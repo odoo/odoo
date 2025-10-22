@@ -43,3 +43,6 @@ class TestUi(HttpCaseWithUserDemo):
             login="john",
         )
         self.start_tour(group_chat.invitation_url, "discuss.meeting_view_public_tour", login="john")
+
+    def test_05_can_create_channel_tour(self):
+        self.start_tour("odoo/discuss", "can_create_channel_from_form_view", login="demo")

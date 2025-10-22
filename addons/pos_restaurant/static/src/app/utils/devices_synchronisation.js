@@ -21,9 +21,9 @@ patch(DevicesSynchronisation.prototype, {
             if (orders.length > 1) {
                 // The only way to get here is if there is several waiters on the same table.
                 // In this case we take orderline of the local order and we add it to the synced order.
-                const localOrders = orders.filter((order) => typeof order.id !== "number");
+                const localOrders = orders.filter((order) => !order.isSynced);
                 const syncedOrder = orders
-                    .filter((order) => typeof order.id === "number")
+                    .filter((order) => order.isSynced)
                     .sort((a, b) => a.id - b.id);
 
                 if (

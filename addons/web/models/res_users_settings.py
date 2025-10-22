@@ -22,14 +22,17 @@ class ResUsersSettings(models.Model):
         embedded_actions_config = self.env['res.users.settings.embedded.action'].search([
             ('user_setting_id', '=', self.id), ('action_id', '=', action_id), ('res_id', '=', res_id)
         ], limit=1)
+        new_vals = {}
         for field, value in vals.items():
             if field in ('embedded_actions_order', 'embedded_actions_visibility'):
-                vals[field] = ','.join('false' if action_id is False else str(action_id) for action_id in value)
+                new_vals[field] = ','.join('false' if action_id is False else str(action_id) for action_id in value)
+            else:
+                new_vals[field] = value
         if embedded_actions_config:
-            embedded_actions_config.write(vals)
+            embedded_actions_config.write(new_vals)
         else:
             self.env['res.users.settings.embedded.action'].create({
-                **vals,
+                **new_vals,
                 'user_setting_id': self.id,
                 'action_id': action_id,
                 'res_id': res_id,

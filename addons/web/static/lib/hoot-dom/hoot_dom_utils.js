@@ -250,7 +250,7 @@ export function dispatchInteraction(type, name, args, returnValue) {
 }
 
 /**
- * @param  {...any} helpers
+ * @param {...any} helpers
  */
 export function exposeHelpers(...helpers) {
     let nameSpaceIndex = 1;
@@ -412,7 +412,7 @@ export function toSelector(node, options) {
 
 export class HootDebugHelpers {
     /**
-     * @param  {...any} helpers
+     * @param {...any} helpers
      */
     constructor(...helpers) {
         $assign(this, ...helpers);

@@ -27,6 +27,7 @@ patch(PosStore.prototype, {
         this.couponByLineUuidCache = {};
         this.rewardProductByLineUuidCache = {};
         await super.setup(...arguments);
+        await this.updateOrder(this.getOrder());
     },
     async afterProcessServerData() {
         // Remove reward lines that have no reward anymore (could happen if the program got archived)
@@ -249,9 +250,16 @@ patch(PosStore.prototype, {
             (rule) =>
                 rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code)
         );
+        const partnerId = await this.data.call("loyalty.card", "get_loyalty_card_partner_by_code", [
+            code,
+        ]);
         let claimableRewards = null;
         let coupon = null;
-        if (rule) {
+        // If the code belongs to a loyalty card we just set the partner
+        if (partnerId) {
+            const partner = this.models["res.partner"].get(partnerId);
+            order.setPartner(partner);
+        } else if (rule) {
             const date_order = DateTime.fromSQL(order.date_order);
             if (
                 rule.program_id.date_from &&

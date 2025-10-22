@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from cups import Connection as CupsConnection
+from cups import Connection as CupsConnection, IPPError
 from itertools import groupby
 from threading import Lock
 from urllib.parse import urlsplit, parse_qs, unquote
@@ -227,14 +227,17 @@ class PrinterInterface(Interface):
 
         ppdname_argument = next(({"ppdname": ppd} for ppd in PPDs if model and model in PPDs[ppd]['ppd-product']), {})
 
-        with cups_lock:
-            conn.addPrinter(name=device['identifier'], device=device['url'], **ppdname_argument)
-            conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
-            conn.enablePrinter(device['identifier'])
-            conn.acceptJobs(device['identifier'])
-            conn.setPrinterUsersAllowed(device['identifier'], ['all'])
-            conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
-            conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
+        try:
+            with cups_lock:
+                conn.addPrinter(name=device['identifier'], device=device['url'], **ppdname_argument)
+                conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
+                conn.enablePrinter(device['identifier'])
+                conn.acceptJobs(device['identifier'])
+                conn.setPrinterUsersAllowed(device['identifier'], ['all'])
+                conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
+                conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
+        except IPPError:
+            _logger.exception("Failed to add printer '%s'", device['identifier'])
 
     def start(self):
         super().start()

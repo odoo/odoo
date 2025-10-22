@@ -8,7 +8,6 @@ import {
     makeMockEnv,
     mountWithCleanup,
     patchWithCleanup,
-    preloadBundle,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -17,8 +16,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 describe.current.tags("desktop");
-
-preloadBundle("web_tour.automatic");
 
 const tourRegistry = registry.category("web_tour.tours");
 let macro;
@@ -138,7 +135,10 @@ test("a failing tour logs the step that failed in run", async () => {
         groupCollapsed: (s) => expect.step(`log: ${s}`),
         log: (s) => expect.step(`log: ${s}`),
         warn: (s) => {},
-        error: (s) => expect.step(`error: ${s}`),
+        error: (s) => {
+            s = s.replace(/\n +at.*/g, ""); // strip stack trace
+            expect.step(`error: ${s}`);
+        },
     });
     class Root extends Component {
         static components = {};
@@ -175,8 +175,7 @@ test("a failing tour logs the step that failed in run", async () => {
         `log: [2/2] Tour tour2 → Step .button1`,
         [
             "error: FAILED: [2/2] Tour tour2 → Step .button1.",
-            `ERROR during perform action:
-Cannot read properties of null (reading 'click')`,
+            `TypeError: Cannot read properties of null (reading 'click')`,
         ].join("\n"),
     ];
     expect.verifySteps(expectedError);

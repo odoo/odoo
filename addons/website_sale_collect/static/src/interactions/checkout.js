@@ -11,14 +11,16 @@ patch(Checkout.prototype, {
             '.js_wsc_update_product_qty': { 't-on-click': this.onClickUpdateProductQty.bind(this) },
         });
         this.deliveryAddressTitle = this.el.querySelector('[name="delivery_address_title"]');
-        this.deliveryTitle = this.deliveryAddressTitle.textContent;
-        this.useDeliveryAsBillingLabel = this.el.querySelector(
-            '[name="use_delivery_as_billing_text"]'
-        );
-        this.useDeliveryAsBillingLabelText = this.useDeliveryAsBillingLabel.textContent;
-        this.inStoreTitle = _t('Contact Details');
-        this.useDeliveryAsBillingLabelInStoreText = _t('Same as contact details');
-        this._adaptDeliveryTitles();
+        if (this.deliveryAddressTitle) {
+            this.deliveryTitle = this.deliveryAddressTitle.textContent;
+            this.useDeliveryAsBillingLabel = this.el.querySelector(
+                '[name="use_delivery_as_billing_text"]'
+            );
+            this.useDeliveryAsBillingLabelText = this.useDeliveryAsBillingLabel.textContent;
+            this.inStoreTitle = _t('Contact Details');
+            this.useDeliveryAsBillingLabelInStoreText = _t('Same as contact details');
+            this._adaptDeliveryTitles();
+        }
     },
 
     async selectDeliveryMethod(ev) {

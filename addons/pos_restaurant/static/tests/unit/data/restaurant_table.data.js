@@ -52,7 +52,7 @@ export class RestaurantTable extends models.ServerModel {
         },
         {
             id: 4,
-            table_number: 3,
+            table_number: 4,
             width: 165,
             height: 100,
             position_h: 762,

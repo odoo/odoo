@@ -29,9 +29,9 @@ export class SuggestionService {
      * @param {import('models').Thread} thread
      * @returns {Array<[string, number, number]>}
      */
-    getSupportedDelimiters(thread) {
-        if (this.composer.htmlEnabled) {
-            return [["::"], [":", undefined, 2]];
+    getSupportedDelimiters(thread, env) {
+        if (env?.inFrontendPortalChatter) {
+            return [[":", undefined, 2]];
         }
         return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }

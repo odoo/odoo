@@ -119,48 +119,6 @@ class StockPicking(models.Model):
         pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
         return super(StockPicking, pickings)._send_confirmation_email()
 
-    def _action_done(self):
-        res = super()._action_done()
-        for rec in self:
-            if rec.picking_type_id.code != 'outgoing':
-                continue
-            if rec.pos_order_id.shipping_date and not rec.pos_order_id.to_invoice:
-                cost_per_account = defaultdict(lambda: 0.0)
-                for line in rec.move_line_ids:
-                    if not line.product_id.is_storable or line.product_id.valuation != 'real_time':
-                        continue
-                    accounts = line.product_id._get_product_accounts()
-                    out = accounts['stock_output']
-                    exp = accounts['expense']
-                    line_cost = next(iter(line.move_id._get_price_unit().values())) * line.quantity_product_uom
-                    if line_cost != 0:
-                        cost_per_account[out, exp] += line_cost
-                move_vals = []
-                for (out_acc, exp_acc), cost in cost_per_account.items():
-                    move_vals.append({
-                        'journal_id': rec.pos_order_id.sale_journal.id,
-                        'date': rec.pos_order_id.date_order,
-                        'ref': 'pos_order_'+str(rec.pos_order_id.id),
-                        'partner_id': rec.pos_order_id.partner_id.id,
-                        'line_ids': [
-                            (0, 0, {
-                                'name': rec.pos_order_id.name,
-                                'account_id': exp_acc.id,
-                                'debit': cost,
-                                'credit': 0.0,
-                            }),
-                            (0, 0, {
-                                'name': rec.pos_order_id.name,
-                                'account_id': out_acc.id,
-                                'debit': 0.0,
-                                'credit': cost,
-                            }),
-                        ],
-                    })
-                move = self.env['account.move'].sudo().create(move_vals)
-                move.action_post()
-        return res
-
 
 class StockPickingType(models.Model):
     _name = 'stock.picking.type'

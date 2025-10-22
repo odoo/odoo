@@ -362,7 +362,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_cached_template_prefetched_keys(self):
-        return super()._get_cached_template_prefetched_keys() + ['active', 'visibility']
+        return super()._get_cached_template_prefetched_keys() + ['active', 'visibility', 'track']
 
     @api.model
     def _get_template_minimal_cache_keys(self):

@@ -374,6 +374,9 @@ patch(PosOrder.prototype, {
      */
     _getPointsCorrection(program) {
         const rewardLines = this.lines.filter((line) => line.is_reward_line);
+        if (!this._canGenerateRewards(program, this.getTotalWithTax(), this.getTotalWithoutTax())) {
+            return 0;
+        }
         let res = 0;
         const ProductPrice = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"

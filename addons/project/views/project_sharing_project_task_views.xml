@@ -187,7 +187,7 @@
                             <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_edit': True, 'no_edit_color': True}"/>
                             <field name="partner_id" readonly="not current_user_same_company_partner" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
                             <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
-                            <field name="recurring_task" invisible="not allow_recurring_tasks" groups="project.group_project_recurring_tasks"/>
+                            <field name="recurring_task" invisible="not allow_recurring_tasks or not active or parent_id" groups="project.group_project_recurring_tasks"/>
                             <label for="repeat_interval" invisible="not recurring_task or not allow_recurring_tasks" groups="project.group_project_recurring_tasks"/>
                             <div invisible="not recurring_task or not allow_recurring_tasks" class="d-flex" groups="project.group_project_recurring_tasks" name="repeat_intervals">
                                 <field name="repeat_interval" required="recurring_task"

@@ -9,13 +9,14 @@
 # Martin Trigaux, 2022
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-14 08:12+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/product/"
 "de/>\n"
 "Language: de\n"
@@ -71,8 +72,8 @@ msgid ""
 msgstr ""
 "%(base)s mit einem Rabatt von %(discount)s %% %(discount_type)s und einer "
 "Zusatzgebühr von %(surcharge)s \n"
-"Beispiel: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Beispiel: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -81,8 +82,8 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
-"%(item_name)s: Enddatum (%(end_date)s) sollte größer sein als Startdatum "
-"(%(start_date)s)"
+"%(item_name)s: Enddatum (%(end_date)s) sollte größer sein als Startdatum (%"
+"(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -104,6 +105,7 @@ msgstr "%(percentage)s %% auf den Verkaufspreis"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -148,8 +150,8 @@ msgstr "- %(amount)s Preisnachlass"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- Barcode „%(barcode)s“ bereits dem/den Produkt(en) zugeordnet: "
-"%(product_list)s"
+"- Barcode „%(barcode)s“ bereits dem/den Produkt(en) zugeordnet: %"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -196,8 +198,9 @@ msgstr "100"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_length_120
+#, fuzzy
 msgid "120"
-msgstr ""
+msgstr "120"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -206,18 +209,20 @@ msgstr "123456789012"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_length_140
+#, fuzzy
 msgid "140"
-msgstr ""
+msgstr "140"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_length_160
+#, fuzzy
 msgid "160"
-msgstr ""
+msgstr "160"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs"
-msgstr ""
+msgstr "160x80cm, mit langen Beinen"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -231,8 +236,9 @@ msgstr "2 Jahre"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_2xl
+#, fuzzy
 msgid "2XL"
-msgstr ""
+msgstr "2XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_3
@@ -241,13 +247,15 @@ msgstr "3 Jahre"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_39
+#, fuzzy
 msgid "39"
-msgstr ""
+msgstr "39"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
+#, fuzzy
 msgid "3XL"
-msgstr ""
+msgstr "3XL"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
@@ -266,8 +274,9 @@ msgstr "4 x 7 mit Preis"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_40
+#, fuzzy
 msgid "40"
-msgstr ""
+msgstr "40"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_41
@@ -281,13 +290,15 @@ msgstr "42"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_shoe_size_43
+#, fuzzy
 msgid "43"
-msgstr ""
+msgstr "43"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_height_45
+#, fuzzy
 msgid "45"
-msgstr ""
+msgstr "45"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
@@ -315,8 +326,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
-">Kontakt</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
+"o_translate_inline\">Kontakt</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -329,8 +340,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label="
-"\"Arrow icon\" title=\"Arrow\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
@@ -576,8 +587,8 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
-"Fügen Sie Produkte hinzu, indem Sie oben rechts auf die Schaltfläche „"
-"Produkte hinzufügen“\n"
+"Fügen Sie Produkte hinzu, indem Sie oben rechts auf die Schaltfläche "
+"„Produkte hinzufügen“\n"
 "                                klicken, um sie dem Bericht hinzuzufügen."
 
 #. module: product
@@ -878,7 +889,7 @@ msgstr "Beige"
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Big table seats 10–12 for team discussions"
-msgstr ""
+msgstr "Großer Tisch mit 10-12 Plätzen für Teambesprechungen"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_black
@@ -934,8 +945,9 @@ msgstr "Abbrechen"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_canon
+#, fuzzy
 msgid "Canon"
-msgstr ""
+msgstr "Canon"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1000,8 +1012,9 @@ msgstr "Codes"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_colgate
+#, fuzzy
 msgid "Colgate"
-msgstr ""
+msgstr "Colgate"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__html_color
@@ -1373,8 +1386,9 @@ msgstr "Löschen"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dell
+#, fuzzy
 msgid "Dell"
-msgstr ""
+msgstr "Dell"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__description
@@ -1516,8 +1530,9 @@ msgstr "Dokumente dieser Variante"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dove
+#, fuzzy
 msgid "Dove"
-msgstr ""
+msgstr "Dove"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1780,8 +1795,9 @@ msgstr "Allgemeine Informationen"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_gillette
+#, fuzzy
 msgid "Gillette"
-msgstr ""
+msgstr "Gillette"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
@@ -3395,6 +3411,12 @@ msgid "Ray-Ban"
 msgstr "Ray-Ban"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr ""
+
+#. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
 msgstr "Rot"
@@ -3798,8 +3820,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product %"
 "(product)s."
 msgstr ""
-"Das Attribut %(attribute)s muss mindestens einen Wert für das Produkt "
-"%(product)s haben."
+"Das Attribut %(attribute)s muss mindestens einen Wert für das Produkt %"
+"(product)s haben."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3936,8 +3958,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Der Wert %(value)s ist für das Attribut %(attribute)s des Produkts %(product)"
-"s nicht definiert."
+"Der Wert %(value)s ist für das Attribut %(attribute)s des Produkts %"
+"(product)s nicht definiert."
 
 #. module: product
 #. odoo-python
@@ -4515,7 +4537,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr "Sie sind im Begriff, den Sonderpreis von %s Produkten zu aktualisieren."
+msgstr ""
+"Sie sind im Begriff, den Sonderpreis von %s Produkten zu aktualisieren."
 
 #. module: product
 #. odoo-python
@@ -4585,15 +4608,6 @@ msgstr ""
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"Sie können die Hauptpreisliste nicht als andere Preisliste in der "
-"Preislistenposition zuordnen."
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
@@ -4621,8 +4635,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"Sie können das Produkt des auf Produkt %(product)s eingestellten Wertes "
-"%(value)s nicht ändern."
+"Sie können das Produkt des auf Produkt %(product)s eingestellten Wertes %"
+"(value)s nicht ändern."
 
 #. module: product
 #. odoo-python
@@ -4631,8 +4645,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"Sie können den Wert des auf Produkt %(product)s eingestellten Wertes %(value)"
-"s nicht ändern."
+"Sie können den Wert des auf Produkt %(product)s eingestellten Wertes %"
+"(value)s nicht ändern."
 
 #. module: product
 #. odoo-python
@@ -4905,6 +4919,12 @@ msgstr "bis"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr ""
+#~ "Sie können die Hauptpreisliste nicht als andere Preisliste in der "
+#~ "Preislistenposition zuordnen."
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"

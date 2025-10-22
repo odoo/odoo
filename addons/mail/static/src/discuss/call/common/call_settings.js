@@ -1,4 +1,4 @@
-import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
+import { Component, onWillStart, useExternalListener, useState, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -8,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
+import { Dialog } from "@web/core/dialog/dialog";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
@@ -144,4 +145,14 @@ export class CallSettings extends Component {
         this.store.settings.edgeBlurAmount = Number(ev.target.value);
         this.saveEdgeBlurAmount();
     }
+}
+
+export class CallSettingsDialog extends Component {
+    static template = xml`
+        <Dialog size="medium" footer="false" title.translate="Voice &amp; Video Settings">
+            <CallSettings withActionPanel="false"/>
+        </Dialog>
+    `;
+    static props = ["*"];
+    static components = { CallSettings, Dialog };
 }

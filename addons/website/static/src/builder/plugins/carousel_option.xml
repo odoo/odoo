@@ -85,6 +85,8 @@
         <span class="oi fa-fw oi-plus"/>
     </button>
     <button class="btn btn-danger py-0 px-1"
+            t-att-class="{ disabled: state.disableRemove }"
+            t-att-disabled="state.disableRemove"
             title="Remove Slide"
             aria-label="Remove Slide"
             t-on-click="removeSlide">

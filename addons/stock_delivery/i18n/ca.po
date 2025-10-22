@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 02:32+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -26,7 +26,7 @@ msgid "%(name)s (Estimated Cost: %(cost)s)"
 msgstr "%(name)s (Cost estimat: %(cost)s)"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
 msgid "(computed:"
 msgstr "(computat:"
 
@@ -47,8 +47,12 @@ msgid "<span>Shipping Weight: </span>"
 msgstr "<span>Pes d'enviament:</span>"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Carrier:</strong>"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Carrier</strong>"
 msgstr "<strong>Transportista</strong>"
 
@@ -88,8 +92,20 @@ msgstr "<strong>Pes: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
-msgid "<strong>Weight</strong>"
-msgstr "<strong>Pes</strong>"
+msgid ""
+"<strong>Weight:</strong>\n"
+"                <br/>"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
+msgid "Action while validating Delivery Orders"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
+msgid "Allowed Carrier"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
@@ -104,14 +120,14 @@ msgstr "Cancel·la"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "La cancel·lació d'un lliurament pot no ser infable. Segur que voleu "
 "continuar?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__package_carrier_type
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
@@ -124,30 +140,20 @@ msgid "Carrier Code"
 msgstr "Codi del transportista"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
+msgid "Carrier Type"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
 msgstr "Nom de l'operador"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
-msgid "Company"
-msgstr "Empresa"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
 msgstr "Cost: %(price).2f %(currency)s"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
-msgid "Created by"
-msgstr "Creat per"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_date
-msgid "Created on"
-msgstr "Creat el"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
@@ -158,16 +164,6 @@ msgstr "Assistent de selecció del transportista de lliurament"
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
 msgstr "Mètodes lliurament"
-
-#. module: stock_delivery
-#: model:ir.model,name:stock_delivery.model_choose_delivery_package
-msgid "Delivery Package Selection Wizard"
-msgstr "Assistent de selecció del paquet de lliurament"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
-msgid "Delivery Package Type"
-msgstr "Tipus de paquet de lliurament"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -181,12 +177,19 @@ msgid "Destination Country"
 msgstr "País de destinació"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
-msgid "Discard"
-msgstr "Descartar"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
 msgstr "Nom mostrat"
 
@@ -198,8 +201,10 @@ msgstr "Mostrar enllaços de seguiment"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Cost estimat: es facturarà al client el cost estimat de l'enviament.\n"
 "Cost real: es facturarà al client el cost real de l'enviament i, un cop "
@@ -232,9 +237,26 @@ msgid "HS Code"
 msgstr "Codi HS"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
 msgstr "ID"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__integration_level
+msgid "Integration Level"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
@@ -250,16 +272,6 @@ msgstr "Política de facturació"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
 msgstr "És la selecció de retorn"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
-msgid "Last Updated by"
-msgstr "Última actualització per"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
-msgid "Last Updated on"
-msgstr "Última actualització el"
 
 #. module: stock_delivery
 #. odoo-python
@@ -284,31 +296,15 @@ msgid "Origin of Goods"
 msgstr "Origen dels béns"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+#: model:ir.model,name:stock_delivery.model_stock_package
 msgid "Package"
 msgstr "Paquet"
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
-msgid "Package Details"
-msgstr "Detalls del paquet"
-
-#. module: stock_delivery
-#. odoo-python
-#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+#: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
 msgid "Package too heavy!"
 msgstr "Paquet massa pesat"
-
-#. module: stock_delivery
-#: model:ir.model,name:stock_delivery.model_stock_quant_package
-msgid "Packages"
-msgstr "Paquets"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
-msgid "Picking"
-msgstr "Albarà"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -330,6 +326,11 @@ msgstr "Moviment del producte (línia de moviment d'estoc)"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
 msgid "Provider"
 msgstr "Proveïdor"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_put_in_pack
+msgid "Put In Pack Wizard"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
@@ -356,8 +357,10 @@ msgstr "Rutes"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
 "Les normes d'origen determinen on s'originen els productes, és a dir, no des "
 "d'on s'han enviat, sinó on s'han produït o fabricat.\n"
@@ -380,11 +383,6 @@ msgid "Sales Order Line"
 msgstr "Línia comanda de venda"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
-msgid "Save"
-msgstr "Desar"
-
-#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
 msgstr "Enviar al transportista"
@@ -393,8 +391,8 @@ msgstr "Enviar al transportista"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
 "Paquet enviat al transportista %(carrier_name)s per efectuar l'enviament amb "
 "número de seguiment %(ref)s"
@@ -416,7 +414,7 @@ msgid "Shipping Methods"
 msgstr "Mètodes d'enviament"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__shipping_weight
 msgid "Shipping Weight"
 msgstr "Pes de l'enviament"
 
@@ -444,12 +442,12 @@ msgid "Stock package type"
 msgstr "Tipus de paquet principal"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
 msgstr "Camp tècnic que indica el nombre de xifres decimals del pes"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr "Camp tècnic que indica si el pes uom és de kg o no (p. ex. lb)"
 
@@ -477,11 +475,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
 msgid "The shipping price will be set once the delivery is done."
-msgstr "El preu del transport s'establirà una vegada que es faci el lliurament."
+msgstr ""
+"El preu del transport s'establirà una vegada que es faci el lliurament."
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+#: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"its package type. Please choose another package."
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
@@ -496,7 +503,7 @@ msgid "There is no matching delivery rule."
 msgstr "No hi ha cap regla de lliurament que coincideixi."
 
 #. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
+#: model:ir.model.fields,help:stock_delivery.field_stock_package__weight
 msgid "Total weight of all the products contained in the package."
 msgstr "Pes total de tots els productes continguts en el paquet."
 
@@ -543,8 +550,8 @@ msgstr "Transferència"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight"
 msgstr "Pes"
@@ -555,9 +562,9 @@ msgid "Weight for shipping"
 msgstr "Pes per enviament"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr "Unitat de pes de l'etiqueta de mesura"
 
@@ -568,11 +575,11 @@ msgstr "Pes:"
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
+#: code:addons/stock_delivery/models/stock_move.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 "No és possible empaquetar productes en el mateix paquet si tenen "
 "transportistes diferents. Cal comprovar que tots els paquets tenen un "
@@ -614,6 +621,57 @@ msgid "^FO310,200"
 msgstr ",FO310,200"
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
+msgid "^FO35, 180 ^A0N,15^FDHS:"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
+msgid "^FO35, 220 ^A0N,15^FDHS:"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FS"
 msgstr "FSFS"
+
+#~ msgid "<strong>Weight</strong>"
+#~ msgstr "<strong>Pes</strong>"
+
+#~ msgid "Company"
+#~ msgstr "Empresa"
+
+#~ msgid "Created by"
+#~ msgstr "Creat per"
+
+#~ msgid "Created on"
+#~ msgstr "Creat el"
+
+#~ msgid "Delivery Package Selection Wizard"
+#~ msgstr "Assistent de selecció del paquet de lliurament"
+
+#~ msgid "Delivery Package Type"
+#~ msgstr "Tipus de paquet de lliurament"
+
+#~ msgid "Discard"
+#~ msgstr "Descartar"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Última actualització per"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Última actualització el"
+
+#~ msgid "Package Details"
+#~ msgstr "Detalls del paquet"
+
+#~ msgid "Packages"
+#~ msgstr "Paquets"
+
+#~ msgid "Picking"
+#~ msgstr "Albarà"
+
+#~ msgid "Save"
+#~ msgstr "Desar"

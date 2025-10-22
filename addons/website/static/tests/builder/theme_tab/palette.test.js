@@ -1,5 +1,8 @@
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@odoo/hoot-dom";
 
@@ -38,8 +41,10 @@ test("theme tab: warning on palette change", async () => {
     await contains(`[data-action-value="'default-light-1'"] .o-color-palette-pill span`).click();
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog .btn-primary").click();
+    await def;
     expect.verifySteps([
         `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,
+        "asset reload",
     ]);
 });
 
@@ -64,8 +69,10 @@ test("theme tab: no warning on palette change", async () => {
         ".o_theme_tab [data-src='/website/static/src/img/snippets_options/palette.svg']"
     ).click();
     await contains(`[data-action-value="'default-light-1'"] .o-color-palette-pill span`).click();
+    await def;
     expect(".o_dialog").toHaveCount(0);
     expect.verifySteps([
         `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,
+        "asset reload",
     ]);
 });

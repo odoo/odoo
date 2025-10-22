@@ -11,7 +11,7 @@ class AccountMoveLine(models.Model):
             lambda l: l.move_id.country_code == 'IN'
             and l.move_id.move_type == 'entry'
             and l.display_type in ('product', 'tax')
-            and (l.move_id.pos_session_ids or l.move_id.reversed_pos_order_id)
+            and (l.move_id.sudo().pos_session_ids or l.move_id.sudo().reversed_pos_order_id)
         )
         if not in_pos_closing_and_reversed_lines:
             return

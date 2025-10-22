@@ -57,16 +57,14 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
 });
 
 registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
-    steps: () => {
-        const todayYear = new Date().getFullYear();
-        const order = `TSJ/${todayYear}/00001`;
-        return [
+    steps: () =>
+        [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             PartnerList.clickPartnerOptions("Partner Test 1"),
             PartnerList.clickDropDownItemText("Settle invoices"),
-            PartnerList.clickSettleOrderName(order),
+            PartnerList.clickSettleOrderName("TSJ/", "/00001", true),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -75,8 +73,7 @@ registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
             ReceiptScreen.paymentLineContains("Bank", "10.00"),
             ReceiptScreen.paymentLineContains("Customer Account", "-10.00"),
             Chrome.endTour(),
-        ].flat();
-    },
+        ].flat(),
 });
 
 registry.category("web_tour.tours").add("test_simplified_invoice_not_override_set_pricelist", {
@@ -86,6 +83,7 @@ registry.category("web_tour.tours").add("test_simplified_invoice_not_override_se
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.clickPriceList("Test pricelist"),
+            ProductScreen.clickFiscalPosition("Original Tax"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),

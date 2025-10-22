@@ -120,14 +120,8 @@
 
 /* Style of the tiles allowing the user to load a sample survey. */
 
-.o_survey_sample_card {
-    &:hover {
-        * { 
-            color: $primary !important;
-        }
-        box-shadow: $box-shadow;
-        border-color: $primary !important;
-    }
+.o_survey_sample_card:hover {
+    background: var(--SurveySampleCard-background-hover, #{$o-gray-200});
 }
 
 .o_form_label.o_form_label_readonly.o_survey_label_survey_start_url{

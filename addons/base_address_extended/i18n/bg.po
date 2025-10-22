@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
@@ -37,11 +37,16 @@ msgstr ""
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Поставете отметка в това квадратче, за да се уверите, че всеки създаден в тази държава адрес има \"град\", избран в списъка на градовете в страната."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Поставете отметка в това квадратче, за да се уверите, че всеки създаден в "
+"тази държава адрес има \"град\", избран в списъка на градовете в страната."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
 msgstr "Градове"
 
@@ -73,6 +78,11 @@ msgid "Country"
 msgstr "Държава"
 
 #. module: base_address_extended
+#: model:ir.model,website_form_label:base_address_extended.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
 msgstr "Създадено от"
@@ -84,6 +94,8 @@ msgstr "Създадено на"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Име за показване"
 
@@ -91,11 +103,14 @@ msgstr "Име за показване"
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
 msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
-"                your partner records. Note that an option can be set on each country separately\n"
+"                your partner records. Note that an option can be set on each "
+"country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
-"Показвайте и управлявайте списъка с всички градове, към които може да бъде присвоен\n"
-" запис на ваш партньор. Имайте предвид, че по една опция може да бъде зададена за всяка отделна страна,\n"
+"Показвайте и управлявайте списъка с всички градове, към които може да бъде "
+"присвоен\n"
+" запис на ваш партньор. Имайте предвид, че по една опция може да бъде "
+"зададена за всяка отделна страна,\n"
 " за да наложи правилото всеки адрес да има град в този списък."
 
 #. module: base_address_extended
@@ -129,6 +144,8 @@ msgstr ""
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 

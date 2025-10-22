@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:34+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -37,8 +37,8 @@ msgstr "取消"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" debit notes made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
 msgstr "如果您不想为此日记账的发票和借方通知单共享相同的序列，请选中此框"
 
 #. module: account_debit_note
@@ -119,8 +119,9 @@ msgstr "如果为空，则使用要借记的会计凭证的日记账。"
 msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
-msgstr "如果您需要对每行进行更正，复制它们会很方便。 我们不会从借记单中复制退款通知。"
-" "
+msgstr ""
+"如果您需要对每行进行更正，复制它们会很方便。 我们不会从借记单中复制退款通"
+"知。 "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -191,7 +192,7 @@ msgstr "为此结算单创建的借记单"
 
 #. module: account_debit_note
 #. odoo-python
-#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
 msgstr "借记单创建于：%s"
 
@@ -218,8 +219,8 @@ msgstr "您只能借记已发布的凭证。"
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
 msgstr "不能为已链接至应收账单的发票制作退款账单。"
 
 #. module: account_debit_note

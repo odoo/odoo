@@ -1,7 +1,10 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
-import { getDragMoveHelper, waitForEndOfOperation } from "./website_helpers";
+import {
+    getDragMoveHelper,
+    setupHTMLBuilder,
+    waitForEndOfOperation,
+} from "@html_builder/../tests/helpers";
 
 const dropzoneSelectors = {
     selector: "section",

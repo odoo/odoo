@@ -26,7 +26,7 @@
                 </setting>
             </block>
             <div id="tip_product" position="after">
-                <div invisible="not pos_module_pos_restaurant or not pos_iface_tipproduct">
+                <div invisible="not pos_module_pos_restaurant or not pos_iface_tipproduct or country_code == 'BE'">
                     <field name="pos_set_tip_after_payment" class="oe_inline"/>
                     <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment"/>
                 </div>

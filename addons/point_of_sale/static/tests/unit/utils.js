@@ -15,7 +15,7 @@ export const setupPosEnv = async () => {
     odoo.from_backend = 0;
     odoo.access_token = uuidv4(); // Avoid indexedDB conflicts
     odoo.info = {
-        db: "pos",
+        db: `pos-${uuidv4()}`, // Avoid indexedDB conflicts
         isEnterprise: true,
     };
 

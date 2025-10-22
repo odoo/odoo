@@ -100,10 +100,9 @@
                     <FacturasRectificadasSustituidas>
                         <IDFacturaRectificadaSustituida>
                             <!-- NOTE: could support issuing a single credit note for multiple invoices (optional) -->
-                            <t t-set="seq_and_num" t-value="refunded_doc._get_tbai_sequence_and_number()"/>
-                            <SerieFactura t-out="seq_and_num[0]"/>
-                            <NumFactura t-out="seq_and_num[1]"/>
-                            <FechaExpedicionFactura t-out="format_date(refunded_doc.xml_attachment_id and refunded_doc._get_tbai_signature_and_date()[1] or refunded_doc_invoice_date)"/>
+                            <SerieFactura t-out="refunded_serie"/>
+                            <NumFactura t-out="refunded_num"/>
+                            <FechaExpedicionFactura t-out="format_date(refunded_date)"/>
                         </IDFacturaRectificadaSustituida>
                     </FacturasRectificadasSustituidas>
                 </t>

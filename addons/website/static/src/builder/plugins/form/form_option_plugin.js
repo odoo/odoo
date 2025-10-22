@@ -167,6 +167,7 @@ export class FormOptionPlugin extends Plugin {
             SetCustomErrorMessageAction,
             SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
+            SetMultipleFilesAction,
         },
         force_not_editable_selector: ".s_website_form form",
         force_editable_selector: [
@@ -662,7 +663,11 @@ export class FormOptionPlugin extends Plugin {
                     for (const el of inputsInDependencyContainer) {
                         conditionValueList.push({
                             value: el.value,
-                            textContent: inputsInDependencyContainer.length === 1 ? el.value : dependencyContainerEl.querySelector(`label[for="${el.id}"]`).textContent,
+                            textContent:
+                                inputsInDependencyContainer.length === 1
+                                    ? el.value
+                                    : dependencyContainerEl.querySelector(`label[for="${el.id}"]`)
+                                          .textContent,
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
@@ -1431,6 +1436,12 @@ class PropertyAction extends BuilderAction {
 
     apply({ editingElement, params: { property, format } = {}, value }) {
         editingElement[property] = format ? format(value) : value;
+    }
+}
+class SetMultipleFilesAction extends BuilderAction {
+    static id = "setMultipleFiles";
+    apply({ editingElement }) {
+        editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;
     }
 }
 

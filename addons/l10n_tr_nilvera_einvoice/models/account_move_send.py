@@ -87,15 +87,6 @@ class AccountMoveSend(models.AbstractModel):
                 )),
             }
 
-        # Alert if partner has Street 2 filled, which is not allowed
-        if tr_partners_with_street2 := tr_nilvera_moves.filtered(lambda m: (m.partner_id.street2)).partner_id:
-            alerts["tr_partners_with_street2"] = {
-                'level': 'danger',
-                "message": _("The following partner(s) must have Street 2 empty"),
-                "action_text": _("View Partner(s)"),
-                "action": tr_partners_with_street2._get_records_action(name=_("Check Street 2 on Partner(s)")),
-            }
-
         # Alert if partner does not use UBL TR e-invoice format or has not checked Nilvera status
         if tr_partners_invalid_edi_or_status := tr_nilvera_moves.filtered(
             lambda m: (

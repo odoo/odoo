@@ -138,7 +138,7 @@ def make_mock_google_route(on_call=None):
                         {
                             "long_name": "Australia",
                             "short_name": "AU",
-                            "types": ["country", "political"],
+                            "types": ["political", "country"],  # should work w/ "unordered" types
                         },
                         {
                             "long_name": "2009",

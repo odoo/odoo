@@ -4,15 +4,14 @@ import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction
 import {
     addActionOption,
     addOption,
-    confirmAddSnippet,
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
-    waitForEndOfOperation,
 } from "./website_helpers";
 import { waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { confirmAddSnippet, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 

@@ -14,6 +14,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -273,6 +274,8 @@ export class LinkPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
+        double_click_overrides: this.doubleClickLinkOverrides.bind(this),
+        triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
     };
 
     setup() {
@@ -408,21 +411,15 @@ export class LinkPlugin extends Plugin {
         if (this.getResource("link_compatible_selection_predicates").some((p) => p())) {
             return true;
         }
-        const linksInSelection = this.dependencies.selection
-            .getTargetedNodes()
-            .filter((n) => n.tagName === "A");
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const targetedBlocks = targetedNodes.filter(isBlock);
+        const linksInSelection = targetedNodes.filter((n) => n.tagName === "A");
         return (
             linksInSelection.length < 2 &&
             // Prevent a link across sibling blocks:
-            !targetedNodes.some((node) => {
-                const next = node.nextSibling;
-                const previous = node.previousSibling;
-                return (
-                    (next && targetedNodes.includes(next) && isBlock(next)) ||
-                    (previous && targetedNodes.includes(previous) && isBlock(previous))
-                );
-            })
+            targetedBlocks.every((node) =>
+                targetedNodes.every((other) => node.contains(other) || other.contains(node))
+            )
         );
     }
 
@@ -464,12 +461,25 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes, customStyle, linkTarget, attachmentId) => {
+        const applyCallback = (
+            url,
+            label,
+            classes,
+            customStyle,
+            linkTarget,
+            attachmentId,
+            relValue
+        ) => {
             if (this.linkInDocument) {
                 if (url) {
                     this.linkInDocument.href = url;
                 } else {
                     this.linkInDocument.removeAttribute("href");
+                }
+                if (relValue) {
+                    this.linkInDocument.setAttribute("rel", relValue);
+                } else {
+                    this.linkInDocument.removeAttribute("rel");
                 }
                 if (linkTarget) {
                     this.linkInDocument.setAttribute("target", linkTarget);
@@ -509,6 +519,9 @@ export class LinkPlugin extends Plugin {
                             (FONT_SIZE_CLASSES.some((cls) => el.classList.contains(cls)) ||
                                 el.style?.fontSize)
                     );
+                    if (relValue) {
+                        link.setAttribute("rel", relValue);
+                    }
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
                         image?.parentElement?.matches("figure[contenteditable=false]") &&
@@ -1153,6 +1166,9 @@ export class LinkPlugin extends Plugin {
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
                 selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
+                if (link.getAttribute("href") === link.textContent) {
+                    this.newlyInsertedLinks.add(link);
+                }
                 return nodeForSelectionRestore;
             }
         }
@@ -1247,5 +1263,71 @@ export class LinkPlugin extends Plugin {
 
     isLinkImmutable(linkEl) {
         return this.getResource("immutable_link_selectors").some((s) => linkEl.matches(s));
+    }
+
+    doubleClickLinkOverrides(ev) {
+        const clickedLink = closestElement(ev.target, "a");
+        // If we double click on a link, limit the selection inside the link
+        if (clickedLink) {
+            // mimic the double click behavior of browsers
+            this.dependencies.selection.modifySelection("extend", "backward", "word");
+            this.document.getSelection().collapseToStart();
+            this.dependencies.selection.modifySelection("extend", "forward", "word");
+
+            const { anchorNode, focusNode, anchorOffset, focusOffset } =
+                this.dependencies.selection.getEditableSelection();
+
+            // We reset the word selection of double click to be inside the current clicked link
+            // when it spreads over different links. Because it's a word selection, we need to keep
+            // the correct offsets when resetting.
+            if (clickedLink.contains(anchorNode) && !clickedLink.contains(focusNode)) {
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode: clickedLink,
+                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                });
+            } else if (!clickedLink.contains(anchorNode) && clickedLink.contains(focusNode)) {
+                this.dependencies.selection.setSelection({
+                    anchorNode: clickedLink,
+                    anchorOffset: 1, // 1 to avoid the FEFF char
+                    focusNode,
+                    focusOffset,
+                });
+            } else if (!clickedLink.contains(anchorNode) && !clickedLink.contains(focusNode)) {
+                this.dependencies.selection.setSelection({
+                    anchorNode: clickedLink,
+                    anchorOffset: 1, // 1 to avoid the FEFF char
+                    focusNode: clickedLink,
+                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                });
+            } else {
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                });
+            }
+
+            return true;
+        }
+    }
+
+    tripleClickButtonOverrides(ev) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const buttonElement = isBrowserFirefox()
+            ? findInSelection(selection, "a.btn")
+            : closestElement(selection.anchorNode, "a.btn");
+        if (buttonElement) {
+            this.dependencies.selection.setSelection({
+                anchorNode: buttonElement,
+                anchorOffset: 0,
+                focusNode: buttonElement,
+                focusOffset: nodeSize(buttonElement),
+            });
+            ev.preventDefault();
+            return true;
+        }
     }
 }

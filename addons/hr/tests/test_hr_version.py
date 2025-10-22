@@ -519,3 +519,181 @@ class TestHrVersion(TransactionCase):
         for version in versions[1:]:
             self.assertEqual(version.job_id.id, jobB.id)
             self.assertEqual(version.contract_date_end, date(2020, 9, 30))
+
+    def test_delete_version(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        v1 = employee.version_id
+        v2 = employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        v3 = employee.create_version({
+            'date_version': '2022-01-01',
+        })
+        self.assertEqual(employee.current_version_id, v3)
+
+        v3.unlink()
+        self.assertEqual(employee.current_version_id, v2)
+        v1.unlink()
+        self.assertEqual(employee.current_version_id, v2)
+        with self.assertRaises(ValidationError):
+            v2.unlink()
+
+    def test_multi_edit_multi_employees_no_contract(self):
+        """
+        Test the multi-edit when there is one version per employee, without contract
+        """
+        employee_john, employee_rob = self.env['hr.employee'].create([
+            {
+                'name': 'John Doe',
+                'date_version': '2020-01-01',
+            },
+            {
+                'name': 'Rob Carter',
+                'date_version': '2020-10-18',
+            }
+        ])
+        versions = (employee_john | employee_rob).version_id
+        versions.write({
+            'contract_date_start': '2021-10-10'
+        })
+        self.assertEqual(versions[0].contract_date_start, date(2021, 10, 10))
+        self.assertEqual(versions[1].contract_date_start, date(2021, 10, 10))
+
+    def test_multi_edit_multi_employees_mix_contract(self):
+        """
+        Test the multi-edit when there is one version per employee, some with contract
+        """
+        employee_john, employee_rob = self.env['hr.employee'].create([
+            {
+                'name': 'John Doe',
+                'date_version': '2020-01-01',
+                'contract_date_start': '2020-01-01',
+            },
+            {
+                'name': 'Rob Carter',
+                'date_version': '2020-10-18',
+            }
+        ])
+        versions = (employee_john | employee_rob).version_id
+        versions.write({
+            'contract_date_start': '2021-10-10'
+        })
+        self.assertEqual(versions[0].contract_date_start, date(2021, 10, 10))
+        self.assertEqual(versions[1].contract_date_start, date(2021, 10, 10))
+
+    def test_multi_edit_multi_employees_all_contract(self):
+        """
+        Test the multi-edit when there is one version per employee, all with different contract
+        """
+        employee_john, employee_rob = self.env['hr.employee'].create([
+            {
+                'name': 'John Doe',
+                'date_version': '2020-01-01',
+                'contract_date_start': '2020-01-01',
+            },
+            {
+                'name': 'Rob Carter',
+                'date_version': '2020-10-18',
+                'contract_date_start': '2020-10-18',
+            }
+        ])
+        versions = (employee_john | employee_rob).version_id
+        versions |= employee_john.create_version({
+            'date_version': '2021-08-01',
+            'contract_date_start': '2020-01-01',
+        })
+        versions.write({
+            'contract_date_start': '2021-10-10'
+        })
+        self.assertEqual(versions[0].contract_date_start, date(2021, 10, 10))
+        self.assertEqual(versions[1].contract_date_start, date(2021, 10, 10))
+        self.assertEqual(versions[2].contract_date_start, date(2021, 10, 10))
+
+    def test_multi_edit_multi_employees_incompatible(self):
+        """
+        Test the multi-edit when there is one version per employee, one with incompatible dates
+        """
+        employee_john, employee_rob = self.env['hr.employee'].create([
+            {
+                'name': 'John Doe',
+                'date_version': '2020-01-01',
+                'contract_date_start': '2020-01-01',
+                'contract_date_end': '2020-10-10'
+            },
+            {
+                'name': 'Rob Carter',
+                'date_version': '2020-10-18',
+                'contract_date_start': '2020-10-18',
+            }
+        ])
+        versions = (employee_john | employee_rob).version_id
+        versions |= employee_john.create_version({
+            'date_version': '2021-08-01',
+            'contract_date_start': '2021-08-01',
+        })
+        with self.assertRaises(ValidationError):
+            versions.write({
+                'contract_date_start': '2021-10-10'
+            })
+
+    def test_hr_version_fields_tracking(self):
+        tracking_blacklist = {
+            "__last_update",
+            "active_employee",
+            "activity_ids",
+            "company_country_id",
+            "contract_wage",
+            "country_code",
+            "create_date",
+            "create_uid",
+            "currency_id",
+            "date_end",
+            "date_start",
+            "display_name",
+            "id",
+            "is_current",
+            "is_flexible",
+            "is_fully_flexible",
+            "is_future",
+            "is_in_contract",
+            "is_past",
+            "job_title",
+            "last_modified_date",
+            "last_modified_on",
+            "last_modified_uid",
+            "member_of_department",
+            "message_follower_ids",
+            "message_ids",
+            "message_partner_ids",
+            "rating_ids",
+            "template_warning",
+            "tz",
+            "website_message_ids",
+            "work_location_name",
+            "work_location_type",
+            "write_date",
+            "write_uid",
+        }
+
+        hr_version_model = self.env['hr.version']
+        fields_without_tracking = []
+
+        for field_name, field in hr_version_model._fields.items():
+            if field_name in tracking_blacklist:
+                continue
+            if field.compute and not field.inverse:
+                continue
+            if field.related:
+                continue
+            if hasattr(field, 'store') and field.store is False:
+                continue
+            if not (hasattr(field, 'tracking') and field.tracking):
+                fields_without_tracking.append(field_name)
+
+        self.assertFalse(
+            fields_without_tracking,
+            f"The following hr.version fields should have tracking=True: {fields_without_tracking}",
+        )

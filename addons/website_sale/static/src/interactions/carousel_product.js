@@ -75,7 +75,6 @@ export class CarouselProduct extends Interaction {
         let indicatorsPositionDiff = (indicatorPosition + (indicatorSize / 2)) - (indicatorsDivSize / 2);
         indicatorsPositionDiff = Math.min(indicatorsPositionDiff, scrollSize - indicatorsDivSize);
         this.updateJustifyContent();
-        this.updateContent();
         const indicatorsPositionX = isVertical ? "0" : "-" + indicatorsPositionDiff;
         const indicatorsPositionY = isVertical ? "-" + indicatorsPositionDiff : "0";
         const translate3D = indicatorsPositionDiff > 0 ? "translate3d(" + indicatorsPositionX + "px," + indicatorsPositionY + "px,0)" : "";
@@ -86,16 +85,14 @@ export class CarouselProduct extends Interaction {
         this.indicatorJustify = "start";
         if (uiUtils.getSize() <= SIZES.MD) {
             const indicatorsDivEl = this.el.querySelector(".carousel-indicators");
-            const indicatorsDivRect = indicatorsDivEl.getBoundingClientRect();
-            const lastIndicatorEl = indicatorsDivEl.children[indicatorsDivEl.children.length - 1];
-            const lastIndicatorRect = lastIndicatorEl.getBoundingClientRect();
-            const lastIndicatorStyle = window.getComputedStyle(lastIndicatorEl);
-            const firstLiEl = indicatorsDivEl.querySelector("li");
-            const firstLiRect = firstLiEl.getBoundingClientRect();
-            if ((lastIndicatorRect.left - indicatorsDivRect.left - parseFloat(lastIndicatorStyle.marginLeft) + firstLiRect.width) < indicatorsDivRect.width) {
+            const firstIndicatorEl = indicatorsDivEl.firstElementChild;
+            const lastIndicatorEl = indicatorsDivEl.lastElementChild;
+            const { left: lastIndicatorLeft } = lastIndicatorEl.getBoundingClientRect();
+            if (lastIndicatorLeft + firstIndicatorEl.offsetWidth < indicatorsDivEl.offsetWidth) {
                 this.indicatorJustify = "center";
             }
         }
+        this.updateContent();
     }
 
     /**

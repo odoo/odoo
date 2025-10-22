@@ -44,19 +44,19 @@
                         </div>
 
                         <div class="pay-button w-100 w-lg-100 mt-2">
-                            <button class="btn btn-lg btn-primary w-100"
+                            <button class="btn btn-lg btn-primary w-100 pay-split-order"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-4 py-2' : 'fs-1 py-4' }}"
                                 t-on-click="paySplittedOrder">
                                 Payment
                             </button>
                             <div class="d-flex gap-2 w-100 mt-2">
-                                <button class="btn btn-lg btn-secondary w-100"
+                                <button class="btn btn-lg btn-secondary w-100 split-order-button"
                                     t-attf-class="{{ this.ui.isSmall ? 'fs-5 py-2' : 'fs-1 py-4' }}"
                                     t-att-disabled="!this.getNumberOfProducts()"
                                     t-on-click="createSplittedOrder">
                                     Split Order
                                 </button>
-                                <button class="btn btn-lg btn-secondary w-100"
+                                <button class="btn btn-lg btn-secondary w-100 transfer-split-order"
                                     t-attf-class="{{ this.ui.isSmall ? 'fs-5 py-2' : 'fs-1 py-4' }}"
                                     t-on-click="transferSplittedOrder">
                                     Transfer

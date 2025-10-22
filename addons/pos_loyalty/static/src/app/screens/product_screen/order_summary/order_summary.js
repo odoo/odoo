@@ -175,9 +175,6 @@ patch(OrderSummary.prototype, {
 
                 await this._updateGiftCardOrderline(code, points);
                 this.currentOrder.processGiftCard(code, points, expirationDate);
-
-                // update indexedDB
-                this.pos.data.debouncedSynchronizeLocalDataInIndexedDB();
             },
         });
     },

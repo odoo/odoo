@@ -66,7 +66,7 @@ class AccountMoveLine(models.Model):
 
         # FIFO
         moves = self._get_stock_moves()
-        return moves._get_average_price_unit()
+        return moves._get_price_unit()
 
     def _get_stock_moves(self):
         return self.env['stock.move']

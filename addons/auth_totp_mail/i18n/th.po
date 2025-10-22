@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:18+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -32,13 +32,21 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
-"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor "
+"authentication to protect your account.<br/><br/>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-style=\"background-color:{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
 "                Activate my two-factor Authentication\n"
 "            </a>\n"
 "        </p>\n"
@@ -52,17 +60,17 @@ msgstr ""
 "        <t t-out=\"user.name  or ''\"/> "
 "ขอให้คุณเปิดใช้งานการตรวจสอบสิทธิ์แบบสองขั้นตอนเพื่อปกป้องบัญชีของคุณ<br/><br/>\n"
 "        การยืนยันตัวตนแบบสองขั้นตอน (\"2FA\") คือระบบการยืนยันตัวตนแบบสองชั้น\n"
-"        ขั้นตอนแรกคือการใช้รหัสผ่านของคุณ และขั้นตอนที่สองคือการใช้รหัสที่คุณได้รับจากแอปมือถื"
-"อเฉพาะ\n"
+"        ขั้นตอนแรกคือการใช้รหัสผ่านของคุณ "
+"และขั้นตอนที่สองคือการใช้รหัสที่คุณได้รับจากแอปมือถือเฉพาะ\n"
 "        ที่ได้รับความนิยมได้แก่ Authy, Google Authenticator หรือ Microsoft "
 "Authenticator\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-style"
-"=\"background-color:{{object.company_id.email_secondary_color or '#875A7B'}};"
-" padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
-"\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
 "                เปิดใช้งานการยืนยันตัวตนแบบสองขั้นตอนของฉัน\n"
 "            </a>\n"
 "        </p>\n"
@@ -83,14 +91,18 @@ msgid ""
 "    <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
 "    <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
 "</ul>\n"
-"<p>If this is you, please enter the following code to complete the login:</p>\n"
+"<p>If this is you, please enter the following code to complete the login:</"
+"p>\n"
 "<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
 "<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
 "<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
 "<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"/>\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
 "</div>\n"
-"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</small>\n"
+"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</"
+"small>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
 "    If you did NOT initiate this log-in,\n"
@@ -98,11 +110,14 @@ msgid ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
-"    We also strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"    We also strongly recommend enabling the two-factor authentication using "
+"an authenticator app to help secure your account.\n"
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
 "        Activate my two-factor authentication\n"
 "    </a>\n"
 "</p>\n"
@@ -136,9 +151,7 @@ msgstr ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
-"    "
-"เราขอแนะนำอย่างยิ่งให้เปิดใช้การตรวจสอบสิทธิ์แบบสองปัจจัยโดยใช้แอปพลิเคชันการตรวจสอบสิทธิ์เพื่อช่"
-"วยรักษาความปลอดภัยของบัญชีของคุณ\n"
+"    เราขอแนะนำอย่างยิ่งให้เปิดใช้การตรวจสอบสิทธิ์แบบสองปัจจัยโดยใช้แอปพลิเคชันการตรวจสอบสิทธิ์เพื่อช่วยรักษาความปลอดภัยของบัญชีของคุณ\n"
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -155,10 +168,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
-"                To login, enter below the six-digit authentication code just sent via email to"
+"                To login, enter below the six-digit authentication code just "
+"sent via email to"
 msgstr ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                หากต้องการเข้าสู่ระบบ ให้ป้อนโค้ดยืนยันตัวตน 6 หลักด้านล่างและส่งทางอีเมลไปที่"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
@@ -179,12 +201,6 @@ msgid ""
 msgstr "อุปกรณ์ที่เชื่อถือได้ถูกลบออกจากบัญชีของคุณแล้ว:%(device_names)s"
 
 #. module: auth_totp_mail
-#. odoo-python
-#: code:addons/auth_totp_mail/models/res_users.py:0
-msgid "Account Security"
-msgstr "ความปลอดภัยของบัญชี"
-
-#. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
 msgid "All users"
 msgstr "ผู้ใช้ทั้งหมด"
@@ -199,6 +215,11 @@ msgstr "อุปกรณ์ตรวจสอบสิทธิ์"
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
 msgstr "ไม่สามารถส่งอีเมล: ผู้ใช้ %s ไม่มีที่อยู่อีเมล"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Click to enable 2FA."
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_config_settings
@@ -216,6 +237,11 @@ msgstr "แสดงชื่อ"
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
 msgstr "พนักงานเท่านั้น"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Enable 2FA"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
@@ -242,8 +268,7 @@ msgstr "ไอดี"
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr ""
-"คำเชิญให้เปิดใช้งานการรับรองความถูกต้องแบบ two-factor ในบัญชี Odoo ของคุณ"
+msgstr "คำเชิญให้เปิดใช้งานการรับรองความถูกต้องแบบ two-factor ในบัญชี Odoo ของคุณ"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -251,8 +276,7 @@ msgstr ""
 msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
-msgstr ""
-"คำเชิญให้ใช้การรับรองความถูกต้องแบบ two-factor ที่ส่งถึงผู้ใช้ต่อไปนี้:%s"
+msgstr "คำเชิญให้ใช้การรับรองความถูกต้องแบบ two-factor ที่ส่งถึงผู้ใช้ต่อไปนี้:%s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
@@ -270,11 +294,6 @@ msgid "Learn More"
 msgstr "เรียนรู้เพิ่มเติม"
 
 #. module: auth_totp_mail
-#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
-msgid "Name"
-msgstr "ชื่อ"
-
-#. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "New Connection to your Account"
@@ -289,6 +308,12 @@ msgstr "เปิดการกำหนดค่าการรับรอง
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Re-send email"
 msgstr "ส่งอีเมลอีกครั้ง"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security"
+msgstr ""
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -317,6 +342,11 @@ msgstr "การตั้งค่า: คำเชิญ 2Fa"
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
 msgstr "การตั้งค่า: 2Fa เข้าสู่ระบบใหม่"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Two-factor Authentication"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
@@ -349,7 +379,8 @@ msgstr "การยืนยันล้มเหลว โปรดตรว�
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
-"We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"We strongly recommend enabling the two-factor authentication using an "
+"authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
 "เราขอแนะนำอย่างยิ่งให้เปิดใช้งานการรับรองแบบ two-factor "
@@ -365,3 +396,9 @@ msgstr "โค้ดการรับรองความถูกต้อง
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "activating Two-factor Authentication"
 msgstr "การเปิดใช้งานการรับรองความถูกต้องด้วย Two-factor"
+
+#~ msgid "Account Security"
+#~ msgstr "ความปลอดภัยของบัญชี"
+
+#~ msgid "Name"
+#~ msgstr "ชื่อ"

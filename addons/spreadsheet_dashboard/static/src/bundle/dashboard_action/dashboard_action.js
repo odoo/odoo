@@ -11,6 +11,7 @@ import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/sha
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
@@ -74,6 +75,7 @@ export class SpreadsheetDashboardAction extends Component {
         useSpreadsheetPrint(() => this.loader.getActiveDashboard()?.model);
         /** @type {{ sidebarExpanded: boolean}} */
         this.state = useState({ sidebarExpanded: true });
+        this.searchBarToggler = useSearchBarToggler();
     }
 
     get dashboardButton() {
@@ -84,7 +86,9 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {number | undefined}
      */
     get activeDashboardId() {
-        return this.loader.getActiveDashboard() ? this.loader.getActiveDashboard().data.id : undefined;
+        return this.loader.getActiveDashboard()
+            ? this.loader.getActiveDashboard().data.id
+            : undefined;
     }
 
     /**

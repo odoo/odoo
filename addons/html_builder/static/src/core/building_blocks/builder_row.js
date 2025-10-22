@@ -1,6 +1,7 @@
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
+import { useService } from "@web/core/utils/hooks";
 import {
     basicContainerBuilderComponentProps,
     useApplyVisibility,
@@ -22,6 +23,7 @@ export class BuilderRow extends Component {
         initialExpandAnim: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
         observeCollapseContent: { type: Boolean, optional: true },
+        disabled: { type: Boolean, optional: true },
     };
     static defaultProps = { expand: false, observeCollapseContent: false };
 
@@ -31,8 +33,8 @@ export class BuilderRow extends Component {
 
         this.state = useState({
             expanded: this.props.expand,
-            tooltip: this.props.tooltip,
         });
+        this.hasTooltip = this.props.tooltip ? true : undefined;
 
         if (this.props.slots.collapse) {
             useVisibilityObserver("collapse-content", useApplyVisibility("collapse"));
@@ -50,10 +52,6 @@ export class BuilderRow extends Component {
                     this.toggleCollapseContent();
                 }, 150);
             }
-            const labelEl = this.labelRef.el;
-            if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
-                this.state.tooltip = this.props.label;
-            }
         });
 
         this.transition = useTransition({
@@ -67,7 +65,9 @@ export class BuilderRow extends Component {
                 const isFirstMount = !isMounted;
                 isMounted = true;
                 const contentEl = this.collapseContentRef.el;
-                if (!contentEl) return;
+                if (!contentEl) {
+                    return;
+                }
 
                 const setHeightAuto = () => {
                     contentEl.style.height = "auto";
@@ -82,7 +82,7 @@ export class BuilderRow extends Component {
                 switch (stage) {
                     case "enter-active": {
                         contentEl.style.height = contentEl.scrollHeight + "px";
-                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true});
+                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true });
                         break;
                     }
                     case "leave": {
@@ -96,6 +96,7 @@ export class BuilderRow extends Component {
             },
             () => [this.transition.stage]
         );
+        this.tooltip = useService("tooltip");
     }
 
     getLevelClass() {
@@ -114,5 +115,22 @@ export class BuilderRow extends Component {
     get collapseContentClass() {
         const isNotVisible = this.props.observeCollapseContent && !this.transition.shouldMount;
         return `${this.transition.className} ${isNotVisible ? "d-none" : ""}`;
+    }
+
+    openTooltip() {
+        if (this.hasTooltip === undefined) {
+            const labelEl = this.labelRef.el;
+            this.hasTooltip = labelEl && labelEl.clientWidth < labelEl.scrollWidth;
+        }
+        if (this.hasTooltip) {
+            const tooltip = this.props.tooltip || this.props.label;
+            this.removeTooltip = this.tooltip.add(this.labelRef.el, { tooltip });
+        }
+    }
+
+    closeTooltip() {
+        if (this.removeTooltip) {
+            this.removeTooltip();
+        }
     }
 }

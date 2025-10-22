@@ -239,6 +239,9 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 
     function refreshCurrentItem() {
+        if (env.editor.isDestroyed) {
+            return;
+        }
         let currentItem;
         let itemPriority = 0;
         for (const selectableItem of selectableItems) {

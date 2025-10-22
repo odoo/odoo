@@ -1440,7 +1440,10 @@ test("onchange for embedded one2many with handle widget (more records)", async (
     await contains('.o_list_renderer div[name="turtle_foo"] input').edit("blurp");
 
     // Drag and drop the third line in second position
-    await contains("tbody tr:eq(2) .o_handle_cell").dragAndDrop("tbody tr:eq(1)");
+    // TODO JUM: PRHOOT the events
+    const { drop, moveTo } = await contains("tbody tr:eq(2) .o_handle_cell").drag();
+    await moveTo(`tbody tr:eq(1)`);
+    await drop(document.body);
 
     // need to unselect row...
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blurp", "kawa", "blip"]);
@@ -8489,7 +8492,10 @@ test("one2many with sequence field and text field", async () => {
 
     expect(".ui-sortable-handle").toHaveCount(3);
 
-    await contains("tbody tr:eq(1) .o_handle_cell").dragAndDrop("tbody tr:eq(0)");
+    // TODO JUM: PRHOOT the events
+    const { drop, moveTo } = await contains("tbody tr:eq(1) .o_handle_cell").drag();
+    await moveTo("tbody tr:eq(0)");
+    await drop(document.body);
 
     // empty line has been discarded on the drag and drop)
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([inputText2, inputText1]);

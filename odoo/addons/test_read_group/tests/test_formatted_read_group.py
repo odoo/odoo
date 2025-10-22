@@ -2099,6 +2099,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                 "total_in_related_stored_currency_id": 1.00,  # 1 Db (no active currency)
             },
         ])
+        cls.env['res.currency.rate'].search([]).unlink()  # Avoid demo mess up tests
 
     def test_monetary_fields_agg_in_fields_get(self):
         field_infos = self.MonetaryAgg.fields_get()

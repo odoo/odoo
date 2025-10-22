@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:06+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 17:26+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -36,10 +36,12 @@ msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
-msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title="
-"\"Shares\"/>"
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -203,8 +205,8 @@ msgstr "Campanha de cartões"
 #: code:addons/marketing_card/models/mailing_mailing.py:0
 msgid "Card Campaign Mailing should target model %(model_name)s"
 msgstr ""
-"A comunicação da campanha de cartões deve ter como alvo o modelo "
-"%(model_name)s"
+"A comunicação da campanha de cartões deve ter como alvo o modelo %"
+"(model_name)s"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_click_count
@@ -220,6 +222,12 @@ msgstr "Total de cartões"
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Card Layout"
 msgstr "Layout do cartão"
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Card Preview"
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_requires_sync_count
@@ -319,6 +327,7 @@ msgstr "Design"
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__display_name
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_utm_source__display_name
@@ -356,11 +365,6 @@ msgid "Email composition wizard"
 msgstr "Assistente de composição de e-mail"
 
 #. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
-msgid "Filter By"
-msgstr "Filtrar por"
-
-#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
 msgid "Followers"
 msgstr "Seguidores"
@@ -379,12 +383,6 @@ msgstr "Ícone do Font Awesome. Ex.: fa-tasks"
 #: model:card.template,name:marketing_card.card_template_geometric
 msgid "Geometric"
 msgstr "Geométrico"
-
-#. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
-msgid "Group By"
-msgstr "Agrupar por"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__has_message
@@ -409,14 +407,27 @@ msgstr "Caminho do cabeçalho"
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Hello everyone"
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Help us share the news"
 msgstr "Ajude-nos a compartilhar as notícias"
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Here's the link to advertise your participation."
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__id
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__id
 #: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__id
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__id
 #: model:ir.model.fields,field_description:marketing_card.field_utm_source__id
@@ -541,6 +552,12 @@ msgid "Mailing Count"
 msgstr "Total de comunicações"
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Many thanks"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
 #: model:ir.ui.menu,name:marketing_card.card_menu
 #: model:ir.ui.menu,name:marketing_card.marketing_card_menu_technical
@@ -602,6 +619,11 @@ msgid ""
 msgstr ""
 "O modelo de campanha %(campaign)s não pode ser alterado, pois já possui "
 "cartões"
+
+#. module: marketing_card
+#: model:ir.model,name:marketing_card.model_ir_model
+msgid "Models"
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__my_activity_date_deadline
@@ -679,14 +701,10 @@ msgstr "Odoo"
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"email. If not set, the main partner's language will be used. This should "
+"usually be a placeholder expression that provides the appropriate language, "
+"e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"Idioma opcional de tradução (código ISO) para selecionar ao enviar um e-"
-"mail. Se não for definido, a versão inglês será usada. Isso geralmente deve "
-"ser uma expressão marcadora de posição que fornece o idioma apropriado, por "
-"exemplo, {{ object.partner_id.lang }}."
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic
@@ -1043,6 +1061,12 @@ msgid "Your Home Page"
 msgstr "Sua página inicial"
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Your help with this promotion would be greatly appreciated!"
+msgstr ""
+
+#. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_2
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_3
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
@@ -1094,3 +1118,20 @@ msgstr "ex.: Exemplo de palestra"
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Why people should share on their network?"
 msgstr "ex.: Por que as pessoas devem compartilhar em sua rede?"
+
+#~ msgid "Filter By"
+#~ msgstr "Filtrar por"
+
+#~ msgid "Group By"
+#~ msgstr "Agrupar por"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually "
+#~ "be a placeholder expression that provides the appropriate language, e.g. "
+#~ "{{ object.partner_id.lang }}."
+#~ msgstr ""
+#~ "Idioma opcional de tradução (código ISO) para selecionar ao enviar um e-"
+#~ "mail. Se não for definido, a versão inglês será usada. Isso geralmente "
+#~ "deve ser uma expressão marcadora de posição que fornece o idioma "
+#~ "apropriado, por exemplo, {{ object.partner_id.lang }}."

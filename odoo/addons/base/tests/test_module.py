@@ -94,7 +94,7 @@ class TestModuleManifest(BaseCase):
             file.write(str({'name': f'Temp {self.module_name}'}))
         with self.assertLogs('odoo.modules.module', 'WARNING') as capture:
             manifest = Manifest.for_addon(self.module_name)
-            manifest.manifest_cached
+            manifest.raw_value('')  # parse the manifest
         self.assertEqual(manifest['license'], 'LGPL-3')
         self.assertEqual(manifest['author'], '')
         self.assertIn("Missing `author` key", capture.output[0])

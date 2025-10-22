@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:30+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -132,11 +132,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
-msgid "Adjustment Account"
 msgstr ""
 
 #. module: stock_account
@@ -282,6 +277,11 @@ msgid "Cost Method"
 msgstr "成本计算方法"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Cost of Production"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
 msgstr "成本方法"
@@ -418,6 +418,11 @@ msgid "Everything is correctly closed"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
+msgid "Expense Account"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__fifo
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__fifo
@@ -491,6 +496,12 @@ msgid "Initial Balance"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Invalid search on valuation"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
 msgid "Inventory Adjustment Reference / Reason"
 msgstr ""
@@ -520,6 +531,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 msgid "Inventory Valuation"
 msgstr "库存估值"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Inventory Variation"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -632,7 +648,7 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "None"
+msgid "None (only useful for continental)"
 msgstr ""
 
 #. module: stock_account
@@ -659,6 +675,19 @@ msgstr ""
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "拣货类型"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid "Please set the Journal for Inventory Valuation in the settings."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"Please set the Valuation Account for Inventory Valuation in the settings."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
@@ -900,6 +929,7 @@ msgstr "总计剩余价值"
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_value
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__total_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_view_list_at_date
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
 msgstr "总价值"
@@ -919,7 +949,9 @@ msgstr "触发相关销售订单/采购订单中已交货/已收货数量的减�
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_view_list_at_date
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_avco_report_view_list
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Unit Cost"
 msgstr "单位成本"
 
@@ -1031,7 +1063,8 @@ msgstr "在产品上启用自动库存估值后，此账户将保留产品的当
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "在进行自动库存估值时，这是会计日记账，其中处理库存凭证时将自动过账条目。"
+msgstr ""
+"在进行自动库存估值时，这是会计日记账，其中处理库存凭证时将自动过账条目。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id

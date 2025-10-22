@@ -6,7 +6,7 @@
             <Transition t-if="!env.isSmall" visible="state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
                 <div class="o_embedded_actions overflow-hidden d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
                     <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
-                        <t t-if="_checkValueLocalStorage(action)">
+                        <t t-if="_isEmbeddedActionVisible(action)">
                             <button class="btn btn-secondary o_draggable"
                                     t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id}"
                                     t-on-click="() => this.onEmbeddedActionClick(action)"

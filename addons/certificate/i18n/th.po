@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:36+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/certificate/"
@@ -218,6 +218,12 @@ msgid "Make sure to use a private key to sign documents."
 msgstr "อย่าลืมใช้คีย์ส่วนตัวในการลงนามเอกสาร"
 
 #. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a public key to verify the signature of documents."
+msgstr ""
+
+#. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
 msgstr ""
@@ -338,21 +344,13 @@ msgid "The certificate and public key are not compatible."
 msgstr "ใบรับรองและคีย์สาธารณะไม่เข้ากัน"
 
 #. module: certificate
-#. odoo-python
-#: code:addons/certificate/models/certificate.py:0
-msgid ""
-"The certificate subject field contains invalid characters. Make sure all "
-"characters are unicode valid."
-msgstr ""
-
-#. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
-msgid "The date on which the certificate expires (UTC)"
+msgid "The date on which the certificate expires"
 msgstr ""
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
-msgid "The date on which the certificate starts to be valid (UTC)"
+msgid "The date on which the certificate starts to be valid"
 msgstr ""
 
 #. module: certificate
@@ -418,8 +416,7 @@ msgstr "ไม่สามารถโหลดคีย์นี้ได้ �
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "decryption: RSA."
-msgstr ""
-"อัลกอริทึมการเข้ารหัสแบบไม่สมมาตรที่ไม่รองรับ '%s' ปัจจุบันรองรับการถอดรหัส: RSA"
+msgstr "อัลกอริทึมการเข้ารหัสแบบไม่สมมาตรที่ไม่รองรับ '%s' ปัจจุบันรองรับการถอดรหัส: RSA"
 
 #. module: certificate
 #. odoo-python
@@ -427,23 +424,31 @@ msgstr ""
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "signature: EC and RSA."
-msgstr ""
-"อัลกอริทึมการเข้ารหัสแบบไม่สมมาตรที่ไม่รองรับ '%s' ปัจจุบันรองรับลายเซ็น: EC และ RSA"
+msgstr "อัลกอริทึมการเข้ารหัสแบบไม่สมมาตรที่ไม่รองรับ '%s' ปัจจุบันรองรับลายเซ็น: EC และ RSA"
 
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: ED25519, EC and RSA."
 msgstr ""
-"อัลกอริทึมการเข้ารหัสแบบไม่สมมาตรที่ไม่รองรับ '%s' ปัจจุบันรองรับ: EC, RSA"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
+msgstr "อัลกอริทึมการเข้ารหัสแบบไม่สมมาตรที่ไม่รองรับ '%s' ปัจจุบันรองรับ: EC, RSA"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
 "ใช้ในการตั้งค่าคีย์สาธารณะในกรณีที่คีย์ที่มีอยู่ในใบรับรองนั้นผิดพลาด\n"

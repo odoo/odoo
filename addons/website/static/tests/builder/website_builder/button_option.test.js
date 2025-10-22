@@ -2,10 +2,9 @@ import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
-    getDragHelper,
     setupWebsiteBuilder,
-    waitForEndOfOperation,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
+import { getDragHelper, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 

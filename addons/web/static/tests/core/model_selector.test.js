@@ -11,12 +11,18 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { ModelSelector } from "@web/core/model_selector/model_selector";
 
-async function mountModelSelector(models = [], value = undefined, onModelSelected = () => {}) {
+async function mountModelSelector(
+    models = [],
+    value = undefined,
+    onModelSelected = () => {},
+    nbVisibleModels = undefined
+) {
     await mountWithCleanup(ModelSelector, {
         props: {
             models,
             value,
             onModelSelected,
+            nbVisibleModels,
         },
     });
 }
@@ -69,7 +75,19 @@ test("model_selector: displays model display names", async () => {
     expect(items[2]).toHaveText("Model 3");
 });
 
-test("model_selector: with 8 models", async () => {
+test("model_selector: with 8 models, showing 5", async () => {
+    await mountModelSelector(
+        ["model.1", "model.2", "model.3", "model.4", "model.5", "model.6", "model.7", "model.8"],
+        undefined,
+        undefined,
+        5
+    );
+    await contains(".o-autocomplete--input").click();
+    expect("li.o-autocomplete--dropdown-item").toHaveCount(6);
+    expect("li.o-autocomplete--dropdown-item:eq(5)").toHaveText("Start typing...");
+});
+
+test("model_selector: with 8 models, showing 8", async () => {
     await mountModelSelector([
         "model.1",
         "model.2",
@@ -84,7 +102,7 @@ test("model_selector: with 8 models", async () => {
     expect("li.o-autocomplete--dropdown-item").toHaveCount(8);
 });
 
-test("model_selector: with more than 8 models", async () => {
+test("model_selector: with more than 8 models, showing 8", async () => {
     await mountModelSelector([
         "model.1",
         "model.2",
@@ -100,6 +118,52 @@ test("model_selector: with more than 8 models", async () => {
     await contains(".o-autocomplete--input").click();
     expect("li.o-autocomplete--dropdown-item").toHaveCount(9);
     expect("li.o-autocomplete--dropdown-item:eq(8)").toHaveText("Start typing...");
+});
+
+test("model_selector: with more than 8 models, showing 9", async () => {
+    await mountModelSelector(
+        [
+            "model.1",
+            "model.2",
+            "model.3",
+            "model.4",
+            "model.5",
+            "model.6",
+            "model.7",
+            "model.8",
+            "model.9",
+            "model.10",
+        ],
+        undefined,
+        undefined,
+        9
+    );
+    await contains(".o-autocomplete--input").click();
+    expect("li.o-autocomplete--dropdown-item").toHaveCount(10);
+    expect("li.o-autocomplete--dropdown-item:eq(9)").toHaveText("Start typing...");
+});
+
+test("model_selector: with more than 8 models, showing all", async () => {
+    await mountModelSelector(
+        [
+            "model.1",
+            "model.2",
+            "model.3",
+            "model.4",
+            "model.5",
+            "model.6",
+            "model.7",
+            "model.8",
+            "model.9",
+            "model.10",
+        ],
+        undefined,
+        undefined,
+        10
+    );
+    await contains(".o-autocomplete--input").click();
+    expect("li.o-autocomplete--dropdown-item").toHaveCount(10);
+    expect("li.o-autocomplete--dropdown-item:eq(9)").toHaveText("Model 10");
 });
 
 test("model_selector: search content is not applied when opening the autocomplete", async () => {

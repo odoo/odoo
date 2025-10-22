@@ -55,7 +55,8 @@
                                     </group>
                                     <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
-                                        <field name="amount_currency"/>
+                                        <field name="display_type" invisible="1"/>
+                                        <field name="amount_currency" readonly="display_type != 'tax' or parent_state != 'draft'"/>
                                     </group>
                                     <group string="Product" invisible="not product_id">
                                         <field name="product_id" readonly="1"/>
@@ -475,7 +476,7 @@
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
                     <field name="date" readonly="state in ['cancel', 'posted']"/>
-                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field_to_check" placeholder="/"/>
+                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field_to_check" placeholder="/" readonly="state != 'draft'"/>
                     <field name="checked" column_invisible="True" groups="account.group_account_user"/> <!-- To be used for Reviewed badge display, see char_with_placeholder_field_to_check -->
                     <field name="partner_id" optional="show" readonly="state != 'draft'"/>
                     <field name="ref" optional="show"/>
@@ -843,7 +844,7 @@
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    invisible="not matched_payment_ids">
+                                    invisible="not payment_count">
                                     <field name="payment_count" string="Payments" widget="statinfo"/>
                             </button>
                             <button name="open_reconcile_view"

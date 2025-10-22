@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
-import { qrCodeSrc } from "@point_of_sale/utils";
+import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 import { CopyButton } from "@web/core/copy_button/copy_button";
 
 export class QrCodeCustomerDisplay extends Component {
@@ -9,6 +9,6 @@ export class QrCodeCustomerDisplay extends Component {
     static props = ["close", "customerDisplayURL"];
 
     getQrCode() {
-        return qrCodeSrc(this.props.customerDisplayURL);
+        return generateQRCodeDataUrl(this.props.customerDisplayURL);
     }
 }

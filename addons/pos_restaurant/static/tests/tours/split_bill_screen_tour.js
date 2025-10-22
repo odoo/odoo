@@ -80,6 +80,29 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SplitBillScreenTourPay", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Split pay by selecting products
+            FloorScreen.clickTable("4"),
+            ProductScreen.addOrderline("Water"),
+            ProductScreen.addOrderline("Minute Maid"),
+            ProductScreen.clickControlButton("Split"),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickContinueOrder(),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("SplitBillScreenTour2", {
     steps: () =>
         [
@@ -137,7 +160,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
@@ -146,7 +168,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             // Check if there is no more order to continue
             ReceiptScreen.clickNextOrder(),
         ].flat(),
@@ -202,7 +223,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ...ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
@@ -244,7 +264,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
 
             // Add products in order
@@ -262,7 +281,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickContinueOrder(),
 
             // Check if redirect to split bill screen of original order
@@ -271,7 +289,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

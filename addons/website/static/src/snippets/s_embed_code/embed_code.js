@@ -20,6 +20,4 @@ export class EmbedCode extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.embed_code", EmbedCode);
+registry.category("public.interactions").add("website.embed_code", EmbedCode);

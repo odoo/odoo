@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -354,35 +355,14 @@ class TestDevice(TestHttpBase):
                 'session_identifier': odoo.http.root.session_store.generate_key(),
                 'user_id': session.uid,
                 'revoked': False,
+                'first_activity': datetime.now(),
+                'last_activity': datetime.now(),
             })
 
-    def test_filesystem_reflexion_user(self):
+    def test_filesystem_reflexion(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self._create_device_log_for_user(session, 10)
-        session = self.authenticate(self.user_internal.login, self.user_internal.login)
-        self._create_device_log_for_user(session, 10)
-
-        devices, logs = self.get_devices_logs(self.user_internal)
-        self.assertEqual(len(devices), 10)
-        self.assertEqual(len(logs), 10)
-        self.assertEqual(len(self.user_internal.device_ids), 10)
-
-        self.DeviceLog.with_user(self.user_internal)._ResDeviceLog__update_revoked()
-        self.DeviceLog.flush_model()  # Because write on ``res.device.log`` and so we have new values in cache
-        self.Device.invalidate_model()  # Because it depends on the ``res.device.log`` model (updated in database)
-
-        devices, _ = self.get_devices_logs(self.user_internal)
-        self.assertEqual(len(devices), 0)  # No file exist on the filesystem (``revoked`` equals to ``False``)
-        self.assertEqual(len(self.user_internal.device_ids), 0)
-
-        # Admin device logs are not updated
-        devices, _ = self.get_devices_logs(self.user_admin)
-        self.assertEqual(len(devices), 10)
-        self.assertEqual(len(self.user_admin.device_ids), 10)
-
-    def test_filesystem_reflexion_admin(self):
-        session = self.authenticate(self.user_admin.login, self.user_admin.login)
-        self._create_device_log_for_user(session, 10)
+        with freeze_time('2025-01-01 08:00:00'):
+            self._create_device_log_for_user(session, 10)
 
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 10)
@@ -390,20 +370,22 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(self.user_admin.device_ids), 10)
 
         session = self.authenticate(self.user_internal.login, self.user_internal.login)
-        self._create_device_log_for_user(session, 10)
+        with freeze_time('2025-01-01 08:00:00'):
+            self._create_device_log_for_user(session, 10)
 
         devices, logs = self.get_devices_logs(self.user_internal)
         self.assertEqual(len(devices), 10)
         self.assertEqual(len(logs), 10)
         self.assertEqual(len(self.user_internal.device_ids), 10)
 
-        # Admin can update all device logs
-        self.DeviceLog.with_user(self.user_admin)._ResDeviceLog__update_revoked()
-        self.DeviceLog.flush_model()
-        self.Device.invalidate_model()
+        # Update all device logs
+        with freeze_time('2025-02-01 08:00:00'), patch.object(self.cr, 'commit', lambda: ...):
+            self.DeviceLog.sudo()._ResDeviceLog__update_revoked()
+        self.DeviceLog.flush_model()  # Because write on ``res.device.log`` and so we have new values in cache
+        self.Device.invalidate_model()  # Because it depends on the ``res.device.log`` model (updated in database)
 
         devices, _ = self.get_devices_logs(self.user_admin)
-        self.assertEqual(len(devices), 0)
+        self.assertEqual(len(devices), 0)  # No file exist on the filesystem (``revoked`` equals to ``True``)
         self.assertEqual(len(self.user_admin.device_ids), 0)
 
         devices, _ = self.get_devices_logs(self.user_internal)

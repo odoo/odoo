@@ -6,15 +6,16 @@
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2025-09-14 08:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-10-21 05:28+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/nl/>\n"
 "Language: nl\n"
@@ -124,7 +125,7 @@ msgstr "%(vatLabel)s: %(vatId)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "%s almost runs out of paper."
-msgstr ""
+msgstr "%s heeft bijna geen papier meer."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -321,27 +322,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Beste <t t-out="
-"\"client_name\">Klantnaam</t>,</t>\n"
+"                        <t t-if=\"client_name\">Beste <t t-"
+"out=\"client_name\">Klantnaam</t>,</t>\n"
 "                        <t t-else=\"\">Beste,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Bedankt voor je aankoop bij <t t-out=\"store_name\""
-">Winkelnaam</t>!</div>\n"
+"                    <div>Bedankt voor je aankoop bij <t t-"
+"out=\"store_name\">Winkelnaam</t>!</div>\n"
 "                    <div>In de bijlage vind je je kassabon voor de aankoop "
 "op <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">datum</t> om <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">tijd</t>.</span>\n"
+"time_format='short',                          lang_code=lg)\">tijd</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Met vriendelijke groeten,</div>\n"
@@ -372,9 +373,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %(is_invoiced)"
-"svoor             %(pos_name)s voor een bedrag van %(amount)s bij "
-"%(company_name)s. </p>"
+"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %"
+"(is_invoiced)svoor             %(pos_name)s voor een bedrag van %(amount)s "
+"bij %(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -404,8 +405,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"Deze instelling geldt voor alle kassa's.\" pos-data-toggle="
-"\"tooltip\"/>"
+"title=\"Deze instelling geldt voor alle kassa's.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -428,9 +429,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
-"<span invisible=\"not is_return or pricelist_id\" class="
-"\"oe_inline ps-2 text-info\">Tip: voeg een retourprijslijst toe (bijv. € "
-"0)</span>"
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Tip: voeg een retourprijslijst toe (bijv. € 0)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1364,7 +1364,7 @@ msgstr "Naam van de achtergrondafbeelding"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "Badge ID"
-msgstr "Badge ID"
+msgstr "Badge-ID"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_bagel_product_template
@@ -1595,6 +1595,12 @@ msgstr "Annuleer betaalaanvraag"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Cancelled"
 msgstr "Geannuleerd"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Cannot edit orderline"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3195,7 +3201,7 @@ msgstr "Kortingen"
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4257,8 +4263,8 @@ msgstr "Factuurstatus"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
-"Factuurbetaling van %(order)s (%(account_move)s) aan de hand van "
-"%(payment_method)s"
+"Factuurbetaling van %(order)s (%(account_move)s) aan de hand van %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -4569,7 +4575,7 @@ msgid ""
 "Overrides the company's receivable account (for Point of Sale) used in the "
 "journal entries."
 msgstr ""
-"Laat leeg om het standaardrekening uit de bedrijfsinstelling te gebruiken.\n"
+"Laat leeg om de standaardrekening uit de bedrijfsinstelling te gebruiken.\n"
 "Overschrijft de debiteurenrekening van het bedrijf (voor kassa) die wordt "
 "gebruikt in de boekingen."
 
@@ -4598,7 +4604,7 @@ msgstr ""
 "standaardrekening in het dagboek.\n"
 "Voor bankboek schrijven we naar de openstaande rekening die is opgegeven in "
 "deze betaalmethode.\n"
-"Alleen kas en bankdagboeken zijn toegestaan."
+"Alleen kas- en bankdagboeken zijn toegestaan."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -4699,7 +4705,9 @@ msgstr "Laden..."
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__epson_printer_ip
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_epson_printer_ip
-msgid "Local IP address of an Epson receipt printer."
+msgid ""
+"Local IP address of an Epson receipt printer, or its serial number if the "
+"'Automatic Certificate Update' option is enabled in the printer settings."
 msgstr ""
 
 #. module: point_of_sale
@@ -5175,9 +5183,8 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu, "
 "and install one from the Invoicing tab."
 msgstr ""
-"Geen grootboekschema geconfigureerd, ga naar het menu "
-"\"configuratie / instellingen\" en installeer er een via het Facturatie-"
-"tabblad."
+"Geen grootboekschema geconfigureerd, ga naar het menu \"configuratie / "
+"instellingen\" en installeer er een via het Facturatie-tabblad."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5463,7 +5470,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr "Enkel beheerders kunnen de kopteksten en voetnota's van bonnen wijzigen"
+msgstr ""
+"Enkel beheerders kunnen de kopteksten en voetnota's van bonnen wijzigen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -8228,6 +8236,12 @@ msgid "Some Serial/Lot Numbers are missing"
 msgstr "Sommige serie-/partijnummers ontbreken"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -8349,6 +8363,12 @@ msgstr "Voorraadregel"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "Voorraad moet bijgewerkt worden bij afsluiten"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Stock variation for %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8648,14 +8668,14 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"De Kassa ondersteunt alleen de afrondingsstrategie "
-"\"voeg een afrondingsregel toe\"."
+"De Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
+"afrondingsregel toe\"."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
-msgid "The Ticket Number should be at least 14 characters long."
-msgstr "Het ticketnummer moet minstens 14 karakters lang zijn."
+msgid "The Ticket Number should be at least 12 characters long."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8690,6 +8710,12 @@ msgid ""
 msgstr ""
 "De strategie voor het afronden van contact geld van de kassa %(pos)s moet "
 "zijn: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "The company must have a fiscal country set."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9359,8 +9385,8 @@ msgid ""
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
 "Dit dagboek is gekoppeld aan betaalmethode %(payment_method)s die wordt "
-"gebruikt door bestelling %(pos_order)s in de actieve Kassasessie "
-"%(pos_session)s."
+"gebruikt door bestelling %(pos_order)s in de actieve Kassasessie %"
+"(pos_session)s."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9402,6 +9428,13 @@ msgid ""
 msgstr ""
 "Deze order is nog niet gesynchroniseerd met de server. Zorg ervoor dat het "
 "is gesynchroniseerd en probeer het opnieuw."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid ""
+"This orderline has already been sent to the kitchen and cannot be edited."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10040,9 +10073,7 @@ msgid "Warehouse (PoS)"
 msgstr "Magazijn (Kassa)"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Warning"
@@ -10322,12 +10353,6 @@ msgstr "Je kunt een betaling voor een geplaatste order niet bewerken."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr "Je kunt orders van verschillende bedrijven niet factureren."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -10529,7 +10554,6 @@ msgstr "bijv. 1234567890"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "e.g. Cash"
 msgstr "bijv. Contant geld"
 
@@ -10542,6 +10566,11 @@ msgstr "bijv. Cheeseburger"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "e.g. Company Address, Website"
 msgstr "Bijv. Bedrijfsadres, website"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "e.g. Dine in"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -10716,6 +10745,12 @@ msgstr "om de knoppen te activeren."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "gebruikende"
+
+#~ msgid "The Ticket Number should be at least 14 characters long."
+#~ msgstr "Het ticketnummer moet minstens 14 karakters lang zijn."
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr "Je kunt orders van verschillende bedrijven niet factureren."
 
 #~ msgid " REFUND"
 #~ msgstr " GERETOURNEERD"

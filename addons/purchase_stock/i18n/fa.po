@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -135,12 +135,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
 msgid "Action"
 msgstr "عمل"
-
-#. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
-msgid "Activate"
-msgstr ""
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -330,6 +324,7 @@ msgstr "نوع مکان مقصد"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_route__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__display_name
@@ -480,6 +475,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_route__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__id
@@ -500,6 +496,11 @@ msgstr "محموله ی در حال آمدن"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_route
+msgid "Inventory Routes"
 msgstr ""
 
 #. module: purchase_stock
@@ -816,8 +817,8 @@ msgstr "از فروشندگان بخواهید که به مشتری‌ها تح�
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
-msgid "Requests for quotation"
-msgstr "درخواست استعلام قیمت"
+msgid "Requests for quotation :"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -962,14 +963,6 @@ msgstr "فیلد فنی مورد استفاده برای نمایش آدرس د�
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/product.py:0
-msgid ""
-"The 'Buy' route cannot be assigned to a product that is not purchasable. "
-"Enable 'Can be Purchased' boolean to use this route."
-msgstr ""
-
-#. module: purchase_stock
-#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 msgid "The following replenishment order has been generated"
 msgstr ""
@@ -1035,6 +1028,12 @@ msgstr ""
 "ارسال می‌شود، پس از تأیید سفارش فروش، درخواست خرید برای استعلام قیمت ایجاد "
 "می‌کند. این یک جریان بر اساس تقاضا است. آدرس تحویل درخواستی آدرس تحویل مشتری "
 "خواهد بود و نه انبار شما."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/product.py:0
+msgid "This product has the \"Buy\" route checked but is not purchasable."
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -1142,6 +1141,12 @@ msgid "Warehouse"
 msgstr "انبار"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/product.py:0
+msgid "Warning!"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__3
 msgid "Wednesday"
 msgstr ""
@@ -1198,6 +1203,9 @@ msgstr "سفارش داده شده به جای"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr ""
+
+#~ msgid "Requests for quotation"
+#~ msgstr "درخواست استعلام قیمت"
 
 #~ msgid ""
 #~ "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "

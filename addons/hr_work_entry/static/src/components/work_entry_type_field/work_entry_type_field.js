@@ -19,6 +19,9 @@ export class WorkEntryType extends Component {
 }
 
 function extractData(record) {
+    if (!record) {
+        return null;
+    }
     let name;
     if ("display_name" in record) {
         name = record.display_name;

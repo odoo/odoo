@@ -122,7 +122,7 @@ export function useDropdownNesting(state) {
             hotkeys: {
                 escape: () => current.close(),
                 arrowleft: {
-                    isAvailable: ({ target }) => current.parent || (isRTL() && isDropdown(target)),
+                    isAvailable: () => true,
                     callback: (navigator) => {
                         if (isRTL() && isDropdown(navigator.activeItem?.target)) {
                             navigator.activeItem?.select();
@@ -132,7 +132,7 @@ export function useDropdownNesting(state) {
                     },
                 },
                 arrowright: {
-                    isAvailable: ({ target }) => isDropdown(target) || (isRTL() && current.parent),
+                    isAvailable: () => true,
                     callback: (navigator) => {
                         if (isRTL() && current.parent) {
                             current.close();

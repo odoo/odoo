@@ -89,7 +89,7 @@ describe("floor_screen.js", () => {
         const table = await screen._createTableHelper(null);
         expect(Boolean(table)).toBe(true);
         expect(table.floor_id.id).toBe(floor.id);
-        expect(table.table_number).toBe(4);
+        expect(table.table_number).toBe(5);
         expect(table.height).toBe(table.width);
         expect(table.position_v >= 0).toBe(true);
         expect(table.position_h >= 10).toBe(true);
@@ -97,11 +97,11 @@ describe("floor_screen.js", () => {
 
     test("_getNewTableNumber", async () => {
         const store = await setupPosEnv();
-        const floor = store.models["restaurant.floor"].getFirst();
+        const floor = store.models["restaurant.floor"].getFirst(); // Main Floor (tables 1,2,4)
         const screen = await mountWithCleanup(FloorScreen, {});
         screen.selectFloor(floor);
         const newNumber = screen._getNewTableNumber();
-        expect(newNumber).toBe(4);
+        expect(newNumber).toBe(5); // max(1,2,4) + 1 = 5
     });
 
     test("duplicateTable", async () => {

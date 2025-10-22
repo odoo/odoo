@@ -46,7 +46,6 @@ have real delivered quantities in sales orders.
         ],
         'web.assets_tests': [
             'sale_timesheet/static/tests/tours/**/*',
-            'web/static/lib/hoot-dom/**/*',
         ],
         'web.assets_unit_tests': [
             'sale_timesheet/static/tests/**/*',

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
@@ -21,7 +21,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_action_res_partner_bank_form
@@ -40,14 +42,14 @@ msgid "Configuration"
 msgstr "Konfigūracija"
 
 #. module: contacts
+#: model:ir.model,name:contacts.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
 msgid "Contact Tags"
 msgstr "Kontakto žymos"
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "Kontakto kreipiniai"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
@@ -72,9 +74,26 @@ msgid "Create a Contact in your address book"
 msgstr "Sukurkite naują kontaktą adresų knygelėje"
 
 #. module: contacts
+#: model:ir.model,website_form_label:contacts.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__display_name
+#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "Savivaldybės"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__id
+#: model:ir.model.fields,field_description:contacts.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
@@ -95,3 +114,6 @@ msgstr "Odoo padės jums sekti visas veiklas susijusias su jūsų kontaktais."
 #: model:ir.model,name:contacts.model_res_users
 msgid "User"
 msgstr "Vartotojas"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Kontakto kreipiniai"

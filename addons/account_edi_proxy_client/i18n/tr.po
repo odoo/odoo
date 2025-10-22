@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 17:25+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -107,6 +107,17 @@ msgid "Edi Identification"
 msgstr "Edi Tanımlayıcı Numarası"
 
 #. module: account_edi_proxy_client
+#. odoo-python
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+msgid ""
+"Failed to connect to Odoo Access Point server. This might be due to another "
+"connection to Odoo Access Point server. It can occur if you have duplicated "
+"your database. \n"
+"\n"
+"If you are not sure how to fix this, please contact our support."
+msgstr ""
+
+#. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_certificate_key__id
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__id
@@ -117,20 +128,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
 msgstr "Tanımlayıcı İstemcisi"
-
-#. module: account_edi_proxy_client
-#. odoo-python
-#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
-msgid ""
-"Invalid signature for request. This might be due to another connection to odoo Access Point server. It can occur if you have duplicated your database. \n"
-"\n"
-"If you are not sure how to fix this, please contact our support."
-msgstr ""
-"İstek için geçersiz imza. Bu durum, başka bir bağlantının Odoo Erişim "
-"Noktası sunucusuna yapılmış olması nedeniyle oluşabilir. \n"
-"\n"
-"Veri tabanınızı çoğalttıysanız da meydana gelebilir. Nasıl çözeceğinizden "
-"emin değilseniz lütfen destek ekibimizle iletişime geçin."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
@@ -185,8 +182,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %(url)s. %(error_message)s"
 msgstr ""
-"Bu hizmetin istediği URL bir hata döndürdü. İletişim kurmaya çalıştığı URL "
-"%(url)s. %(error_message)s"
+"Bu hizmetin istediği URL bir hata döndürdü. İletişim kurmaya çalıştığı URL %"
+"(url)s. %(error_message)s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -211,11 +208,40 @@ msgid "This company has an active user already created for this EDI type"
 msgstr "Bu şirket için bu EDI türünde zaten aktif bir kullanıcı oluşturulmuş."
 
 #. module: account_edi_proxy_client
-#: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
-msgid "This edi identification is already assigned to an active user"
-msgstr "Bu EDI tanımlayıcısı zaten aktif bir kullanıcıya atanmış durumda"
+#: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__is_token_out_of_sync
+msgid ""
+"This field is used to indicate that the edi user token is out of sync with "
+"the proxy server. It is set to True when the token needs to be refreshed or "
+"updated."
+msgstr ""
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
 msgstr "Bu id_client zaten başka bir kullanıcıda kullanılıyor."
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__is_token_out_of_sync
+msgid "Token Out of Sync"
+msgstr ""
+
+#. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__token_sync_version
+msgid "Token Sync Version"
+msgstr ""
+
+#~ msgid ""
+#~ "Invalid signature for request. This might be due to another connection to "
+#~ "odoo Access Point server. It can occur if you have duplicated your "
+#~ "database. \n"
+#~ "\n"
+#~ "If you are not sure how to fix this, please contact our support."
+#~ msgstr ""
+#~ "İstek için geçersiz imza. Bu durum, başka bir bağlantının Odoo Erişim "
+#~ "Noktası sunucusuna yapılmış olması nedeniyle oluşabilir. \n"
+#~ "\n"
+#~ "Veri tabanınızı çoğalttıysanız da meydana gelebilir. Nasıl çözeceğinizden "
+#~ "emin değilseniz lütfen destek ekibimizle iletişime geçin."
+
+#~ msgid "This edi identification is already assigned to an active user"
+#~ msgstr "Bu EDI tanımlayıcısı zaten aktif bir kullanıcıya atanmış durumda"

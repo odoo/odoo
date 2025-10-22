@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
@@ -695,3 +695,34 @@ class TestStockLot(TestStockCommon):
         self.assertEqual(apple_lot1.with_context(formatted_display_name=True).display_name, "LOT-00001")
         self.assertEqual(apple_lot2.with_context(formatted_display_name=True).display_name, "LOT-00002\t--Expired--")
         self.assertEqual(apple_lot3.with_context(formatted_display_name=True).display_name, "LOT-00003\t--Expire on " + fields.Datetime.to_string(apple_lot3.expiration_date) + "--")
+
+    def test_proceed_except_expired_delivery_without_move_removal_date(self):
+        lot = self.LotObj.create({
+            'name': 'LOT-001',
+            'product_id': self.apple_product.id,
+        })
+        lot.removal_date = False
+
+        self.StockQuantObj.with_context(inventory_mode=True).create({
+            'product_id': self.apple_product.id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'quantity': 100,
+            'lot_id': lot.id,
+        })
+        picking = self.PickingObj.create({
+            'partner_id': self.partner_1.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'move_ids': [Command.create({
+                'product_id': self.apple_product.id,
+                'product_uom_qty': 2,
+            })],
+        })
+        picking.button_validate()
+        context = {
+            'button_validate_picking_ids': [picking.id],
+            'default_picking_ids': [picking.id],
+            'default_lot_ids': [lot.id],
+        }
+        wizard = self.env['expiry.picking.confirmation'].with_context(context).create({})
+        self.assertFalse(wizard.picking_ids.move_line_ids.removal_date)
+        wizard.process_no_expired()

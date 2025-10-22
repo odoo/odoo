@@ -253,9 +253,10 @@ test("share dashboard from dashboard view", async function () {
     expect(".spreadsheet_share_dropdown").toHaveCount(0);
     await contains("i.fa-share-alt").click();
     await animationFrame();
-    expect(".spreadsheet_share_dropdown").toHaveText("Generating sharing link");
+    expect(".spreadsheet_share_dropdown .o_loading_state").toHaveText("Generating sharing link");
     def.resolve();
     await animationFrame();
+    expect(".spreadsheet_share_dropdown .o_loading_state").toHaveCount(0);
     expect.verifySteps(["dashboard_shared", "share url copied"]);
     expect(".o_field_CopyClipboardChar").toHaveText("localhost:8069/share/url/132465");
     await contains(".fa-clipboard").click();
@@ -319,7 +320,7 @@ test("Should toggle favorite status of a dashboard when the 'Favorite' icon is c
     await createSpreadsheetDashboard();
     expect(".o_search_panel_section").toHaveCount(2);
     await contains(".o_dashboard_star").click();
-    expect(".o_dashboard_star").toHaveClass("fa-star favorite_button_enabled", {
+    expect(".o_dashboard_star").toHaveClass("fa-star", {
         message: "The star should be filled",
     });
     expect(".o_search_panel_section").toHaveCount(3);
@@ -328,7 +329,7 @@ test("Should toggle favorite status of a dashboard when the 'Favorite' icon is c
         "FAVORITES"
     );
     await contains(".o_dashboard_star").click();
-    expect(".o_dashboard_star").not.toHaveClass("fa-star favorite_button_enabled", {
+    expect(".o_dashboard_star").not.toHaveClass("fa-star", {
         message: "The star should not be filled",
     });
     expect.verifySteps(["action_toggle_favorite"]);

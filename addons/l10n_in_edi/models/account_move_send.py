@@ -56,7 +56,8 @@ class AccountMoveSend(models.AbstractModel):
                         'error_title': self.env._(
                             "Error when sending the invoice to government:"
                         ),
-                        'errors': [error] if not isinstance(error, list) else error,
+                        'errors': error['messages'],
+                        'retry': error.get('is_warning'),
                     }
                 elif invoice.invoice_pdf_report_id:
                     invoice.write({'invoice_pdf_report_file': False})

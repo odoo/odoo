@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
@@ -7,7 +7,14 @@ import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { BOLD_TAGS, em, notStrong, span, strong } from "../_helpers/tags";
 import { expectElementCount } from "../_helpers/ui_expectations";
-import { bold, italic, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
+import {
+    bold,
+    insertText,
+    italic,
+    simulateArrowKeyPress,
+    tripleClick,
+    undo,
+} from "../_helpers/user_actions";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -435,4 +442,66 @@ test("should not remove empty bold tag in an empty block when changing selection
     await simulateArrowKeyPress(editor, "ArrowUp");
     await tick(); // await selectionchange
     expect(getContent(el)).toBe(`<p>[]abcd</p><p>${strong("\u200B", "first")}</p>`);
+});
+
+test("should not add history step for bold on collapsed selection", async () => {
+    const { editor, el } = await setupEditor("<p>abcd[]</p>");
+
+    patchWithCleanup(console, { warn: () => {} });
+
+    // Collapsed formatting shortcuts (e.g. Ctrl+B) shouldn’t create a history
+    // step. The empty inline tag is temporary: auto-cleaned if unused. We want
+    // to avoid having a phantom step in the history.
+    await press(["ctrl", "b"]);
+    expect(getContent(el)).toBe(`<p>abcd${strong("[]\u200B", "first")}</p>`);
+
+    await insertText(editor, "A");
+    expect(getContent(el)).toBe(`<p>abcd${strong("A[]")}</p>`);
+
+    undo(editor);
+    expect(getContent(el)).toBe(`<p>abcd[]</p>`);
+});
+
+test("Should properly apply bold format if closest element is bold but not closest block", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <blockquote class="blockquote">
+                <em class="h4">
+                    a[b]c
+                </em>
+            </blockquote>
+        `),
+        {
+            styleContent: `
+                blockquote {
+                    font-weight: 300;   
+                }
+            `,
+        }
+    );
+    await animationFrame();
+    await expectElementCount('.o-we-toolbar [name="bold"].active', 1);
+    await click('.o-we-toolbar [name="bold"].active');
+    await animationFrame();
+    expect(el).toHaveInnerHTML(
+        unformat(
+            `<blockquote class="blockquote">
+                <em class="h4">
+                    a<span style="font-weight: normal;">b</span>c
+                </em>
+            </blockquote>`
+        )
+    );
+    await expectElementCount('.o-we-toolbar [name="bold"]:not(.active)', 1);
+    await click('.o-we-toolbar [name="bold"]:not(.active)');
+    await animationFrame();
+    expect(el).toHaveInnerHTML(
+        unformat(
+            `<blockquote class="blockquote">
+                <em class="h4">
+                    abc
+                </em>
+            </blockquote>`
+        )
+    );
 });

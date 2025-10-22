@@ -16,6 +16,7 @@ export class ModelSelector extends Component {
         // list of models technical name, if not set
         // we will fetch all models we have access to
         models: { type: Array, optional: true },
+        nbVisibleModels: { type: Number, optional: true },
     };
 
     setup() {
@@ -60,9 +61,13 @@ export class ModelSelector extends Component {
         };
     }
 
+    get nbVisibleModels() {
+        return this.props.nbVisibleModels || 8;
+    }
+
     filterModels(name) {
         if (!name) {
-            const visibleModels = this.models.slice(0, 8);
+            const visibleModels = this.models.slice(0, this.nbVisibleModels);
             if (this.models.length - visibleModels.length > 0) {
                 visibleModels.push({
                     label: _t("Start typing..."),

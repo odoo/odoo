@@ -2,7 +2,10 @@
 <templates xml:space="preserve">
     <!-- Attributes line template -->
     <t t-name="sale.ProductTemplateAttributeLine">
-        <div name="ptal" t-attf-class="#{this.props.attribute_values.length === 1 &amp;&amp; hasPTAVCustom() ? 'd-flex' : ''}">
+        <div
+            name="ptal"
+            t-attf-class="#{this.props.attribute_values.length === 1 &amp;&amp; hasPTAVCustom() ? 'd-md-flex' : ''}"
+        >
         <!-- If the attribute line contains only one attribute value, we don't show the attribute
              value template or the attribute line title unless the single attribute value is custom,
              whereas in this case, only the title of the attribute line and the custom value
@@ -16,7 +19,7 @@
                 <t t-if="showValuesChoice" t-call="{{getPTAVTemplate()}}"/>
             </div>
             <input
-                class="o_input form-control w-lg-75 mb-4"
+                class="o_input form-control w-100 w-md-75 mb-4"
                 type="text"
                 t-att-placeholder="customValuePlaceholder"
                 t-if="hasPTAVCustom &amp;&amp; isSelectedPTAVCustom()"

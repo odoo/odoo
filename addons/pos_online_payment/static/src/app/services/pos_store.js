@@ -10,19 +10,6 @@ patch(PosStore.prototype, {
             // Therefore, no sensitive information is sent through it, only a
             // notification to invite the local browser to do a safe RPC to
             // the server to check the new state of the order.
-            const order = this.models["pos.order"].find((o) => o.id == id);
-            const result = await this.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["id", "=", id]]],
-                {},
-                false,
-                true
-            );
-            const updatedOrder = result["pos.order"][0];
-            if (updatedOrder) {
-                order.state = updatedOrder.state;
-            }
             if (this.getOrder()?.id === id) {
                 this.updateOnlinePaymentsDataWithServer(this.getOrder(), false);
             }

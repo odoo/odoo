@@ -69,5 +69,6 @@ export class FollowerList extends Component {
             follower: this.props.thread.selfFollower,
             onFollowerChanged: () => this.props.onFollowerChanged?.(),
         });
+        this.props.dropdown.close();
     }
 }

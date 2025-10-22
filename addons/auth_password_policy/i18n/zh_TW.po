@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_password_policy
@@ -35,6 +36,12 @@ msgstr "顯示名稱"
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
 msgid "ID"
 msgstr "識別號"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
+msgid "Medium"
+msgstr ""
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -59,11 +66,18 @@ msgstr "密碼"
 msgid ""
 "Required: %s\n"
 "\n"
-"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
+"Hint: to increase password strength, increase length, use multiple words, "
+"and use non-letter characters."
 msgstr ""
 "必需： %s\n"
 "\n"
 "提示：增加密碼強度，增加長度，使用多個單詞，並使用非字母字符。"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
+msgid "Strong"
+msgstr ""
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -71,12 +85,19 @@ msgid "User"
 msgstr "使用者"
 
 #. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
+msgid "Weak"
+msgstr ""
+
+#. module: auth_password_policy
 #. odoo-python
 #: code:addons/auth_password_policy/models/res_users.py:0
 msgid ""
 "Your password must contain at least %(minimal_length)d characters and only "
 "has %(current_count)d."
-msgstr "密碼須最少有 %(minimal_length)d 個字元，但現時只有 %(current_count)d 個字元。"
+msgstr ""
+"密碼須最少有 %(minimal_length)d 個字元，但現時只有 %(current_count)d 個字元。"
 
 #. module: auth_password_policy
 #. odoo-javascript

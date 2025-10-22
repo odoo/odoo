@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:11+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 04:49+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -31,12 +31,42 @@ msgid "Accrual Plan Level"
 msgstr "Mức độ phương pháp tích lũy"
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Chấm công"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__active
+msgid "Active"
+msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_hours
+msgid "Approved Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Approved Time Offs"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Archived Employees"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_line
+msgid "Attendance Overtime Line"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Attendance Records"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_attendance_report
+msgid "Attendance and Leave Analysis Report"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__attendance_ids
 msgid "Attendances"
 msgstr ""
 
@@ -47,8 +77,14 @@ msgid "Available"
 msgstr "Có hàng"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__calendar
-msgid "Calendar"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__compensable_as_leave
+msgid "Compensable as Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__date
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Date"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -60,31 +96,64 @@ msgstr "Ngày"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
 msgstr "Trừ giờ làm thêm"
 
 #. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Department"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
+msgid "Difference"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
 msgid "Discard"
 msgstr "Huỷ bỏ"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__display_name
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: hr_holidays_attendance
-#: model:hr.leave.type,name:hr_holidays_attendance.holiday_status_extra_hours
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
-msgid "Extra Hours"
-msgstr "Giờ làm thêm"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Duration"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_employee
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+msgid "Employee Overtime"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Employees"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__expected_hours
+msgid "Expected Hours"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
@@ -93,8 +162,13 @@ msgid "Extra Hours Available"
 msgstr "Có giờ làm thêm"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
-msgid "Frequency Hourly Source"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency
+msgid "Frequency"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__compensable_as_leave
+msgid "Give back as time off"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -104,25 +178,47 @@ msgid "Hours"
 msgstr "Giờ"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__active
 msgid ""
-"If the source is set to \"Calendar\", the amount of worked hours will be "
-"computed based on the Employee's working schedule. Otherwise, the amount of "
-"worked hours will be based on Attendance records."
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__job_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Job Position"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Last 2 Months"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Missing Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
 msgstr "Đơn phân bổ mới"
@@ -130,8 +226,8 @@ msgstr "Đơn phân bổ mới"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 msgid ""
-"Once a time off of this type is approved, extra hours in attendances will be"
-" deducted."
+"Once a time off of this type is approved, extra hours in attendances will be "
+"deducted."
 msgstr ""
 "Khi ngày nghỉ của loại này được duyệt, giờ làm thêm trong chấm công sẽ được "
 "trừ đi."
@@ -153,32 +249,19 @@ msgid "Overtime Deductible"
 msgstr "Tăng ca có thể trừ"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
-msgid "Request Overtime"
-msgstr "Yêu cầu tăng ca"
-
-#. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
-msgid "Save"
-msgstr "Lưu"
-
-#. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
-msgid "Source"
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_rule
+msgid "Overtime Rule"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid ""
-"The employee does not have enough extra hours to extend this allocation."
-msgstr "Nhân viên không có đủ số giờ làm thêm để kéo dài phân bổ này."
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
+msgid "Per Hour Worked"
+msgstr ""
 
 #. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
-msgid "The employee does not have enough extra hours to extend this leave."
-msgstr "Nhân viên không có đủ số giờ làm thêm để kéo dài nghỉ phép này."
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
+msgid "Save"
+msgstr "Lưu"
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -189,8 +272,7 @@ msgstr "Nhân viên không có đủ số giờ làm thêm để yêu cầu ngh�
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid ""
-"The employee does not have enough overtime hours to request this leave."
+msgid "The employee does not have enough overtime hours to request this leave."
 msgstr "Nhân viên không có đủ số giờ làm thêm để yêu cầu nghỉ phép này."
 
 #. module: hr_holidays_attendance
@@ -204,23 +286,87 @@ msgid "Time Off Allocation"
 msgstr "Phân bổ thời gian ngày nghỉ"
 
 #. module: hr_holidays_attendance
+#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_attendance_report_action
+#: model:ir.ui.menu,name:hr_holidays_attendance.hr_leave_attendance_report
+msgid "Time Off Ledger"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Loại Ngày nghỉ"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_type_names
+msgid "Time Off Types"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_ids
+msgid "Time Offs"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
 msgstr "Tổng tăng ca"
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_res_users
-msgid "User"
-msgstr "Người dùng"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Worked Extra Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__worked_hours
+msgid "Worked Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
+msgid "Worked Hours - Expected Hours + Approved Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__schedule_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Working Schedule"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_accrual_plan_level.py:0
+msgid ""
+"You can't base accrued time on hours worked, because time is accrued at the "
+"start of the period."
+msgstr ""
 
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 msgid "You do not have enough extra hours to request this leave"
 msgstr "Bạn không có đủ số giờ làm thêm để yêu cầu nghỉ phép này"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
+msgid "every worked hour."
+msgstr ""
+
+#~ msgid "Attendance"
+#~ msgstr "Chấm công"
+
+#~ msgid "Extra Hours"
+#~ msgstr "Giờ làm thêm"
+
+#~ msgid "Request Overtime"
+#~ msgstr "Yêu cầu tăng ca"
+
+#~ msgid ""
+#~ "The employee does not have enough extra hours to extend this allocation."
+#~ msgstr "Nhân viên không có đủ số giờ làm thêm để kéo dài phân bổ này."
+
+#~ msgid "The employee does not have enough extra hours to extend this leave."
+#~ msgstr "Nhân viên không có đủ số giờ làm thêm để kéo dài nghỉ phép này."
+
+#~ msgid "User"
+#~ msgstr "Người dùng"

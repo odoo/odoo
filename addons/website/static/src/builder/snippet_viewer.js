@@ -29,5 +29,5 @@ patch(SnippetViewer.prototype, {
             onWillPatch(stopPreview);
             onWillUnmount(stopPreview);
         }
-    }
+    },
 });

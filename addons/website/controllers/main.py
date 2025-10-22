@@ -103,9 +103,6 @@ class Website(Home):
         Most DBs will just have a website.page with '/' as URL and keep the
         homepage_url setting empty.
         """
-        # prefetch all menus (it will prefetch website.page too)
-        top_menu = request.website.menu_id
-
         homepage_url = request.website._get_cached('homepage_url')
         if homepage_url and homepage_url != '/':
             request.reroute(homepage_url)
@@ -126,6 +123,9 @@ class Website(Home):
         # Fallback on first accessible menu
         def is_reachable(menu):
             return menu.is_visible and menu.url not in ('/', '', '#') and not menu.url.startswith(('/?', '/#', ' '))
+
+        # prefetch all menus (it will prefetch website.page too)
+        top_menu = request.website.menu_id
 
         reachable_menus = top_menu.child_id.filtered(is_reachable)
         if reachable_menus:
@@ -842,7 +842,9 @@ class Website(Home):
             record = request.env[model['model']].browse(model['id'])
             model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
             tree = html.fromstring(str(record[model['field']]))
-            for index, el in enumerate(tree.xpath('//img')):
+            # Only process static img elements (with src) - skip dynamic
+            # template images (t-att*)
+            for index, el in enumerate(tree.xpath('//img[@src]')):
                 role = el.get('role')
                 decorative = role == "presentation"
                 alt = el.get('alt')

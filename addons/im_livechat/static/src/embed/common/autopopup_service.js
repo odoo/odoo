@@ -18,13 +18,15 @@ export class AutopopupService {
         this.livechatService = livechatService;
         this.ui = ui;
 
-        browser.setTimeout(async () => {
-            await Promise.all([storeService.isReady, storeService.chatHub.initPromise]);
-            if (this.allowAutoPopup) {
-                expirableStorage.setItem(AutopopupService.STORAGE_KEY, true);
-                livechatService.open();
-            }
-        }, storeService.livechat_rule?.auto_popup_timer * 1000);
+        storeService.isReady.then(() => { 
+            browser.setTimeout(async () => {
+                await storeService.chatHub.initPromise;
+                if (this.allowAutoPopup) {
+                    expirableStorage.setItem(AutopopupService.STORAGE_KEY, true);
+                    livechatService.open();
+                }
+            }, storeService.livechat_rule?.auto_popup_timer * 1000);
+        });
     }
 
     get allowAutoPopup() {

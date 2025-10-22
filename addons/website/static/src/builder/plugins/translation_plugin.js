@@ -7,17 +7,16 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "../translation_components/translatorInfoDialog";
+import { withSequence } from "@html_editor/utils/resource";
 
-export const translationSavableSelector =
-    "[data-oe-translation-source-sha], " +
-    "[data-oe-model][data-oe-id][data-oe-field], " +
+export const translationAttributeSelector =
     '[placeholder*="data-oe-translation-source-sha="], ' +
     '[title*="data-oe-translation-source-sha="], ' +
     '[value*="data-oe-translation-source-sha="], ' +
     '[alt*="data-oe-translation-source-sha="]';
 
-export function getTranslationEditableEls(rootEl) {
-    const translationSavableEls = rootEl.querySelectorAll(translationSavableSelector);
+export function getTranslationAttributeEls(rootEl) {
+    const translationSavableEls = rootEl.querySelectorAll(translationAttributeSelector);
     const textAreaEls = Array.from(rootEl.querySelectorAll("textarea")).find((el) =>
         el.textContent.includes("data-oe-translation-source-sha")
     );
@@ -31,16 +30,15 @@ export function getTranslationEditableEls(rootEl) {
  */
 function findOEditable(containerEl) {
     const isOEditable = (node) => {
-        while (node) {
-            if (node.className && typeof node.className === "string") {
-                if (node.className.includes("o_not_editable")) {
-                    return false;
-                }
-                if (node.className.includes("o_editable")) {
-                    return true;
-                }
-            }
-            node = node.parentNode;
+        // Ideally, we should entirely rely on the contenteditable mechanism.
+        // The problem is that the translatable attributes are not branded DOM
+        // nodes hence the o_editable_attribute hack.
+        if (
+            node.isContentEditable ||
+            (node.classList.contains("o_editable_attribute") &&
+                (!node.closest(".o_not_editable") || node.classList.contains("o_editable_media")))
+        ) {
+            return true;
         }
         return false;
     };
@@ -56,37 +54,41 @@ export class TranslationPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
-            const translationSavableEls = getTranslationEditableEls(
+            const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
             );
             for (const translationSavableEl of translationSavableEls) {
-                if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
-                    translationSavableEl.classList.add("o_editable");
+                translationSavableEl.classList.add("o_editable_attribute");
+            }
+            // Apply data-oe-readonly on wrapping editor
+            const editableElSelector = ".o_editable, .o_editable_attribute";
+            const editableEls = [
+                ...translationSavableEls,
+                ...this.services.website.pageDocument.querySelectorAll(".o_editable"),
+            ];
+            for (const editableEl of editableEls) {
+                if (editableEl.querySelectorAll(editableElSelector).length) {
+                    editableEl.setAttribute("data-oe-readonly", "true");
                 }
             }
-            this.setupServicesIfNotSet();
-            this.prepareTranslation();
             return true;
         },
+        start_edition_handlers: withSequence(5, () => {
+            this.prepareTranslation();
+        }),
+        system_classes: ["o_editable_attribute"],
     };
 
     setup() {
-        this.setupServicesIfNotSet();
-    }
-
-    setupServicesIfNotSet() {
-        if (!this.websiteService) {
-            this.websiteService = this.services.website;
-            this.notificationService = this.services.notification;
-            this.dialogService = this.services.dialog;
-        }
+        this.websiteService = this.services.website;
+        this.notificationService = this.services.notification;
+        this.dialogService = this.services.dialog;
     }
 
     prepareTranslation() {
-        const editableEls = findOEditable(this.editable);
-        this.buildTranslationInfoMap(editableEls);
-        this.handleSelectTranslation(editableEls);
-        this.handleAnnouncementScrollTranslation(editableEls);
+        this.editableEls = findOEditable(this.editable);
+        this.buildTranslationInfoMap(this.editableEls);
+        this.handleSelectTranslation(this.editableEls);
         this.markTranslatableNodes();
         for (const [translatedEl] of this.elToTranslationInfoMap) {
             if (translatedEl.matches("input[type=hidden].o_translatable_input_hidden")) {
@@ -111,15 +113,6 @@ export class TranslationPlugin extends Plugin {
             this.dialogService.add(TranslatorInfoDialog);
         }
 
-        // Apply data-oe-readonly on nested data
-        const translationSavableEls = getTranslationEditableEls(this.websiteService.pageDocument);
-        for (const translationSavableEl of translationSavableEls) {
-            if (getTranslationEditableEls(translationSavableEl).length) {
-                translationSavableEl.setAttribute("data-oe-readonly", "true");
-                translationSavableEl.removeAttribute("contenteditable");
-            }
-        }
-
         const showNotification = (ev) => {
             // Prevent duplicate notifications for the same click but allow the
             // event to bubble (i.e. for carousel sliding)
@@ -136,11 +129,14 @@ export class TranslationPlugin extends Plugin {
                 sticky: false,
             });
         };
-        for (const translateEl of editableEls) {
-            if (translateEl.closest(".o_not_editable")) {
-                this.addDomListener(translateEl, "click", showNotification);
-            }
+        for (const translateEl of this.editableEls) {
             this.handleToC(translateEl);
+        }
+        const savableInsideNotEditableEls = this.editable.querySelectorAll(
+            ".o_not_editable .o_editable, .o_not_editable .o_editable_attribute"
+        );
+        for (const savableInsideNotEditableEl of savableInsideNotEditableEls) {
+            this.addDomListener(savableInsideNotEditableEl, "click", showNotification);
         }
         // Keep the original values of elToTranslationInfoMap so that we know
         // which translations have been updated.
@@ -237,14 +233,6 @@ export class TranslationPlugin extends Plugin {
         }
     }
 
-    handleAnnouncementScrollTranslation(editableEls) {
-        this.announcementScrollEls = editableEls
-            .filter(el => {
-                return el.parentElement.classList.contains('s_announcement_scroll_marquee_item');
-            })
-            .map(el => el.closest('.s_announcement_scroll'));
-    }
-
     handleToC(translateEl) {
         if (translateEl.closest(".s_table_of_content_navbar_wrap")) {
             // Make sure the same translation ids are used
@@ -308,19 +296,7 @@ export class TranslationPlugin extends Plugin {
                 });
             });
         }
-        for (const announcementScrollEl of this.announcementScrollEls) {
-            // FIXME
-            // 1. Do not use prompt but an Odoo dialog
-            // 2. The interaction should be restarted when the text changes
-            // => There should probably be a better way to handle this.
-            this.addDomListener(announcementScrollEl, "click", ev => {
-                const els = announcementScrollEl.querySelectorAll('.s_announcement_scroll_marquee_item > [data-oe-translation-source-sha]');
-                const value = prompt("", els[0].textContent);
-                for (const el of els) {
-                    el.textContent = value;
-                }
-            });
-        }
+        this.dispatchTo("mark_translatable_nodes", this.editableEls);
     }
 
     updateTranslationMap(translateEl, translation, attrName) {
@@ -362,6 +338,9 @@ export class TranslationPlugin extends Plugin {
     }
 
     cleanForSave({ root }) {
+        root.querySelectorAll(".o_editable_attribute").forEach((el) => {
+            el.classList.remove("o_editable_attribute");
+        });
         // Remove the `.o_translation_select` temporary element
         const optionsEl = root.querySelector(".o_translation_select");
         if (optionsEl) {

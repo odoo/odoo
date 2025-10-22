@@ -202,10 +202,16 @@
         display: grid;
         justify-items: center;
         gap: map-get($spacers, 2);
-        padding: map-get($spacers, 3);
+        padding: map-get($spacers, 3) map-get($spacers, 2);
 
         &.selected::before {
             content: none !important;
+        }
+
+        > span {
+            @include text-truncate();
+            max-width: 100%;
+            margin-left: 0 !important; // Counter BS rule ms-1
         }
     }
 }

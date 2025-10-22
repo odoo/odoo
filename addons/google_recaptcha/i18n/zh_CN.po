@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.2alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 15:38+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -39,9 +39,26 @@ msgid "Config Settings"
 msgstr "配置设置"
 
 #. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_ir_http__display_name
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__enable_recaptcha
+msgid "Enable reCAPTCHA"
+msgstr ""
+
+#. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_ir_http__id
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__id
+msgid "ID"
+msgstr ""
 
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_min_score
@@ -50,15 +67,16 @@ msgstr "最小得分"
 
 #. module: google_recaptcha
 #. odoo-javascript
-#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
-msgid "No recaptcha site key set."
-msgstr ""
-
-#. module: google_recaptcha
-#. odoo-javascript
 #: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
 msgid "Privacy Policy"
 msgstr "‎隐私政策‎"
+
+#. module: google_recaptcha
+#: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
+msgid ""
+"Protect your forms from spam and abuse. If no keys are provided, no checks "
+"will be done."
+msgstr ""
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -75,6 +93,12 @@ msgstr "密钥"
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key
 msgid "Site Key"
 msgstr "‎站点密钥‎"
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+msgid "Suspicious activity detected by google reCAPTCHA."
+msgstr ""
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -117,3 +141,11 @@ msgstr "您的请求超时，请重试。"
 #: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
 msgid "apply."
 msgstr "‎应用。‎"
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
+msgid ""
+"reCAPTCHA disabled or no site key has been configured. Please check your "
+"settings."
+msgstr ""

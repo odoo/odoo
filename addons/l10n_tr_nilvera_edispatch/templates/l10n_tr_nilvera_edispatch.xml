@@ -21,7 +21,7 @@
             </cac:PartyName>
         </t>
         <cac:PostalAddress>
-            <cbc:StreetName t-out="partner.street"/>
+            <cbc:StreetName t-out="' '.join(s for s in [partner.street, partner.street2] if s)"/>
             <cbc:CitySubdivisionName t-out="partner.city"/>
             <cbc:CityName t-out="partner.state_id.name"/>
             <cbc:PostalZone t-out="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_nilvera_edispatch_customs_zip"/>

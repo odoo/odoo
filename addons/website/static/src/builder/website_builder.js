@@ -17,6 +17,7 @@ import { useSetupAction } from "@web/search/action_hook";
 import { HighlightPlugin } from "./plugins/highlight/highlight_plugin";
 import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
+import { TranslateAnnouncementScrollPlugin } from "./plugins/translate_announcement_scroll_plugin";
 import { TranslateLinkInlinePlugin } from "./plugins/translate_link_inline_plugin";
 import { TranslationPlugin } from "./plugins/translation_plugin";
 import { WebsiteVisibilityPlugin } from "./plugins/website_visibility_plugin";
@@ -56,6 +57,7 @@ const TRANSLATION_PLUGINS = [
     SaveTranslationPlugin,
     TranslateLinkInlinePlugin,
     TranslationPlugin,
+    TranslateAnnouncementScrollPlugin,
     WebsiteVisibilityPlugin,
     AnimateOptionPlugin,
     HighlightPlugin,

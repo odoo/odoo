@@ -1,5 +1,4 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from . import account_edi_common
 from . import account_edi_proxy_user
 from . import account_edi_ubl_xml
 from . import account_journal

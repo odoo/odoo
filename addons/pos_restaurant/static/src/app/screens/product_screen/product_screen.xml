@@ -7,7 +7,7 @@
                 <t t-if="this.swapButton">
                     <button
                         t-if="!this.currentOrder.isDirectSale and nbrOfChanges"
-                        class="btn-switchpane pay-button btn btn-lg flex-grow-1 position-relative lh-sm overflow-hidden"
+                        class="btn-switchpane order-button btn btn-lg flex-grow-1 position-relative lh-sm overflow-hidden"
                         t-on-click="() => doSubmitOrder.call()"
                         t-att-disabled="doSubmitOrder.status === 'loading'"
                         t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
@@ -39,9 +39,10 @@
                 </t>
                 <t t-else="">
                     <button
-                        class="btn-switchpane pay-button btn btn-lg flex-grow-1 lh-sm"
-                        t-attf-class="{{ currentOrder.isEmpty() ? 'btn-light disabled' : 'btn-primary' }}"
-                        t-on-click="() => this.pos.pay()">
+                        class="btn-switchpane pay-button pay-small btn btn-lg flex-grow-1 lh-sm"
+                        t-attf-class="{{ currentOrder.isEmpty() ? 'btn-light' : 'btn-primary' }}"
+                        t-on-click="() => this.pos.pay()"
+                        t-att-disabled="currentOrder.isEmpty()">
                         <span class="d-block">Pay</span>
                         <small><t t-esc="total" /></small>
                     </button>

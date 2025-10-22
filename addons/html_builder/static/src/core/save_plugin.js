@@ -119,12 +119,15 @@ export class SavePlugin extends Plugin {
             return;
         }
 
-        const delay = delayTranslations ? { delay_translations: true } : {};
-        const context = {
-            website_id: this.services.website.currentWebsite.id,
-            lang: this.services.website.currentWebsite.metadata.lang,
-            ...delay,
-        };
+        let context = {};
+        if (this.services.website) {
+            const delay = delayTranslations ? { delay_translations: true } : {};
+            context = {
+                website_id: this.services.website.currentWebsite.id,
+                lang: this.services.website.currentWebsite.metadata.lang,
+                ...delay,
+            };
+        }
 
         escapeTextNodes(el);
         return this.services.orm.call(

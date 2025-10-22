@@ -15,6 +15,8 @@ installed.""",
         'website_blog',
         'website_event_sale',
         'website_slides',
+        'website_livechat',
+        'website_crm_iap_reveal',
     ],
     'installable': True,
     'assets': {

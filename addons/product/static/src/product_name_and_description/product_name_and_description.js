@@ -14,7 +14,7 @@ export const ProductNameAndDescriptionListRendererMixin = {
         if (this.productColumns.includes(column.name)) {
             return;
         }
-        super.getCellTitle(column, record);
+        return super.getCellTitle(column, record);
     },
 
     getActiveColumns() {

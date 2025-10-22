@@ -1,4 +1,5 @@
 import { useOperation } from "@html_builder/core/operation_plugin";
+import { useDomState } from "@html_builder/core/utils";
 import { Component } from "@odoo/owl";
 
 export class CarouselItemHeaderMiddleButtons extends Component {
@@ -11,6 +12,12 @@ export class CarouselItemHeaderMiddleButtons extends Component {
 
     setup() {
         this.callOperation = useOperation();
+        this.state = useDomState((editingElement) => {
+            const carouselItemsNumber = editingElement.parentElement.children.length;
+            return {
+                disableRemove: carouselItemsNumber === 1,
+            };
+        });
     }
 
     slide(direction) {

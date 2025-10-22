@@ -9,7 +9,8 @@
                     <group>
                         <field name="session_id" readonly="0"/>
                         <field name="pos_order_id"/>
-                        <field name="amount" readonly="0"/>
+                        <field name="amount" readonly="0" widget="monetary"/>
+                        <field name="currency_id"/>
                         <field name="payment_method_id"/>
                         <field name="payment_method_payment_mode" invisible="not payment_method_payment_mode"/>
                         <field name="card_type" invisible="not card_type or not card_no"/>

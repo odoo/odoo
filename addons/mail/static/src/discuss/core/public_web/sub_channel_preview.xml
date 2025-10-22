@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SubChannelPreview">
+        <t t-set="message" t-value="thread.newestPersistentOfAllMessage ?? thread.from_message_id"/>
+        <button class="o-mail-SubChannelPreview btn btn-light-subtle d-flex border border-secondary mx-1 px-2 py-1 rounded-2 align-items-center" t-attf-class="{{ props.class }}" t-on-click="onClick">
+            <div class="d-flex flex-column w-100">
+                <div class="d-flex w-100">
+                    <span class="o-fw-600 text-truncate small" t-esc="thread.displayName"/>
+                    <span class="flex-grow-1"/>
+                    <span t-if="message" class="text-muted smaller flex-shrink-0" t-esc="dateText(message)"/>
+                </div>
+                <div class="o-mail-SubChannelPreview-lastMessage text-start text-muted fw-normal smaller overflow-hidden ms-2">
+                    <t t-if="message" t-call="mail.message_preview_prefix">
+                        <t t-set="message" t-value="message"/>
+                    </t>
+                    <t t-out="message?.inlineBody"/>
+                </div>
+            </div>
+            <i t-if="env.inMessage" class="oi oi-chevron-right ms-2 opacity-50"/>
+        </button>
+    </t>
+</templates>

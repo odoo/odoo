@@ -19,18 +19,18 @@ class HrVersion(models.Model):
 
     date_generated_from = fields.Datetime(string='Generated From', readonly=True, required=True,
         default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False,
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_user", tracking=True)
     date_generated_to = fields.Datetime(string='Generated To', readonly=True, required=True,
         default=lambda self: datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), copy=False,
-        groups="hr.group_hr_user")
-    last_generation_date = fields.Date(string='Last Generation Date', readonly=True, groups="hr.group_hr_user")
-    work_entry_source = fields.Selection([('calendar', 'Working Schedule')], required=True, default='calendar', help='''
+        groups="hr.group_hr_user", tracking=True)
+    last_generation_date = fields.Date(string='Last Generation Date', readonly=True, groups="hr.group_hr_user", tracking=True)
+    work_entry_source = fields.Selection([('calendar', 'Working Schedule')], required=True, default='calendar', tracking=True, help='''
         Defines the source for work entries generation
 
         Working Schedule: Work entries will be generated from the working hours below.
         Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
-    ''', groups="hr.group_hr_manager", tracking=True)
+    ''', groups="hr.group_hr_manager")
     work_entry_source_calendar_invalid = fields.Boolean(
         compute='_compute_work_entry_source_calendar_invalid',
         groups="hr.group_hr_manager",
@@ -89,7 +89,7 @@ class HrVersion(models.Model):
             ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
-            ('company_id', 'in', [False, self.company_id.id]),
+            ('company_id', 'in', [False] + self.env.companies.ids),
         ])
         return domain & self._get_sub_leave_domain()
 

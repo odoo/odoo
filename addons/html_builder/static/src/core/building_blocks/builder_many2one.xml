@@ -7,14 +7,27 @@
             model="props.model"
             fields="props.fields"
             limit="props.limit"
+            nullText="props.nullText"
             domain="props.domain"
             selected="domState.selected ? [domState.selected] : []"
             select="select.bind(this)"
+            preview="hasPreview ? preview.bind(this) : undefined"
+            revert.bind="revert"
             create="props.createAction ? create.bind(this) : undefined"
 
             message="domState.selected?.display_name || props.defaultMessage"
         />
-        <button t-if="domState.selected and props.allowUnselect" type="button" class="btn btn-primary fa fa-fw fa-times" style="min-width: min-content;" t-on-click="() => this.select()"/>
+        <button type="button"
+                t-if="domState.selected and props.allowUnselect"
+                class="o-hb-btn o-hb-btn-has-icon btn btn-secondary"
+                t-on-click="() => this.select()"
+                t-on-pointerenter="hasPreview ? () => this.preview() : undefined"
+                t-on-pointerleave="revert"
+                t-on-focusin="hasPreview ? () => this.preview() : undefined"
+                t-on-focusout="revert"
+                aria-label="Unselect">
+            <i class="oi oi-close" role="presentation"/>
+        </button>
     </BuilderComponent>
 </t>
 

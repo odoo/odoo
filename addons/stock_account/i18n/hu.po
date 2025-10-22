@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
+# * stock_account
 #
 # Translators:
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
@@ -11,20 +11,22 @@
 # gezza <geza.nagy@oregional.hu>, 2022
 # Martin Trigaux, 2022
 # Tamás Dombos, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tamás Dombos, 2022\n"
-"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-09-29 19:46+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"stock_account/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -88,7 +90,7 @@ msgstr "Számlatükör sablon"
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
 msgid "Accounting Date"
-msgstr "Könyvelés dátuma"
+msgstr "Könyvelési dátum"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -139,11 +141,6 @@ msgid "Adjusted on %(date)s by %(user)s"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
-msgid "Adjustment Account"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
@@ -162,7 +159,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitikus számla"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
@@ -172,7 +169,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Analitikus tervek"
 
 #. module: stock_account
 #. odoo-javascript
@@ -215,7 +212,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
-msgstr ""
+msgstr "Szalonna"
 
 #. module: stock_account
 #. odoo-python
@@ -243,7 +240,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Vállalatok"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__company_id
@@ -272,12 +269,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr "Beállítások"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
 msgid "Cost"
-msgstr ""
+msgstr "Költség"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
@@ -285,6 +282,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Cost of Production"
 msgstr ""
 
 #. module: stock_account
@@ -427,6 +429,11 @@ msgid "Everything is correctly closed"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
+msgid "Expense Account"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__fifo
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__fifo
@@ -477,7 +484,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__anglo_saxon_accounting
@@ -497,6 +504,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
 msgid "Initial Balance"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Invalid search on valuation"
 msgstr ""
 
 #. module: stock_account
@@ -529,6 +542,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 msgid "Inventory Valuation"
 msgstr "Készletértékelés"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Inventory Variation"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -568,7 +586,7 @@ msgstr "Könyvelési tétel"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Könyvelési tételsor"
+msgstr "Könyvelési tétel"
 
 #. module: stock_account
 #. odoo-python
@@ -589,7 +607,7 @@ msgstr "Frissítette"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__write_date
 msgid "Last Updated on"
-msgstr "Frissítve ekkor"
+msgstr "Frissítve"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__lot_id
@@ -599,7 +617,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Lot/szériaszám"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -644,7 +662,7 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "None"
+msgid "None (only useful for continental)"
 msgstr ""
 
 #. module: stock_account
@@ -670,6 +688,19 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid "Please set the Journal for Inventory Valuation in the settings."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"Please set the Valuation Account for Inventory Valuation in the settings."
 msgstr ""
 
 #. module: stock_account
@@ -768,7 +799,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Visszáru kiszedés sor"
+msgstr "Visszáru kigyűjtés tétel"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
@@ -914,6 +945,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_value
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__total_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_view_list_at_date
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
 msgstr "Összérték"
@@ -921,7 +953,7 @@ msgstr "Összérték"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "Szállítás"
+msgstr "Átmozgatás"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -935,7 +967,9 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_view_list_at_date
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_avco_report_view_list
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Unit Cost"
 msgstr "Egységár"
 
@@ -1069,7 +1103,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "egységek"
 
 #~ msgid "Account Move"
 #~ msgstr "Főkönyvi mozgás"

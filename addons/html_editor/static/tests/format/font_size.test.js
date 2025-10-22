@@ -234,3 +234,19 @@ test("should update the font class if the parent already has one", async () => {
         contentAfter: '<h2 class="h4-fs"><span class="h3-fs">[abcdefg]</span></h2>',
     });
 });
+
+test("should apply font size on space", async () => {
+    await testEditor({
+        contentBefore: `<div><p>a[ ]b</p></div>`,
+        stepFunction: setFontSize("36px"),
+        contentAfter: `<div><p>a<span style="font-size: 36px;">[ ]</span>b</p></div>`,
+    });
+});
+
+test("should apply font size on non breaking space", async () => {
+    await testEditor({
+        contentBefore: `<div><p>a[&nbsp;]b</p></div>`,
+        stepFunction: setFontSize("36px"),
+        contentAfter: `<div><p>a<span style="font-size: 36px;">[&nbsp;]</span>b</p></div>`,
+    });
+});

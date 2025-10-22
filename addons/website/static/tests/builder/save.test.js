@@ -9,14 +9,16 @@ import {
     addOption,
     addPlugin,
     defineWebsiteModels,
-    exampleWebsiteContent,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
+import {
+    exampleContent,
     getDragHelper,
     getDragMoveHelper,
     modifyText,
-    setupWebsiteBuilder,
     waitForEndOfOperation,
     wrapExample,
-} from "./website_helpers";
+} from "@html_builder/../tests/helpers";
 import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
@@ -26,7 +28,7 @@ defineWebsiteModels();
 
 test("basic save", async () => {
     const resultSave = setupSaveAndReloadIframe();
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     await modifyText(getEditor(), getEditableContent());
 
@@ -42,7 +44,7 @@ test("basic save", async () => {
 
 test("nothing to save", async () => {
     const resultSave = setupSaveAndReloadIframe();
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     await modifyText(getEditor(), getEditableContent());
     await animationFrame();
     await contains(".o-snippets-menu button.fa-undo").click();
@@ -57,7 +59,7 @@ test("failure to save does not block the builder", async () => {
     expect.errors(1);
     let deferred = new Deferred();
     onRpc("ir.ui.view", "save", async () => await deferred);
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     await modifyText(getEditor(), getEditableContent());
 
     await contains(".o-snippets-top-actions button:contains(Save)").click();
@@ -81,7 +83,7 @@ test("failure to save does not block the builder", async () => {
 
 test("discard modified elements", async () => {
     setupSaveAndReloadIframe();
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     await modifyText(getEditor(), getEditableContent());
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".modal-content button.btn-primary").click();
@@ -96,7 +98,7 @@ test("discard without any modifications", async () => {
             this.websiteContent.el.contentDocument.body.innerHTML = wrapExample;
         },
     });
-    await setupWebsiteBuilder(exampleWebsiteContent);
+    await setupWebsiteBuilder(exampleContent);
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").not.toHaveClass("o_editable");
@@ -424,7 +426,7 @@ test("'Switch Theme' after a mutation should only ask one confirmation", async (
     registry.category("actions").add("__test__switch_theme__action__", MockSwitchThemeAction);
 
     setupSaveAndReloadIframe();
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     await modifyText(getEditor(), getEditableContent());
     await contains(`.o-snippets-tabs button[data-name="theme"]`).click();
     await contains(`.o_theme_tab button[data-action-id="switchTheme"]`).click();

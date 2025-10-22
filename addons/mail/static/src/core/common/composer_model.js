@@ -1,5 +1,9 @@
 import { fields, OR, Record } from "@mail/core/common/record";
-import { convertBrToLineBreak, prettifyMessageText } from "@mail/utils/common/format";
+import {
+    convertBrToLineBreak,
+    getNonEditableMentions,
+    prettifyMessageText,
+} from "@mail/utils/common/format";
 import { markup } from "@odoo/owl";
 import { isHtmlEmpty } from "@web/core/utils/html";
 
@@ -65,7 +69,10 @@ export class Composer extends Record {
     composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"), {
         compute() {
             if (this.syncHtmlWithMessage) {
-                return this.message.body || markup("<div class='o-paragraph'><br></div>");
+                return (
+                    getNonEditableMentions(this.message.body) ||
+                    markup("<div class='o-paragraph'><br></div>")
+                );
             }
             return this.composerHtml;
         },

@@ -2,6 +2,7 @@ import { test, describe, expect } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 definePosModels();
 
@@ -44,9 +45,9 @@ describe("PosStore - loyalty essentials", () => {
     });
 
     test("activateCode", async () => {
+        onRpc("loyalty.card", "get_loyalty_card_partner_by_code", () => false);
         const store = await setupPosEnv();
         store.addNewOrder();
-
         const result = await store.activateCode("EXPIRED");
 
         expect(result).toBe(true);

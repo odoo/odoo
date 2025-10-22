@@ -20,9 +20,9 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.uk',
-                'bank_account_code_prefix': '120001',
-                'cash_account_code_prefix': '999001',
-                'transfer_account_code_prefix': '122001',
+                'bank_account_code_prefix': '1200',
+                'cash_account_code_prefix': '1210',
+                'transfer_account_code_prefix': '1220',
                 'account_default_pos_receivable_account_id': '110400',
                 'income_currency_exchange_account_id': '770000',
                 'expense_currency_exchange_account_id': '770000',

@@ -8,7 +8,7 @@
             <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
                 <div t-attf-class="#{_icon_wrap_class}">
                     <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
-                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', None) if website_sale_cart_quantity else None"/>
                 </div>
                 <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
             </a>
@@ -711,8 +711,9 @@
                                         t-att-data-editor-message="editor_msg"
                                     />
                                 </t>
-                                <t t-if="opt_wsale_categories_top"
+                                <t t-if="opt_wsale_categories_top and category_entries"
                                    t-call="website_sale.filmstrip_categories"
+                                   entries="category_entries"
                                 />
                                 <div
                                     t-if="not opt_wsale_floating_bar"
@@ -722,7 +723,8 @@
                                         <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
                                         <!-- Desktop Search button -->
                                         <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}">
-                                            <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                            <t t-set="search_term">Search in</t>
+                                            <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                                             <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                         </div>
                                         <!-- Mobile Search button -->
@@ -804,6 +806,7 @@
                                                     t-value="product._get_ribbon(
                                                         price_vals=template_price_vals,
                                                         auto_assign_ribbons=auto_assign_ribbons,
+                                                        variant=product_variants[product],
                                                     )"
                                                 />
                                                 <div
@@ -910,7 +913,8 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-set="search_term">Search in</t>
+                                <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                             </t>
                         </div>
                     </div>
@@ -1329,7 +1333,8 @@
                 class="offcanvas-body flex-grow-0 overflow-visible"
             >
                 <t t-call="website_sale.search">
-                    <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                    <t t-set="search_term">Search in</t>
+                    <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                     <t t-set="search" t-value="original_search or search"/>
                     <t t-set="_s_searchbar_autocomplete_classes" t-valuef="bg-primary"> </t>
                 </t>
@@ -1423,21 +1428,7 @@
 
     <!-- Top-Nav Categories -->
     <template id="website_sale.filmstrip_categories" name="Categories Filmstrip">
-        <t t-if="category.id">
-            <t t-set="entries" t-value="not search and category.child_id or category.child_id.filtered(lambda c: category.id in search_categories_ids)"/>
-
-            <t t-if="not entries">
-                <t t-set="parent" t-value="category.parent_id"/>
-                <t t-set="entries" t-value="not search and parent.child_id or parent.child_id.filtered(lambda c: parent.id in search_categories_ids)"/>
-            </t>
-        </t>
-        <t t-else="">
-            <t t-set="entries" t-value="categories"/>
-        </t>
-        <t t-set="entries" t-value="request.env.user._is_internal() and entries or entries.filtered('has_published_products')"/>
-
         <div
-            t-if="entries"
             id="o_wsale_categories_filmstrip"
             class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch overflow-hidden"
             role="navigation"
@@ -1988,6 +1979,7 @@
                             o_wsale_product_page_opt_image_ratio_mobile_{{website.product_page_image_ratio_mobile}}
                             o_wsale_product_page_opt_image_radius_{{website.product_page_image_roundness}}
                          "
+                         t-att-data-image-ratio="website.product_page_image_ratio"
                          t-att-data-view-track="view_track and '1' or '0'"
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
@@ -2064,12 +2056,13 @@
                             <div id="o_wsale_product_details_content" t-attf-class="js_product js_main_product o_wsale_content_contained container">
 
                                 <!-- Product title (purchase not available)-->
+                                <t t-set="is_add_to_cart_possible" t-value="product._is_add_to_cart_possible()"/>
                                 <t
-                                    t-if="not product._is_add_to_cart_possible()"
+                                    t-if="not is_add_to_cart_possible"
                                     t-call="website_sale.product_title"
                                 />
 
-                                <form t-if="product._is_add_to_cart_possible()">
+                                <form t-if="is_add_to_cart_possible">
                                     <!-- Product title (purchase available)-->
                                     <t t-call="website_sale.product_title"/>
 
@@ -2121,7 +2114,7 @@
                                             t-att-value="product.type"
                                         />
                                         <div
-                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not product.valid_product_template_attribute_line_ids and 'd-none' or ' '}}"
+                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not (product.valid_product_template_attribute_line_ids or product._has_multiple_uoms()) and 'd-none' or ''}}"
                                         >
                                             <t t-call="website_sale.variants">
                                                 <t t-set="ul_class" t-valuef="flex-column" />
@@ -2138,6 +2131,7 @@
                                             t-call="website_sale.cta_wrapper"
                                         />
                                         <t
+                                            t-if="is_view_active('website_sale.product_terms_and_conditions')"
                                             t-call="website_sale.product_terms_and_conditions"
                                         />
                                     </div>
@@ -2270,6 +2264,7 @@
         <div
             t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_title {{'mb-3' if not product.description_ecommerce else ''}}"
         >
+            <!-- FIXME VCR variable seems unused -->
             <t t-set="base_url" t-value="website.get_base_url()"/>
             <h1
                 t-attf-class="h3 {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
@@ -2308,10 +2303,10 @@
                     t-value="product_variant.all_product_tag_ids"
                 />
             </t>
-            <p t-if="(not product._is_add_to_cart_possible()) and (not product.active)" class="alert alert-warning">
+            <p t-if="(not is_add_to_cart_possible) and (not product.active)" class="alert alert-warning">
                 This product is no longer available.
             </p>
-            <p t-elif="not product._is_add_to_cart_possible()" class="alert alert-warning">
+            <p t-elif="not is_add_to_cart_possible" class="alert alert-warning">
                 This product has no valid combination.
             </p>
         </div>
@@ -2478,7 +2473,7 @@
         </xpath>
     </template>
 
-    <template id="product_tags" name="Product Tags" active="True">
+    <template id="website_sale.product_tags" name="Product Tags" active="True">
         <t t-set="visible_tags" t-value="all_product_tags.filtered('visible_to_customers')"/>
         <div
             t-attf-class="o_product_tags o_field_tags {{ 'd-flex flex-wrap align-items-center gap-2 mb-2 mt-1' if visible_tags else '' }}"
@@ -4337,7 +4332,7 @@
     <template id="carousel_product_indicators_left" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Left">
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="before">
             <t t-call="website_sale.carousel_product_indicators">
-                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-2'"/>
+                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-lg-2'"/>
             </t>
         </xpath>
         <xpath expr="//div[@id='o-carousel-product']" position="attributes">

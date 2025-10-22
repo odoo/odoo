@@ -8,13 +8,14 @@
 # Sarah Park, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2025-09-16 04:45+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-10-13 08:02+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "website_hr_recruitment/ko/>\n"
 "Language: ko\n"
@@ -25,14 +26,24 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "%s open positions"
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_job.py:0
+msgid ""
+"\n"
+"            <span class=\"text-muted small\">Time to Answer</span>\n"
+"            <h6>2 open days</h6>\n"
+"            <span class=\"text-muted small\">Process</span>\n"
+"            <h6>1 Phone Call</h6>\n"
+"            <h6>1 Onsite Interview</h6>\n"
+"            <span class=\"text-muted small\">Days to get an Offer</span>\n"
+"            <h6>4 Days after Interview</h6>\n"
+"        "
 msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "%s's Application"
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid " In case of issue, contact %(contact_infos)s"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -42,7 +53,7 @@ msgstr "'. 다음에 대한 결과 표시 중 '"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
-msgid "+1 (650) 691-3277"
+msgid "+1 (650) 555-0187"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -51,16 +62,11 @@ msgid "12 days / year, including <br/>6 of your choice."
 msgstr "원하는 날짜 6일을 포함하여 <br/>연간 총 12일의 교육을 제공합니다."
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_kanban_referal_extends
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
-"<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
-"                        Job Page"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -69,7 +75,9 @@ msgstr "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>모든 채용"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" aria-label=\"Employment type\"/>"
+msgid ""
+"<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
+"aria-label=\"Employment type\"/>"
 msgstr ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"근무 유형\" role=\"img\" aria-"
 "label=\"근무 유형\"/>"
@@ -80,29 +88,15 @@ msgid "<i class=\"oi oi-arrow-left\"/> Job Description"
 msgstr "<i class=\"oi oi-arrow-left\"/> 직무 설명"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "<small><b>READ</b></small>"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
-msgid "<span class=\"fst-italic\">No address specified</span>"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid ""
 "<span class=\"h5 fw-light\">In the meantime,</span><br/>\n"
-"                                            <span class=\"h3 mt8 mb32 fw-bold\">Take a look around our website:</span>"
+"                                            <span class=\"h3 mt8 mb32 fw-"
+"bold\">Take a look around our website:</span>"
 msgstr ""
 "<span class=\"h5 fw-light\">그동안,</span><br/>\n"
-"                                            <span class="
-"\"h3 mt8 mb32 fw-bold\">웹사이트를 둘러보세요:</span>"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Our Job Offers</span>"
-msgstr ""
+"                                            <span class=\"h3 mt8 mb32 fw-"
+"bold\">웹사이트를 둘러보세요:</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -133,35 +127,34 @@ msgstr "<span class=\"s_website_form_label_content\">간단한 소개</span>"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Email</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">이메일 주소</span>\n"
-"                                                <span class="
-"\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">이름</span>\n"
-"                                                 <span class=\"s_website_form_mark\"> *</span>"
+"                                                 <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Phone Number</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">전화번호</span>\n"
-"                                                <span class="
-"\"s_website_form_mark\"> *</span>"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "<span class=\"text-bg-success\">Published</span>"
-msgstr ""
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -185,7 +178,34 @@ msgstr "<span class=\"text-muted small\">위치</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: 0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+msgid ""
+"<span class=\"text-muted small\">Provide either a resume file or a linkedin "
+"profile</span>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -214,34 +234,33 @@ msgid "Additional languages"
 msgstr "제2외국어 가능"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Administrative Work"
-msgstr "행정 업무 능력"
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base_mobile
+msgid "All"
+msgstr "전부"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
-msgid "All Countries"
-msgstr "모든 국가"
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
+msgid "All websites"
+msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
-msgid "All Departments"
-msgstr "모든 부서"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
-msgid "All Offices"
-msgstr "모든 사무실"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
-msgid "All Types"
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"An application already exists for %(value)s. Duplicates might be rejected. %"
+"(recruiter_contact)s"
 msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
 msgid "Applicant"
 msgstr "지원자"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
+msgid "Application Info"
+msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -260,34 +279,46 @@ msgid "Apply Now!"
 msgstr "지금 신청하기!"
 
 #. module: website_hr_recruitment
+#: model:ir.model,website_form_label:website_hr_recruitment.model_hr_applicant
+msgid "Apply for a Job"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "As an employee of our company, you will <b>collaborate with each department\n"
-"                        to create and deploy disruptive products.</b> Come work at a growing company\n"
-"                        that offers great benefits with opportunities to moving forward and learn\n"
-"                        alongside accomplished leaders. We're seeking an experienced and outstanding\n"
+"                        to create and deploy disruptive products.</b> Come "
+"work at a growing company\n"
+"                        that offers great benefits with opportunities to "
+"moving forward and learn\n"
+"                        alongside accomplished leaders. We're seeking an "
+"experienced and outstanding\n"
 "                        member of staff.\n"
 "                        <br/><br/>\n"
-"                        This position is both <b>creative and rigorous</b> by nature you need to think\n"
-"                        outside the box. We expect the candidate to be proactive and have a \"get it done\"\n"
-"                        spirit. To be successful, you will have solid solving problem skills."
+"                        This position is both <b>creative and rigorous</b> "
+"by nature you need to think\n"
+"                        outside the box. We expect the candidate to be "
+"proactive and have a \"get it done\"\n"
+"                        spirit. To be successful, you will have solid "
+"solving problem skills."
 msgstr ""
-"회사의 일원으로서 여러분은 <b>각 부서와 협력하여 혁신적인 제품을 생산하고 "
-"배포하게 됩니다.</b> 뛰어난 역량의 리더들과 함께 배우고 성장할 기회는 물론,\n"
+"회사의 일원으로서 여러분은 <b>각 부서와 협력하여 혁신적인 제품을 생산하고 배"
+"포하게 됩니다.</b> 뛰어난 역량의 리더들과 함께 배우고 성장할 기회는 물론,\n"
 "                        다양한 복지를 제공하는 회사에서 함께 일해보세요.\n"
 "                        풍부한 경험과 잠재력을 지닌\n"
 "                        인재를 모십니다..\n"
 "                        <br/><br/>\n"
 "                        해당 직책은 <b>창의성과 엄격함 </b>모두를 요구하며,\n"
-"                        틀에 벗어난 사고를 필요로 합니다. 능동적이고 "
-"\"해내야 한다\"는 정신을 갖추고 있으며,\n"
-"                        탄탄한 문제 해결 능력을 지닌 지원자 여러분을 "
-"기다리고 있습니다."
+"                        틀에 벗어난 사고를 필요로 합니다. 능동적이고 \"해내"
+"야 한다\"는 정신을 갖추고 있으며,\n"
+"                        탄탄한 문제 해결 능력을 지닌 지원자 여러분을 기다리"
+"고 있습니다."
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Autonomy"
-msgstr "자율성"
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "Autosave"
+msgstr "자동 저장"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -298,6 +329,11 @@ msgstr "학사 학위 이상 취득자"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__can_publish
 msgid "Can Publish"
 msgstr "게시 가능"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.topbar_customizations
+msgid "Close"
+msgstr "닫기"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__job_details
@@ -315,7 +351,19 @@ msgid "Contact us"
 msgstr "문의하기"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Copied"
+msgstr "복사됨"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
+msgid "Countries"
+msgstr "국가"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Countries Filter"
 msgstr "국가 필터"
 
@@ -326,14 +374,11 @@ msgstr "사용자에게 실질적으로 도움이 되는 콘텐츠를 제작합�
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
-msgstr "오른쪽 상단의 <strong>+ <i>신규</i></strong> 버튼을 눌러 새로운 직무 "
-"페이지를 작성합니다."
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Customer Relationship"
-msgstr "고객 관계"
+msgid ""
+"Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
+msgstr ""
+"오른쪽 상단의 <strong>+ <i>신규</i></strong> 버튼을 눌러 새로운 직무 페이지"
+"를 작성합니다."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -343,12 +388,19 @@ msgid "Department"
 msgstr "부서"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
+msgid "Departments"
+msgstr "부서"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Departments Filter"
 msgstr "부서 필터"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option_plugin.js:0
 msgid "Description"
 msgstr "내용"
 
@@ -358,13 +410,26 @@ msgid "Discover our products."
 msgstr "제품 알아보기."
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Each employee has a chance to see the impact of his work.\n"
-"                You can make a real contribution to the success of the company.\n"
-"                <br/>\n"
-"                Several activities are often organized all over the year, such as weekly\n"
-"                sports sessions, team building events, monthly drink, and much more"
+"                    You can make a real contribution to the success of the "
+"company.\n"
+"                    <br/>\n"
+"                    Several activities are often organized all over the "
+"year, such as weekly\n"
+"                    sports sessions, team building events, monthly drink, "
+"and much more"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -373,7 +438,8 @@ msgid "Eat &amp; Drink"
 msgstr "간식 제공"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Employment Types Filter"
 msgstr "고용 유형 필터"
 
@@ -386,6 +452,21 @@ msgstr "다양한 비즈니스 산업에 대한 지식을 넓힐 수 있습니�
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Experience in writing online content"
 msgstr "온라인 콘텐츠 작성 경험"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
+msgid "Filter by country"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.topbar_customizations
+msgid "Filters"
+msgstr "필터"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -422,17 +503,20 @@ msgstr "홈"
 msgid ""
 "I usually <strong>answer applications within 3 days</strong>.\n"
 "                                                <br/><br/>\n"
-"                                                The next step is either a call or a meeting in our offices.\n"
+"                                                The next step is either a "
+"call or a meeting in our offices.\n"
 "                                                <br/><br/>\n"
-"                                                Feel free to <strong>contact me if you want a faster\n"
-"                                                feedback</strong> or if you don't get news from me\n"
+"                                                Feel free to <strong>contact "
+"me if you want a faster\n"
+"                                                feedback</strong> or if you "
+"don't get news from me\n"
 "                                                quickly enough."
 msgstr ""
-"일반적인 경우, <strong>지원 결과에 대한 안내를 수일 내로 드리게 "
-"됩니다.</strong>\n"
+"일반적인 경우, <strong>지원 결과에 대한 안내를 수일 내로 드리게 됩니다.</"
+"strong>\n"
 "                                                <br/><br/>\n"
-"                                                다음 단계는 전화 면접 또는 "
-"사무실 대면 면접으로 이루어질 예정입니다.\n"
+"                                                다음 단계는 전화 면접 또는 사"
+"무실 대면 면접으로 이루어질 예정입니다.\n"
 "                                                <br/><br/>\n"
 "                                                더 빠른 피드백을 원하시거나 "
 "<strong>결과에 대한\n"
@@ -445,13 +529,40 @@ msgid "I'm feeling lucky"
 msgstr "운이 좋은 것 같아요"
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid ""
+"If checked, the record will be saved immediately when the field is modified."
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_industries
+msgid "Industries"
+msgstr "인더스트리"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
+msgid "Industries Filter"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
 msgstr "직무 설명 삽입하기..."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 msgid "Is Published"
 msgstr "게시 여부"
 
@@ -464,6 +575,11 @@ msgstr "입사지원서 양식"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__description
 msgid "Job Description"
 msgstr "직무 설명"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "Job Page"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_window,name:website_hr_recruitment.action_job_pages_list
@@ -487,16 +603,20 @@ msgid "Job not found"
 msgstr "채용 정보 찾을 수 없음"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
 #. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 #: code:addons/website_hr_recruitment/models/website.py:0
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option.xml:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
+#: model:website.menu,name:website_hr_recruitment.website_menu_jobs
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Jobs"
 msgstr "직무"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option_plugin.js:0
 msgid "Jobs Page"
 msgstr "채용 페이지"
 
@@ -504,6 +624,17 @@ msgstr "채용 페이지"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Lead the entire sales cycle"
 msgstr "전체 영업 주기 리드"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "LinkedIn Profile"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -526,14 +657,10 @@ msgid "Nice to have"
 msgstr "우대 사항"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
-msgid "No address specified"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr "무능한 관리자, 비효율적인 도구의 사용, 경직된 근로 시간 제도가 없습니다."
+msgstr ""
+"무능한 관리자, 비효율적인 도구의 사용, 경직된 근로 시간 제도가 없습니다."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -542,17 +669,26 @@ msgstr "' 에 대한 결과를 찾을 수 없습니다."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
-msgstr "엔터프라이즈 프로세스를 사용하여 시간 낭비를 최소화하며, 각 직책에 맞는 "
-"실질적인 책임과 자율성을 부여합니다."
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
+msgstr ""
+"엔터프라이즈 프로세스를 사용하여 시간 낭비를 최소화하며, 각 직책에 맞는 실질"
+"적인 책임과 자율성을 부여합니다."
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "Not published"
-msgstr "게시 안됨"
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
+msgid "Not Published"
+msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
+msgid "Offices"
+msgstr "사무실"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Offices Filter"
 msgstr "사무실 필터"
 
@@ -567,9 +703,19 @@ msgid "Others"
 msgstr "기타"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "Our Job Offers"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Our Product"
 msgstr "제품"
+
+#. module: website_hr_recruitment
+#: model:ir.model,name:website_hr_recruitment.model_website_page
+msgid "Page"
+msgstr "페이지"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -587,9 +733,10 @@ msgid "Perks"
 msgstr "기본 혜택"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Personal Evolution"
-msgstr "성장 가능성"
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Phone Number"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -598,6 +745,7 @@ msgstr "동료와 함께 스포츠 활동을 즐길 경우, <br/>모든 비용�
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Process Details"
 msgstr "프로세스 세부 사항"
 
@@ -607,8 +755,11 @@ msgid "Products"
 msgstr "제품"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_search_view_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_tree_inherit_website
 msgid "Published"
 msgstr "게시 완료"
@@ -629,10 +780,21 @@ msgid "Real responsibilities and challenges in a fast evolving company"
 msgstr "빠르게 발전하는 기업의 사회적 책임과 도전 과제를 제시합니다."
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Remote"
 msgstr "재택 근무"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
+msgid "Reset Filter"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_reset_filters
+msgid "Reset Filters"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -641,12 +803,7 @@ msgstr "주요 업무"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr "이 웹 사이트로의 게시를 제한합니다."
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
-msgid "SEO Optimized"
+msgid "Restrict to a specific website."
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -655,7 +812,8 @@ msgid "SEO optimized"
 msgstr "SEO 최적화"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Search Bar"
 msgstr "검색창"
 
@@ -670,7 +828,26 @@ msgid "Set if the application is published on the website of the company."
 msgstr "회사 웹사이트에 앱을 게시할지 여부를 설정합니다."
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Share Job"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Short Introduction"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid "Short introduction from applicant"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Sidebar"
 msgstr "사이드바"
 
@@ -690,24 +867,54 @@ msgid "Strong analytical skills"
 msgstr "정확한 분석 능력"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Technical Expertise"
-msgstr "기술 전문성"
+#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
-msgid "The full URL to access the document through the website."
-msgstr "웹사이트를 통해 문서에 접근 하는 전체 URL입니다."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "The job link has been copied to the clipboard."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
+msgid "The job offer has been closed."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/interactions/hr_recruitment_form.js:0
+msgid "The profile that you gave us doesn't seems like a linkedin profile"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
-"                                            but feel free to <span class=\"fw-bold\">contact us</span> for a spontaneous application."
+"                                            but feel free to <span "
+"class=\"fw-bold\">contact us</span> for a spontaneous application."
 msgstr ""
 "현재 진행 중인 채용 공고가 없습니다.<br class=\"mb-2\"/>\n"
-"                                            수시 채용을 위한 지원서를 "
-"제출하시려면 <span class=\"fw-bold\">문의하기</span> 를 통해 남겨주세요."
+"                                            수시 채용을 위한 지원서를 제출하"
+"시려면 <span class=\"fw-bold\">문의하기</span> 를 통해 남겨주세요."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "ToggleLabeled"
+msgstr "라벨 토글"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
+msgid "Tracker URL"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -716,13 +923,14 @@ msgstr "교육"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
-msgid "Unspecified type"
-msgstr ""
+msgid "Types"
+msgstr "유형"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
-msgid "Url Parameters"
-msgstr "Url 매개변수"
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base_mobile
+msgid "Unspecified"
+msgstr "미지정"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -737,19 +945,42 @@ msgstr "현재 웹 사이트에 공개"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid ""
-"We are a team of passionate people whose goal is to improve everyone's life through disruptive products.\n"
-"                                We build great products to solve your business problems."
+"We are a team of passionate people whose goal is to improve everyone's life "
+"through disruptive products.\n"
+"                                We build great products to solve your "
+"business problems."
 msgstr ""
-"저희는 모든 사람들이 더 나은 삶을 영위할 수 있도록 혁신 제품을 제작하고자 "
-"하는 열정을 가지고 구성된 팀입니다.\n"
+"저희는 모든 사람들이 더 나은 삶을 영위할 수 있도록 혁신 제품을 제작하고자 하"
+"는 열정을 가지고 구성된 팀입니다.\n"
 "                                고객님이 비즈니스를 운영하는 중 겪을 수 있는 "
 "문제를 해결할 훌륭한 제품을 만들기 위해 노력하고 있습니다."
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"We found a recent application with a similar name, email, phone number. You "
+"can continue if it's not a mistake."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"We've found a previous closed application in our system within the last 6 "
+"months. Please consider before applying in order not to duplicate efforts."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
 msgid "Website"
 msgstr "웹사이트"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
@@ -797,22 +1028,21 @@ msgid "What's great in the job?"
 msgstr "해당 직책의 장점은 무엇입니까?"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_description
-msgid ""
-"You can customize this sample job description with a short overview of\n"
-"        the job position, defining specific terms and benefits. Keep it simple\n"
-"        an clear."
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
-msgid "You can write here a short description of your Job Description that will be displayed on the main Jobs' list page."
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
 msgstr "귀하의 <b>연락처</b> 정보는:"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Email"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Name"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -829,8 +1059,15 @@ msgid "breadcrumb"
 msgstr "사이트 이동 경로"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
+msgid ""
+"e.g. Summarize the position in one or two lines that will be displayed on "
+"the Jobs list page..."
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "e.g. https://www.linkedin.com/in/fpodoo/"
+msgid "e.g. https://www.linkedin.com/in/fpodoo"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -839,11 +1076,60 @@ msgid "info@yourcompany.example.com"
 msgstr "info@yourcompany.example.com"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_recruitment_source_kanban_inherit_website
-msgid "share it"
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
+msgid "job URL"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open position"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open positions"
 msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "게시 안함"
+
+#~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+#~ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+
+#~ msgid "Administrative Work"
+#~ msgstr "행정 업무 능력"
+
+#~ msgid "All Countries"
+#~ msgstr "모든 국가"
+
+#~ msgid "All Departments"
+#~ msgstr "모든 부서"
+
+#~ msgid "All Offices"
+#~ msgstr "모든 사무실"
+
+#~ msgid "Autonomy"
+#~ msgstr "자율성"
+
+#~ msgid "Customer Relationship"
+#~ msgstr "고객 관계"
+
+#~ msgid "Not published"
+#~ msgstr "게시 안됨"
+
+#~ msgid "Personal Evolution"
+#~ msgstr "성장 가능성"
+
+#~ msgid "Restrict publishing to this website."
+#~ msgstr "이 웹 사이트로의 게시를 제한합니다."
+
+#~ msgid "Technical Expertise"
+#~ msgstr "기술 전문성"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "웹사이트를 통해 문서에 접근 하는 전체 URL입니다."
+
+#~ msgid "Url Parameters"
+#~ msgstr "Url 매개변수"

@@ -19,6 +19,16 @@
         &[data-shape] {
             object-fit: contain;
         }
+
+        &.rounded-start {
+            border-bottom-left-radius: var(--card-inner-border-radius) !important;
+            border-top-left-radius: var(--card-inner-border-radius) !important;
+        }
+
+        &.rounded-end {
+            border-top-right-radius: var(--card-inner-border-radius) !important;
+            border-bottom-right-radius: var(--card-inner-border-radius) !important;
+        }
     }
 
     .o_card_img_wrapper.ratio {

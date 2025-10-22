@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 21:18+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_sms/th/>"
-"\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_sms/th/"
+">\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,20 +23,37 @@ msgstr ""
 #: model:sms.template,body:pos_sms.sms_template_data_point_of_sale
 msgid ""
 "\n"
-"                {{ object.company_id.name }} : Your order with reference: {{ object.pos_reference }} was processed succesfully with amount {{  object.currency_id.format(object.amount_total) }}. Use {{ object.pos_reference }}  for further reference\n"
+"                {{ object.company_id.name }} : Your order with reference: "
+"{{ object.pos_reference }} was processed succesfully with amount "
+"{{  object.currency_id.format(object.amount_total) }}. Use "
+"{{ object.pos_reference }}  for further reference\n"
 "            "
 msgstr ""
 "\n"
-"                {{ object.company_id.name }} : คำสั่งซื้อของคุณที่มีการอ้างอิง: {{ "
-"object.pos_reference }} ได้รับการดำเนินการเรียบร้อยแล้วด้วยจำนวนเงิน {{ "
-"object.currency_id.format(object.amount_total) }} โปรดใช้ {{ "
-"object.pos_reference }} สำหรับการอ้างอิงเพิ่มเติม\n"
+"                {{ object.company_id.name }} : คำสั่งซื้อของคุณที่มีการอ้างอิง: "
+"{{ object.pos_reference }} ได้รับการดำเนินการเรียบร้อยแล้วด้วยจำนวนเงิน "
+"{{ object.currency_id.format(object.amount_total) }} โปรดใช้ "
+"{{ object.pos_reference }} สำหรับการอ้างอิงเพิ่มเติม\n"
 "            "
 
 #. module: pos_sms
 #: model:ir.model,name:pos_sms.model_res_config_settings
 msgid "Config Settings"
 msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: pos_sms
+#: model:ir.model.fields,field_description:pos_sms.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sms.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_sms
+#: model:ir.model.fields,field_description:pos_sms.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sms.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__id
+msgid "ID"
+msgstr ""
 
 #. module: pos_sms
 #: model:sms.template,name:pos_sms.sms_template_data_point_of_sale

@@ -126,6 +126,7 @@ class AccountPaymentRegister(models.TransientModel):
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n")
     available_payment_method_line_ids = fields.Many2many('account.payment.method.line', compute='_compute_payment_method_line_fields')
+    payment_method_code = fields.Char(related='payment_method_line_id.code')
 
     # == Payment difference fields ==
     payment_difference = fields.Monetary(
@@ -392,7 +393,7 @@ class AccountPaymentRegister(models.TransientModel):
 
             wizard.batches = batch_vals
 
-    @api.depends('payment_method_line_id', 'line_ids', 'group_payment')
+    @api.depends('payment_method_line_id', 'line_ids', 'group_payment', 'partner_bank_id')
     def _compute_trust_values(self):
         for wizard in self:
             total_payment_count = 0
@@ -404,7 +405,8 @@ class AccountPaymentRegister(models.TransientModel):
             for batch in wizard.batches:
                 payment_count = 1 if wizard.group_payment else len(batch['lines'])
                 total_payment_count += payment_count
-                batch_account = wizard._get_batch_account(batch)
+                # Use the currently selected partner_bank_id if in edit mode, otherwise use batch account
+                batch_account = wizard.partner_bank_id or wizard._get_batch_account(batch)
                 if wizard.require_partner_bank_account:
                     if not batch_account:
                         missing_account_partners += batch['lines'].partner_id
@@ -576,7 +578,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_actionable_errors(self):
         for wizard in self:
             actionable_errors = {}
-            if unpaid_matched_payments := wizard.line_ids.move_id.matched_payment_ids.filtered(lambda p: p.state == 'in_process'):
+            if unpaid_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: p.state == 'in_process'):
                 actionable_errors['unpaid_matched_payments'] = {
                     'message': self.env._("There are payments in progress. Make sure you don't pay twice."),
                     'action_text': self.env._("Check them"),
@@ -761,16 +763,20 @@ class AccountPaymentRegister(models.TransientModel):
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
                 html_lines = []
                 if wizard.installments_mode == 'full':
-                    if (
+                    is_full_match = (
                         wizard.currency_id.is_zero(total_amount_values['full_amount'] - wizard.amount)
                         and wizard.currency_id.is_zero(total_amount_values['full_amount'] - total_amount_values['amount_by_default'])
-                    ):
-                        wizard.installments_switch_amount = 0.0
-                    else:
-                        wizard.installments_switch_amount = total_amount_values['amount_by_default']
+                    )
+                    wizard.installments_switch_amount = 0.0 if is_full_match else total_amount_values['amount_by_default']
+                    if not is_full_match and not wizard.currency_id.is_zero(wizard.amount):
+                        switch_message = (
+                            _("Consider paying the amount with %(btn_start)searly payment discount%(btn_end)s instead.")
+                            if total_amount_values['epd_applied']
+                            else _("Consider paying in %(btn_start)sinstallments%(btn_end)s instead.")
+                        )
                         html_lines += [
                             _("This is the full amount."),
-                            _("Consider paying in %(btn_start)sinstallments%(btn_end)s instead."),
+                            switch_message,
                         ]
                 elif wizard.installments_mode == 'overdue':
                     wizard.installments_switch_amount = total_amount_values['full_amount']

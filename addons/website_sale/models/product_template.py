@@ -347,18 +347,21 @@ class ProductTemplate(models.Model):
         res = defaultdict(dict)
         show_count = 20
         for template in self:
-            available_attribute_lines = template.attribute_line_ids.filtered(
-                lambda ptal: ptal.attribute_id.preview_variants != 'hidden'
-            )
-            if available_attribute_lines:
-                previewed_ptal = available_attribute_lines[0]
-                previewed_ptavs = previewed_ptal.product_template_value_ids.filtered(
-                    lambda ptav: ptav.ptav_active and ptav.ptav_product_variant_ids
-                )
+            previewed_ptal = next((
+                p for p in template.attribute_line_ids
+                if p.attribute_id.preview_variants != 'hidden'
+            ), None)
+            if previewed_ptal:
+                previewed_ptavs = [
+                    ptav
+                    for ptav in previewed_ptal.product_template_value_ids
+                    if ptav.ptav_active and ptav.ptav_product_variant_ids
+                ]
+
                 if len(previewed_ptavs) > 1:
                     previewed_ptavs_data = []
                     for ptav in previewed_ptavs[:show_count]:
-                        matching_variant = ptav.ptav_product_variant_ids.sorted('id')[0]
+                        matching_variant = min(ptav.ptav_product_variant_ids, key=lambda p: p.id)
                         variant_query_params = {
                             **(product_query_params or {}),
                             'attribute_values': str(ptav.product_attribute_value_id.id)
@@ -368,6 +371,7 @@ class ProductTemplate(models.Model):
                             'variant_image_url': self.env['website'].image_url(matching_variant, 'image_512'),
                             'variant_url': template._get_product_url(category, variant_query_params),
                         })
+
                     res[template.id] = {
                         'ptavs_data': previewed_ptavs_data,
                         'hidden_ptavs_count': max(0, len(previewed_ptavs) - show_count)
@@ -863,8 +867,11 @@ class ProductTemplate(models.Model):
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
-            tags = list(map(int, tags)) # Convert list of strings to list of integers
-            domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
+            tags = list(map(int, tags))  # Convert list of strings to list of integers
+            domains.append(Domain.OR([
+                Domain('product_tag_ids', 'in', tags),
+                Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
+            ]))
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:
@@ -1056,7 +1063,7 @@ class ProductTemplate(models.Model):
             # previously found.
             if auto_assign_ribbons is None:
                 # On product page, the auto_assign_ribbons are not provided.
-                auto_assign_ribbons = self.env['product.ribbon'].search([
+                auto_assign_ribbons = self.env['product.ribbon'].search_fetch([
                     ('assign', '!=', 'manual'),
                 ])
             for rb in auto_assign_ribbons:

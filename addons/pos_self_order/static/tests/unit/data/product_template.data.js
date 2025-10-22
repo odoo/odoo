@@ -6,3 +6,8 @@ patch(ProductTemplate.prototype, {
         return [...super._load_pos_data_fields(), "self_order_available"];
     },
 });
+
+ProductTemplate._records = ProductTemplate._records.map((record) => ({
+    ...record,
+    self_order_available: true,
+}));

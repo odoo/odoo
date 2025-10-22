@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:38+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 02:34+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: web_hierarchy
@@ -36,7 +36,14 @@ msgstr "База"
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
 msgid "Cannot change the parent because it will cause a cyclic."
-msgstr "Невозможно изменить родителя, так как это приведет к циклической ситуации."
+msgstr ""
+"Невозможно изменить родителя, так как это приведет к циклической ситуации."
+
+#. module: web_hierarchy
+#: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__display_name
+#: model:ir.model.fields,field_description:web_hierarchy.field_ir_ui_view__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -45,8 +52,6 @@ msgid "Fold"
 msgstr "Сложить"
 
 #. module: web_hierarchy
-#. odoo-javascript
-#: code:addons/web_hierarchy/static/src/hierarchy_view.js:0
 #: model:ir.model.fields.selection,name:web_hierarchy.selection__ir_actions_act_window_view__view_mode__hierarchy
 #: model:ir.model.fields.selection,name:web_hierarchy.selection__ir_ui_view__type__hierarchy
 msgid "Hierarchy"
@@ -65,16 +70,28 @@ msgid "Hierarchy view can contain only one templates tag"
 msgstr "Иерархическое представление может содержать только один тег шаблонов"
 
 #. module: web_hierarchy
+#: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__id
+#: model:ir.model.fields,field_description:web_hierarchy.field_ir_ui_view__id
+msgid "ID"
+msgstr ""
+
+#. module: web_hierarchy
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_renderer.js:0
-msgid "Impossible to update the parent node of the dragged node because no parent has been found."
-msgstr "Невозможно обновить родительский узел перетаскиваемого узла, поскольку родительский узел не найден."
+msgid ""
+"Impossible to update the parent node of the dragged node because no parent "
+"has been found."
+msgstr ""
+"Невозможно обновить родительский узел перетаскиваемого узла, поскольку "
+"родительский узел не найден."
 
 #. module: web_hierarchy
 #. odoo-python
 #: code:addons/web_hierarchy/models/ir_ui_view.py:0
-msgid "Invalid attributes (%s) in hierarchy view. Attributes must be in (%s)"
-msgstr "Недопустимые атрибуты (%s) в представлении иерархии. Атрибуты должны быть в (%s)"
+msgid ""
+"Invalid attributes (%(invalid_attributes)s) in hierarchy view. Attributes "
+"must be in (%(valid_attributes)s)"
+msgstr ""
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -85,7 +102,9 @@ msgstr "Новый"
 #. module: web_hierarchy
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
-msgid "The parent of \"%s\" was successfully updated. Reloading records to account for other changes."
+msgid ""
+"The parent of \"%s\" was successfully updated. Reloading records to account "
+"for other changes."
 msgstr ""
 "Родительский элемент для «%s» был успешно обновлен. Перезагружаем записи, "
 "чтобы учесть другие изменения."
@@ -112,3 +131,9 @@ msgstr "Просмотр"
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_ui_view__type
 msgid "View Type"
 msgstr "Тип просмотра"
+
+#~ msgid ""
+#~ "Invalid attributes (%s) in hierarchy view. Attributes must be in (%s)"
+#~ msgstr ""
+#~ "Недопустимые атрибуты (%s) в представлении иерархии. Атрибуты должны быть "
+#~ "в (%s)"

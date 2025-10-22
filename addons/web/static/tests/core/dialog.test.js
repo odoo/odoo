@@ -13,7 +13,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 test("simple rendering", async () => {
-    expect.assertions(8);
+    expect.assertions(7);
     class Parent extends Component {
         static components = { Dialog };
         static template = xml`
@@ -33,10 +33,7 @@ test("simple rendering", async () => {
     expect(".o_dialog main").toHaveCount(1, { message: "a dialog has always a main node" });
     expect("main").toHaveText("Hello!");
     expect(".o_dialog footer").toHaveCount(1, { message: "the footer is rendered by default" });
-    expect(".o_dialog footer button").toHaveCount(1, {
-        message: "the footer is rendered with a single button 'Ok' by default",
-    });
-    expect("footer button").toHaveText("Ok");
+    expect(".o_dialog footer:visible").toHaveCount(0, { message: "the footer is hidden if empty" });
 });
 
 test("hotkeys work on dialogs", async () => {
@@ -45,9 +42,15 @@ test("hotkeys work on dialogs", async () => {
         static template = xml`
             <Dialog title="'Wow(l) Effect'">
                 Hello!
+                <t t-set-slot="footer">
+                    <button t-on-click="onClickOk">Ok</button>
+                </t>
             </Dialog>
         `;
         static props = ["*"];
+        onClickOk() {
+            expect.step("clickOk");
+        }
     }
     await makeDialogMockEnv({
         dialogData: {
@@ -65,7 +68,7 @@ test("hotkeys work on dialogs", async () => {
     // Same effect as clicking on the Ok button
     await keyDown("control+enter");
     await keyUp("ctrl+enter");
-    expect.verifySteps(["close"]);
+    expect.verifySteps(["clickOk"]);
 });
 
 test("simple rendering with two dialogs", async () => {
@@ -141,30 +144,6 @@ test("click on the button x triggers the close and dismiss defined by a Child co
 
     await contains(".o_dialog header button[aria-label='Close']").click();
     expect.verifySteps(["dismiss", "close"]);
-});
-
-test("click on the default footer button triggers the service close", async () => {
-    expect.assertions(2);
-    class Parent extends Component {
-        static template = xml`
-            <Dialog>
-                Hello!
-            </Dialog>
-        `;
-        static props = ["*"];
-        static components = { Dialog };
-    }
-    await makeDialogMockEnv({
-        dialogData: {
-            close: () => expect.step("close"),
-            dismiss: () => expect.step("dismiss"),
-        },
-    });
-    await mountWithCleanup(Parent);
-    expect(".o_dialog").toHaveCount(1);
-
-    await contains(".o_dialog footer button").click();
-    expect.verifySteps(["close"]);
 });
 
 test("render custom footer buttons is possible", async () => {

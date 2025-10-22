@@ -203,7 +203,7 @@ class AccountMove(models.Model):
         for partner in partners:
             if partner_validation := partner._l10n_in_edi_strict_error_validation():
                 self.l10n_in_edi_error = Markup("<br>").join(partner_validation)
-                return partner_validation
+                return {'messages': partner_validation}
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
         response = self._l10n_in_edi_connect_to_server(
@@ -278,13 +278,17 @@ class AccountMove(models.Model):
                 msg = Markup("<br/>").join(
                     ["[%s] %s" % (e.get("code"), e.get("message")) for e in error]
                 )
+                is_warning = any(warning_code in error_codes for warning_code in ('404', 'timeout'))
                 self.l10n_in_edi_error = (
                     self._l10n_in_edi_get_iap_buy_credits_message()
                     if no_credit else msg
                 )
                 # avoid return `l10n_in_edi_error` because as a html field
                 # values are sanitized with `<p>` tag
-                return msg
+                return {
+                    'messages': [msg],
+                    'is_warning': is_warning
+                }
         data = response.get("data", {})
         json_dump = json.dumps(data)
         json_name = "%s_einvoice.json" % (self.name.replace("/", "_"))
@@ -594,7 +598,14 @@ class AccountMove(models.Model):
                 "TaxSch": "GST",
                 "SupTyp": self._l10n_in_get_supply_type(tax_details_by_code.get('igst_amount')),
                 "RegRev": tax_details_by_code.get('is_reverse_charge') and "Y" or "N",
-                "IgstOnIntra": is_intra_state and tax_details_by_code.get('igst_amount') and "Y" or "N",
+                "IgstOnIntra": (
+                    # for Export SEZ LUT tax as per e-invoice api doc validation point 32
+                    # Export and SEZ must be treated as Inter state supply
+                    self.l10n_in_gst_treatment not in ('special_economic_zone', 'overseas')
+                    and is_intra_state
+                    and tax_details_by_code.get("igst_amount")
+                    and "Y" or "N"
+                ),
             },
             "DocDtls": {
                 "Typ": (self.move_type == "out_refund" and "CRN") or (self.debit_origin_id and "DBN") or "INV",
@@ -616,7 +627,7 @@ class AccountMove(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": in_round(tax_details['base_amount'] + global_discount_amount),
+                "AssVal": in_round(tax_details['base_amount']),
                 "CgstVal": in_round(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": in_round(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": in_round(tax_details_by_code.get("igst_amount", 0.00)),
@@ -631,7 +642,11 @@ class AccountMove(models.Model):
                 "Discount": in_round(global_discount_amount),
                 "RndOffAmt": in_round(rounding_amount),
                 "TotInvVal": in_round(
-                    (tax_details["base_amount"] + tax_details["tax_amount"] + rounding_amount)),
+                    tax_details["base_amount"]
+                    + tax_details["tax_amount"]
+                    + rounding_amount
+                    - global_discount_amount
+                ),
             },
         }
         if self.company_currency_id != self.currency_id:

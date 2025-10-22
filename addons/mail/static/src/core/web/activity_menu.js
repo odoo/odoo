@@ -7,6 +7,8 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
+import { useCommand } from "@web/core/commands/command_hook";
+import { _t } from "@web/core/l10n/translation";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };
@@ -21,6 +23,16 @@ export class ActivityMenu extends Component {
         this.userId = user.userId;
         this.ui = useService("ui");
         this.dropdown = useDropdownState();
+        useCommand(_t("Activity"), () => this.store.scheduleActivity(false, false), {
+            category: "activity",
+            hotkey: "alt+shift+a",
+            global: true,
+            hotkeyOptions: { bypassEditableProtection: true },
+            isAvailable: () =>
+                !this.ui.activeElement.querySelector(
+                    "[data-hotkey='shift+a'], .o_mail_activity_schedule_wizard"
+                ),
+        });
     }
 
     onBeforeOpen() {

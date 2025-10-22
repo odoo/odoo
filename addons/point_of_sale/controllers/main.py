@@ -134,8 +134,8 @@ class PosController(PortalAccount):
 
             if errors:
                 errors['generic'] = _("Please fill all the required fields.")
-            elif len(form_values['pos_reference']) < 14:
-                errors['pos_reference'] = _("The Ticket Number should be at least 14 characters long.")
+            elif len(form_values['pos_reference']) < 12:
+                errors['pos_reference'] = _("The Ticket Number should be at least 12 characters long.")
             else:
                 date_order = datetime(*[int(i) for i in form_values['date_order'].split('-')])
                 order = request.env['pos.order'].sudo().search([
@@ -189,7 +189,7 @@ class PosController(PortalAccount):
 
         # Set the proper context in case of unauthenticated user accessing
         # from the main company website
-        pos_order = pos_order.with_company(pos_order.company_id)
+        pos_order = pos_order.with_company(pos_order.company_id).with_context(allowed_company_ids=pos_order.company_id.ids)
 
         # If the order was already invoiced, return the invoice directly by forcing the access token so that the non-connected user can see it.
         if pos_order.account_move and pos_order.account_move.is_sale_document():

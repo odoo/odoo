@@ -8,7 +8,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
 import { ActionList } from "@mail/core/common/action_list";
-import { attClassObjectToString } from "@mail/utils/common/format";
 import { ACTION_TAGS } from "@mail/core/common/action";
 
 export class CallActionList extends Component {
@@ -45,11 +44,6 @@ export class CallActionList extends Component {
                           this.callActions.more(
                               {
                                   actions: moreActions,
-                                  btnClass: () =>
-                                      attClassObjectToString({
-                                          "o-discuss-CallActionList-pulse":
-                                              this.isPromotingFullscreen,
-                                      }),
                                   dropdownMenuClass: "m-0 mb-1",
                                   dropdownPosition: "top-end",
                                   name: this.MORE,
@@ -64,6 +58,7 @@ export class CallActionList extends Component {
         });
     }
 
+    /** @deprecated */
     get isPromotingFullscreen() {
         return Boolean(
             !this.env.pipWindow &&

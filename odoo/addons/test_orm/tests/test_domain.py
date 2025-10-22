@@ -705,8 +705,13 @@ class TestDomainOptimize(TransactionCase):
             "Timezone should have no effect on datetime"
         )
         self.assertEqual(
+            Domain('moment', '>=', '2024-07-02').optimize(model),
+            Domain('moment', '>=', datetime(2024, 7, 1, 22)),
+            "Date should consider timezone of the user"
+        )
+        self.assertEqual(
             Domain('moment', '>=', '2024-01-02').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 1, 22)),
+            Domain('moment', '>=', datetime(2024, 1, 1, 23)),
             "Date should consider timezone of the user"
         )
 

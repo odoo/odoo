@@ -51,8 +51,12 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line')
     def _compute_website_order_line(self):
+        # group saler.order.line to prefetch all in one query
+        order_lines = self.env['sale.order.line'].search_fetch([('order_id', 'in', self.ids)])
         for order in self:
-            order.website_order_line = order.order_line.filtered(lambda sol: sol._show_in_cart())
+            order.website_order_line = order_lines.filtered(
+                lambda sol: sol.order_id == order and sol._show_in_cart(),
+            )
 
     @api.depends('order_line.price_total', 'order_line.price_subtotal')
     def _compute_amount_delivery(self):
@@ -110,6 +114,16 @@ class SaleOrder(models.Model):
                 order.payment_term_id = order.env['account.payment.term'].search([
                     ('company_id', '=', order.company_id.id),
                 ], limit=1)
+
+    def _compute_pricelist_id(self):
+        # Override to compute pricelists for carts using the partner's GeoIP,
+        # providing a fallback in case they don't have an address set.
+        if not (country_code := self.env['website']._get_geoip_country_code()):
+            return super()._compute_pricelist_id()
+        if website_orders := self.filtered('website_id'):
+            website_orders = website_orders.with_context(country_code=country_code)
+            super(SaleOrder, website_orders)._compute_pricelist_id()
+        return super(SaleOrder, self - website_orders)._compute_pricelist_id()
 
     def _search_abandoned_cart(self, operator, value):
         if operator != 'in':
@@ -603,7 +617,8 @@ class SaleOrder(models.Model):
         :returns: whether the combo quantities had to be updated
         """
         # Ensure all combo lines have the same quantity
-        combo_lines = line.linked_line_ids
+        if not (combo_lines := line.linked_line_ids):
+            return False
         available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
         if available_combo_quantity < line.product_uom_qty:
             line._set_shop_warning_stock(

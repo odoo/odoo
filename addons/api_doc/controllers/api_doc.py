@@ -561,7 +561,7 @@ class Param:
             # ignore the default value when it is not json serializable
             try:
                 json.dumps(self.default)
-            except ValueError:
+            except (ValueError, TypeError):
                 d.pop('default')
         return d
 

@@ -93,3 +93,24 @@ class TestEcommerceAccess(HttpCaseWithUserDemo, WebsiteSaleCommon):
         self.menu.with_user(self.public_user).sudo()._compute_visible()
         # Check if menu is hidden for public user when ecommerce is restricted
         self.assertFalse(self.menu.is_visible)
+
+    def test_ecommerce_access_shop_redirection(self):
+        self.website.ecommerce_access = 'logged_in'
+        self.authenticate(None, None)
+        public_category = self.env['product.public.category'].create({
+            'name': 'Test Category',
+        })
+        public_product_template = self.env['product.template'].create({
+            'name': 'Test Template',
+            'public_categ_ids': [public_category.id],
+            'website_published': True,
+        })
+        category_slug = self.env["ir.http"]._slug(public_category)
+        response = self.url_open(f'/shop/category/{category_slug}/page/1', allow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertURLEqual(response.url, f'/web/login?redirect=/shop/category/{category_slug}/page/1')
+
+        product_slug = self.env["ir.http"]._slug(public_product_template)
+        response = self.url_open(f'/shop/{product_slug}', allow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertURLEqual(response.url, f'/web/login?redirect=/shop/{product_slug}')

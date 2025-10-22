@@ -157,7 +157,7 @@ test("colorpicker inside the builder are linked to the builder theme colors", as
             applyColorPreview() {},
             applyColorResetPreview() {},
             colorPrefix: "",
-            themeColorPrefix: "xyz-",
+            cssVarColorPrefix: "xyz-",
         },
     });
     const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
@@ -195,7 +195,7 @@ test("colorpicker outside the builder are not linked to the builder theme colors
             applyColorPreview() {},
             applyColorResetPreview() {},
             colorPrefix: "",
-            themeColorPrefix: "",
+            cssVarColorPrefix: "",
         },
     });
     const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
@@ -268,4 +268,26 @@ test("can register an extra tab", async () => {
     expect("button.extra-tab").toHaveClass("active");
     expect(".o_font_color_selector>p:last-child").toHaveText("Color picker extra tab");
     registry.category("color_picker_tabs").remove("web.extra");
+});
+
+test("should mark default color as selected when it is selected", async () => {
+    defineStyle(`
+        :root {
+            --900: #212527;
+        }
+    `);
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#212527",
+                defaultTab: "custom",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {},
+            applyColorResetPreview() {},
+            colorPrefix: "",
+        },
+    });
+    expect(".o_color_button[data-color='900']").toHaveClass("selected");
 });

@@ -53,6 +53,10 @@ class ResCompany(models.Model):
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
             raise UserError(_("Everything is correctly closed"))
+        if not self.account_stock_journal_id:
+            raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
+        if not self.account_stock_valuation_id:
+            raise UserError(self.env._("Please set the Valuation Account for Inventory Valuation in the settings."))
 
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,
@@ -231,6 +235,8 @@ class ResCompany(models.Model):
                 account_variation = account.account_stock_variation_id
             if not account_variation and account.account_stock_expense_id:
                 account_variation = account.account_stock_expense_id
+            if not account_variation:
+                account_variation = self.env.company.expense_account_id
             if not account_variation:
                 continue
             balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)

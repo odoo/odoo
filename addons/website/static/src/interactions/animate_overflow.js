@@ -11,7 +11,8 @@ export class AnimateOverflow extends Interaction {
     dynamicContent = {
         _scrollingElement: {
             "t-att-class": () => ({
-                "o_wanim_overflow_xy_hidden": this.forceOverflowXYHidden || this.hasAnimationInProgress,
+                o_wanim_overflow_xy_hidden:
+                    this.forceOverflowXYHidden || this.hasAnimationInProgress,
             }),
         },
         _root: {
@@ -31,9 +32,9 @@ export class AnimateOverflow extends Interaction {
         // (not only one) as the bug is not systematic and may depend on some
         // other conditions (for example: an animated image in a block which is
         // hidden on mobile would not have the issue).
-        this.forceOverflowXYHidden = [...animatedElements].some(el => {
-            return window.getComputedStyle(el).transform !== "none";
-        });
+        this.forceOverflowXYHidden = [...animatedElements].some(
+            (el) => window.getComputedStyle(el).transform !== "none"
+        );
     }
 
     get hasAnimationInProgress() {
@@ -41,12 +42,8 @@ export class AnimateOverflow extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.animate_overflow", AnimateOverflow);
+registry.category("public.interactions").add("website.animate_overflow", AnimateOverflow);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.animate_overflow", {
-        Interaction: AnimateOverflow,
-    });
+registry.category("public.interactions.edit").add("website.animate_overflow", {
+    Interaction: AnimateOverflow,
+});

@@ -8,11 +8,8 @@ const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {SuggestionService} */
 const suggestionServicePatch = {
-    getSupportedDelimiters(thread) {
-        const res = super.getSupportedDelimiters(thread);
-        if (this.composer.htmlEnabled) {
-            return res;
-        }
+    getSupportedDelimiters(thread, env) {
+        const res = super.getSupportedDelimiters(...arguments);
         return thread?.model === "discuss.channel" ? [...res, ["/", 0]] : res;
     },
     /**

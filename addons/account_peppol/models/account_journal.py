@@ -15,7 +15,14 @@ class AccountJournal(models.Model):
 
         self.filtered(lambda j: (
             j.account_peppol_proxy_state in sender_states
-            and (j.type == 'sale' or j.type == 'purchase' and j.company_id.peppol_activate_self_billing_sending)
+            and (
+                j.type == 'sale'
+                or (
+                    j.type == 'purchase'
+                    and j.is_self_billing
+                    and j.company_id.peppol_activate_self_billing_sending
+                )
+            )
         )).show_refresh_out_einvoices_status_button = True
 
     @api.depends('is_peppol_journal', 'account_peppol_proxy_state')
@@ -26,10 +33,8 @@ class AccountJournal(models.Model):
         self.filtered(lambda j: (
             j.is_peppol_journal
             and j.account_peppol_proxy_state == 'receiver'
-            and (
-                j.type == 'purchase'
-                or j.type == 'sale' and j.company_id.peppol_activate_self_billing_sending
-            )
+            and j.type == 'purchase'
+            and not j.is_self_billing
         )).show_fetch_in_einvoices_button = True
 
     def button_fetch_in_einvoices(self):

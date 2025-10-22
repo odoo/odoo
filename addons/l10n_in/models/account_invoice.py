@@ -158,6 +158,8 @@ class AccountMove(models.Model):
     @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
+        foreign_state = self.env['res.country.state'].search([('code', '!=', 'IN')], limit=1)
+
         def _get_fiscal_state(move):
             """
             Maps each move to its corresponding fiscal state based on its type,
@@ -177,7 +179,7 @@ class AccountMove(models.Model):
                 return self.env.ref('l10n_in.state_in_oc')
             elif move.is_sale_document(include_receipts=True):
                 # In Sales Documents: Compare place of supply with company state
-                return move.l10n_in_state_id
+                return move.l10n_in_state_id if move.l10n_in_state_id.l10n_in_tin != '96' else foreign_state
             elif move.is_purchase_document(include_receipts=True) and move.partner_id.country_id.code == 'IN':
                 # In Purchases Documents: Compare place of supply with vendor state
                 pos_state_id = move.l10n_in_state_id
@@ -624,6 +626,11 @@ class AccountMove(models.Model):
         def l10n_in_grouping_key_generator(base_line, tax_data):
             invl = base_line['record']
             tax = tax_data['tax']
+            if self.l10n_in_gst_treatment in ('overseas', 'special_economic_zone') and all(
+                self.env.ref("l10n_in.tax_tag_igst") in rl.tag_ids
+                for rl in tax.invoice_repartition_line_ids if rl.repartition_type == 'tax'
+            ):
+                tax_data['is_reverse_charge'] = False
             tag_ids = tax.invoice_repartition_line_ids.tag_ids.ids
             line_code = "other"
             xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
@@ -640,12 +647,9 @@ class AccountMove(models.Model):
                         line_code = "state_cess"
                 else:
                     for gst in ["cgst", "sgst", "igst"]:
-                        if xmlid_to_res_id(f"l10n_in.tax_tag_{gst}") in tag_ids:
-                            # need to separate rc tax value so it's not passed to other values
-                            if tax.l10n_in_reverse_charge:
-                                line_code = gst + '_rc'
-                            else:
-                                line_code = gst
+                        if xmlid_to_res_id("l10n_in.tax_tag_%s" % (gst)) in tag_ids:
+                            # need to separate rc tax value so it's not pass to other values
+                            line_code = f'{gst}_rc' if tax_data['is_reverse_charge'] else gst
             return {
                 "tax": tax,
                 "base_product_id": invl.product_id,

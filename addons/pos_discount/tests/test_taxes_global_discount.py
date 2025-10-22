@@ -103,3 +103,19 @@ class TestTaxesGlobalDiscountPOS(TestTaxCommonPOS, TestTaxesGlobalDiscount):
         self.assert_pos_orders_and_invoices('test_taxes_l10n_be_pos_global_discount_round_globally_price_included', [
             round_globally_included_tests[0],
         ])
+
+    def test_pos_global_discount_sell_and_refund(self):
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_pos_global_discount_sell_and_refund')
+        orders = self.main_pos_config.current_session_id.order_ids
+        self.assertEqual(len(orders), 2)
+        refund_order = orders[0]
+        self.assertAlmostEqual(refund_order.amount_total, -2.85)
+        self.assertEqual(len(refund_order.lines), 2)
+        self.assertEqual(refund_order.lines[1].product_id.id, self.main_pos_config.discount_product_id.id)
+        self.assertAlmostEqual(refund_order.lines[1].price_subtotal_incl, 0.15)
+        pos_order = orders[1]
+        self.assertAlmostEqual(pos_order.amount_total, 2.85)
+        self.assertEqual(len(pos_order.lines), 2)
+        self.assertEqual(pos_order.lines[1].product_id.id, self.main_pos_config.discount_product_id.id)
+        self.assertAlmostEqual(pos_order.lines[1].price_subtotal_incl, -0.15)

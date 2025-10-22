@@ -9,20 +9,20 @@ import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relat
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
 import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
 
-class PartnerMany2XAutocomplete extends Many2XAutocomplete {
+export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
     static components = {
         ...super.components,
         AutoComplete: PartnerAutoComplete,
     };
 }
-class PartnerMany2One extends Many2One {
+export class PartnerMany2One extends Many2One {
     static components = {
         ...super.components,
         Many2XAutocomplete: PartnerMany2XAutocomplete,
     };
 }
 
-class PartnerAutoCompleteMany2one extends Component {
+export class PartnerAutoCompleteMany2one extends Component {
     static template = "partner_autocomplete.PartnerAutoCompleteMany2one";
     static components = { Many2One: PartnerMany2One };
     static props = { ...Many2OneField.props };
@@ -117,6 +117,8 @@ class PartnerAutoCompleteMany2one extends Component {
     }
 }
 
-registry.category("fields").add("res_partner_many2one", {
+export const PartnerAutoCompleteMany2oneField = {
     ...buildM2OFieldDescription(PartnerAutoCompleteMany2one),
-});
+};
+
+registry.category("fields").add("res_partner_many2one", PartnerAutoCompleteMany2oneField);

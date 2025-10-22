@@ -35,7 +35,7 @@ export class CartPage extends Component {
         return (
             this.selfOrder.config.self_ordering_mode === "mobile" &&
             this.selfOrder.config.self_ordering_pay_after === "each" &&
-            typeof this.selfOrder.currentOrder.id === "number"
+            this.selfOrder.currentOrder.isSynced
         );
     }
 
@@ -137,11 +137,12 @@ export class CartPage extends Component {
         }
     }
 
-    generateTicketImage = async () =>
+    generateTicketImage = async (basicReceipt = false) =>
         await this.renderer.toJpeg(
             OrderReceipt,
             {
                 order: this.selfOrder.currentOrder,
+                basic_receipt: basicReceipt,
             },
             { addClass: "pos-receipt-print p-3" }
         );
@@ -149,13 +150,15 @@ export class CartPage extends Component {
     async _sendReceiptToCustomer({ action, destination, mail_template_id }) {
         const order = this.selfOrder.currentOrder;
         const fullTicketImage = await this.generateTicketImage();
-        const basicTicketImage = await this.generateTicketImage(true);
+        const basicTicketImage = this.selfOrder.config.basic_receipt
+            ? await this.generateTicketImage(true)
+            : null;
         await this.selfOrder.data.call("pos.order", action, [
             [order.id],
             destination,
             mail_template_id,
             fullTicketImage,
-            this.selfOrder.config.basic_receipt ? basicTicketImage : null,
+            basicTicketImage,
         ]);
     }
 
@@ -229,6 +232,7 @@ export class CartPage extends Component {
         const card = event?.target.closest(".product-cart-item");
         if (!card) {
             doRemoveLine();
+            return;
         }
         const onAnimationEnd = () => {
             card.removeEventListener("animationend", onAnimationEnd);
@@ -251,7 +255,7 @@ export class CartPage extends Component {
         increase ? line.qty++ : line.qty--;
 
         if (line.qty <= 0) {
-            this.removeLine(line.uuid);
+            this.removeLine(line);
         }
     }
 

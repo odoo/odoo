@@ -7,13 +7,14 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Marianna Ciofani, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2025-09-14 21:18+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-10-15 14:19+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/it/>\n"
 "Language: it\n"
@@ -91,8 +92,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project '%"
 "(project_name)s' linked to the timesheet."
 msgstr ""
-"Piano/i analitico/i '%(missing_plan_names)s' richiesti per il progetto "
-"'%(project_name)s' collegato al foglio ore."
+"Piano/i analitico/i '%(missing_plan_names)s' richiesti per il progetto '%"
+"(project_name)s' collegato al foglio ore."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -140,8 +141,8 @@ msgid ""
 "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
 "title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Data\" title="
-"\"Data\"/>"
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Data\" "
+"title=\"Data\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -186,8 +187,8 @@ msgstr ""
 "                            Hai due opzioni: eliminare quei fogli ore oppure "
 "archiviare il dipendente.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups="
-"\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Prima elimina tutti i fogli ore.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -599,7 +600,7 @@ msgstr "Ha accesso responsabile dipartimento"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__has_timesheet
 msgid "Has Timesheet"
-msgstr ""
+msgstr "Ha foglio ore"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
@@ -631,7 +632,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Import Template for Timesheets"
-msgstr ""
+msgstr "Importa modello per fogli ore"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -858,7 +859,7 @@ msgstr "Fogli ore del progetto"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Dipendente pubblico"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -1336,6 +1337,7 @@ msgstr "I fogli ore non possono essere creati per un'attività privata."
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Timesheets could not be created for any of the selected days"
 msgstr ""
+"Non è stato possibile creare i fogli ore per nessuno dei giorni selezionati"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1366,7 +1368,7 @@ msgstr "Fogli ore di %(name)s"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Timesheets successfully created"
-msgstr ""
+msgstr "Fogli ore creati con successo"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1456,6 +1458,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Usa queste parole chiave nel titolo per configurare nuovi lavori:\n"
+"\n"
+"        30h per assegnare 30 ore al lavoro\n"
+"        #tags per configurare tag nel lavoro\n"
+"        @user per assegnare il lavoro a un utente\n"
+"        ! per impostare la priorità su media\n"
+"        !! per impostare la priorità su alta\n"
+"        !!! per impostare la priorità su urgente\n"
+"\n"
+"        Assicurati di utilizzare il formato e l'ordine corretti, ad es. "
+"Migliorare la schermata di configurazione 5h #feature #v16 @Mitchell!"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1572,8 +1585,8 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "in\n"
-"                        <span class=\"fw-bold text-dark\"> sotto-"
-"attività</span>)"
+"                        <span class=\"fw-bold text-dark\"> sotto-attività</"
+"span>)"
 
 #~ msgid "%s Spent"
 #~ msgstr "%s Impiegati"

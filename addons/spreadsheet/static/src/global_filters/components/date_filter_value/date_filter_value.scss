@@ -1,5 +1,7 @@
 .o-date-filter-dropdown:hover .btn-previous,
-.o-date-filter-dropdown:hover .btn-next {
+.o-date-filter-dropdown:hover .btn-next,
+.o-date-filter-dropdown.selected .btn-previous,
+.o-date-filter-dropdown.selected .btn-next {
     color: $o-gray-600;
 }
 
@@ -42,4 +44,9 @@
     &:focus, &:hover {
         outline: none;
     }
+}
+
+.o_bottom_sheet .o-date-filter-dropdown  :last-child {
+    /* Make space for the check icon of the active item */
+    margin-right: 12px;
 }

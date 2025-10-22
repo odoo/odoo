@@ -156,18 +156,11 @@ export class TicketScreen extends Component {
     async onClickScanOrder(qrcode) {
         if (qrcode) {
             const uuid = new URL(qrcode).searchParams.get("order_uuid");
-            const results = await this.pos.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["uuid", "=", uuid]]],
-                {},
-                false,
-                true
-            );
-            const order = results["pos.order"][0];
+            const orders = await this.pos.data.loadServerOrders([["uuid", "=", uuid]]);
+            const order = orders[0];
             if (order) {
                 this.state.filter = "SYNCED";
-                this.state.selectedOrder = order;
+                this.setSelectedOrder(order);
                 this.pos.scanning = !this.pos.scanning;
             } else {
                 this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
@@ -825,14 +818,9 @@ export class TicketScreen extends Component {
             .map((info) => info[0]);
 
         if (idsNotInCacheOrOutdated.length > 0) {
-            await this.pos.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["id", "in", Array.from(new Set(idsNotInCacheOrOutdated))]]],
-                {},
-                false,
-                true
-            );
+            await this.pos.data.loadServerOrders([
+                ["id", "in", Array.from(new Set(idsNotInCacheOrOutdated))],
+            ]);
         }
     }
     //#endregion

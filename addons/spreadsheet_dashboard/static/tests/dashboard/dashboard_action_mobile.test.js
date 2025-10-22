@@ -35,6 +35,18 @@ function getServerData(spreadsheetData) {
     return serverData;
 }
 
+test("Search input can be toggled", async () => {
+    const productFilter = { id: "1", type: "relation", label: "Product", modelName: "product" };
+    const spreadsheetData = { globalFilters: [productFilter] };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+
+    expect(".o_searchview_input").toHaveCount(0);
+
+    await contains(".o_search_toggler button").click();
+    expect(".o_searchview_input").toHaveCount(1);
+});
+
 test("Search input is not focusable in mobile", async () => {
     const productFilter = {
         id: "1",
@@ -46,6 +58,7 @@ test("Search input is not focusable in mobile", async () => {
     const serverData = getServerData(spreadsheetData);
     await createSpreadsheetDashboard({ serverData });
 
+    await contains(".o_search_toggler button").click();
     await contains(".o_searchview_input").click();
 
     const input = getFixture().querySelector(".o_searchview_input");

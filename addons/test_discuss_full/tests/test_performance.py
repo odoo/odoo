@@ -433,7 +433,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
-                "hasCannedResponses": False,
+                "hasCannedResponses": True,
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
                 "has_access_livechat": True,
@@ -482,7 +482,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "discuss.channel.rtc.session": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
-            "res.groups": [{'full_name': 'Role / Member', 'id': self.env.ref("base.group_user").id}],
+            "res.groups": [{'full_name': 'Role / User', 'id': self.env.ref("base.group_user").id}],
             "res.partner": self._filter_partners_fields(
                 self._expected_result_for_persona(self.users[0]),
                 self._expected_result_for_persona(self.users[14]),
@@ -606,7 +606,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {"code": "IN", "id": self.env.ref("base.in").id, "name": "India"},
                 {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"},
             ],
-            "res.groups": [{"full_name": "Role / Member", "id": self.env.ref("base.group_user").id}],
+            "res.groups": [{"full_name": "Role / User", "id": self.env.ref("base.group_user").id}],
             "res.partner": self._filter_partners_fields(
                 self._expected_result_for_persona(
                     self.users[0],

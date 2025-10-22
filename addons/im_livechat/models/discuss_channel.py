@@ -3,7 +3,9 @@
 from odoo import api, fields, models, _, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
+from odoo.tools.mimetypes import get_extension
 
+import json
 from markupsafe import Markup
 from pytz import timezone
 
@@ -582,6 +584,29 @@ class DiscussChannel(models.Model):
         })
         mail.send()
 
+    def _attachment_to_html(self, attachment):
+        if attachment.mimetype.startswith("image/"):
+            return Markup(
+                "<img src='%s?access_token=%s' alt='%s' style='max-width: 75%%; height: auto; padding: 5px;'>",
+            ) % (
+                attachment.image_src,
+                attachment.generate_access_token()[0],
+                attachment.name,
+            )
+        file_extension = get_extension(attachment.display_name)
+        attachment_data = {
+            "id": attachment.id,
+            "access_token": attachment.generate_access_token()[0],
+            "checksum": attachment.checksum,
+            "extension": file_extension.lstrip("."),
+            "mimetype": attachment.mimetype,
+            "filename": attachment.display_name,
+            "url": attachment.url,
+        }
+        return Markup(
+            "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
+        ) % json.dumps({"fileData": attachment_data})
+
     def _get_channel_history(self):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
@@ -595,14 +620,19 @@ class DiscussChannel(models.Model):
         last_msg_from_chatbot = False
         # sudo - mail.message: getting empty messages to exclude them is allowed.
         for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
-            if message.author_id == chatbot_op and not last_msg_from_chatbot:
+            is_author_chatbot = message.author_id == chatbot_op
+            if is_author_chatbot and not last_msg_from_chatbot:
                 parts.append(Markup("<br/>"))
             if not tools.is_html_empty(message.body):
-                if message.author_id == chatbot_op:
+                if is_author_chatbot:
                     parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
                 else:
                     parts.append(Markup("%s<br/>") % html2plaintext(message.body))
-                last_msg_from_chatbot = message.author_id == chatbot_op
+                last_msg_from_chatbot = is_author_chatbot
+            for attachment in message.attachment_ids:
+                last_msg_from_chatbot = is_author_chatbot
+                # sudo - ir.attachment: public user can read attachment metadata
+                parts.append(Markup("%s<br/>") % self._attachment_to_html(attachment.sudo()))
         return Markup("").join(parts)
 
     def _get_livechat_session_fields_to_store(self):

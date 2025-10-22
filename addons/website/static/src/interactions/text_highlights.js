@@ -1,12 +1,17 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { getCurrentTextHighlight, makeHighlightSvgs } from "@website/js/highlight_utils";
+import {
+    getCurrentTextHighlight,
+    makeHighlightSvgs,
+    closestToObserve,
+    getObservedEls,
+} from "@website/js/highlight_utils";
 
 export class TextHighlight extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
         _root: {
-            "t-on-text_highlight_added": ({target}) => this.onTextHighlightAdded(target),
+            "t-on-text_highlight_added": ({ target }) => this.onTextHighlightAdded(target),
         },
     };
 
@@ -34,8 +39,8 @@ export class TextHighlight extends Interaction {
     _updateEntries(entries) {
         const closestToObserves = new Set();
         for (const { target, addedNodes = [], removedNodes = [] } of entries) {
-            const elements = [target, ...(addedNodes), ...(removedNodes)]
-                .map((el) => el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement)
+            const elements = [target, ...addedNodes, ...removedNodes]
+                .map((el) => (el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement))
                 .filter(Boolean);
             if (!elements.length) {
                 continue;
@@ -61,25 +66,21 @@ export class TextHighlight extends Interaction {
         }
     }
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @param {HTMLElement} el
      */
     closestToObserve(el) {
-        el = el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement;
-        if (!el || el === this.el) {
-            return null;
-        }
-        if (window.getComputedStyle(el).display !== "inline") {
-            return el;
-        }
-        return this.closestToObserve(el.parentElement);
+        return closestToObserve(el, this.el);
     }
 
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @param {HTMLElement} el
      */
     getObservedEls(el) {
-        const closestToObserve = this.closestToObserve(el);
-        return closestToObserve ? [closestToObserve, el] : [el];
+        return getObservedEls(el);
     }
 
     /**
@@ -116,12 +117,8 @@ export class TextHighlight extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.text_highlight", TextHighlight);
+registry.category("public.interactions").add("website.text_highlight", TextHighlight);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.text_highlight", {
-        Interaction: TextHighlight,
-    });
+registry.category("public.interactions.edit").add("website.text_highlight", {
+    Interaction: TextHighlight,
+});

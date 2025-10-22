@@ -3,13 +3,14 @@
 # * hr_holidays_attendance
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:11+0000\n"
-"PO-Revision-Date: 2025-09-16 15:38+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-10 02:31+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/hr_holidays_attendance/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -31,12 +32,42 @@ msgid "Accrual Plan Level"
 msgstr "应计计划等级"
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "出勤"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__active
+msgid "Active"
+msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_hours
+msgid "Approved Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Approved Time Offs"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Archived Employees"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_line
+msgid "Attendance Overtime Line"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Attendance Records"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_attendance_report
+msgid "Attendance and Leave Analysis Report"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__attendance_ids
 msgid "Attendances"
 msgstr ""
 
@@ -47,9 +78,15 @@ msgid "Available"
 msgstr "可用"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__calendar
-msgid "Calendar"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__compensable_as_leave
+msgid "Compensable as Time Off"
 msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__date
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Date"
+msgstr "日期"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -60,31 +97,64 @@ msgstr "天"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
 msgstr "调休申请"
 
 #. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Department"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
+msgid "Difference"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
 msgid "Discard"
 msgstr "丢弃"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__display_name
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: hr_holidays_attendance
-#: model:hr.leave.type,name:hr_holidays_attendance.holiday_status_extra_hours
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
-msgid "Extra Hours"
-msgstr "加班时间"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Duration"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_employee
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+msgid "Employee Overtime"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Employees"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__expected_hours
+msgid "Expected Hours"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
@@ -93,8 +163,13 @@ msgid "Extra Hours Available"
 msgstr "可提供的额外时间"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
-msgid "Frequency Hourly Source"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency
+msgid "Frequency"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__compensable_as_leave
+msgid "Give back as time off"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -104,25 +179,47 @@ msgid "Hours"
 msgstr "小时"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__active
 msgid ""
-"If the source is set to \"Calendar\", the amount of worked hours will be "
-"computed based on the Employee's working schedule. Otherwise, the amount of "
-"worked hours will be based on Attendance records."
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__job_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Job Position"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Last 2 Months"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Missing Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
 msgstr "新的分配请求"
@@ -130,8 +227,8 @@ msgstr "新的分配请求"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 msgid ""
-"Once a time off of this type is approved, extra hours in attendances will be"
-" deducted."
+"Once a time off of this type is approved, extra hours in attendances will be "
+"deducted."
 msgstr "一旦这种类型的休假被批准，将扣除额外的出勤时间。"
 
 #. module: hr_holidays_attendance
@@ -149,32 +246,19 @@ msgid "Overtime Deductible"
 msgstr "加班费免赔额"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
-msgid "Request Overtime"
-msgstr "要求加班"
-
-#. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
-msgid "Save"
-msgstr "保存"
-
-#. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
-msgid "Source"
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_rule
+msgid "Overtime Rule"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid ""
-"The employee does not have enough extra hours to extend this allocation."
-msgstr "该员工没有足够的额外时间来延长这一分配。"
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
+msgid "Per Hour Worked"
+msgstr ""
 
 #. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
-msgid "The employee does not have enough extra hours to extend this leave."
-msgstr "该员工没有足够的额外时间来延长这一假期。"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
+msgid "Save"
+msgstr "保存"
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -185,8 +269,7 @@ msgstr "该员工没有足够的额外时间来申请这个假期。"
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid ""
-"The employee does not have enough overtime hours to request this leave."
+msgid "The employee does not have enough overtime hours to request this leave."
 msgstr "该员工没有足够的加班时间来申请这个假期。"
 
 #. module: hr_holidays_attendance
@@ -200,23 +283,87 @@ msgid "Time Off Allocation"
 msgstr "休息分配"
 
 #. module: hr_holidays_attendance
+#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_attendance_report_action
+#: model:ir.ui.menu,name:hr_holidays_attendance.hr_leave_attendance_report
+msgid "Time Off Ledger"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "休假类型"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_type_names
+msgid "Time Off Types"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_ids
+msgid "Time Offs"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
 msgstr "加班费总额"
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_res_users
-msgid "User"
-msgstr "用户"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Worked Extra Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__worked_hours
+msgid "Worked Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
+msgid "Worked Hours - Expected Hours + Approved Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__schedule_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Working Schedule"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_accrual_plan_level.py:0
+msgid ""
+"You can't base accrued time on hours worked, because time is accrued at the "
+"start of the period."
+msgstr ""
 
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 msgid "You do not have enough extra hours to request this leave"
 msgstr "您没有足够的额外时间来申请这个假期"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
+msgid "every worked hour."
+msgstr ""
+
+#~ msgid "Attendance"
+#~ msgstr "出勤"
+
+#~ msgid "Extra Hours"
+#~ msgstr "加班时间"
+
+#~ msgid "Request Overtime"
+#~ msgstr "要求加班"
+
+#~ msgid ""
+#~ "The employee does not have enough extra hours to extend this allocation."
+#~ msgstr "该员工没有足够的额外时间来延长这一分配。"
+
+#~ msgid "The employee does not have enough extra hours to extend this leave."
+#~ msgstr "该员工没有足够的额外时间来延长这一假期。"
+
+#~ msgid "User"
+#~ msgstr "用户"

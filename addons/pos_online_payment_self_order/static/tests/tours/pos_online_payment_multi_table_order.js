@@ -5,6 +5,7 @@ import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
@@ -17,9 +18,6 @@ registry.category("web_tour.tours").add("OnlinePaymentWithMultiTables", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            ProductScreen.clickOrderButton(),
-            ProductScreen.orderlinesHaveNoChange(),
-            FloorScreen.clickTable("2"),
             ProductScreen.clickPayButton(),
             PaymentScreen.totalIs("2.20"),
             Chrome.clickPlanButton(),
@@ -37,4 +35,16 @@ registry.category("web_tour.tours").add("test_online_payment_self_multi_company_
             trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
         },
     ],
+});
+
+registry.category("web_tour.tours").add("test_online_payment_pos_self_order_preparation_changes", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Chrome.clickOrders(),
+            TicketScreen.checkStatus("Self-order", "Ongoing"),
+            TicketScreen.selectOrder("Self-order"),
+            ProductScreen.clickReview(),
+            ProductScreen.orderlineIsToOrder("Fanta"),
+        ].flat(),
 });

@@ -53,7 +53,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.start_tour(self_route, "self_mobile_each_counter_takeaway_in")
         self.start_tour(self_route, "self_mobile_each_counter_takeaway_out")
 
-        self.env['pos.order'].search([]).write({'state': 'cancel'})
+        self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.pos_config.write({
             'self_ordering_pay_after': 'meal',
             'self_ordering_service_mode': 'table',
@@ -63,7 +63,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.start_tour(self_route, "self_mobile_meal_table_takeaway_in")
         self.start_tour(self_route, "self_mobile_meal_table_takeaway_out")
 
-        self.env['pos.order'].search([]).write({'state': 'cancel'})
+        self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.pos_config.write({
             'self_ordering_service_mode': 'counter',
         })
@@ -75,7 +75,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         # Cancel in meal
         self.start_tour(self_route, "self_order_mobile_meal_cancel")
 
-        self.env['pos.order'].search([]).write({'state': 'cancel'})
+        self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.pos_config.write({
             'self_ordering_pay_after': 'each',
         })
@@ -180,3 +180,23 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         references = self.env['pos.order'].search([], limit=4, order="id desc").mapped('pos_reference')
         self.assertEqual(references, [f"{current_year}0-{self.pos_config.id}-00000{4 - i}" for i in range(4)])
         self.assertEqual(self.pos_config.order_backend_seq_id.number_next, 5)
+
+    def test_mobile_self_order_preparation_changes(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        # create self-order from mobile
+        self.start_tour(self.pos_config._get_self_order_route(), 'test_mobile_self_order_preparation_changes')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, 'draft')
+        self.assertEqual(len(order.lines), 2)
+
+        # Check self-order in pos-terminal are not prompted for Send-for-Preparation
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes', login='pos_user')

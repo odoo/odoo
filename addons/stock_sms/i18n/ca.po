@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 04:46+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -23,7 +23,12 @@ msgstr ""
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
 "\n"
-"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': We are glad to inform you "
+"that your order n° ' + object.origin + ' has been shipped.' if object.origin "
+"else object.company_id.name + ': We are glad to inform you that your order "
+"has been shipped.') + (' Your tracking reference is ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
 "\n"
@@ -82,6 +87,9 @@ msgstr "Desactiva l'SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_stock_picking__display_name
 msgid "Display Name"
 msgstr "Nom mostrat"
 
@@ -92,6 +100,9 @@ msgstr "Ha rebut un missatge d'advertiment sobre l'estoc"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__id
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stock_sms.field_stock_picking__id
 msgid "ID"
 msgstr "ID"
 
@@ -118,22 +129,10 @@ msgid "SMS"
 msgstr "SMS"
 
 #. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
-#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
-msgid "SMS Confirmation"
-msgstr "Confirmació de l' SMS"
-
-#. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
-#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Template"
 msgstr "Plantilla de SMS"
-
-#. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
-msgid "SMS Validation with stock move"
-msgstr "Validació de SMS amb moviment d'existències"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
@@ -150,9 +149,16 @@ msgstr "Transferència"
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+"                This feature can easily be disabled from the Settings of "
+"Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
-"Esteu a punt de confirmar aquesta comanda d'entrega per missatge de text "
-"SMS.<br/>\n"
+"Esteu a punt de confirmar aquesta comanda d'entrega per missatge de text SMS."
+"<br/>\n"
 "                Aquesta característica es pot desactivar fàcilment des de la "
 "Configuració de Inventari o fent Clic a «Desactivar SMS».<br/>"
+
+#~ msgid "SMS Confirmation"
+#~ msgstr "Confirmació de l' SMS"
+
+#~ msgid "SMS Validation with stock move"
+#~ msgstr "Validació de SMS amb moviment d'existències"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:20+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -18,6 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -187,8 +195,8 @@ msgid ""
 "The GS1 content type defines what kind of data the rule will process the "
 "barcode as:        * Date: the barcode will be converted into a Odoo "
 "datetime;        * Measure: the barcode's value is related to a specific "
-"unit;        * Numeric Identifier: fixed length barcode following a specific"
-" encoding;        * Alpha-Numeric Name: variable length barcode."
+"unit;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
 "ประเภทเนื้อหา GS1 กำหนดว่ากฎจะประมวลผลบาร์โค้ดเป็นข้อมูลประเภทใด:            * วันที่: "
 "บาร์โค้ดจะถูกแปลงเป็น datetime ของ Odoo;             * การวัด: "
@@ -219,8 +227,10 @@ msgstr "รูปแบบกฎ '%(rule)s' ไม่ใช่ Regex ที่�
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "มีบางอย่างผิดปกติกับรูปแบบของกฎบาร์โค้ด \"%s\" \n"
 "หากกฎนี้ใช้ทศนิยม "
@@ -234,8 +244,7 @@ msgstr ""
 msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
-msgstr ""
-"ระบบการตีความนี้ใช้ข้อกำหนด GS1 ซึ่งยอมรับกฎการเข้ารหัส GS1-128 เท่านั้น"
+msgstr "ระบบการตีความนี้ใช้ข้อกำหนด GS1 ซึ่งยอมรับกฎการเข้ารหัส GS1-128 เท่านั้น"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript

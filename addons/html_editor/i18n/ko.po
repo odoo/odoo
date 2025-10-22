@@ -3,13 +3,14 @@
 # * html_editor
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
-"PO-Revision-Date: 2025-09-16 04:47+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-06 06:58+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "html_editor/ko/>\n"
 "Language: ko\n"
@@ -26,8 +27,8 @@ msgid ""
 "'Alt tag' specifies an alternate text for an image, if the image cannot be "
 "displayed (slow connection, missing image, screen reader ...)."
 msgstr ""
-"'Alt 태그'는 이미지를 표시할 수 없는 경우(저속 연결, 누락된 이미지, 화면 "
-"판독기 등) 이미지의 대체 텍스트를 지정합니다."
+"'Alt 태그'는 이미지를 표시할 수 없는 경우(저속 연결, 누락된 이미지, 화면 판독"
+"기 등) 이미지의 대체 텍스트를 지정합니다."
 
 #. module: html_editor
 #. odoo-javascript
@@ -40,6 +41,12 @@ msgstr "사진을 가리키면 '제목 태그'가 툴팁으로 표시됩니다."
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "(URL or Embed)"
 msgstr "(URL 또는 임베드)"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid ", submited by"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -73,24 +80,6 @@ msgstr "별 5개"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "AI"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "AI Copywriter"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "AI Tools"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Accepts"
 msgstr "수락"
@@ -99,16 +88,18 @@ msgstr "수락"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Action %s is not a window action, link preview is not available"
-msgstr "작업 %s이 창 작업으로 인식되지 않으므로 링크 미리 보기를 생성할 수 없습니다."
+msgstr ""
+"작업 %s이 창 작업으로 인식되지 않으므로 링크 미리 보기를 생성할 수 없습니다."
 
 #. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
-msgstr "작업을 %s를 찾을 수 없습니다. 링크 미리 보기를 사용할 수 없습니다. URL이 "
-"올바른지 확인하세요."
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
+msgstr ""
+"작업을 %s를 찾을 수 없습니다. 링크 미리 보기를 사용할 수 없습니다. URL이 올바"
+"른지 확인하세요."
 
 #. module: html_editor
 #. odoo-javascript
@@ -179,6 +170,18 @@ msgstr "이 토글 안에 내용을 추가하세요."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/caption_plugin/caption_plugin.js:0
+msgid "Add/remove a caption"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Advanced mode"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.js:0
 msgid "Alert"
 msgstr "주의"
@@ -215,6 +218,12 @@ msgstr "입력한 URL을 불러오는 동안 오류가 발생했습니다."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Angle"
+msgstr "각도"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/collaboration/collaboration_selection_avatar_plugin.js:0
 #: code:addons/html_editor/static/src/others/collaboration/collaboration_selection_plugin.js:0
 msgid "Anonymous"
@@ -224,18 +233,19 @@ msgstr "익명"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
+#: code:addons/html_editor/static/src/main/media/image_description.xml:0
 msgid "Apply"
 msgstr "적용"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/font/color_ui_plugin.js:0
 msgid "Apply Background Color"
 msgstr "배경색 적용"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/font/color_ui_plugin.js:0
 msgid "Apply Font Color"
 msgstr "글꼴 색상 적용"
 
@@ -260,6 +270,12 @@ msgstr "첨부 파일"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "첨부 파일 URL"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -308,16 +324,27 @@ msgid "Banner Warning"
 msgstr "경고 배너"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/signature_plugin.js:0
-msgid "Basic Bloc"
-msgstr "기본 블록"
+#: model:ir.model,name:html_editor.model_base
+msgid "Base"
+msgstr "기준"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Big section heading"
 msgstr "큰 섹션 제목"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Border"
+msgstr "테두리"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Border Size"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -345,17 +372,9 @@ msgstr "보조 버튼"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
 msgid "Cancel"
 msgstr "취소"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "ChatGPT"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -365,7 +384,7 @@ msgstr "점검표"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
 msgid "Clear"
 msgstr "제거"
 
@@ -396,6 +415,12 @@ msgstr "코드"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+msgid "Code copied to the clipboard."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Code view"
 msgstr "코드 보기"
@@ -405,18 +430,6 @@ msgstr "코드 보기"
 #: code:addons/html_editor/static/src/main/column_plugin.js:0
 msgid "Columnize"
 msgstr "컬럼화"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
-msgid "Comparison"
-msgstr "비교"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
-msgid "Content"
-msgstr "내용"
 
 #. module: html_editor
 #. odoo-javascript
@@ -450,6 +463,12 @@ msgstr "열로 변환"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/syntax_highlighting_plugin/code_toolbar.xml:0
+msgid "Copy"
+msgstr "복사"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Copy Link"
 msgstr "링크 복사"
@@ -459,12 +478,6 @@ msgstr "링크 복사"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Copy-paste your URL or embed code here"
 msgstr "여기에 URL을 복사하여 붙여 넣거나 코드를 삽입하십시오"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Correct"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -491,6 +504,16 @@ msgid "Create an URL."
 msgstr "URL을 생성합니다."
 
 #. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_crop_plugin.js:0
 msgid "Crop image"
@@ -498,6 +521,7 @@ msgstr "이미지 자르기"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Custom"
 msgstr "사용자 정의"
@@ -507,6 +531,12 @@ msgstr "사용자 정의"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Dailymotion"
 msgstr "Dailymotion"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+msgid "Define a custom gradient"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -522,7 +552,14 @@ msgstr "설명"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Direct download"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.xml:0
@@ -530,17 +567,28 @@ msgid "Discard"
 msgstr "취소"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
-msgid ""
-"Discover a world of awesomeness in our copyright-free image haven. No legal "
-"drama, just nice images!"
-msgstr ""
-"저작권이 없는 이미지 저장 공간에서 장엄한 세계를 탐험해 보세요. 법적인 "
-"문제에 대해 걱정할 필요 없는 멋진 사진들만이 기다리고 있습니다!"
-
-#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__display_name
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__display_name
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_contact__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_date__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_datetime__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_duration__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_float__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_html__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_integer__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_many2one__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_monetary__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_qweb__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_relative__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_selection__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_text__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_websocket__display_name
 msgid "Display Name"
 msgstr "이름 표시"
 
@@ -564,7 +612,7 @@ msgstr "오류: 미디어 라이브러리에서 다운로드 URL을 가져올 �
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
 msgid "Edit"
 msgstr "편집"
 
@@ -594,12 +642,6 @@ msgstr "유튜브 동영상 임베드"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
-msgid "Embed a video"
-msgstr "동영상 삽입"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Embed the image in the document."
 msgstr "문서에 이미지를 삽입합니다."
@@ -624,15 +666,38 @@ msgstr "빈 열"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.js:0
-msgid "Error"
-msgstr "오류"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/toolbar/toolbar_plugin.js:0
 msgid "Expand toolbar"
 msgstr "도구 모음 확장"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the closest corner"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the closest side"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the farthest corner"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the farthest side"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_html_field_history_mixin
+msgid "Field html History"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -648,14 +713,8 @@ msgstr "파일이 업로드 되었습니다"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Fill"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Fill + Rounded"
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Fill Color"
 msgstr ""
 
 #. module: html_editor
@@ -684,32 +743,13 @@ msgstr "형식"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Friendly"
-msgstr ""
+#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.js:0
+msgid "Gradient"
+msgstr "그라데이션"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Generate Text with AI"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "Generate or transform content with AI"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "Generating"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "Generating an alternative..."
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
 msgstr ""
 
 #. module: html_editor
@@ -833,21 +873,56 @@ msgid "History"
 msgstr "기록"
 
 #. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__html_field_history
+msgid "History data"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__html_field_history_metadata
+msgid "History metadata"
+msgstr ""
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Html"
 msgstr "Html"
 
 #. module: html_editor
-#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
-msgid "ID"
-msgstr "ID"
+#: model:ir.model,name:html_editor.model_html_editor_converter_test_sub
+msgid "Html Editor Converter Subtest"
+msgstr ""
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Icon"
-msgstr "아이콘"
+#: model:ir.model,name:html_editor.model_html_editor_converter_test
+msgid "Html Editor Converter Test"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__id
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_contact__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_date__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_datetime__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_duration__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_float__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_html__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_integer__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_many2one__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_monetary__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_qweb__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_relative__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_selection__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_text__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_websocket__id
+msgid "ID"
+msgstr "ID"
 
 #. module: html_editor
 #. odoo-javascript
@@ -860,12 +935,6 @@ msgstr "아이콘"
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Illustrations"
 msgstr "일러스트레이션"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Image"
-msgstr "이미지"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__image_height
@@ -884,35 +953,21 @@ msgstr "이미지 폭"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "Image description"
-msgstr "이미지 설명"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
 msgid "Images"
 msgstr "이미지"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Indicates the link is sponsored or paid content"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 msgid "Insert"
 msgstr "삽입"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
-msgid "Insert Video"
-msgstr "비디오 삽입"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
-msgid "Insert a Video"
-msgstr "동영상 삽입"
 
 #. module: html_editor
 #. odoo-javascript
@@ -994,6 +1049,12 @@ msgstr "이미지 또는 아이콘 삽입"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Insert image, icon or video"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Insert left"
 msgstr "왼쪽으로 삽입"
@@ -1005,10 +1066,10 @@ msgid "Insert right"
 msgstr "오른쪽으로 삽입"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/signature_plugin.js:0
-msgid "Insert your signature"
-msgstr "서명 입력하기"
+#. odoo-python
+#: code:addons/html_editor/models/ir_ui_view.py:0
+msgid "Invalid field value for %(field_name)s: %(value)s"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1023,10 +1084,20 @@ msgid "Large"
 msgstr "크게"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Lengthen"
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__write_uid
+msgid "Last Updated by"
 msgstr ""
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Linear"
+msgstr "선형"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1045,9 +1116,9 @@ msgstr "링크가 클립보드에 복사되었습니다."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
-msgstr "%s 때문에 링크 미리 보기를 사용할 수 없습니다. URL이 올바른지 확인하세요."
+"Link preview is not available because %s, please check if your url is correct"
+msgstr ""
+"%s 때문에 링크 미리 보기를 사용할 수 없습니다. URL이 올바른지 확인하세요."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1064,8 +1135,6 @@ msgstr "추가 불러오기 ..."
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Loading..."
@@ -1073,9 +1142,21 @@ msgstr "불러오는 중..."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Logout"
+msgstr "로그아웃"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Loop"
 msgstr "반복"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "MM:SS"
+msgstr "MM:SS"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1110,6 +1191,7 @@ msgstr "파일 누락"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "More options"
 msgstr "더 보기"
 
@@ -1142,6 +1224,11 @@ msgstr "위로 이동"
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "My Images"
 msgstr "나의 이미지"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__name
+msgid "Name"
+msgstr "이름"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1194,9 +1281,9 @@ msgstr "번호가 지정된 목록"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.js:0
-msgid "OdooBot"
-msgstr ""
+#: code:addons/html_editor/static/src/main/media/media_dialog/attachment_error.xml:0
+msgid "Ok"
+msgstr "확인"
 
 #. module: html_editor
 #. odoo-python
@@ -1210,7 +1297,8 @@ msgstr "죄송합니다, AI와 연결할 수 없습니다."
 msgid ""
 "Oops, the file %s could not be found. Please replace this file box by a new "
 "one to re-upload the file."
-msgstr "%s 파일을 찾을 수 없습니다. 파일을 다시 업로드하시려면 이 파일 박스를 새로운 "
+msgstr ""
+"%s 파일을 찾을 수 없습니다. 파일을 다시 업로드하시려면 이 파일 박스를 새로운 "
 "항목으로 바꾸시기 바랍니다."
 
 #. module: html_editor
@@ -1218,6 +1306,12 @@ msgstr "%s 파일을 찾을 수 없습니다. 파일을 다시 업로드하시�
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Open in a new tab"
 msgstr "새 탭에서 열기"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Open in new tab"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1229,18 +1323,6 @@ msgstr "최적화"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__original_id
 msgid "Original (unoptimized, unresized) attachment"
 msgstr "원본(최적화되지 않은, 크기 조정되지 않은) 첨부 파일"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Outline"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Outline + Rounded"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1262,19 +1344,24 @@ msgstr "URL로 붙여넣기"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Paste or type your URL"
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Position X"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Persuasive"
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Position Y"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Prevents the new page from accessing the original window (security)"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Preview"
 msgstr "미리보기"
@@ -1287,15 +1374,24 @@ msgstr "이미지 미리보기"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Professional"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
 msgid "Progress bar"
 msgstr "진행 표시줄"
+
+#. module: html_editor
+#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__c
+msgid "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__a
+msgid "Qu'il n'est pas arrivé à Toronto"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__b
+msgid "Qu'il était supposé arriver à Toronto"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1304,10 +1400,102 @@ msgid "Quote"
 msgstr "인용"
 
 #. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb
+msgid "Qweb"
+msgstr "Qweb"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_date
+msgid "Qweb Field Date"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_datetime
+msgid "Qweb Field Datetime"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_duration
+msgid "Qweb Field Duration"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_float
+msgid "Qweb Field Float"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_image
+msgid "Qweb Field Image"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_integer
+msgid "Qweb Field Integer"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_many2one
+msgid "Qweb Field Many to One"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_monetary
+msgid "Qweb Field Monetary"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_relative
+msgid "Qweb Field Relative"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_selection
+msgid "Qweb Field Selection"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_text
+msgid "Qweb Field Text"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_qweb
+msgid "Qweb Field qweb"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Radial"
+msgstr "방사형"
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/history_plugin.js:0
 msgid "Redo"
 msgstr "되돌리기"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
+msgid "Remove"
+msgstr "제거"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1336,9 +1524,22 @@ msgstr "열 삭제"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Removes referrer information sent to the target site"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "Replace"
 msgstr "이미지 바꾸기"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Replace URL with its title"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1367,7 +1568,19 @@ msgstr "이미지 초기화"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
-msgid "Reset Size"
+msgid "Reset column size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Reset row size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Reset table size"
 msgstr ""
 
 #. module: html_editor
@@ -1426,9 +1639,9 @@ msgstr "오른쪽으로 회전"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "Save"
-msgstr "저장"
+#: code:addons/html_editor/static/src/main/media/media_dialog/search_media.xml:0
+msgid "Search"
+msgstr "검색"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1450,13 +1663,19 @@ msgstr "이미지 검색"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
+msgid "Search the web for royalty-free images"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/icon_color_plugin.js:0
 msgid "Select Background Color"
 msgstr "배경 색상 선택"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_color_plugin.js:0
 msgid "Select Font Color"
 msgstr "글꼴 색상 선택"
 
@@ -1489,12 +1708,6 @@ msgstr "글꼴 스타일 선택"
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Selection has no format"
 msgstr "선택 항목에 형식이 없습니다."
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Send a message"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1534,9 +1747,9 @@ msgstr "모양 설정: 썸네일"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Shorten"
-msgstr ""
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Shape"
+msgstr "배경 디자인"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1546,9 +1759,24 @@ msgstr "최적화된 이미지 보기"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/signature_plugin.js:0
-msgid "Signature"
-msgstr "서명"
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid ""
+"Showing all differences between the current version and the selected one "
+"updated by"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Showing the document as it was on"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Size"
+msgstr "사이즈"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1576,9 +1804,21 @@ msgstr "메시지가 너무 깁니다. 더 짧은 단어로 말해주세요."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Split view"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/star_plugin.js:0
 msgid "Stars"
 msgstr "별"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
+msgid "Start at"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1619,9 +1859,21 @@ msgstr "목차"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Tells search engines not to follow this link"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Text"
 msgstr "문자"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Text Color"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1634,6 +1886,28 @@ msgstr "URL이 작동하지 않는 것 같습니다."
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "The URL seems valid."
 msgstr "URL이 유효한 것 같습니다."
+
+#. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/models/ir_qweb_fields.py:0
+msgid "The datetime %(value)s does not match the format %(format)s"
+msgstr ""
+
+#. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/tools.py:0
+msgid ""
+"The document was already saved from someone with a different history for "
+"model \"%(model)s\", field \"%(field)s\" with id \"%(id)d\"."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/attachment_error.xml:0
+msgid ""
+"The image could not be deleted because it is used in the\n"
+"                following pages or views:"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1652,12 +1926,6 @@ msgstr "입력하신 URL이 유효하지 않습니다"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "The provided url is not valid"
 msgstr "입력하신 URL이 유효하지 않습니다"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Thinking..."
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1682,6 +1950,12 @@ msgstr "이 파일은 현재 레코드에 첨부됩니다."
 #: code:addons/html_editor/static/src/main/media/image_crop.js:0
 msgid "This image is an external image"
 msgstr "이 이미지는 외부 이미지입니다"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "This is the current version, nothing to compare."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1761,8 +2035,8 @@ msgstr "그림 변환 (변환을 재설정하려면 두 번 클릭)"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
+#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_plugin.js:0
 msgid "Translate with AI"
 msgstr "AI로 번역"
 
@@ -1777,6 +2051,24 @@ msgstr "번역..."
 #: code:addons/html_editor/static/src/main/media/media_dialog/icon_selector.xml:0
 msgid "Try searching with other keywords."
 msgstr "다른 키워드로 검색해 보세요."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Turn into header"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Turn into row"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Type"
+msgstr "유형"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1810,8 +2102,8 @@ msgstr "취소"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Upload File"
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Unified view"
 msgstr ""
 
 #. module: html_editor
@@ -1836,13 +2128,20 @@ msgstr "이미지 업로드"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Uploaded image's format is not supported. Try with: %s"
-msgstr "해당 이미지는 지원되지 않는 형식입니다. 다음 형식의 파일로 시도해보세요: %s"
+msgstr ""
+"해당 이미지는 지원되지 않는 형식입니다. 다음 형식의 파일로 시도해보세요: %s"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
-msgid "Video Link"
-msgstr "동영상 링크"
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Version date"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_align_plugin.js:0
+msgid "Vertical align table cells content"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1852,13 +2151,14 @@ msgstr "동영상 코드"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/video/video.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/core/video/readonly_video.xml:0
 msgid "Video player"
 msgstr "동영상 플레이어"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
+#: code:addons/html_editor/static/src/fields/x2many_field/custom_media_dialog.js:0
+#: code:addons/html_editor/static/src/main/media/video_plugin.js:0
 msgid "Videos"
 msgstr "동영상"
 
@@ -1867,6 +2167,29 @@ msgstr "동영상"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Videos are muted when autoplay is enabled"
 msgstr "자동 재생이 활성화되면 동영상이 음소거됩니다."
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_ui_view
+msgid "View"
+msgstr "보기"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "View Content"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "View comparison"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "View content"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1886,7 +2209,14 @@ msgstr "위젯"
 msgid ""
 "Wow, it feels a bit empty in here. Upload from the button in the top right "
 "corner!"
-msgstr "이 부분이 좀 비어있는 것 같습니다. 오른쪽 상단에 있는 버튼으로 업로드하세요!"
+msgstr ""
+"이 부분이 좀 비어있는 것 같습니다. 오른쪽 상단에 있는 버튼으로 업로드하세요!"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/caption_plugin/caption_plugin.js:0
+msgid "Write a caption..."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1896,8 +2226,16 @@ msgstr "예"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.js:0
-msgid "You"
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.js:0
+msgid ""
+"You can not replace a field by this image. If you want to use this image, "
+"first save it on your computer and then upload it here."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
+msgid "You can not use this image in a field"
 msgstr ""
 
 #. module: html_editor
@@ -1914,8 +2252,9 @@ msgstr "화면 왼쪽 상단에 있는 버튼으로 문서를 업로드할 수 �
 msgid ""
 "You have reached the maximum number of requests for this service. Try again "
 "later."
-msgstr "이 서비스에 대한 최대 요청 수에 도달했습니다. 나중에 다시 시도하시기 "
-"바랍니다."
+msgstr ""
+"이 서비스에 대한 최대 요청 수에 도달했습니다. 나중에 다시 시도하시기 바랍니"
+"다."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1938,7 +2277,7 @@ msgstr "Youku"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/video/video.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/core/video/readonly_video.xml:0
 msgid "Your browser does not support iframe."
 msgstr "이 브라우저는 iframe을 지원하지 않습니다."
 
@@ -1968,27 +2307,15 @@ msgstr "축소"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "all"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "alternatives..."
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "and"
 msgstr "및"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "database"
-msgstr ""
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "deg"
+msgstr "각"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1998,15 +2325,27 @@ msgstr "문서"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "e.g. https://www.odoo.com"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "file"
 msgstr "파일"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "media-library"
-msgstr ""
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "noopener"
+msgstr "noopener"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "on"
+msgstr "on"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2016,24 +2355,66 @@ msgstr "또는"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "px"
+msgstr "px"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "동영상"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.urlDescription}}"
+#: model:ir.model,name:html_editor.model_ir_websocket
+msgid "websocket message handling"
 msgstr ""
 
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.urlTitle}}"
-msgstr ""
+#~ msgid "Basic Bloc"
+#~ msgstr "기본 블록"
 
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.url}}"
-msgstr ""
+#~ msgid "Comparison"
+#~ msgstr "비교"
+
+#~ msgid "Content"
+#~ msgstr "내용"
+
+#~ msgid ""
+#~ "Discover a world of awesomeness in our copyright-free image haven. No "
+#~ "legal drama, just nice images!"
+#~ msgstr ""
+#~ "저작권이 없는 이미지 저장 공간에서 장엄한 세계를 탐험해 보세요. 법적인 문"
+#~ "제에 대해 걱정할 필요 없는 멋진 사진들만이 기다리고 있습니다!"
+
+#~ msgid "Embed a video"
+#~ msgstr "동영상 삽입"
+
+#~ msgid "Error"
+#~ msgstr "오류"
+
+#~ msgid "Icon"
+#~ msgstr "아이콘"
+
+#~ msgid "Image"
+#~ msgstr "이미지"
+
+#~ msgid "Image description"
+#~ msgstr "이미지 설명"
+
+#~ msgid "Insert Video"
+#~ msgstr "비디오 삽입"
+
+#~ msgid "Insert a Video"
+#~ msgstr "동영상 삽입"
+
+#~ msgid "Insert your signature"
+#~ msgstr "서명 입력하기"
+
+#~ msgid "Save"
+#~ msgstr "저장"
+
+#~ msgid "Signature"
+#~ msgstr "서명"
+
+#~ msgid "Video Link"
+#~ msgstr "동영상 링크"

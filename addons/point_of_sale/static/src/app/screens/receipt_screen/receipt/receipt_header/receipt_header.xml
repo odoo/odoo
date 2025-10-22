@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ReceiptHeader">
-        <img t-attf-src="/web/image?model=res.company&amp;id={{order.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
+        <img t-att-src="logoUrl" alt="Logo" class="pos-receipt-logo"/>
         <div class="text-center pt-3" style="font-size: 75%;">
             <span class="pos-receipt-vat">
                 <span class="ticket-name-prefix">
@@ -37,15 +37,10 @@
                 </div>
             </div>
         </div>
-        <div t-if="order?.presetDateTime" class="pt-2">
+        <div t-if="order?.presetDateTime" class="pt-2 text-center">
             <span>
                 <t t-out="order.preset_id.name"/>: <t t-out="order.presetDateTime"/>
             </span>
-        </div>
-        <div t-if="order.preset_id?.identification === 'address'" t-attf-class="{{ order?.presetDateTime ? '' : 'pt-2'}}">
-            <div class="text-break">
-                <span class="fw-bolder" t-out="order.partner_id.name"/> (<span t-out="partnerAddress"/>)
-            </div>
         </div>
     </t>
 </templates>

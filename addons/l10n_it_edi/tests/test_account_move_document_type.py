@@ -1,3 +1,4 @@
+from odoo import fields
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
@@ -39,3 +40,29 @@ class TestItAccountMoveDocumentType(TestItEdi):
         reversal_wizard.modify_moves()
         credit_note_y = invoice_y.reversal_move_ids[0]
         self.assertEqual(credit_note_y.l10n_it_document_type, dt_credit_note)
+
+    def test_td01_assigned_on_posted_in_invoice(self):
+        """Test that TD01 is correctly assigned to an in_invoice after posting."""
+        dt_invoice = self.env.ref('l10n_it_edi.l10n_it_document_type_01')
+
+        invoice_x = self.init_invoice("in_invoice", amounts=[1000])
+        self.assertFalse(invoice_x.l10n_it_document_type)
+
+        invoice_x.action_post()
+        self.assertEqual(invoice_x.l10n_it_document_type, dt_invoice)
+
+    def test_td01_assigned_on_imported_in_invoice(self):
+        td01 = self.env.ref('l10n_it_edi.l10n_it_document_type_01')
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 5.0,
+            'amount_tax': 1.1,
+            'invoice_line_ids': [{
+                'quantity': 5.0,
+                'price_unit': 1.0,
+                'debit': 5.0,
+            }],
+            'l10n_it_payment_method': 'MP01',
+            'l10n_it_document_type': td01.id,
+        }])

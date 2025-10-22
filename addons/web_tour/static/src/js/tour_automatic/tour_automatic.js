@@ -1,10 +1,10 @@
-import { tourState } from "@web_tour/js/tour_state";
+import * as hootDom from "@odoo/hoot-dom";
+import { enableEventLogs, setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { browser } from "@web/core/browser/browser";
+import { Macro } from "@web/core/macro";
 import { config as transitionConfig } from "@web/core/transition";
 import { TourStepAutomatic } from "@web_tour/js/tour_automatic/tour_step_automatic";
-import { Macro } from "@web/core/macro";
-import { browser } from "@web/core/browser/browser";
-import { enableEventLogs, setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import * as hootDom from "@odoo/hoot-dom";
+import { tourState } from "@web_tour/js/tour_state";
 
 export class TourAutomatic {
     mode = "auto";
@@ -66,7 +66,7 @@ export class TourAutomatic {
                             this.allowUnload = true;
                             setTimeout(() => {
                                 const message = `
-                                    The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms. 
+                                    The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms.
                                     You probably don't need it.
                                 `.replace(/^\s+/gm, "");
                                 this.throwError(message);

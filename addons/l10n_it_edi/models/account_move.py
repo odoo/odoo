@@ -973,7 +973,7 @@ class AccountMove(models.Model):
     def _l10n_it_edi_document_type_mapping(self):
         """ Returns a dictionary with the required features for every TDxx FatturaPA document type """
         return {
-            'TD01': {'move_types': ['out_invoice'],
+            'TD01': {'move_types': ['in_invoice', 'out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
@@ -1399,6 +1399,9 @@ class AccountMove(models.Model):
 
             # For unsupported document types, just assume in_invoice, and log that the type is unsupported
             document_type = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
+            if l10n_it_document_type := self.env['l10n_it.document.type'].search([('code', '=', document_type)]):
+                self.l10n_it_document_type = l10n_it_document_type
+
             move_type = self._l10n_it_edi_document_type_mapping().get(document_type, {}).get('import_type')
             if not move_type:
                 move_type = "in_invoice"
@@ -1838,18 +1841,34 @@ class AccountMove(models.Model):
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):
-        if move_lines := self.mapped("invoice_line_ids").filtered(lambda line:
+        errors = {}
+        for kind_code, kind_desc, min_len in (
+            ('vat', _('VAT'), 1),
+            ('withholding', _('Withholding'), 0),
+            ('pension_fund', _('Pension Fund'), 0),
+        ):
+            errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len))
+        return errors
+
+    def _l10n_it_edi_check_lines_for_tax_kind(self, kind_code, kind_desc, min_len=1):
+        assert min_len in (0, 1)
+        if self.invoice_line_ids.filtered(lambda line:
             line.display_type == 'product'
-            and len(line.tax_ids.flatten_taxes_hierarchy()._l10n_it_filter_kind('vat')) != 1
+            and not (min_len <= len(line.tax_ids._l10n_it_filter_kind(kind_code)) <= 1),
         ):
             return {
-                'l10n_it_edi_move_only_one_vat_tax_per_line': {
-                    'message': _("Invoices must have exactly one VAT tax set per line."),
+                f'l10n_it_edi_move_{kind_code}_tax_per_line': {
+                    'message': _(
+                        "Invoices must have %(number)s one %(kind)s tax set per line.",
+                        number=_("exactly") if min_len == 1 else _("at most"),
+                        kind=kind_desc,
+                    ),
                     **({
                         'action_text': _("View invoice(s)"),
-                        'action': move_lines.mapped("move_id")._get_records_action(name=_("Check taxes on invoice lines")),
-                    } if len(self) > 1 else {})
-                }}
+                        'action': self._get_records_action(name=_("Check taxes on invoice lines")),
+                    } if len(self) > 1 else {}),
+                },
+            }
         return {}
 
     def _l10n_it_edi_get_formatters(self):
@@ -1982,69 +2001,53 @@ class AccountMove(models.Model):
             self.lock_for_update()
         except LockError:
             raise UserError(_('This document is being sent by another process already.')) from None
-        files_to_upload = defaultdict(lambda: (self.env['account.move'], []))
-        filename_move = {}
+        results = {}
 
-        # Setup moves for sending
         for move in self:
             move.l10n_it_edi_header = False
-            attachment_vals = attachments_vals[move]
-            filename = attachment_vals['name']
-            content = b64encode(attachment_vals['raw']).decode()
-            proxy_user = move.company_id.l10n_it_edi_proxy_user_id
-            moves, files = files_to_upload[proxy_user]
-            to_upload = (
-                moves | move,
-                files + [{
+            attachment = attachments_vals[move]
+            filename = attachment['name']
+            content = b64encode(attachment['raw']).decode()
+
+            try:
+                response = move._l10n_it_edi_upload([{
                     'filename': filename,
                     'xml': content,
                     'destination_code': move.commercial_partner_id.l10n_it_pa_index,
-                }],
-            )
-            files_to_upload[proxy_user] = to_upload
-            filename_move[filename] = move
+                }])[filename]
 
-        # Upload files
-        results = {}
-        try:
-            for proxy_user, (moves, files) in files_to_upload.items():
-                results.update(moves._l10n_it_edi_upload(files))
-        except AccountEdiProxyError as e:
-            messages_to_log = []
-            for filename in filename_move:
-                unsent_move = filename_move[filename]
-                unsent_move.l10n_it_edi_state = False
-                text_message = _("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=e.message)
-                html_message = nl2br(text_message)
-                unsent_move.l10n_it_edi_header = text_message
-                unsent_move.sudo().message_post(body=html_message)
-                messages_to_log.append(text_message)
-            raise UserError("\n".join(messages_to_log)) from e
+                if 'error' in response:
+                    move.l10n_it_edi_transaction = False
+                    move.l10n_it_edi_state = False
 
-        # Handle results
-        for filename, vals in results.items():
-            move = filename_move[filename]
-            if 'error' in vals:
-                state, id_transaction = False, False
-                error_code, error_description = vals.get('error'), vals.get('error_description')
-                error_message = self._l10n_it_edi_upload_error_message(error_code, error_description)
-                header = nl2br(_("Error uploading the e-invoice file %(file)s.\n%(error)s",
-                    file=filename,
-                    error=error_message
-                ))
-            else:
-                state, id_transaction = "processing", vals.get('id_transaction')
-                if vals['id_transaction'] == 'demo':
-                    header = _("We are simulating the sending of the e-invoice file %s, as we are in demo mode.", filename)
-                elif vals.get('signed', False):
-                    header = nl2br(_("The e-invoice file %s was signed and sent to the SdI for processing.", filename))
+                    error_code, error_description = response.get('error'), response.get('error_description')
+                    error_message = self._l10n_it_edi_upload_error_message(error_code, error_description)
+                    response['error_message'] = error_message
+                    header = nl2br(_("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=error_message))
                 else:
-                    header = _("The e-invoice file %s was sent to the SdI for processing.", filename)
-                move.sudo().message_post(body=header)
+                    move.l10n_it_edi_state = "processing"
+                    move.l10n_it_edi_transaction = response.get('id_transaction')
 
-            move.l10n_it_edi_header = header
-            move.l10n_it_edi_state = state
-            move.l10n_it_edi_transaction = id_transaction
+                    if response.get('id_transaction') == 'demo':
+                        message = _("We are simulating the sending of the e-invoice file %s, as we are in demo mode.", filename)
+                    elif response.get('signed'):
+                        message = _("The e-invoice file %s was signed and sent to the SdI for processing.", filename)
+                    else:
+                        message = _("The e-invoice file %s was sent to the SdI for processing.", filename)
+
+                    header = nl2br(message)
+                    move.sudo().message_post(body=header)
+
+                results[filename] = response
+                move.l10n_it_edi_header = header
+
+            except AccountEdiProxyError as e:
+                move.l10n_it_edi_state = False
+                error_message = _("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=e.message)
+                header = nl2br(error_message)
+                move.sudo().message_post(body=header)
+                move.l10n_it_edi_header = header
+                results[filename] = {'error_message': error_message}
 
         return results
 
@@ -2063,28 +2066,29 @@ class AccountMove(models.Model):
             error_message = f'{error_message}: {error_description}'
         return error_message
 
-    def _l10n_it_edi_upload(self, files):
-        '''Upload files to the SdI.
-
-        :param files:    A list of dictionary {filename, base64_xml}.
+    def _l10n_it_edi_upload_single(self, file):
+        """Upload file to the SdI.
+        :param file:    A dictionary {filename, base64_xml}.
         :returns:        A dictionary.
         * message:       Message from fatturapa.
         * transactionId: The fatturapa ID of this request.
         * error:         An eventual error.
-        '''
-        if not files:
-            return {}
+        """
         proxy_user = self.company_id.l10n_it_edi_proxy_user_id
         proxy_user.ensure_one()
         if proxy_user.edi_mode == 'demo':
-            return {file_data['filename']: {'id_transaction': 'demo'} for file_data in files}
-
+            return {'id_transaction': 'demo'}
         server_url = proxy_user._get_server_url()
-        results = proxy_user._make_request(
-            f'{server_url}/api/l10n_it_edi/1/out/SdiRiceviFile',
-            params={'files': files})
+        return proxy_user._make_request(f'{server_url}/api/l10n_it_edi/2/out/SdiRiceviFile', params={'file': file})
 
-        return results
+    def _l10n_it_edi_upload(self, files):
+        """Upload files to the SdI.
+        :param files:    A list of dictionary {filename, base64_xml}.
+        :returns:        A dict mapping each input filename to the result returned by _l10n_it_edi_upload_single
+        """
+        # This method must be kept as-is — changing its signature would break backward compatibility
+        # with existing extensions or overrides that depend on it.
+        return {file['filename']: self._l10n_it_edi_upload_single(file) for file in files or []}
 
     # -------------------------------------------------------------------------
     # EDI: Update notifications

@@ -147,10 +147,10 @@ class StockMove(models.Model):
 
     def _get_value_from_account_move(self, quantity, at_date=None):
         valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
-        if not (self.purchase_line_id and self.purchase_line_id):
+        if not self.purchase_line_id:
             return valuation_data
 
-        quantity = 0
+        aml_quantity = 0
         value = 0
         aml_ids = set()
         for aml in self.purchase_line_id.invoice_lines:
@@ -160,14 +160,20 @@ class StockMove(models.Model):
                 continue
             aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
-                quantity += aml.quantity
-                value += aml.price_subtotal
+                aml_quantity += aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
+                value += aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
             elif aml.move_type == 'in_refund':
-                quantity -= aml.quantity
-                value -= aml.price_subtotal
+                aml_quantity -= aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
+                value -= aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
 
-        valuation_data['quantity'] = quantity
-        valuation_data['value'] = value
+        if aml_quantity <= 0:
+            return valuation_data
+        if quantity >= aml_quantity:
+            valuation_data['quantity'] = aml_quantity
+            valuation_data['value'] = value
+        else:
+            valuation_data['quantity'] = quantity
+            valuation_data['value'] = quantity * value / aml_quantity
         account_moves = self.env['account.move.line'].browse(aml_ids).move_id
         valuation_data['description'] = _('%(value)s for %(quantity)s %(unit)s from %(bills)s',
             value=value, quantity=quantity, unit=self.product_id.uom_id.name,

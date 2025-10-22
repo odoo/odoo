@@ -99,6 +99,7 @@
                 <search string="Search Taxes">
                     <field name="name" string="Name"/>
                     <field name="description"/>
+                    <field name="amount"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="fiscal_position_ids"/>
                     <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
@@ -196,7 +197,7 @@
                                 <group name="advanced_booleans">
                                     <field name="price_include" invisible="1"/>
                                     <field name="price_include_override"
-                                           invisible="amount_type == 'group'"
+                                           invisible="amount_type == 'group' or has_negative_factor"
                                            placeholder="Default"
                                     />
                                     <field name="include_base_amount" invisible="amount_type == 'group'"/>

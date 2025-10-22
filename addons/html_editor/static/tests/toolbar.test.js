@@ -265,6 +265,25 @@ test("toolbar disable link button when selection cross blocks", async () => {
     expect(".btn[name='link']").toHaveClass("disabled");
 });
 
+test("toolbar disable link button when table cells are selected", async () => {
+    await setupEditor(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p>[<br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p>]<br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").toHaveClass("disabled");
+});
+
 test("toolbar enable link button when selection has only link", async () => {
     await setupEditor(`<p>[<a href="test.com">test.com</a>]</p>`);
 
@@ -1329,17 +1348,17 @@ test("should not close image cropper while loading media", async () => {
     await animationFrame();
     await click('.btn[name="image_crop"]');
 
-    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
-    await click('.btn[title="Discard"]');
+    await waitFor('.btn:contains("Discard")', { timeout: 1000 });
+    await click('.btn:contains("Discard")');
     await animationFrame();
 
     // Cropper should not close as the cropper still loading the image.
-    expect('.btn[title="Discard"]').toHaveCount(1);
+    expect('.btn:contains("Discard")').toHaveCount(1);
 
     // Once the image loaded we should be able to close
     await cropperReadyPromise;
-    await click('.btn[title="Discard"]');
-    await waitForNone('.btn[title="Discard"]', { timeout: 1500 });
+    await click('.btn:contains("Discard")');
+    await waitForNone('.btn:contains("Discard")', { timeout: 1500 });
 });
 
 test("toolbar shouldn't be visible if can_display_toolbar === false", async () => {

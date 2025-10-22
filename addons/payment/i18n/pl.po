@@ -30,13 +30,15 @@
 # danielkowalczyk007, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-16 10:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-21 12:30+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/payment/"
 "pl/>\n"
 "Language: pl\n"
@@ -92,10 +94,11 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible="
-"\"support_partial_capture != 'full_only'\" title=\"Niektóre z transakcji, "
-"które starasz się przechwycić mogą być przechwycone jedynie w całości. "
-"Obsługuj transakcje indywidualnie, aby przechwycić częściowe ilości.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Niektóre z "
+"transakcji, które starasz się przechwycić mogą być przechwycone jedynie w "
+"całości. Obsługuj transakcje indywidualnie, aby przechwycić częściowe ilości."
+"\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -103,8 +106,8 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Usuń metodę płatności\" data-bs-toggle="
-"\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"fa fa-trash\" title=\"Usuń metodę płatności\" data-bs-"
+"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -253,8 +256,8 @@ msgstr "ACH Direct Debit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "ACTIVATE STRIPE"
-msgstr "AKTYWUJ STRIPE"
+msgid "ACTIVATE"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -275,7 +278,7 @@ msgstr "Aktywne"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__active_provider_id
 msgid "Active Provider"
-msgstr ""
+msgstr "Aktywny operator"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -806,7 +809,7 @@ msgstr "Firma"
 #. module: payment
 #: model:ir.model,name:payment.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ustawienia konfiguracji"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -1184,7 +1187,7 @@ msgstr "Ma projekt potomków"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__has_enabled_provider
 msgid "Has Enabled Provider"
-msgstr ""
+msgstr "Ma aktywowanego operatora"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
@@ -1690,7 +1693,7 @@ msgstr "OmanNet"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
 msgid "Onboarding Payment Module"
-msgstr ""
+msgstr "Moduł płatności wprowadzającej"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_online_banking_czech_republic
@@ -1904,7 +1907,7 @@ msgstr "Kod metody płatności"
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Methods"
-msgstr "Metody wysyłania płatności"
+msgstr "Metody płatności"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
@@ -2525,7 +2528,8 @@ msgstr "Kwota do przechwycenia musi być dodatnia i nie może być wyższa niż 
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr "Podstawowy obraz używany dla tej metody płatności; w formacie 64x64 px."
+msgstr ""
+"Podstawowy obraz używany dla tej metody płatności; w formacie 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
@@ -2589,7 +2593,8 @@ msgstr "Należy wypełnić następujące pola: %s"
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "The following kwargs are not whitelisted: %s"
-msgstr "Następujące argumenty kluczowe (kwargs) nie są na liście dozwolonych:%s"
+msgstr ""
+"Następujące argumenty kluczowe (kwargs) nie są na liście dozwolonych:%s"
 
 #. module: payment
 #. odoo-python
@@ -2685,7 +2690,8 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
 msgid "The message displayed to explain and help the payment process"
-msgstr "Komunikat wyświetlany w celu wyjaśnienia i ułatwienia procesu płatności"
+msgstr ""
+"Komunikat wyświetlany w celu wyjaśnienia i ułatwienia procesu płatności"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -3454,6 +3460,9 @@ msgstr "tokenizacja nie jest wspierana"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "tokenizacja bez płatności nie jest wspierana"
+
+#~ msgid "ACTIVATE STRIPE"
+#~ msgstr "AKTYWUJ STRIPE"
 
 #~ msgid " Data Fetched"
 #~ msgstr " Pobierane Dane"

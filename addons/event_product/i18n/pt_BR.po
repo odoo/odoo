@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-17 17:19+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -46,11 +46,22 @@ msgid "Description"
 msgstr "Descrição"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_product__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_template__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: event_product
 #: model:ir.model,name:event_product.model_event_event
 msgid "Event"
 msgstr "Evento"
 
 #. module: event_product
+#: model:ir.model,name:event_product.model_event_registration
 #: model:ir.model.fields.selection,name:event_product.selection__product_template__service_tracking__event
 msgid "Event Registration"
 msgstr "Inscrição no evento"
@@ -79,6 +90,27 @@ msgstr "Ingresso de evento"
 #: model:ir.model.fields,field_description:event_product.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Ingressos do evento"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__free
+msgid "Free"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__id
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_event_registration__id
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_product_product__id
+#: model:ir.model.fields,field_description:event_product.field_product_template__id
+msgid "ID"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr ""
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
@@ -115,6 +147,11 @@ msgid "Product Variant"
 msgstr "Variante do produto"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr ""
+
+#. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales End"
 msgstr "Vendas Encerradas"
@@ -123,3 +160,14 @@ msgstr "Vendas Encerradas"
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales Start"
 msgstr "Início de Vendas"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Sold"
+msgstr ""
+
+#. module: event_product
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Transaction"
+msgstr ""

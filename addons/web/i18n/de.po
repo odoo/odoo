@@ -14,13 +14,14 @@
 # Larissa Manderfeld, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:55+0000\n"
-"PO-Revision-Date: 2025-09-16 04:43+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"PO-Revision-Date: 2025-10-17 12:45+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/web/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -304,7 +305,7 @@ msgstr "3.30"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "31/01/%s"
-msgstr ""
+msgstr "31/01/%s"
 
 #. module: web
 #. odoo-javascript
@@ -485,6 +486,18 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
+"\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">Getrennt (1 "
+"pro Reiter)</option>\n"
+"                                        <option value=\"temporal\">Temporär "
+"(experimentell)</option>\n"
+"                                    </select>\n"
+"                                    <span id=\"temporal_warning\" class="
+"\"alert alert-warning\" style=\"display:none\"><b>Warnung:</b> Im temporären "
+"Modus werden alle Proben zusammengeführt.<br/>Bei gleichzeitigen Profilen "
+"kann dies zu teilweise ungültigen Ergebnissen führen.<br/>Mit Vorsicht "
+"verwenden! </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -626,8 +639,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong class=\"text-nowrap\"><span class=\"oe_currency_value\">\n"
-"                                                       22.137,50</span> "
-"€</strong>"
+"                                                       22.137,50</span> €</"
+"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -901,7 +914,7 @@ msgstr "Foto hinzufügen"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
-msgstr ""
+msgstr "Eigenschaft hinzufügen"
 
 #. module: web
 #. odoo-javascript
@@ -1107,12 +1120,6 @@ msgstr "Und weitere"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Angle"
-msgstr "Winkel"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Animals & Nature"
 msgstr "Tiere & Natur"
@@ -1177,12 +1184,14 @@ msgstr "Sind Sie sicher, dass Sie diese eingebettete Aktion entfernen möchten?"
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the %(nbSelected)s selected records?"
 msgstr ""
+"Sind Sie sicher, dass Sie die %(nbSelected)s ausgewählten Datensätze löschen "
+"möchten?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the selected record?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie die ausgewählten Datensätze löschen möchten?"
 
 #. module: web
 #. odoo-javascript
@@ -1200,7 +1209,7 @@ msgstr "Sind Sie sicher, dass Sie diese Spalte löschen möchten?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Are you sure you want to delete this property field?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie dieses Eigenschaftsfeld löschen möchten?"
 
 #. module: web
 #. odoo-javascript
@@ -1478,7 +1487,6 @@ msgstr "Garantie für Fehlerbehebungen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/view_button/view_button.xml:0
 msgid "Button"
 msgstr "Schaltfläche"
@@ -2190,7 +2198,7 @@ msgstr "Währung"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
-msgstr ""
+msgstr "Währungsfeld"
 
 #. module: web
 #. odoo-javascript
@@ -2200,7 +2208,7 @@ msgstr "Aktuelles Wertfeld"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
+#: code:addons/web/static/src/core/color_picker/tabs/color_picker_custom_tab.js:0
 msgid "Custom"
 msgstr "Benutzerdefiniert"
 
@@ -2245,7 +2253,7 @@ msgstr "Benutzerdefinierte Gruppe"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Custom range"
-msgstr ""
+msgstr "Benutzerdefinierter Bereich"
 
 #. module: web
 #. odoo-python
@@ -2311,7 +2319,7 @@ msgstr "Datum & Uhrzeit"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Date Format"
-msgstr ""
+msgstr "Datumsformat"
 
 #. module: web
 #. odoo-javascript
@@ -2411,12 +2419,6 @@ msgstr "Standardschriftart"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Default:"
 msgstr "Standard:"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Define a custom gradient"
-msgstr "Definieren eines benutzerdefinierten Farbverlaufs"
 
 #. module: web
 #. odoo-javascript
@@ -2569,8 +2571,6 @@ msgid "Discard changes"
 msgstr "Änderungen verwerfen"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
@@ -2630,6 +2630,8 @@ msgid ""
 "Displays or hides the seconds in the datetime value. Affect only the "
 "readable datetime format."
 msgstr ""
+"Zeigt die Sekunden im Datums-/Zeitwert an oder blendet sie aus. Dies "
+"betrifft nur das lesbare Datums-/Zeitformat."
 
 #. module: web
 #. odoo-javascript
@@ -2642,6 +2644,8 @@ msgstr "Zeigt die Zeit im Datum/Zeit-Wert an oder blendet in aus."
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s"
 msgstr ""
+"Zeigt das Datum entweder im Format 31/01/%(year)s oder als 31. Januar %(year)"
+"s an"
 
 #. module: web
 #. odoo-javascript
@@ -2801,7 +2805,6 @@ msgstr "Frühestes akzeptiertes Datum"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
@@ -2867,7 +2870,7 @@ msgstr "E-Mail"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_res_users_settings__embedded_actions_config_ids
 msgid "Embedded Actions Config"
-msgstr ""
+msgstr "Konfiguration eingebetteter Aktionen"
 
 #. module: web
 #. odoo-javascript
@@ -2932,12 +2935,6 @@ msgstr "Enterprise"
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Entry Count"
 msgstr "Anzahl Einträge"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
-msgid "Error"
-msgstr "Fehler"
 
 #. module: web
 #. odoo-javascript
@@ -3006,30 +3003,6 @@ msgstr "Das Exportieren von gruppierten Daten nach csv wird nicht unterstützt."
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.js:0
 msgid "Expression is invalid. Please correct it"
 msgstr "Ausdruck ist ungültig. Bitte korrigieren"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the closest corner"
-msgstr "Erweitern bis zur nächsten Ecke"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the closest side"
-msgstr "Erweitern bis zur nächsten Seite"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the farthest corner"
-msgstr "Erweitern bis zur äußersten Ecke"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the farthest side"
-msgstr "Erweitern bis zur äußersten Seite"
 
 #. module: web
 #. odoo-javascript
@@ -3264,6 +3237,8 @@ msgid ""
 "For example, if the value is \"1\" and you enter \"+=2\", it will be updated "
 "to \"3\"."
 msgstr ""
+"Wenn der Wert beispielsweise „1“ ist und Sie „+=2“ eingeben, wird er auf „3“ "
+"aktualisiert."
 
 #. module: web
 #. odoo-javascript
@@ -3383,12 +3358,6 @@ msgstr "Google Slide Viewer"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Gradient"
-msgstr "Farbverlauf"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Green"
 msgstr "Grün"
@@ -3447,6 +3416,10 @@ msgid ""
 "click the %(upload_icon)s button now to ensure your work is saved before you "
 "exit this tab."
 msgstr ""
+"Achtung! Ihre letzten Änderungen sind zu umfangreich, um automatisch "
+"gespeichert zu werden. Klicken Sie jetzt auf die Schaltfläche %(upload_icon)"
+"s, um sicherzustellen, dass Ihre Arbeit gespeichert wird, bevor Sie diesen "
+"Reiter schließen."
 
 #. module: web
 #. odoo-javascript
@@ -3517,7 +3490,7 @@ msgstr "Startmenü"
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
-msgstr ""
+msgstr "Stunde"
 
 #. module: web
 #. odoo-python
@@ -3734,7 +3707,7 @@ msgstr "Installieren"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 msgid "Install %s"
-msgstr "%s Installieren"
+msgstr "%s installieren"
 
 #. module: web
 #. odoo-javascript
@@ -3772,6 +3745,12 @@ msgstr "Interner Link"
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Interval"
 msgstr "Intervall"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
+msgid "Invalid Display Name"
+msgstr "Ungültiger Anzeigename"
 
 #. module: web
 #. odoo-javascript
@@ -3827,13 +3806,6 @@ msgstr "Ungültige Feldkette"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 msgid "Invalid fields"
 msgstr "Ungültige Felder:"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/model/relational_model/record.js:0
-#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
-msgid "Invalid fields: "
-msgstr "Ungültige Felder: "
 
 #. module: web
 #. odoo-python
@@ -3943,18 +3915,20 @@ msgid ""
 "It will be removed for everyone using the \"%(parentName)s\" %"
 "(parentFieldLabel)s."
 msgstr ""
+"Es wird für alle entfernt, die %(parentFieldLabel)s „%(parentName)s“ "
+"verwenden."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "It will be removed for everyone!"
-msgstr ""
+msgstr "Es wird für alle entfernt."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Jan 31, %s"
-msgstr ""
+msgstr "31. Januar %s"
 
 #. module: web
 #. odoo-javascript
@@ -4203,19 +4177,19 @@ msgstr "Groß"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "Letzte 12 Monate"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "Letzte 30 Tage"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "Letzte 7 Tage"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__write_uid
@@ -4233,7 +4207,7 @@ msgstr "Zuletzt aktualisiert am"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last month"
-msgstr ""
+msgstr "Letzten Monat"
 
 #. module: web
 #. odoo-javascript
@@ -4307,12 +4281,6 @@ msgstr "Liniendiagramm"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Linear"
-msgstr "Linear"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Load"
 msgstr "Laden"
@@ -4382,7 +4350,7 @@ msgstr "Abmelden"
 #. odoo-python
 #: code:addons/web/controllers/home.py:0
 msgid "Login"
-msgstr ""
+msgstr "Anmelden"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -4536,12 +4504,12 @@ msgstr "Meeting-Betreff"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory limit (in bytes)"
-msgstr ""
+msgstr "Speicherlimit (in Bytes)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory profile"
-msgstr ""
+msgstr "Speicherprofil"
 
 #. module: web
 #. odoo-javascript
@@ -4610,6 +4578,12 @@ msgstr "Fehlender Datensatz"
 #: code:addons/web/controllers/json.py:0
 msgid "Missing record id"
 msgstr "Fehlende Datensatz-ID"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+msgid "Missing required fields"
+msgstr "Fehlende Pflichtfelder"
 
 #. module: web
 #. odoo-javascript
@@ -4696,7 +4670,7 @@ msgstr "Monat"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Month to date"
-msgstr ""
+msgstr "Monat zu Datum"
 
 #. module: web
 #. odoo-javascript
@@ -4820,7 +4794,7 @@ msgstr "Mein Odoo.com-Konto"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 msgid "My Preferences"
-msgstr ""
+msgstr "Meine Präferenzen"
 
 #. module: web
 #. odoo-javascript
@@ -5059,8 +5033,9 @@ msgstr "Kein Treffer gefunden"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/select_menu/select_menu.xml:0
+#, fuzzy
 msgid "No results"
-msgstr ""
+msgstr "Keine Ergebnisse"
 
 #. module: web
 #. odoo-javascript
@@ -5117,6 +5092,8 @@ msgid ""
 "Not possible to create monetary field because there is no currency on "
 "current model."
 msgstr ""
+"Es ist nicht möglich, ein Währungsfeld zu erstellen, da das aktuelle Modell "
+"keine Währung enthält."
 
 #. module: web
 #. odoo-javascript
@@ -5270,8 +5247,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
-"Von den %(selectedRecord)s ausgewählten Datensätzen wurden nur die ersten "
-"%(firstRecords)s archiviert/dearchiviert."
+"Von den %(selectedRecord)s ausgewählten Datensätzen wurden nur die ersten %"
+"(firstRecords)s archiviert/dearchiviert."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -5652,18 +5629,6 @@ msgid "Please, scan again!"
 msgstr "Bitte erneut scannen!"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Position X"
-msgstr "Position X"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Position Y"
-msgstr "Position Y"
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
 msgstr "Powered by %s%s"
@@ -5816,7 +5781,7 @@ msgstr "Eigenschaften"
 #. module: web
 #: model:ir.model,name:web.model_properties_base_definition
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Allgemeine Festlegung der Eigenschaften"
 
 #. module: web
 #. odoo-javascript
@@ -5894,12 +5859,6 @@ msgstr "Qweb-Feld Bild"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Radial"
-msgstr "Radial"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/radio/radio_field.js:0
 msgid "Radio"
 msgstr "Radio"
@@ -5953,7 +5912,7 @@ msgstr "Datensatzregeln"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Record memory"
-msgstr ""
+msgstr "Datensatzspeicher"
 
 #. module: web
 #. odoo-javascript
@@ -6452,8 +6411,8 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
-"<i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" title="
-"\"Database\"/> auswählen"
+"<i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/> auswählen"
 
 #. module: web
 #. odoo-javascript
@@ -6590,6 +6549,7 @@ msgstr "Zeitzone für Ihren Benutzer einstellen"
 #: code:addons/web/static/src/views/fields/badge_selection/list_badge_selection_field.js:0
 msgid "Set an integer field to use colors with the badge."
 msgstr ""
+"Legen Sie ein Ganzzahlen-Feld fest, um Farben mit dem Abzeichen zu verwenden."
 
 #. module: web
 #. odoo-javascript
@@ -6695,7 +6655,6 @@ msgstr "Wochenenden anzeigen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
@@ -6718,7 +6677,7 @@ msgstr "Smileys & Gefühle"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
+#: code:addons/web/static/src/core/color_picker/tabs/color_picker_solid_tab.js:0
 msgid "Solid"
 msgstr "Einheitlich"
 
@@ -6759,7 +6718,7 @@ msgstr "Spezial:"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Speedscope"
-msgstr ""
+msgstr "Speedscope"
 
 #. module: web
 #. odoo-javascript
@@ -6864,7 +6823,7 @@ msgstr "Stilfehler"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Suffix"
-msgstr ""
+msgstr "Suffix"
 
 #. module: web
 #. odoo-javascript
@@ -7008,7 +6967,6 @@ msgstr "Vorlage:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -7084,7 +7042,7 @@ msgstr "Die Domain sollte keine Nicht-Buchstabensymbole enthalten."
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
-msgstr ""
+msgstr "Die ID in %(field_name)s dürfen nicht dupliziert sein: „%(action_ids)s“"
 
 #. module: web
 #. odoo-python
@@ -7093,6 +7051,8 @@ msgid ""
 "The ids in %(field_name)s must only be integers or \"false\": “%"
 "(action_ids)s”"
 msgstr ""
+"Die ID in %(field_name)s dürfen nur Ganzzahlen oder „false“ sein: "
+"„%(action_ids)s“"
 
 #. module: web
 #. odoo-javascript
@@ -7140,12 +7100,8 @@ msgid ""
 "The user should have one unique embedded action setting per user setting, "
 "action and record id."
 msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Theme"
-msgstr "Designmotiv"
+"Der Benutzer sollte über eine eindeutige eingebettete Aktionseinstellung pro "
+"Benutzereinstellung, Aktion und Datensatz-ID verfügen."
 
 #. module: web
 #. odoo-javascript
@@ -7200,7 +7156,8 @@ msgstr "Diese Domain wird nicht unterstützt."
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "This embedded action is global and will be removed for everyone."
-msgstr "Die eingebettete Aktion ist allgemeingültig und wird für alle entfernt."
+msgstr ""
+"Die eingebettete Aktion ist allgemeingültig und wird für alle entfernt."
 
 #. module: web
 #. odoo-javascript
@@ -7304,7 +7261,6 @@ msgstr "Titania"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Title"
@@ -7345,7 +7301,7 @@ msgstr "Suchfeld ein/aus"
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Toggle date range mode"
-msgstr ""
+msgstr "Modus für Datumsbereich ein/aus"
 
 #. module: web
 #. odoo-javascript
@@ -7456,7 +7412,6 @@ msgstr "Di"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 #: code:addons/web/static/src/views/fields/float_toggle/float_toggle_field.js:0
@@ -7730,6 +7685,8 @@ msgid ""
 "Use the operators \"+=\", \"-=\", \"*=\" and \"/=\" to update the current "
 "value."
 msgstr ""
+"Verwenden Sie die Operatoren „+=“, „-=“, „*=“ und „/=“, um den aktuellen "
+"Wert zu aktualisieren."
 
 #. module: web
 #. odoo-javascript
@@ -7777,12 +7734,12 @@ msgstr "Benutzerschnittstelle"
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Benutzereinstellungen"
 
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings_embedded_action
 msgid "User Settings for Embedded Actions"
-msgstr ""
+msgstr "Benutzereinstellungen für eingebettete Aktionen"
 
 #. module: web
 #. odoo-javascript
@@ -7939,7 +7896,6 @@ msgstr "WC"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Warning"
@@ -8081,7 +8037,7 @@ msgstr "Jahr"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Year to date"
-msgstr ""
+msgstr "Seit Jahresbeginn"
 
 #. module: web
 #. odoo-javascript
@@ -8130,7 +8086,7 @@ msgstr "Sie können die App aus dem Browsermenü installieren"
 #. odoo-python
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
-msgstr ""
+msgstr "Sie können diese Felddefinition nicht lesen."
 
 #. module: web
 #. odoo-javascript
@@ -8354,7 +8310,7 @@ msgstr "Asklepios"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "after"
-msgstr ""
+msgstr "nach"
 
 #. module: web
 #. odoo-javascript
@@ -9331,7 +9287,7 @@ msgstr "Käfer"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "before"
-msgstr ""
+msgstr "vor"
 
 #. module: web
 #. odoo-javascript
@@ -12107,12 +12063,6 @@ msgstr "Reh"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "deg"
-msgstr "Grad"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "dejected"
 msgstr "niedergeschlagen"
@@ -12960,7 +12910,7 @@ msgstr "Empanada"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/blank_component.xml:0
 msgid "empty"
-msgstr ""
+msgstr "leer"
 
 #. module: web
 #. odoo-javascript
@@ -14790,7 +14740,7 @@ msgstr "Grashüpfer"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "greater or equal to"
-msgstr ""
+msgstr "größer als oder gleich"
 
 #. module: web
 #. odoo-javascript
@@ -17256,13 +17206,13 @@ msgstr "niedrig"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "lower or equal to"
-msgstr ""
+msgstr "kleiner als oder gleich"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "lower than"
-msgstr ""
+msgstr "kleiner als"
 
 #. module: web
 #. odoo-javascript
@@ -19462,15 +19412,17 @@ msgstr "optische Platte"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/autocomplete/autocomplete.xml:0
+#, fuzzy
 msgid "option.label"
-msgstr ""
+msgstr "option.label"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/record_selectors/record_autocomplete.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#, fuzzy
 msgid "optionScope.label"
-msgstr ""
+msgstr "optionScope.label"
 
 #. module: web
 #. odoo-javascript
@@ -27102,6 +27054,51 @@ msgstr "„freies Zimmer“"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ココ"
 msgstr "ココ"
+
+#~ msgid "Angle"
+#~ msgstr "Winkel"
+
+#~ msgid "Define a custom gradient"
+#~ msgstr "Definieren eines benutzerdefinierten Farbverlaufs"
+
+#~ msgid "Error"
+#~ msgstr "Fehler"
+
+#~ msgid "Extend to the closest corner"
+#~ msgstr "Erweitern bis zur nächsten Ecke"
+
+#~ msgid "Extend to the closest side"
+#~ msgstr "Erweitern bis zur nächsten Seite"
+
+#~ msgid "Extend to the farthest corner"
+#~ msgstr "Erweitern bis zur äußersten Ecke"
+
+#~ msgid "Extend to the farthest side"
+#~ msgstr "Erweitern bis zur äußersten Seite"
+
+#~ msgid "Gradient"
+#~ msgstr "Farbverlauf"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "Ungültige Felder: "
+
+#~ msgid "Linear"
+#~ msgstr "Linear"
+
+#~ msgid "Position X"
+#~ msgstr "Position X"
+
+#~ msgid "Position Y"
+#~ msgstr "Position Y"
+
+#~ msgid "Radial"
+#~ msgstr "Radial"
+
+#~ msgid "Theme"
+#~ msgstr "Designmotiv"
+
+#~ msgid "deg"
+#~ msgstr "Grad"
 
 #~ msgid " records"
 #~ msgstr " Datensätze"

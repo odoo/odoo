@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account.tests.common import TestTaxCommon
 from odoo.tests import tagged
 
@@ -490,6 +491,40 @@ class TestTaxesComputation(TestTaxCommon):
         )
         self._run_js_tests()
 
+    def test_random_case_10_reverse_charge(self):
+        """ Reverse charge taxes are always price-excluded. """
+        tax = self.percent_tax(
+            21.0,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        )
+
+        expected_values = [
+            tax,
+            100.0,
+            {
+                'total_included': 100.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 21.0),
+                    (100.0, -21.0),
+                ),
+            },
+        ]
+
+        self.assert_taxes_computation(*expected_values)
+        tax.price_include_override = 'tax_included'
+        self.assert_taxes_computation(*expected_values)
+        self._run_js_tests()
+
     def test_fixed_tax_price_included_affect_base_on_0(self):
         tax = self.fixed_tax(0.05, price_include_override='tax_included', include_base_amount=True)
         self.assert_taxes_computation(
@@ -659,9 +694,29 @@ class TestTaxesComputation(TestTaxCommon):
 
         # tax       price_incl      incl_base_amount    is_base_affected
         # ----------------------------------------------------------------
+        # tax1      T               T
+        # tax2      T               T
+        tax1.is_base_affected = False
+        self.assert_taxes_computation(
+            tax1 + tax2,
+            200.0,
+            {
+                'total_included': 200.0,
+                'total_excluded': 178.571429,
+                'taxes_data': (
+                    (178.571429, 10.714286),
+                    (178.571429, 10.714286),
+                ),
+            },
+            rounding_method='round_globally',
+        )
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
         # tax1      T               T                   T
         # tax2
         # tax3                                          T
+        tax1.is_base_affected = True
         tax2.price_include = False
         tax2.include_base_amount = False
         self.assert_taxes_computation(

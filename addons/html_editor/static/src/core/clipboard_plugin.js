@@ -1,7 +1,7 @@
-import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
+import { isTextNode, isParagraphRelatedElement, isEmptyBlock } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
+import { unwrapContents, wrapInlinesInBlocks, splitTextNode, fillEmpty } from "../utils/dom";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -69,6 +69,8 @@ export const CLIPBOARD_WHITELISTS = {
         "img-thumbnail",
         "rounded",
         "rounded-circle",
+        // Odoo tables
+        "o_table",
         "table",
         "table-bordered",
         /^padding-/,
@@ -160,7 +162,10 @@ export class ClipboardPlugin extends Plugin {
      */
     onPaste(ev) {
         let selection = this.dependencies.selection.getEditableSelection();
-        if (!selection.anchorNode.isConnected) {
+        if (
+            !selection.anchorNode.isConnected ||
+            !closestElement(selection.anchorNode).isContentEditable
+        ) {
             return;
         }
         ev.preventDefault();
@@ -449,7 +454,26 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
-            if (node.nodeName === "TD") {
+            if (node.nodeName === "THEAD") {
+                const tbody = node.nextElementSibling;
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...node.children);
+                    node.remove();
+                    node = tbody;
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    node = this.dependencies.dom.setTagName(node, "TBODY");
+                }
+            } else if (["TD", "TH"].includes(node.nodeName)) {
+                // Insert base container into empty TD.
+                if (isEmptyBlock(node)) {
+                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                    fillEmpty(baseContainer);
+                    node.replaceChildren(baseContainer);
+                }
+
                 if (node.hasAttribute("bgcolor") && !node.style["background-color"]) {
                     node.style["background-color"] = node.getAttribute("bgcolor");
                 }
@@ -527,7 +551,7 @@ export class ClipboardPlugin extends Plugin {
      * @returns {boolean}
      */
     isWhitelisted(item) {
-        if (item instanceof Attr) {
+        if (item.nodeType === Node.ATTRIBUTE_NODE) {
             return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
         } else if (typeof item === "string") {
             return CLIPBOARD_WHITELISTS.classes.some((okClass) =>

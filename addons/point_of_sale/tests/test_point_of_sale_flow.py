@@ -1,11 +1,13 @@
 import odoo
 
 from freezegun import freeze_time
+from unittest.mock import patch
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
+from odoo.exceptions import ValidationError, UserError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -175,6 +177,20 @@ class TestPointOfSaleFlow(CommonPosTest):
         refund_payment.with_context(**payment_context).check()
 
         self.assertEqual(refund.state, 'paid')
+
+        refund_action = order.refund()
+        remaining_refund = self.env['pos.order'].browse(refund_action['res_id'])
+        self.assertEqual(remaining_refund.amount_total, -10.0)
+
+        payment_context = {"active_ids": remaining_refund.ids, "active_id": remaining_refund.id}
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': remaining_refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+
+        self.assertEqual(remaining_refund.state, 'paid')
+
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
 
@@ -1739,3 +1755,122 @@ class TestPointOfSaleFlow(CommonPosTest):
         refund_payment.with_context(**payment_context).check()
         current_session.close_session_from_ui()
         self.assertEqual(current_session.picking_ids.mapped('state'), ['done', 'done'])
+
+    def test_search_paid_order_ids(self):
+        """ Test if the orders from other configs are excluded in search_paid_order_ids """
+        other_pos_config = self.env['pos.config'].create({
+            'name': 'Other POS',
+            'picking_type_id': self.env['stock.picking.type'].search([('code', '=', 'outgoing')], limit=1).id,
+        })
+        self.pos_config_usd.open_ui()
+        other_pos_config.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        other_session = other_pos_config.current_session_id
+
+        paid_order_1, paid_order_2 = self.env['pos.order'].create([{
+            'company_id': self.env.company.id,
+            'session_id': session_id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'qty': 1,
+                    'price_subtotal': 134.38,
+                    'price_subtotal_incl': 134.38,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 134.38,
+            'amount_paid': 134.38,
+            'amount_return': 0.0,
+            'state': 'paid',
+        } for session_id in (current_session.id, other_session.id)])
+
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [], 80, 0)['ordersInfo']]
+        self.assertNotIn(paid_order_1.id, order_ids)
+        self.assertIn(paid_order_2.id, order_ids)
+
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_paid_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
+        self.assertNotIn(paid_order_1.id, order_ids)
+        self.assertIn(paid_order_2.id, order_ids)
+
+    def test_session_name_gap(self):
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        session.set_opening_control(0, None)
+        current_session_name = session.name
+        session.action_pos_session_closing_control()
+
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+
+        def _post_cash_details_message_patch(*_args, **_kwargs):
+            raise UserError('Test Error')
+
+        with patch.object(self.env.registry.models['pos.session'], "_post_cash_details_message", _post_cash_details_message_patch):
+            with self.assertRaises(UserError):
+                session.set_opening_control(0, None)
+
+        session.set_opening_control(0, None)
+        self.assertEqual(int(session.name.split('/')[1]), int(current_session_name.split('/')[1]) + 1)
+
+    def test_open_ui_missing_country(self):
+        """ Test that a POS can not be opened if it has no country """
+        self.pos_config_usd.company_id.account_fiscal_country_id = False
+        with self.assertRaises(ValidationError, msg="The company must have a fiscal country set."):
+            self.pos_config_usd.open_ui()
+
+    def test_branch_company_access_cost_currency_id(self):
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+            'country_id': self.env.company.country_id.id,
+        })
+        user = self.env['res.users'].create({
+            'name': 'Branch user',
+            'login': 'branch_user',
+            'email': 'branch@yourcompany.com',
+            'group_ids': [(6, 0, [self.ref('base.group_user'), self.ref('point_of_sale.group_pos_user')])],
+            'company_ids': [(4, branch.id)],
+            'company_id': branch.id,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'company_id': self.env.company.id,
+        })
+        config = self.env['pos.config'].with_company(branch).create({
+            'name': 'Main',
+            'company_id': branch.id,
+        })
+        config.payment_method_ids.filtered(lambda pm: pm.is_cash_count).unlink()
+
+        config.open_ui()
+        current_session = config.current_session_id
+
+        order = self.env['pos.order'].with_user(user).with_company(branch).create({
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'company_id': branch.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 6,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 6,
+                'price_subtotal_incl': 6,
+            })],
+            'amount_paid': 6.0,
+            'amount_total': 6.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+
+        order_line = order.lines[0]
+        self.env.invalidate_all()
+        order_line.with_user(user).with_company(branch)._compute_total_cost(None)

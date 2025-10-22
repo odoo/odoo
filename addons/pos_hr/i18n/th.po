@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 21:33+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_hr/th/>"
-"\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/pos_hr/th/"
+">\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,18 +20,13 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_hr
-#: model:ir.model,name:pos_hr.model_report_pos_hr_multi_employee_sales_report
-msgid "A collection of single session reports. One for each employee"
-msgstr ""
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
 msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
+#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Access Denied"
 msgstr "การเข้าถึงถูกปฏิเสธ"
 
@@ -66,13 +61,13 @@ msgstr "สิทธิขั้นพื้นฐาน"
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
 msgid ""
-"Can't generate a report per employee! as selected session has no orders "
-"associated with any employee."
+"Cannot generate report per employee: only one employee logged in during this "
+"session."
 msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash in/out"
 msgstr ""
 
@@ -96,12 +91,6 @@ msgid "Cashier name"
 msgstr ""
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
-msgid "Change Cashier"
-msgstr "เปลี่ยนแคชเชียร์"
-
-#. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Closed Register"
@@ -114,21 +103,36 @@ msgstr "ตั้งค่าการกำหนดค่า"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Counted"
 msgstr "จำนวน"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Difference"
 msgstr "ส่วนต่าง"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.js:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Discard"
 msgstr "ละทิ้ง"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -138,11 +142,6 @@ msgstr "ละทิ้ง"
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
 msgstr "พนักงาน"
-
-#. module: pos_hr
-#: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
-msgid "Employee Sales Details"
-msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -173,14 +172,37 @@ msgid "Employees with manager access"
 msgstr "พนักงานที่มีสิทธิ์การเข้าถึงระดับผู้จัดการ"
 
 #. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
+msgid "Employees with minimal access"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
 msgstr ""
 
 #. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:pos_hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_hr.field_product_product__id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "หากเว้นว่างไว้ พนักงานทุกคนสามารถเข้าสู่ระบบ PoS ได้"
 
@@ -192,19 +214,26 @@ msgstr "หากเว้นว่างไว้ มีเพียงผู�
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/navbar/navbar.xml:0
+#: code:addons/pos_hr/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 msgid "Lock"
 msgstr "ล็อก"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Minimal rights"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "No Cashiers"
 msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Open Register"
 msgstr "เปิดลงทะเบียน"
 
@@ -216,33 +245,33 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Opening"
 msgstr "เปิด"
 
 #. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Others"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "PIN not found"
 msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "Password?"
 msgstr "รหัสผ่าน?"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Payments"
 msgstr "การชำระเงิน"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.js:0
-msgid "Payments in %(paymentMethod)s"
-msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -275,15 +304,15 @@ msgid "Point of Sale Session"
 msgstr "เซสชั่นการขายหน้าร้าน"
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/print_report_button/print_report_button.xml:0
-msgid "Print"
-msgstr ""
-
-#. module: pos_hr
 #: model:ir.model,name:pos_hr.model_product_product
 msgid "Product Variant"
 msgstr "ตัวแปรสินค้า"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
+msgid "Select Cashier"
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -314,25 +343,25 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "There is no cashier available."
 msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Unlock Register"
 msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "Wrong PIN"
 msgstr "PIN ผิด"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
+#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "You are not allowed to change the price of a product."
 msgstr "คุณไม่มีสิทธิเปลี่ยนแปลงราคาของผลิตภัณฑ์"
 
@@ -342,5 +371,7 @@ msgstr "คุณไม่มีสิทธิเปลี่ยนแปลง
 msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
-msgstr ""
-"คุณไม่สามารถลบพนักงานที่อาจใช้ในเซสชั่น PoS ที่ใช้งานอยู่ ปิดเซสชั่นก่อน: \n"
+msgstr "คุณไม่สามารถลบพนักงานที่อาจใช้ในเซสชั่น PoS ที่ใช้งานอยู่ ปิดเซสชั่นก่อน: \n"
+
+#~ msgid "Change Cashier"
+#~ msgstr "เปลี่ยนแคชเชียร์"

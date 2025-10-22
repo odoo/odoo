@@ -780,6 +780,7 @@ export function makeActionManager(env, router = _router) {
                 actionName: action.name,
                 cache: action.cache,
                 actionType: "ir.actions.act_window",
+                actionXmlId: action.xml_id,
                 embeddedActions,
                 parentActionId,
                 currentEmbeddedActionId,
@@ -1027,6 +1028,7 @@ export function makeActionManager(env, router = _router) {
                         "current_action",
                         action._originalAction || "{}"
                     );
+                    browser.sessionStorage.setItem("current_lang", user.lang);
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
@@ -1448,7 +1450,7 @@ export function makeActionManager(env, router = _router) {
                         pick(options, "forceLeave")
                     );
                     if (!canProceed) {
-                        return new Promise(() => {});
+                        return;
                     }
                 }
                 return _executeActWindowAction(action, options);
@@ -1748,6 +1750,12 @@ export function makeActionManager(env, router = _router) {
      */
 
     async function loadState(state = router.current) {
+        const lang = browser.sessionStorage.getItem("current_lang");
+        if (lang && lang !== user.lang) {
+            browser.sessionStorage.removeItem("current_action");
+            browser.sessionStorage.removeItem("current_lang");
+            browser.sessionStorage.removeItem("current_state");
+        }
         const newStack = await _controllersFromState(state);
         const actionParams = _getActionParams(state);
         if (actionParams) {

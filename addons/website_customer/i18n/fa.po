@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -23,14 +23,35 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                        There are no matching customers found for the "
+"selected country. Displaying results across all countries instead."
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Open map\"/>"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to references"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> همه"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
-msgid "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link\" title=\"External link\"/>"
-msgstr "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link\" title=\"External link\"/>"
+#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
+msgid "<span class=\"small text-muted\">Implemented by</span>"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
@@ -38,11 +59,13 @@ msgid "Active"
 msgstr "فعال"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Countries"
 msgstr "تمام کشورها"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Industries"
 msgstr ""
@@ -51,6 +74,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Archived"
 msgstr "بایگانی شده"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "Back to references list"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
@@ -73,6 +101,7 @@ msgid "Class"
 msgstr "کلاس"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "Close"
 msgstr "بستن"
@@ -83,8 +112,14 @@ msgid "Contact"
 msgstr "مخاطب"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Countries Filter"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model,website_form_label:website_customer.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: website_customer
@@ -103,22 +138,85 @@ msgid "Created on"
 msgstr "ایجادشده در"
 
 #. module: website_customer
+#. odoo-python
+#: code:addons/website_customer/controllers/main.py:0
+msgid "Customers"
+msgstr ""
+
+#. module: website_customer
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option_plugin.js:0
+msgid "Customers Page"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
+#: model:ir.model.fields,field_description:website_customer.field_website__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Enter a short description"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Country"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Industry"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Tags"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
+msgid "Filter by country"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "Filter by industry"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,help:website_customer.field_res_users__website_tag_ids
+msgid "Filter published customers on the .../customers website page"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filters"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Go to customer"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__id
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
+#: model:ir.model.fields,field_description:website_customer.field_website__id
 msgid "ID"
 msgstr "شناسه"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "Implemented By"
-msgstr "پیاده‌سازی شده توسط"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Industry Filter"
 msgstr ""
 
@@ -126,11 +224,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
 msgstr "منتشر شده است"
-
-#. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
-msgid "Last Modified on"
-msgstr "آخرین اصلاح در"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
@@ -144,19 +237,22 @@ msgstr "آخرین بروز رسانی در"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Manage contact tags to better classify them for tracking and analysis purposes."
-msgstr "برچسب‌های مخاطبان برای تقسیم بندی و رهگیری بهتر آنها و به منظور تحلیل بهتر مدیریت کنید."
+msgid ""
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
+msgstr ""
+"برچسب‌های مخاطبان برای تقسیم بندی و رهگیری بهتر آنها و به منظور تحلیل بهتر "
+"مدیریت کنید."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "No result found"
-msgstr "نتیجه‌ای یافت نشد"
+msgid "No results found for \""
+msgstr ""
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.details
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Our References"
-msgstr "شماره پیگیری ما"
+msgid "Our references"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_form
@@ -165,8 +261,12 @@ msgstr "برچسب های همکار"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner_tag
-msgid "Partner Tags - These tags can be used on website to find customers by sector, or ..."
-msgstr "برچسب های همکار - این برچسب ها می‌توانید در وبسایت برای یافتن مشتریان با بخش استفاده شود، یا ..."
+msgid ""
+"Partner Tags - These tags can be used on website to find customers by "
+"sector, or ..."
+msgstr ""
+"برچسب های همکار - این برچسب ها می‌توانید در وبسایت برای یافتن مشتریان با بخش "
+"استفاده شود، یا ..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
@@ -174,30 +274,11 @@ msgid "Partners"
 msgstr "طرف حساب"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
 msgid "References"
 msgstr "مراجع"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
-msgid "References Page"
-msgstr ""
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
-msgid "References by Country"
-msgstr "مراجع بر اساس کشور"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Industries"
-msgstr ""
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
-msgid "References by Tag"
-msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -210,24 +291,41 @@ msgid "Search Partner Tag"
 msgstr "جستجوی برچسب همکار"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See all customers"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See countries filters"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See industries filters"
+msgstr ""
+
+#. module: website_customer
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Show Map"
 msgstr ""
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Tags Filter"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
-msgid "The full URL to access the document through the website."
-msgstr "آدرس URL کامل برای دسترسی سند در وبسایت."
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Trusted by millions worldwide"
-msgstr "مورد اعتماد میلیون ها نفر در سطح دنیا"
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
@@ -238,6 +336,11 @@ msgstr "قابل دید در وبسایت حاضر"
 #: model:ir.model,name:website_customer.model_website
 msgid "Website"
 msgstr "تارنما"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -263,7 +366,30 @@ msgstr "برچسب های وبسایت"
 msgid "World Map"
 msgstr "نقشه جهان"
 
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "reference(s))"
-msgstr ""
+#~ msgid ""
+#~ "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+#~ "link\" title=\"External link\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+#~ "link\" title=\"External link\"/>"
+
+#~ msgid "Implemented By"
+#~ msgstr "پیاده‌سازی شده توسط"
+
+#~ msgid "Last Modified on"
+#~ msgstr "آخرین اصلاح در"
+
+#~ msgid "No result found"
+#~ msgstr "نتیجه‌ای یافت نشد"
+
+#~ msgid "Our References"
+#~ msgstr "شماره پیگیری ما"
+
+#~ msgid "References by Country"
+#~ msgstr "مراجع بر اساس کشور"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "آدرس URL کامل برای دسترسی سند در وبسایت."
+
+#~ msgid "Trusted by millions worldwide"
+#~ msgstr "مورد اعتماد میلیون ها نفر در سطح دنیا"

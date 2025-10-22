@@ -92,6 +92,17 @@ class ResConfigSettings(models.TransientModel):
                         worksheet.write(row_idx, col_idx, cell)
             return buffer.getvalue()
 
+    def get_pos_qr_stands(self):
+        """Redirect to the get the free stands with the data of QR codes for the current POS config"""
+        self.ensure_one()
+        return {
+            "type": "ir.actions.client",
+            "tag": "pos_qr_stands",
+            "params": {
+                "data": self.pos_config_id.get_pos_qr_order_data(),
+            },
+        }
+
     def generate_qr_codes_zip(self):
         if not self.pos_self_ordering_mode in ['mobile', 'consultation']:
             raise ValidationError(_("QR codes can only be generated in mobile or consultation mode."))
@@ -192,6 +203,14 @@ class ResConfigSettings(models.TransientModel):
                 }
             }
         )
+
+    def pos_close_ui(self):
+        if self.pos_self_ordering_mode == "kiosk":
+            if self.env.context.get('pos_config_id'):
+                pos_config_id = self.env.context['pos_config_id']
+                pos_config = self.env['pos.config'].browse(pos_config_id)
+                return pos_config.action_close_kiosk_session()
+        return super().pos_close_ui()
 
     def preview_self_order_app(self):
         self.ensure_one()

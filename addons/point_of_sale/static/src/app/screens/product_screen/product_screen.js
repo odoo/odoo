@@ -255,6 +255,7 @@ export class ProductScreen extends Component {
             product.needToConfigure()
         );
         this.numberBuffer.reset();
+        this.showOptionalProductPopupIfNeeded(product);
     }
     async _getPartnerByBarcode(code) {
         let partner = this.pos.models["res.partner"].getBy("barcode", code.code);
@@ -288,6 +289,7 @@ export class ProductScreen extends Component {
     async _barcodeGS1Action(parsed_results) {
         const productBarcode = parsed_results.find((element) => element.type === "product");
         const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const qty = parsed_results.find((element) => element.type === "quantity");
         const product = await this._getProductByBarcode(productBarcode);
 
         if (!product) {
@@ -296,12 +298,19 @@ export class ProductScreen extends Component {
             );
             return;
         }
+        const vals = { product_id: product, product_tmpl_id: product.product_tmpl_id };
+        if (
+            qty &&
+            product.uom_id &&
+            qty.rule?.associated_uom_id &&
+            product.uom_id.id == qty.rule.associated_uom_id[0]
+        ) {
+            vals.qty = qty.value;
+        }
 
-        await this.pos.addLineToCurrentOrder(
-            { product_id: product, product_tmpl_id: product.product_tmpl_id },
-            { code: lotBarcode }
-        );
+        await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode });
         this.numberBuffer.reset();
+        this.showOptionalProductPopupIfNeeded(product);
     }
     displayAllControlPopup() {
         this.dialog.add(ControlButtonsPopup);
@@ -392,8 +401,11 @@ export class ProductScreen extends Component {
                 options["presetVariant"] = searchedProduct[0];
             }
         }
-        const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
-        if (line?.product_id?.product_tmpl_id?.pos_optional_product_ids?.length) {
+        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
+        this.showOptionalProductPopupIfNeeded(product);
+    }
+    showOptionalProductPopupIfNeeded(product) {
+        if (product.pos_optional_product_ids?.length) {
             this.dialog.add(OptionalProductPopup, {
                 productTemplate: product,
             });

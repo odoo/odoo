@@ -47,6 +47,7 @@ export class WebsiteSale extends Interaction {
         this.filmStripIsDown = false;
         this.filmStripScrollLeft = 0;
         this.filmStripMoved = false;
+        this.imageRatio = this.el.dataset.imageRatio;
     }
 
     start() {
@@ -210,11 +211,12 @@ export class WebsiteSale extends Interaction {
         if (salePage.dataset.ecomZoomClick) {
             // In this case we want all the images not just the ones that are "zoomables"
             const images = this.el.querySelectorAll('.product_detail_img');
-            for (const image of images ) {
+            for (const [idx, image] of images.entries()) {
                 const handler = () => {
                     this.services.dialog.add(ProductImageViewer, {
-                        selectedImageIdx: [...images].indexOf(image),
+                        selectedImageIdx: idx,
                         images,
+                        imageRatio: this.imageRatio,
                     });
                 };
                 image.addEventListener("click", handler);

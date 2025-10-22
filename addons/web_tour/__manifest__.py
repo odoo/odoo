@@ -40,7 +40,13 @@ Odoo Web tours.
         ],
         'web.assets_unit_tests': [
             ('include', 'web_tour.recorder'),
+            ('include', 'web_tour.automatic'),
+            ('include', 'web_tour.interactive'),
             'web_tour/static/tests/*.test.js',
+        ],
+        "web.assets_tests": [
+            'web_tour/static/src/js/tour_automatic/tour_helpers.js',
+            ('include', 'web_tour.automatic')
         ],
         'web_tour.common': [
             'web/static/lib/hoot-dom/**/*',

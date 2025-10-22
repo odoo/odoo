@@ -86,13 +86,17 @@ export class SplitBillScreen extends Component {
     }
 
     async paySplittedOrder() {
-        if (this.getNumberOfProducts() > 0) {
+        const totalQty = this.currentOrder.lines.reduce((sum, line) => sum + line.qty, 0);
+        const selectedQty = this.getNumberOfProducts();
+
+        if (selectedQty > 0 && selectedQty < totalQty) {
             const originalOrder = this.currentOrder;
             await this.createSplittedOrder();
             originalOrder.setScreenData({ name: "SplitBillScreen" });
         }
         this.pos.pay();
     }
+
     async transferSplittedOrder(event) {
         // Prevents triggering the 'startTransferOrder' event listener
         event.stopPropagation();
@@ -149,6 +153,8 @@ export class SplitBillScreen extends Component {
                     false,
                     true
                 );
+
+                newLine.setHasChange(false);
 
                 if (line.combo_line_ids.length > 0) {
                     for (const comboLine of line.combo_line_ids) {

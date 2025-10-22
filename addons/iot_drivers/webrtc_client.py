@@ -7,6 +7,7 @@ import time
 from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
 
 from odoo.addons.iot_drivers import main
+from odoo.addons.iot_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class WebRtcClient(Thread):
             self.connections.add(channel)
 
             @channel.on("message")
-            def on_message(message_str: str):
+            async def on_message(message_str: str):
                 # Handle chunked message
                 if self.chunked_message_in_progress.get(channel) is not None:
                     if message_str == "chunked_end":
@@ -62,7 +63,7 @@ class WebRtcClient(Thread):
                     data["session_id"] = message["session_id"]
                     if device_identifier in main.iot_devices:
                         _logger.info("device '%s' action started with: %s", device_identifier, pprint.pformat(data))
-                        main.iot_devices[device_identifier].action(data)
+                        await self.event_loop.run_in_executor(None, lambda: main.iot_devices[device_identifier].action(data))
                     else:
                         # Notify that the device is not connected
                         self.send({
@@ -71,6 +72,13 @@ class WebRtcClient(Thread):
                             'time': time.time(),
                             'status': 'disconnected',
                         })
+                elif message_type == "test_protocol":
+                    self.send({
+                        'owner': message['session_id'],
+                        'device_identifier': helpers.get_identifier(),
+                        'time': time.time(),
+                        'status': 'success',
+                    })
 
             @channel.on("close")
             def on_close():

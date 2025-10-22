@@ -3,13 +3,14 @@
 # * website_sale_collect
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:04+0000\n"
-"PO-Revision-Date: 2025-09-14 21:17+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"PO-Revision-Date: 2025-10-16 02:30+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_collect/ja/>\n"
 "Language: ja\n"
@@ -22,15 +23,16 @@ msgstr ""
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order.py:0
-msgid "%(available_qty)s/%(cart_qty)s available at this location"
-msgstr ""
+msgid "%(available_qty)s/%(line_qty)s available at this location"
+msgstr "このロケーションでは %(line_qty)s 個中 %(available_qty)s 個が利用可能です"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
-" your products."
-msgstr "<i>ご注文が確定しました。</i><br> ご来店の上、商品代金をお支払い下さい。"
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
+"your products."
+msgstr ""
+"<i>ご注文が確定しました。</i><br> ご来店の上、商品代金をお支払い下さい。"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
@@ -59,7 +61,7 @@ msgstr "クリック＆コレクト"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
@@ -81,7 +83,7 @@ msgstr "カスタムモード"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Delivery"
-msgstr "配送料"
+msgstr "配送"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -166,7 +168,7 @@ msgstr "決済プロバイダー"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "決済トランザクション"
+msgstr "支払取引"
 
 #. module: website_sale_collect
 #: model:delivery.carrier,name:website_sale_collect.carrier_pick_up_in_store
@@ -240,7 +242,7 @@ msgstr "選択された店舗では在庫のない製品があります。"
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
-msgstr "申し訳ありませんが、ご注文を出荷できません"
+msgstr "申し訳ありません。ご注文を発送することができません。"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__warehouse_ids
@@ -284,8 +286,7 @@ msgstr "ウェブサイト"
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/payment.py:0
 msgid ""
-"You can only pay on site when selecting the pick up in store delivery "
-"method."
+"You can only pay on site when selecting the pick up in store delivery method."
 msgstr "店頭受取を選択された場合は、店頭支払のみとなります。"
 
 #. module: website_sale_collect

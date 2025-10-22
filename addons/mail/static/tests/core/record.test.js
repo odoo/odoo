@@ -1218,16 +1218,19 @@ test("Can assign new record on Many field with One inverse", async () => {
     const thread = store.Thread.insert("general");
     const file1 = store.File.insert("file1.txt");
     const file2 = store.File.insert("file2.txt");
-    thread.files.push(file1);
-    expect(thread.files.length).toBe(1);
-    expectRecord(thread.files[0]).toEqual(file1);
-    expectRecord(file1.thread).toEqual(thread);
-    expect(file2.thread).toBe(undefined);
-    thread.files[0] = file2;
-    expect(thread.files.length).toBe(1);
-    expectRecord(thread.files[0]).toEqual(file2);
+    const file3 = store.File.insert("file3.txt");
+    const file4 = store.File.insert("file4.txt");
+    const file2Replacement = store.File.insert("file2repl.txt");
+    thread.files.push(file1, file2, file3, file4);
+    expect(thread.files.length).toBe(4);
+    expectRecord(thread.files[1]).toEqual(file2);
     expectRecord(file2.thread).toEqual(thread);
-    expect(file1.thread).toBe(undefined);
+    expect(file2Replacement.thread).toBe(undefined);
+    thread.files[1] = file2Replacement;
+    expect(thread.files.length).toBe(4);
+    expectRecord(thread.files[1]).toEqual(file2Replacement);
+    expectRecord(file2Replacement.thread).toEqual(thread);
+    expect(file2.thread).toBe(undefined);
 });
 
 test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", async () => {

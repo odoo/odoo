@@ -1,3 +1,5 @@
+import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -10,11 +12,12 @@ export class FloatingBlocks extends Interaction {
             "t-on-scroll": this.throttled(this.onScroll),
         },
         ".s_floating_blocks_block": {
-            "t-att-style": blockEl => ({
-                "opacity": "1",
-                "top": this.boxesTops.get(blockEl),
-                "transform": this.boxesTransforms.get(blockEl),
+            "t-att-style": (blockEl) => ({
+                opacity: "1",
+                top: this.boxesTops.get(blockEl),
+                transform: this.boxesTransforms.get(blockEl),
             }),
+            "t-on-keydown": this.onKeydown,
         },
     };
 
@@ -37,7 +40,9 @@ export class FloatingBlocks extends Interaction {
 
     start() {
         this.adaptToHeaderChange();
-        this.registerCleanup(this.services.website_menus.registerCallback(this.adaptToHeaderChange.bind(this)));
+        this.registerCleanup(
+            this.services.website_menus.registerCallback(this.adaptToHeaderChange.bind(this))
+        );
 
         if (this.boxesEls.length >= 2) {
             // The last block does not need to be animated
@@ -46,7 +51,7 @@ export class FloatingBlocks extends Interaction {
             // Calculate the minimal scale based on number of animated cards.
             // Each card decreases the scale by `this.boxScaleStep`.
             this.minimalScale = Math.max(
-                this.maximalScale - (this.boxScaleStep * (this.boxesToAnimate.length - 1)),
+                this.maximalScale - this.boxScaleStep * (this.boxesToAnimate.length - 1),
                 0.7 // Safe-net to ensure we don't go below 0.7 for very large numbers of cards
             );
 
@@ -85,7 +90,7 @@ export class FloatingBlocks extends Interaction {
 
         // Assign proportional scale factors and pre-compute transforms
         for (let i = 0; i < boxesLength; i++) {
-            const scale = this.minimalScale + (scaleStep * i);
+            const scale = this.minimalScale + scaleStep * i;
             boxesScaleStep.push(scale);
 
             // Pre-compute the transform string for this scale
@@ -170,8 +175,30 @@ export class FloatingBlocks extends Interaction {
     onScroll() {
         this.updateZoom();
     }
+    /**
+     * Support Shift+Tab navigation
+     *
+     * @param {KeyboardEvent} ev
+     */
+    onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "shift+tab") {
+            this.addListener(ev.currentTarget, "focusout", this.onShiftTabFocusout.bind(this), {
+                once: true,
+            });
+        }
+    }
+    onShiftTabFocusout(ev) {
+        if (
+            !ev.relatedTarget ||
+            ev.relatedTarget.closest(".s_floating_blocks_block") === ev.currentTarget
+        ) {
+            return;
+        }
+        // Account for `.gap-5` on the container.
+        const gap = convertNumericToUnit(3, "rem", "px", getHtmlStyle(document));
+        scrollTo(0, window.scrollY - (this.snippetHeight + gap));
+    }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.floating_blocks", FloatingBlocks);
+registry.category("public.interactions").add("website.floating_blocks", FloatingBlocks);

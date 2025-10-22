@@ -1,5 +1,8 @@
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -184,8 +187,8 @@ test("Mouse move on throttleForAnimation", async () => {
     await contains(":iframe .col-lg-3").click();
     expect(".oe_overlay.oe_active").toHaveCount(1);
 
-    const keyDownEvent = new KeyboardEvent('keydown', { bubbles: true });
-    const mouseMoveEvent = new KeyboardEvent('mousemove', { bubbles: true });
+    const keyDownEvent = new KeyboardEvent("keydown", { bubbles: true });
+    const mouseMoveEvent = new KeyboardEvent("mousemove", { bubbles: true });
     const p = queryOne(":iframe p");
 
     p.dispatchEvent(keyDownEvent);
@@ -195,7 +198,7 @@ test("Mouse move on throttleForAnimation", async () => {
     p.dispatchEvent(keyDownEvent);
     expect(".oe_overlay.oe_active.o_overlay_hidden").toHaveCount(1);
     p.dispatchEvent(mouseMoveEvent);
-    // Due to throttleForAnimation, the second mousemove event listener call 
+    // Due to throttleForAnimation, the second mousemove event listener call
     // will be throttled at animationFrame time
     await animationFrame();
     expect(".oe_overlay.oe_active:not(.o_overlay_hidden)").toHaveCount(1);

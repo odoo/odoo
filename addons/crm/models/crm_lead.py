@@ -236,8 +236,10 @@ class CrmLead(models.Model):
         index=True, ondelete='restrict', tracking=71)
     # Statistics
     calendar_event_ids = fields.One2many('calendar.event', 'opportunity_id', string='Meetings')
-    duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})
-    duplicate_lead_count = fields.Integer(compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead Count")
+    duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead",
+        context={"active_test": False}, compute_sudo=True)
+    duplicate_lead_count = fields.Integer(compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead Count",
+        compute_sudo=True)
     meeting_display_date = fields.Date(compute="_compute_meeting_display")
     meeting_display_label = fields.Char(compute="_compute_meeting_display")
     # UX
@@ -641,7 +643,7 @@ class CrmLead(models.Model):
             records. Idea is that counter indicates duplicates are present and
             the lead could be escalated to managers.
             """
-            model = self.env[model_name].sudo().with_context(active_test=False)
+            model = self.env[model_name].with_context(active_test=False)
             res = model.search(domain, limit=SEARCH_RESULT_LIMIT)
             return res if len(res) < SEARCH_RESULT_LIMIT else model
 
@@ -1026,7 +1028,7 @@ class CrmLead(models.Model):
         for lead, vals in zip(self, vals_list):
             vals.setdefault('type', lead.type)
             vals.setdefault('team_id', lead.team_id.id)
-            vals['date_open'] = now if lead.type == 'opportunity' else False
+            vals['date_open'] = now if lead.type == 'opportunity' and lead.user_id.active else False
             if not lead.user_id.active:
                 vals['user_id'] = False
         return vals_list

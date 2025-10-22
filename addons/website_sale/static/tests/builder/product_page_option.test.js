@@ -4,7 +4,6 @@ import { contains, dataURItoBlob, defineModels, models, onRpc } from "@web/../te
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
-    waitForEndOfOperation,
 } from "@website/../tests/builder/website_helpers";
 
 class ProductRibbon extends models.Model {
@@ -15,7 +14,7 @@ defineWebsiteModels();
 defineModels([ProductRibbon]);
 
 test("Product page options", async () => {
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <main>
             <div class="o_wsale_product_page">
                 <section
@@ -98,22 +97,21 @@ test("Product page options", async () => {
     await contains(":iframe .o_wsale_product_page").click();
     await contains("[data-action-id=productReplaceMainImage]").click();
     await contains(".o_select_media_dialog .o_existing_attachment_cell button").click();
+    await expect.waitForSteps(["theme_customize_data_get", "get_image_info"]);
     await waitForNone(".o_select_media_dialog");
 
     expect(":iframe #product_detail_main img[src^='data:image/webp;base64,']").toHaveCount(1);
     expect(":iframe img").toHaveCount(2);
-    expect.verifySteps(["theme_customize_data_get", "get_image_info"]);
-
     await contains("button#o_wsale_image_width").click();
     // Avoid selecting the first option to prevent the image layout option from disappearing
     await contains("[data-action-id=productPageImageWidth][data-action-value='50_pc']").click();
-    await waitForEndOfOperation();
-    expect.verifySteps(["config"]);
+    await waitSidebarUpdated();
+    await expect.waitForSteps(["config"]);
 
     await contains("button#o_wsale_image_layout").click();
     await contains("[data-action-id=productPageImageLayout]").click();
-    await waitForEndOfOperation();
-    expect.verifySteps([
+    await waitSidebarUpdated();
+    await expect.waitForSteps([
         // Activate the carousel view and change the shop config
         "config",
         // Shop config changes don't trigger the `savePlugin`; image edits are saved because of the
@@ -126,4 +124,10 @@ test("Product page options", async () => {
         // Reload the view
         "theme_customize_data_get"
     ]);
+
+    // Make sure that clicking quickly on a builder button after an clicking on
+    // an action that reloads the editor does not produce a crash.
+    await contains("[data-action-id=websiteConfig].o_we_buy_now_btn").click();
+    await contains("button#o_wsale_image_layout").click();
+    await expect.waitForSteps(["theme_customize_data", "theme_customize_data_get"]);
 });

@@ -340,6 +340,7 @@ class HrApplicant(models.Model):
                 Domain("email_normalized", "in", [email for email in self.mapped("email_normalized") if email]),
                 Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone]),
                 Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped("linkedin_profile") if linkedin_profile]),
+                Domain("pool_applicant_id", "in", [pool_applicant.id for pool_applicant in self.mapped("pool_applicant_id") if pool_applicant]),
             ])
         ])
         if ignore_talent:
@@ -1072,7 +1073,11 @@ class HrApplicant(models.Model):
             'res_model': 'applicant.get.refuse.reason',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_applicant_ids': self.ids, 'active_test': False},
+            'context': {
+                'default_applicant_ids': self.ids,
+                'active_test': False,
+                'hide_mail_template_management_options': True,
+            },
             'views': [[False, 'form']]
         }
 

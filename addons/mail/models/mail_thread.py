@@ -20,7 +20,7 @@ from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
 
-from lxml import etree
+from lxml import etree, html
 from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
@@ -164,6 +164,11 @@ class MailThread(models.AbstractModel):
             thread.message_partner_ids = thread.message_follower_ids.mapped('partner_id')
 
     def _inverse_message_partner_ids(self):
+        # The unsubscription is postponed until the end of the method because the
+        # message_unsubscribe() unlinks records that invalidates all the cache including
+        # `message_partner_ids` in `self`.
+        to_unsubscribe = []
+
         for thread in self:
             new_partners_ids = thread.message_partner_ids
             previous_partners_ids = thread.message_follower_ids.partner_id
@@ -172,7 +177,10 @@ class MailThread(models.AbstractModel):
             if added_patners_ids:
                 thread.message_subscribe(added_patners_ids.ids)
             if removed_partners_ids:
-                thread.message_unsubscribe(removed_partners_ids.ids)
+                to_unsubscribe.append((thread, removed_partners_ids.ids))
+
+        for thread, partner_ids in to_unsubscribe:
+            thread.message_unsubscribe(partner_ids)
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
@@ -933,14 +941,14 @@ class MailThread(models.AbstractModel):
         If the email is related to a partner, we consider that the number of message_bounce
         is not relevant anymore as the email is valid - as we received an email from this
         address. The model is here hardcoded because we cannot know with which model the
-        incomming mail match. We consider that if a mail arrives, we have to clear bounce for
+        incoming mail match. We consider that if a mail arrives, we have to clear bounce for
         each model having bounce count.
         """
-        valid_email = message_dict['email_from']
-        if valid_email:
+        normalized_from = email_normalize(message_dict['email_from'])
+        if normalized_from:
             bl_models = self.env['ir.model'].sudo().search(['&', ('is_mail_blacklist', '=', True), ('model', '!=', 'mail.thread.blacklist')])
             for model in [bl_model for bl_model in bl_models if bl_model.model in self.env]:  # transient test mode
-                self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', valid_email)])._message_reset_bounce(valid_email)
+                self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', normalized_from)])._message_reset_bounce(normalized_from)
 
     @api.model
     def _detect_is_bounce(self, message, message_dict):
@@ -4905,12 +4913,26 @@ class MailThread(models.AbstractModel):
 
         msg_values = {}
         if body is not None:
-            msg_values["body"] = (
-                # keep html if already Markup, otherwise escape
-                escape(body) + Markup("<span class='o-mail-Message-edited'/>")
-                if body or not message._filter_empty()
-                else ""
-            )
+            if body or not message._filter_empty():
+                tree = html.fragment_fromstring(escape(body), create_parent="div")
+                children = tree.getchildren()
+                if len(children) > 0:  # body is a valid html
+                    # If the last element is a div or p, add the edited span inside it to avoid the edit markup
+                    # to be on its own line. Otherwise, append it to the end of the last element.
+                    last_div_element = (
+                        children[-1] if children[-1].tag in ["div", "p"] else tree
+                    )
+                    last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
+                    etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
+                    msg_values["body"] = (
+                        # markup: it is considered safe, as coming from html.fragment_fromstring
+                        Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
+                    )
+                else:  # body is plain text
+                    # keep html if already Markup, otherwise escape
+                    msg_values["body"] = escape(body) + Markup("<span class='o-mail-Message-edited'/>")
+            else:
+                msg_values["body"] = ""
         if attachment_ids:
             msg_values.update(
                 self._process_attachments_for_post([], attachment_ids, {

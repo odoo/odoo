@@ -15,11 +15,11 @@ export class Popup extends Interaction {
         ".btn-primary": {
             "t-on-click": this.onBtnPrimaryClick,
         },
-        "_root": {
+        _root: {
             "t-on-hide.bs.modal": this.onHideModal,
             "t-on-shown.bs.modal": this.trapFocus,
         },
-        "_window": {
+        _window: {
             "t-on-hashchange": this.onHashChange,
         },
         ".modal:not(.s_popup_no_backdrop)": {
@@ -36,11 +36,15 @@ export class Popup extends Interaction {
         this.modalEl = this.el.querySelector(".modal");
         /** @type {import("bootstrap").Modal} */
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
-        this.registerCleanup(() => { this.bsModal.dispose() });
+        this.registerCleanup(() => {
+            this.bsModal.dispose();
+        });
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
-            this.showModalBtnEl = document.querySelector(`[href="#${this.modalShownOnClickEl.id}"]`);
+            this.showModalBtnEl = document.querySelector(
+                `[href="#${this.modalShownOnClickEl.id}"]`
+            );
             // Check if a hash exists and if the modal needs to be opened when
             // the page loads (e.g. The user has clicked a button on the
             // "Contact us" page to open a popup on the homepage).
@@ -58,7 +62,7 @@ export class Popup extends Interaction {
         // visibility option uses < LG to hide on mobile. So compute it here.
         const isMobile = uiUtils.getSize() < SIZES.LG;
         const emptyPopup = [
-            ...this.el.querySelectorAll(".oe_structure > *:not(.s_popup_close)")
+            ...this.el.querySelectorAll(".oe_structure > *:not(.s_popup_close)"),
         ].every((el) => {
             const visibilitySelectors = el.dataset.visibilitySelectors;
             const deviceInvisible = isMobile
@@ -136,8 +140,8 @@ export class Popup extends Interaction {
      */
     canBtnPrimaryClosePopup(primaryBtnEl) {
         return !(
-            primaryBtnEl.classList.contains("s_website_form_send")
-            || primaryBtnEl.classList.contains("o_website_form_send")
+            primaryBtnEl.classList.contains("s_website_form_send") ||
+            primaryBtnEl.classList.contains("o_website_form_send")
         );
     }
 
@@ -163,7 +167,9 @@ export class Popup extends Interaction {
         }
         // The focus should stay free for no backdrop popups.
         if (this.el.querySelector(".s_popup_no_backdrop")) {
-            this.addListener(this.el, "hide.bs.modal", () => previouslyFocusedEl.focus(), { once: true });
+            this.addListener(this.el, "hide.bs.modal", () => previouslyFocusedEl.focus(), {
+                once: true,
+            });
             return;
         }
         const onKeydown = (ev) => {
@@ -186,10 +192,15 @@ export class Popup extends Interaction {
             }
         };
         const removeOnKeydown = this.addListener(this.el, "keydown", onKeydown);
-        this.addListener(this.el, "hide.bs.modal", () => {
-            removeOnKeydown();
-            previouslyFocusedEl.focus();
-        }, { once: true });
+        this.addListener(
+            this.el,
+            "hide.bs.modal",
+            () => {
+                removeOnKeydown();
+                previouslyFocusedEl.focus();
+            },
+            { once: true }
+        );
     }
 
     onCloseClick() {

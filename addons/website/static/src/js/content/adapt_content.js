@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     const htmlEl = document.documentElement;
     const editTranslations = !!htmlEl.dataset.edit_translations;
     // Hack: on translation editor, textareas with translatable text content
@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // with attribute translation on CSS). But here, we need to hide the text
     // on JS until the editor's code sets the right values on textareas.
     if (editTranslations) {
-        [...document.querySelectorAll('textarea')].map(textarea => {
-            if (textarea.value.indexOf('data-oe-translation-source-sha') !== -1) {
-                textarea.classList.add('o_text_content_invisible');
+        [...document.querySelectorAll("textarea")].map((textarea) => {
+            if (textarea.value.indexOf("data-oe-translation-source-sha") !== -1) {
+                textarea.classList.add("o_text_content_invisible");
             }
         });
     }
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchModalEl = document.querySelector("header#top .modal#o_search_modal");
     if (searchModalEl) {
         const mainEl = document.querySelector("main");
-        const searchDivEl = document.createElement('div');
+        const searchDivEl = document.createElement("div");
         searchDivEl.id = "o_search_modal_block";
         searchDivEl.appendChild(searchModalEl);
         mainEl.appendChild(searchDivEl);

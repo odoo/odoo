@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:37+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -18,6 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "<span>MB</span>"
+msgstr ""
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -34,11 +39,6 @@ msgstr "Pilvitallennus"
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
 msgstr "Pilvitallennuspalvelun tarjoaja uusille liitteille"
-
-#. module: cloud_storage
-#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-msgid "Cloud Storage Settings"
-msgstr "Pilvitallennusasetukset"
 
 #. module: cloud_storage
 #. odoo-python
@@ -64,9 +64,33 @@ msgid "Config Settings"
 msgstr "Asetukset"
 
 #. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_http__display_name
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP-reititys"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_http__id
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Minimum File Size"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size_mb
+msgid "Minimum File Size (MB)"
+msgstr ""
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
@@ -75,9 +99,8 @@ msgstr "Tiedoston vähimmäiskoko (tavua)"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
+msgid "Minimum size for attachments to be stored in the cloud storage"
 msgstr ""
-"Pilvitallennukseen tallennettavien liitetiedostojen vähimmäiskoko (tavuja)"
 
 #. module: cloud_storage
 #. odoo-python
@@ -116,7 +139,8 @@ msgstr ""
 #: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid ""
 "webclient can upload files larger than the minimum file size\n"
-"        (in bytes) as url attachments to the server and then upload the file to\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
 "        the cloud storage."
 msgstr ""
 "webclient voi ladata tiedostoja, jotka ovat suurempia kuin tiedostojen "
@@ -124,3 +148,11 @@ msgstr ""
 "        (tavuina) url-liitteinä palvelimelle ja ladata tiedoston sitten "
 "osoitteeseen\n"
 "        pilvitallennukseen."
+
+#~ msgid "Cloud Storage Settings"
+#~ msgstr "Pilvitallennusasetukset"
+
+#~ msgid ""
+#~ "Minimum size(bytes) for attachments to be stored in the cloud storage"
+#~ msgstr ""
+#~ "Pilvitallennukseen tallennettavien liitetiedostojen vähimmäiskoko (tavuja)"

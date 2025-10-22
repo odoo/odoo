@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 18:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:31+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -65,8 +65,8 @@ msgid ""
 "    - Second: %(sec)s\n"
 msgstr ""
 "\n"
-"    若有多项产品共用相同字首，它们将会共享相同的序列。 "
-"否则，该序列将由该产品专用。\n"
+"    若有多项产品共用相同字首，它们将会共享相同的序列。 否则，该序列将由该产品"
+"专用。\n"
 "\n"
 "    * 图例（用于字首）：\n"
 "    - 目前年份及世纪：%(year)s\n"
@@ -146,7 +146,8 @@ msgstr " - 产品：%(product)s，序列号码：%(lot)s"
 msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
-msgstr " 当与0不同时，储存在这个位置的产品的库存清点日期将按定义的频率自动设置。"
+msgstr ""
+" 当与0不同时，储存在这个位置的产品的库存清点日期将按定义的频率自动设置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -213,8 +214,9 @@ msgstr "%(name)s存储序列"
 msgid ""
 "%(operations)s have default source or destination locations within warehouse "
 "%(warehouse)s, therefore you cannot archive it."
-msgstr "操作 %(operations)s 在仓库 %(warehouse)s "
-"内设有预设来源位置或目标位置，因此不可封存。"
+msgstr ""
+"操作 %(operations)s 在仓库 %(warehouse)s 内设有预设来源位置或目标位置，因此不"
+"可封存。"
 
 #. module: stock
 #. odoo-python
@@ -235,8 +237,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
-"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，而订购数量为 %(qty_to_order)s "
-"%(uom)s。"
+"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，而订购数量为 %(qty_to_order)s %"
+"(uom)s。"
 
 #. module: stock
 #. odoo-python
@@ -559,7 +561,8 @@ msgstr "<br>需求产生于 <b>%s</b> 为满足这个需求，规则将会被触
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered "
 "to bring the missing quantity in this location."
-msgstr "<br>如果<b>%s</b>里的产品不可用，规则将被触发来把缺失的数量带入此位置。"
+msgstr ""
+"<br>如果<b>%s</b>里的产品不可用，规则将被触发来把缺失的数量带入此位置。"
 
 #. module: stock
 #. odoo-python
@@ -568,8 +571,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>这些产品将会移至 <b>%(destination)s</b>，<br/>即 "
-"<b>%(operation)s</b>操作指定的目的地。"
+"<br>这些产品将会移至 <b>%(destination)s</b>，<br/>即 <b>%(operation)s</b>操作"
+"指定的目的地。"
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -619,22 +622,21 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好，<"
-"br/><br/>\n"
+"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好，"
+"<br/><br/>\n"
 "        我们很高兴地通知您，您的订单已发货。\n"
-"        <t t-if="
-"\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">"
-"\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            您的追踪参考号码是\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value="
-"\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" "
-"t-out=\"line[0] or ''\"/>\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
@@ -829,6 +831,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
 msgstr "<span class=\"text-muted small\"> 在库</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1650,6 +1658,7 @@ msgstr "自动并不增加步骤"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__available
@@ -2294,6 +2303,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
 msgid "Container"
 msgstr ""
@@ -2585,8 +2595,9 @@ msgstr "创建日期"
 msgid ""
 "Creation date of this move line until updated due to: quantity being "
 "increased, 'picked' status has updated, or move line is done."
-msgstr "此移动行的创建日期，直到由于以下原因而更新：数量增加、“已拣货” "
-"状态已更新或移动行完成。"
+msgstr ""
+"此移动行的创建日期，直到由于以下原因而更新：数量增加、“已拣货” 状态已更新或移"
+"动行完成。"
 
 #. module: stock
 #. odoo-python
@@ -3030,8 +3041,6 @@ msgid "Deliveries"
 msgstr "交货"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
 msgid "Delivery"
@@ -3041,6 +3050,12 @@ msgstr "交货"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Delivery Address"
 msgstr "送货地址"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Delivery Date"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
@@ -3519,6 +3534,12 @@ msgstr "重复的序列号码"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__dymo
 msgid "Dymo"
 msgstr "Dymo"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Earliest Possible Arrival"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -4210,7 +4231,8 @@ msgid ""
 "If a separator is defined, a QR code containing all serial numbers contained "
 "in package will be generated, using the defined character(s) to separate "
 "each numbers"
-msgstr "如果定义了分隔符，则将生成包含软件包中所有序列号的二维码，并使用定义的字符分"
+msgstr ""
+"如果定义了分隔符，则将生成包含软件包中所有序列号的二维码，并使用定义的字符分"
 "隔每个号码"
 
 #. module: stock
@@ -4330,7 +4352,8 @@ msgstr "如果勾选该复选框，Odoo 将在采摘验证时自动打印采摘�
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
-msgstr "如果勾选该复选框，Odoo 将在采摘验证并分配移动后自动打印采摘的接收报告。"
+msgstr ""
+"如果勾选该复选框，Odoo 将在采摘验证并分配移动后自动打印采摘的接收报告。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
@@ -4366,7 +4389,8 @@ msgstr ""
 msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
-msgstr "如果仅选中此项，则会假设您要创建新的批次/序列号，以便您可以在文本字段中提供它"
+msgstr ""
+"如果仅选中此项，则会假设您要创建新的批次/序列号，以便您可以在文本字段中提供它"
 "们。 "
 
 #. module: stock
@@ -4377,9 +4401,9 @@ msgid ""
 "If this is checked, you will be able to choose the Lots/Serial Numbers. You "
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
-msgstr "如果选中此项，您将可以选择批次/序列号。 "
-"您也可以决定不要在这种作业类型中投入很多。 "
-"这意味着它将创造出没有多少的库存，或者不会限制措施。 "
+msgstr ""
+"如果选中此项，您将可以选择批次/序列号。 您也可以决定不要在这种作业类型中投入"
+"很多。 这意味着它将创造出没有多少的库存，或者不会限制措施。 "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
@@ -4398,8 +4422,10 @@ msgstr "如果这个运输被拆分，该字段连接到包括了已经处理的
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
-msgid "If ticked, you will be able to select entire packages to move"
-msgstr "如果勾选此项，你将被允许可以选择整个包装来进行移动"
+msgid ""
+"If ticked, packages to move will be directly displayed in Barcode instead of "
+"the products they contain"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
@@ -4463,9 +4489,8 @@ msgid ""
 "order to have these products in stock at the date promised by the supplier"
 msgstr ""
 "在出货情况下，请在该日期前验证转账，以确保能按承诺的日期向客户交货。\n"
-"        "
-"在进货情况下，请在该日期前验证转账，以确保能在供应商承诺的日期前将这些产品存"
-"入库存。"
+"        在进货情况下，请在该日期前验证转账，以确保能在供应商承诺的日期前将这"
+"些产品存入库存。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
@@ -4735,12 +4760,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
 msgid "Inventory Name"
 msgstr "库存名称"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-msgid "Inventory On Hand"
-msgstr "在手库存"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -5154,6 +5173,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Lead Time"
 msgstr "前置时间"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Lead Time Information"
+msgstr ""
 
 #. module: stock
 #. odoo-javascript
@@ -5688,7 +5713,8 @@ msgid "Move Quantity"
 msgstr "移动数量"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Move a Pack"
 msgstr ""
 
@@ -6149,10 +6175,10 @@ msgid ""
 "                                        <br/>"
 msgstr ""
 "Odoo 默认开启 PDF 预览。如果你（仅限企业用戶）想立即打印，\n"
-"                                        "
-"请在与条码操作员位于同一本地网络的电脑上，\n"
-"                                        "
-"安装物联网（IoT）应用程序，并配置报告的路由。\n"
+"                                        请在与条码操作员位于同一本地网络的电"
+"脑上，\n"
+"                                        安装物联网（IoT）应用程序，并配置报告"
+"的路由。\n"
 "                                        <br/>"
 
 #. module: stock
@@ -6437,6 +6463,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
@@ -6983,7 +7010,8 @@ msgstr "是否存在取决于作业类型。"
 msgid ""
 "Press the \"New\" button to define the quantity for a product in your stock "
 "or import quantities from a spreadsheet via the Actions menu"
-msgstr "点击【新增】按钮，为产品设定库存数量，或通过【操作】菜单从电子表格导入数量。"
+msgstr ""
+"点击【新增】按钮，为产品设定库存数量，或通过【操作】菜单从电子表格导入数量。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
@@ -7089,7 +7117,6 @@ msgstr "生产的数量"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_id
@@ -7724,8 +7751,6 @@ msgid "Reason for relocation"
 msgstr "搬迁原因"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 msgid "Receipt"
 msgstr "收货"
@@ -7975,8 +8000,6 @@ msgid "Replenish wizard"
 msgstr "补给向导"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
@@ -8534,13 +8557,11 @@ msgid "Search not supported without a value."
 msgstr "不支持无值搜索。"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
-msgid "Select"
-msgstr ""
-
-#. module: stock
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#: code:addons/stock/static/src/views/list/stock_add_package_list_view.js:0
+#: code:addons/stock/static/src/views/picking_form/stock_move_one2many.js:0
 msgid "Select Packages to Move"
 msgstr ""
 
@@ -8651,7 +8672,8 @@ msgstr "序列号"
 msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): %"
 "(location_list)s. Please correct the serial number encoded."
-msgstr "序号（%(serial_number)s）已存在于以下位置：%(location_list)s。请更正编码的序"
+msgstr ""
+"序号（%(serial_number)s）已存在于以下位置：%(location_list)s。请更正编码的序"
 "列号。"
 
 #. module: stock
@@ -8663,8 +8685,8 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"序号（%(serial_number)s）并不位于%(source_location)s中，而是在位置%(other_loc"
-"ations)s。\n"
+"序号（%(serial_number)s）并不位于%(source_location)s中，而是在位置%"
+"(other_locations)s。\n"
 "\n"
 "请更正，以防数据不一致。"
 
@@ -8677,8 +8699,8 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
-"序号（%(serial_number)s）并不位于 "
-"%(source_location)s中，而是在位置%(other_locations)s。\n"
+"序号（%(serial_number)s）并不位于 %(source_location)s中，而是在位置%"
+"(other_locations)s。\n"
 "\n"
 "此移动的来源位置将变更为%(recommended_location)s"
 
@@ -9245,6 +9267,12 @@ msgid "Stock Text Validation with stock move"
 msgstr ""
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Stock To Reserve:"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Stock level to reach when replenishing."
@@ -9688,7 +9716,8 @@ msgid ""
 "The quantity done for the product \"%(product)s\" doesn't respect the "
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
-msgstr "产品“%(product)s”的完成数量不符合计量单位“%(unit)s”上定义的舍入精确度。请更改"
+msgstr ""
+"产品“%(product)s”的完成数量不符合计量单位“%(unit)s”上定义的舍入精确度。请更改"
 "已完成的数量，或计量单位的舍入精确度。"
 
 #. module: stock
@@ -9782,10 +9811,9 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
-"此操作会添加 “按订单补货（MTO）” "
-"路线，该路线可应用于产品，以便在销售订单（例如）确认后立即生成与其直接关联的"
-"按需补货。系统会根据产品设置的补货方式（“购买”或“制造”路线）触发相应的采购订"
-"单、制造订单等。"
+"此操作会添加 “按订单补货（MTO）” 路线，该路线可应用于产品，以便在销售订单（例"
+"如）确认后立即生成与其直接关联的按需补货。系统会根据产品设置的补货方式（“购"
+"买”或“制造”路线）触发相应的采购订单、制造订单等。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9796,9 +9824,9 @@ msgid ""
 "demand flow. The requested delivery address will be the customer delivery "
 "address and not your warehouse."
 msgstr ""
-"这增加一个直销路线来应用于产品，以请求您的供应商交付给您的客户。 "
-"一旦销售订单被确认，要直销的产品将会产生报价的采购申请。这是按需流量。 "
-"请求的送货地址将是客户送货地址，而不是您的仓库。"
+"这增加一个直销路线来应用于产品，以请求您的供应商交付给您的客户。 一旦销售订单"
+"被确认，要直销的产品将会产生报价的采购申请。这是按需流量。 请求的送货地址将是"
+"客户送货地址，而不是您的仓库。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__picked
@@ -9818,7 +9846,8 @@ msgid ""
 "This is the default destination location when this operation is manually "
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
-msgstr "这是手动创建操作时的默认目标位置。不过，您可以在之后更改，或由系统路线设置其"
+msgstr ""
+"这是手动创建操作时的默认目标位置。不过，您可以在之后更改，或由系统路线设置其"
 "他默认位置。"
 
 #. module: stock
@@ -9827,7 +9856,8 @@ msgid ""
 "This is the default source location when this operation is manually created. "
 "However, it is possible to change it afterwards or that the routes use "
 "another one by default."
-msgstr "这是手动创建操作时的默认来源位置。不过，您可以在之后更改，或由系统路线设置其"
+msgstr ""
+"这是手动创建操作时的默认来源位置。不过，您可以在之后更改，或由系统路线设置其"
 "他默认位置。"
 
 #. module: stock
@@ -9941,8 +9971,8 @@ msgstr "如果此产品有部分属于另一家公司，则不能更改产品的
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
-msgid "This record already exists."
-msgstr "此记录早已存在。"
+msgid "This record already exists"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9958,7 +9988,8 @@ msgid ""
 "recommended that you select a unique prefix to avoid issues and/or repeated "
 "reference values or assign the existing reference sequence to this operation "
 "type."
-msgstr "此序列前缀已被其他操作类型使用。建议您选择一个唯一的前缀，以避免出现问题和/或"
+msgstr ""
+"此序列前缀已被其他操作类型使用。建议您选择一个唯一的前缀，以避免出现问题和/或"
 "重复参考值，或将现有参考序列分配给此操作类型。"
 
 #. module: stock
@@ -9997,6 +10028,12 @@ msgstr "这将放弃所有未应用的盘点，您想继续吗？"
 #: code:addons/stock/models/stock_rule.py:0
 msgid "Time Horizon"
 msgstr "时间范围"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Time to replenish:"
+msgstr ""
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -10056,8 +10093,6 @@ msgid "To Location"
 msgstr "位置:"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
@@ -10098,6 +10133,7 @@ msgstr "重新订购"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -10179,7 +10215,8 @@ msgid ""
 "Total weight of packages and products not in a package. Packages with no "
 "shipping weight specified will default to their products' total weight. This "
 "is the weight used to compute the cost of the shipping."
-msgstr "包裹和不在包裹中的产品的总重量。未指定运输重量的包裹将默认为其产品的总重量。"
+msgstr ""
+"包裹和不在包裹中的产品的总重量。未指定运输重量的包裹将默认为其产品的总重量。"
 "该重量用于计算运费。"
 
 #. module: stock
@@ -10283,7 +10320,8 @@ msgid ""
 "Transfer trouble alert! Validating a zero quantity transfer? You're not "
 "moving invisible goods around are you?\n"
 "Set some quantities and let's get moving!"
-msgstr "调拨问题警报！正在验证零数量的调拨？您该不是在转移隐形货物吧？设置一些数量，"
+msgstr ""
+"调拨问题警报！正在验证零数量的调拨？您该不是在转移隐形货物吧？设置一些数量，"
 "我们就可以开始处理了！"
 
 #. module: stock
@@ -10517,8 +10555,8 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
-"更新此转移的位置，将导致取消保留当前已指派的项目。系统会尝试在新位置预订物品"
-"，先前传输的链接将被丢弃。\n"
+"更新此转移的位置，将导致取消保留当前已指派的项目。系统会尝试在新位置预订物"
+"品，先前传输的链接将被丢弃。\n"
 "\n"
 "为了避免这种情况，请在保存之前，放弃来源位置变更。"
 
@@ -10930,8 +10968,8 @@ msgid ""
 "b> are created from <b>%(source_location)s</b> to fulfill the need. %"
 "(suffix)s"
 msgstr ""
-"当 <b>%(destination)s</b> 需要产品时，<br>会自动创建<b>%(operation)s</b> "
-"操作，由 <b>%(source_location)s</b> 调配产品，以满足需求。%(suffix)s"
+"当 <b>%(destination)s</b> 需要产品时，<br>会自动创建<b>%(operation)s</b> 操"
+"作，由 <b>%(source_location)s</b> 调配产品，以满足需求。%(suffix)s"
 
 #. module: stock
 #. odoo-python
@@ -10940,8 +10978,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"产品到达<b>%(source_location)s</b>时，<br>会自动建立<b>%(operation)s</b>操作"
-"，将产品运往<b>%(destination)s</b>。"
+"产品到达<b>%(source_location)s</b>时，<br>会自动建立<b>%(operation)s</b>操"
+"作，将产品运往<b>%(destination)s</b>。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -11200,8 +11238,8 @@ msgstr "不能更改已取消的库存移动，应创建新行。"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
-msgstr "您不能更改已完成或已取消调拨的预定日期。"
+msgid "You cannot change the Scheduled Date on a cancelled transfer."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -11266,7 +11304,8 @@ msgstr "如果产品来自不同的转运，且操作类型不同，则不能将
 msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
-msgstr "当某个位置已被指定为生产类型操作的目的地位置时，不能将该位置设置为报废位置。"
+msgstr ""
+"当某个位置已被指定为生产类型操作的目的地位置时，不能将该位置设置为报废位置。"
 
 #. module: stock
 #. odoo-python
@@ -11358,12 +11397,6 @@ msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
 msgstr "您需要激活存储位置，以便能够执行内部作业类型。"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/product_replenish.py:0
-msgid "You need to select a route to replenish your products"
-msgstr "您需要选择补货的路线"
 
 #. module: stock
 #. odoo-python
@@ -11684,6 +11717,12 @@ msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
 msgstr "例：d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "expected on"
+msgstr ""
+
+#. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
 msgstr "fifo"
@@ -11747,12 +11786,6 @@ msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-msgid "reserved"
-msgstr "已预留"
-
-#. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph
 msgid "stock.click_dashboard_graph"
 msgstr "stock.click_dashboard_graph"
@@ -11800,6 +11833,25 @@ msgstr "单位"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "${object.company_id.name} 交货单 (Ref ${object.name or 'n/a' })"
+
+#~ msgid "If ticked, you will be able to select entire packages to move"
+#~ msgstr "如果勾选此项，你将被允许可以选择整个包装来进行移动"
+
+#~ msgid "Inventory On Hand"
+#~ msgstr "在手库存"
+
+#~ msgid "This record already exists."
+#~ msgstr "此记录早已存在。"
+
+#~ msgid ""
+#~ "You cannot change the Scheduled Date on a done or cancelled transfer."
+#~ msgstr "您不能更改已完成或已取消调拨的预定日期。"
+
+#~ msgid "You need to select a route to replenish your products"
+#~ msgstr "您需要选择补货的路线"
+
+#~ msgid "reserved"
+#~ msgstr "已预留"
 
 #~ msgid ""
 #~ "\n"

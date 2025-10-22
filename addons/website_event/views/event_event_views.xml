@@ -37,13 +37,13 @@
             </div>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div name="event_menu_configuration" groups="base.group_no_one">
-                    <label for="website_menu" string="Website Submenu"/>
-                    <field name="website_menu"/>
+                    <label for="website_menu" string="Website Submenu" class="me-1"/>
+                    <field name="website_menu" class="me-3"/>
                     <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
                     <field name="introduction_menu" invisible="1"/>
                     <field name="register_menu" invisible="1"/>
-                    <label for="community_menu" string="Community" invisible="1"/>
-                    <field name="community_menu" invisible="1"/>
+                    <label for="community_menu" string="Community" invisible="1" class="me-1"/>
+                    <field name="community_menu" invisible="1" class="me-3"/>
                 </div>
             </xpath>
             <field name="tag_ids" position="attributes">

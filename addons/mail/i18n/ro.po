@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:47+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:30+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/mail/ro/"
@@ -232,13 +232,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
@@ -281,6 +274,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s connected. This is their first connection. Wish them luck."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
 msgstr ""
 
 #. module: mail
@@ -968,6 +967,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
+#: code:addons/mail/static/src/core/web/activity_menu.js:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model:ir.model,name:mail.model_mail_activity
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_act_window_view__view_mode__activity
@@ -1132,12 +1132,6 @@ msgstr "Adaugă interesați"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
 msgid "Add GIFs"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_reactions.xml:0
-msgid "Add Reaction"
 msgstr ""
 
 #. module: mail
@@ -1675,6 +1669,7 @@ msgstr "Atașamente"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Audio Output"
 msgstr ""
 
@@ -1791,6 +1786,11 @@ msgid ""
 msgstr ""
 "Planifică automat această activitate odată ce activitatea curentă este "
 "marcată"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "Available everywhere"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1939,8 +1939,13 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 msgid "Blur Background"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
+msgid "Blur background"
 msgstr ""
 
 #. module: mail
@@ -2140,7 +2145,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Camera"
 msgstr ""
 
@@ -2155,12 +2160,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera and microphone access blocked. Enable in browser settings."
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Camera is off"
-msgstr "Camera este oprită"
 
 #. module: mail
 #. odoo-javascript
@@ -3310,6 +3309,7 @@ msgstr "Termen limită: %s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Deafen"
 msgstr "Deaf"
 
@@ -3472,6 +3472,13 @@ msgstr "Șterge emailuri"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Delete Thread"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 msgid "Delete all previews"
 msgstr ""
@@ -3582,6 +3589,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
 msgid "Discard"
 msgstr "Abandonează"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Discard editing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4584,7 +4597,8 @@ msgstr "Câmpuri"
 #: model:ir.model.fields,help:mail.field_mail_template__template_fs
 #: model:ir.model.fields,help:mail.field_template_reset_mixin__template_fs
 msgid "File from where the template originates. Used to reset broken template."
-msgstr "Fișierul din care provine șablonul. Utilizat pentru a reseta șabloanele"
+msgstr ""
+"Fișierul din care provine șablonul. Utilizat pentru a reseta șabloanele"
 
 #. module: mail
 #. odoo-javascript
@@ -5113,6 +5127,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Hide camera preview"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Hide sidebar"
 msgstr "Ascunde bara laterală"
@@ -5556,12 +5576,6 @@ msgid "Inbox"
 msgstr "Casuța poștală"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Call..."
-msgstr "Apel în curs..."
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
@@ -5587,14 +5601,16 @@ msgstr "Servere Primire E-mail-uri"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Video Call..."
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel_member.py:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Incoming call"
 msgstr ""
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel_member.py:0
-msgid "Incoming call"
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Incoming call from %(inviter)s"
 msgstr ""
 
 #. module: mail
@@ -7130,7 +7146,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Microphone"
 msgstr ""
 
@@ -7216,15 +7232,6 @@ msgid "Models"
 msgstr "Modele"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid ""
-"Modifying the model can have an impact on existing activities using this "
-"activity type, be careful."
-msgstr ""
-"Modificarea modelului poate avea un impact asupra activităților existente "
-"folosind acest tip de activitate, fiți atenți."
-
-#. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
 msgstr "Dezinstalare Modul"
@@ -7249,6 +7256,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Mute"
 msgstr "Mut"
 
@@ -8353,12 +8361,6 @@ msgstr "Server trimitere e-mail-uri"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Output"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__account_account__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_state__overdue
@@ -8585,6 +8587,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Performance Warning:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+msgid "Permanently delete this thread?"
 msgstr ""
 
 #. module: mail
@@ -8919,12 +8927,6 @@ msgid "Preview"
 msgstr "Previzualizare"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Preview my camera"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
 msgid "Previous Activity Type"
 msgstr "Tip de activitate precedent"
@@ -9010,6 +9012,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__push_to_talk_key
 msgid "Push-To-Talk shortcut"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
+msgid "Push-to-Talk"
 msgstr ""
 
 #. module: mail
@@ -9292,12 +9300,6 @@ msgstr "Elimină"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Remove Blur"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
-msgid "Remove Blur Background"
 msgstr ""
 
 #. module: mail
@@ -10362,6 +10364,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Show camera preview"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Show sidebar"
 msgstr "Afișați bara laterală"
@@ -10594,6 +10602,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Stop camera"
 msgstr "Oprește camera"
 
@@ -10991,11 +11000,6 @@ msgstr ""
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "UUID-ul canalului trebuie să fie unic"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Tipul canalului nu poate fi gol"
 
 #. module: mail
 #. odoo-javascript
@@ -11455,6 +11459,18 @@ msgstr "Fir"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
+msgid "Thread \"%(thread_name)s\" has been deleted"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Thread Actions"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
@@ -11485,12 +11501,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 msgid "Threads"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Threads Actions"
 msgstr ""
 
 #. module: mail
@@ -11762,6 +11772,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Turn camera on"
 msgstr "Porniți camera"
 
@@ -11953,6 +11964,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Unmute"
 msgstr ""
 
@@ -12442,6 +12454,13 @@ msgstr "Video"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
+msgid "Video Settings"
+msgstr "Setări video"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Video player:"
 msgstr ""
@@ -12500,9 +12519,21 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View chat with %(channel_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "View or join channels"
 msgstr "Vizualizați sau alăturați-vă canalelor"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View the %(channel_name)s channel"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -12524,6 +12555,9 @@ msgid "Voice & Video"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/web/quick_video_settings_patch.js:0
+#: code:addons/mail/static/src/discuss/call/web/quick_voice_settings_patch.js:0
 #: model:ir.actions.client,name:mail.discuss_call_settings_action
 msgid "Voice & Video Settings"
 msgstr ""
@@ -12543,6 +12577,13 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 msgid "Voice Message"
 msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
+msgid "Voice Settings"
+msgstr "Setări voce"
 
 #. module: mail
 #. odoo-javascript
@@ -13014,12 +13055,6 @@ msgstr ""
 #: code:addons/mail/models/res_users.py:0
 msgid "Your account password has been updated"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Your browser does not support videoconference"
-msgstr "Browserul dvs. nu suportă videoconferință"
 
 #. module: mail
 #. odoo-javascript
@@ -13701,6 +13736,25 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr ""
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "Tipul canalului nu poate fi gol"
+
+#~ msgid "Camera is off"
+#~ msgstr "Camera este oprită"
+
+#~ msgid "Incoming Call..."
+#~ msgstr "Apel în curs..."
+
+#~ msgid ""
+#~ "Modifying the model can have an impact on existing activities using this "
+#~ "activity type, be careful."
+#~ msgstr ""
+#~ "Modificarea modelului poate avea un impact asupra activităților existente "
+#~ "folosind acest tip de activitate, fiți atenți."
+
+#~ msgid "Your browser does not support videoconference"
+#~ msgstr "Browserul dvs. nu suportă videoconferință"
 
 #~ msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 #~ msgstr ""
@@ -15082,9 +15136,6 @@ msgstr ""
 #~ msgid "VS button"
 #~ msgstr "Buton VS"
 
-#~ msgid "Video Settings"
-#~ msgstr "Setări video"
-
 #~ msgid "View image"
 #~ msgstr "Vizualizare imagine"
 
@@ -15093,9 +15144,6 @@ msgstr ""
 
 #~ msgid "Virgo"
 #~ msgstr "Virgo"
-
-#~ msgid "Voice Settings"
-#~ msgstr "Setări voce"
 
 #~ msgid "Voice detection threshold"
 #~ msgstr "Prag de detectare a vocei"

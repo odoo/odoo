@@ -80,3 +80,25 @@ registry.category("web_tour.tours").add("self_order_preset_slot_tour", {
         Utils.clickBtn("Ok"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_slot_limit_orders", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Free"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        // Will always pick the first available: 00:00
+        CartPage.selectRandomValueInInput(".slot-select"),
+        CartPage.fillInput("Name", "Dr Dre"),
+        Utils.clickBtn("Continue"),
+        Utils.clickBtn("Ok"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Free"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        CartPage.checkSlotUnavailable("00:00"),
+    ],
+});

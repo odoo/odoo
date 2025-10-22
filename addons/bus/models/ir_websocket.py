@@ -22,7 +22,7 @@ class IrWebsocket(models.AbstractModel):
         """
         req = request or wsrequest
         channels.append('broadcast')
-        channels.extend(self.env.user.group_ids)
+        channels.extend(self.env.user.all_group_ids)
         if req.session.uid:
             channels.append(self.env.user.partner_id)
         return channels

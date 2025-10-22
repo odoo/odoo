@@ -4,6 +4,8 @@ from datetime import datetime
 from freezegun import freeze_time
 from lxml import etree
 
+from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import file_open
 
@@ -341,6 +343,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
                 'product_uom_qty': 1,
                 'price_unit': 100,
                 'currency_id': self.other_currency.id,
+                'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
             })],
         }).sudo(False)
         sale_order.action_confirm()
@@ -679,6 +682,19 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cbc:ItemClassificationCode[@listID="CLASS"]',
             invoice.line_ids[0].l10n_my_edi_classification_code,
         )
+
+    def test_15_none_tax(self):
+        invoice = self.init_invoice(
+            'out_invoice',
+            partner=self.partner_b,
+            products=self.product_a,
+            post=False,
+        )
+        invoice.invoice_line_ids.write({'tax_ids': [Command.clear()]})  # remove existing taxes
+        invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
+        with self.assertRaises(UserError):
+            myinvois_document.action_generate_xml_file()
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)

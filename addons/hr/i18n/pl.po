@@ -33,13 +33,14 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-16 10:04+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-10-21 14:23+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/hr/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -152,8 +153,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\""
-"><small><b>PRZECZYTAJ</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>PRZECZYTAJ</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -171,8 +172,8 @@ msgid ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
 "title=\"Company\"/>"
 msgstr ""
-"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Firma\" title="
-"\"Firma\"/>"
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Firma\" "
+"title=\"Firma\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -182,8 +183,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Email służbowy\""
-"/>"
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Email służbowy\"/"
+">"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -216,8 +217,8 @@ msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Telefon\"/>"
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-suitcase text-primary\" title=\"Job Position\"/>"
 msgstr ""
-"<i class=\"fa fa-fw me-2 fa-suitcase text-primary\" title="
-"\"Stanowisko pracy\"/>"
+"<i class=\"fa fa-fw me-2 fa-suitcase text-primary\" title=\"Stanowisko "
+"pracy\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -227,8 +228,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-mobile fa-fw me-1 text-primary\" title=\"Work Mobile\"/>"
 msgstr ""
-"<i class=\"fa fa-mobile fa-fw me-1 text-primary\" title="
-"\"Służbowy tel. kom.\"/>"
+"<i class=\"fa fa-mobile fa-fw me-1 text-primary\" title=\"Służbowy tel. kom."
+"\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -337,13 +338,6 @@ msgstr "<small>eLearning</small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
-"<span class=\"col-8 text-uppercase fw-bolder small\"> Contract Overview </"
-"span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
 "invisible=\"is_trusted_bank_account\" class=\"text-muted\">Untrusted</span>\n"
@@ -436,6 +430,11 @@ msgid ""
 "<span invisible=\"not user_id or is_user_active\">\n"
 "                                                (User is Inactive)\n"
 "                                            </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Contract Overview</span>"
 msgstr ""
 
 #. module: hr
@@ -1430,7 +1429,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid ""
-"Cannot modify multiple records contract dates with different contracts at "
+"Cannot modify multiple versions contract dates with different contracts at "
 "once."
 msgstr ""
 
@@ -2121,6 +2120,7 @@ msgstr "Kanał dyskusyjny"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__display_name
@@ -2910,6 +2910,7 @@ msgstr "Menedżer działu kadr"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_version__id
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__id
@@ -3006,7 +3007,8 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
-msgstr "Jeśli masz więcej niż jeden samochód, po prostu oddziel tablice spacją."
+msgstr ""
+"Jeśli masz więcej niż jeden samochód, po prostu oddziel tablice spacją."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -3837,8 +3839,8 @@ msgid ""
 "enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
-"Kod PIN używany do zameldowania/wyjścia w trybie kiosku aplikacji Obecność ("
-"jeśli włączono w konfiguracji) oraz do zmiany kasjera w aplikacji Punkt "
+"Kod PIN używany do zameldowania/wyjścia w trybie kiosku aplikacji Obecność "
+"(jeśli włączono w konfiguracji) oraz do zmiany kasjera w aplikacji Punkt "
 "sprzedaży."
 
 #. module: hr
@@ -5565,8 +5567,8 @@ msgstr ""
 "sugerowanie ulepszeń w celu uwzględnienia nowych domen oprogramowania.\n"
 "Dołączysz do działu wsparcia implementacji. Ten 3-osobowy zespół pomaga "
 "klientom Odoo w konfiguracji oprogramowania. Twoją rolą będzie\n"
-"Animowanie webinarów w celu pokazania różnych funkcjonalności oprogramowania."
-"\n"
+"Animowanie webinarów w celu pokazania różnych funkcjonalności "
+"oprogramowania.\n"
 "być zaangażowanym we wsparcie klientów i\n"
 "odpowiadać na ich pytania.\n"
 "Pomaganie kierownikowi wsparcia w tworzeniu nowych usług wsparcia poprzez\n"
@@ -5698,6 +5700,11 @@ msgstr "np. johndoe@example.com"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
 msgstr "np. myprivateemail@example.com"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_mixin
+msgid "hr.mixin"
+msgstr ""
 
 #. module: hr
 #. odoo-python

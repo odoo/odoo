@@ -1,3 +1,4 @@
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -75,6 +76,21 @@ const assertNoRPC = {
 registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivity", {
     url: "/odoo",
     steps: () => [
+        {
+            trigger: "body",
+            run() {
+                const oldRpc = rpc._rpc;
+                rpc._rpc = function (...args) {
+                    return oldRpc(...args).catch((err) => {
+                        if (err.data?.name === "odoo.addons.auth_timeout.models.ir_http.CheckIdentityException") {
+                            return new Promise(() => {});
+                        } else {
+                            throw err;
+                        }
+                    });
+                }
+            },
+        },
         // Check identity using a password
         assertCheckIdentityForm,
         assertNoRPC,

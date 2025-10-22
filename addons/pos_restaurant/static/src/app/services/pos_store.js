@@ -450,7 +450,7 @@ patch(PosStore.prototype, {
         ) {
             this.removeOrder(order);
         }
-        super.navigate(routeName, routeParams);
+        return super.navigate(routeName, routeParams);
     },
     showDefault() {
         const page = this.defaultPage;
@@ -581,7 +581,7 @@ patch(PosStore.prototype, {
             startingValue: order.floating_order_name || "",
         });
         if (payload) {
-            if (typeof order.id == "number") {
+            if (order.isSynced) {
                 this.data.write("pos.order", [order.id], {
                     floating_order_name: payload,
                 });
@@ -935,14 +935,19 @@ patch(PosStore.prototype, {
         if (!destCourse) {
             return;
         }
+        const lines = [];
         if (selectedLine) {
-            selectedLine.course_id = destCourse.id;
+            const mainLine = selectedLine.combo_parent_id || selectedLine;
+            lines.push(mainLine);
+            if (mainLine.combo_line_ids?.length) {
+                lines.push(...mainLine.combo_line_ids);
+            }
         } else {
-            const lines = [...selectedCourse.lines];
-            lines.forEach((line) => {
-                line.course_id = destCourse.id;
-            });
+            lines.push(...selectedCourse.lines);
         }
+        lines.forEach((line) => {
+            line.course_id = destCourse.id;
+        });
         order.selectCourse(destCourse);
         order.recomputeOrderData();
     },

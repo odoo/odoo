@@ -7,30 +7,32 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useSubEnv, onMounted, useEnv } from "@odoo/owl";
 
 /*
-* Common code for theme installation/update handler.
-* It overrides the onClickViewButton function that's present in the env.
-* That way, we display our own Loader and make a silent call to the ORM.
-*/
+ * Common code for theme installation/update handler.
+ * It overrides the onClickViewButton function that's present in the env.
+ * That way, we display our own Loader and make a silent call to the ORM.
+ */
 export function useLoaderOnClick() {
-    const website = useService('website');
-    const orm = useService('orm');
-    const action = useService('action');
+    const website = useService("website");
+    const orm = useService("orm");
+    const action = useService("action");
     const env = useEnv();
     const previousOnClickViewButton = env.onClickViewButton;
     useSubEnv({
         async onClickViewButton(params) {
             const name = params.clickParams.name;
-            if (['button_refresh_theme', 'button_choose_theme'].includes(name)) {
+            if (["button_refresh_theme", "button_choose_theme"].includes(name)) {
                 website.invalidateSnippetCache = true;
-                website.showLoader({ showTips: name !== 'button_refresh_theme' });
+                website.showLoader({ showTips: name !== "button_refresh_theme" });
                 try {
                     const resParams = params.getResParams();
-                    const callback = await orm.silent.call(resParams.resModel, name, [[resParams.resId]]);
+                    const callback = await orm.silent.call(resParams.resModel, name, [
+                        [resParams.resId],
+                    ]);
                     let keepLoader = false;
                     if (callback) {
-                        callback.target = 'main';
+                        callback.target = "main";
                         await action.doAction(callback);
-                        if (callback.tag === 'website_preview') {
+                        if (callback.tag === "website_preview") {
                             keepLoader = true;
                         }
                     }
@@ -44,7 +46,7 @@ export function useLoaderOnClick() {
             } else {
                 return previousOnClickViewButton(...arguments);
             }
-        }
+        },
     });
 }
 
@@ -70,7 +72,7 @@ class ThemePreviewFormController extends FormController {
      * @override
      */
     get className() {
-        return {...super.className, 'o_view_form_theme_preview_controller': true};
+        return { ...super.className, o_view_form_theme_preview_controller: true };
     }
     /**
      * Handler called when user click on 'Choose another theme' button.
@@ -87,13 +89,13 @@ class ThemePreviewFormControlPanel extends ControlPanel {
      * @see {FieldIframePreview} for the event handler.
      */
     onMobileClick() {
-        this.env.bus.trigger('THEME_PREVIEW:SWITCH_MODE', {mode: 'mobile'});
+        this.env.bus.trigger("THEME_PREVIEW:SWITCH_MODE", { mode: "mobile" });
     }
     /**
      * @see {onMobileClick}
      */
     onDesktopClick() {
-        this.env.bus.trigger('THEME_PREVIEW:SWITCH_MODE', {mode: 'desktop'});
+        this.env.bus.trigger("THEME_PREVIEW:SWITCH_MODE", { mode: "desktop" });
     }
     /**
      * Handler called when user click on Go Back button.
@@ -109,4 +111,4 @@ const ThemePreviewFormView = {
     ControlPanel: ThemePreviewFormControlPanel,
 };
 
-registry.category('views').add('theme_preview_form', ThemePreviewFormView);
+registry.category("views").add("theme_preview_form", ThemePreviewFormView);

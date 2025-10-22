@@ -14,7 +14,6 @@ class PurchaseTestCommon(TestStockCommon):
             'warehouse_id': self.warehouse_1,
             'action': 'pull_push',
             'date_planned': date_planned or fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
-            'date_order': date_planned or fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
         }
         if ref:
             order_values['reference_ids'] = ref

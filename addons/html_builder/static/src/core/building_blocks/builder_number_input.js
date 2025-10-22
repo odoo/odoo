@@ -81,13 +81,14 @@ export class BuilderNumberInput extends Component {
             if (savedUnit || this.props.saveUnit) {
                 // Convert value from saveUnit to unit
                 value = convertNumericToUnit(
-                    savedValue,
+                    parseFloat(savedValue),
                     savedUnit || this.props.saveUnit,
                     unit,
                     getHtmlStyle(this.env.getEditingElement().ownerDocument)
                 );
             }
-            return value;
+            // Put *at most* 3 decimal digits
+            return parseFloat(parseFloat(value).toFixed(3)).toString();
         });
     }
 
@@ -128,8 +129,8 @@ export class BuilderNumberInput extends Component {
                 // Only keep the first "."
                 .replace(/^([^.]*)\.?(.*)/, (_, a, b) => a + (b ? "." + b.replace(/\./g, "") : ""));
         }
-        displayValue = displayValue.split(" ").map(this.clampValue.bind(this)).join(" ");
-
+        displayValue =
+            displayValue.split(" ").map(this.clampValue.bind(this)).join(" ") || this.props.default;
         return this.convertSpaceSplitValues(displayValue, (value) => {
             if (value === "") {
                 return value;

@@ -56,6 +56,9 @@ export class ClickAndCollectAvailability extends Component {
      * @return {void}
      */
     async openLocationSelector() {
+        if (!this.state.active) { // Combination is not possible.
+            return; // Do not open the location selector.
+        }
         const { zip_code, id } = this.state.selectedLocationData;
         this.dialog.add(LocationSelectorDialog, {
             isProductPage: true,

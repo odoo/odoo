@@ -10324,8 +10324,13 @@ test(`editable list with handle widget`, async () => {
         message: "default fourth record should have amount 0",
     });
 
+    await contains(`tbody tr:eq(1) div[name='amount']`).click();
+    await contains(`tbody tr:eq(1) div[name='amount'] input`).edit(600, { confirm: false });
     // Drag and drop the fourth line in second position
-    await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(queryFirst(`tbody tr:eq(1)`));
+    // TODO JUM: PRHOOT the events
+    const { drop, moveTo } = await contains(`tbody tr:eq(3) .o_handle_cell`).drag();
+    await moveTo(`tbody tr:eq(1)`);
+    await drop(document.body);
     expect.verifySteps([["web_resequence", [4, 2, 3], "int_field", 1]]);
     expect(`tbody tr:eq(0) td:last`).toHaveText("1,200", {
         message: "new first record should have amount 1,200",
@@ -10333,7 +10338,7 @@ test(`editable list with handle widget`, async () => {
     expect(`tbody tr:eq(1) td:last`).toHaveText("0", {
         message: "new second record should have amount 0",
     });
-    expect(`tbody tr:eq(2) td:last`).toHaveText("500", {
+    expect(`tbody tr:eq(2) td:last`).toHaveText("600", {
         message: "new third record should have amount 500",
     });
     expect(`tbody tr:eq(3) td:last`).toHaveText("300", {
@@ -10927,6 +10932,48 @@ test(`list daterange with empty start date and end date`, async () => {
     expect(queryAllTexts(`.o_data_row:eq(0) .o_field_widget[name=date] span`)).toEqual([
         "Jan 25, 2017",
     ]);
+});
+
+test(`list daterange in form: open/close picker`, async () => {
+    Foo._fields.foo_o2m = fields.One2many({ relation: "foo" });
+    Foo._fields.date_end = fields.Date();
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="foo_o2m">
+                        <list editable="bottom">
+                            <field name="date" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': '1'}"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(".o_field_daterange[name=date]").click();
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toBeDisplayed();
+    expect("input[data-field=date]").toBeFocused();
+
+    await contains(getPickerCell("15")).click();
+    await contains(getPickerCell("20")).click();
+
+    // Close picker
+    await pointerDown(`.o_view_controller`);
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+
+    // Wait to check if the picker is still closed
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -19193,4 +19240,57 @@ test(`multi edition: many2many_tags add few tags in one time`, async () => {
     expect(`.modal .o_field_many2many_tags .badge:eq(0)`).toHaveText("Value 3", {
         message: "should have display_name in badge",
     });
+});
+
+test.tags("mobile");
+test("scroll position is restored when coming back to list view", async () => {
+    Foo._views = {
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 30; i++) {
+        Foo._records.push({ id: 100 + i, foo: `Record ${i}` });
+    }
+
+    let def;
+    onRpc("web_search_read", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // simulate a scroll in the list view
+    queryOne(".o_list_view").scrollTop = 200;
+
+    await getService("action").switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+
+    // the list is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_renderer").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_list_renderer").toHaveCount(1);
+    expect(".o_list_view").toHaveProperty("scrollTop", 200);
 });

@@ -7,13 +7,14 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-14 08:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-21 05:28+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/payment/nl/"
 ">\n"
 "Language: nl\n"
@@ -68,10 +69,11 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible="
-"\"support_partial_capture != 'full_only'\" title=\"Sommige transacties die "
-"je wilt vastleggen, kunnen alleen volledig worden vastgelegd. Behandel de "
-"transacties afzonderlijk om een gedeeltelijk bedrag vast te leggen.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Sommige "
+"transacties die je wilt vastleggen, kunnen alleen volledig worden "
+"vastgelegd. Behandel de transacties afzonderlijk om een gedeeltelijk bedrag "
+"vast te leggen.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -79,13 +81,14 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Betaalmethode verwijderen\" data-bs-toggle="
-"\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
+"<i class=\"fa fa-trash\" title=\"Betaalmethode verwijderen\" data-bs-"
+"toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr "<i class=\"oi oi-arrow-right me-1\"></i> Configureer een betaalprovider"
+msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i> Configureer een betaalprovider"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -200,8 +203,8 @@ msgid ""
 msgstr ""
 "<strong>Waarschuwing</strong> Het maken van een betaalprovider via de knop "
 "<em>CREATE</em> wordt niet ondersteund.\n"
-"                        Gebruik in plaats daarvan de actie "
-"<em>Dupliceren</em>."
+"                        Gebruik in plaats daarvan de actie <em>Dupliceren</"
+"em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -231,8 +234,8 @@ msgstr "ACH Direct Debit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "ACTIVATE STRIPE"
-msgstr "ACTIVATE STRIPE"
+msgid "ACTIVATE"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -973,7 +976,7 @@ msgstr "Ontdekken"
 #: model:ir.model.fields,field_description:payment.field_res_country__display_name
 #: model:ir.model.fields,field_description:payment.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -2033,7 +2036,8 @@ msgstr "Pix"
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
-msgstr "Zorg ervoor dat %(payment_method)s ondersteunt wordt door %(provider)s."
+msgstr ""
+"Zorg ervoor dat %(payment_method)s ondersteunt wordt door %(provider)s."
 
 #. module: payment
 #. odoo-python
@@ -2704,8 +2708,8 @@ msgid ""
 "For example, \"Card\" is the primary payment method of the card brand "
 "\"VISA\"."
 msgstr ""
-"De primaire betaalmethode van de huidige betaalmethode, als deze een merk is."
-"\n"
+"De primaire betaalmethode van de huidige betaalmethode, als deze een merk "
+"is.\n"
 "Bijvoorbeeld, \"Kaart\" is de primaire betaalmethode van het kaartmerk "
 "\"VISA\"."
 
@@ -3455,6 +3459,9 @@ msgstr "tokenisatie niet ondersteund"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "tokenisatie zonder betaling niet ondersteund"
+
+#~ msgid "ACTIVATE STRIPE"
+#~ msgstr "ACTIVATE STRIPE"
 
 #~ msgid " Data Fetched"
 #~ msgstr " Gegevens opgehaald"

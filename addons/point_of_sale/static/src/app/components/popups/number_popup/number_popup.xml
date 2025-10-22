@@ -13,10 +13,10 @@
             <Numpad buttons="props.buttons"/>
             <t t-set-slot="footer">
                 <div class="d-flex flex-grow-1 justify-content-center">
-                    <button t-att-disabled="!props.isValid(state.buffer)" class="btn btn-primary btn-lg lh-lg o-default-button me-2" tabindex="1" t-on-click="confirm">
+                    <button t-att-disabled="!props.isValid(state.buffer)" class="btn btn-primary btn-lg lh-lg me-2" tabindex="1" t-on-click="confirm">
                         <t t-esc="confirmButtonLabel"/>
                     </button>
-                    <button class="btn btn-secondary btn-lg lh-lg o-default-button" tabindex="1" t-on-click="cancel">
+                    <button class="btn btn-secondary btn-lg lh-lg" tabindex="1" t-on-click="cancel">
                         Discard
                     </button>
                 </div>

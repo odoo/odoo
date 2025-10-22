@@ -67,6 +67,14 @@ class TestSlidesManagement(slides_common.SlidesCase):
             'is_published': True,
         })
 
+        # test the behavior on both employees and portal users
+        users = self.user_emp | self.user_portal
+        channel.sudo()._action_add_members(users.partner_id)
+        memberships = self.env['slide.channel.partner'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
+
+        # with no slides, next_slide_id is False for all memberships
+        self.assertFalse(memberships.next_slide_id)
+
         category_1, category_2 = self.env['slide.slide'].create([{
             'name': 'Category %s' % i,
             'channel_id': channel.id,
@@ -93,10 +101,8 @@ class TestSlidesManagement(slides_common.SlidesCase):
         } for i in [3, 4]])
 
         self.assertEqual(channel.slide_content_ids, slide_1 | slide_2 | slide_3 | slide_4)
-        # test the behavior on both employees and portal users
-        users = self.user_emp | self.user_portal
-        channel.sudo()._action_add_members(users.partner_id)
-        memberships = self.env['slide.channel.partner'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
+        # force recompute next slide based on added slides
+        memberships.invalidate_recordset(fnames=['next_slide_id'])
 
         for membership in memberships:
             for slide in channel.slide_content_ids:

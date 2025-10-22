@@ -108,7 +108,7 @@ export class ConfirmationPage extends Component {
                     this.updateHasPaper(true);
                 }
                 order.nb_print = 1;
-                if (typeof order.id === "number" && result) {
+                if (order.isSynced && result) {
                     await rpc("/pos_self_order/kiosk/increment_nb_print/", {
                         access_token: this.selfOrder.access_token,
                         order_id: order.id,

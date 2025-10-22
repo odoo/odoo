@@ -87,7 +87,6 @@ export class CallDropdown extends Component {
     }
 
     onClickMenu(ev) {
-        this.close();
         ev.stopPropagation();
     }
 

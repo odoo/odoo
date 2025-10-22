@@ -38,7 +38,6 @@ class TestWebsitePriceList(WebsiteSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.user.partner_id.country_id = False  # Remove country to avoid property pricelist computed.
-        cls.website.user_id = cls.env.user
 
         cls.pricelist.name = "Public Pricelist" # reduce diff in existing tests
         cls.country_be = cls.env.ref('base.be')

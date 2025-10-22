@@ -23,6 +23,7 @@ import { ChatGPTTranslatePlugin } from "./main/chatgpt/chatgpt_translate_plugin"
 import { ColumnPlugin } from "./main/column_plugin";
 import { EmojiPlugin } from "./main/emoji_plugin";
 import { ColorPlugin } from "./main/font/color_plugin";
+import { ColorUIPlugin } from "./main/font/color_ui_plugin";
 import { FeffPlugin } from "./main/feff_plugin";
 import { FontPlugin } from "./main/font/font_plugin";
 import { FontFamilyPlugin } from "./main/font/font_family_plugin";
@@ -36,6 +37,7 @@ import { ListPlugin } from "./main/list/list_plugin";
 import { LocalOverlayPlugin } from "./main/local_overlay_plugin";
 import { FilePlugin } from "./main/media/file_plugin";
 import { IconPlugin } from "./main/media/icon_plugin";
+import { IconColorPlugin } from "./main/media/icon_color_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
 import { ImagePlugin } from "./main/media/image_plugin";
 import { ImageSavePlugin } from "./main/media/image_save_plugin";
@@ -68,6 +70,7 @@ import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plu
 import { EmbeddedYoutubePlugin } from "./others/embedded_components/plugins/video_plugin/embedded_youtube_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
+import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 import { EditorVersionPlugin } from "./core/editor_version_plugin";
 import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
@@ -98,6 +101,7 @@ import { ContentEditablePlugin } from "./core/content_editable_plugin";
  *
  * Main
  * @property { import("./main/font/color_plugin").ColorShared } color
+ * @property { import("./main/font/color_ui_plugin").ColorUIShared } colorUi
  * @property { import("./main/link/link_plugin").LinkShared } link
  * @property { import ("./main/link/link_selection_plugin").LinkSelectionShared } linkSelection
  * @property { import ("./main/media/media_plugin").MediaShared } media
@@ -147,6 +151,7 @@ export const MAIN_PLUGINS = [
     BannerPlugin,
     ChatGPTTranslatePlugin,
     ColorPlugin,
+    ColorUIPlugin,
     SeparatorPlugin,
     ColumnPlugin,
     EmojiPlugin,
@@ -168,6 +173,7 @@ export const MAIN_PLUGINS = [
     FontPlugin, // note: if before ListPlugin, there are a few split tests that fails
     FontFamilyPlugin,
     IconPlugin,
+    IconColorPlugin,
     ImagePlugin,
     ImagePostProcessPlugin,
     ImageCropPlugin,
@@ -202,6 +208,7 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedYoutubePlugin,
     CaptionPlugin,
     EmbeddedFilePlugin,
+    SyntaxHighlightingPlugin,
 ];
 
 export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [FilePlugin, VideoPlugin, YoutubePlugin];

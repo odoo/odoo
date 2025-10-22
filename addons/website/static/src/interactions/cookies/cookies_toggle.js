@@ -53,17 +53,19 @@ export class CookiesToggle extends Interaction {
             const toggleMargin = 8;
             // Avoid having the toggle over another button, but if the cookies
             // bar is too tall, place it at the bottom anyway.
-            const bottom = document.body.offsetHeight > popupHeight + this.el.offsetHeight + toggleMargin
-                ? `calc(
-                    ${getComputedStyle(this.cookiesModalEl.querySelector(".modal-dialog")).paddingBottom}
+            const bottom =
+                document.body.offsetHeight > popupHeight + this.el.offsetHeight + toggleMargin
+                    ? `calc(
+                    ${
+                        getComputedStyle(this.cookiesModalEl.querySelector(".modal-dialog"))
+                            .paddingBottom
+                    }
                     + ${popupHeight + toggleMargin}px
                 )`
-                : "";
+                    : "";
             this.el.style.setProperty("--cookies-bar-toggle-inset-block-end", bottom);
         }
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.cookies_toggle", CookiesToggle);
+registry.category("public.interactions").add("website.cookies_toggle", CookiesToggle);

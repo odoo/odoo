@@ -85,10 +85,11 @@ export function getBasicServerData() {
  *
  * @param {string} model
  * @param {Array<string>} columns
+ * @param {{name: string, asc: boolean}[]} orderBy
  *
  * @returns { {definition: Object, columns: Array<Object>}}
  */
-export function generateListDefinition(model, columns, actionXmlId) {
+export function generateListDefinition(model, columns, actionXmlId, orderBy = []) {
     const cols = [];
     for (const name of columns) {
         const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
@@ -106,7 +107,7 @@ export function generateListDefinition(model, columns, actionXmlId) {
             searchParams: {
                 domain: [],
                 context: {},
-                orderBy: [],
+                orderBy,
             },
             name: "List",
             actionXmlId,

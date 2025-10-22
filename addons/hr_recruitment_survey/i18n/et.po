@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -30,26 +30,39 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br/><br/>\n"
 "        <t>\n"
-"            You've progressed through the recruitment process and we would like you to answer some questions.\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
 "        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                <t>\n"
 "                    Start the written interview\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
-"            We wish you good luck! Thank you in advance for your participation.\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
 "        </t>\n"
-"    </p>\n"
+"    \n"
 "</div>\n"
 "            "
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -72,6 +85,11 @@ msgid "Activities"
 msgstr "Tegevused"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
@@ -84,15 +102,33 @@ msgid "Applicant: Interview"
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
+msgid "Apply for a Job"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
-msgstr "Vali sellele ametikohale intervjuu ankeet, mida saate printida ning lasta vastata kõigil tööle kandideerijatel."
+msgid ""
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
+msgstr ""
+"Vali sellele ametikohale intervjuu ankeet, mida saate printida ning lasta "
+"vastata kõigil tööle kandideerijatel."
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "Kuva intervjuu ankeet"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -130,6 +166,15 @@ msgid "Having freebies such as tea, coffee and stationery"
 msgstr "Tasuta tee, kohv ja kirjatarbed"
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__id
+msgid "ID"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
 msgid "Important"
 msgstr "Tähtis"
@@ -152,12 +197,15 @@ msgid "Interview Survey"
 msgstr "Intervjuu küsimused"
 
 #. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
 msgstr "Intervjuud"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
 msgstr "Ametikoht"
 
@@ -193,13 +241,16 @@ msgstr "Eelnev töökogemus"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
 msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
 msgid ""
-"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
 
@@ -212,12 +263,19 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
 msgstr ""
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -249,6 +307,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "Tagasiside"
@@ -259,6 +318,11 @@ msgid "Survey Invitation Wizard"
 msgstr "Küsitluse kutsumise viisard"
 
 #. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
 msgstr "Tagasiside Kasutajapoolne Sisend"
@@ -266,7 +330,8 @@ msgstr "Tagasiside Kasutajapoolne Sisend"
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
-msgstr "Tänan, et leidsite aega küsimustele vastata. Võtame teiega varsti ühendust."
+msgstr ""
+"Tänan, et leidsite aega küsimustele vastata. Võtame teiega varsti ühendust."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -309,3 +374,10 @@ msgstr ""
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
 msgstr "Töötamine kaasaegse tehnoloogiaga"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""

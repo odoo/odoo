@@ -9,7 +9,7 @@ export class PostLink extends Interaction {
         _root: {
             "t-on-click.prevent": this.onClickPost,
             "t-att-class": () => ({
-                "o_post_link_js_loaded": true,
+                o_post_link_js_loaded: true,
             }),
         },
     };
@@ -21,10 +21,8 @@ export class PostLink extends Interaction {
                 data[key.slice(5)] = value;
             }
         }
-        sendRequest(this.el.dataset.post || this.el.href, data);
+        sendRequest(this.el.dataset.post || this.el.href || this.el.value, data);
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.post_link", PostLink);
+registry.category("public.interactions").add("website.post_link", PostLink);

@@ -12,7 +12,7 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
     // Cannot be imported for some reason, probably because of this being lazy
     // loaded?
     function addLifecycleStep(step) {
-        const localStorageKey = 'interactionAndWysiwygLifecycle';
+        const localStorageKey = "interactionAndWysiwygLifecycle";
         const oldValue = window.localStorage.getItem(localStorageKey);
         const newValue = JSON.stringify(JSON.parse(oldValue).concat(step));
         window.localStorage.setItem(localStorageKey, newValue);
@@ -37,7 +37,7 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
                 this.__consideredInitialized = true;
             });
             onMounted(() => {
-                addLifecycleStep('wysiwygStarted');
+                addLifecycleStep("wysiwygStarted");
             });
         },
         /**
@@ -45,7 +45,7 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
          */
         editableElements() {
             if (!this.__consideredInitialized) {
-                addLifecycleStep('wysiwygStart');
+                addLifecycleStep("wysiwygStart");
             }
             return super.editableElements(...arguments);
         },
@@ -53,7 +53,7 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
          * @override
          */
         destroy() {
-            addLifecycleStep('wysiwygStop');
+            addLifecycleStep("wysiwygStop");
             super.destroy(...arguments);
         },
     });

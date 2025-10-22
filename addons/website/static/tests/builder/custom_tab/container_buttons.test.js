@@ -4,14 +4,16 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     addOption,
-    getSnippetStructure,
-    getInnerContent,
-    getSnippetView,
-    dummyBase64Img,
     addPlugin,
     addActionOption,
     waitForSnippetDialog,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
+import {
+    dummyBase64Img,
+    getInnerContent,
+    getSnippetStructure,
+    getSnippetView,
+} from "@html_builder/../tests/helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { animationFrame, Deferred, queryText, tick, waitFor } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
@@ -316,29 +318,27 @@ test("applying option container button should wait for actions in progress", asy
     });
 
     const { getEditableContent, getEditor } = await setupWebsiteBuilder(`
-        <div class="test-options-target o-paragraph">plop</div>
+        <p class="test-options-target">plop</p>
     `);
     const editor = getEditor();
     const editable = getEditableContent();
 
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target">plop</p>`);
 
     await contains(".test_button").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target">plop</p>`);
 
     customActionDef.resolve();
     await tick();
     expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph customAction overlayButton">plop</div>`
+        `<p class="test-options-target customAction overlayButton">plop</p>`
     );
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph customAction">plop</div>`
-    );
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target customAction">plop</p>`);
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target">plop</p>`);
 });

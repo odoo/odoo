@@ -60,21 +60,27 @@ class HrEmployee(models.Model):
             raise ValidationError(_('Cannot remove address from employees with linked cars.'))
 
     def write(self, vals):
-        res = super().write(vals)
         # Update car partner when it is changed on the employee
+        old_work_contact_id_mapping = {e.id: e.work_contact_id.id for e in self}
+        res = super().write(vals)
+
+        # Update car partner when it is changed on the employee needs to be done after because of _sync_user
         if 'work_contact_id' in vals:
-            car_ids = self.env['fleet.vehicle'].sudo().search([
-                '|',
-                    ('driver_employee_id', 'in', self.ids),
-                    ('future_driver_employee_id', 'in', self.ids),
-            ])
-            if car_ids:
-                car_ids.filtered(lambda c: c.driver_employee_id.id in self.ids).write({
-                    'driver_id': vals['work_contact_id'],
-                })
-                car_ids.filtered(lambda c: c.future_driver_employee_id.id in self.ids).write({
-                    'future_driver_id': vals['work_contact_id'],
-                })
+            for employee in self:
+                if vals['work_contact_id'] != old_work_contact_id_mapping[employee.id]:
+                    car_ids = self.env['fleet.vehicle'].sudo().search([
+                        '|',
+                            ('driver_employee_id', '=', employee.id),
+                            ('future_driver_employee_id', '=', employee.id),
+                    ])
+                    if car_ids:
+                        car_ids.filtered(lambda c: c.driver_employee_id.id == employee.id).write({
+                            'driver_id': vals['work_contact_id'],
+                        })
+                        car_ids.filtered(lambda c: c.future_driver_employee_id.id == employee.id).write({
+                            'future_driver_id': vals['work_contact_id'],
+                        })
+
         if 'mobility_card' in vals:
             car_ids = self.env['fleet.vehicle'].sudo().search([
                 ('driver_employee_id', 'in', self.ids),

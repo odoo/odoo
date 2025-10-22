@@ -87,7 +87,7 @@ export class FloorScreen extends Component {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.ui = useService("ui");
+        this.ui = useState(useService("ui"));
         const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
@@ -161,8 +161,15 @@ export class FloorScreen extends Component {
                 const table = this.getPosTable(element);
                 if (!suggestLinkingPositions()) {
                     table.position_h =
-                        x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
-                    table.position_v = y - offsetY - this.map.el.getBoundingClientRect().top;
+                        x -
+                        offsetX +
+                        this.map.el.parentElement.parentElement.scrollLeft -
+                        this.state.floorMapOffset.x;
+                    table.position_v =
+                        y -
+                        offsetY -
+                        this.map.el.getBoundingClientRect().top -
+                        this.state.floorMapOffset.y;
                     if (this.pos.isEditMode && !this.activeFloor.floor_background_image) {
                         table.position_h -= table.position_h % GRID_SIZE;
                         table.position_v -= table.position_v % GRID_SIZE;
@@ -619,25 +626,10 @@ export class FloorScreen extends Component {
         this.pos.restoreOrdersToOriginalTable(mainOrder, table);
     }
     _getNewTableNumber() {
-        let firstNum = 1;
-        const tablesNumber = [
-            ...new Set(
-                this.activeTables
-                    .map((table) => table.table_number)
-                    .sort(function (a, b) {
-                        return a - b;
-                    })
-            ),
-        ];
-
-        for (let i = 0; i < tablesNumber.length; i++) {
-            if (tablesNumber[i] == firstNum) {
-                firstNum += 1;
-            } else {
-                break;
-            }
+        if (!this.activeTables?.length) {
+            return 1;
         }
-        return firstNum;
+        return Math.max(...this.activeTables.map((t) => t.table_number)) + 1;
     }
     get activeFloor() {
         return this.state.selectedFloorId

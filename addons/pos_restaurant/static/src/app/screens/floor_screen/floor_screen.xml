@@ -19,8 +19,8 @@
                             <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
                         </button>
                     </t>
-                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" >
-                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" />
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" title="Add Floor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" />
                     </button>
                 </div>
                 <!-- Right Side Div -->
@@ -28,23 +28,23 @@
                     <div class="d-flex gap-1 p-1 rounded-3 bg-200">
                         <t t-if="hasSelectedTable">
                             <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
-                            <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="changeSeatsNum" t-att-disabled="!hasSelectedTable">
-                                <i class="fa fa-user fa-fw" role="img" aria-label="Seats" title="Seats" />
+                            <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="changeSeatsNum" t-att-disabled="!hasSelectedTable" title="Seats">
+                                <i class="fa fa-user fa-fw" role="img" aria-label="Seats" />
                             </button>
                             <t t-if="selectedTables.some((t) => t.shape === 'square')">
-                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('round')" t-att-disabled="!hasSelectedTable">
-                                    <i class="fa fa-circle-o fa-fw" role="img" aria-label="Make Round" title="Round Shape" />
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('round')" t-att-disabled="!hasSelectedTable" title="Round Shape">
+                                    <i class="fa fa-circle-o fa-fw" role="img" aria-label="Make Round" />
                                 </button>
                             </t>
                             <t t-else="">
-                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('square')" t-att-disabled="!hasSelectedTable">
-                                    <i class="fa fa-square-o fa-fw" role="img" aria-label="Make Square" title="Square Shape" />
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('square')" t-att-disabled="!hasSelectedTable" title="Square Shape">
+                                    <i class="fa fa-square-o fa-fw" role="img" aria-label="Make Square" />
                                 </button>
                             </t>
                         </t>
                         <Dropdown menuClass="'pos-dropdown-menu px-1'">
-                            <button t-attf-class="{{editButtonClass}} btn-light">
-                                <i class="fa fa-paint-brush fa-fw" role="img" aria-label="Change Floor Background" title="Change Floor Background"/>
+                            <button t-attf-class="{{editButtonClass}} btn-light" title="Change Floor Background">
+                                <i class="fa fa-paint-brush fa-fw" role="img" aria-label="Change Floor Background"/>
                             </button>
                             <t t-set-slot="content">
                                 <div class="d-grid gap-1 py-2 px-1" style="grid-template-columns: repeat(3, 1fr);">
@@ -68,14 +68,14 @@
                                 </div>
                             </t>
                         </Dropdown>
-                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.rename(hasSelectedTable)">
-                            <i class="fa fa-pencil-square-o fa-fw" role="img" aria-label="Rename" title="Rename"/>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.rename(hasSelectedTable)" title="Rename">
+                            <i class="fa fa-pencil-square-o fa-fw" role="img" aria-label="Rename"/>
                         </button>
-                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.duplicate(hasSelectedTable)">
-                            <i class="fa fa-copy fa-fw" role="img" aria-label="Clone" title="Clone"/>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.duplicate(hasSelectedTable)" title="Clone">
+                            <i class="fa fa-copy fa-fw" role="img" aria-label="Clone"/>
                         </button>
-                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.delete(hasSelectedTable)">
-                            <i class="fa fa-trash fa-fw" role="img" aria-label="Delete" title="Delete"/>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.delete(hasSelectedTable)" title="Delete">
+                            <i class="fa fa-trash fa-fw" role="img" aria-label="Delete"/>
                         </button>
                     </div>
                     <button t-attf-class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2 lh-lg" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">

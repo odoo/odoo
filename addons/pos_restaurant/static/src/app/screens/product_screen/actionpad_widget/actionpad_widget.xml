@@ -92,8 +92,8 @@
                 </t>
                 <button t-if="!currentOrder.isEmpty() and this.pos.numpadMode != 'table'"
                     t-on-click="() => pos.pay()" 
-                    class="button pay-order-button btn btn-lg w-50"
-                    t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}" 
+                    class="button pay-order-button pay-order-button-restaurant btn btn-lg w-50"
+                    t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}"
                 >
                     Payment
                 </button>

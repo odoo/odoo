@@ -1,4 +1,5 @@
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
+import { getSnippetStructure, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
@@ -8,11 +9,9 @@ import {
     addOption,
     addDropZoneSelector,
     defineWebsiteModels,
-    getSnippetStructure,
     invisibleEl,
     setupWebsiteBuilder,
     waitForSnippetDialog,
-    waitForEndOfOperation,
 } from "./website_helpers";
 
 defineWebsiteModels();

@@ -1,3 +1,6 @@
+import * as Utils from "@pos_self_order/../tests/tours/utils/common";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+
 export function clickProduct(productName) {
     return {
         content: `Click on product '${productName}'`,
@@ -9,6 +12,14 @@ export function clickCategory(categoryName) {
     return {
         content: `Click on category '${categoryName}'`,
         trigger: `.category_btn:contains('${categoryName}')`,
+        run: "click",
+    };
+}
+
+export function clickChildCategory(childCategoryName) {
+    return {
+        content: `Click on child category '${childCategoryName}'`,
+        trigger: `.child_category_btn:contains('${childCategoryName}')`,
         run: "click",
     };
 }
@@ -137,7 +148,9 @@ export function setupCombo(products, addToCart = true) {
         steps.push(clickComboProduct(product.product));
 
         if (product.attributes.length > 0) {
+            Utils.checkMissingRequiredsExists();
             steps.push(...setupAttribute(product.attributes));
+            negateStep(Utils.checkMissingRequiredsExists());
         }
     }
 

@@ -1,15 +1,12 @@
-import io
 import os
 import re
 import subprocess as sp
 import sys
-import textwrap
-import time
 import unittest
 from pathlib import Path
 
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
-from odoo.tests import BaseCase, TransactionCase
+from odoo.tests import BaseCase
 from odoo.tools import config, file_path
 
 
@@ -132,55 +129,3 @@ class TestCommand(BaseCase):
         # we skip local variables as they differ based on configuration (e.g.: if a database is specified or not)
         lines = [line for line in shell.stdout.read().splitlines() if line.startswith('>>>')]
         self.assertEqual(lines, [">>> Hello from Python!", '>>> '])
-
-
-class TestCommandUsingDb(TestCommand, TransactionCase):
-
-    @unittest.skipIf(
-        os.name != 'posix' and sys.version_info < (3, 12),
-        "os.set_blocking on files only available in windows starting 3.12",
-    )
-    def test_i18n_export(self):
-        # i18n export is a process that takes a long time to run, we are
-        # not interrested in running it in full, we are only interrested
-        # in making sure it starts correctly.
-        #
-        # This test only asserts the first few lines and then SIGTERM
-        # the process. We took the challenge to write a cross-platform
-        # test, the lack of a select-like API for Windows makes the code
-        # a bit complicated. Sorry :/
-
-        expected_text = textwrap.dedent("""\
-            # Translation of Odoo Server.
-            # This file contains the translation of the following modules:
-            # \t* base
-        """).encode()
-
-        proc = self.popen_command(
-            'i18n', 'export', '-d', self.env.cr.dbname, '-o', '-', 'base',
-            # ensure we get a io.FileIO and not a buffered or text shit
-            text=False, bufsize=0,
-        )
-
-        # Feed the buffer for maximum 15 seconds.
-        buffer = io.BytesIO()
-        timeout = time.monotonic() + 15
-        os.set_blocking(proc.stdout.fileno(), False)
-        while buffer.tell() < len(expected_text) and time.monotonic() < timeout:
-            if chunk := proc.stdout.read(len(expected_text) - buffer.tell()):
-                buffer.write(chunk)
-            else:
-                # would had loved to use select() for its timeout, but
-                # select doesn't work on files on windows, use a flat
-                # sleep instead: not great, not terrible.
-                time.sleep(.1)
-
-        proc.terminate()
-        try:
-            proc.wait(timeout=5)
-        except sp.TimeoutExpired:
-            proc.kill()
-            raise
-
-        self.assertEqual(buffer.getvalue(), expected_text,
-            "The subprocess did not write the prelude in under 15 seconds.")

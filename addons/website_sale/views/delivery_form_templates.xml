@@ -31,7 +31,7 @@
         <t t-set="delivery_type" t-value="dm.delivery_type + '_use_locations'"/>
         <t
             t-set="is_pickup_needed"
-            t-value="delivery_type in dm.fields_get() and dm[delivery_type]"
+            t-value="delivery_type in dm._fields and dm[delivery_type]"
         />
         <div class="d-flex justify-content-between gap-3">
             <div class="form-check flex-grow-1 cursor-pointer">

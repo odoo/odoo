@@ -5,10 +5,11 @@ export class HeaderTop extends Interaction {
     static selector = "header#top";
     dynamicContent = {
         "#top_menu_collapse, #top_menu_collapse_mobile": {
-            "t-on-show.bs.offcanvas": () => this.showCollapse = true,
-            "t-on-hidden.bs.offcanvas": () => this.showCollapse &&= this.mobileNavbarEl.matches(".show, .showing"),
+            "t-on-show.bs.offcanvas": () => (this.showCollapse = true),
+            "t-on-hidden.bs.offcanvas": () =>
+                (this.showCollapse &&= this.mobileNavbarEl.matches(".show, .showing")),
             "t-att-class": () => ({
-                "o_top_menu_collapse_shown": this.showCollapse,
+                o_top_menu_collapse_shown: this.showCollapse,
             }),
         },
     };
@@ -19,12 +20,8 @@ export class HeaderTop extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.header_top", HeaderTop);
+registry.category("public.interactions").add("website.header_top", HeaderTop);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.header_top", {
-        Interaction: HeaderTop,
-    });
+registry.category("public.interactions.edit").add("website.header_top", {
+    Interaction: HeaderTop,
+});

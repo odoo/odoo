@@ -13,9 +13,9 @@ export class Parallax extends Interaction {
         _modal: { "t-on-shown.bs.modal": this.updateBackgroundHeight },
         _bg: {
             "t-att-style": () => ({
-                "top": this.styleTop,
-                "bottom": this.styleBottom,
-                "transform": this.styleTransform,
+                top: this.styleTop,
+                bottom: this.styleBottom,
+                transform: this.styleTransform,
             }),
         },
     };
@@ -105,12 +105,8 @@ export class Parallax extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.parallax", Parallax);
+registry.category("public.interactions").add("website.parallax", Parallax);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.parallax", {
-        Interaction: Parallax,
-    });
+registry.category("public.interactions.edit").add("website.parallax", {
+    Interaction: Parallax,
+});

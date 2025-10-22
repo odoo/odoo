@@ -49,6 +49,7 @@ import {
 } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
+import { deepEqual } from "@web/core/utils/objects";
 
 //
 // Commons
@@ -353,19 +354,30 @@ export class Many2XAutocomplete extends Component {
     }
 
     async search(name) {
-        if (name.startsWith(this.lastEmptySearch) || name.length < this.props.searchThreshold) {
+        const domain = this.props.getDomain();
+        const context = this.props.context;
+        if (
+            this.lastEmptySearch &&
+            deepEqual(this.lastEmptySearch.domain, domain) &&
+            deepEqual(this.lastEmptySearch.context, context) &&
+            (name.startsWith(this.lastEmptySearch.name) || name.length < this.props.searchThreshold)
+        ) {
             return [];
         }
         const records = await this.orm.call(this.props.resModel, "web_name_search", [], {
             name,
             operator: "ilike",
-            domain: this.props.getDomain(),
+            domain,
             limit: this.props.searchLimit + 1,
-            context: this.props.context,
+            context,
             specification: this.searchSpecification,
         });
         if (!records.length) {
-            this.lastEmptySearch = name;
+            this.lastEmptySearch = {
+                context,
+                domain,
+                name,
+            };
         }
         return records;
     }
@@ -465,7 +477,9 @@ export class Many2XAutocomplete extends Component {
     }
 
     addStartTypingSuggestion({ request, records }) {
-        return records !== null ? request.length === 0 && !this.activeActions.createEdit : !this.props.value;
+        return records !== null
+            ? request.length === 0 && !this.activeActions.createEdit
+            : !this.props.value;
     }
 
     buildCreateSuggestion(request) {

@@ -2,7 +2,11 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -52,7 +56,8 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     await def;
     expect.verifySteps([
         "set preset",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":4}',
+        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
         "asset reload",
     ]);
 
@@ -75,12 +80,14 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     // Setting preset does not impact solid color
     expect.step("set preset on solid color");
     await contains("button.o_we_color_preview").click();
+    await contains("button.theme-tab").click();
     await contains("button[data-color='o_cc3'").click();
     // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
     await def;
     expect.verifySteps([
         "set preset on solid color",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test":3}',
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":3}',
+        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
         "asset reload",
     ]);
 
@@ -103,12 +110,14 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     // Setting preset does not impact gradient
     expect.step("set preset on gradient");
     await contains("button.o_we_color_preview").click();
+    await contains("button.theme-tab").click();
     await contains("button[data-color='o_cc4'").click();
     // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
     await def;
     expect.verifySteps([
         "set preset on gradient",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":4}',
+        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
         "asset reload",
     ]);
 

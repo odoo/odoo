@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 21:31+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -23,6 +23,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_template_attribute_value_ids
 msgid "Attribute Values"
 msgstr "ค่าคุณลักษณะ"
+
+#. module: purchase_product_matrix
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: purchase_product_matrix
 #. odoo-javascript
@@ -46,12 +52,17 @@ msgid "Grid Update"
 msgstr "อัปเดตตาราง"
 
 #. module: purchase_product_matrix
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
 msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
-msgstr ""
-"หากตั้งค่าไว้ เมทริกซ์ของสินค้าที่สามารถกำหนดค่าได้จะแสดงในรายงานของคำสั่งซื้อนี้"
+msgstr "หากตั้งค่าไว้ เมทริกซ์ของสินค้าที่สามารถกำหนดค่าได้จะแสดงในรายงานของคำสั่งซื้อนี้"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
@@ -115,5 +126,4 @@ msgstr "ช่องตารางมีเมทริกซ์ใหม่ท
 msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
-msgstr ""
-"คุณไม่สามารถเปลี่ยนแปลงปริมาณของสินค้าที่มีอยู่ในรายการซื้อหลายรายการได้"
+msgstr "คุณไม่สามารถเปลี่ยนแปลงปริมาณของสินค้าที่มีอยู่ในรายการซื้อหลายรายการได้"

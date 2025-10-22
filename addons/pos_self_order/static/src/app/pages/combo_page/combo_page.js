@@ -91,6 +91,17 @@ export class ComboPage extends Component {
         return (this.state.choices[this.state.selectedChoiceIndex] ??= {});
     }
 
+    shouldShowMissingDetails() {
+        const el = this.scrollContainerRef?.el;
+        if (!el) {
+            return false;
+        }
+        return (
+            el.scrollHeight > el.clientHeight &&
+            this.currentChoiceState.displayAttributesOfItem.product_id.attribute_line_ids.length > 1
+        );
+    }
+
     selectItem(item) {
         const product = item.product_id;
         if (!product.self_order_available) {
@@ -211,7 +222,7 @@ export class ComboPage extends Component {
         if (!selection) {
             return true;
         }
-        return selection.hasMissingAttributeValues(product.attribute_line_ids);
+        return Boolean(selection.getMissingAttributeValue(product.attribute_line_ids));
     }
 
     changeQuantity(increase) {
@@ -438,6 +449,17 @@ export class ComboPage extends Component {
 
     goBack() {
         this.router.navigate("product_list");
+    }
+
+    scrollUpToRequired() {
+        const selectedItem = this.currentChoiceState.displayAttributesOfItem.product_id;
+        const selection = this.state.selectedValues[selectedItem.id];
+        const missingAttribute = selection?.getMissingAttributeValue(
+            selectedItem.attribute_line_ids
+        );
+        document
+            .getElementById(missingAttribute?.attribute_id?.id)
+            ?.scrollIntoView({ behavior: "smooth" });
     }
 
     /*

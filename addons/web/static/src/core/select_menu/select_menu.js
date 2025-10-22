@@ -29,6 +29,9 @@ export class SelectMenu extends Component {
         togglerClass: "",
         multiSelect: false,
         onSelect: () => {},
+        onNavigated: () => {},
+        onOpened: () => {},
+        onClosed: () => {},
         required: false,
         searchable: true,
         autoSort: true,
@@ -100,8 +103,12 @@ export class SelectMenu extends Component {
         multiSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
+        onNavigated: { type: Function, optional: true },
+        onOpened: { type: Function, optional: true },
+        onClosed: { type: Function, optional: true },
         slots: { type: Object, optional: true },
         disabled: { type: Boolean, optional: true },
+        menuRef: { type: Function, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -120,6 +127,7 @@ export class SelectMenu extends Component {
         });
         this.inputRef = useRef("inputRef");
         this.menuRef = useChildRef();
+        this.props.menuRef?.(this.menuRef);
         this.debouncedOnInput = useDebounced((ev) => {
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
@@ -164,6 +172,14 @@ export class SelectMenu extends Component {
                         }
                     },
                 },
+            },
+            onItemActivated: (element) => {
+                const index = parseInt(element.dataset.choiceIndex);
+                if (index >= 0 && this.state.displayedOptions[index]) {
+                    this.props.onNavigated(this.state.displayedOptions[index]);
+                } else {
+                    this.props.onNavigated();
+                }
             },
         };
     }
@@ -266,8 +282,10 @@ export class SelectMenu extends Component {
             if (selectedElement) {
                 scrollTo(selectedElement);
             }
+            this.props.onOpened();
         } else {
             this.state.searchValue = null;
+            this.props.onClosed();
         }
     }
 
@@ -345,9 +363,7 @@ export class SelectMenu extends Component {
 
         const _choices = [];
         const _sections = new Set();
-        groupsList.sort((a, b) =>
-            a.section && b.section ? a.section.localeCompare(b.section) : 1
-        );
+        groupsList.sort((a, b) => (a.section || "").localeCompare(b.section || ""));
 
         for (const group of groupsList) {
             let filteredOptions = group.choices || [];

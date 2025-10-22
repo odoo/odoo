@@ -339,8 +339,10 @@ class IrModuleModule(models.Model):
         return [('state', '=', 'installed')]
 
     def check_external_dependencies(self, module_name, newstate='to install'):
+        manifest = modules.Manifest.for_addon(module_name)
+        if not manifest:
+            return  # unavailable module, there is no point in checking dependencies
         try:
-            manifest = modules.Manifest.for_addon(module_name)
             manifest.check_manifest_dependencies()
         except MissingDependency as e:
             if newstate == 'to install':
@@ -353,7 +355,7 @@ class IrModuleModule(models.Model):
             install_package = None
             if platform.system() == 'Linux':
                 distro = platform.freedesktop_os_release()
-                id_likes = {distro['ID'], *distro.get('ID_LIKE').split()}
+                id_likes = {distro['ID'], *distro.get('ID_LIKE', '').split()}
                 if 'debian' in id_likes or 'ubuntu' in id_likes:
                     if package := manifest['external_dependencies'].get('apt', {}).get(e.dependency):
                         install_package = f'apt install {package}'

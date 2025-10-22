@@ -189,6 +189,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         """
         if 'sale.order' not in self.env:
             self.skipTest('`sale` is not installed')
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
 
         payment_custom = self.env['ir.module.module']._get('payment_custom')
         if payment_custom.state != 'installed':

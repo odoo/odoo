@@ -4,6 +4,7 @@ import { fields } from "@mail/core/common/record";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
+ChannelMember.CANCEL_CALL_INVITE_DELAY = 30000;
 /** @type {import("models").ChannelMember} */
 const ChannelMemberPatch = {
     setup() {
@@ -18,7 +19,7 @@ const ChannelMemberPatch = {
                 this.store.ringingThreads.add(this.channel_id);
                 this.channel_id.cancelRtcInvitationTimeout = browser.setTimeout(() => {
                     this.store.env.services["discuss.rtc"].leaveCall(this.channel_id);
-                }, 30000);
+                }, ChannelMember.CANCEL_CALL_INVITE_DELAY);
             },
             /** @this {import("models").ChannelMember} */
             onDelete() {

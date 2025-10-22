@@ -9,43 +9,43 @@ import {
 
 const snippets = [
     {
-        id: 's_banner',
-        name: 'Banner',
+        id: "s_banner",
+        name: "Banner",
         groupName: "Intro",
     },
     {
-        id: 's_three_columns',
-        name: 'Columns',
+        id: "s_three_columns",
+        name: "Columns",
         groupName: "Columns",
     },
     {
-        id: 's_text_image',
-        name: 'Image - Text',
+        id: "s_text_image",
+        name: "Image - Text",
         groupName: "Content",
     },
     {
-        id: 's_masonry_block_default_template',
-        name: 'Masonry',
+        id: "s_masonry_block_default_template",
+        name: "Masonry",
         groupName: "Images",
     },
     {
-        id: 's_title',
-        name: 'Title',
+        id: "s_title",
+        name: "Title",
         groupName: "Text",
     },
     {
-        id: 's_showcase',
-        name: 'Showcase',
+        id: "s_showcase",
+        name: "Showcase",
         groupName: "Content",
     },
     {
-        id: 's_call_to_action',
-        name: 'Call to Action',
+        id: "s_call_to_action",
+        name: "Call to Action",
         groupName: "Content",
     },
     {
-        id: 's_quotes_carousel',
-        name: 'Quotes',
+        id: "s_quotes_carousel",
+        name: "Quotes",
         groupName: "People",
     },
 ];

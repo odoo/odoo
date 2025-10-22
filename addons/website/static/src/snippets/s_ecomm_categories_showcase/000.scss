@@ -25,6 +25,12 @@
             margin: 0;
             z-index: 2;
         }
+
+        .o_bg_video_container iframe {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     }
 
     .s_ecomm_categories_showcase_content {
@@ -67,11 +73,13 @@
             transition: flex 0.3s ease-out;
         }
 
-        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block {
+        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block,
+        .s_ecomm_categories_showcase_wrapper:focus-within .s_ecomm_categories_showcase_block:not(:focus-within) {
             flex: var(--ecomm-categories-showcase-flex-base);
         }
 
-        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block:hover {
+        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block:hover,
+        .s_ecomm_categories_showcase_wrapper .s_ecomm_categories_showcase_block:focus-within {
             flex: 3;
         }
 

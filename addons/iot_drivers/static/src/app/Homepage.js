@@ -138,6 +138,7 @@ export class Homepage extends Component {
                     </small>
                 </div>
                 <SingleData name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
+                <SingleData t-if="store.advanced" name="'Mac Address'" value="state.data.mac_address" icon="'fa-address-book'" />
                 <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                     <t t-set-slot="button">
                         <UpdateDialog />

@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:04+0000\n"
-"PO-Revision-Date: 2025-09-18 19:01+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"PO-Revision-Date: 2025-10-07 23:38+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/website_sale_stock/es_419/>\n"
 "Language: es_419\n"
@@ -46,7 +47,7 @@ msgstr "Todos los almacenes"
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
 msgid "Assign"
-msgstr ""
+msgstr "Asignar"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -56,7 +57,7 @@ msgstr "Notificaciones de disponibilidad"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "Below"
-msgstr ""
+msgstr "Debajo"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -96,6 +97,11 @@ msgid ""
 "- New: Applied based on the New period you will define.\n"
 "- Out Of Stock: Applied when the product is out of stock."
 msgstr ""
+"Define cómo asignar esta cinta a los productos:\n"
+"- Manual: Asigna la cinta a los productos de forma manual.\n"
+"- Oferta: Aplica cuando el producto tiene una oferta visible.\n"
+"- Nuevo: Aplica según el periodo de productos nuevos que definas.\n"
+"- Agotado: Aplica cuando el producto está agotado."
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
@@ -192,7 +198,7 @@ msgstr "Combo de productos"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_feed
 msgid "Product Feed"
-msgstr ""
+msgstr "Feed del producto"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -202,7 +208,7 @@ msgstr "Variante del producto"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "Cinta del producto"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -229,7 +235,7 @@ msgstr "Línea de la orden de venta"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
 msgid "Sell when Out-of-Stock"
-msgstr ""
+msgstr "Vender cuando no haya existencias"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -239,7 +245,7 @@ msgstr "Mostrar la cantidad disponible"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Quantity"
-msgstr ""
+msgstr "Mostrar la cantidad disponible"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
@@ -259,8 +265,8 @@ msgstr "Mostrar la cantidad disponible"
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry"
-" for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
 msgstr ""
 "Algunos productos ya no están disponibles, actualizamos su carrito. "
 "Lamentamos las molestias."
@@ -327,8 +333,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"You ask for %(desired_qty)s products but only %(available_qty)s is "
-"available."
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
 msgstr ""
 "Solicitó %(desired_qty)s productos, pero solo hay %(available_qty)s "
 "disponibles."
@@ -336,13 +341,13 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "e.g. 'Will be back soon'"
-msgstr ""
+msgstr "Por ejemplo, \"Pronto volverá a nuestro catálogo\""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "in stock"
-msgstr ""
+msgstr "en existencia"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -358,7 +363,7 @@ msgstr "solo si es inferior a"
 #. module: website_sale_stock
 #: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
 msgid "when out of stock"
-msgstr ""
+msgstr "cuando esté agotado"
 
 #. module: website_sale_stock
 #. odoo-javascript

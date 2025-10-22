@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 04:47+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -20,11 +20,21 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+
+#. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "<strong>Use your passkey to authenticate</strong>"
 msgstr "<strong>패스키를 사용하여 인증하기</strong>"
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Add Passkey"
 msgstr "패스키 추가"
@@ -83,19 +93,12 @@ msgid "Created on"
 msgstr "작성일자"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid "Created:"
-msgstr "생성:"
-
-#. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__credential_identifier
 msgid "Credential Identifier"
 msgstr "인증 정보 식별자"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Delete"
 msgstr "삭제"
 
@@ -121,8 +124,9 @@ msgstr "ID"
 msgid ""
 "Incorrect Passkey. Please provide a valid passkey or use a different "
 "authentication method."
-msgstr "잘못된 패스키입니다. 유효한 비밀번호를 입력하거나 다른 인증 방법을 "
-"선택하세요."
+msgstr ""
+"잘못된 패스키입니다. 유효한 비밀번호를 입력하거나 다른 인증 방법을 선택하세"
+"요."
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__write_uid
@@ -137,8 +141,7 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Last used:"
 msgstr "최근 사용:"
 
@@ -166,14 +169,6 @@ msgid "Passkeys"
 msgstr "패스키"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid ""
-"Passkeys are a replacement for your username and password, offering a more "
-"secure way of logging in."
-msgstr "패스키는 사용자 아이디와 비밀번호를 대체하여 보다 안전하게 로그인할 수 있는 "
-"방법입니다."
-
-#. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_res_users_identitycheck
 msgid "Password Check Wizard"
 msgstr "비밀번호 확인 마법사"
@@ -184,7 +179,7 @@ msgid "Public Key"
 msgstr "일반 키"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Rename"
 msgstr "이름 바꾸기"
 
@@ -240,3 +235,13 @@ msgstr "비밀번호 사용"
 #: model:ir.model,name:auth_passkey.model_res_users
 msgid "User"
 msgstr "사용자"
+
+#~ msgid "Created:"
+#~ msgstr "생성:"
+
+#~ msgid ""
+#~ "Passkeys are a replacement for your username and password, offering a "
+#~ "more secure way of logging in."
+#~ msgstr ""
+#~ "패스키는 사용자 아이디와 비밀번호를 대체하여 보다 안전하게 로그인할 수 있"
+#~ "는 방법입니다."

@@ -13,7 +13,7 @@ export const HIDE_FOOTER = after(FOOTER_COPYRIGHT);
 
 class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
-    static dependencies = ["history", "visibility"];
+    static dependencies = ["history", "visibility", "builderActions"];
     static shared = ["setDirty", "setFooterVisible", "getVisibilityItem", "getFooterVisibility"];
     resources = {
         builder_actions: {
@@ -112,9 +112,17 @@ class WebsitePageConfigOptionPlugin extends Plugin {
     }
 
     onTargetVisibilityToggle(show, target) {
-        if (target.matches("#wrapwrap > header, #wrapwrap > footer")) {
-            this.dependencies.history.ignoreDOMMutations(() => {
-                target.classList.toggle("d-none", !show);
+        if (show && target.matches("#wrapwrap > header")) {
+            this.dependencies.builderActions.applyAction("setWebsiteHeaderVisibility", {
+                editingElement: target,
+                value: "regular",
+                isPreviewing: false,
+            });
+        }
+        if (show && target.matches("#wrapwrap > footer")) {
+            this.dependencies.builderActions.applyAction("setWebsiteFooterVisible", {
+                editingElement: target,
+                isPreviewing: false,
             });
         }
     }

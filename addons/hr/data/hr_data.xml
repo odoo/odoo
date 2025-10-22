@@ -6,7 +6,7 @@
             <field name="name">Administration</field>
         </record>
 
-        <record id="employee_admin" model="hr.employee">
+        <record id="employee_admin" model="hr.employee" forcecreate="0">
             <field name="name" eval="obj(ref('base.partner_admin')).name" model="res.partner"/>
             <field name="department_id" ref="dep_administration"/>
             <field name="user_id" ref="base.user_admin"/>

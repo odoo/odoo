@@ -142,7 +142,6 @@ class IotBoxOwlHomePage(http.Controller):
 
         devices = [{
             'name': device.device_name,
-            'value': str(device.data['result']),
             'type': device.device_type,
             'identifier': device.device_identifier,
             'connection': device.device_connection,
@@ -168,6 +167,7 @@ class IotBoxOwlHomePage(http.Controller):
             'enterprise_code': helpers.get_conf('enterprise_code'),
             'ip': helpers.get_ip(),
             'identifier': helpers.get_identifier(),
+            'mac_address': helpers.get_mac_address(),
             'devices': grouped_devices,
             'server_status': odoo_server_url,
             'pairing_code': connection_manager.pairing_code,

@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:52+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2024-09-26 12:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,6 +24,13 @@ msgstr ""
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
+msgstr ""
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: calendar_sms
@@ -44,15 +52,15 @@ msgstr ""
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
 msgid ""
-"Event reminder: {{ object.name }}, {{ "
-"object.get_display_time_tz(object.partner_id.tz) }}"
+"Event reminder: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
 
 #. module: calendar_sms
-#. odoo-python
-#: code:addons/calendar_sms/models/calendar_alarm.py:0
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
-msgid "Notify Responsible"
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
 msgstr ""
 
 #. module: calendar_sms

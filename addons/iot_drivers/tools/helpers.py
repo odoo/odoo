@@ -6,7 +6,9 @@ from functools import cache, wraps
 from importlib import util
 import inspect
 import io
+from ipaddress import ip_address
 import logging
+import netifaces
 from pathlib import Path
 import re
 import requests
@@ -22,7 +24,15 @@ import zipfile
 from werkzeug.exceptions import Locked
 
 from odoo import http, release, service
-from odoo.addons.iot_drivers.tools.system import IOT_CHAR, IOT_RPI_CHAR, IOT_WINDOWS_CHAR, IS_RPI, IS_TEST, IS_WINDOWS
+from odoo.addons.iot_drivers.tools.system import (
+    IOT_CHAR,
+    IOT_RPI_CHAR,
+    IOT_WINDOWS_CHAR,
+    IS_RPI,
+    IS_TEST,
+    IS_WINDOWS,
+    mtr,
+)
 from odoo.tools.func import reset_cached_properties
 from odoo.tools.misc import file_path
 
@@ -219,6 +229,15 @@ def get_identifier():
         update_conf({'generated_identifier': identifier})
 
     return identifier
+
+
+def get_mac_address():
+    interfaces = netifaces.interfaces()
+    for interface in interfaces:
+        if netifaces.ifaddresses(interface).get(netifaces.AF_INET):
+            addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]['addr']
+            if addr != '00:00:00:00:00:00':
+                return addr
 
 
 def get_path_nginx():
@@ -503,10 +522,12 @@ def save_browser_state(url=None, orientation=None):
     :param url: The URL the browser is on (if None, the URL is not saved)
     :param orientation: The orientation of the screen (if None, the orientation is not saved)
     """
-    update_conf({
-        'browser_url': url,
-        'screen_orientation': orientation.name.lower() if orientation else None,
-    })
+    to_update = {
+        "browser_url": url,
+        "screen_orientation": orientation.name.lower() if orientation else None,
+    }
+    # Only update the values that are not None
+    update_conf({k: v for k, v in to_update.items() if v is not None})
 
 
 def load_browser_state():
@@ -628,3 +649,34 @@ def toggle_remote_connection(token=""):
         )
         return True
     return False
+
+
+def check_network(host=None):
+    host = host or get_gateway()
+    if not host:
+        return None
+
+    host = socket.gethostbyname(host)
+    packet_loss, avg_latency = mtr(host)
+    thresholds = {"fast": 5, "normal": 20} if ip_address(host).is_private else {"fast": 50, "normal": 150}
+
+    if packet_loss is None or packet_loss >= 50 or avg_latency is None:
+        return "unreachable"
+    if avg_latency < thresholds["fast"] and packet_loss < 1:
+        return "fast"
+    if avg_latency < thresholds["normal"] and packet_loss < 5:
+        return "normal"
+    return "slow"
+
+
+def get_gateway():
+    """Get the router IP address (default gateway)
+
+    :return: The IP address of the default gateway or None if it can't be determined
+    """
+    gws = netifaces.gateways()
+    default = gws.get("default", {})
+    gw = default.get(netifaces.AF_INET)
+    if gw:
+        return gw[0]
+    return None

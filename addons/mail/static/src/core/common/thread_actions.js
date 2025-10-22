@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action, UseActions } from "@mail/core/common/action";
+import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
 import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
 import { useService } from "@web/core/utils/hooks";
 
@@ -93,12 +93,22 @@ registerThreadAction("search-messages", {
 });
 registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
+    badge: ({ thread }) => thread.isUnread,
+    badgeIcon: ({ thread }) => !thread.importantCounter && "fa fa-circle text-700",
+    badgeText: ({ thread }) => thread.importantCounter || undefined,
     condition: ({ owner }) => owner.env.inMeetingView,
     icon: "fa fa-fw fa-comments",
     name: _t("Chat"),
     panelOuterClass: "bg-100 border border-secondary",
     sequence: 30,
     toggle: true,
+    tags: ({ thread }) => {
+        const tags = [];
+        if (thread.importantCounter) {
+            tags.push(ACTION_TAGS.IMPORTANT_BADGE);
+        }
+        return tags;
+    },
 });
 
 export class ThreadAction extends Action {

@@ -218,6 +218,13 @@ class TestImport(common.TransactionCase):
             "Translation placeholders were not applied"
         )
 
+        # don't translate byte strings as lists
+        self.assertEqual(
+            model_fr_BE.get_code_placeholder_translation(b'Test byte string'),
+            "Code, b'Test byte string', Français, Belgium",
+            "Translation placeholders were not applied, byte string argument mishandled"
+        )
+
         # correctly format lists
         self.assertEqual(
             model_fr_BE.get_code_placeholder_translation(["1", "2", "3"]),

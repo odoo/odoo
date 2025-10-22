@@ -7,6 +7,8 @@ import {
     createBasicChart,
     createScorecardChart,
     createGaugeChart,
+    addChartFigureToCarousel,
+    createCarousel,
 } from "@spreadsheet/../tests/helpers/commands";
 import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
@@ -143,12 +145,12 @@ test("Clicking on a scorecard or gauge redirects to the linked menu id", async f
     model.updateMode("dashboard");
     await animationFrame();
 
-    const figures = document.querySelectorAll(".o-figure");
+    const chartCanvas = document.querySelectorAll(".o-figure canvas");
 
-    await click(figures[0]);
+    await click(chartCanvas[0]);
     expect.verifySteps(["menuAction2"]);
 
-    await click(figures[1]);
+    await click(chartCanvas[1]);
     expect.verifySteps(["menuAction2"]);
 });
 
@@ -180,4 +182,28 @@ test("Middle-click on chart in dashboard mode open the odoo menu in a new tab", 
 
     await contains(".o-chart-container canvas").click({ button: 1 }); // middle mouse click
     expect.verifySteps(["doAction"]);
+});
+
+test("Clicking on the carousel header doesn't redirect to its chart's linked menu", async function () {
+    mockService("action", {
+        doAction: async (actionRequest) => expect.step(actionRequest),
+    });
+
+    const { model } = await createModelWithDataSource({ serverData });
+    await mountSpreadsheet(model);
+    createBasicChart(model, chartId);
+    const sheetId = model.getters.getActiveSheetId();
+    const chartFigureId = model.getters.getFigures(sheetId)[0].id;
+
+    createCarousel(model, { items: [] }, "carouselId");
+    addChartFigureToCarousel(model, "carouselId", chartFigureId);
+    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId, odooMenuId: 2 });
+    model.updateMode("dashboard");
+    await animationFrame();
+
+    await contains(".o-carousel-header").click();
+    expect.verifySteps([]);
+
+    await contains(".o-carousel canvas").click();
+    expect.verifySteps(["menuAction2"]);
 });

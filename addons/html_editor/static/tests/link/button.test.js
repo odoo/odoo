@@ -1,10 +1,20 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryOne, select, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    hover,
+    queryAll,
+    queryOne,
+    select,
+    waitFor,
+    waitForNone,
+    manuallyDispatchProgrammaticEvent,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
-import { getContent, simulateDoubleClickSelect } from "../_helpers/selection";
+import { getContent, setSelection } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
 
 describe("button style", () => {
@@ -88,16 +98,6 @@ describe("Custom button style", () => {
         expect(optionsvalues).toInclude("Button Secondary");
         expect(optionsvalues).toInclude("Custom");
     });
-    test("Editor allow target blank style if config is active", async () => {
-        await setupEditor(
-            '<p><a href="https://test.com/">link[]Label</a></p>',
-            allowTargetBlankOpt
-        );
-        await waitFor(".o-we-linkpopover");
-        await click(".o_we_edit_link");
-        await animationFrame();
-        await waitFor(".target-blank-option");
-    });
     test("The link popover should load the current custom format correctly", async () => {
         await setupEditor(
             '<p><a href="https://test.com/" class="btn btn-custom" style="color: rgb(0, 255, 0); background-color: rgb(0, 0, 255); border-width: 4px; border-color: rgb(255, 0, 0); border-style: dotted;">link[]Label</a></p>',
@@ -114,6 +114,28 @@ describe("Custom button style", () => {
         expect(queryOne(".custom-border-picker").style.backgroundColor).toBe("rgb(255, 0, 0)");
         expect(queryOne(".custom-border-size").value).toBe("4");
         expect(queryOne(".custom-border-style").value).toBe("dotted");
+    });
+
+    test.tags("desktop");
+    test("The color preview should be reset after cursor is out of the colorpicker", async () => {
+        await setupEditor(
+            '<p><a href="https://test.com/" class="btn btn-custom" style="color: rgb(0, 255, 0); background-color: rgb(0, 0, 255); border-width: 4px; border-color: rgb(255, 0, 0); border-style: dotted;">link[]Label</a></p>',
+            allowCustomOpt
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        await click(".custom-fill-picker");
+        await animationFrame();
+        await hover(".o_color_button[data-color='#00FF00']");
+        await animationFrame();
+
+        expect(queryOne(".custom-fill-picker").style.backgroundColor).toBe("rgb(0, 255, 0)");
+
+        await hover(".custom-fill-picker"); // cursor out of the colorpicker
+        await animationFrame();
+
+        expect(queryOne(".custom-fill-picker").style.backgroundColor).toBe("rgb(0, 0, 255)");
     });
 
     test("should convert all selected text to a custom button", async () => {
@@ -172,8 +194,11 @@ describe("Custom button style", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
             confirm: false,
         });
+        await click(".o-we-linkpopover .fa-gear");
+        await contains(".o_advance_option_panel .target-blank-option").click();
+        await click(".o_advance_option_panel .fa-angle-left");
+        await waitFor(".o-we-linkpopover");
 
-        await click(".target-blank-option input[type='checkbox']");
         await animationFrame();
         await click(".o_we_apply_link");
         await animationFrame();
@@ -227,9 +252,11 @@ describe("button edit", () => {
         await waitForNone(".o-we-linkpopover");
         const button = el.querySelector("a");
         // simulate double click selection
-        await simulateDoubleClickSelect(button);
+        setSelection({ anchorNode: button, anchorOffset: 0 });
+        manuallyDispatchProgrammaticEvent(button, "mousedown", { detail: 2 });
+        await animationFrame();
         expect(getContent(el)).toBe(
-            '<p>this is a \ufeff<a href="http://test.test/" class="o_link_in_selection">[\ufefflink]\ufeff</a>\ufeff</p>'
+            '<p>this is a \ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[link]\ufeff</a>\ufeff</p>'
         );
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.test/">[link]</a></p>'
@@ -237,6 +264,58 @@ describe("button edit", () => {
         await insertText(editor, "X");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.test/">X[]</a></p>'
+        );
+    });
+
+    test("double click select on a link should stay inside the link (1)", async () => {
+        const { el } = await setupEditor(
+            '<p>this is a <a href="http://test.test/">test b[]tn</a><a href="http://test2.test/">test btn2</a></p>'
+        );
+        const link = el.querySelector("a[href='http://test.test/']");
+        // simulate double click selection
+        manuallyDispatchProgrammaticEvent(link, "mousedown", { detail: 2 });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>this is a \ufeff<a href="http://test.test/" class="o_link_in_selection">\ufefftest [btn]\ufeff</a>\ufeff<a href="http://test2.test/">\ufefftest btn2\ufeff</a>\ufeff</p>'
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/">test [btn]</a><a href="http://test2.test/">test btn2</a></p>'
+        );
+    });
+
+    test("double click select on a link should stay inside the link (2)", async () => {
+        const { el } = await setupEditor(
+            '<p>this is a <a href="http://test.test/">test btn</a><a href="http://test2.test/">t[]est btn2</a></p>'
+        );
+        const link = el.querySelector("a[href='http://test2.test/']");
+        // simulate double click selection
+        manuallyDispatchProgrammaticEvent(link, "mousedown", { detail: 2 });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>this is a \ufeff<a href="http://test.test/">\ufefftest btn\ufeff</a>\ufeff<a href="http://test2.test/" class="o_link_in_selection">\ufeff[test] btn2\ufeff</a>\ufeff</p>'
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/">test btn</a><a href="http://test2.test/">[test] btn2</a></p>'
+        );
+    });
+
+    test("triple click select should select the full button text", async () => {
+        const { el, editor } = await setupEditor(
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">test b[]tn</a></p>'
+        );
+        const button = el.querySelector("a");
+        // simulate triple click selection
+        manuallyDispatchProgrammaticEvent(button, "mousedown", { detail: 3 });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>this is a \ufeff<a href="http://test.test/" class="btn btn-fill-primary">[\ufefftest btn\ufeff]</a>\ufeff</p>'
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">[test btn]</a></p>'
+        );
+        await insertText(editor, "X");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">X[]</a></p>'
         );
     });
 });

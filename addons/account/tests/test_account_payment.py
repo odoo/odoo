@@ -654,12 +654,12 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         }])
         invoice_1.action_post()
         register_payment_and_assert_state(invoice_1, 100.0, is_community=True)
-        self.assertTrue(invoice_1.matched_payment_ids.move_id)
+        self.assertTrue(invoice_1.reconciled_payment_ids.move_id)
 
         invoice_2 = invoice_1.copy()
         invoice_2.action_post()
         register_payment_and_assert_state(invoice_2, 100.0, is_community=False)
-        self.assertFalse(invoice_2.matched_payment_ids.move_id)
+        self.assertFalse(invoice_2.reconciled_payment_ids.move_id)
 
     def test_payment_confirmation_with_bank_outstanding_account(self):
         """ Ensures that when the outstanding account of the payment method is set to a bank,

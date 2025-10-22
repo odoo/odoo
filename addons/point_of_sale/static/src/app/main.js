@@ -13,7 +13,12 @@ const loader = reactive({ isShown: true });
 whenReady(() => {
     // Show loader as soon as the page is ready, do not wait for services to be started
     // as some services load data over RPC and this is why we want to show a loader.
-    mount(Loader, document.body, { getTemplate, translateFn: appTranslateFn, props: { loader } });
+    mount(Loader, document.body, {
+        getTemplate,
+        props: { loader },
+        translatableAttributes: ["data-tooltip"],
+        translateFn: appTranslateFn,
+    });
 });
 // The following is mostly a copy of startWebclient but without any of the legacy stuff
 (async function startPosApp() {

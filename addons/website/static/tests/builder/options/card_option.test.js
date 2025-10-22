@@ -1,5 +1,9 @@
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { animationFrame, click, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
 

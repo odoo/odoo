@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:59+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -27,18 +27,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+msgid "400: Bad Request"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.403
 msgid "403: Forbidden"
 msgstr "403: Keelatud"
 
 #. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+msgid "415: Unsupported Media Type"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
-msgid "<b>Don't panic.</b> If you think it's our mistake, please send us a message on"
-msgstr "<b>Kõik on korras!</b> Kui arvate, et tegemist on veaga, siis saatke meile sõnum"
+msgid ""
+"<b>Don't panic.</b> If you think it's our mistake, please send us a message "
+"on"
+msgstr ""
+"<b>Kõik on korras!</b> Kui arvate, et tegemist on veaga, siis saatke meile "
+"sõnum"
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.error_message
-#: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "<strong>Error message:</strong>"
 msgstr ""
 
@@ -46,6 +59,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:http_routing.500
 msgid "Back"
 msgstr "Tagasi"
+
+#. module: http_routing
+#: model:ir.model.fields,field_description:http_routing.field_ir_http__display_name
+#: model:ir.model.fields,field_description:http_routing.field_ir_qweb__display_name
+#: model:ir.model.fields,field_description:http_routing.field_res_lang__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -69,12 +89,32 @@ msgid "Home"
 msgstr "Kodu"
 
 #. module: http_routing
+#: model:ir.model.fields,field_description:http_routing.field_ir_http__id
+#: model:ir.model.fields,field_description:http_routing.field_ir_qweb__id
+#: model:ir.model.fields,field_description:http_routing.field_res_lang__id
+msgid "ID"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+msgid ""
+"It looks like the URL you are accessing doesn't support the format of the "
+"request. Take a look at the error message below."
+msgstr ""
+
+#. module: http_routing
+#: model:ir.model,name:http_routing.model_res_lang
+msgid "Languages"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "Maybe you were looking for one of these <b>popular pages?</b>"
 msgstr ""
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
 msgid "Oops! Something went wrong."
 msgstr "Midagi läks valesti."
 
@@ -89,7 +129,8 @@ msgid "Qweb"
 msgstr "Qweb"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
 msgid "Take a look at the error message below."
 msgstr "Vaadake allolevat veateadet."
 
@@ -102,6 +143,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:http_routing.403
 msgid "The page you were looking for could not be authorized."
 msgstr "Otsitud lehekülge ei saanud autoriseerida."
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+msgid ""
+"The server couldn't understand the request. Take a look at the error message "
+"below."
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug

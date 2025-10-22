@@ -16,7 +16,7 @@ import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "./call_actions";
 
 let sequence = 1;
@@ -102,7 +102,7 @@ function hasTurn(iceServers) {
  * establish a connection with other call participants with the SFU when possible, and still handle
  * peer-to-peer for the participants who did not manage to establish a SFU connection.
  */
-class Network {
+export class Network {
     /** @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} */
     p2p;
     /** @type {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} */
@@ -395,14 +395,6 @@ export class Rtc extends Record {
             isFullscreen: false,
         });
         this.blurManager = undefined;
-        browser.navigator.permissions?.query({ name: "microphone" }).then((status) => {
-            this.microphonePermission = status.state;
-            status.onchange = () => (this.microphonePermission = status.state);
-        });
-        browser.navigator.permissions?.query({ name: "camera" }).then((status) => {
-            this.cameraPermission = status.state;
-            status.onchange = () => (this.cameraPermission = status.state);
-        });
     }
 
     start() {
@@ -582,6 +574,7 @@ export class Rtc extends Record {
 
     async openPip(options) {
         if (this.isHost) {
+            this.exitFullscreen();
             await this.pipService.openPip(options);
             return;
         }
@@ -832,6 +825,14 @@ export class Rtc extends Record {
                 audio: audio ? this.store.settings.audioConstraints : false,
                 video: video ? this.store.settings.cameraConstraints : false,
             });
+            if (isBrowserSafari() || isMobileOS()) {
+                if (audio) {
+                    this.microphonePermission = "granted";
+                }
+                if (video) {
+                    this.cameraPermission = "granted";
+                }
+            }
             closeStream(stream);
         } catch {
             this.showMediaUnavailableWarning({ microphone: audio, camera: video });
@@ -1341,7 +1342,7 @@ export class Rtc extends Record {
                 const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
                     Number(id)
                 );
-                if (!session || !this.channel) {
+                if (!session || session.eq(this.localSession) || !this.channel) {
                     return;
                 }
                 // `isRaisingHand` is turned into the Date `raisingHand`
@@ -1762,17 +1763,13 @@ export class Rtc extends Record {
      * Applies blur effect to a video stream using BlurManager.
      *
      * @param {MediaStream} videoStream - input video stream.
-     * @returns {Promise<{stream: MediaStream, close: Function}>} - Blurred video stream and a function to close the blur manager.
+     * @returns {Promise<BlurManager>} - BlurManager instance.
      */
     async applyBlurEffect(videoStream) {
-        const blurManager = new BlurManager(videoStream, {
+        return new BlurManager(videoStream, {
             backgroundBlur: this.store.settings.backgroundBlurAmount,
             edgeBlur: this.store.settings.edgeBlurAmount,
         });
-        return {
-            stream: await blurManager.stream,
-            close: () => blurManager.close(),
-        };
     }
 
     /**
@@ -1988,7 +1985,7 @@ export class Rtc extends Record {
             this.blurManager = undefined;
             try {
                 this.blurManager = await this.applyBlurEffect(sourceStream);
-                const blurredStream = this.blurManager.stream;
+                const blurredStream = await this.blurManager.stream;
                 outputTrack = blurredStream.getVideoTracks()[0];
             } catch (_e) {
                 this.notification.add(_e.message, { type: "warning" });
@@ -2354,6 +2351,14 @@ export const rtcService = {
                     rtc.state.screenTrack.enabled = true;
                 }
             }
+        });
+        browser.navigator.permissions?.query({ name: "microphone" }).then((status) => {
+            rtc.microphonePermission = status.state;
+            status.onchange = () => (rtc.microphonePermission = status.state);
+        });
+        browser.navigator.permissions?.query({ name: "camera" }).then((status) => {
+            rtc.cameraPermission = status.state;
+            status.onchange = () => (rtc.cameraPermission = status.state);
         });
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {

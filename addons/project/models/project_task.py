@@ -794,6 +794,8 @@ class ProjectTask(models.Model):
 
     def _inverse_display_name(self):
         for task in self:
+            if not task.display_name:
+                continue
             pattern = re.compile(r'^%s.+?%s$' % (
                 ('').join(task._get_cannot_start_with_patterns()),
                 ('').join(task._get_groups_patterns()))
@@ -1049,7 +1051,11 @@ class ProjectTask(models.Model):
     def _ensure_fields_write(self, vals, defaults=False):
         if defaults:
             vals = {
-                **{key[8:]: value for key, value in self.env.context.items() if key.startswith("default_")},
+                **{
+                    key[8:]: value
+                    for key, value in self.env.context.items()
+                    if key.startswith("default_") and key[8:] in self._fields
+                },
                 **vals
             }
 

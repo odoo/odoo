@@ -29,6 +29,10 @@ class DriverController(http.Controller):
         We specify in data from which session_id that action is called
         And call the action of specific device
         """
+        if device_identifier == "test_protocol":
+            # Special case for testing if a protocol is working
+            return True
+
         # If device_identifier is a type of device, we take the first device of this type
         # required for longpolling with community db
         if device_identifier in DEVICE_TYPES:

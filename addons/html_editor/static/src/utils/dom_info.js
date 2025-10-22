@@ -15,7 +15,25 @@ export function isEmpty(el) {
 }
 
 export function isEmptyTextNode(node) {
-    return node.nodeType === Node.TEXT_NODE && node.textContent.trim().length === 0;
+    if (node.nodeType !== Node.TEXT_NODE) {
+        return false;
+    }
+    if (!node.textContent) {
+        return true;
+    }
+    const trimmedContent = node.textContent.trim();
+    if (!trimmedContent) {
+        // Only `\n` is considered as empty
+        if (node.textContent.includes("\n")) {
+            return true;
+        }
+        // Only spaces is not considered as empty
+        // we technically can apply styles on spaces
+        if (node.textContent) {
+            return false;
+        }
+    }
+    return !trimmedContent;
 }
 
 /**
@@ -28,7 +46,11 @@ export function isEmptyTextNode(node) {
  */
 export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
-    return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
+    const referenceElement = closestElement(
+        node,
+        (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
+    );
+    return fontWeight > 500 || fontWeight > +getComputedStyle(referenceElement).fontWeight;
 }
 
 /**
@@ -297,7 +319,7 @@ export const isNotEditableNode = (node) =>
 
 const iconTags = ["I", "SPAN"];
 // @todo @phoenix: move the specific part in a proper plugin.
-const iconClasses = ["fa", "fab", "fad", "far", "oi"];
+export const iconClasses = ["fa", "fab", "fad", "far", "oi"];
 
 export const ICON_SELECTOR = iconTags
     .map((tag) => iconClasses.map((cls) => `${tag}.${cls}`).join(", "))

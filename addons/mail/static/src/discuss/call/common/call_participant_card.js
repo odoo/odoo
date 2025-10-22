@@ -11,7 +11,7 @@ import { Component, onMounted, onWillUnmount, useRef, useExternalListener } from
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
-const HIDDEN_CONNECTION_STATES = new Set([undefined, "connected", "completed"]);
+const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
     static props = [
@@ -59,12 +59,10 @@ export class CallParticipantCard extends Component {
     }
 
     get isContextMenuAvailable() {
-        if (!this.rtcSession) {
-            return false;
-        }
         return (
-            !this.rtcSession.eq(this.rtc.selfSession) ||
-            (this.env.debug && this.rtc.state.connectionType === CONNECTION_TYPES.SERVER)
+            this.isOfActiveCall &&
+            (this.rtcSession.notEq(this.rtc.selfSession) ||
+                (this.env.debug && this.rtc.state.connectionType === CONNECTION_TYPES.SERVER))
         );
     }
 
@@ -124,6 +122,7 @@ export class CallParticipantCard extends Component {
     get showConnectionState() {
         if (
             !this.rtcSession ||
+            !this.rtc.isHost ||
             !this.isOfActiveCall ||
             HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
         ) {

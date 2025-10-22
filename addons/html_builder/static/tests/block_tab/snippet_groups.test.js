@@ -1,6 +1,3 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     addBuilderPlugin,
     addDropZoneSelector,
@@ -11,9 +8,14 @@ import {
     setupHTMLBuilderWithDummySnippet,
     waitForEndOfOperation,
     waitForSnippetDialog,
-} from "../helpers";
+} from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
 import { Plugin } from "@html_editor/plugin";
+import { beforeEach, expect, test, describe } from "@odoo/hoot";
+import { animationFrame, click, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+
+describe.current.tags("desktop");
 
 let snippets;
 beforeEach(() => {

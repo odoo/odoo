@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:06+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:39+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -36,10 +36,12 @@ msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
-msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-share\" aria-label=\"分享\" role=\"img\" title="
-"\"分享\"/>"
+"<i class=\"fa fa-fw fa-share\" aria-label=\"分享\" role=\"img\" title=\"分享"
+"\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -220,6 +222,12 @@ msgid "Card Layout"
 msgstr "卡片布局"
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Card Preview"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_requires_sync_count
 msgid "Card Requires Sync Count"
 msgstr "需要同步海报数目"
@@ -316,6 +324,7 @@ msgstr "设计"
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__display_name
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_utm_source__display_name
@@ -353,11 +362,6 @@ msgid "Email composition wizard"
 msgstr "EMail撰写向导"
 
 #. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
-msgid "Filter By"
-msgstr "筛选方式"
-
-#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
 msgid "Followers"
 msgstr "关注者"
@@ -376,12 +380,6 @@ msgstr "Font Awesome图标，例如：fa-tasks"
 #: model:card.template,name:marketing_card.card_template_geometric
 msgid "Geometric"
 msgstr "几何"
-
-#. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
-msgid "Group By"
-msgstr "分组方式"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__has_message
@@ -406,14 +404,27 @@ msgstr "标题路径"
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Hello everyone"
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Help us share the news"
 msgstr "帮助我们分享新闻"
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Here's the link to advertise your participation."
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__id
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__id
 #: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__id
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__id
 #: model:ir.model.fields,field_description:marketing_card.field_utm_source__id
@@ -538,6 +549,12 @@ msgid "Mailing Count"
 msgstr "推广邮件计数"
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Many thanks"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
 #: model:ir.ui.menu,name:marketing_card.card_menu
 #: model:ir.ui.menu,name:marketing_card.marketing_card_menu_technical
@@ -597,6 +614,11 @@ msgstr "模型名称"
 msgid ""
 "Model of campaign %(campaign)s may not be changed as it already has cards"
 msgstr "活动模型 %(campaign)s 可能无法更改，因为它已经有生成海报了"
+
+#. module: marketing_card
+#: model:ir.model,name:marketing_card.model_ir_model
+msgid "Models"
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__my_activity_date_deadline
@@ -674,13 +696,10 @@ msgstr "Odoo"
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"email. If not set, the main partner's language will be used. This should "
+"usually be a placeholder expression that provides the appropriate language, "
+"e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"发送邮件时可选择的翻译代码（ISO "
-"代码）。如果未设置，将使用英文版本。一般使用占位符确定适当语言，例如：{{ "
-"object.partner_id.lang }}"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic
@@ -1031,6 +1050,12 @@ msgid "Your Home Page"
 msgstr "您的网站主页"
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Your help with this promotion would be greatly appreciated!"
+msgstr ""
+
+#. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_2
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_3
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
@@ -1082,3 +1107,18 @@ msgstr "例如：对话样本"
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Why people should share on their network?"
 msgstr "例如：为什么人们应该在他们的社交圈中分享？"
+
+#~ msgid "Filter By"
+#~ msgstr "筛选方式"
+
+#~ msgid "Group By"
+#~ msgstr "分组方式"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually "
+#~ "be a placeholder expression that provides the appropriate language, e.g. "
+#~ "{{ object.partner_id.lang }}."
+#~ msgstr ""
+#~ "发送邮件时可选择的翻译代码（ISO 代码）。如果未设置，将使用英文版本。一般使"
+#~ "用占位符确定适当语言，例如：{{ object.partner_id.lang }}"

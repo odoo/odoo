@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:30+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -308,20 +308,20 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t> "
-"您好！<br/>\n"
-"    很高兴通知您，“<strong t-out=\"object.name or ''\">翻新</strong>” "
-"项目已经成功完成！\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t> 您"
+"好！<br/>\n"
+"    很高兴通知您，“<strong t-out=\"object.name or ''\">翻新</strong>” 项目已"
+"经成功完成！\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/></"
 "t>Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style="
-"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
-"groups=\"project.group_project_stages\">您收到这封电子邮件，是因为项目已移至 "
-"“<b t-out=\"object.stage_id.name or ''\">完成</b>” 阶段。</span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">您收到这封电子邮"
+"件，是因为项目已移至 “<b t-out=\"object.stage_id.name or ''\">完成</b>” 阶"
+"段。</span>\n"
 "            "
 
 #. module: project
@@ -348,8 +348,8 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    <t t-out=\"object.partner_id.name or '客戶'\">Brandon Freeman</t> 您好！<"
-"br/><br/>\n"
+"    <t t-out=\"object.partner_id.name or '客戶'\">Brandon Freeman</t> 您好！"
+"<br/><br/>\n"
 "    谢谢联络我们，感谢您对我们的产品/服务感兴趣。<br/>\n"
 "    我们的团队目前正在处理您的查询，会尽快回复您的电邮。<br/>\n"
 "   期间如果您有任何问题或疑虑，欢迎随时告诉我们，我们乐意协助。<br/><br/>\n"
@@ -374,14 +374,13 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible="
-"\"rating_avg < 3.66\" title=\"满意\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible="
-"\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"中性\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible="
-"\"rating_avg >= 2.33\" title=\"不满意\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg < 3.66\" title=\"满意\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"中性"
+"\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg >= 2.33\" title=\"不满意\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1190,9 +1189,9 @@ msgstr "请求变更"
 msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the "
 "name of a customer, of a product, of a team, of a construction site, etc.</i>"
-msgstr "为您的项目选择 1 "
-"个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名称、团队名称、建筑"
-"工地名称等。</i>"
+msgstr ""
+"为您的项目选择 1 个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名"
+"称、团队名称、建筑工地名称等。</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1671,7 +1670,8 @@ msgstr "该项目结束的日期。在查看项目的计划时，会考虑到项
 msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
-msgstr "该任务上次指派（或未指派）的日期。据此，您可以统计出指派任务通常所需的时间。"
+msgstr ""
+"该任务上次指派（或未指派）的日期。据此，您可以统计出指派任务通常所需的时间。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
@@ -1949,7 +1949,8 @@ msgstr "复制"
 msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
-msgstr "每个用户至少应有一个个人阶段。创建一个新阶段，删除选定任务后可将任务转移到该"
+msgstr ""
+"每个用户至少应有一个个人阶段。创建一个新阶段，删除选定任务后可将任务转移到该"
 "阶段。"
 
 #. module: project
@@ -1981,7 +1982,8 @@ msgstr "编辑权限受限：协作者可以在看板视图中查看和编辑他
 msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
-msgstr "编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注哪"
+msgstr ""
+"编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注哪"
 "些任务。"
 
 #. module: project
@@ -2198,7 +2200,8 @@ msgstr "授予门户访问权限"
 msgid ""
 "Grant employees access to your project or tasks by adding them as followers. "
 "Employees automatically get access to the tasks they are assigned to."
-msgstr "将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看被"
+msgstr ""
+"将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看被"
 "指派的任务。"
 
 #. module: project
@@ -2472,8 +2475,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "无效的字段: "
+msgid "Invalid Display Name"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2647,6 +2650,12 @@ msgstr "最近的里程碑"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "稍后"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -3296,8 +3305,8 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例如"
-"：project(parent_model) 和任务 (模型)）"
+"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例"
+"如：project(parent_model) 和任务 (模型)）"
 
 #. module: project
 #. odoo-python
@@ -3772,7 +3781,8 @@ msgid ""
 "Quickly check the status of tasks for approvals or change requests and "
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
-msgstr "使用沙漏图标，快速检查待批准或变更请求的任务状态，并标识那些在依赖关系解决之"
+msgstr ""
+"使用沙漏图标，快速检查待批准或变更请求的任务状态，并标识那些在依赖关系解决之"
 "前被暂停的任务。"
 
 #. module: project
@@ -4745,12 +4755,6 @@ msgid "Tasks in Recurrence"
 msgstr "循环中的任务"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr "项目模板中的任务不可转为常规任务。"
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr "Tasks.test"
@@ -4856,8 +4860,9 @@ msgstr ""
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如：如果您要收取 <jobs@example.odoo.com> "
-"的EMail,别名就要设为：\"jobs\""
+msgstr ""
+"邮件别名的名称，例如：如果您要收取 <jobs@example.odoo.com> 的EMail,别名就要设"
+"为：\"jobs\""
 
 #. module: project
 #. odoo-python
@@ -4872,7 +4877,8 @@ msgstr "项目和相关合作伙伴必须与同一家公司有关联。"
 msgid ""
 "The project's company cannot be changed if its analytic account has analytic "
 "lines or if more than one project is linked to it."
-msgstr "如果项目的分析账户有分析项目，或者有多个项目与之关联，则不能更改项目的公司。"
+msgstr ""
+"如果项目的分析账户有分析项目，或者有多个项目与之关联，则不能更改项目的公司。"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4886,7 +4892,8 @@ msgid ""
 "The report should be grouped either by \"Stage\" to represent a Burndown "
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these "
 "groupings applied, the report will not provide relevant information."
-msgstr "报告应按“阶段”分组，以代表燃尽图，或按照“已关闭”分组，以代表燃起图。如果不采"
+msgstr ""
+"报告应按“阶段”分组，以代表燃尽图，或按照“已关闭”分组，以代表燃起图。如果不采"
 "用这些分组之一，报告将无法提供相关信息。"
 
 #. module: project
@@ -4937,7 +4944,8 @@ msgid ""
 "They can edit shared project tasks and view specific documents in read mode "
 "on your website. This includes leads/opportunities, quotations/sales orders, "
 "purchase orders, invoices and bills, timesheets, and tickets."
-msgstr "他们可以编辑共享项目任务并在您的网站上以阅读模式查看特定文档。这包括潜在客户/"
+msgstr ""
+"他们可以编辑共享项目任务并在您的网站上以阅读模式查看特定文档。这包括潜在客户/"
 "商机、报价/销售订单、采购订单、发票和账单、时间表和票据。"
 
 #. module: project
@@ -4983,7 +4991,8 @@ msgstr ""
 msgid ""
 "This follower is currently a project collaborator. Removing them will revoke "
 "their portal access to the project. Are you sure you want to proceed?"
-msgstr "该关注者目前是项目合作者。若将其删除，将取消其对项目的门户访问权。您确定要继"
+msgstr ""
+"该关注者目前是项目合作者。若将其删除，将取消其对项目的门户访问权。您确定要继"
 "续吗？"
 
 #. module: project
@@ -5004,8 +5013,8 @@ msgid ""
 "records to align them under the same company."
 msgstr ""
 "该项目与%(project_company)s相关联，而所选阶段属于%(stage_company)s。有几个选"
-"项可以考虑：要么从项目或阶段中删除公司名称。或者，可以更新这些记录的公司信息"
-"，使它们归属于同一个公司。"
+"项可以考虑：要么从项目或阶段中删除公司名称。或者，可以更新这些记录的公司信"
+"息，使它们归属于同一个公司。"
 
 #. module: project
 #. odoo-python
@@ -5023,7 +5032,8 @@ msgid ""
 "associated with %s. There are a couple of options to consider: either change "
 "the project's company to align with the stage's company or remove the "
 "company designation from the stage"
-msgstr "该项目与任何公司都没有关联，而该阶段与%s关联。有几个方案可以考虑：要么更改项"
+msgstr ""
+"该项目与任何公司都没有关联，而该阶段与%s关联。有几个方案可以考虑：要么更改项"
 "目的公司，使其与阶段的公司一致，要么删除阶段的公司名称"
 
 #. module: project
@@ -5064,7 +5074,8 @@ msgstr "这将存档以下项目中的阶段及其包含的所有任务："
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
-msgstr "这些代表了你必须做的不同类别的事情（例如：\"打电话 \"或 \"发送电子邮件\"）"
+msgstr ""
+"这些代表了你必须做的不同类别的事情（例如：\"打电话 \"或 \"发送电子邮件\"）"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5146,7 +5157,8 @@ msgstr ""
 msgid ""
 "To give portal users access to your project, add them as followers. For task "
 "access, add them as followers for each task."
-msgstr "要让门户用户访问项目，可将他们添加为关注者。要访问任务，可将他们添加为每个任"
+msgstr ""
+"要让门户用户访问项目，可将他们添加为关注者。要访问任务，可将他们添加为每个任"
 "务的关注者。"
 
 #. module: project
@@ -5155,7 +5167,8 @@ msgid ""
 "To transform a task into a sub-task, select a parent task. Alternatively, "
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
-msgstr "要将任务转换为子任务，请选择母任务。或者，将母任务字段留空，将子任务转换为独"
+msgstr ""
+"要将任务转换为子任务，请选择母任务。或者，将母任务字段留空，将子任务转换为独"
 "立任务。"
 
 #. module: project
@@ -5386,9 +5399,9 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your "
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
-msgstr "利用聊天工具<b>发送电子邮件</b> "
-"，与客户进行高效沟通。将新人添加到关注者列表中，让他们了解有关这项任务的主要"
-"变化。"
+msgstr ""
+"利用聊天工具<b>发送电子邮件</b> ，与客户进行高效沟通。将新人添加到关注者列表"
+"中，让他们了解有关这项任务的主要变化。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5590,9 +5603,9 @@ msgid ""
 "(project_company_name)s. Please ensure that this stage exclusively consists "
 "of projects linked to %(company_name)s."
 msgstr ""
-"您无法将该阶段的公司更改为 %(company_name)s，因为它目前包括与 "
-"%(project_company_name)s 相关的项目。请确保该阶段只包含与 %(company_name)s "
-"相关的项目。"
+"您无法将该阶段的公司更改为 %(company_name)s，因为它目前包括与 %"
+"(project_company_name)s 相关的项目。请确保该阶段只包含与 %(company_name)s 相"
+"关的项目。"
 
 #. module: project
 #. odoo-javascript
@@ -5684,8 +5697,8 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
-"你有未保存的变化-不用担心！ Odoo将在您切换浏览页面时自动保存它。<br/"
-">您可以从此处放弃这些更改或手动保存您的任务。<br/>让我们手动保存它吧。"
+"你有未保存的变化-不用担心！ Odoo将在您切换浏览页面时自动保存它。<br/>您可以从"
+"此处放弃这些更改或手动保存您的任务。<br/>让我们手动保存它吧。"
 
 #. module: project
 #. odoo-javascript
@@ -5804,7 +5817,8 @@ msgstr "图标来组织你的日常活动。"
 msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
-msgstr "图标，以查看正在等待其他任务的任务。一旦任务被标记为已完成或已取消，其所有依"
+msgstr ""
+"图标，以查看正在等待其他任务的任务。一旦任务被标记为已完成或已取消，其所有依"
 "赖任务都将解除阻塞。"
 
 #. module: project
@@ -5911,7 +5925,8 @@ msgstr "将创建任务在您的"
 msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name or user.env.company.name }}: 满意度调查"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: 满意度调查"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5930,6 +5945,12 @@ msgstr "👤 未指派"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "无效的字段: "
+
+#~ msgid "Tasks in a project template cannot be converted into regular tasks."
+#~ msgstr "项目模板中的任务不可转为常规任务。"
 
 #~ msgid ""
 #~ "\n"

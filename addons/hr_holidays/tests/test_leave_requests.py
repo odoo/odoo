@@ -1895,3 +1895,21 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(sick_leave.duration_display, '3 days', "hr_holidays: duration_display should not update after adding an overlapping holiday")
         self.assertEqual(sick_leave_hr.duration_display, '2 days', "hr_holidays: duration_display should update after adding an overlapping holiday")
+
+    def test_leave_request_by_removing_dates_holiday_status_id(self):
+        """
+        Test that removing the dates of a leave request or a holiday_status_id
+        does not raise a traceback.
+        """
+        with Form(self.env['hr.leave']) as leave_form:
+            leave_form.name = 'Test leave'
+            leave_form.employee_id = self.employee_emp
+            leave_form.holiday_status_id = self.holidays_type_1
+            leave_form.request_date_from = date(2022, 3, 11)
+            leave_form.request_date_to = date(2022, 3, 11)
+            leave_form.request_date_from = False
+            leave_form.request_date_to = False
+            leave_form.holiday_status_id = self.env['hr.leave.type']
+            leave_form.request_date_from = date(2022, 3, 11)
+            leave_form.request_date_to = date(2022, 3, 11)
+            leave_form.holiday_status_id = self.holidays_type_1

@@ -6,6 +6,7 @@ import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { undo } from "./_helpers/user_actions";
 import { contains } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { execCommand } from "./_helpers/userCommands";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -269,6 +270,106 @@ test("Styles should be preserved when replacing icon", async () => {
     expect("span.fa-search.fa-3x").toHaveCount(1);
 });
 
+test("Can replace a odoo icon", async () => {
+    const { editor, el } = await setupEditor(`<p><span class="oi oi-plus"></span></p>`);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="oi oi-plus" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // Selection normalization include U+FEFF, moving the cursor outside the
+    // icon and triggering the normal toolbar. To prevent this, we exclude
+    // U+FEFF from selection.
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="oi oi-plus" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+    execCommand(editor, "replaceIcon");
+    await animationFrame();
+    await contains("main.modal-body span.fa-search").click();
+    await animationFrame();
+    expect("span.fa.fa-search").toHaveCount(1);
+    expect("span.oi.oi-plus").toHaveCount(0);
+});
+
+test("Can replace a font awesome brand icon", async () => {
+    const { el, editor } = await setupEditor(`<p><span class="fab fa-opera"></span></p>`);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="fab fa-opera" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // Selection normalization include U+FEFF, moving the cursor outside the
+    // icon and triggering the normal toolbar. To prevent this, we exclude
+    // U+FEFF from selection.
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fab fa-opera" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+    execCommand(editor, "replaceIcon");
+    await animationFrame();
+    await contains("main.modal-body span.fa-search").click();
+    await animationFrame();
+    expect("span.fa.fa-search").toHaveCount(1);
+    expect("span.fab.fa-opera").toHaveCount(0);
+});
+
+test("Can replace a font awesome duotone icon", async () => {
+    const { el, editor } = await setupEditor(`<p><span class="fad fa-bus-alt"></span></p>`);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="fad fa-bus-alt" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // Selection normalization include U+FEFF, moving the cursor outside the
+    // icon and triggering the normal toolbar. To prevent this, we exclude
+    // U+FEFF from selection.
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fad fa-bus-alt" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+    execCommand(editor, "replaceIcon");
+    await animationFrame();
+    await contains("main.modal-body span.fa-search").click();
+    await animationFrame();
+    expect("span.fa.fa-search").toHaveCount(1);
+    expect("span.fad.fa-bus-alt").toHaveCount(0);
+});
+
+test("Can replace a font awesome regular icon", async () => {
+    const { el, editor } = await setupEditor(`<p><span class="far fa-money-bill-alt"></span></p>`);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="far fa-money-bill-alt" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // Selection normalization include U+FEFF, moving the cursor outside the
+    // icon and triggering the normal toolbar. To prevent this, we exclude
+    // U+FEFF from selection.
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="far fa-money-bill-alt" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+    execCommand(editor, "replaceIcon");
+    await animationFrame();
+    await contains("main.modal-body span.fa-search").click();
+    await animationFrame();
+    expect("span.fa.fa-search").toHaveCount(1);
+    expect("span.far.fa-money-bill-alt").toHaveCount(0);
+});
+
 test("Should be able to undo after adding spin effect to an icon", async () => {
     const { el, editor } = await setupEditor('<p><span class="fa fa-glass"></span></p>');
     expect(getContent(el)).toBe(
@@ -293,11 +394,11 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
     await click("button[name='icon_spin']");
     await animationFrame();
     expect("span.fa-glass.fa-spin").toHaveCount(1);
-    expect(".btn-group[name='icon_spin'] button").toHaveClass("active");
+    await expectElementCount(".btn-group[name='icon_spin'] button.active", 1);
     undo(editor);
     await animationFrame();
     expect("span.fa-glass.fa-spin").toHaveCount(0);
-    expect(".btn-group[name='icon_spin']").not.toHaveClass("active");
+    await expectElementCount(".btn-group[name='icon_spin'].active", 0);
     expect("span.fa-glass").toHaveCount(1);
     expect("span.fa-glass.fa-spin").toHaveCount(0);
 });

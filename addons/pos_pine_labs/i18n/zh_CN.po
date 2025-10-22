@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:34+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -101,11 +101,6 @@ msgid ""
 msgstr "Pine Labs 销售点交易已取消。请再尝试收取付款。"
 
 #. module: pos_pine_labs
-#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
-msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr "Pine Labs PlutusTransactionReferenceID"
-
-#. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "Pine Labs Security Token"
 msgstr "Pine Labs 安全令牌"
@@ -139,6 +134,11 @@ msgid "Pine Labs payment cancellation request failed"
 msgstr "Pine Labs 取消付款请求失败"
 
 #. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid "PineLabs Transaction ID"
+msgstr ""
+
+#. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "POS支付方式"
@@ -157,9 +157,9 @@ msgstr "编号不匹配"
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid ""
-"Required during the refund order process: "
-"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
-"request-for-Void-ICB-on-UPI-transaction"
+"Required during the refund order process: https://developer.pinelabs.com/in/"
+"instore/cloud-integration#Example-JSON-request-for-Void-ICB-on-UPI-"
+"transaction"
 msgstr ""
 "在订单退款过程中必须提供： https://developer.pinelabs.com/in/instore/cloud-"
 "integration#Example-JSON-request-for-Void-ICB-on-UPI-transaction"
@@ -193,3 +193,6 @@ msgstr "由于闲置，交易已失败"
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
 msgstr "Upi"
+
+#~ msgid "Pine Labs PlutusTransactionReferenceID"
+#~ msgstr "Pine Labs PlutusTransactionReferenceID"

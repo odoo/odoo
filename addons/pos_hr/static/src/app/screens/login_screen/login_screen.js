@@ -53,10 +53,7 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         } else {
             const employee = await this.selectCashier();
-            if (
-                employee &&
-                (employee._role === "manager" || employee.user_id?.id === this.pos.user.id)
-            ) {
+            if (employee && employee.user_id?.id === this.pos.user.id) {
                 super.clickBack();
                 return;
             }
@@ -64,5 +61,14 @@ patch(LoginScreen.prototype, {
     },
     get backBtnName() {
         return this.pos.login && this.pos.config.module_pos_hr ? _t("Discard") : super.backBtnName;
+    },
+    maskedInput(ev) {
+        ev.preventDefault();
+        const input = ev.target;
+        const pin = this.state.pin || "";
+        const maskedLen = input.value.length;
+        this.state.pin = maskedLen < pin.length ? pin.slice(0, maskedLen) : pin + (ev.data || "");
+
+        input.value = "•".repeat(this.state.pin.length);
     },
 });

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -44,7 +44,8 @@ msgstr "Seadistused"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: model:product.template,name:pos_discount.product_product_consumable_product_template
 msgid "Discount"
 msgstr "Allahindlus"
 
@@ -55,7 +56,7 @@ msgstr "Allahindlus %"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "Discount Percentage"
@@ -68,16 +69,30 @@ msgid "Discount Product"
 msgstr "Allahinnatud toode"
 
 #. module: pos_discount
-#. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "No discount product found"
-msgstr "Allahindlusega tooteid ei leitud"
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "No tax"
-msgstr "Maksudeta"
+#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "Error"
+msgstr ""
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__id
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+msgid "No discount product found"
+msgstr "Allahindlusega tooteid ei leitud"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
@@ -90,20 +105,14 @@ msgid "Point of Sale Configuration"
 msgstr "Kassa seadistused"
 
 #. module: pos_discount
-#: model:ir.model,name:pos_discount.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Kassa Sessioon"
-
-#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
 msgstr "Kassa allahinnatud toode"
 
 #. module: pos_discount
-#. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
-msgid "Tax: %s"
-msgstr "Maksud: %s"
+#: model:ir.model,name:pos_discount.model_product_template
+msgid "Product"
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
@@ -113,7 +122,7 @@ msgstr "Vaikimisi allahindluse protsent, kui klikkida nupule \"Allahindlus\"."
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be "
 "Sold' and 'Available in Point of Sale'."
@@ -125,3 +134,18 @@ msgstr ""
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
 msgstr "Toode, mida kasutatakse pileti allahindluse kohaldamiseks."
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "You cannot edit a discount line."
+msgstr ""
+
+#~ msgid "No tax"
+#~ msgstr "Maksudeta"
+
+#~ msgid "Point of Sale Session"
+#~ msgstr "Kassa Sessioon"
+
+#~ msgid "Tax: %s"
+#~ msgstr "Maksud: %s"

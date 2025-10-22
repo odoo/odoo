@@ -46,6 +46,7 @@ class WebsocketClient(Thread):
         """
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
+        self.connect_timestamp = time.monotonic()
         ws.send(json.dumps({
             'event_name': 'subscribe',
             'data': {
@@ -80,6 +81,11 @@ class WebsocketClient(Thread):
                                 'status': 'disconnected',
                             })
                 case 'server_clear':
+                    if time.monotonic() < self.connect_timestamp + 5.0:
+                        # This is a hacky way avoid processing an old server_clear message
+                        # In master we can fix this properly by providing the last message ID to the IoT box on connection
+                        _logger.warning("Ignoring server_clear message")
+                        continue
                     helpers.disconnect_from_server()
                     close_server_log_sender_handler()
                 case 'server_update':
@@ -108,6 +114,17 @@ class WebsocketClient(Thread):
                         'device_identifier': None,
                         'status': 'success',
                         'result': {'enabled': helpers.is_ngrok_enabled()}
+                    })
+                case "test_connection":
+                    send_to_controller({
+                        'session_id': payload['session_id'],
+                        'iot_box_identifier': helpers.get_identifier(),
+                        'device_identifier': helpers.get_identifier(),
+                        'status': 'success',
+                        'result': {
+                            'lan_quality': helpers.check_network(),
+                            'wan_quality': helpers.check_network("www.odoo.com"),
+                        }
                     })
                 case _:
                     continue

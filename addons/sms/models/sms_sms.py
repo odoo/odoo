@@ -227,7 +227,8 @@ class SmsSms(models.Model):
     def _update_sms_state_and_trackers(self, new_state, failure_type=None):
         """Update sms state update and related tracking records (notifications, traces)."""
         self.write({'state': new_state, 'failure_type': failure_type})
-        self.sms_tracker_id._action_update_from_sms_state(new_state, failure_type=failure_type)
+        # Use sudo on mail.notification to allow writing other users' notifications; rights are already checked by sms write
+        self.sms_tracker_id.sudo()._action_update_from_sms_state(new_state, failure_type=failure_type)
 
     def _handle_call_result_hook(self, results):
         """Further process SMS sending API results."""

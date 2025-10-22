@@ -21,7 +21,9 @@
     --o-website-sale-comparison-table-column-padding-x: #{map-get($spacers, 2)};
 
     > .overflow-x-auto {
-        @include media-breakpoint-down(sm) {
+        margin: 0 calc(var(--o-website-sale-comparison-table-column-padding-x) * -1);
+
+        @include media-breakpoint-down(lg) {
             margin: 0 calc(var(--gutter-x, 30px) / -2);
         }
     }
@@ -38,13 +40,12 @@
     }
 
     #o_comparelist_table {
-        margin: 0 calc(var(--o-website-sale-comparison-table-column-padding-x) * -1);
-
         @include media-breakpoint-down(xl) {
             min-width: max-content;
         }
-        @include media-breakpoint-down(sm) {
-            padding: 0 calc(var(--gutter-x, 30px) / 2);
+
+        @include media-breakpoint-down(lg) {
+            padding: 0 calc(var(--o-website-sale-comparison-table-column-padding-x));
         }
     }
 

@@ -117,11 +117,6 @@ class DiscussChannel(models.Model):
         compute="_compute_channel_name_member_ids",
         help="Members from which the channel name is computed when the name field is empty.",
     )
-
-    _channel_type_not_null = models.Constraint(
-        'CHECK(channel_type IS NOT NULL)',
-        'The channel type cannot be empty',
-    )
     _from_message_id_unique = models.Constraint(
         'UNIQUE(from_message_id)',
         'Messages can only be linked to one sub-channel',
@@ -423,7 +418,8 @@ class DiscussChannel(models.Model):
         # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()
-
+        if not self.env.context.get("install_mode") and not self.env.user._is_public():
+            Store(bus_channel=self.env.user).add(channels).bus_send()
         return channels
 
     @api.ondelete(at_uninstall=False)
@@ -1006,7 +1002,7 @@ class DiscussChannel(models.Model):
         # sudo: discuss.channel - write to discuss.channel is not accessible for most users
         self.sudo().last_interest_dt = fields.Datetime.now()
         if "everyone" in kwargs.pop("special_mentions", []):
-            partner_ids = list(OrderedSet(partner_ids + self.channel_member_ids.partner_id.ids))
+            partner_ids = list(OrderedSet((partner_ids or []) + self.channel_member_ids.partner_id.ids))
         if partner_ids:
             kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
         # mail_post_autofollow=False is necessary to prevent adding followers
@@ -1492,7 +1488,6 @@ class DiscussChannel(models.Model):
         new_channel.group_public_id = group.id if group else None
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-        Store(bus_channel=self.env.user).add(new_channel).bus_send()
         return new_channel
 
     @api.model

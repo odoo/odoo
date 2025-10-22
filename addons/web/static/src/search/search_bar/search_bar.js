@@ -12,7 +12,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { ACTIVE_ELEMENT_CLASS, useNavigation } from "@web/core/navigation/navigation";
+import { useNavigation } from "@web/core/navigation/navigation";
 
 const parsers = registry.category("parsers");
 
@@ -83,7 +83,7 @@ export class SearchBar extends Component {
         this.inputRef =
             this.env.config.disableSearchBarAutofocus || !this.props.autofocus
                 ? useRef("autofocus")
-                : useAutofocus({ mobile: this.props.toggler !== undefined }); // only force the focus on touch devices when the toggler is present on small devices
+                : useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
 
         useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();
@@ -470,7 +470,6 @@ export class SearchBar extends Component {
                 }
                 return [];
             },
-            isNavigationAvailable: ({ navigator, target }) => navigator.contains(target),
             hotkeys: {
                 enter: {
                     isAvailable: () => !this.inputDropdownState.isOpen,
@@ -544,6 +543,7 @@ export class SearchBar extends Component {
                 this.inputDropdownState.isOpen &&
                 (this.facetContainerRef.el?.contains(target) || navigator.contains(target)),
             onUpdated: (navigator) => (this.navigator = navigator),
+            onItemActivated: (itemEl) => (this.lastActiveItemId = parseInt(itemEl.id, 10)),
             hotkeys: {
                 escape: {
                     callback: () => {
@@ -657,7 +657,7 @@ export class SearchBar extends Component {
             this.resetState();
         }
     }
-    
+
     /**
      * @param {CompositionEvent} ev
      */
@@ -673,14 +673,9 @@ export class SearchBar extends Component {
         if (!this.state.query.length) {
             this.env.searchModel.search();
         } else {
-            const els = [
-                ...this.root.el.ownerDocument.querySelectorAll(
-                    ".o_searchview_autocomplete .o-dropdown-item"
-                ),
-            ];
-            const index = els.findIndex((el) => el.classList.contains(ACTIVE_ELEMENT_CLASS));
-            if (this.items[index]) {
-                this.selectItem(this.items[index]);
+            const item = this.items.find((item) => item.id === this.lastActiveItemId);
+            if (item) {
+                this.selectItem(item);
             }
         }
     }

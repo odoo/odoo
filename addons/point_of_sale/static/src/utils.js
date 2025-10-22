@@ -1,5 +1,8 @@
-import { session } from "@web/session";
+/* global QRCode */
 
+import { session } from "@web/session";
+import { getDataURLFromFile } from "@web/core/utils/urls";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -174,3 +177,48 @@ export function isValidEmail(email) {
 }
 
 export const LONG_PRESS_DURATION = session.test_mode ? 100 : 1000;
+
+export async function getImageDataUrl(imageUrl) {
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    return await getDataURLFromFile(blob);
+}
+
+export function orderUsageUTCtoLocalUtil(data) {
+    const result = {};
+    for (const [datetime, usage] of Object.entries(data)) {
+        const dt = deserializeDateTime(datetime);
+        const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
+        result[formattedDt] = usage;
+    }
+    return result;
+}
+
+/**
+ * Generates a QR code as a data URL in SVG format for a given URL.
+ *
+ * @param {string} url - The URL or text to encode in the QR code.
+ * @param {Object} [options={}] - Optional configuration for the QR code.
+ * @param {number} [options.width=150] - The width of the QR code.
+ * @param {number} [options.height=150] - The height of the QR code.
+ * @param {number} [options.correctLevel=QRCode.CorrectLevel.L] - The error correction level for the QR code.
+ * @param {boolean} [options.useSVG=true] - Whether to generate the QR code as SVG.
+ * @param {Object} [options.rest] - Additional options to pass to the QRCode constructor.
+ * @returns {string} The QR code as a data URL in SVG format.
+ */
+export function generateQRCodeDataUrl(
+    url,
+    { width = 150, height = 150, correctLevel = QRCode.CorrectLevel.L, ...rest } = {}
+) {
+    const tempDiv = document.createElement("div");
+    const options = { width, height, correctLevel, ...rest };
+
+    new QRCode(tempDiv, { text: url, useSVG: true, ...options });
+
+    const svg = tempDiv.querySelector("svg");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+
+    const qr_code_svg = new XMLSerializer().serializeToString(svg);
+    return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
+}

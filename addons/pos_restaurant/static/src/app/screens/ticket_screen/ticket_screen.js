@@ -51,7 +51,7 @@ patch(TicketScreen.prototype, {
         for (const order of this.getFilteredOrderList()) {
             const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
 
-            if (typeof order.id === "string") {
+            if (!order.isSynced) {
                 logPosMessage(
                     "TicketScreen",
                     "settleTips",

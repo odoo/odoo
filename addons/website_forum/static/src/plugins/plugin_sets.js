@@ -1,15 +1,17 @@
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { ForumColorPlugin } from "./color_plugin";
 import { ForumFontPlugin } from "./font_plugin";
 import { ForumHistoryPlugin } from "./history_plugin";
 
+const removedPlugins = new Set(["colorUi", "iconColor"]);
+
 const customPlugins = {
-    color: ForumColorPlugin,
     font: ForumFontPlugin,
     history: ForumHistoryPlugin,
 };
 
-export const FULL_EDIT_PLUGINS = MAIN_PLUGINS.map((P) => customPlugins[P.id] || P);
+export const FULL_EDIT_PLUGINS = MAIN_PLUGINS.filter((P) => !removedPlugins.has(P.id)).map(
+    (P) => customPlugins[P.id] || P
+);
 
 const fullEditOnlyPlugins = new Set(["link", "linkPaste", "mediaUrlPaste", "imageCrop", "media"]);
 

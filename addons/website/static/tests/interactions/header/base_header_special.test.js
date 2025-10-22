@@ -1,13 +1,8 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 
-import {
-    getTemplateWithoutHideOnScroll,
-} from "./helpers";
+import { getTemplateWithoutHideOnScroll } from "./helpers";
 
 setupInteractionWhiteList("website.header_disappears");
 

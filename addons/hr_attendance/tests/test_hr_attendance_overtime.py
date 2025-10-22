@@ -93,6 +93,23 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
         set_calendar_and_tz(cls.europe_employee, 'Europe/Brussels')
 
+        cls.no_contract_employee = cls.env['hr.employee'].create({
+            'name': 'No Contract',
+            'company_id': cls.company.id,
+            'tz': 'UTC',
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': False,
+        })
+        cls.future_contract_employee = cls.env['hr.employee'].create({
+            'name': 'Future contract',
+            'company_id': cls.company.id,
+            'tz': 'UTC',
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2030, 1, 1),
+        })
+
         cls.calendar_flex_40h = cls.env['resource.calendar'].create({
             'name': 'Flexible 40 hours/week',
             'company_id': cls.company.id,
@@ -525,6 +542,37 @@ class TestHrAttendanceOvertime(TransactionCase):
         # Employee with flexible working schedule should not be checked out
         self.assertEqual(attendance_flexible_pending.check_out, False)
 
+    @freeze_time("2024-02-1 23:00:00")
+    def test_auto_check_out_more_one_day_delta(self):
+        """ Test that the checkout is correct if the delta between the check in and now is > 24 hours"""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1
+        })
+
+        attendance_utc_pending = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 30, 8, 0)
+        })
+
+        self.assertEqual(attendance_utc_pending.check_out, False)
+        self.env['hr.attendance']._cron_auto_check_out()
+        self.assertEqual(attendance_utc_pending.check_out, datetime(2024, 1, 30, 18, 0))
+
+    @freeze_time("2024-02-05 23:00:00")
+    def test_auto_checkout_past_day(self):
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1,
+        })
+        attendance_utc_pending_7th_day = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 2, 1, 14, 0),
+        })
+        self.assertEqual(attendance_utc_pending_7th_day.check_out, False)
+        self.env['hr.attendance']._cron_auto_check_out()
+        self.assertEqual(attendance_utc_pending_7th_day.check_out, datetime(2024, 2, 1, 23, 0))
+
     @freeze_time("2024-02-2 20:00:00")
     def test_auto_check_out_calendar_tz(self):
         """Check expected working hours and previously worked hours are from the correct day when
@@ -678,6 +726,10 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     #     # Other company with setting disabled
     #     self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
+
+    #     # Employee with no contract or future contract
+    #     # self.assertAlmostEqual(self.no_contract_employee.total_overtime, 0, 2)
+    #     # self.assertAlmostEqual(self.future_contract_employee.total_overtime, 0, 2)
 
     def test_overtime_hours_flexible_resource(self):
         """ Test the computation of overtime hours for a single flexible resource with 8 hours_per_day.

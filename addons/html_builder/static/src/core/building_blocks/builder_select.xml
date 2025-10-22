@@ -8,7 +8,13 @@
         <div t-ref="root" class="o-hb-select-wrapper">
             <div inert="" class="h-0 w-0 overflow-hidden" t-att-class="props.className" t-ref="content"><WithIgnoreItem><t t-slot="default" /></WithIgnoreItem></div>
             <Dropdown state="this.dropdown" menuClass="'o-hb-select-dropdown'">
-                <button class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret" t-ref="button" t-att-id="props.id">
+                <button 
+                    class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret"
+                    t-ref="button"
+                    t-att-id="props.id"
+                    t-att-disabled="props.disabled ? 'disabled' : undefined"
+                    t-att-aria-disabled="props.disabled ? 'true' : undefined"
+                    >
                     <t t-slot="fixedButton"/>
                 </button>
                 <t t-set-slot="content">

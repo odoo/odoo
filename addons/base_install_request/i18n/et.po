@@ -1,0 +1,213 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_install_request
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-09-11 13:55+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: base_install_request
+#: model:mail.template,body_html:base_install_request.mail_template_base_install_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> "
+"has requested to activate the <span style=\"font-weight: bold;\" t-"
+"out=\"object.module_id.shortdesc\"/> module.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-"
+"quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
+"        <a t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"padding:8px 16px 8px 16px; text-decoration:none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-"
+"base_install_request.action_base_module_install_review?"
+"menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
+"        <br/><br/>\n"
+"        Thanks,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/models/ir_module_module.py:0
+msgid "Activation Request of \"%s\""
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
+msgid "Body"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
+msgid "Depending Apps"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__display_name
+#: model:ir.model.fields,field_description:base_install_request.field_ir_module_module__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__id
+#: model:ir.model.fields,field_description:base_install_request.field_ir_module_module__id
+msgid "ID"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Install App"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: base_install_request
+#: model:mail.template,name:base_install_request.mail_template_base_install_request
+msgid "Mail: Install Request"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_ir_module_module
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__module_id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_id
+msgid "Module"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_request
+msgid "Module Activation Request"
+msgstr ""
+
+#. module: base_install_request
+#: model:mail.template,subject:base_install_request.mail_template_base_install_request
+msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_review
+msgid "Module Activation Review"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
+msgid "Modules Description"
+msgstr ""
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "No module selected."
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
+msgid "Request Access"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Request Activation"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Send to:"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
+msgid "The following apps will be installed:"
+msgstr ""
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "The module is already installed."
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
+msgid "User"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Why do you need this module?"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
+msgid "You are about to install an extra application"
+msgstr ""
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "Your request has been successfully sent"
+msgstr ""
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid ""
+"e.g. I'd like to use the SMS Marketing module to organize the promotion of "
+"our internal events, and exhibitions. I need access for 3 people of my team."
+msgstr ""

@@ -342,7 +342,7 @@ class MrpWorkcenter(models.Model):
         get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_leaves_domain, resources=resource, tz=timezone(self.resource_calendar_id.tz))
         extra_leaves_slots_intervals = Intervals([(localized(start), localized(stop), self.env['resource.calendar.attendance']) for start, stop in extra_leaves_slots])
 
-        remaining = duration
+        remaining = duration = max(duration, 1 / 60)
         now = localized(datetime.now())
         delta = timedelta(days=14)
         start_interval, stop_interval = None, None

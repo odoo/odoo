@@ -5,7 +5,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
-import { Component, onMounted, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, status, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 
@@ -86,7 +86,10 @@ export class BarcodeVideoScanner extends Component {
                 return;
             }
             this.videoPreviewRef.el.srcObject = this.stream;
-            await this.isVideoReady();
+            const ready = await this.isVideoReady();
+            if (!ready) {
+                return;
+            }
             const { height, width } = getComputedStyle(this.videoPreviewRef.el);
             const divWidth = width.slice(0, -2);
             const divHeight = height.slice(0, -2);
@@ -124,11 +127,15 @@ export class BarcodeVideoScanner extends Component {
         // FIXME: even if it shouldn't happened, a timeout could be useful here.
         while (!isVideoElementReady(this.videoPreviewRef.el)) {
             await delay(10);
+            if (status(this) === "destroyed"){
+                return false;
+            }
         }
         this.state.isReady = true;
         if (this.props.onReady) {
             this.props.onReady();
         }
+        return true;
     }
 
     onResize(overlayInfo) {
