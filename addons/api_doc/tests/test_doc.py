@@ -1,10 +1,14 @@
+import inspect
 import textwrap
 from datetime import datetime, timedelta
 from http import HTTPStatus
 
+from .dummy_functions import TEST_DOCSTRINGS, DummyFunctions
+
 from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
 
+from odoo.addons.api_doc.controllers.api_doc import parse_signature
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -18,6 +22,7 @@ class TestDoc(HttpCaseWithUserDemo):
         })
 
     def test_doc_access(self):
+        self.maxDiff = None
         e = "This page is only accessible to Technical Documentation users."
         new_test_user(self.env, login='test_doc_access')
         self.authenticate('test_doc_access', 'test_doc_access')
@@ -201,3 +206,11 @@ class TestDoc(HttpCaseWithUserDemo):
         etag_admin = res.headers.get('ETag', '')
         self.assertTrue(etag_admin)
         self.assertNotEqual(etag_demo, etag_admin)
+
+    def test_parse_signature(self):
+        methods = inspect.getmembers(DummyFunctions, predicate=inspect.isfunction)
+        for name, method in methods:
+            if name.startswith('__'):
+                continue
+            with self.subTest(method=name):
+                self.assertEqual(parse_signature(method).as_dict(), TEST_DOCSTRINGS[name])
