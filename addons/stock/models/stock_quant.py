@@ -1157,7 +1157,8 @@ class StockQuant(models.Model):
                 del reserved_move_lines[(product, location, lot, package, owner)]
 
         for (product, location, lot, package, owner), reserved_quantity in reserved_move_lines.items():
-            if location.should_bypass_reservation():
+            if location.should_bypass_reservation() or\
+                self.env['stock.quant']._should_bypass_product(product, location, reserved_quantity, lot, package, owner):
                 continue
             else:
                 self.env['stock.quant']._update_reserved_quantity(product, location, reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
@@ -1539,6 +1540,9 @@ class StockQuant(models.Model):
                 result_package_id))
         moves = self.env['stock.move'].create(move_vals)
         moves._action_done()
+
+    def _should_bypass_product(self, product=False, location=False, reserved_quantity=0, lot_id=False, package_id=False, owner_id=False):
+        return False
 
 
 class StockQuantPackage(models.Model):
