@@ -79,7 +79,7 @@ test("supports arbitrary number of text and number inputs on entries", async () 
     );
 });
 
-test("delete an item", async () => {
+test("delete an item except the last one", async () => {
     addBuilderOption(
         class extends BaseOptionComponent {
             static selector = ".test-options-target";
@@ -94,12 +94,31 @@ test("delete an item", async () => {
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
-        JSON.stringify(defaultValueWithIds([0]))
+        JSON.stringify(defaultValueWithIds([0, 1]))
     );
+    expect(".we-bg-options-container .builder_list_remove_item").toHaveAttribute(
+        "title",
+        "Delete the item."
+    );
+
     await contains(".we-bg-options-container .builder_list_remove_item").click();
-    expect(":iframe .test-options-target").toHaveAttribute("data-list", JSON.stringify([]));
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify(defaultValueWithIds([1]))
+    );
+    expect(".we-bg-options-container .builder_list_remove_item").toHaveAttribute(
+        "title",
+        "You cannot delete the last item."
+    );
+
+    await contains(".we-bg-options-container .builder_list_remove_item").click();
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify(defaultValueWithIds([1]))
+    );
 });
 
 test("reorder items", async () => {

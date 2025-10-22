@@ -41,6 +41,7 @@
                                 </t>
                                 <td>
                                     <button type="button" class="btn text-danger builder_list_remove_item"
+                                            t-attf-title="{{ formatRawValue(state.value).length === 1 ? 'You cannot delete the last item.' : 'Delete the item.' }}"
                                             t-on-click="() => this.deleteItem(item._id)">
                                         <i class="fa fa-fw fa-minus" aria-hidden="true"/>
                                         <span class="visually-hidden">Delete item</span>
