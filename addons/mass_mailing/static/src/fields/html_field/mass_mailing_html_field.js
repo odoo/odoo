@@ -48,8 +48,15 @@ export class MassMailingHtmlField extends HtmlField {
         let subServices = Object.create(this.env.services);
         useChildSubEnv({ services: subServices })
         onWillStart(async () => {
-            subServices.overlay = await overlayService.start(this.env);
-            subServices.popover = await popoverService.start(this.env, subServices);
+            const overlayService = Object.create(this.env.services.overlay);
+            overlayService.add = (c, props, opts) => {
+                opts = {
+                    ...opts || {},
+                    sequence: (opts.sequence ?? 50) + 1000,
+                }
+                return this.env.services.overlay.add(c, props, opts);
+            }
+            subServices.overlay = overlayService;
         })
 
 
