@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account.Many2ManyTagsJournals" t-inherit="web.Many2ManyTagsField">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="group_company_id">this.props.record.data['company_id'].id</attribute>
+        </xpath>
+    </t>
+    <t t-name="account.Many2ManyTagsJournalsMany2xAutocomplete" t-inherit="web.Many2XAutocomplete" t-inherit-mode="primary">
+        <xpath expr="//t[@t-set-slot='option']/t" position="after">
+            <t t-if="optionScope.data.record and !props.group_company_id">
+                <span class="text-muted ms-3 fst-italic">
+                    <t t-out="optionScope.data.record.company_id.display_name"/>
+                </span>
+            </t>
+        </xpath>
+    </t>
+</templates>
