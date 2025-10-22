@@ -8,7 +8,6 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.fields import Domain
@@ -541,11 +540,7 @@ class CrmLead(models.Model):
         for lead in self:
             email_state = False
             if lead.email_from:
-                email_state = 'incorrect'
-                for email in email_normalize_all(lead.email_from):
-                    if mail_validation.mail_validate(email):
-                        email_state = 'correct'
-                        break
+                email_state = 'correct' if bool(lead.email_normalized) else 'incorrect'
             lead.email_state = email_state
 
     @api.depends('probability', 'automated_probability')
