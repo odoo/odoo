@@ -2648,8 +2648,12 @@ export class PosStore extends WithLazyGetterTrap {
 
     getProductsBySearchWord(searchWord, products) {
         const words = normalize(searchWord);
-        const matches = products.filter((p) =>
-            p.product_variant_ids.some((variant) => normalize(variant.searchString).includes(words))
+        const matches = products.filter(
+            (p) =>
+                normalize(p.searchString).includes(words) ||
+                p.product_variant_ids.some((variant) =>
+                    normalize(variant.searchString).includes(words)
+                )
         );
 
         return this.sortByWordIndex(matches, words);

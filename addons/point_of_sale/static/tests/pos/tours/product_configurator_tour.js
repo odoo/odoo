@@ -6,6 +6,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     steps: () =>
@@ -107,6 +108,10 @@ registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("Non Existing Product"),
+            ProductScreen.productIsDisplayed("Dynamic Product").map(negateStep),
+            ProductScreen.searchProduct("Dynamic Product"),
+            ProductScreen.productIsDisplayed("Dynamic Product"),
             ProductScreen.clickDisplayedProduct("Dynamic Product"),
             ProductConfigurator.pickRadio("Test 1"),
             Dialog.confirm(),
