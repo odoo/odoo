@@ -15,14 +15,15 @@ class TestStockValuationCommon(BaseCommon):
         return company
 
     # HELPER
-    def _create_invoice(self, move_type, product, quantity=1.0, price_unit=1.0):
-        invoice = self.env["account.move"].create(
-            {
-                "partner_id": self.vendor.id,
-                "move_type": move_type,
-                "invoice_line_ids": [],
-            }
-        )
+    def _create_account_move(self, move_type, product, quantity=1.0, price_unit=1.0, post=True, **kwargs):
+        invoice_vals = {
+            "partner_id": self.vendor.id,
+            "move_type": move_type,
+            "invoice_line_ids": [],
+        }
+        if kwargs.get('reversed_entry_id'):
+            invoice_vals["reversed_entry_id"] = kwargs['reversed_entry_id']
+        invoice = self.env["account.move"].create(invoice_vals)
         self.env["account.move.line"].create({
             "move_id": invoice.id,
              "display_type": "product",
@@ -33,8 +34,19 @@ class TestStockValuationCommon(BaseCommon):
              "product_uom_id": product.uom_id.id,
              "tax_ids": [(5, 0, 0)],
         })
-        invoice.action_post()
+        if post:
+            invoice.action_post()
         return invoice
+
+    def _create_invoice(self, product, quantity=1.0, price_unit=None, post=True, **kwargs):
+        return self._create_account_move("out_invoice", product, quantity, price_unit, post, **kwargs)
+
+    def _create_bill(self, product, quantity=1.0, price_unit=None, post=True, **kwargs):
+        return self._create_account_move("in_invoice", product, quantity, price_unit, post, **kwargs)
+
+    def _create_credit_note(self, product, quantity=1.0, price_unit=1.0, post=True, **kwargs):
+        move_type = kwargs.pop("move_type", "out_refund")
+        return self._create_account_move(move_type, product, quantity, price_unit, post, **kwargs)
 
     def _close(self, auto_post=True, at_date=None):
         action = self.company.action_close_stock_valuation(at_date=at_date, auto_post=auto_post)
@@ -48,7 +60,7 @@ class TestStockValuationCommon(BaseCommon):
         })
         inventory_locations = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.company.id)])
         inventory_locations.valuation_account_id = self.account_inventory.id
-        return  self.account_inventory
+        return self.account_inventory
 
     # Moves
     def _make_in_move(self,
@@ -248,7 +260,6 @@ class TestStockValuationCommon(BaseCommon):
             ('account_id', '=', self.account_expense.id),
         ], order='date, id')
 
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -257,7 +268,7 @@ class TestStockValuationCommon(BaseCommon):
             "generic_coa", cls.company, install_demo=False
         )
         cls.env.user.company_id = cls.company
-        cls.inventory_user = cls._create_new_internal_user(name='Pauline Poivraisselle', login= 'pauline', groups='stock.group_stock_user')
+        cls.inventory_user = cls._create_new_internal_user(name='Pauline Poivraisselle', login='pauline', groups='stock.group_stock_user')
         cls.owner = cls._create_partner(name='Consignment Owner')
         cls.warehouse = cls.env['stock.warehouse'].create({
             'name': 'Test Warehouse',
@@ -271,6 +282,8 @@ class TestStockValuationCommon(BaseCommon):
         cls.account_expense = cls.company.expense_account_id
         cls.account_stock_valuation = cls.company.account_stock_valuation_id
         cls.account_stock_variation = cls.account_stock_valuation.account_stock_variation_id
+        cls.account_payable = cls.company.partner_id.property_account_payable_id
+        cls.account_receivable = cls.company.partner_id.property_account_receivable_id
 
         cls.picking_type_in = cls.warehouse.in_type_id
         cls.picking_type_out = cls.warehouse.out_type_id
@@ -353,4 +366,3 @@ class TestStockValuationCommon(BaseCommon):
             'name': 'Avco Product Auto',
             'categ_id': cls.category_avco_auto.id,
         }).with_context(clean_context(cls.env.context))
-

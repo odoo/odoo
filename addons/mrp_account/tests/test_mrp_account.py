@@ -4,8 +4,8 @@
 from datetime import timedelta
 from unittest import skip
 
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo import fields, Command
@@ -381,7 +381,7 @@ class TestMrpAccount(TestMrpCommon):
 
 @tagged("post_install", "-at_install")
 @skip('Temporary to fast merge new valuation')
-class TestMrpAccountMove(TestAccountMoveStockCommon):
+class TestMrpAccountMove(TestStockValuationCommon):
 
     @classmethod
     def setUpClass(cls):
