@@ -95,6 +95,9 @@ export class AddGridElementAction extends BuilderAction {
                     noDocuments: true,
                     save: (selectedImageEl) => {
                         imageEl = selectedImageEl;
+                        if (imageEl.complete) {
+                            return;
+                        }
                         imageLoadedPromise = new Promise((resolve) => {
                             imageEl.addEventListener("load", () => resolve(), { once: true });
                         });
