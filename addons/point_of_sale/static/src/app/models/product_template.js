@@ -127,5 +127,13 @@ export class ProductTemplate extends ProductTemplateAccounting {
     get canBeDisplayed() {
         return this.active && this.available_in_pos;
     }
+
+    get searchString() {
+        const fields = ["name", "default_code", "barcode"];
+        return fields
+            .map((field) => this[field] || "")
+            .filter(Boolean)
+            .join(" ");
+    }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
