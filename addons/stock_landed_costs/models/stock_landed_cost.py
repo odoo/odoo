@@ -123,7 +123,8 @@ class StockLandedCost(models.Model):
             cost_to_add_byproduct = defaultdict(lambda: 0.0)
             cost_to_add_bylot = defaultdict(lambda: defaultdict(float))
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                remaining_qty = sum(line.move_id._get_stock_valuation_layer_ids().mapped('remaining_qty'))
+                line_svls = line.move_id._get_stock_valuation_layer_ids()
+                remaining_qty = sum(line_svls.mapped('remaining_qty'))
                 linked_layer = line.move_id._get_stock_valuation_layer_ids()
 
                 # Prorate the value at what's still in stock
@@ -134,10 +135,12 @@ class StockLandedCost(models.Model):
                     vals_list = []
                     if line.move_id.product_id.lot_valuated:
                         for lot_id, sml in line.move_id.move_line_ids.grouped('lot_id').items():
-                            if not lot_id.quantity_svl:
+                            lot_remaining_qty = sum(line_svls.filtered(lambda l: l.lot_id == lot_id).mapped('remaining_qty'))
+                            if float_is_zero(lot_remaining_qty, precision_rounding=lot_id.product_id.uom_id.rounding):
                                 continue
+
                             lot_layer = linked_layer.filtered(lambda l: l.lot_id == lot_id)[:1]
-                            value = cost_to_add * lot_id.quantity_svl / remaining_qty
+                            value = cost_to_add * lot_remaining_qty / remaining_qty
                             if product.cost_method in ['average', 'fifo']:
                                 cost_to_add_bylot[product][lot_id] += value
                             vals_list.append({

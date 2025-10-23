@@ -40,7 +40,6 @@ export class HootButtons extends Component {
         <t t-set="isRunning" t-value="runnerState.status === 'running'" />
         <t t-set="showAll" t-value="env.runner.hasRemovableFilter" />
         <t t-set="showFailed" t-value="runnerState.failedIds.size" />
-        <t t-set="failedSuites" t-value="getFailedSuiteIds()" />
         <div
             class="${HootButtons.name} relative"
             t-on-pointerenter="onPointerEnter"
@@ -69,29 +68,35 @@ export class HootButtons extends Component {
             </div>
             <t t-if="state.open">
                 <div
-                    class="animate-slide-down w-fit absolute flex flex-col end-0 shadow rounded overflow-hidden shadow z-2"
+                    class="
+                        w-fit absolute animate-slide-down
+                        flex flex-col end-0
+                        bg-base text-base shadow rounded z-2"
                 >
                     <t t-if="showAll">
-                        <HootLink class="'bg-btn p-2 whitespace-nowrap transition-colors'">
-                            Run <strong>all</strong> tests
+                        <HootLink
+                            class="'p-3 whitespace-nowrap transition-colors hover:bg-gray-300 dark:hover:bg-gray-700'"
+                            title="'Run all tests'"
+                        >
+                            Run <strong class="text-primary">all</strong> tests
                         </HootLink>
                     </t>
                     <t t-if="showFailed">
                         <HootLink
-                            ids="{ id: runnerState.failedIds }"
-                            class="'bg-btn p-2 whitespace-nowrap transition-colors'"
+                            class="'p-3 whitespace-nowrap transition-colors hover:bg-gray-300 dark:hover:bg-gray-700'"
                             title="'Run failed tests'"
+                            ids="{ id: runnerState.failedIds }"
                             onClick="onRunFailedClick"
                         >
-                            Run failed <strong>tests</strong>
+                            Run <strong class="text-rose">failed</strong> tests
                         </HootLink>
                         <HootLink
-                            ids="{ id: failedSuites }"
-                            class="'bg-btn p-2 whitespace-nowrap transition-colors'"
+                            class="'p-3 whitespace-nowrap transition-colors hover:bg-gray-300 dark:hover:bg-gray-700'"
                             title="'Run failed suites'"
+                            ids="{ id: getFailedSuiteIds() }"
                             onClick="onRunFailedClick"
                         >
-                            Run failed <strong>suites</strong>
+                            Run <strong class="text-rose">failed</strong> suites
                         </HootLink>
                     </t>
                 </div>

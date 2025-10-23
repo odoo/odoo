@@ -267,8 +267,12 @@ class IrHttp(models.AbstractModel):
 
         IrHttpModel = request.env['ir.http'].sudo()
         modules = IrHttpModel.get_translation_frontend_modules()
-        user_context = request.session.context if request.session.uid else {}
-        lang = user_context.get('lang')
+        if request.is_frontend:
+            lang = request.lang.code
+            session_info['bundle_params']['lang'] = lang
+        else:
+            user_context = request.session.context if request.session.uid else {}
+            lang = user_context.get('lang')
         translation_hash = request.env['ir.http'].get_web_translations_hash(modules, lang)
 
         session_info.update({

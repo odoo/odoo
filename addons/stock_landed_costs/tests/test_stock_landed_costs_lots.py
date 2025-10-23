@@ -175,3 +175,53 @@ class TestStockLandedCostsLots(TestLotValuation):
             {'lot_id': lot3.id, 'value': 1000},
             {'lot_id': lot4.id, 'value': 1000},
         ])
+
+    def test_landed_cost_with_split_lot(self):
+        """
+        check that the landed costs split correctly between lot/ serial numbers
+        when a same lot is in multiple stock moves
+        """
+        product1 = self.env['product.product'].create({
+            'name': 'product',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lot_valuated': True,
+        })
+        product1.categ_id.property_cost_method = 'average'
+
+        pickings = self.env['stock.picking'].create([{
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'move_ids': [Command.create({
+                'name': name,
+                'product_id': product1.id,
+                'product_uom_qty': 2,
+                'product_uom': self.ref('uom.product_uom_unit'),
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+                'price_unit': 0,
+            })],
+        } for name in ('Picking 1', 'Picking 2', 'Picking Extra')])
+        pickings.action_confirm()
+
+        lot = self.env['stock.lot'].create({
+            'name': 'Lot 1',
+            'product_id': product1.id,
+        })
+        pickings.move_ids.move_line_ids.lot_id = lot
+        pickings.move_ids.picked = True
+        pickings.button_validate()
+
+        self._make_out_move(product1, 1, lot_ids=[lot])
+
+        lc_form = Form(self.env['stock.landed.cost'])
+        lc_form.picking_ids = pickings[:-1]
+        with lc_form.cost_lines.new() as cost_line:
+            cost_line.product_id = self.productlc1
+            cost_line.price_unit = 100
+        lc = lc_form.save()
+        lc.button_validate()
+
+        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted(lambda l: l.stock_move_id.id), [
+            {'lot_id': lot.id, 'value': 25},
+            {'lot_id': lot.id, 'value': 50},
+        ])

@@ -286,6 +286,15 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             vals['withholding_tax_total_vals_list'] = self._get_tr_tax_totals(line.move_id, taxes_vals, withholding=True)
         return vals
 
+    def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
+        # EXTENDS account.edi.xml.ubl_20
+        vals = super()._get_invoice_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount)
+        # UBL TR: If the Invoice Type is IHRACKAYITLI (Registered for Export), then the cbc:PayableAmount node
+        # should have tax exclusive amount instead of tax inclusive amount.
+        if invoice.l10n_tr_gib_invoice_type == 'IHRACKAYITLI':
+            vals["payable_amount"] = vals["tax_exclusive_amount"]
+        return vals
+
     @api.model
     def _get_invoice_line_delivery_vals(self, line):
         """Build delivery values for each invoice line.

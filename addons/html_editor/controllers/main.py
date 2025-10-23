@@ -7,6 +7,7 @@ import werkzeug.exceptions
 import werkzeug.urls
 import requests
 from os.path import join as opj
+from urllib.parse import urlparse
 
 from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
@@ -32,10 +33,10 @@ DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 # regex patterns in Python are slightly different from those in JavaScript.
 
 CSS_ANIMATION_RULE_REGEX = (
-        r"(?P<declaration>animation(-duration)?: .*?)"
-        + r"(?P<value>(\d+(\.\d+)?)|(\.\d+))"
-        + r"(?P<unit>ms|s)"
-        + r"(?P<separator>\s|;|\"|$)"
+        r"(?P<declaration>animation(-duration)?:\s*.*?)"
+        r"(?P<value>(\d+(\.\d+)?)|(\.\d+))"
+        r"(?P<unit>ms|s)"
+        r"(?P<separator>\s|;|\"|$)"
 )
 SVG_DUR_TIMECOUNT_VAL_REGEX = (
         r"(?P<attribute_name>\sdur=\"\s*)"
@@ -203,7 +204,7 @@ class HTML_Editor(http.Controller):
             )
         else:
             regex = r"<svg .*>"
-            declaration = f"--animation-ratio: {ratio}"
+            declaration = f"--animation_ratio: {ratio}"
             subst = ("\\g<0>\n\t<style>\n\t\t:root { \n\t\t\t" +
                      declaration +
                      ";\n\t\t}\n\t</style>")
@@ -589,7 +590,24 @@ class HTML_Editor(http.Controller):
         try:
             Actions = request.env['ir.actions.actions']
             context = dict(request.env.context)
-            words = preview_url.strip('/').split('/')
+            parsed_preview_url = urlparse(preview_url)
+            words = parsed_preview_url.path.strip('/').split('/')
+            last_segment = words[-1]
+
+            if not (
+                last_segment.isnumeric()
+                and (
+                    parsed_preview_url.path.startswith("/odoo")
+                    or parsed_preview_url.path.startswith("/web")
+                    or parsed_preview_url.path.startswith("/@/")
+                )
+            ):
+                # this could be a frontend or an external page
+                link_preview_data = self.link_preview_metadata(preview_url)
+                result = {}
+                if link_preview_data and link_preview_data.get('og_description'):
+                    result['description'] = link_preview_data['og_description']
+                return result
 
             record_id = int(words.pop())
             action_name = words.pop()

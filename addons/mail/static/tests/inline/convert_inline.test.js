@@ -861,13 +861,21 @@ describe("Convert classes to inline styles", () => {
             <div class="container"><div class="row"><div class="col">Hello</div></div></div>`;
         getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
 
+        const borderColor = `rgb(255, 0, 0)`;
+        styleSheet.insertRule(
+            `div {
+                border-color: ${borderColor} !important;
+            }`,
+            0
+        );
+
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         // Some positional properties (eg., padding-right, margin-left) are not
         // concatenated (eg., as padding, margin) because they were defined with
         // variables (var) or calculated (calc).
-        const containerStyle = `border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; border-width: 0px; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
-        const rowStyle = `border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-width: 0px; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
-        const colStyle = `border-radius: 0px; border-style: none; box-sizing: border-box; border-width: 0px; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
+        const containerStyle = `border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; border-width: 0px; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%; border-color: ${borderColor};`;
+        const rowStyle = `border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-width: 0px; margin-left: -16px; margin-right: -16px; margin-top: 0px; border-color: ${borderColor};`;
+        const colStyle = `border-radius: 0px; border-style: none; box-sizing: border-box; border-width: 0px; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%; border-color: ${borderColor};`;
         expect(editable).toHaveInnerHTML(
             `<div class="container" style="${containerStyle}" width="100%">` +
                 `<div class="row" style="${rowStyle}">` +
@@ -877,6 +885,7 @@ describe("Convert classes to inline styles", () => {
                     "should have converted the classes of a simple Bootstrap grid to inline styles",
             }
         );
+        styleSheet.deleteRule(0);
     });
 
     test("simplify border/margin/padding styles", async () => {
@@ -1333,13 +1342,16 @@ describe("Convert classes to inline styles", () => {
         const styleSheet = [...iframe.contentDocument.styleSheets].find(
             (sheet) => sheet.title === "test-stylesheet"
         );
-
+        const borderColor = `rgb(255, 0, 0)`;
         styleSheet.insertRule(
             `
             body {
                 background-color: red;
                 color: white;
                 font-size: 50px;
+                div {
+                    border-color: ${borderColor} !important;
+                }
             }
         `,
             0
@@ -1347,9 +1359,10 @@ describe("Convert classes to inline styles", () => {
         iframeEditable.innerHTML = `<div class="o_layout" style="padding: 50px;"></div>`;
         classToStyle(iframeEditable, getCSSRules(iframeEditable.ownerDocument));
         expect(iframeEditable).toHaveInnerHTML(
-            `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
+            `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-color:${borderColor};border-bottom-color:${borderColor};border-right-color:${borderColor};border-top-color:${borderColor};border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
             { message: "should have given all styles of body to .o_layout" }
         );
+        styleSheet.deleteRule(0);
     });
 
     test("convert classes to styles, preserving specificity", async () => {

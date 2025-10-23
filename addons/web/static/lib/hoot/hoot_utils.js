@@ -2038,6 +2038,7 @@ export const INCLUDE_LEVEL = {
 };
 
 export const MIME_TYPE = {
+    formData: "multipart/form-data",
     blob: "application/octet-stream",
     json: "application/json",
     text: "text/plain",

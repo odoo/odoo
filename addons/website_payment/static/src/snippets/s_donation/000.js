@@ -11,8 +11,24 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
     disabledInEditableMode: false,
     events: {
         'click .s_donation_btn': '_onClickPrefilledButton',
+        // Patched in the init
         'click .s_donation_donate_btn': '_onClickDonateNowButton',
         'input #s_donation_range_slider': '_onInputRangeSlider',
+    },
+
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        // TODO done like this to be extra careful in stable.
+        for (const [key, value] of Object.entries(this.events)) {
+            if (value === '_onClickDonateNowButton') {
+                this.events[key] = 'async _onClickDonateNowButtonProtected';
+                break;
+            }
+        }
+        this._currencyLoaded = new Promise(resolve => this.__confirmCurrencyLoaded = resolve);
     },
 
     /**
@@ -27,6 +43,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
             this._setBubble(this.$rangeSlider);
         }
         await this._displayCurrencies();
+        this.__confirmCurrencyLoaded();
         const customButtonEl = this.el.querySelector("#s_donation_amount_input");
         if (customButtonEl) {
             const canvasEl = document.createElement("canvas");
@@ -130,6 +147,13 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
             this.$rangeSlider.val($button[0].dataset.donationValue);
             this._setBubble(this.$rangeSlider);
         }
+    },
+    /**
+     * @todo in master, just merge with _onClickDonateNowButton
+     */
+    async _onClickDonateNowButtonProtected(ev) {
+        await this._currencyLoaded;
+        return this._onClickDonateNowButton(ev);
     },
     /**
      * @private

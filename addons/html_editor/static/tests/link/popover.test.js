@@ -682,7 +682,7 @@ describe("link preview", () => {
             description: markup("Test description"),
             link_preview_name: "Task name | Project name",
         }));
-        onRpc("/odoo/project/1/tasks/8", () => "", { pure: true });
+        onRpc("/odoo/project/1/tasks/8", () => "");
         const { editor, el } = await setupEditor(`<p>[]</p>`);
         await insertText(editor, "/link");
         await animationFrame();
@@ -732,7 +732,7 @@ describe("link preview", () => {
                 link_preview_name: "Task name | Project name",
             };
         });
-        onRpc("/odoo/cachetest/8", () => "", { pure: true });
+        onRpc("/odoo/cachetest/8", () => "");
         const { editor } = await setupEditor(`<p>abc[]</p>`);
         await insertText(editor, "/link");
         await animationFrame();
@@ -773,15 +773,11 @@ describe("link preview", () => {
         });
 
         const currentProtocol = window.location.protocol;
-        onRpc(
-            "/odoo/cachetest/8",
-            (request) => {
-                const urlProtocol = new URL(request.url).protocol;
-                expect(urlProtocol).toBe(currentProtocol);
-                return "";
-            },
-            { pure: true }
-        );
+        onRpc("/odoo/cachetest/8", (request) => {
+            const urlProtocol = new URL(request.url).protocol;
+            expect(urlProtocol).toBe(currentProtocol);
+            return "";
+        });
 
         const { editor } = await setupEditor(`<p>abc[]</p>`);
         await insertText(editor, "/link");

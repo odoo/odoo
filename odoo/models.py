@@ -6648,7 +6648,7 @@ class BaseModel(metaclass=MetaModel):
                             yield '$'
                         # no need to match r'.*' in else because we only use .match()
 
-                    like_regex = re.compile("".join(build_like_regex(unaccent(value), comparator.startswith("="))))
+                    like_regex = re.compile("".join(build_like_regex(unaccent(value), comparator.startswith("="))), flags=re.DOTALL)
                 if comparator in ('=', '!=') and field.type in ('char', 'text', 'html') and not value:
                     # use the comparator 'in' for falsy comparison of strings
                     comparator = 'in' if comparator == '=' else 'not in'
