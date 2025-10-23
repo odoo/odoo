@@ -51,10 +51,18 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         )
 
         # Check that the chat request has been canceled.
-        chat_request.invalidate_recordset()
         self.assertTrue(chat_request.livechat_end_dt, "The livechat request must be inactive as the visitor started himself a livechat session.")
         self.assertEqual(len(channel), 1)
         self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Operator for active livechat session must be Michel Operator")
+
+        self._clean_livechat_sessions()
+        self.visitor.with_user(self.operator_b).sudo().action_send_chat_request()
+        chat_request = self.env["discuss.channel"].search(
+            [("livechat_visitor_id", "=", self.visitor.id), ("livechat_end_dt", "=", False)]
+        )
+        chat_request.is_pending_chat_request = False  # Customer already accessed the chat.
+        self.url_open(url=self.open_chat_url, json=self.open_chat_params)
+        self.assertFalse(chat_request.livechat_end_dt)
 
     def _common_chat_request_flow(self):
         self.visitor.with_user(self.operator).sudo().action_send_chat_request()
