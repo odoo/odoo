@@ -87,7 +87,7 @@ class StockMove(models.Model):
         for move in self:
             move.remaining_qty = remaining_by_product.get(move.product_id, {}).get(move, 0)
 
-    @api.depends('value')
+    @api.depends('value', 'remaining_qty')
     def _compute_remaining_value(self):
         for move in self:
             if not move.is_in:
