@@ -841,6 +841,7 @@ export class Runner {
     }
 
     manualStart() {
+        this._canStartDef ||= Promise.withResolvers();
         this._canStartDef.resolve(true);
     }
 
@@ -1880,7 +1881,7 @@ export class Runner {
     async _setupStart() {
         this._startTime = $now();
         if (this.config.manual) {
-            this._canStartDef = Promise.withResolvers();
+            this._canStartDef ||= Promise.withResolvers();
         }
 
         // Config log
