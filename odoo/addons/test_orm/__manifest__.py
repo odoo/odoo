@@ -11,6 +11,7 @@
         'data/test_orm_data.xml',
         'data/test_translated_field/test_model_data.xml',
         # START
+        'security/test_access_feedback/ir.model.access.csv',
         'security/test_access_rights/ir.model.access.csv',
         'security/test_action_bindings/ir.model.access.csv',
         'security/test_config/ir.model.access.csv',
