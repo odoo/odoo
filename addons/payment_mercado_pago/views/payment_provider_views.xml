@@ -63,6 +63,13 @@
                     />
                 </div>
             </group>
+            <field name="available_currency_ids" position="attributes">
+                <attribute
+                    name="readonly"
+                    separator="or"
+                    add="(code == 'mercado_pago' and mercado_pago_public_key)"
+                />
+            </field>
         </field>
     </record>
 
