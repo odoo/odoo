@@ -8,5 +8,5 @@ declaration.
 
 Signed,
 
-Sanskar Sijariya sanskarsijariya80@gmail.com https://github.com/DevSijariya
+Dev Sijariya sanskarsijariya80@gmail.com https://github.com/DevSijariya
 
