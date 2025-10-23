@@ -83,7 +83,6 @@ export class ToggleBlockPlugin extends Plugin {
             },
         ],
 
-        mount_component_handlers: this.setupNewToggle.bind(this),
         normalize_handlers: withSequence(Infinity, this.normalize.bind(this)),
 
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -585,15 +584,5 @@ export class ToggleBlockPlugin extends Plugin {
             selection.isCollapsed &&
             !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`)
         );
-    }
-
-    setupNewToggle({ name, env }) {
-        if (name === "toggleBlock") {
-            Object.assign(env, {
-                editorShared: {
-                    preserveSelection: this.dependencies.selection.preserveSelection,
-                },
-            });
-        }
     }
 }

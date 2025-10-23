@@ -100,9 +100,9 @@ export function useEditableDescendants(host) {
             _restoreSelection = undefined;
         }
     };
-    if (component.env.editorShared?.preserveSelection) {
+    if (component.env.editorShared?.selection) {
         onRendered(() => {
-            _restoreSelection = component.env.editorShared.preserveSelection().restore;
+            _restoreSelection = component.env.editorShared.selection.preserveSelection().restore;
         });
     }
     onMounted(() => {
