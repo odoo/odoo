@@ -1225,6 +1225,35 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(values.get('name'), 'new_selection')
         self.assertEqual(values.get('selection'), [], 'Selection key should be at least an empty array (never False)')
 
+        self.discussion_1.attributes_definition = [
+            {
+                'name': 'option',
+                'type': 'selection',
+                'selection': [['a', 'Label'], ['b', 'Label'], ['c', 'Label']],
+            },
+        ]
+
+        (self.message_1 | self.message_2 | self.message_3).discussion = self.discussion_1
+        (self.message_1 | self.message_2).attributes = [{
+            'value': 'a',
+            'name': 'option',
+        }]
+        self.message_3.attributes = [{
+            'value': 'b',
+            'name': 'option',
+        }]
+        self.assertEqual(
+            (self.message_1 | self.message_2 | self.message_3)
+            .filtered_domain([('attributes.option', '=', 'b')]),
+             self.message_3)
+        self.assertEqual(
+            (self.message_1 | self.message_2 | self.message_3)
+            .filtered_domain([('attributes.option', '=', 'a')]),
+             self.message_1 | self.message_2)
+        self.assertFalse(
+            (self.message_1 | self.message_2 | self.message_3)
+            .filtered_domain([('attributes.option', '=', 'Label')]))
+
     def test_properties_field_separator(self):
         """Test the separator properties."""
         self.message_1.attributes = [
