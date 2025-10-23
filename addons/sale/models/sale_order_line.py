@@ -1533,7 +1533,7 @@ class SaleOrderLine(models.Model):
         if len(self) == 1:
             res = {
                 'quantity': self.product_uom_qty,
-                'price': self.price_unit,
+                'price': self._get_discounted_price(),
                 'readOnly': (
                     self.order_id._is_readonly()
                     or self.product_id.sale_line_warn == 'block'
@@ -1598,6 +1598,10 @@ class SaleOrderLine(models.Model):
                 round=False,
             )
         return amount
+
+    def _get_discounted_price(self):
+        self.ensure_one()
+        return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
 
     def has_valued_move_ids(self):
         return self.move_ids
