@@ -1,7 +1,7 @@
 import { describe, expect } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
-import { asyncStep, onRpc, mountWebClient, waitForSteps } from "@web/../tests/web_test_helpers";
+import { onRpc, mountWebClient } from "@web/../tests/web_test_helpers";
 import { defineMailModels, mockGetMedia, onlineTest } from "@mail/../tests/mail_test_helpers";
 import { PeerToPeer, STREAM_TYPE, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
@@ -50,14 +50,14 @@ onlineTest("basic peer to peer connection", async () => {
     const user2 = network.register(2);
     user2.p2p.addEventListener("update", ({ detail: { name, payload } }) => {
         if (name === UPDATE_EVENT.CONNECTION_CHANGE && payload.state === "connected") {
-            asyncStep(payload.state);
+            expect.step(payload.state);
         }
     });
 
     user2.p2p.connect(user2.id, channelId);
     user1.p2p.connect(user1.id, channelId);
     await user1.p2p.addPeer(user2.id);
-    await waitForSteps(["connected"]);
+    await expect.waitForSteps(["connected"]);
     network.close();
 });
 
@@ -98,7 +98,7 @@ onlineTest("connection recovery", async () => {
     user2.remoteStates = new Map();
     user2.p2p.addEventListener("update", ({ detail: { name, payload } }) => {
         if (name === UPDATE_EVENT.CONNECTION_CHANGE && payload.state === "connected") {
-            asyncStep(payload.state);
+            expect.step(payload.state);
         }
     });
 
@@ -112,7 +112,7 @@ onlineTest("connection recovery", async () => {
     });
     advanceTime(5_000); // recovery timeout
     await openPromise;
-    await waitForSteps(["connected"]);
+    await expect.waitForSteps(["connected"]);
     network.close();
 });
 
@@ -201,11 +201,11 @@ onlineTest("can reject arbitrary offers", async () => {
     user1.p2p.connect(user1.id, channelId);
     user2.p2p._emitLog = (id, message) => {
         if (message === "offer rejected") {
-            asyncStep("offer rejected");
+            expect.step("offer rejected");
         }
     };
     user2.p2p.acceptOffer = (id, sequence) => id !== user1.id || sequence > 20;
     user1.p2p.addPeer(user2.id, { sequence: 19 });
-    await waitForSteps(["offer rejected"]);
+    await expect.waitForSteps(["offer rejected"]);
     network.close();
 });

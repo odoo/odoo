@@ -25,14 +25,12 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, leave, pointerDown, press, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
-    asyncStep,
     contains as webContains,
     Command,
     mockService,
     onRpc,
     patchWithCleanup,
     serverState,
-    waitForSteps,
     withUser,
     getService,
 } from "@web/../tests/web_test_helpers";
@@ -440,12 +438,12 @@ test("Do not call server on save if no changes", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/message/update_content", () => asyncStep("update_content"));
+    onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
     await click(".o-mail-Message button", { text: "save" });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
 });
 
 test("Update the link previews when a message is edited", async () => {
@@ -461,7 +459,7 @@ test("Update the link previews when a message is edited", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/link_preview$", (args) => asyncStep("link_preview"));
+    onRpcBefore("/mail/link_preview$", (args) => expect.step("link_preview"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
@@ -470,7 +468,7 @@ test("Update the link previews when a message is edited", async () => {
     });
     await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-body", { text: "http://odoo.com" });
-    await waitForSteps(["link_preview"]);
+    await expect.waitForSteps(["link_preview"]);
 });
 
 test("Scroll bar to the top when edit starts", async () => {
@@ -1072,7 +1070,7 @@ test("toggle_star message", async () => {
         res_id: channelId,
     });
     onRpc("mail.message", "toggle_message_starred", ({ args }) => {
-        asyncStep("rpc:toggle_message_starred");
+        expect.step("rpc:toggle_message_starred");
         expect(args[0][0]).toBe(messageId);
     });
     await start();
@@ -1083,12 +1081,12 @@ test("toggle_star message", async () => {
     await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
     await click(".o-mail-Message [title='Add Star']");
     await contains("button", { text: "Starred messages", contains: [".badge", { text: "1" }] });
-    await waitForSteps(["rpc:toggle_message_starred"]);
+    await expect.waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Remove Star']" + " i.fa-star");
     await click(".o-mail-Message [title='Remove Star']");
     await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
-    await waitForSteps(["rpc:toggle_message_starred"]);
+    await expect.waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Add Star']" + " i.fa-star-o");
 });
@@ -1609,13 +1607,13 @@ test("data-oe-id & data-oe-model link redirection on click", async () => {
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.res_model).toBe("some.model");
             expect(action.res_id).toBe(250);
-            asyncStep("do-action:openFormView_some.model_250");
+            expect.step("do-action:openFormView_some.model_250");
         },
     });
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-body a");
-    await waitForSteps(["do-action:openFormView_some.model_250"]);
+    await expect.waitForSteps(["do-action:openFormView_some.model_250"]);
 });
 
 test("Partner's avatar card should be opened after clicking on their mention", async () => {
@@ -2062,7 +2060,7 @@ test("chatter - font size unchanged when there is only emoji", async () => {
 test("Copy Message Link", async () => {
     patchWithCleanup(browser.navigator.clipboard, {
         writeText(text) {
-            asyncStep(text);
+            expect.step(text);
             super.writeText(text);
         },
     });
@@ -2087,7 +2085,7 @@ test("Copy Message Link", async () => {
     await contains(".o-dropdown-item:contains('Copy Link'_", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await click(".o-dropdown-item:contains('Copy Link')");
-    await waitForSteps([url(`/mail/message/${messageId_2}`)]);
+    await expect.waitForSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await press("Enter");
     await contains(`.o-mail-Message a[href='${url(`/mail/message/${messageId_2}`)}']`, {

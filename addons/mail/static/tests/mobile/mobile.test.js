@@ -13,11 +13,11 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
-import { asyncStep, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineMailModels();
@@ -41,7 +41,7 @@ test("show loading on initial opening", async () => {
     const def = new Deferred();
     listenStoreFetch("channels_as_member", {
         async onRpc() {
-            asyncStep("before channels_as_member");
+            expect.step("before channels_as_member");
             await def;
         },
     });
@@ -52,7 +52,7 @@ test("show loading on initial opening", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin");
     await contains(".o-mail-NotificationItem", { text: "General", count: 0 });
-    await waitForSteps(["before channels_as_member"]);
+    await expect.waitForSteps(["before channels_as_member"]);
     def.resolve();
     await waitStoreFetch("channels_as_member");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });

@@ -4,12 +4,7 @@ import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 
 import { expect, test } from "@odoo/hoot";
 
-import {
-    asyncStep,
-    getService,
-    patchWithCleanup,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -26,24 +21,24 @@ test("store.insert deletes record without creating it", async () => {
     patchWithCleanup(Message, {
         new() {
             const message = super.new(...arguments);
-            asyncStep(`new-${message.id}`);
+            expect.step(`new-${message.id}`);
             return message;
         },
     });
     await start();
     const store = getService("mail.store");
     store.insert({ "mail.message": [{ id: 1, _DELETE: true }] });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     expect(store["mail.message"].get({ id: 1 })?.id).toBe(undefined);
     store.insert({ "mail.message": [{ id: 2 }] });
-    await waitForSteps(["new-2"]);
+    await expect.waitForSteps(["new-2"]);
 });
 
 test("store.insert deletes record after relation created it", async () => {
     patchWithCleanup(Message, {
         new() {
             const message = super.new(...arguments);
-            asyncStep(`new-${message.id}`);
+            expect.step(`new-${message.id}`);
             return message;
         },
     });
@@ -55,7 +50,7 @@ test("store.insert deletes record after relation created it", async () => {
         "mail.link.preview": [{ id: 1 }],
         "mail.message.link.preview": [{ id: 1, link_preview_id: 1, message_id: 1 }],
     });
-    await waitForSteps(["new-1"]);
+    await expect.waitForSteps(["new-1"]);
     expect(store["mail.message"].get({ id: 1 })?.id).toBe(undefined);
 });
 

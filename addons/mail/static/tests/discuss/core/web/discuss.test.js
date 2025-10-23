@@ -14,15 +14,8 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import {
-    asyncStep,
-    Command,
-    getService,
-    onRpc,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 import { pick } from "@web/core/utils/objects";
 
@@ -36,7 +29,7 @@ test("can create a new channel", async () => {
             (route.startsWith("/mail") || route.startsWith("/discuss")) &&
             !STORE_FETCH_ROUTES.includes(route)
         ) {
-            asyncStep(`${route} - ${JSON.stringify(args)}`);
+            expect.step(`${route} - ${JSON.stringify(args)}`);
         }
     });
     listenStoreFetch(undefined, { logParams: ["/discuss/create_channel"] });
@@ -52,7 +45,10 @@ test("can create a new channel", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
     await click("input[placeholder='Search conversations']");
     await insertText("input[placeholder='Search a conversation']", "abc");
-    await waitForSteps([`/discuss/search - {"term":""}`, `/discuss/search - {"term":"abc"}`]);
+    await expect.waitForSteps([
+        `/discuss/search - {"term":""}`,
+        `/discuss/search - {"term":"abc"}`,
+    ]);
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-DiscussSidebar-item", { text: "abc" });
     await contains(".o-mail-Message", { count: 0 });
@@ -84,12 +80,12 @@ test("can make a DM chat", async () => {
             (route.startsWith("/mail") || route.startsWith("/discuss")) &&
             !STORE_FETCH_ROUTES.includes(route)
         ) {
-            asyncStep(`${route} - ${JSON.stringify(args)}`);
+            expect.step(`${route} - ${JSON.stringify(args)}`);
         }
     });
     onRpc((params) => {
         if (params.model === "discuss.channel" && ["search_read"].includes(params.method)) {
-            asyncStep(
+            expect.step(
                 `${params.route} - ${JSON.stringify(
                     pick(params, "args", "kwargs", "method", "model")
                 )}`

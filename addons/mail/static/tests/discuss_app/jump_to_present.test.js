@@ -1,11 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred, press, tick } from "@odoo/hoot-dom";
-import {
-    asyncStep,
-    patchWithCleanup,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import {
     SIZES,
@@ -272,12 +267,12 @@ test("when triggering jump to present, keeps showing old messages until recent o
     }
     let slowMessageFetchDeferred;
     onRpcBefore("/discuss/channel/messages", async () => {
-        asyncStep("/discuss/channel/messages");
+        expect.step("/discuss/channel/messages");
         await slowMessageFetchDeferred;
     });
     await start();
     await openDiscuss(channelId);
-    await waitForSteps(["/discuss/channel/messages"]);
+    await expect.waitForSteps(["/discuss/channel/messages"]);
     await click("[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await contains(".o-mail-Thread .o-mail-Message", { text: "first-message" });
@@ -285,7 +280,7 @@ test("when triggering jump to present, keeps showing old messages until recent o
     slowMessageFetchDeferred = new Deferred();
     await click("[title='Jump to Present']");
     await animationFrame();
-    await waitForSteps(["/discuss/channel/messages"]);
+    await expect.waitForSteps(["/discuss/channel/messages"]);
     await contains(".o-mail-Thread .o-mail-Message", { text: "first-message" });
     slowMessageFetchDeferred.resolve();
     await contains(".o-mail-Thread .o-mail-Message", { text: "first-message", count: 0 });

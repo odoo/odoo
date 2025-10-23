@@ -8,18 +8,12 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { inputFiles } from "@web/../tests/utils";
-import {
-    asyncStep,
-    getService,
-    mockService,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { getService, mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -99,7 +93,7 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
     await start();
     mockService("bus_service", {
         forceUpdateChannels() {
-            asyncStep("update-channels");
+            expect.step("update-channels");
         },
     });
     await openDiscuss();
@@ -108,7 +102,7 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
         partner_ids: [serverState.partnerId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
-    await waitForSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
+    await expect.waitForSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
 });
 
 test("Adding attachments", async () => {

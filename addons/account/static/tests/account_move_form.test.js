@@ -4,10 +4,10 @@ import {
     openFormView,
     start,
     startServer,
-    triggerHotkey
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { asyncStep, contains, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineAccountModels } from "./account_test_helpers";
 
 defineAccountModels();
@@ -17,7 +17,7 @@ test("When I switch tabs, it saves", async () => {
     const accountMove = pyEnv["account.move"].create({ name: "move0" });
     await start();
     onRpc("account.move", "web_save", () => {
-        asyncStep("tab saved");
+        expect.step("tab saved");
     });
     await openFormView("account.move", accountMove, {
         arch: `<form js_class='account_move_form'>
@@ -34,16 +34,14 @@ test("When I switch tabs, it saves", async () => {
     await insertText("[name='name'] input", "somebody save me!");
     triggerHotkey("Enter");
     await click('a[name="aml_tab"]');
-    await waitForSteps(["tab saved"]);
+    await expect.waitForSteps(["tab saved"]);
 });
 
 test("Confirmation dialog on delete contains a warning", async () => {
     const pyEnv = await startServer();
     const accountMove = pyEnv["account.move"].create({ name: "move0" });
     await start();
-    onRpc("account.move", "check_move_sequence_chain", () => {
-        return false;
-    });
+    onRpc("account.move", "check_move_sequence_chain", () => false);
     await openFormView("account.move", accountMove, {
         arch: `<form js_class='account_move_form'>
             <sheet>
@@ -58,7 +56,8 @@ test("Confirmation dialog on delete contains a warning", async () => {
     });
     await contains(".o_cp_action_menus button").click();
     await contains(".o_menu_item:contains(Delete)").click();
-    expect(".o_dialog div.text-danger").toHaveText("This operation will create a gap in the sequence.", {
-        message: "warning message has been added in the dialog"
-    });
+    expect(".o_dialog div.text-danger").toHaveText(
+        "This operation will create a gap in the sequence.",
+        { message: "warning message has been added in the dialog" }
+    );
 });

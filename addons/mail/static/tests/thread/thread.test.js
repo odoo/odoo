@@ -23,13 +23,11 @@ import { describe, expect, test } from "@odoo/hoot";
 import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
-    asyncStep,
     Command,
     getService,
     makeKwArgs,
     onRpc,
     serverState,
-    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 
@@ -293,11 +291,11 @@ test("mark channel as fetched when a new message is loaded", async () => {
     });
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
-        asyncStep("rpc:mark_as_read");
+        expect.step("rpc:mark_as_read");
     });
     onRpc("discuss.channel", "channel_fetched", ({ args }) => {
         expect(args[0][0]).toBe(channelId);
-        asyncStep("rpc:channel_fetch");
+        expect.step("rpc:channel_fetch");
     });
     setupChatHub({ opened: [channelId] });
     listenStoreFetch(["init_messaging", "discuss.channel"]);
@@ -313,11 +311,11 @@ test("mark channel as fetched when a new message is loaded", async () => {
         })
     );
     await contains(".o-mail-Message");
-    await waitForSteps(["rpc:channel_fetch"]);
+    await expect.waitForSteps(["rpc:channel_fetch"]);
     await contains(".o-mail-ChatWindow .badge:contains(1)");
     await contains(".o-mail-Message:contains('Hello!')");
     await focus(".o-mail-Composer-input");
-    await waitForSteps(["rpc:mark_as_read"]);
+    await expect.waitForSteps(["rpc:mark_as_read"]);
 });
 
 test.tags("focus required");
@@ -333,11 +331,11 @@ test("mark channel as fetched when a new message is loaded and thread is focused
         ],
     });
     let hasMarkAsRead = false;
-    onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/messages"));
+    onRpc("/discuss/channel/messages", () => expect.step("/discuss/channel/messages"));
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
         if (!hasMarkAsRead) {
-            asyncStep("rpc:mark_as_read");
+            expect.step("rpc:mark_as_read");
             hasMarkAsRead = true;
         }
     });
@@ -350,7 +348,7 @@ test("mark channel as fetched when a new message is loaded and thread is focused
     });
     await start();
     await openDiscuss(channelId);
-    await waitForSteps(["/discuss/channel/messages"]);
+    await expect.waitForSteps(["/discuss/channel/messages"]);
     await click(".o-mail-Composer");
     // simulate receiving a message
     await withUser(userId, () =>
@@ -361,7 +359,7 @@ test("mark channel as fetched when a new message is loaded and thread is focused
         })
     );
     await contains(".o-mail-Message");
-    await waitForSteps(["rpc:mark_as_read"]);
+    await expect.waitForSteps(["rpc:mark_as_read"]);
 });
 
 test("should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)", async () => {
@@ -699,7 +697,7 @@ test("Thread messages are only loaded once", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     onRpcBefore("/discuss/channel/messages", (args) =>
-        asyncStep(`load messages - ${args["channel_id"]}`)
+        expect.step(`load messages - ${args["channel_id"]}`)
     );
     await start();
     pyEnv["mail.message"].create([
@@ -721,7 +719,10 @@ test("Thread messages are only loaded once", async () => {
     await contains(".o-mail-Message-content", { text: "Message on channel2" });
     await click("button", { text: "General" });
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
-    await waitForSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
+    await expect.waitForSteps([
+        `load messages - ${channelIds[0]}`,
+        `load messages - ${channelIds[1]}`,
+    ]);
 });
 
 test.tags("focus required");
@@ -731,7 +732,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
-        asyncStep("mark-all-messages-as-read");
+        expect.step("mark-all-messages-as-read");
         expect(args[0]).toEqual([
             ["model", "=", "discuss.channel"],
             ["res_id", "=", channelId],
@@ -769,7 +770,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    await waitForSteps(["mark-all-messages-as-read"]);
+    await expect.waitForSteps(["mark-all-messages-as-read"]);
 });
 
 test.tags("focus required", "html composer");
@@ -779,7 +780,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
-        asyncStep("mark-all-messages-as-read");
+        expect.step("mark-all-messages-as-read");
         expect(args[0]).toEqual([
             ["model", "=", "discuss.channel"],
             ["res_id", "=", channelId],
@@ -818,14 +819,14 @@ test("Opening thread with needaction messages should mark all messages of thread
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    await waitForSteps(["mark-all-messages-as-read"]);
+    await expect.waitForSteps(["mark-all-messages-as-read"]);
 });
 
 test("[technical] Opening thread without needaction messages should not mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    onRpc("mail.message", "mark_all_as_read", () => asyncStep("mark-all-messages-as-read"));
+    onRpc("mail.message", "mark_all_as_read", () => expect.step("mark-all-messages-as-read"));
     await start();
     await openDiscuss(channelId);
     await click("button", { text: "Inbox" });
@@ -839,7 +840,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     });
     await click("button", { text: "General" });
     await tick();
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
 });
 
 test.tags("focus required");

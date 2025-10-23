@@ -17,14 +17,8 @@ import {
     userContext,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import {
-    asyncStep,
-    Command,
-    onRpc,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -85,7 +79,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     const operatorPartnerId = serverState.partnerId;
     onRpcBefore((route, args) => {
         if (!route.includes("assets") && !STORE_FETCH_ROUTES.includes(route)) {
-            asyncStep(`${route} - ${JSON.stringify(args)}`);
+            expect.step(`${route} - ${JSON.stringify(args)}`);
         }
     });
     listenStoreFetch(undefined, { logParams: ["init_livechat"] });
@@ -99,7 +93,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
-    await waitForSteps([
+    await expect.waitForSteps([
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             previous_operator_id: null,
@@ -107,7 +101,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         })}`,
     ]);
     await insertText(".o-mail-Composer-input", "Hello!");
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
     const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
@@ -144,8 +138,8 @@ test("do not create new thread when operator answers to visitor", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultEmbedConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    onRpc("/im_livechat/get_session", async () => asyncStep("/im_livechat/get_session"));
-    onRpc("/mail/message/post", async () => asyncStep("/mail/message/post"));
+    onRpc("/im_livechat/get_session", async () => expect.step("/im_livechat/get_session"));
+    onRpc("/mail/message/post", async () => expect.step("/mail/message/post"));
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -163,5 +157,5 @@ test("do not create new thread when operator answers to visitor", async () => {
     await insertText(".o-mail-Composer-input", "Hello!");
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
-    await waitForSteps(["/mail/message/post"]);
+    await expect.waitForSteps(["/mail/message/post"]);
 });

@@ -15,7 +15,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, manuallyDispatchProgrammaticEvent, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { mockWebSocket } from "@odoo/hoot-mock";
 import {
-    asyncStep,
     contains,
     getService,
     makeMockEnv,
@@ -25,7 +24,6 @@ import {
     mountWithCleanup,
     patchWithCleanup,
     restoreRegistry,
-    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
 
@@ -53,7 +51,7 @@ test("notifications not received after stoping the service", async () => {
         [secondTabEnv, "notifType", "beta"]
     );
     secondTabEnv.services.bus_service.stop();
-    await waitForSteps(["BUS:LEAVE"]);
+    await expect.waitForSteps(["BUS:LEAVE"]);
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "epsilon");
     await waitNotifications(
         [firstTabEnv, "notifType", "epsilon"],
@@ -63,8 +61,8 @@ test("notifications not received after stoping the service", async () => {
 
 test("notifications still received after disconnect/reconnect", async () => {
     addBusServiceListeners(
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")],
-        ["BUS:RECONNECT", () => asyncStep("BUS:RECONNECT")]
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
+        ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]
     );
     await makeMockEnv();
     getService("bus_service").addChannel("lambda");
@@ -72,9 +70,9 @@ test("notifications still received after disconnect/reconnect", async () => {
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications(["notifType", "beta"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
     await runAllTimers();
-    await waitForSteps(["BUS:RECONNECT"]);
+    await expect.waitForSteps(["BUS:RECONNECT"]);
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "gamma");
     await waitNotifications(["notifType", "gamma"]);
 });
@@ -122,7 +120,7 @@ test("second tab still receives notifications after main pagehide", async () => 
     await waitNotifications([mainEnv, "notifType", "beta"], [secondEnv, "notifType", "beta"]);
     // simulate unloading main
     await manuallyDispatchProgrammaticEvent(window, "pagehide");
-    await waitForSteps(["BUS:LEAVE"]);
+    await expect.waitForSteps(["BUS:LEAVE"]);
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "gamma");
     await waitNotifications(
         [mainEnv, "notifType", "gamma", { received: false }],
@@ -150,47 +148,51 @@ test("add two different channels from different tabs", async () => {
 });
 
 test("channel management from multiple tabs", async () => {
-    onWebsocketEvent("subscribe", (data) => asyncStep(`subscribe - [${data.channels.toString()}]`));
+    onWebsocketEvent("subscribe", (data) =>
+        expect.step(`subscribe - [${data.channels.toString()}]`)
+    );
     const firstTabEnv = await makeMockEnv();
     restoreRegistry(registry);
     const secondTabEnv = await makeMockEnv(null, { makeNew: true });
     firstTabEnv.services.bus_service.addChannel("channel1");
-    await waitForSteps(["subscribe - [channel1]"]);
+    await expect.waitForSteps(["subscribe - [channel1]"]);
     // Already known: no subscription.
     secondTabEnv.services.bus_service.addChannel("channel1");
     // Remove from tab1, but tab2 still listens: no subscription.
     firstTabEnv.services.bus_service.deleteChannel("channel1");
     // New channel: subscription.
     secondTabEnv.services.bus_service.addChannel("channel2");
-    await waitForSteps(["subscribe - [channel1,channel2]"]);
+    await expect.waitForSteps(["subscribe - [channel1,channel2]"]);
     // Removing last listener of channel1: subscription.
     secondTabEnv.services.bus_service.deleteChannel("channel1");
-    await waitForSteps(["subscribe - [channel2]"]);
+    await expect.waitForSteps(["subscribe - [channel2]"]);
 });
 
 test("re-subscribe on reconnect", async () => {
-    onWebsocketEvent("subscribe", (data) => asyncStep(`subscribe - [${data.channels.toString()}]`));
-    addBusServiceListeners(["BUS:RECONNECT", () => asyncStep("BUS:RECONNECT")]);
+    onWebsocketEvent("subscribe", (data) =>
+        expect.step(`subscribe - [${data.channels.toString()}]`)
+    );
+    addBusServiceListeners(["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]);
     await makeMockEnv();
     startBusService();
-    await waitForSteps(["subscribe - []"]);
+    await expect.waitForSteps(["subscribe - []"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
     await runAllTimers();
-    await waitForSteps(["BUS:RECONNECT", "subscribe - []"]);
+    await expect.waitForSteps(["BUS:RECONNECT", "subscribe - []"]);
 });
 
 test("pass last notification id on initialization", async () => {
     patchWithCleanup(WebsocketWorker.prototype, {
         _onClientMessage(_client, { action, data }) {
             if (action === "BUS:INITIALIZE_CONNECTION") {
-                asyncStep(`${action} - ${data["lastNotificationId"]}`);
+                expect.step(`${action} - ${data["lastNotificationId"]}`);
             }
             return super._onClientMessage(...arguments);
         },
     });
     const firstEnv = await makeMockEnv();
     startBusService(firstEnv);
-    await waitForSteps(["BUS:INITIALIZE_CONNECTION - 0"]);
+    await expect.waitForSteps(["BUS:INITIALIZE_CONNECTION - 0"]);
     firstEnv.services.bus_service.addChannel("lambda");
     await waitForChannels(["lambda"]);
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
@@ -198,77 +200,77 @@ test("pass last notification id on initialization", async () => {
     restoreRegistry(registry);
     const secondEnv = await makeMockEnv(null, { makeNew: true });
     startBusService(secondEnv);
-    await waitForSteps([`BUS:INITIALIZE_CONNECTION - 1`]);
+    await expect.waitForSteps([`BUS:INITIALIZE_CONNECTION - 1`]);
 });
 
 test("websocket disconnects when user logs out", async () => {
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
     patchWithCleanup(session, { user_id: null });
     patchWithCleanup(user, { userId: 1 });
     const firstTabEnv = await makeMockEnv();
     startBusService(firstTabEnv);
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     patchWithCleanup(user, { userId: null });
     restoreRegistry(registry);
     const env2 = await makeMockEnv(null, { makeNew: true });
     startBusService(env2);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
 });
 
 test("websocket reconnects upon user log in", async () => {
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
     patchWithCleanup(session, { user_id: null });
     patchWithCleanup(user, { userId: false });
     await makeMockEnv();
     startBusService();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     patchWithCleanup(user, { userId: 1 });
     restoreRegistry(registry);
     const secondTabEnv = await makeMockEnv(null, { makeNew: true });
     startBusService(secondTabEnv);
-    await waitForSteps(["BUS:DISCONNECT", "BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT", "BUS:CONNECT"]);
 });
 
 test("websocket connects with URL corresponding to given serverURL", async () => {
     const serverURL = "http://random-website.com";
     mockService("bus.parameters", { serverURL });
     await makeMockEnv();
-    mockWebSocket((ws) => asyncStep(ws.url));
+    mockWebSocket((ws) => expect.step(ws.url));
     startBusService();
-    await waitForSteps([
+    await expect.waitForSteps([
         `${serverURL.replace("http", "ws")}/websocket?version=${session.websocket_worker_version}`,
     ]);
 });
 
 test("disconnect on offline, re-connect on online", async () => {
-    browser.addEventListener("online", () => asyncStep("online"));
+    browser.addEventListener("online", () => expect.step("online"));
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
     await makeMockEnv();
     startBusService();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     manuallyDispatchProgrammaticEvent(window, "offline");
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
     manuallyDispatchProgrammaticEvent(window, "online");
-    await waitForSteps(["online"]);
+    await expect.waitForSteps(["online"]);
     await runAllTimers();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
 });
 
 test("no disconnect on offline/online when bus is inactive", async () => {
-    browser.addEventListener("online", () => asyncStep("online"));
-    browser.addEventListener("offline", () => asyncStep("offline"));
+    browser.addEventListener("online", () => expect.step("online"));
+    browser.addEventListener("offline", () => expect.step("offline"));
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
     mockService("bus_service", {
         addChannel() {},
@@ -276,23 +278,23 @@ test("no disconnect on offline/online when bus is inactive", async () => {
     await makeMockEnv();
     expect(getService("bus_service").isActive).toBe(false);
     manuallyDispatchProgrammaticEvent(window, "offline");
-    await waitForSteps(["offline"]);
+    await expect.waitForSteps(["offline"]);
     manuallyDispatchProgrammaticEvent(window, "online");
-    await waitForSteps(["online"]);
+    await expect.waitForSteps(["online"]);
 });
 
 test("can reconnect after late close event", async () => {
-    browser.addEventListener("online", () => asyncStep("online"));
+    browser.addEventListener("online", () => expect.step("online"));
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")],
-        ["BUS:RECONNECT", () => asyncStep("BUS:RECONNECT")],
-        ["BUS:RECONNECTING", () => asyncStep("BUS:RECONNECTING")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
+        ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")],
+        ["BUS:RECONNECTING", () => expect.step("BUS:RECONNECTING")]
     );
     const closeDeferred = new Deferred();
     await makeMockEnv();
     startBusService();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     patchWithCleanup(getWebSocketWorker().websocket, {
         async close(code = WEBSOCKET_CLOSE_CODES.CLEAN, reason) {
             this._readyState = 2; // WebSocket.CLOSING
@@ -311,27 +313,27 @@ test("can reconnect after late close event", async () => {
     manuallyDispatchProgrammaticEvent(window, "offline");
     // Worker reconnects upon the reception of the online event.
     manuallyDispatchProgrammaticEvent(window, "online");
-    await waitForSteps(["online"]);
+    await expect.waitForSteps(["online"]);
     await runAllTimers();
-    await waitForSteps(["BUS:DISCONNECT", "BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT", "BUS:CONNECT"]);
     // Trigger the close event, it shouldn't have any effect since it is
     // related to an old connection that is no longer in use.
     closeDeferred.resolve();
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     // Server closes the connection, the worker should reconnect.
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
-    await waitForSteps(["BUS:DISCONNECT", "BUS:RECONNECTING", "BUS:RECONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT", "BUS:RECONNECTING", "BUS:RECONNECT"]);
 });
 
 test("fallback on simple worker when shared worker failed to initialize", async () => {
-    addBusServiceListeners(["BUS:CONNECT", () => asyncStep("BUS:CONNECT")]);
+    addBusServiceListeners(["BUS:CONNECT", () => expect.step("BUS:CONNECT")]);
     // Starting the server first, the following patch would be overwritten otherwise.
     await makeMockServer();
     patchWithCleanup(browser, {
         SharedWorker: class extends browser.SharedWorker {
             constructor() {
                 super(...arguments);
-                asyncStep("shared-worker-creation");
+                expect.step("shared-worker-creation");
                 setTimeout(() => this.dispatchEvent(new Event("error")));
             }
         },
@@ -339,16 +341,16 @@ test("fallback on simple worker when shared worker failed to initialize", async 
             constructor() {
                 super(...arguments);
 
-                asyncStep("worker-creation");
+                expect.step("worker-creation");
             }
         },
     });
     patchWithCleanup(console, {
-        warn: (message) => asyncStep(message),
+        warn: (message) => expect.step(message),
     });
     await makeMockEnv();
     startBusService();
-    await waitForSteps([
+    await expect.waitForSteps([
         "shared-worker-creation",
         "Error while loading SharedWorker, fallback on Worker: ",
         "worker-creation",
@@ -362,40 +364,40 @@ test("subscribe to single notification", async () => {
     getService("bus_service").addChannel("my_channel");
     await waitForChannels(["my_channel"]);
     getService("bus_service").subscribe("message_type", (payload) =>
-        asyncStep(`message - ${JSON.stringify(payload)}`)
+        expect.step(`message - ${JSON.stringify(payload)}`)
     );
     MockServer.env["bus.bus"]._sendone("my_channel", "message_type", { body: "hello", id: 1 });
-    await waitForSteps(['message - {"body":"hello","id":1}']);
+    await expect.waitForSteps(['message - {"body":"hello","id":1}']);
 });
 
 test("do not reconnect when worker version is outdated", async () => {
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")],
-        ["BUS:RECONNECT", () => asyncStep("BUS:RECONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
+        ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]
     );
     await makeMockEnv();
     startBusService();
     await runAllTimers();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     const worker = getWebSocketWorker();
     expect(worker.state).toBe(WORKER_STATE.CONNECTED);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
     await runAllTimers();
-    await waitForSteps(["BUS:RECONNECT"]);
+    await expect.waitForSteps(["BUS:RECONNECT"]);
     expect(worker.state).toBe(WORKER_STATE.CONNECTED);
-    patchWithCleanup(console, { warn: (message) => asyncStep(message) });
+    patchWithCleanup(console, { warn: (message) => expect.step(message) });
     MockServer.env["bus.bus"]._simulateDisconnection(
         WEBSOCKET_CLOSE_CODES.CLEAN,
         "OUTDATED_VERSION"
     );
-    await waitForSteps(["Worker deactivated due to an outdated version.", "BUS:DISCONNECT"]);
+    await expect.waitForSteps(["Worker deactivated due to an outdated version.", "BUS:DISCONNECT"]);
     await runAllTimers();
     stepWorkerActions("BUS:START");
     startBusService();
     await runAllTimers();
-    await waitForSteps(["BUS:START"]);
+    await expect.waitForSteps(["BUS:START"]);
     // Verify the worker state instead of the steps as the connect event is
     // asynchronous and may not be fired at this point.
     expect(worker.state).toBe(WORKER_STATE.DISCONNECTED);
@@ -403,43 +405,43 @@ test("do not reconnect when worker version is outdated", async () => {
 
 test("reconnect on demande after clean close code", async () => {
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")],
-        ["BUS:RECONNECT", () => asyncStep("BUS:RECONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")],
+        ["BUS:RECONNECT", () => expect.step("BUS:RECONNECT")]
     );
     await makeMockEnv();
     startBusService();
     await runAllTimers();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
     await runAllTimers();
-    await waitForSteps(["BUS:RECONNECT"]);
+    await expect.waitForSteps(["BUS:RECONNECT"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
     await runAllTimers();
     startBusService();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
 });
 
 test("remove from main tab candidates when version is outdated", async () => {
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
     await makeMockEnv();
-    patchWithCleanup(console, { warn: (message) => asyncStep(message) });
+    patchWithCleanup(console, { warn: (message) => expect.step(message) });
     getService("multi_tab").bus.addEventListener("no_longer_main_tab", () =>
-        asyncStep("no_longer_main_tab")
+        expect.step("no_longer_main_tab")
     );
     startBusService();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     expect(await getService("multi_tab").isOnMainTab()).toBe(true);
     MockServer.env["bus.bus"]._simulateDisconnection(
         WEBSOCKET_CLOSE_CODES.CLEAN,
         "OUTDATED_VERSION"
     );
-    await waitForSteps([
+    await expect.waitForSteps([
         "Worker deactivated due to an outdated version.",
         "BUS:DISCONNECT",
         "no_longer_main_tab",
@@ -447,29 +449,29 @@ test("remove from main tab candidates when version is outdated", async () => {
 });
 
 test("show notification when version is outdated", async () => {
-    browser.location.addEventListener("reload", () => asyncStep("reload"));
+    browser.location.addEventListener("reload", () => expect.step("reload"));
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
-    patchWithCleanup(console, { warn: (message) => asyncStep(message) });
+    patchWithCleanup(console, { warn: (message) => expect.step(message) });
     await mountWithCleanup(WebClient);
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     MockServer.env["bus.bus"]._simulateDisconnection(
         WEBSOCKET_CLOSE_CODES.CLEAN,
         "OUTDATED_VERSION"
     );
-    await waitForSteps(["Worker deactivated due to an outdated version.", "BUS:DISCONNECT"]);
+    await expect.waitForSteps(["Worker deactivated due to an outdated version.", "BUS:DISCONNECT"]);
     await runAllTimers();
     await waitFor(".o_notification", {
         text: "Save your work and refresh to get the latest updates and avoid potential issues.",
     });
     await contains(".o_notification button:contains(Refresh)").click();
-    await waitForSteps(["reload"]);
+    await expect.waitForSteps(["reload"]);
 });
 
 test("subscribe message is sent first", async () => {
-    addBusServiceListeners(["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]);
+    addBusServiceListeners(["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]);
     // Starting the server first, the following patch would be overwritten otherwise.
     await makeMockServer();
     const ogSocket = window.WebSocket;
@@ -479,7 +481,7 @@ test("subscribe message is sent first", async () => {
             ws.send = (message) => {
                 const evName = JSON.parse(message).event_name;
                 if (["subscribe", "some_event", "some_other_event"].includes(evName)) {
-                    asyncStep(evName);
+                    expect.step(evName);
                 }
             };
             return ws;
@@ -488,36 +490,36 @@ test("subscribe message is sent first", async () => {
     await makeMockEnv();
     startBusService();
     await runAllTimers();
-    await waitForSteps(["subscribe"]);
+    await expect.waitForSteps(["subscribe"]);
     getService("bus_service").send("some_event");
-    await waitForSteps(["some_event"]);
+    await expect.waitForSteps(["some_event"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
     getService("bus_service").send("some_event");
     getService("bus_service").send("some_other_event");
     getService("bus_service").addChannel("channel_1");
     await runAllTimers();
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     startBusService();
     await runAllTimers();
-    await waitForSteps(["subscribe", "some_event", "some_other_event"]);
+    await expect.waitForSteps(["subscribe", "some_event", "some_other_event"]);
 });
 
 test("worker state is available from the bus service", async () => {
     addBusServiceListeners(
-        ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
     );
     await makeMockEnv();
     startBusService();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     expect(getService("bus_service").workerState).toBe(WORKER_STATE.CONNECTED);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
     await runAllTimers();
     expect(getService("bus_service").workerState).toBe(WORKER_STATE.DISCONNECTED);
     startBusService();
-    await waitForSteps(["BUS:CONNECT"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
     expect(getService("bus_service").workerState).toBe(WORKER_STATE.CONNECTED);
 });
 

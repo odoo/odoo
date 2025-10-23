@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { asyncStep, mockService, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -67,7 +67,7 @@ test("activity mark done popover mark done without feedback", async () => {
         res_model: "res.partner",
     });
     onRpc("mail.activity", "action_feedback", ({ args, kwargs }) => {
-        asyncStep("action_feedback");
+        expect.step("action_feedback");
         expect(args).toHaveLength(1);
         expect(args[0]).toHaveLength(1);
         expect(args[0][0]).toBe(activityId);
@@ -80,7 +80,7 @@ test("activity mark done popover mark done without feedback", async () => {
     await openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await waitForSteps(["action_feedback"]);
+    await expect.waitForSteps(["action_feedback"]);
 });
 
 test("activity mark done popover mark done with feedback", async () => {
@@ -93,7 +93,7 @@ test("activity mark done popover mark done with feedback", async () => {
         res_model: "res.partner",
     });
     onRpc("mail.activity", "action_feedback", ({ args, kwargs, method }) => {
-        asyncStep(method);
+        expect.step(method);
         expect(args).toHaveLength(1);
         expect(args[0]).toHaveLength(1);
         expect(args[0][0]).toBe(activityId);
@@ -116,7 +116,7 @@ test("activity mark done popover mark done with feedback", async () => {
         "This task is done"
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await waitForSteps(["action_feedback"]);
+    await expect.waitForSteps(["action_feedback"]);
 });
 
 test("activity mark done popover mark done and schedule next", async () => {
@@ -129,7 +129,7 @@ test("activity mark done popover mark done and schedule next", async () => {
         res_model: "res.partner",
     });
     onRpc("mail.activity", "action_feedback_schedule_next", ({ args, kwargs, method }) => {
-        asyncStep(method);
+        expect.step(method);
         expect(args).toHaveLength(1);
         expect(args[0]).toHaveLength(1);
         expect(args[0][0]).toBe(activityId);
@@ -145,7 +145,7 @@ test("activity mark done popover mark done and schedule next", async () => {
     mockService("action", {
         doAction(action) {
             if (action?.res_model !== "res.partner") {
-                asyncStep("activity_action");
+                expect.step("activity_action");
                 throw new Error(
                     "The do-action event should not be triggered when the route doesn't return an action"
                 );
@@ -161,7 +161,7 @@ test("activity mark done popover mark done and schedule next", async () => {
         "This task is done"
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    await waitForSteps(["action_feedback_schedule_next"]);
+    await expect.waitForSteps(["action_feedback_schedule_next"]);
 });
 
 test("[technical] activity mark done & schedule next with new action", async () => {
@@ -181,7 +181,7 @@ test("[technical] activity mark done & schedule next with new action", async () 
         doAction(action) {
             if (action?.res_model !== "res.partner") {
                 def.resolve();
-                asyncStep("activity_action");
+                expect.step("activity_action");
                 expect(action).toEqual(
                     { type: "ir.actions.act_window" },
                     { message: "The content of the action should be correct" }
@@ -196,5 +196,5 @@ test("[technical] activity mark done & schedule next with new action", async () 
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await def;
-    await waitForSteps(["activity_action"]);
+    await expect.waitForSteps(["activity_action"]);
 });

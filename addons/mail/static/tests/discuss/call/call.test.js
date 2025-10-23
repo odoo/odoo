@@ -24,13 +24,11 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
 import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
-    asyncStep,
     Command,
     mockService,
     onRpc,
     patchWithCleanup,
     serverState,
-    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -144,7 +142,7 @@ test("should disconnect when closing page while in call", async () => {
         if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
             const blobText = await data.text();
             const blobData = JSON.parse(blobText);
-            asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
+            expect.step(`sendBeacon_leave_call:${blobData.params.channel_id}`);
         }
     });
 
@@ -152,7 +150,7 @@ test("should disconnect when closing page while in call", async () => {
     await contains(".o-discuss-Call");
     // simulate page close
     await manuallyDispatchProgrammaticEvent(window, "pagehide");
-    await waitForSteps([`sendBeacon_leave_call:${channelId}`]);
+    await expect.waitForSteps([`sendBeacon_leave_call:${channelId}`]);
 });
 
 test("should display invitations", async () => {
@@ -169,10 +167,10 @@ test("should display invitations", async () => {
     });
     mockService("mail.sound_effects", {
         play(name) {
-            asyncStep(`play - ${name}`);
+            expect.step(`play - ${name}`);
         },
         stop(name) {
-            asyncStep(`stop - ${name}`);
+            expect.step(`stop - ${name}`);
         },
     });
     listenStoreFetch("init_messaging");
@@ -195,7 +193,7 @@ test("should display invitations", async () => {
     );
     await contains(".o-discuss-CallInvitation");
     await contains(".o-discuss-CallInvitation button[title='Join Call']");
-    await waitForSteps(["play - call-invitation"]);
+    await expect.waitForSteps(["play - call-invitation"]);
     // Simulate stop receiving call invitation
 
     pyEnv["bus.bus"]._sendone(
@@ -206,7 +204,7 @@ test("should display invitations", async () => {
         }).get_result()
     );
     await contains(".o-discuss-CallInvitation", { count: 0 });
-    await waitForSteps(["stop - call-invitation"]);
+    await expect.waitForSteps(["stop - call-invitation"]);
 });
 
 test("can share screen", async () => {
@@ -325,12 +323,12 @@ test("join/leave sounds are only played on main tab", async () => {
     const env2 = await start({ asTab: true });
     patchWithCleanup(env1.services["mail.sound_effects"], {
         play(name) {
-            asyncStep(`tab1 - play - ${name}`);
+            expect.step(`tab1 - play - ${name}`);
         },
     });
     patchWithCleanup(env2.services["mail.sound_effects"], {
         play(name) {
-            asyncStep(`tab2 - play - ${name}`);
+            expect.step(`tab2 - play - ${name}`);
         },
     });
     await openDiscuss(channelId, { target: env1 });
@@ -338,11 +336,11 @@ test("join/leave sounds are only played on main tab", async () => {
     await click(`${env1.selector} [title='Start Call']`);
     await contains(`${env1.selector} .o-discuss-Call`);
     await contains(`${env2.selector} .o-discuss-Call`);
-    await waitForSteps(["tab1 - play - call-join"]);
+    await expect.waitForSteps(["tab1 - play - call-join"]);
     await click(`${env1.selector} [title='Disconnect']:not([disabled])`);
     await contains(`${env1.selector} .o-discuss-Call`, { count: 0 });
     await contains(`${env2.selector} .o-discuss-Call`, { count: 0 });
-    await waitForSteps(["tab1 - play - call-leave"]);
+    await expect.waitForSteps(["tab1 - play - call-leave"]);
 });
 
 test("'New Meeting' in mobile", async () => {
@@ -653,11 +651,11 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
 
     broadcastChannel.onmessage = (event) => {
         if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION) {
-            asyncStep(`is_muted:${event.data.changes["is_muted"]}`);
+            expect.step(`is_muted:${event.data.changes["is_muted"]}`);
         }
     };
     await click("[title='Mute']");
-    await waitForSteps(["is_muted:true"]);
+    await expect.waitForSteps(["is_muted:true"]);
 });
 
 test("automatically cancel incoming call after some time", async () => {

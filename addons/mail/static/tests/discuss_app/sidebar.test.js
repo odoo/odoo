@@ -18,14 +18,7 @@ import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app/di
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
-import {
-    asyncStep,
-    Command,
-    getService,
-    onRpc,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -42,8 +35,7 @@ test("toggling category button hide category items", async () => {
         name: "general",
         channel_type: "channel",
     });
-    const env = await start();
-    window.aku = env;
+    await start();
     await openDiscuss("mail.box_inbox");
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
@@ -248,7 +240,7 @@ test("sidebar: open channel and leave it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     onRpc("discuss.channel", "action_unfollow", ({ args }) => {
-        asyncStep("action_unfollow");
+        expect.step("action_unfollow");
         expect(args[0]).toBe(channelId);
     });
     setupChatHub({ opened: [channelId] });
@@ -256,13 +248,13 @@ test("sidebar: open channel and leave it", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
-    await waitForSteps(["action_unfollow"]);
+    await expect.waitForSteps(["action_unfollow"]);
 });
 
 test("sidebar: unpin chat from bus", async () => {
@@ -870,7 +862,7 @@ test("sidebar: show loading on initial opening", async () => {
     const def = new Deferred();
     listenStoreFetch("channels_as_member", {
         async onRpc() {
-            asyncStep("before channels_as_member");
+            expect.step("before channels_as_member");
             await def;
         },
     });
@@ -882,7 +874,7 @@ test("sidebar: show loading on initial opening", async () => {
         ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin"
     );
     await contains(".o-mail-DiscussSidebarChannel", { text: "General", count: 0 });
-    await waitForSteps(["before channels_as_member"]);
+    await expect.waitForSteps(["before channels_as_member"]);
     def.resolve();
     await waitStoreFetch("channels_as_member");
     await contains(
