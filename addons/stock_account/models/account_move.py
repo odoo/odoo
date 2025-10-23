@@ -164,8 +164,5 @@ class AccountMove(models.Model):
         """
         return self.env.context
 
-    def _get_related_stock_moves(self):
-        return self.env['stock.move']
-
     def _get_invoiced_lot_values(self):
         return []
