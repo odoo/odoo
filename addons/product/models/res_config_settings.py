@@ -9,6 +9,7 @@ class ResConfigSettings(models.TransientModel):
     group_uom = fields.Boolean("Units of Measure & Packagings", implied_group='uom.group_uom')
     group_product_variant = fields.Boolean("Variants", implied_group='product.group_product_variant')
     module_loyalty = fields.Boolean("Promotions, Coupons, Gift Card & Loyalty Program")
+    module_product_barcodelookup = fields.Boolean("Barcode Database")
     group_product_pricelist = fields.Boolean("Pricelists",
         implied_group='product.group_product_pricelist')
     product_weight_in_lbs = fields.Selection([

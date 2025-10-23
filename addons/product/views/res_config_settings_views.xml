@@ -15,6 +15,14 @@
                         </setting>
                     </block>
                 </xpath>
+                <setting id="module_auth_oauth" position="after">
+                    <setting id="process_barcode_lookup_setting" string="Barcode Database" documentation="https://www.barcodelookup.com/api-documentation">
+                        <field name="module_product_barcodelookup" widget="upgrade_boolean"/>
+                        <span id="barcodelookup_description" class="text-muted">
+                            Create products by scanning using <a href="https://www.barcodelookup.com" target="_blank">barcodelookup.com</a>
+                        </span>
+                    </setting>
+                </setting>
             </field>
         </record>
 </odoo>
