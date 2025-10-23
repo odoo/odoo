@@ -81,7 +81,7 @@ class PaymentProvider(models.Model):
 
     def _compute_mercado_pago_is_oauth_supported(self):
         """Return current state of OAuth support by Odoo. To be removed in future versions."""
-        self.mercado_pago_is_oauth_supported = False
+        self.mercado_pago_is_oauth_supported = True
 
     # === CONSTRAINT METHODS === #
 
