@@ -74,9 +74,10 @@ export class DateFilterDropdown extends Component {
     }
 
     get dateOptions() {
-        const filterTypes = getDateGlobalFilterTypes().filter(
-            (type) => !globalFilterDateRegistry.get(type).canOnlyBeDefault
-        );
+        const filterTypes = getDateGlobalFilterTypes().filter((type) => {
+            const item = globalFilterDateRegistry.get(type);
+            return !item.canOnlyBeDefault && !item.shouldBeHidden?.(this.props.model.getters);
+        });
         const options = filterTypes.map((type, i) => {
             const item = globalFilterDateRegistry.get(type);
             const nextItem = filterTypes[i + 1] && globalFilterDateRegistry.get(filterTypes[i + 1]);
