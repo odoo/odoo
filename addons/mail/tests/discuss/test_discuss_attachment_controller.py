@@ -5,7 +5,7 @@ from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCo
 from odoo.tools.misc import file_open
 
 
-@odoo.tests.tagged("-at_install", "post_install", "mail_controller")
+@odoo.tests.tagged("mail_controller")
 class TestDiscussAttachmentController(MailControllerAttachmentCommon):
     def test_attachment_allowed_upload_public_channel(self):
         """Test access to upload an attachment on an allowed upload public channel"""

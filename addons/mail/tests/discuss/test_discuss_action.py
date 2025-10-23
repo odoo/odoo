@@ -3,7 +3,7 @@ from odoo.tests import HttpCase, tagged
 from odoo.addons.mail.tests.common import MailCommon
 
 
-@tagged("post_install", "-at_install", "discuss_action")
+@tagged("discuss_action")
 class TestDiscussAction(HttpCase, MailCommon):
     def test_go_back_to_thread_from_breadcrumbs(self):
         self.start_tour(

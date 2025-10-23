@@ -264,7 +264,7 @@ class TestMailComposerRendering(TestMailComposer):
         )
 
 
-@tagged("mail_composer", "-at_install", "post_install")
+@tagged("mail_composer")
 class TestMailComposerUI(MailCommon, HttpCase):
 
     def test_mail_composer_test_tour(self):

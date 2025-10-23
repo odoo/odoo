@@ -11,7 +11,7 @@ from odoo.http import STATIC_CACHE_LONG
 from odoo import Command, fields
 
 
-@odoo.tests.tagged("-at_install", "post_install", "mail_controller")
+@odoo.tests.tagged("mail_controller")
 class TestMessageController(HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):

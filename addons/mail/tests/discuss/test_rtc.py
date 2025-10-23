@@ -11,7 +11,7 @@ from odoo.tests.common import HttpCase, new_test_user, tagged, users
 from odoo.tools.misc import mute_logger
 
 
-@tagged("RTC", "post_install", "-at_install")
+@tagged("RTC")
 class TestChannelRTC(MailCommon, HttpCase):
 
     @users('employee')

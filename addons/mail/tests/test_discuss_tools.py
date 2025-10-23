@@ -2,11 +2,10 @@
 
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase
 from odoo.tests.common import new_test_user
 
 
-@tagged("post_install", "-at_install")
 class TestDiscussTools(TransactionCase):
     """Test class for discuss tools."""
 

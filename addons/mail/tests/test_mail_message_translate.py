@@ -37,7 +37,7 @@ def mock_response(fun):
 
 
 # Google Cloud Translation Documentation: https://cloud.google.com/translate/docs/reference/api-overview?hl=en
-@tagged("post_install", "-at_install", "mail_message")
+@tagged("mail_message")
 class TestTranslationController(HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):

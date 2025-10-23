@@ -2,7 +2,7 @@ from odoo.addons.mail.tests.common_controllers import MailControllerUpdateCommon
 from odoo.tests import tagged
 
 
-@tagged("-at_install", "post_install", "mail_controller")
+@tagged("mail_controller")
 class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
 
     def test_message_update_guest_as_owner(self):

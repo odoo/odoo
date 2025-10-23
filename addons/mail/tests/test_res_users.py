@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -14,7 +13,7 @@ from odoo.tests import RecordCapturer, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
+@tagged('mail_tools', 'res_users')
 class TestNotifySecurityUpdate(MailCommon):
 
     @users('employee')
@@ -51,7 +50,8 @@ class TestNotifySecurityUpdate(MailCommon):
             subject='Security Update: Password Changed',
         )
 
-@tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
+
+@tagged('mail_tools', 'res_users')
 class TestUser(MailCommon):
 
     @classmethod
@@ -180,7 +180,7 @@ class TestUser(MailCommon):
         )
 
 
-@tagged('-at_install', 'post_install', 'res_users')
+@tagged('res_users')
 class TestUserTours(HttpCaseWithUserDemo):
 
     def test_user_modify_own_profile(self):
@@ -205,7 +205,6 @@ class TestUserTours(HttpCaseWithUserDemo):
         self.assertEqual(self.user_demo.notification_type, "inbox")
 
 
-@tagged("post_install", "-at_install")
 class TestUserSettings(MailCommon):
 
     @skip('Crashes in post_install, probably because other modules force creation through inverse (e.g. voip)')

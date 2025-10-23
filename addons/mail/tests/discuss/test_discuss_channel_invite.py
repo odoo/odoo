@@ -4,11 +4,10 @@ from itertools import product
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
-from odoo.tests import HttpCase, new_test_user, tagged
+from odoo.tests import HttpCase, new_test_user
 from odoo.tools.misc import hash_sign
 
 
-@tagged("-at_install", "post_install")
 class TestDiscussChannelInvite(HttpCase, MailCommon):
     def test_01_invite_by_email_flow(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
