@@ -2018,42 +2018,7 @@ class BaseModel(metaclass=MetaModel):
             return cotable._model._read_group_groupby(cotable, f"{seq_fnames}:{granularity}" if granularity else seq_fnames)
 
         elif field.type == 'many2many':
-            if not field.store:
-                # traverse_related, skip last one if not stored
-                if field.related:
-                    traverse = table
-                    if field.compute_sudo:
-                        traverse = traverse._sudo()
-                    for fname in field.related.split('.')[:-1]:
-                        traverse = traverse[fname]
-                    table = traverse.id._table
-                    field = field.related_field
-                else:
-                    raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
-            # special case for many2many fields: prepare a query on the comodel
-            # and inject the query as an extra condition of the left join
-            # XXX do: field.join(TableSQL(alias, self, query), only_id=True)
-            codomain = field.get_comodel_domain(self)
-            comodel = self.env[field.comodel_name].with_context(**field.context)
-            coquery = comodel._search(codomain, bypass_access=field.bypass_search_access)
-            # LEFT JOIN {field.relation} AS rel_alias ON
-            #     alias.id = rel_alias.{field.column1}
-            #     AND rel_alias.{field.column2} IN ({coquery})
-            rel_alias = table._make_alias(field.name)
-            condition = SQL(
-                "%s = %s",
-                table.id,
-                SQL.identifier(rel_alias, field.column1),
-            )
-            if coquery.where_clause:
-                condition = SQL(
-                    "%s AND %s IN %s",
-                    condition,
-                    SQL.identifier(rel_alias, field.column2),
-                    coquery.subselect(),
-                )
-            table._query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
-            return SQL.identifier(rel_alias, field.column2)
+            return field.join(table, only_ids=True).id
 
         else:
             sql_expr = table[fname]
