@@ -100,6 +100,9 @@ export class BuilderOverlayPlugin extends Plugin {
 
         // Create the overlays.
         optionsContainer.forEach((option) => {
+            if (option.hideOverlay) {
+                return;
+            }
             const overlay = new BuilderOverlay(option.element, {
                 iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
@@ -114,6 +117,10 @@ export class BuilderOverlayPlugin extends Plugin {
             this.overlayContainer.append(overlay.overlayElement);
             this.resizeObserver.observe(overlay.overlayTarget, { box: "border-box" });
         });
+
+        if (!this.overlays.length) {
+            return;
+        }
 
         // Activate the last overlay.
         const innermostOverlay = this.overlays.at(-1);

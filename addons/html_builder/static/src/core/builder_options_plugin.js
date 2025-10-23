@@ -327,15 +327,16 @@ export class BuilderOptionsPlugin extends Plugin {
         const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
         let containers = [...elementToOptions]
             .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
-            .map(([element, options]) => ({
+            .map(([element, Options]) => ({
                 id: previousElementToIdMap.get(element) || uniqueId(),
                 element,
-                options,
+                options: Options,
                 optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
                 headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
                 containerTitle: elementToContainerTitle.get(element)
                     ? elementToContainerTitle.get(element)[0]
                     : {},
+                hideOverlay: Options.every((Option) => Option.hideOverlay),
                 hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
                 removeDisabledReason: this.getRemoveDisabledReason(element),
