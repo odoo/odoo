@@ -10,7 +10,7 @@
     </t>
 
     <t t-name="web.PropertyValue">
-        <t t-if="props.readonly and !['boolean', 'many2one', 'many2many', 'tags', 'html'].includes(props.type)">
+        <t t-if="props.readonly and !['boolean', 'many2one', 'many2many', 'tags', 'html', 'signature'].includes(props.type)">
             <span t-if="displayValue" t-out="displayValue"/>
         </t>
         <t t-else="">
@@ -148,6 +148,9 @@
                     value="propertyValue || ''"
                     updateProperty="(event) => this.onValueChange(event.target.value)"
                 />
+            </t>
+            <t t-elif="props.type === 'signature'">
+                <SignatureViewer url="this.propertyValue" update.bind="this.onValueChange"/>
             </t>
             <t t-else="">
                 <input

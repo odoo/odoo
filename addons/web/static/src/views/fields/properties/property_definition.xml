@@ -46,7 +46,7 @@
                                 <div class="o_input_dropdown w-100 o_field_property_dropdown">
                                     <img t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"
                                         class="position-relative z-1 me-n4"/>
-                                    <input type="text" class="dropdown text-start w-100 o_input py-1 align-middle"
+                                    <input type="text" class="dropdown text-start w-100 o_input py-1 align-middle ms-1"
                                         t-att-id="getUniqueDomID('type')"
                                         t-att-value="state.typeLabel" readonly=""/>
                                     <span class="o_dropdown_button" />
@@ -141,7 +141,7 @@
                         </select>
                     </div>
                 </div>
-                <div t-if="!['tags', 'selection', 'separator'].includes(state.propertyDefinition.type)
+                <div t-if="!['tags', 'selection', 'separator', 'signature'].includes(state.propertyDefinition.type)
                     and (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
                     || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
                     class="o_field_property_definition_value d-contents mb-3 mb-sm-0">
@@ -164,7 +164,7 @@
                         record="props.record"
                     />
                 </div>
-                <t t-if="state.propertyDefinition.type !== 'separator'">
+                <t t-if="!['separator', 'signature'].includes(state.propertyDefinition.type)">
                     <div class="o_field_property_definition_suffix d-contents mb-3 mb-sm-0">
                         <label class="o_form_label align-self-center text-900">Suffix</label>
                         <input
@@ -177,7 +177,7 @@
                         />
                     </div>
                 </t>
-                <div t-if="state.propertyDefinition.type !== 'separator'"
+                <div t-if="!['separator', 'signature'].includes(state.propertyDefinition.type)"
                     class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
                     <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
                         Display in Cards
@@ -190,7 +190,7 @@
                         onChange.bind="onViewInKanbanChange"
                     />
                 </div>
-                <div t-else="" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                <div t-elif="state.propertyDefinition.type === 'separator'" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
                     <t t-set="separatorId" t-value="getUniqueDomID('separator')"/>
                     <label t-att-for="separatorId" class="o_form_label align-self-center text-900">
                         Default State

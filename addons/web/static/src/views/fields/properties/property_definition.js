@@ -15,6 +15,71 @@ import { uuid } from "@web/core/utils/strings";
 
 import { Component, useState, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 
+export const PROPERTIES_INFO = {
+    char: {
+        label: _t("Text"),
+        parameters: [],
+    },
+    text: {
+        label: _t("Multiline Text"),
+        parameters: [],
+    },
+    html: {
+        label: _t("HTML"),
+        parameters: [],
+    },
+    boolean: {
+        label: _t("Checkbox"),
+        parameters: [],
+    },
+    integer: {
+        label: _t("Integer"),
+        parameters: [],
+    },
+    float: {
+        label: _t("Decimal"),
+        parameters: [],
+    },
+    monetary: {
+        label: _t("Monetary"),
+        parameters: ["currency_field"],
+    },
+    date: {
+        label: _t("Date"),
+        parameters: [],
+    },
+    datetime: {
+        label: _t("Date & Time"),
+        parameters: [],
+    },
+    selection: {
+        label: _t("Selection"),
+        parameters: ["selection"],
+    },
+    tags: {
+        label: _t("Tags"),
+        parameters: ["tags"],
+    },
+    many2one: {
+        label: _t("Many2one"),
+        parameters: ["comodel", "domain"],
+    },
+    many2many: {
+        label: _t("Many2many"),
+        parameters: ["comodel", "domain"],
+    },
+    signature: {
+        label: _t("Signature"),
+        parameters: [],
+    },
+    separator: {
+        label: _t("Separator"),
+        parameters: [],
+    },
+};
+export const PROPERTY_TYPES = Object.keys(PROPERTIES_INFO);
+const PROPERTY_PARAMETERS = new Set(Object.values(PROPERTIES_INFO).flatMap((info) => info.parameters));
+
 export class PropertyDefinition extends Component {
     static template = "web.PropertyDefinition";
     static components = {
@@ -44,13 +109,6 @@ export class PropertyDefinition extends Component {
         close: { type: Function, optional: true },
         record: { type: Object, optional: true },
     };
-    static _propertyParametersMap = new Map([
-        ["comodel", ["many2one", "many2many"]],
-        ["currency_field", ["monetary"]],
-        ["domain", ["many2one", "many2many"]],
-        ["selection", ["selection"]],
-        ["tags", ["tags"]],
-    ]);
 
     setup() {
         this.orm = useService("orm");
@@ -71,7 +129,7 @@ export class PropertyDefinition extends Component {
 
         this.state = useState({
             propertyDefinition: propertyDefinition,
-            typeLabel: this._typeLabel(propertyDefinition.type),
+            typeLabel: PROPERTIES_INFO[propertyDefinition.type].label,
             resModel: "",
             resModelDescription: "",
             matchingRecordsCount: undefined,
@@ -112,22 +170,7 @@ export class PropertyDefinition extends Component {
      * @returns {array}
      */
     get availablePropertyTypes() {
-        return [
-            ["char", _t("Text")],
-            ["text", _t("Multiline Text")],
-            ["html", _t("HTML")],
-            ["boolean", _t("Checkbox")],
-            ["integer", _t("Integer")],
-            ["float", _t("Decimal")],
-            ["monetary", _t("Monetary")],
-            ["date", _t("Date")],
-            ["datetime", _t("Date & Time")],
-            ["selection", _t("Selection")],
-            ["tags", _t("Tags")],
-            ["many2one", _t("Many2one")],
-            ["many2many", _t("Many2many")],
-            ["separator", _t("Separator")],
-        ];
+        return Object.entries(PROPERTIES_INFO).map(([key, { label }]) => [key, label]);
     }
 
     get currencyFields() {
@@ -231,11 +274,15 @@ export class PropertyDefinition extends Component {
             propertyDefinition.fold_by_default = true;
         }
 
-        PropertyDefinition._propertyParametersMap.forEach((types, param) => {
-            if (!types.includes(propertyDefinition.type)) {
+        if (newType === "signature") {
+            delete propertyDefinition.suffix;
+        }
+
+        for (const param of PROPERTY_PARAMETERS) {
+            if (!PROPERTIES_INFO[propertyDefinition.type].parameters.includes(param)) {
                 delete propertyDefinition[param];
             }
-        });
+        }
 
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
@@ -243,7 +290,7 @@ export class PropertyDefinition extends Component {
             this.state.resModel = "";
             this.state.resModelDescription = "";
         }
-        this.state.typeLabel = this._typeLabel(newType);
+        this.state.typeLabel = PROPERTIES_INFO[propertyDefinition.type].label;
     }
 
     /**
@@ -394,7 +441,7 @@ export class PropertyDefinition extends Component {
 
         this.state.propertyDefinition = propertyDefinition;
         this.state.resModel = propertyDefinition.comodel;
-        this.state.typeLabel = this._typeLabel(propertyDefinition.type);
+        this.state.typeLabel = PROPERTIES_INFO[propertyDefinition.type].label;
         this.state.resModel = newModel;
 
         if (newModel && newModel !== currentModel) {
@@ -437,16 +484,5 @@ export class PropertyDefinition extends Component {
         } else {
             this.state.matchingRecordsCount = undefined;
         }
-    }
-
-    /**
-     * Return the property label corresponding to the property type.
-     *
-     * @param {string} propertyType
-     * @returns {string}
-     */
-    _typeLabel(propertyType) {
-        const allTypes = this.availablePropertyTypes;
-        return allTypes.find((type) => type[0] === propertyType)[1];
     }
 }
