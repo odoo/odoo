@@ -9,8 +9,9 @@ export function onceAllImagesLoaded(element) {
         if (imgEl.complete) {
             return; // Already loaded
         }
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             imgEl.addEventListener("load", resolve, { once: true });
+            imgEl.addEventListener("error", reject, { once: true });
         });
     });
     return Promise.all(defs);
