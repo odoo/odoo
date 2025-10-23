@@ -1397,3 +1397,27 @@ test("failure is removed from messaging menu when message is deleted", async () 
     pyEnv["mail.message"].unlink([messageId]);
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
+
+test("ensure messaging menu shows standalone inbox messages", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+    // no record set
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Message with needaction",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem .badge");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-Message-author", { text: "Partner1" });
+    await contains(".o-mail-Message-textContent", { text: "Message with needaction" });
+});
