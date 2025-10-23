@@ -799,8 +799,9 @@ export class LinkPlugin extends Plugin {
             }
         }
         if (!selectionData.currentSelectionIsInEditable) {
+            const popoverEl = document.querySelector(".o-we-linkpopover");
             const anchorNode = document.getSelection()?.anchorNode;
-            if (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover")) {
+            if ((popoverEl && !selectionData.documentSelection) || (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover"))) {
                 return;
             }
             this.linkInDocument = null;
