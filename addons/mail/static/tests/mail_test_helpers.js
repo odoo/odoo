@@ -79,7 +79,7 @@ import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_set
 import { Network } from "@mail/discuss/call/common/rtc_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
-import { DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS } from "@mail/discuss/core/public_web/discuss_app_category_model";
+import { DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
 
 export * from "./mail_test_helpers_contains";
 

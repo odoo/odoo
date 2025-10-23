@@ -1,6 +1,7 @@
+import { ActionList } from "@mail/core/common/action_list";
+import { DiscussSearch } from "@mail/core/public_web/discuss_search";
+
 import { Component, onMounted, useSubEnv } from "@odoo/owl";
-import { ActionList } from "../common/action_list";
-import { DiscussSearch } from "./discuss_search";
 
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";

@@ -1,4 +1,4 @@
-import { DiscussApp } from "@mail/core/public_web/discuss_app_model";
+import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { fields } from "@mail/core/common/record";
 
 import { _t } from "@web/core/l10n/translation";

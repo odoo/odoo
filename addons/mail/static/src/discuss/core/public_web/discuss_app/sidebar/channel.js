@@ -1,6 +1,6 @@
 import { CountryFlag } from "@mail/core/common/country_flag";
-import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_sidebar_channel_actions";
-import { DiscussSidebarSubchannel } from "@mail/discuss/core/public_web/discuss_sidebar_subchannel";
+import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
+import { DiscussSidebarSubchannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/subchannel";
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";

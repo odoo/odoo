@@ -1,5 +1,5 @@
 declare module "models" {
-    import { DiscussAppCategory as DiscussAppCategoryClass } from "@mail/discuss/core/public_web/discuss_app_category_model";
+    import { DiscussAppCategory as DiscussAppCategoryClass } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
 
     export interface DiscussAppCategory extends DiscussAppCategoryClass {}
 

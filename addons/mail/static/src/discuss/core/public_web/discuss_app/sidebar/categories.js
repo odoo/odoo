@@ -1,6 +1,6 @@
-import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
-import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_sidebar_category";
-import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_sidebar_channel";
+import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
+import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_app/sidebar/category";
+import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
 
 import { Component, useSubEnv } from "@odoo/owl";
 

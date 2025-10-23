@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { DiscussSidebarChannelActions } from "./discuss_sidebar_channel_actions";
+import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
