@@ -2014,15 +2014,15 @@ class SnippetsMenu extends Component {
         });
 
         useBus(this.props.bus, "INSERT_SNIPPET", ({ detail }) => {
-            const { snippetSelector, block } = detail;
+            const { snippetSelector } = detail;
             this._execWithLoadingEffect(() => {
                 const snippet = [...this.snippets.values()].find((snippet) => {
                     return snippet.baseBody.matches(snippetSelector);
                 });
-                if (snippet && block) {
+                if (snippet) {
                     const clonedBody = snippet.baseBody.cloneNode(true);
                     clonedBody.classList.remove(".oe_snippet_body");
-                    block.after(clonedBody);
+                    this.options.wysiwyg.odooEditor.execCommand("insert", clonedBody);
                     // This call will block the mutex so it is not awaited.
                     this.callPostSnippetDrop($(clonedBody));
                 }
