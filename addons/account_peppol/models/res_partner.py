@@ -212,7 +212,7 @@ class ResPartner(models.Model):
             if (peppol_state := self._get_peppol_verification_state(inverse_endpoint, inverse_eas, self_partner._get_peppol_edi_format())) == 'valid':
                 self_partner.peppol_eas = inverse_eas
                 self_partner.peppol_endpoint = inverse_endpoint
-                self_partner.peppol_verification_state = peppol_state
+                new_value = peppol_state
 
         if old_value != new_value:
             self_partner.peppol_verification_state = new_value
