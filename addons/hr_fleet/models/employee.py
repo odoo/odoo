@@ -14,7 +14,6 @@ class HrEmployee(models.Model):
         groups="fleet.fleet_group_manager,hr.group_hr_user",
     )
     license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate", groups="hr.group_hr_user")
-    mobility_card = fields.Char(groups="fleet.fleet_group_user")
 
     def action_open_employee_cars(self):
         self.ensure_one()
@@ -81,11 +80,6 @@ class HrEmployee(models.Model):
                             'future_driver_id': vals['work_contact_id'],
                         })
 
-        if 'mobility_card' in vals:
-            car_ids = self.env['fleet.vehicle'].sudo().search([
-                ('driver_employee_id', 'in', self.ids),
-            ])
-            car_ids._compute_mobility_card()
         return res
 
 
@@ -93,7 +87,6 @@ class HrEmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_user")
-    mobility_card = fields.Char(readonly=True)
 
     def action_open_employee_cars(self):
         return self.env['hr.employee'].browse(self.ids).action_open_employee_cars()
