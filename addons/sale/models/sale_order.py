@@ -1428,7 +1428,7 @@ class SaleOrder(models.Model):
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id']
+        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id', 'fiscal_position_id']
 
     def _nothing_to_invoice_error_message(self):
         return _(
