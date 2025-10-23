@@ -54,7 +54,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='driver_id']" position="after">
                 <field name="driver_employee_id" invisible="1"/>
-                <field name="mobility_card" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='future_driver_id']" position="after">
                 <field name="future_driver_employee_id" invisible="1"/>
@@ -75,9 +74,6 @@
         <field name="model">fleet.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='license_plate']" position="after">
-                <field name="mobility_card"/>
-            </xpath>
             <xpath expr="//field[@name='log_drivers']" position="attributes">
                 <attribute name="filter_domain">[
                     '|', '|', '|', '|','|',
