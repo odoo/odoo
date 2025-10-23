@@ -310,7 +310,7 @@ class ResUsers(models.Model):
 
     def write(self, vals):
         if 'active' in vals and not vals['active']:
-            self.partner_id.signup_cancel()
+            self.partner_id.sudo().signup_cancel()
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
