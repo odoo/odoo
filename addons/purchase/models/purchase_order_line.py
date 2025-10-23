@@ -79,7 +79,7 @@ class PurchaseOrderLine(models.Model):
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True, index='btree_not_null')
     currency_id = fields.Many2one(related='order_id.currency_id', string='Currency')
-    date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
+    date_order = fields.Datetime(related='order_id.date_order', string='Order Deadline', readonly=True)
     date_approve = fields.Datetime(related="order_id.date_approve", string='Confirmation Date', readonly=True)
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
