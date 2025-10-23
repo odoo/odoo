@@ -1,4 +1,4 @@
-import { LivechatChannel } from "@im_livechat/core/common/livechat_channel_model";
+import { ImLivechatChannel } from "@mail/core/common/model_definitions";
 import { fields } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";
@@ -22,4 +22,4 @@ const livechatChannelPatch = {
         });
     },
 };
-patch(LivechatChannel.prototype, livechatChannelPatch);
+patch(ImLivechatChannel.prototype, livechatChannelPatch);

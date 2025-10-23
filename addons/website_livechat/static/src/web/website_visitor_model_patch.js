@@ -1,5 +1,3 @@
-import { fields } from "@mail/core/common/record";
-
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
 
@@ -13,7 +11,6 @@ const websiteVisitorPatch = {
         super.setup();
         /** @type {Array<[string, string]>} */
         this.page_visit_history = [];
-        this.discuss_channel_ids = fields.Many("mail.thread");
     },
     /** @returns {string} */
     get pageVisitHistoryText() {

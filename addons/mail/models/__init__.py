@@ -74,3 +74,4 @@ from . import discuss
 
 # discuss_channel_member must be loaded first
 from . import res_partner
+from . import ir_asset

@@ -1,6 +1,5 @@
-import { LivechatChannel } from "@im_livechat/core/common/livechat_channel_model";
-
 import { useSequential } from "@mail/utils/common/hooks";
+import { ImLivechatChannel } from "@mail/core/common/model_definitions";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -37,4 +36,4 @@ const livechatChannelPatch = {
         return _t("Leave %s", this.name);
     },
 };
-patch(LivechatChannel.prototype, livechatChannelPatch);
+patch(ImLivechatChannel.prototype, livechatChannelPatch);

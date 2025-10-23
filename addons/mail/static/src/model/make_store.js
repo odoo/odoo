@@ -202,7 +202,9 @@ export function makeStore(env, { localRegistry } = {}) {
             const targetModel = Model._.fieldsTargetModel.get(name);
             const inverse = Model._.fieldsInverse.get(name);
             if (targetModel && !Models[targetModel]) {
-                throw new Error(`No target model ${targetModel} exists`);
+                throw new Error(
+                    `Field "${name}" on model "${Model.name}" targets nonexistent model "${targetModel}".`
+                );
             }
             if (inverse) {
                 const OtherModel = Models[targetModel];

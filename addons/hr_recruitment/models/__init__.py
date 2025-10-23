@@ -21,4 +21,5 @@ from . import res_users
 from . import ir_attachment
 from . import ir_ui_menu
 from . import mail_activity_plan
+from . import mail_js_models_registry
 from . import hr_job_platform

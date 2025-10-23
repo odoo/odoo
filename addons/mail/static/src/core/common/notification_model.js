@@ -1,24 +1,12 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
+import { MailNotification } from "@mail/core/common/model_definitions";
 
 import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
 
-export class Notification extends Record {
-    static _name = "mail.notification";
-    static id = "id";
-
-    /** @type {number} */
-    id;
-    mail_message_id = fields.One("mail.message", {
-        onDelete() {
-            this.delete();
-        },
-    });
-    /** @type {string} */
-    notification_status;
-    /** @type {string} */
-    notification_type;
-    mail_email_address;
-    failure = fields.One("Failure", {
+/** @this {import("models").Notification} */
+function setup() {
+    this.failure = fields.One("Failure", {
         inverse: "notifications",
         /** @this {import("models").Notification} */
         compute() {
@@ -40,8 +28,13 @@ export class Notification extends Record {
         },
         eager: true,
     });
-    /** @type {string} */
-    failure_type;
+}
+
+patch(MailNotification.prototype, {
+    setup() {
+        super.setup(...arguments);
+        setup.call(this);
+    },
     get failureMessage() {
         switch (this.failure_type) {
             case "mail_smtp":
@@ -61,9 +54,7 @@ export class Notification extends Record {
             default:
                 return _t("Exception");
         }
-    }
-    res_partner_id = fields.One("res.partner");
-
+    },
     /**
      * Get the translate string of the failure type only
      * when it corresponds to a failure type
@@ -81,29 +72,24 @@ export class Notification extends Record {
                 return _t("Opted Out");
         }
         return "";
-    }
-
+    },
     get isFailure() {
         return ["exception", "bounce"].includes(this.notification_status);
-    }
-
+    },
     get icon() {
         if (this.isFailure) {
             return "fa fa-envelope";
         }
         return "fa fa-envelope-o";
-    }
-
+    },
     get label() {
         return "";
-    }
-
+    },
     get isFollowerNotification() {
         return this.mail_message_id.thread.followers.some(
             (follower) => follower.partner_id.id === this.res_partner_id.id
         );
-    }
-
+    },
     get statusIcon() {
         switch (this.notification_status) {
             case "process":
@@ -125,8 +111,7 @@ export class Notification extends Record {
                 return "fa fa-trash-o";
         }
         return "";
-    }
-
+    },
     get statusTitle() {
         switch (this.notification_status) {
             case "process":
@@ -145,7 +130,9 @@ export class Notification extends Record {
                 return this.autoCanceledFailureType || _t("Cancelled");
         }
         return "";
-    }
-}
-
-Notification.register();
+    },
+    _mail_message_id_onDelete() {
+        this.delete();
+    },
+});
+export const Notification = MailNotification;

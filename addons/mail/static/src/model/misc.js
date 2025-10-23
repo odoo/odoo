@@ -16,6 +16,7 @@ export const IS_RECORD_SYM = Symbol("isRecord");
 export const IS_FIELD_SYM = Symbol("isField");
 export const IS_DELETED_SYM = Symbol("isDeleted");
 export const STORE_SYM = Symbol("store");
+export const NO_COMPUTE_SYM = Symbol("NO_COMPUTE_SYM");
 
 export function AND(...args) {
     return [AND_SYM, ...args];

@@ -3,6 +3,6 @@ declare module "models" {
         leave_date_to: import("luxon").DateTime;
     }
     export interface ResUsers {
-        leave_date_to: string;
+        leave_date_to: import("luxon").DateTime;
     }
 }

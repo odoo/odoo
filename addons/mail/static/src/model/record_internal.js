@@ -2,7 +2,13 @@
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 import { onChange } from "@mail/utils/common/misc";
-import { IS_DELETED_SYM, IS_RECORD_SYM, isFieldDefinition, isRelation } from "./misc";
+import {
+    IS_DELETED_SYM,
+    IS_RECORD_SYM,
+    isFieldDefinition,
+    isRelation,
+    NO_COMPUTE_SYM,
+} from "./misc";
 import { RecordList } from "./record_list";
 import { reactive, toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
@@ -209,9 +215,9 @@ export class RecordInternal {
         } catch (err) {
             store.handleError(err);
         }
-        store._.updateFields(record, {
-            [fieldName]: computedValue,
-        });
+        if (computedValue !== NO_COMPUTE_SYM) {
+            store._.updateFields(record, { [fieldName]: computedValue });
+        }
         this.fieldsComputing.delete(fieldName);
     }
     /**

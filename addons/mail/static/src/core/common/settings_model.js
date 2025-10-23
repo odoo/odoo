@@ -1,50 +1,35 @@
+import { ResUsersSettings } from "@mail/core/common/model_definitions";
+import { fields } from "@mail/core/common/record";
 import { hasHardwareAcceleration } from "@mail/utils/common/misc";
-import { _t } from "@web/core/l10n/translation";
+
 import { browser } from "@web/core/browser/browser";
-import { fields, Record } from "./record";
-import { debounce } from "@web/core/utils/timing";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
+import { debounce } from "@web/core/utils/timing";
 
 const MESSAGE_SOUND = "mail.user_setting.message_sound";
 
-export class Settings extends Record {
-    id;
-
-    static new() {
+patch(ResUsersSettings, {
+    new() {
         const record = super.new(...arguments);
         record.onStorage = record.onStorage.bind(record);
         browser.addEventListener("storage", record.onStorage);
         return record;
-    }
+    },
+});
 
-    setup() {
-        super.setup();
-        this.saveVoiceThresholdDebounce = debounce(() => {
-            browser.localStorage.setItem(
-                "mail_user_setting_voice_threshold",
-                this.voiceActivationThreshold.toString()
-            );
-        }, 2000);
-        this.hasCanvasFilterSupport =
-            typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
-        this._loadLocalSettings();
-    }
-
-    delete() {
-        browser.removeEventListener("storage", this.onStorage);
-        super.delete(...arguments);
-    }
-
-    // Notification settings
-    /**
-     * @type {"mentions"|"all"|"no_notif"}
-     */
-    channel_notifications = fields.Attr("mentions", {
-        compute() {
-            return this.channel_notifications === false ? "mentions" : this.channel_notifications;
-        },
-    });
-    messageSound = fields.Attr(true, {
+/** @this {import("models").Settings} */
+function setup() {
+    this.saveVoiceThresholdDebounce = debounce(() => {
+        browser.localStorage.setItem(
+            "mail_user_setting_voice_threshold",
+            this.voiceActivationThreshold.toString()
+        );
+    }, 2000);
+    this.hasCanvasFilterSupport =
+        typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
+    this.messageSound = fields.Attr(true, {
         compute() {
             return browser.localStorage.getItem(MESSAGE_SOUND) !== "false";
         },
@@ -57,7 +42,7 @@ export class Settings extends Record {
             }
         },
     });
-    useCallAutoFocus = fields.Attr(true, {
+    this.useCallAutoFocus = fields.Attr(true, {
         /** @this {import("models").Settings} */
         compute() {
             return !browser.localStorage.getItem("mail_user_setting_disable_call_auto_focus");
@@ -71,27 +56,22 @@ export class Settings extends Record {
             browser.localStorage.setItem("mail_user_setting_disable_call_auto_focus", "true");
         },
     });
-
     // Voice settings
     // DeviceId of the audio input selected by the user
-    audioInputDeviceId = "";
-    audioOutputDeviceId = "";
-    cameraInputDeviceId = "";
-    use_push_to_talk = false;
-    voice_active_duration = 200;
-    volumes = fields.Many("Volume");
-    volumeSettingsTimeouts = new Map();
+    this.audioInputDeviceId = "";
+    this.audioOutputDeviceId = "";
+    this.cameraInputDeviceId = "";
+    this.volumes = fields.Many("Volume");
+    this.volumeSettingsTimeouts = new Map();
     // Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
-    voiceActivationThreshold = 0.05;
+    this.voiceActivationThreshold = 0.05;
     // true if listening to keyboard input to register the push to talk key.
-    isRegisteringKey = false;
-    push_to_talk_key;
-
+    this.isRegisteringKey = false;
     // Video settings
-    backgroundBlurAmount = 10;
-    edgeBlurAmount = 10;
-    showOnlyVideo = false;
-    useBlur = fields.Attr(false, {
+    this.backgroundBlurAmount = 10;
+    this.edgeBlurAmount = 10;
+    this.showOnlyVideo = false;
+    this.useBlur = fields.Attr(false, {
         compute() {
             return browser.localStorage.getItem("mail_user_setting_use_blur") === "true";
         },
@@ -104,7 +84,7 @@ export class Settings extends Record {
             }
         },
     });
-    blurPerformanceWarning = fields.Attr(false, {
+    this.blurPerformanceWarning = fields.Attr(false, {
         compute() {
             const rtc = this.store.rtc;
             if (!rtc || !this.useBlur) {
@@ -113,9 +93,22 @@ export class Settings extends Record {
             return this.useBlur && rtc.state?.cameraTrack && !hasHardwareAcceleration();
         },
     });
-    cameraFacingMode = undefined;
-
-    logRtc = false;
+    this.cameraFacingMode = undefined;
+    this.logRtc = false;
+    this._loadLocalSettings();
+}
+patch(ResUsersSettings.prototype, {
+    setup() {
+        super.setup(...arguments);
+        setup.call(this);
+    },
+    _compute_channel_notifications() {
+        return this.channel_notifications === false ? "mentions" : this.channel_notifications;
+    },
+    delete() {
+        browser.removeEventListener("storage", this.onStorage);
+        super.delete(...arguments);
+    },
     /**
      * @returns {Object} MediaTrackConstraints
      */
@@ -128,8 +121,7 @@ export class Settings extends Record {
             constraints.deviceId = this.audioInputDeviceId;
         }
         return constraints;
-    }
-
+    },
     get cameraConstraints() {
         const constraints = {
             width: 1280,
@@ -140,8 +132,7 @@ export class Settings extends Record {
             constraints.deviceId = this.cameraInputDeviceId;
         }
         return constraints;
-    }
-
+    },
     get NOTIFICATIONS() {
         return [
             {
@@ -157,8 +148,7 @@ export class Settings extends Record {
                 name: _t("Nothing"),
             },
         ];
-    }
-
+    },
     get MUTES() {
         return [
             {
@@ -192,8 +182,7 @@ export class Settings extends Record {
                 name: _t("Until I turn it back on"),
             },
         ];
-    }
-
+    },
     getMuteUntilText(dt) {
         if (dt) {
             return dt.year <= luxon.DateTime.now().year + 2
@@ -201,8 +190,7 @@ export class Settings extends Record {
                 : _t("Until I turn it back on");
         }
         return undefined;
-    }
-
+    },
     /**
      * @param {string} custom_notifications
      * @param {import("models").Thread} thread
@@ -213,8 +201,7 @@ export class Settings extends Record {
                 !thread && custom_notifications === "mentions" ? false : custom_notifications,
             channel_id: thread?.id,
         });
-    }
-
+    },
     /**
      * @param {integer|false} minutes
      * @param {import("models").Thread} thread
@@ -224,15 +211,14 @@ export class Settings extends Record {
             minutes,
             channel_id: thread?.id,
         });
-    }
-
+    },
     /**
      * @param {String} audioInputDeviceId
      */
     async setAudioInputDevice(audioInputDeviceId) {
         this.audioInputDeviceId = audioInputDeviceId;
         browser.localStorage.setItem("mail_user_setting_audio_input_device_id", audioInputDeviceId);
-    }
+    },
     /**
      * @param {String} audioOutputDeviceId
      */
@@ -242,7 +228,7 @@ export class Settings extends Record {
             "mail_user_setting_audio_output_device_id",
             audioOutputDeviceId
         );
-    }
+    },
     /**
      * @param {String} cameraInputDeviceId
      */
@@ -253,14 +239,14 @@ export class Settings extends Record {
             "mail_user_setting_camera_input_device_id",
             cameraInputDeviceId
         );
-    }
+    },
     /**
      * @param {string} value
      */
     setDelayValue(value) {
         this.voice_active_duration = parseInt(value, 10);
         this._saveSettings();
-    }
+    },
     /**
      * @param {event} ev
      */
@@ -274,7 +260,7 @@ export class Settings extends Record {
         }
         this.push_to_talk_key = pushToTalkKey;
         this._saveSettings();
-    }
+    },
     /**
      * @param {Object} param0
      * @param {number} [param0.partnerId]
@@ -296,17 +282,15 @@ export class Settings extends Record {
                 5000
             )
         );
-    }
+    },
     /**
      * @param {float} voiceActivationThreshold
      */
     setThresholdValue(voiceActivationThreshold) {
         this.voiceActivationThreshold = voiceActivationThreshold;
         this.saveVoiceThresholdDebounce();
-    }
-
+    },
     // methods
-
     buildKeySet({ shiftKey, ctrlKey, altKey, key }) {
         const keys = new Set();
         if (key) {
@@ -322,8 +306,7 @@ export class Settings extends Record {
             keys.add("Alt");
         }
         return keys;
-    }
-
+    },
     /**
      * @param {event} ev
      * @param {Object} param1
@@ -344,7 +327,7 @@ export class Settings extends Record {
             return [...settingsKeySet].every((key) => eventKeySet.has(key));
         }
         return settingsKeySet.has(ev.key === "Meta" ? "Alt" : ev.key);
-    }
+    },
     pushToTalkKeyFormat() {
         if (!this.push_to_talk_key) {
             return;
@@ -356,11 +339,11 @@ export class Settings extends Record {
             altKey: !!altKey,
             key: key || false,
         };
-    }
+    },
     setPushToTalk(value) {
         this.use_push_to_talk = value;
         this._saveSettings();
-    }
+    },
     /**
      * @private
      */
@@ -391,7 +374,7 @@ export class Settings extends Record {
         this.useCallAutoFocus = !browser.localStorage.getItem(
             "mail_user_setting_disable_call_auto_focus"
         );
-    }
+    },
     /**
      * @private
      */
@@ -409,7 +392,7 @@ export class Settings extends Record {
                 },
             }
         );
-    }
+    },
     /**
      * @param {Object} param0
      * @param {String} param0.key
@@ -424,7 +407,7 @@ export class Settings extends Record {
             [[this.id], partnerId, volume],
             { guest_id: guestId }
         );
-    }
+    },
     onStorage(ev) {
         if (ev.key === MESSAGE_SOUND) {
             this.messageSound = ev.newValue !== "false";
@@ -432,7 +415,7 @@ export class Settings extends Record {
         if (ev.key === "mail_user_setting_use_blur") {
             this.useBlur = ev.newValue === "true";
         }
-    }
+    },
     /**
      * @private
      */
@@ -445,7 +428,5 @@ export class Settings extends Record {
             () => this._onSaveGlobalSettingsTimeout(),
             2000
         );
-    }
-}
-
-Settings.register();
+    },
+});

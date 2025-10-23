@@ -9,9 +9,6 @@ patch(ResPartner.prototype, {
     employeeId: undefined,
     setup() {
         super.setup();
-        this.employee_ids = fields.Many("hr.employee", {
-            inverse: "work_contact_id",
-        });
         this.employee_id = fields.One("hr.employee", {
             compute() {
                 return (

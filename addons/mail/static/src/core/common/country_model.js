@@ -1,22 +1,12 @@
-import { Record } from "@mail/core/common/record";
+import { ResCountry } from "@mail/core/common/model_definitions";
 
-export class Country extends Record {
-    static id = "id";
-    static _name = "res.country";
+import { patch } from "@web/core/utils/patch";
 
-    /** @type {string} */
-    code;
-    /** @type {number} */
-    id;
-    /** @type {string} */
-    name;
-
+patch(ResCountry.prototype, {
     get flagUrl() {
         if (!this.code) {
             return false;
         }
         return `/base/static/img/country_flags/${encodeURIComponent(this.code.toLowerCase())}.png`;
-    }
-}
-
-Country.register();
+    },
+});

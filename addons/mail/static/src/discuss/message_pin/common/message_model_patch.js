@@ -1,15 +1,10 @@
 import { patch } from "@web/core/utils/patch";
 import { Message } from "@mail/core/common/message_model";
-import { fields } from "@mail/core/common/record";
 import { _t } from "@web/core/l10n/translation";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { Deferred } from "@web/core/utils/concurrency";
 
 patch(Message.prototype, {
-    setup() {
-        super.setup();
-        this.pinned_at = fields.Datetime();
-    },
     /** @returns {Deferred<boolean>} */
     pin() {
         if (this.pinned_at) {

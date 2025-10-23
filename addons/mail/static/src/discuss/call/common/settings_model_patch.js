@@ -1,12 +1,9 @@
-import { Settings } from "@mail/core/common/settings_model";
+import { ResUsersSettings } from "@mail/core/common/model_definitions";
 
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Settings} */
 const SettingsPatch = {
-    setup() {
-        super.setup(...arguments);
-    },
     /** @param {import("models").RtcSession} rtcSession */
     getVolume(rtcSession) {
         return (
@@ -20,4 +17,4 @@ const SettingsPatch = {
         );
     },
 };
-patch(Settings.prototype, SettingsPatch);
+patch(ResUsersSettings.prototype, SettingsPatch);

@@ -5,11 +5,10 @@ import { generatePdfThumbnail } from "@mail/utils/common/pdf_thumbnail";
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { IrAttachment } from "@mail/core/common/model_definitions";
 import { imageUrl, url } from "@web/core/utils/urls";
 
-export class Attachment extends FileModelMixin(Record) {
-    static _name = "ir.attachment";
-    static id = "id";
+export class Attachment extends FileModelMixin(IrAttachment) {
     static new() {
         /** @type {import("models").Attachment} */
         const attachment = super.new(...arguments);
@@ -25,24 +24,21 @@ export class Attachment extends FileModelMixin(Record) {
     thread = fields.One("mail.thread", { inverse: "attachments" });
     /** @type {string} */
     raw_access_token;
-    res_name;
     /** @type {string} */
     thumbnail_access_token;
     message = fields.One("mail.message", { inverse: "attachment_ids" });
     /** @type {string} */
     ownership_token;
-    create_date = fields.Datetime();
-    has_thumbnail = fields.Attr(undefined, {
-        onUpdate() {
-            if (
-                this.isPdf &&
-                !this.has_thumbnail &&
-                (this.store.self_user?.share === false || this.ownership_token)
-            ) {
-                this.setPdfThumbnail();
-            }
-        },
-    });
+
+    _has_thumbnail_onUpdate() {
+        if (
+            this.isPdf &&
+            !this.has_thumbnail &&
+            (this.store.self_user?.share === false || this.ownership_token)
+        ) {
+            this.setPdfThumbnail();
+        }
+    }
 
     get thumbnailUrl() {
         return imageUrl(

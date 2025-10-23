@@ -5,9 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(Activity.prototype, {
-    setup() {
-        super.setup(...arguments);
-    },
     get dateDeadlineFormatted() {
         return formatDate(this.date_deadline);
     },

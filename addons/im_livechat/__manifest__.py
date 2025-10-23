@@ -114,6 +114,7 @@ Help your customers with this chat, and analyse their feedback.
         'im_livechat.assets_embed_core': [
             ('remove', 'web/static/src/core/browser/title_service.js'),
             ("include", "html_editor.assets_editor"),
+            ('include', 'mail.assets_js_models'),
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/discuss/core/common/*',

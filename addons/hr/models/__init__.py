@@ -14,6 +14,7 @@ from . import hr_work_location
 from . import mail_activity_plan
 from . import mail_activity_plan_template
 from . import mail_alias
+from . import mail_js_models_registry
 from . import discuss_channel
 from . import models
 from . import res_config_settings

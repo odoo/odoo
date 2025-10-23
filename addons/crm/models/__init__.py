@@ -15,4 +15,5 @@ from . import crm_lead_scoring_frequency
 from . import utm
 from . import crm_recurring_plan
 from . import mail_activity
+from . import mail_js_models_registry
 from . import res_users
