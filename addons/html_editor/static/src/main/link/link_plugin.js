@@ -646,7 +646,7 @@ export class LinkPlugin extends Plugin {
         }
         if (!selectionData.documentSelectionIsInEditable) {
             const popoverEl = document.querySelector(".o-we-linkpopover");
-            if (popoverEl?.contains(selectionData.documentSelection?.anchorNode)) {
+            if (popoverEl && (!selectionData.documentSelection || popoverEl.contains(selectionData.documentSelection.anchorNode))) {
                 return;
             }
             this.linkInDocument = null;
