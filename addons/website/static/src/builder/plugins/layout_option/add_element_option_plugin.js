@@ -3,6 +3,7 @@ import { resizeGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layo
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { onceAllImagesLoaded } from "@website/utils/images";
 
 /**
  * @typedef { Object } AddElementOptionShared
@@ -94,25 +95,17 @@ export class AddGridElementAction extends BuilderAction {
     async apply({ editingElement: rowEl, params: { mainParam: elementType } }) {
         if (elementType === "image") {
             // Choose an image with the media dialog.
-            let imageEl, imageLoadedPromise;
-            await new Promise((resolve) => {
-                const onClose = this.dependencies.media.openMediaDialog({
-                    onlyImages: true,
-                    noDocuments: true,
-                    save: (selectedImageEl) => {
-                        imageEl = selectedImageEl;
-                        imageLoadedPromise = new Promise((resolve) => {
-                            imageEl.addEventListener("load", () => resolve(), { once: true });
-                        });
-                    },
-                });
-                onClose.then(resolve);
+            let imageEl;
+            await this.dependencies.media.openMediaDialog({
+                onlyImages: true,
+                noDocuments: true,
+                save: (selectedImageEl) => (imageEl = selectedImageEl),
             });
             if (!imageEl) {
                 return;
             }
             // Wait for the image to be loaded.
-            await imageLoadedPromise;
+            await onceAllImagesLoaded(imageEl);
             this.dependencies.addElementOption.addGridElement(rowEl, imageEl, 6, 6, [
                 "o_grid_item_image",
             ]);
