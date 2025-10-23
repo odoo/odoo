@@ -350,8 +350,8 @@ export class PosOrderline extends PosOrderlineAccounting {
             orderline.getNote() === this.getNote() &&
             this.getProduct().id === orderline.getProduct().id &&
             this.isPosGroupable() &&
-            // don't merge discounted orderlines
-            this.getDiscount() === 0 &&
+            this.getDiscount() === orderline.getDiscount() &&
+            this.price_type === orderline.price_type &&
             this.currency.isZero(
                 this.currency.round(price) -
                     this.currency.round(order_line_price) -
