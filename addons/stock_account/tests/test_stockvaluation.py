@@ -2852,3 +2852,13 @@ class TestStockValuation(TestStockValuationBase):
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
         self.assertEqual(move.value, 120, "The move value should match the price in the correct UoM (12 * 10$).")
+
+    def test_product_valuation_scrap_different_uom(self):
+        self.product1.standard_price = 8
+        uom_pack_6 = self.env.ref('uom.product_uom_pack_6')
+        self.product1.uom_ids = uom_pack_6
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 10)
+        self.assertEqual(self.product1.total_value, 80)
+        self._make_out_move(self.product1, 1, uom_id=uom_pack_6.id)
+        self.assertEqual(self.product1.total_value, 32)
