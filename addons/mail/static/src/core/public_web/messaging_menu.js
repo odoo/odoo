@@ -43,6 +43,19 @@ export class MessagingMenu extends Component {
         this.markAsRead(thread);
     }
 
+    onClickInboxMsg(isMarkAsRead, msg) {
+        if (!isMarkAsRead) {
+            this.store.inbox.highlightMessage = msg;
+            this.env.services.action.doAction({
+                tag: "mail.action_discuss",
+                type: "ir.actions.client",
+                context: { active_id: "mail.box_inbox" },
+            });
+            return;
+        }
+        msg.setDone();
+    }
+
     markAsRead(thread) {
         if (thread.needactionMessages.length > 0) {
             thread.markAllMessagesAsRead();
@@ -117,6 +130,17 @@ export class MessagingMenu extends Component {
 
     get threads() {
         return this.store.menuThreads;
+    }
+
+    get visibleStandaloneMessages() {
+        const tab = this.store.discuss.activeTab;
+        if (tab !== "main") {
+            return [];
+        }
+        if (this.store.discuss.searchTerm) {
+            return [];
+        }
+        return this.store.standaloneInboxMessages;
     }
 
     /**

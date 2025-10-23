@@ -64,6 +64,7 @@ patch(MessagingMenu.prototype, {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
+            this.visibleStandaloneMessages.length > 0 ||
             (this.store.failures.length > 0 &&
                 this.store.discuss.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
