@@ -198,19 +198,30 @@ class PurchaseOrderLine(models.Model):
                 # Give priority to the pickings related to the line
                 moves_to_assign = line.order_id.picking_ids.move_ids.filtered(lambda m: not m.purchase_line_id and line.product_id == m.product_id)
                 moves_to_assign.purchase_line_id = line.id
+                previous_qty = self.env.context['previous_product_qty'][line.id] if 'previous_product_qty' in self.env.context else 0
+                diff_qty = line.product_qty - previous_qty
                 line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 if line_pickings:
                     picking = line_pickings[0]
                 else:
                     pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                     picking = pickings and pickings[0] or False
+
+                # if no picking was found we look for OUT picking in case of -ve qty update before creating a new picking
+                if not picking and diff_qty < 0:
+                    out_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('supplier'))
+                    picking = out_pickings[-1:] or False
+
                 if not picking:
-                    if not line.product_qty > line.qty_received:
+                    if not line.product_qty > line.qty_received and line.product_qty > 0:
                         continue
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)
 
                 moves = line._create_stock_moves(picking)
+                if diff_qty < 0 and moves.location_dest_id.usage == 'supplier':
+                    moves.product_uom_qty *= -1
+                    moves.location_id, moves.location_dest_id, moves.location_final_id = picking.location_id, picking.location_dest_id, picking.location_dest_id
                 moves._action_confirm()._action_assign()
 
     def _get_move_dests_initial_demand(self, move_dests):
@@ -218,7 +229,7 @@ class PurchaseOrderLine(models.Model):
             sum(move_dests.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier').mapped('product_qty')),
             self.uom_id, rounding_method='HALF-UP')
 
-    def _prepare_stock_moves(self, picking):
+    def _prepare_stock_moves(self, picking=False):
         """ Prepare the stock moves data for one order line. This function returns a list of
         dictionary ready to be used in stock.move's create()
         """
@@ -299,8 +310,11 @@ class PurchaseOrderLine(models.Model):
     def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
         self.ensure_one()
         self._check_orderpoint_picking_type()
-        product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
-        location_dest = self.env['stock.location'].browse(self.order_id._get_destination_location())
+        if not self.order_id.reference_ids:
+            self.order_id.reference_ids = self.order_id.reference_ids.create(self.order_id._prepare_reference_vals())
+        if not self.order_id.partner_id.property_stock_supplier.id:
+            raise UserError(_("You must set a Vendor Location for partner %(partner_name)s", partner_name=self.partner_id.name))
+        location_dest = picking.location_dest_id if picking else self.env['stock.location'].browse(self.order_id._get_destination_location())
         location_final = self.location_final_id or self.order_id._get_final_location_record()
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
@@ -309,11 +323,11 @@ class PurchaseOrderLine(models.Model):
             'product_id': self.product_id.id,
             'date': date_planned,
             'date_deadline': date_planned,
-            'location_id': self.order_id.partner_id.property_stock_supplier.id,
+            'location_id': picking.location_id.id if picking else self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': location_dest.id,
             'location_final_id': location_final.id,
-            'picking_id': picking.id,
-            'partner_id': self.order_id.dest_address_id.id,
+            'picking_id': picking.id if picking else False,
+            'partner_id': self.order_id.dest_address_id.id or self.order_id.partner_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
             'state': 'draft',
             'purchase_line_id': self.id,
@@ -378,7 +392,7 @@ class PurchaseOrderLine(models.Model):
         res['product_no_variant_attribute_value_ids'] = values.get('never_product_template_attribute_value_ids')
         return res
 
-    def _create_stock_moves(self, picking):
+    def _create_stock_moves(self, picking=False):
         values = []
         for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):

@@ -177,7 +177,7 @@ class StockMove(models.Model):
             picking_type=self.picking_type_id,
             company_id=self.company_id.id,
             bom_type='subcontract',
-            subcontractor=self.picking_id.partner_id,
+            subcontractor=self.partner_id,
         )
         return bom
 

@@ -631,9 +631,10 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         po = self.env['purchase.order'].create(po_vals)
         po.button_confirm()
 
-        # one delivery, one receipt
         self.assertEqual(len(po.picking_ids), 1)
         self.assertEqual(po.picking_ids.picking_type_id.code, 'outgoing')
+        # check there is no empty receipts are created
+        self.assertFalse(self.env['stock.picking'].search([('move_ids', '=', False)]))
         po.picking_ids.button_validate()
         self.assertEqual(po.order_line.qty_received, po.order_line.product_qty)
 
@@ -974,3 +975,46 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             ('res_model_id', '=', 'purchase.order'), ('res_id', '=', multi_step_po.id),
         ])
         self.assertFalse(activity)
+
+    def test_merging_moves_of_negative_order_lines_update(self):
+        """This tests that moves created by updating order_lines with negative quantities get merged
+            correctly.
+            Increasing the -ve value (-3 => -5) should reflect in the OUT transfer with +ve value in
+            the quantity of the move.
+            Decreasing the -ve value (-5 => -3) should create a new IN transfer (or gets merged if
+            there is already an IN transfer on the PO) with +ve value in the quantity of the move.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_id_1.name,
+                'product_id': self.product_id_1.id,
+                'uom_id': self.product_id_1.uom_id.id,
+                'product_qty': -5.0,
+                'price_unit': 250.0,
+            })],
+        })
+        po.button_confirm()
+
+        out_delivery = po.picking_ids
+        self.assertEqual(len(out_delivery), 1)
+        self.assertEqual(out_delivery.picking_type_id.code, 'outgoing')
+        self.assertEqual(out_delivery.move_ids.quantity, 5)
+        po.order_line.write({'product_qty': -7})
+        self.assertEqual(out_delivery.move_ids.quantity, 7)
+        # increasing the quantity is reflected in a new IN transfer
+        po.order_line.write({'product_qty': -6})
+        self.assertEqual(len(po.picking_ids), 2)
+        in_receipt = po.picking_ids.filtered(lambda p: p.picking_type_id.code == 'incoming')
+        self.assertEqual(in_receipt.move_ids.quantity, 1)
+        # increasing the quantity again gets merged in the existing IN transfer
+        po.order_line.write({'product_qty': -5})
+        self.assertEqual(in_receipt.move_ids.quantity, 2)
+        # decreasing the quantity will cancel receipt
+        po.order_line.write({'product_qty': -10})
+        self.assertEqual(in_receipt.state, 'cancel')
+        # To improve: If you go below the original negative value, moves are added but not merged
+        self.assertRecordValues(out_delivery.move_ids, [
+            {'product_id': self.product_id_1.id, 'quantity': 7},
+            {'product_id': self.product_id_1.id, 'quantity': 3}
+        ])
