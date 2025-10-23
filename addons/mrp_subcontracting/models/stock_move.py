@@ -154,6 +154,8 @@ class StockMove(models.Model):
             subcontracting_location = \
                 move.picking_id.partner_id.with_company(company).property_stock_subcontractor \
                 or company.subcontracting_location_id
+            if not move.picking_id:
+                move._assign_picking()
             move.write({
                 'production_group_id': False,
                 'is_subcontract': True,
@@ -178,7 +180,7 @@ class StockMove(models.Model):
             picking_type=self.picking_type_id,
             company_id=self.company_id.id,
             bom_type='subcontract',
-            subcontractor=self.picking_id.partner_id,
+            subcontractor=self.env.context.get('move_picking_partner_id') or self.picking_id.partner_id,
         )
         return bom
 

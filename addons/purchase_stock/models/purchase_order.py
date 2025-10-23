@@ -380,49 +380,24 @@ class PurchaseOrder(models.Model):
             'name': self.name,
         }
 
-    def _prepare_picking(self):
-        if not self.reference_ids:
-            self.reference_ids = self.reference_ids.create(self._prepare_reference_vals())
-        if not self.partner_id.property_stock_supplier.id:
-            raise UserError(_("You must set a Vendor Location for this partner %s", self.partner_id.name))
-        return {
-            'picking_type_id': self.picking_type_id.id,
-            'partner_id': self.partner_id.id,
-            'user_id': False,
-            'origin': self.name,
-            'location_dest_id': self._get_destination_location(),
-            'location_id': self.partner_id.property_stock_supplier.id,
-            'company_id': self.company_id.id,
-            'state': 'draft',
-            'reference_ids': [Command.set(self.reference_ids.ids)],
-            'priority': self.priority,
-        }
-
     def _create_picking(self):
-        StockPicking = self.env['stock.picking']
         for order in self.filtered(lambda po: po.state == 'purchase'):
             if any(product.type == 'consu' for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-                if not pickings:
-                    res = order._prepare_picking()
-                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
-                    pickings = picking
-                else:
-                    picking = pickings[0]
-                moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
+                moves = order.order_line._create_stock_moves()
+                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).with_context({'move_picking_partner_id': self.partner_id}).sudo()._action_confirm()
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
+                pickings = moves.picking_id
                 # Get following pickings (created by push rules) to confirm them as well.
                 forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
                 (pickings | forward_pickings).action_confirm()
-                picking.message_post_with_source(
+                pickings.message_post_with_source(
                     'mail.message_origin_link',
-                    render_values={'self': picking, 'origin': order},
+                    render_values={'self': pickings, 'origin': order},
                     subtype_xmlid='mail.mt_note',
                 )
         return True
