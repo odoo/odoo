@@ -147,7 +147,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return {
             'partner': partner,
             'party_identification_vals': self.with_context(ubl_partner_role=role)._get_partner_party_identification_vals_list(partner.commercial_partner_id),
-            'party_name_vals': [{'name': partner.display_name}],
+            'party_name_vals': [{'name': partner.display_name if partner.name else partner.commercial_partner_id.display_name}],
             'postal_address_vals': self._get_partner_address_vals(partner),
             'party_tax_scheme_vals': self._get_partner_party_tax_scheme_vals_list(partner.commercial_partner_id, role),
             'party_legal_entity_vals': self._get_partner_party_legal_entity_vals_list(partner.commercial_partner_id),
