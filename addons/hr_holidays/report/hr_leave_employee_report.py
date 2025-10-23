@@ -19,7 +19,7 @@ class HrLeaveEmployeeReport(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", readonly=True)
-    working_schedule_aligned_date_from = fields.Datetime('Date From', compute='_compute_working_schedule_aligned_dates', readonly=True, store=True)
+    working_schedule_aligned_date_from = fields.Datetime('Date From', readonly=True, store=True)
     number_of_days = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     number_of_hours = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
     description = fields.Char()
@@ -37,7 +37,6 @@ class HrLeaveEmployeeReport(models.Model):
     def _table_query(self):
         fetched_leave_field_names, leave_records = self._fetch_leave_data()
         report_records = self._create_report_records_from_leave_records(leave_records, fetched_leave_field_names)
-        self._compute_working_schedule_aligned_dates(report_records)
         self._compute_leave_duration(report_records)
         return self._generate_report_query(report_records)
 
@@ -61,7 +60,7 @@ class HrLeaveEmployeeReport(models.Model):
             SELECT
                 id, leave_id, employee_id,
                 holiday_status_id, state, description,
-                GREATEST(date_from, day_start) AS day_aligned_date_from,
+                GREATEST(date_from, day_start) AS working_schedule_aligned_date_from,
                 LEAST(date_to, (day_start + INTERVAL '1 day' - INTERVAL '1 second')) AS day_aligned_date_to
             FROM leave_data;
             """,
@@ -75,12 +74,7 @@ class HrLeaveEmployeeReport(models.Model):
         report_records = []
         for leave_record in leave_records:
             report_records.append({field_name: leave_record[index] for index, field_name in enumerate(leave_field_names)})
-
         return report_records
-
-    def _compute_working_schedule_aligned_dates(self, report_records):
-        for report_record in report_records:
-            report_record['working_schedule_aligned_date_from'] = report_record['day_aligned_date_from']
 
     def _compute_leave_duration(self, report_records):
         if not report_records:
@@ -88,9 +82,8 @@ class HrLeaveEmployeeReport(models.Model):
         leave_ids = [report_record['leave_id'] for report_record in report_records]
         leaves = self.env['hr.leave'].browse(leave_ids)
         holiday_status_id_by_leave_id = {leave.id: leave.holiday_status_id.id for leave in leaves}
-        # Remove the day_aligned_date_from/to as they are intermediate values for computing other values
         virtual_leaves_data = [{
-            'date_from': report_record.pop('day_aligned_date_from'),
+            'date_from': report_record['working_schedule_aligned_date_from'],
             'date_to': report_record.pop('day_aligned_date_to'),
             'employee_id': report_record['employee_id'],
             'holiday_status_id': holiday_status_id_by_leave_id[report_record['leave_id']],
