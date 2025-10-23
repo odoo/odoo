@@ -9,7 +9,7 @@ import { memoize } from "@web/core/utils/functions";
  */
 export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
-    static dependencies = ["history", "protectedNode"];
+    static dependencies = ["history", "protectedNode", "selection"];
     resources = {
         /** Handlers */
         normalize_handlers: withSequence(0, this.normalize.bind(this)),
@@ -32,7 +32,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         // map from node to component info
         this.nodeMap = new WeakMap();
         this.app = this.config.embeddedComponentInfo.app;
-        this.env = this.config.embeddedComponentInfo.env;
+        this.env = this.config.embeddedComponentInfo.env ?? {};
         this.hostToStateChangeManagerMap = new WeakMap();
         this.embeddedComponents = memoize((embeddedComponents = []) => {
             const result = {};
@@ -163,11 +163,16 @@ export class EmbeddedComponentPlugin extends Plugin {
     ) {
         const props = getProps?.(host) || {};
         const env = Object.create(this.env);
+        env.editorShared = {};
         if (getStateChangeManager) {
             env.getStateChangeManager = this.getStateChangeManager.bind(this);
         }
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
+            // Enable the automatic selection restoration feature in @see useEditableDescendants
+            Object.assign(env.editorShared, {
+                selection: { ...this.dependencies.selection },
+            });
         }
         this.dispatchTo("mount_component_handlers", { name, env, props });
         const root = this.app.createRoot(Component, {
