@@ -77,7 +77,7 @@ class AccountEdiProxyClientUser(models.Model):
     @handle_demo
     def _check_company_on_peppol(self, company, edi_identification):
         if (
-            not company.account_peppol_migration_key
+            not company.sudo().account_peppol_migration_key
             and (participant_info := company.partner_id._peppol_lookup_participant(edi_identification)) is not None
             and company.partner_id._check_peppol_participant_exists(participant_info, edi_identification, check_company=True)
         ):
@@ -297,7 +297,7 @@ class AccountEdiProxyClientUser(models.Model):
         self.ensure_one()
         response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
         if migration_key := response.get('migration_key'):
-            self.company_id.account_peppol_migration_key = migration_key
+            self.company_id.sudo().account_peppol_migration_key = migration_key
 
     def _get_company_details(self):
         self.ensure_one()
@@ -310,7 +310,7 @@ class AccountEdiProxyClientUser(models.Model):
             'peppol_country_code': self.company_id.country_id.code,
             'peppol_phone_number': self.company_id.account_peppol_phone_number,
             'peppol_contact_email': self.company_id.account_peppol_contact_email,
-            'peppol_migration_key': self.company_id.account_peppol_migration_key,
+            'peppol_migration_key': self.company_id.sudo().account_peppol_migration_key,
         }
 
     def _peppol_register_sender(self):
@@ -353,13 +353,13 @@ class AccountEdiProxyClientUser(models.Model):
         self._call_peppol_proxy(
             endpoint='/api/peppol/1/register_sender_as_receiver',
             params={
-                'migration_key': company.account_peppol_migration_key,
+                'migration_key': company.sudo().account_peppol_migration_key,
                 'supported_identifiers': list(company._peppol_supported_document_types())
             },
         )
         # once we sent the migration key over, we don't need it
         # but we need the field for future in case the user decided to migrate away from Odoo
-        company.account_peppol_migration_key = False
+        company.sudo().account_peppol_migration_key = False
         company.account_peppol_proxy_state = 'smp_registration'
 
         self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
@@ -379,7 +379,7 @@ class AccountEdiProxyClientUser(models.Model):
             self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
 
         self.company_id.account_peppol_proxy_state = 'not_registered'
-        self.company_id.account_peppol_migration_key = False
+        self.company_id.sudo().account_peppol_migration_key = False
         self.unlink()
 
     @api.model

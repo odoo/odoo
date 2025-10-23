@@ -55,7 +55,7 @@ class ResCompany(models.Model):
         help='Primary contact email for Peppol connection related communications and notifications.\n'
              'In particular, this email is used by Odoo to reconnect your Peppol account in case of database change.',
     )
-    account_peppol_migration_key = fields.Char(string="Migration Key")
+    account_peppol_migration_key = fields.Char(string="Migration Key", groups="base.group_system")
     account_peppol_phone_number = fields.Char(
         string='Mobile number',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
