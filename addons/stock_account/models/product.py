@@ -248,11 +248,6 @@ class ProductProduct(models.Model):
             moves_qty_by_product[product] = qty_by_move
         return moves_qty_by_product
 
-    def _get_cogs_value(self, quantity):
-        if self.cost_method in ['standard', 'average']:
-            return self.standard_price * quantity
-        return self._run_fifo(quantity)
-
     def _run_avco(self, at_date=None, lot=None, method="realtime"):
         """ Recompute the average cost of the product base on the last closing
         inventory value and all the incoming moves during the period."""
