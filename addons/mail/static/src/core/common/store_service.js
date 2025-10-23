@@ -1,6 +1,7 @@
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
@@ -171,6 +172,15 @@ export class Store extends BaseStore {
         }
         return res.join(" ");
     }
+
+    standaloneInboxMessages = fields.Many("mail.message", {
+        compute() {
+            const messages = this.store.inbox.messages.filter((m) => !m.thread);
+            return messages.sort(
+                (m1, m2) => compareDatetime(m2.datetime, m1.datetime) || m2.id - m1.id
+            );
+        },
+    });
 
     /**
      * @param {Object} params post message data

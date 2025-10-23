@@ -23,17 +23,17 @@
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'notification' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'notification'">Notifications</button>
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
-                        <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
+                        <button t-if="(threads.length + visibleStandaloneMessages.length) >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
                         <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                     </t>
                 </t>
             </div>
         </xpath>
-        <xpath expr="//*[@name='threads']" position="before">
+        <xpath expr="//*[@name='standaloneInboxMessages']" position="before">
             <div t-if="store.channels.status !== 'fetching' and !hasPreviews and !store.discuss.searchTerm" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
-            <div t-if="store.discuss.searchTerm and !threads.length" class="d-flex justify-content-center py-4 px-2 text-muted">
+            <div t-if="store.discuss.searchTerm and !threads.length and !visibleStandaloneMessages.length" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No thread found.
             </div>
             <t t-set="itemIndex" t-value="0"/>
