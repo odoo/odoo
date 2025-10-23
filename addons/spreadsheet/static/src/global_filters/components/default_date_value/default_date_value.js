@@ -27,9 +27,10 @@ export class DefaultDateValue extends Component {
     }
 
     get dateOptions() {
-        const filterTypes = getDateGlobalFilterTypes().filter(
-            (type) => !globalFilterDateRegistry.get(type).isFixedPeriod
-        );
+        const filterTypes = getDateGlobalFilterTypes().filter((type) => {
+            const item = globalFilterDateRegistry.get(type);
+            return !item.isFixedPeriod && !item.shouldBeHidden?.(this.env.model.getters);
+        });
         const options = filterTypes.map((type, i) => {
             const item = globalFilterDateRegistry.get(type);
             const nextItem = filterTypes[i + 1] && globalFilterDateRegistry.get(filterTypes[i + 1]);

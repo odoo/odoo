@@ -16,16 +16,21 @@ const THIS_FISCAL_YEAR_FILTER = {
     defaultValue: "this_fiscal_year",
 };
 
+let fiscalYearStart = "2025-07-01";
+let fiscalYearEnd = "2026-06-30";
+
 let spreadsheetData;
 beforeEach(() => {
     spreadsheetData = undefined;
+    fiscalYearStart = "2025-07-01";
+    fiscalYearEnd = "2026-06-30";
     onRpc(
         "/spreadsheet/dashboard/data/1",
         () => ({
             snapshot: spreadsheetData,
             revisions: [],
-            current_fiscal_year_start: "2025-07-01",
-            current_fiscal_year_end: "2026-06-30",
+            current_fiscal_year_start: fiscalYearStart,
+            current_fiscal_year_end: fiscalYearEnd,
         }),
         { pure: true }
     );
@@ -72,4 +77,15 @@ test("Can navigate in a fiscal year global filter in the dropdown", async functi
     expect(".o-dropdown-item[data-id='fiscal_year']").toHaveClass("selected");
     expect(getCustomRangeValue()).toEqual(["07/01/2026", "06/30/2027"]);
     expect(model.getters.getGlobalFilterValue("1")).toEqual({ type: "fiscal_year", offset: 1 });
+});
+
+test("Fiscal year filter is hidden in dropdown if the fiscal year the same as the normal year", async function () {
+    fiscalYearStart = "2025-01-01";
+    fiscalYearEnd = "2025-12-31";
+    spreadsheetData = { globalFilters: [THIS_FISCAL_YEAR_FILTER] };
+    SpreadsheetDashboard._records[0].spreadsheet_data = JSON.stringify(spreadsheetData);
+    await createSpreadsheetDashboard({});
+    await contains(".o-date-filter-value").click();
+
+    expect(".o-dropdown-item[data-id='fiscal_year']").toHaveCount(0);
 });
