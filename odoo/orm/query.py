@@ -338,7 +338,7 @@ class TableSQL(SQL):
         field = model._fields.get(field_name)
         if not field:
             raise ValueError(f"Invalid field {field_name!r} on model {model._name!r}")
-        if field.type == 'many2one':
+        if hasattr(field, 'join') and callable(field.join):
             return field.join(self, **kw)
         raise ValueError(f"Invalid field {field_name}: _join() not possible")
 

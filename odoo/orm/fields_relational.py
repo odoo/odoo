@@ -1168,6 +1168,28 @@ class One2many(_RelationalMulti):
                         lines = browse(command[2] if command[0] == Command.SET else [])
                         self._update_cache(recs[-1], lines._ids)
 
+    def join(self, table: TableSQL, kind='LEFT JOIN') -> TableSQL:
+        """ Add a LEFT JOIN to ``query`` by following field ``self``,
+        and return the joined table's corresponding model and alias.
+        """
+        model = table._model
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        codomain = self.get_comodel_domain(model)
+        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access)
+
+        coalias = table._make_alias(self.name, comodel)
+        condition = SQL(
+            "%s = %s",
+            table.id,
+            coalias[self.inverse_name],
+        )
+        if coquery.where_clause:
+            cotable_sql = coquery.subselect(SQL('%s.*', coquery.table))
+        else:
+            cotable_sql = None
+        table._query.add_join(kind, coalias, cotable_sql, condition)
+        return coalias
+
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, operator, value) -> Query:
         inverse_field = comodel._fields[self.inverse_name]
         if inverse_field not in comodel.env.registry.not_null_fields:
@@ -1722,6 +1744,66 @@ class Many2many(_RelationalMulti):
                 if invf.model_name == self.comodel_name
             ])
 
+    def join(self, table: TableSQL, kind='LEFT JOIN', *, only_ids: bool = False) -> TableSQL:
+        """ Add a LEFT JOIN to ``query`` by following field ``self``,
+        and return the joined table's corresponding model and alias.
+        """
+        if not self.store:
+            # traverse_related, skip last one if not stored
+            if self.related:
+                traverse = table
+                if self.compute_sudo:
+                    env = table._model.env
+                    traverse = traverse._sudo()
+                for fname in self.related.split('.')[:-1]:
+                    traverse = traverse[fname]
+                table = traverse.id._table
+                if self.compute_sudo:
+                    table = table._with_model(table._model.with_env(env))
+                return self.related_field.join(table, kind=kind, only_ids=only_ids)
+            raise ValueError(f"Cannot join a non-stored many2many field: {self!r}")
+
+        model = table._model
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
+        codomain = self.get_comodel_domain(model)
+        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access)
+
+        rel_alias = table._make_alias(f'{self.name}__rel')
+        condition = SQL(
+            "%s = %s",
+            table.id,
+            rel_alias[rel_id1],
+        )
+        if only_ids:
+            result_id = TableSQLId(rel_alias._alias, rel_id2, table._query)
+            if coquery.where_clause:
+                condition = SQL(
+                    "%s AND %s IN %s",
+                    condition,
+                    result_id.id,
+                    coquery.subselect(),
+                )
+            table._query.add_join(kind, rel_alias, rel_table, condition)
+            return result_id
+
+        table._query.add_join(kind, rel_alias, rel_table, condition)
+        coalias = table._make_alias(self.name, comodel)
+        condition = SQL(
+            "%s = %s",
+            rel_alias[rel_id2],
+            coalias.id,
+        )
+        if coquery.where_clause:
+            # note that the number of rows in the result depends on the
+            # rel_table, but usually the resulting query will group by or
+            # exclude null values from the comodel
+            cotable_sql = coquery.subselect(SQL('%s.*', coquery.table))
+        else:
+            cotable_sql = None
+        table._query.add_join(kind, coalias, cotable_sql, condition)
+        return coalias
+
     def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         if coquery.is_empty():
             return SQL("FALSE") if exists else SQL("TRUE")
@@ -1749,3 +1831,16 @@ class Many2many(_RelationalMulti):
             rel_alias[rel_id2],
             coquery.subselect(),
         )
+
+
+class TableSQLId(TableSQL):
+    def __init__(self, alias, field_name, query):
+        super().__init__(alias, None, query)
+        self._sql_field = SQL.identifier(alias, field_name)
+
+    def __getitem__(self, name):
+        if name == 'id':
+            return self._sql_field
+        raise KeyError(f"Only 'id' is supported in {self!r}")
+
+    __getattr__ = __getitem__
