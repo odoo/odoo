@@ -353,6 +353,16 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                     self.assertEqual(result["mail.thread"][0]["hasReadAccess"], has_r)
                     self.assertEqual(result["mail.thread"][0]["canPostOnReadonly"], can_post)
 
+        record.with_user(self.user_admin).message_post(
+            body='Hello!',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=self.partner_employee_c2.ids,
+        )
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        messages = self.make_jsonrpc_request("/mail/inbox/messages")
+        self.assertEqual(len(messages['data']['mail.message']), 1)
+
     def test_redirect_to_records(self):
         """ Test mail/view redirection in MC environment, notably cids being
         added in redirect if user has access to the record. """
