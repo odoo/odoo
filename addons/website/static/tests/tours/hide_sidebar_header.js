@@ -1,5 +1,6 @@
+import { delay } from "@web/core/utils/concurrency";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { clickOnSave, goToTheme, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
     "hide_sidebar_header",
@@ -24,15 +25,15 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that the header changed to 'Sidebar'",
+            content:
+                "Check that the header changed to 'Sidebar' and wait for the iframe to finish reloading",
             trigger: ":iframe #wrapwrap>header.o_header_sidebar",
+            async run() {
+                await delay(1000);
+            },
         },
         stepUtils.waitIframeIsReady(),
-        {
-            content: "Go to the theme tab",
-            trigger: ".o-website-builder_sidebar .o-snippets-tabs button[data-name='theme']",
-            run: "click",
-        },
+        ...goToTheme(),
         {
             content: "Toggle 'Show Header' off",
             trigger: ".hb-row[data-label='Show Header'] input[type='checkbox']",
