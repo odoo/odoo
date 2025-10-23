@@ -2191,7 +2191,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
-        return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
+        return sol._get_discounted_price()
 
     # === Product Documents === #
 

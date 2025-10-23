@@ -1646,7 +1646,7 @@ class SaleOrderLine(models.Model):
         if len(self) == 1:
             return {
                 'quantity': self.product_uom_qty,
-                'price': self.price_unit,
+                'price': self._get_discounted_price(),
                 'readOnly': (
                     self.order_id._is_readonly()
                     or bool(self.combo_item_id)
@@ -1713,6 +1713,10 @@ class SaleOrderLine(models.Model):
             return False
         accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
         return accrual_date < fields.Date.today()
+
+    def _get_discounted_price(self):
+        self.ensure_one()
+        return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
 
     def has_valued_move_ids(self):
         return self.move_ids
