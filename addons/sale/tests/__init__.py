@@ -9,6 +9,7 @@ from . import test_ir_config_parameter
 from . import test_onchange
 from . import test_payment_flow
 from . import test_product_attribute_value
+from . import test_product_catalog
 from . import test_product_configurator_data
 from . import test_sale_combo_configurator
 from . import test_sale_flow
