@@ -24,6 +24,10 @@ class AccountMoveSendWizard(models.TransientModel):
         readonly=False,
         store=True,
     )
+    # Technical field to display the attachments widget
+    display_attachments_widget = fields.Boolean(
+        compute='_compute_display_attachments_widget',
+    )
     extra_edis = fields.Json(
         compute='_compute_extra_edis',
         inverse='_inverse_extra_edis',
@@ -76,6 +80,7 @@ class AccountMoveSendWizard(models.TransientModel):
         store=True,
         readonly=False,
     )
+    attachments_not_supported = fields.Json(compute='_compute_attachments_not_supported')
 
     model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
     res_ids = fields.Text('Related Document IDs', compute='_compute_res_ids', readonly=False, store=True)
@@ -136,13 +141,21 @@ class AccountMoveSendWizard(models.TransientModel):
                 method_key: {
                     'checked': (
                         method_key in preferred_methods and (
-                            method_key == 'email' or self._is_applicable_to_move(method_key, wizard.move_id, **self._get_sending_settings())
+                            method_key == 'email' or self._is_applicable_to_move(method_key, wizard.move_id, **self._get_default_sending_settings(wizard.move_id))
                         )),  # email method is always ok in single mode since the email can be added if it's missing
                     'label': method_label,
                 }
                 for method_key, method_label in methods
                 if self._is_applicable_to_company(method_key, wizard.company_id)
             }
+
+    @api.depends('invoice_edi_format')
+    def _compute_display_attachments_widget(self):
+        for wizard in self:
+            wizard.display_attachments_widget = wizard._display_attachments_widget(
+                edi_format=wizard.invoice_edi_format,
+                sending_methods=wizard.sending_methods or [],
+            )
 
     @api.depends('extra_edi_checkboxes')
     def _compute_extra_edis(self):
@@ -305,6 +318,11 @@ class AccountMoveSendWizard(models.TransientModel):
         self.ensure_one()
         return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
 
+    @api.depends('invoice_edi_format', 'mail_attachments_widget')
+    def _compute_attachments_not_supported(self):
+        for wizard in self:
+            wizard.attachments_not_supported = {}
+
     # -------------------------------------------------------------------------
     # CONSTRAINS
     # -------------------------------------------------------------------------
@@ -345,8 +363,9 @@ class AccountMoveSendWizard(models.TransientModel):
                 'mail_body': self.body,
                 'mail_subject': self.subject,
                 'mail_partner_ids': self.mail_partner_ids.ids,
-                'mail_attachments_widget': self.mail_attachments_widget,
             })
+        if self.display_attachments_widget:
+            send_settings['mail_attachments_widget'] = self.mail_attachments_widget
         return send_settings
 
     def _update_preferred_settings(self):
