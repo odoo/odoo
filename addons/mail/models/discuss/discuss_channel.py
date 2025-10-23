@@ -52,7 +52,7 @@ class DiscussChannel(models.Model):
     _description = 'Discussion Channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ["mail.thread", "bus.listener.mixin"]
+    _inherit = ["mail.thread"]
 
     MAX_BOUNCE_LIMIT = 10
 
@@ -1193,6 +1193,9 @@ class DiscussChannel(models.Model):
         channels = self.env["discuss.channel"].search(member_domain)
         channels += self.env["discuss.channel"].search(pinned_member_domain)
         return channels
+
+    def _get_store_target(self):
+        return {"bus_channel": self, "bus_subchannel": None}
 
     def _to_store_defaults(self, target: Store.Target):
         # As the method uses partial recordsets with filtered (that lose the prefetch ids) it is

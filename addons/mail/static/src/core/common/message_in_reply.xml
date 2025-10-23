@@ -13,12 +13,19 @@
                         <span class="o-mail-MessageInReply-content overflow-hidden smaller">
                             <b class="o-mail-MessageInReply-author"><t t-out="props.message.parent_id.authorName"/></b>:
                             <span class="o-mail-MessageInReply-message ms-1 text-break">
-                                <i t-if="props.message.parent_id.hasAttachments" class="fa fa-fw me-1" t-att-class="props.message.parent_id.previewIcon" /> 
+                                <i t-if="props.message.parent_id.hasAttachments" class="fa fa-fw me-1" t-att-class="props.message.parent_id.previewIcon" />
+                                <i t-if="props.message.parent_id.poll" class="fa fa-fw me-1 oi oi-view-cohort"/>
                                 <t t-if="!props.message.parent_id.isBodyEmpty">
                                     <t t-out="props.message.parent_id.inlineBody"/>
                                     <em t-if="props.message.parent_id.edited" class="smaller fw-bold text-500"> (edited)</em>
                                 </t>
-                                <span t-else="" class="fst-italic">Click to see the attachments</span>
+                                <span t-else="" class="fst-italic">
+                                    <t t-if="props.message.parent_id.attachment_ids.length > 0">
+                                        Click to see the attachments
+                                    </t>
+                                    <t t-elif="props.message.parent_id.ended_poll_ids.length" t-out="props.message.parent_id.poll.pollClosedText"/>
+                                    <t t-elif="props.message.parent_id.poll" t-esc="props.message.parent_id.poll.poll_question"/>
+                                </span>
                             </span>
                         </span>
                     </t>

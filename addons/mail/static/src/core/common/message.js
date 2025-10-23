@@ -6,6 +6,8 @@ import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_l
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
+import { Poll } from "@mail/core/common/poll";
+import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
@@ -64,6 +66,8 @@ export class Message extends Component {
         MessageLinkPreviewList,
         MessageReactions,
         Popover: MessageNotificationPopover,
+        Poll,
+        PollResult,
         RelativeTime,
         NotificationMessage,
     };

@@ -62,7 +62,7 @@
                             <t t-if="!isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': isAlignedRight }">
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote, 'o-mail-Message-pollContent flex-grow-1': message.poll }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.edited))">
@@ -127,6 +127,8 @@
                                         </t>
                                     </t>
                                     <t t-if="message.bubbleColor and message.hasTextContent and !env.inChatWindow and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
+                                    <PollResult t-if="message.ended_poll_ids.length" poll="message.poll"/>
+                                    <Poll t-elif="message.poll" poll="message.poll"/>
                                 </div>
                                 <div class="position-relative">
                                     <AttachmentList

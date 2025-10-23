@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.CreatePollDialog">
+    <Dialog size="'md'" title.translate="Create a poll">
+        <div class="w-100 mb-3">
+            <label class="w-100">
+                <span class="d-inline-block mb-2 fw-bold">Question</span>
+                <input type="text" name="poll_question" t-model="state.question" class="form-control rounded" placeholder="What question do you want to ask?" t-ref="question"/>
+                <div t-if="questionMissing" class="text-danger form-text ms-1">The question cannot be empty.</div>
+            </label>
+        </div>
+        <div class="mb-3">
+            <span class="mb-2 d-inline-block fw-bold">Options</span>
+            <CreatePollOptionDialog t-foreach="state.options" t-as="option" t-key="option_index" model="option" deletable="state.options.length > 2" onClickRemove="() => this.onClickRemoveOption(option_index)"/>
+            <button class="btn btn-link align-self-end" t-on-click="onClickAddOption" t-att-disabled="!canAddOption"><i class="fa fa-plus me-1"/> Add another option</button>
+            <div t-if="optionsMissing" class="text-danger form-text ms-1">At least two options are required</div>
+        </div>
+        <div class="d-flex justify-content-between gap-3">
+            <label class="d-flex align-items-center">
+                <span class="fw-bold me-2">Allow multiple options</span>
+                <input type="checkbox" name="poll_allow_multiple_options" t-model="state.allowMultipleOptions"/>
+            </label>
+            <label class="d-flex align-items-center">
+                <span class="fw-bold me-2">Duration</span>
+                <select class="form-select" name="poll_duration" style="width: fit-content;" t-model="state.duration">
+                    <option value="10">10 minutes</option>
+                    <option value="60">1 hour</option>
+                    <option value="240">4 hours</option>
+                    <option value="480">8 hours</option>
+                    <option value="1440">24 hours</option>
+                </select>
+        </label>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary me-2" t-on-click="onClickSubmit">Post</button>
+            <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+</templates>

@@ -1,3 +1,5 @@
+import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
+
 import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
@@ -5,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
 import { Action, useAction, UseActions } from "@mail/core/common/action";
+import { useService } from "@web/core/utils/hooks";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -146,6 +149,21 @@ registerComposerAction("add-canned-response", {
     name: _t("Insert a Canned response"),
     onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),
     sequence: 5,
+});
+registerComposerAction("start-poll", {
+    name: _t("Start a poll"),
+    icon: "oi oi-view-cohort",
+    condition: ({ composer, store }) => {
+        if (!store.self_user) {
+            return false;
+        }
+        return ["channel", "group"].includes(composer.targetThread?.channel_type);
+    },
+    onSelected: ({ composer, owner }) =>
+        owner.dialogService.add(CreatePollDialog, { thread: composer.targetThread }),
+    setup: ({ owner }) => {
+        owner.dialogService = useService("dialog");
+    },
 });
 
 export class ComposerAction extends Action {

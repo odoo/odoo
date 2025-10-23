@@ -1,0 +1,57 @@
+$poll-color-opacity-map: (
+    "secondary": 0.3,
+    "o-action": 0.1,
+    "o-brand-primary": 0.2
+);
+
+$poll-color-map: (
+    "secondary": $secondary,
+    "o-action": $o-action,
+    "o-brand-primary": $o-brand-primary
+);
+
+@mixin o-poll-bg($color-name) {
+    $opacity: map-get($poll-color-opacity-map, $color-name);
+    $color-value: map-get($poll-color-map, $color-name);
+    --poll-bg-r: #{red($color-value)};
+    --poll-bg-g: #{green($color-value)};
+    --poll-bg-b: #{blue($color-value)};
+    --poll-bg-opacity: #{$opacity};
+}
+
+@mixin o-mail-poll() {
+    .o-mail-Poll {
+        @include o-poll-bg("secondary");
+
+        &.o-ongoing .o-mail-PollOption.o-selected,
+        &.o-ongoing.o-isShowingResults .o-mail-PollOption.o-hasVotes {
+            @include o-poll-bg("o-action");
+        }
+
+        &:not(.o-ongoing) .o-mail-PollOption.o-winningOption {
+            @include o-poll-bg("o-brand-primary");
+        }
+
+        &.o-isShowingResults .o-mail-PollOption {
+            --poll-bg-color: rgba(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b), var(--poll-bg-opacity));
+            background: linear-gradient(to right, var(--poll-bg-color), var(--poll-bg-color)) no-repeat;
+        }
+    }
+
+    .o-mail-PollOption {
+        --poll-border-color: rgba(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b), 0.5);
+        border: 1px solid var(--poll-border-color);
+        background-size: 0%;
+        transition: background-size 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+        .fa-check-circle {
+            color: rgb(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b));
+        }
+
+        .form-check-input:focus {
+            box-shadow: none;
+        }
+    }
+}
+
+@include o-mail-poll();
