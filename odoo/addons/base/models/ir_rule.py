@@ -1,15 +1,22 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 import logging
+import typing
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import config, SQL
+from odoo.tools import config, frozendict
 from odoo.tools.safe_eval import safe_eval, time
 
 
 _logger = logging.getLogger(__name__)
+
+
+class RuleInfo(typing.NamedTuple):
+    rule_id: int
+    group_id: int
+    domain: Domain | str
 
 
 class IrRule(models.Model):
@@ -86,49 +93,70 @@ class IrRule(models.Model):
         rules get AND-ed and can each fail)
         """
         Model = for_records.browse(()).sudo()
+        record_ids = for_records.ids
         eval_context = self._eval_context()
-
-        all_rules = self._get_rules(Model._name, mode=mode).sudo()
+        failing_ids = set()
+        all_rules = self._get_rules(Model._name)[mode]
 
         # first check if the group rules fail for any record (aka if
         # searching on (records, group_rules) filters out some of the records)
-        group_rules = all_rules.filtered(lambda r: r.groups and r.groups & self.env.user.all_group_ids)
+        user_group_ids = set(self.env.user._get_group_ids())
         group_domains = Domain.OR(
-            safe_eval(r.domain_force, eval_context) if r.domain_force else []
-            for r in group_rules
+            r.domain if isinstance(r.domain, Domain) else Domain(safe_eval(r.domain, eval_context))
+            for r in all_rules
+            if r.group_id in user_group_ids
         )
+
         # if all records get returned, the group rules are not failing
-        if Model.search_count(group_domains & Domain('id', 'in', for_records.ids)) == len(for_records):
-            group_rules = self.browse(())
+        if Model.search_count(group_domains & Domain('id', 'in', record_ids)) < len(record_ids):
+            failing_ids.update(r.rule_id for r in all_rules if r.group_id in user_group_ids)
 
-        # failing rules are previously selected group rules or any failing global rule
-        def is_failing(r, ids=for_records.ids):
-            dom = Domain(safe_eval(r.domain_force, eval_context) if r.domain_force else [])
-            return Model.search_count(dom & Domain('id', 'in', ids)) < len(ids)
+        # check failing global rules
+        for r in all_rules:
+            if r.group_id:
+                continue
+            dom = r.domain if isinstance(r.domain, Domain) else Domain(safe_eval(r.domain, eval_context))
+            if Model.search_count(dom & Domain('id', 'in', record_ids)) < len(record_ids):
+                failing_ids.add(r.rule_id)
 
-        return all_rules.filtered(lambda r: r in group_rules or (not r.groups and is_failing(r))).with_user(self.env.user)
+        return self.browse(id_ for r in all_rules if (id_ := r.rule_id) in failing_ids)
 
-    def _get_rules(self, model_name, mode='read'):
+    @api.model
+    @tools.ormcache('model_name', cache='stable')
+    def _get_rules(self, model_name: str) -> dict[str, tuple[RuleInfo, ...]]:
         """ Returns all the rules matching the model for the mode for the
         current user.
         """
-        if mode not in self._MODES:
-            raise ValueError('Invalid mode: %r' % (mode,))
-
-        if self.env.su:
-            return self.browse(())
-
-        sql = SQL("""
-            SELECT r.id FROM ir_rule r
-            JOIN ir_model m ON (r.model_id=m.id)
-            WHERE m.model = %s AND r.active AND r.perm_%s
-                AND (r.global OR r.id IN (
-                    SELECT rule_group_id FROM rule_group_rel rg
-                    WHERE rg.group_id IN %s
-                ))
-            ORDER BY r.id
-        """, model_name, SQL(mode), tuple(self.env.user._get_group_ids()) or (None,))
-        return self.browse(v for v, in self.env.execute_query(sql))
+        model = self.env[model_name]
+        all_rules = self.sudo().search_fetch(
+            [
+                ('active', '=', True),
+                ('model_id.model', '=', model_name),
+            ],
+            ['groups', 'domain_force', *(f'perm_{mode}' for mode in self._MODES)],
+            order='id',
+        )
+        domains = {}
+        for rule in all_rules:
+            domain = (rule.domain_force or '').strip()
+            try:
+                if domain:
+                    domain = ast.literal_eval(domain)
+                else:
+                    domain = Domain.TRUE
+            except ValueError:
+                domains[rule] = domain
+            else:
+                domains[rule] = Domain(domain).optimize(model)
+        return frozendict({
+            mode: tuple(
+                RuleInfo(rule.id, group.id, domains[rule])
+                for rule in all_rules.filtered(f'perm_{mode}')
+                # iterate over all rules, or just once with an empty groups recordset for global rules
+                for group in rule.groups or (rule.groups,)
+            )
+            for mode in self._MODES
+        })
 
     @api.model
     @tools.conditional(
@@ -138,32 +166,38 @@ class IrRule(models.Model):
     )
     def _compute_domain(self, model_name: str, mode: str = "read") -> Domain:
         model = self.env[model_name]
+        if self.env.su:
+            return Domain.TRUE
 
         # add rules for parent models
         global_domains: list[Domain] = []
+        group_domains: list[Domain] = []
         for parent_model_name, parent_field_name in model._inherits.items():
             if not model._fields[parent_field_name].store:
                 continue
             if domain := self._compute_domain(parent_model_name, mode):
                 global_domains.append(Domain(parent_field_name, 'any', domain))
 
-        rules = self._get_rules(model_name, mode=mode)
-        if not rules:
-            return Domain.AND(global_domains).optimize(model)
-
-        # browse user and rules with sudo to avoid access errors!
-        eval_context = self._eval_context()
-        user_groups = self.env.user.all_group_ids
-        group_domains: list[Domain] = []
-        for rule in rules.sudo():
-            if rule.groups and not (rule.groups & user_groups):
-                continue
-            # evaluate the domain for the current user
-            dom = Domain(safe_eval(rule.domain_force, eval_context)) if rule.domain_force else Domain.TRUE
-            if rule.groups:
-                group_domains.append(dom)
-            else:
-                global_domains.append(dom)
+        # fetch the rules
+        all_rules = self._get_rules(model_name)[mode]
+        if all_rules:
+            # filter rules which apply
+            user_group_ids = set(self.env.user._get_group_ids())
+            user_group_ids.add(False)  # global rule
+            # evaluate the domains
+            eval_context = None
+            for rule in all_rules:
+                if rule.group_id not in user_group_ids:
+                    continue
+                domain = rule.domain
+                if not isinstance(domain, Domain):
+                    if eval_context is None:
+                        eval_context = self._eval_context()
+                    domain = Domain(safe_eval(domain, eval_context))
+                if rule.group_id:
+                    group_domains.append(domain)
+                else:
+                    global_domains.append(domain)
 
         # combine global domains and group domains
         if group_domains:
@@ -181,26 +215,26 @@ class IrRule(models.Model):
             yield v
 
     def unlink(self):
-        res = super(IrRule, self).unlink()
-        self.env.registry.clear_cache()
+        res = super().unlink()
+        self.env.registry.clear_cache('stable')
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrRule, self).create(vals_list)
+        res = super().create(vals_list)
         # DLE P33: tests
         self.env.flush_all()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     def write(self, vals):
-        res = super(IrRule, self).write(vals)
+        res = super().write(vals)
         # DLE P33: tests
         # - odoo/addons/test_access_rights/tests/test_feedback.py
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
         self.env.flush_all()
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('stable')
         return res
 
     def _make_access_error(self, operation, records):
