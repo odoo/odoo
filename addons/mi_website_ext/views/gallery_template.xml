@@ -17,12 +17,12 @@
                             <t t-if="albums">
                                 <t t-foreach="albums" t-as="album">
                                     <a class="album_item" t-attf-href="/gallery/album/#{album.id}">
-                                        <t t-if="album.image_1920">
-                                            <img t-att-src="image_data_uri(album.image_1920)" t-att-alt="album.name"/>
-                                        </t>
-                                        <t t-else="">
-                                            <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="album.name"/>
-                                        </t>
+                                        <t t-if="album.image_512">
+    <img t-attf-src="/web/image/website.gallery.album/#{album.id}/image_512" t-att-alt="album.name" loading="lazy"/>
+</t>
+<t t-else="">
+    <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="album.name" loading="lazy"/>
+</t>
                                         <h3 class="title-truncate">
                                             <t t-esc="album.name"/>
                                         </h3>
