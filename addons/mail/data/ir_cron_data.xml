@@ -75,6 +75,14 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
         </record>
+        <record id="ir_cron_mail_end_polls" model="ir.cron">
+            <field name="name">Mail: End polls</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_mail_poll"/>
+            <field name="code">model._end_expired_polls()</field>
+            <field name="state">code</field>
+        </record>
 
         <record id="ir_cron_discuss_channel_member_unmute" model="ir.cron">
             <field name="name">Discuss: channel member unmute</field>

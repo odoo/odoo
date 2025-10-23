@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Poll">
+        <div class="o-mail-Poll card border-secondary rounded shadow-sm w-100" t-att-class="{'o-ongoing': !props.poll.end_message_id, 'o-isShowingResults': isShowingResults}">
+            <div class="card-body d-flex flex-column gap-1 p-3">
+                <p class="card-title text-start fw-bold mb-0" t-esc="props.poll.poll_question"/>
+                <p class="card-subtitle mb-2 text-muted smaller">
+                    <t t-if="props.allow_multiple_options">Select one or more options</t>
+                    <t t-else="">Select one option</t>
+                </p>
+                <div class="o-mail-PollOption rounded" t-foreach="props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="percentageAttStyle(option)" t-att-class="{'o-selected': state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
+                    <div t-if="isShowingResults" class="d-flex justify-content-between p-2">
+                        <span class="fw-bold me-1 text-truncate" t-esc="option.option_label"/>
+                        <span class="flex-shrink-0">
+                            <span class="fw-bold me-1 smaller" t-esc="voteCountText(option.number_of_votes)"/>
+                            <span class="fw-bold"><t t-esc="option.vote_percentage"/> %</span>
+                            <i t-if="option.selected_by_self" class="ms-1 fa fa-lg fa-check-circle"/>
+                        </span>
+                    </div>
+                    <label t-else="" class="d-flex justify-content-between p-2 cursor-pointer">
+                        <span class="fw-bold me-1 text-truncate" t-esc="option.option_label"/>
+                        <input class="form-check-input" t-att-disabled="state.voting" t-att-checked="state.selectedOptionIds.has(option.id)" t-on-change="(ev) => this.onOptionCheckboxToggle(option.id, ev.target.checked)" type="checkbox"/>
+                    </label>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <p class="small text-muted m-0">
+                        <t t-esc="voteCountText(props.poll.numberOfVotes)"/>
+                        &#8729;
+                        <t t-if="props.poll.end_message_id">Poll closed</t>
+                        <t t-else="" t-esc="state.remainingTimeText"/>
+                    </p>
+                    <span class="flex-grow-1"/>
+                    <t t-if="!props.poll.end_message_id">
+                        <t t-if="!props.poll.selfAlreadyVoted">
+                            <t t-if="isShowingResults">
+                                <button class="btn btn-secondary" t-on-click="() => this.hideResults()">Go back to vote</button>
+                            </t>
+                            <t t-else="">
+                                <a href="#" class="me-2" t-on-click="() => this.showResults()">View results</a>
+                                <button class="btn btn-primary" t-att-disabled="voteButtonDisabled" t-on-click="onClickVote">Vote</button>
+                            </t>
+                        </t>
+                        <button t-else="" class="btn btn-secondary" t-on-click="props.poll.removeVote">Remove Vote</button>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
