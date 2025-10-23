@@ -5,9 +5,18 @@
     <BuilderRow label.translate="Shadow">
         <BuilderSelect action="props.setShadowClassAction">
             <BuilderSelectItem actionParam="''">None</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'shadow'">Normal</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'shadow-sm'">Small</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'shadow-lg'">Large</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow'">
+                <t t-set="onClick" t-value="getOnClick('shadow')"/>
+                <t t-call="html_builder.ShadowOptionItem">Normal</t>
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow-sm'">
+                <t t-set="onClick" t-value="getOnClick('shadow-sm')"/>
+                <t t-call="html_builder.ShadowOptionItem">Small</t>
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow-lg'">
+                <t t-set="onClick" t-value="getOnClick('shadow-lg')"/>
+                <t t-call="html_builder.ShadowOptionItem">Large</t>
+            </BuilderSelectItem>
             <BuilderSelectItem id="'custom_shadow'" actionParam="'o-shadow-custom'">Custom</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
@@ -37,6 +46,17 @@
             </BuilderRow>
         </BuilderContext>
     </t>
+</t>
+
+<t t-name="html_builder.ShadowOptionItem">
+    <div class="d-flex">
+        <div class="o-hb-shadow-text">
+            <t t-out="0"/>
+        </div>
+        <a class="fa fa-pencil btn o-hb-shadow-button"
+                title="Edit"
+                t-on-click="onClick"/>
+    </div>
 </t>
 
 </templates>

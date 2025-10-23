@@ -7,6 +7,7 @@ export class DesignTab extends Component {
     static components = { OptionsContainer };
     static props = {
         colorPresetToShow: { optional: true },
+        shadowSizeToShow: { optional: true },
     };
 
     setup() {

@@ -2,8 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ThemeShadowOption">
+    <div t-ref="root" />
     <BuilderContext action="'customizeWebsiteVariable'">
-        <BuilderRow label.translate="Normal" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Normal" initialExpandAnim="shadowSizeToShow === 'shadow'" tooltip.translate="Horizontal and Vertical Offset">
             <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
             <t t-set-slot="collapse">
@@ -18,7 +19,7 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Small" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Small" initialExpandAnim="shadowSizeToShow === 'shadow-sm'" tooltip.translate="Horizontal and Vertical Offset">
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
             <t t-set-slot="collapse">
@@ -33,7 +34,7 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Large" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Large" initialExpandAnim="shadowSizeToShow === 'shadow-lg'" tooltip.translate="Horizontal and Vertical Offset">
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
             <t t-set-slot="collapse">
