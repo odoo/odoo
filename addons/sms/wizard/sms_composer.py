@@ -50,6 +50,10 @@ class SmsComposer(models.TransientModel):
     use_exclusion_list = fields.Boolean(
         'Use Exclusion List', default=True, copy=False,
         help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
+    sms_type = fields.Selection([
+        ('marketing', 'Marketing'),
+        ('alert', 'Alert'),
+    ])
     # recipients
     recipient_valid_count = fields.Integer('# Valid recipients', compute='_compute_recipients', compute_sudo=False)
     recipient_invalid_count = fields.Integer('# Invalid recipients', compute='_compute_recipients', compute_sudo=False)
@@ -244,7 +248,9 @@ class SmsComposer(models.TransientModel):
                 all_bodies[record.id],
                 subtype_id=subtype_id,
                 number_field=self.number_field_name,
-                sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None)
+                sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None,
+                sms_type=self.sms_type,
+            )
         return messages
 
     def _action_send_sms_mass(self, records=None):
@@ -348,6 +354,7 @@ class SmsComposer(models.TransientModel):
                 'partner_id': recipients['partner'].id,
                 'state': state,
                 'uuid': uuid4().hex,
+                'sms_type': self.sms_type,
             }
         return result
 

@@ -68,6 +68,10 @@ class SmsSms(models.Model):
         'Marked for deletion', default=False,
         help='Will automatically be deleted, while notifications will not be deleted in any case.'
     )
+    sms_type = fields.Selection([
+        ('marketing', 'Marketing'),
+        ('alert', 'Alert'),
+    ])
 
     _uuid_unique = models.Constraint(
         'unique(uuid)',
@@ -190,6 +194,7 @@ class SmsSms(models.Model):
         messages = [{
             'content': body,
             'numbers': [{'number': sms.number, 'uuid': sms.uuid} for sms in body_sms_records],
+            'sms_type': 'marketing' if 'marketing' in body_sms_records.mapped('sms_type') else 'alert',
         } for body, body_sms_records in self.grouped('body').items()]
 
         delivery_reports_url = url_join(self[0].get_base_url(), '/sms/status')

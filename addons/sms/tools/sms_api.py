@@ -104,7 +104,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
         return self._contact_iap('/api/sms/3/send', {
             'messages': messages,
             'webhook_url': delivery_reports_url,
-            'dbuuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+            'dbuuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
         })
 
     def _get_sms_api_error_messages(self):
