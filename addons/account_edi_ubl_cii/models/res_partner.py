@@ -160,7 +160,12 @@ class ResPartner(models.Model):
     @api.model
     def _get_ubl_cii_formats_info(self):
         return {
-            'ubl_bis3': {'countries': list(PEPPOL_DEFAULT_COUNTRIES), 'on_peppol': True, 'sequence': 200},
+            'ubl_bis3': {
+                'countries': list(PEPPOL_DEFAULT_COUNTRIES),
+                'on_peppol': True,
+                'sequence': 200,
+                'embed_attachments': True,
+            },
             'xrechnung': {'countries': ['DE'], 'on_peppol': True},
             'ubl_a_nz': {'countries': ['NZ', 'AU'], 'on_peppol': False},  # Not yet available through Odoo's Access Point, although it's a Peppol valid format
             'nlcius': {'countries': ['NL'], 'on_peppol': True},

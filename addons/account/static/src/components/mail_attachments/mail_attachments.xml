@@ -10,6 +10,8 @@
                         <button class="btn flex-shrink-0" t-on-click.stop="() => this.onFileRemove(attachment.id)">
                             <i class="fa fa-fw fa-times"/>
                         </button>
+
+                        <i class="fa fa-fw o_button_icon fa-warning" t-if="attachment.tooltip" t-att-data-tooltip="attachment.tooltip"></i>
                     </li>
                 </t>
             </t>
