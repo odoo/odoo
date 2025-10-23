@@ -354,12 +354,14 @@ class StockQuant(models.Model):
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
         forbidden_fields = self._get_forbidden_fields_write()
-        if self._is_inventory_mode() and any(field for field in forbidden_fields if field in vals.keys()):
+        forbidden_fields_in_vals = [field for field in forbidden_fields if field in vals.keys()]
+        if self._is_inventory_mode() and any(forbidden_fields_in_vals):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
-            self = self.sudo()
-            raise UserError(_("Quant's editing is restricted, you can't do this operation."))
+            for field in forbidden_fields_in_vals:
+                if any((quant[field].id != vals[field] and quant[field] != vals[field]) for quant in self):
+                    raise UserError(_("Quant's editing is restricted, you can't change the field %s.") % field)
         return super(StockQuant, self).write(vals)
 
     @api.ondelete(at_uninstall=False)

@@ -1709,6 +1709,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 lot_id=reserved_quant.lot_id.id or False,
                 package_id=package.id or False,
                 owner_id =reserved_quant.owner_id.id or False,
+                lot_name=reserved_quant.lot_id.name or False,
             )
         return vals
 
