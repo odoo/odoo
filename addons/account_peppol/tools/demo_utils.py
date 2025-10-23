@@ -181,7 +181,7 @@ def _mock_update_user_data(func, self, *args, **kwargs):
 
 
 def _mock_migrate_participant(func, self, *args, **kwargs):
-    self.company_id.account_peppol_migration_key = 'demo_migration_key'
+    self.company_id.sudo().account_peppol_migration_key = 'demo_migration_key'
 
 
 def _mock_check_company_on_peppol(func, self, *args, **kwargs):
