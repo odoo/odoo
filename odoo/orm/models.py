@@ -300,10 +300,10 @@ READ_GROUP_AGGREGATE = {
     'min': lambda table, expr: SQL('MIN(%s)', expr),
     'bool_and': lambda table, expr: SQL('BOOL_AND(%s)', expr),
     'bool_or': lambda table, expr: SQL('BOOL_OR(%s)', expr),
-    'array_agg': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, SQL.identifier(table, 'id')),
+    'array_agg': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, table.id),
     'array_agg_distinct': lambda table, expr: SQL('ARRAY_AGG(DISTINCT %s ORDER BY %s)', expr, expr),
     # 'recordset' aggregates will be post-processed to become recordsets
-    'recordset': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, SQL.identifier(table, 'id')),
+    'recordset': lambda table, expr: SQL('ARRAY_AGG(%s ORDER BY %s)', expr, table.id),
     'count': lambda table, expr: SQL('COUNT(%s)', expr),
     'count_distinct': lambda table, expr: SQL('COUNT(DISTINCT %s)', expr),
 }
@@ -1751,7 +1751,7 @@ class BaseModel(metaclass=MetaModel):
 
         # --- SQL Query Construction ---
         groupby_terms: dict[str, SQL] = {
-            spec: self._read_group_groupby(self._table, spec, query) for spec in all_groupby_specs
+            spec: self._read_group_groupby(query.table, spec) for spec in all_groupby_specs
         }
         aggregates_terms: list[SQL] = [
             self._read_group_select(spec, query) for spec in aggregates
@@ -1912,7 +1912,7 @@ class BaseModel(metaclass=MetaModel):
         query.offset = offset
 
         groupby_terms: dict[str, SQL] = {
-            spec: self._read_group_groupby(self._table, spec, query)
+            spec: self._read_group_groupby(query.table, spec)
             for spec in groupby
         }
         aggregates_terms: list[SQL] = [
@@ -1966,24 +1966,24 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError(f"Aggregate method is mandatory for {fname!r}")
 
         field = self._fields[fname]
+        table = query.table
         if func == 'sum_currency':
             if field.type != 'monetary':
                 raise ValueError(f'Aggregator "sum_currency" only works on currency field for {fname!r}')
 
+            currency_field_name = field.get_currency_field(self)
             rate_subquery_table = SQL(
                 "(%s)",
                 self.env['res.currency']._get_rates_query(self.env.company, Date.context_today(self)),
             )
-            currency_field_name = field.get_currency_field(self)
-            alias_rate = query.make_alias(self._table, f'{currency_field_name}__rates')
-            currency_field_sql = self._field_to_sql(self._table, currency_field_name, query)
-            condition = SQL("%s = %s", currency_field_sql, SQL.identifier(alias_rate, "id"))
+            alias_rate = table._make_alias(f'{currency_field_name}__rates')
+            condition = SQL("%s = %s", table[currency_field_name], alias_rate.id)
             query.add_join('LEFT JOIN', alias_rate, rate_subquery_table, condition)
 
             return SQL(
                 "SUM(%s / COALESCE(%s, 1.0))",
-                self._field_to_sql(self._table, fname, query),
-                SQL.identifier(alias_rate, "rate"),
+                table[fname],
+                alias_rate.rate,
             )
 
         if func not in READ_GROUP_AGGREGATE:
@@ -1992,61 +1992,58 @@ class BaseModel(metaclass=MetaModel):
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 
-        sql_field = self._field_to_sql(self._table, fname, query)
-        return READ_GROUP_AGGREGATE[func](self._table, sql_field)
+        sql_field = table[fname]
+        return READ_GROUP_AGGREGATE[func](table, sql_field)
 
-    def _read_group_groupby(self, alias: str, groupby_spec: str, query: Query) -> SQL:
+    def _read_group_groupby(self, table: TableSQL, groupby_spec: str) -> SQL:
         """ Return <SQL expression> corresponding to the given groupby element.
         The method also checks whether the fields used in the groupby are
         accessible for reading.
         """
         fname, seq_fnames, granularity = parse_read_group_spec(groupby_spec)
+
+        assert table._model._name == self._name
         if fname not in self._fields:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
-
         field = self._fields[fname]
         field_type = field.type
 
         if field.type == 'properties':
-            sql_expr, field_type = self._read_group_groupby_properties(alias, field, seq_fnames, query)
+            sql_expr, field_type = self._read_group_groupby_properties(table[fname], seq_fnames)
 
         elif seq_fnames:
             if field.type != 'many2one':
                 raise ValueError(f"Only many2one path is accepted for the {groupby_spec!r} groupby spec")
 
-            cotable = field.join(TableSQL(alias, self, query))
-            comodel = cotable._model
-            coalias = cotable._alias
-            return comodel._read_group_groupby(coalias, f"{seq_fnames}:{granularity}" if granularity else seq_fnames, query)
-
-        elif granularity and field.type not in ('datetime', 'date', 'properties'):
-            raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
+            cotable = field.join(table)
+            return cotable._model._read_group_groupby(cotable, f"{seq_fnames}:{granularity}" if granularity else seq_fnames)
 
         elif field.type == 'many2many':
             if not field.store:
                 # traverse_related, skip last one if not stored
                 if field.related:
-                    traverse = TableSQL(alias, self, query)
+                    traverse = table
                     if field.compute_sudo:
                         traverse = traverse._sudo()
                     for fname in field.related.split('.')[:-1]:
                         traverse = traverse[fname]
-                    alias = traverse.id._table._alias
+                    table = traverse.id._table
                     field = field.related_field
                 else:
                     raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
             # special case for many2many fields: prepare a query on the comodel
             # and inject the query as an extra condition of the left join
+            # XXX do: field.join(TableSQL(alias, self, query), only_id=True)
             codomain = field.get_comodel_domain(self)
             comodel = self.env[field.comodel_name].with_context(**field.context)
             coquery = comodel._search(codomain, bypass_access=field.bypass_search_access)
             # LEFT JOIN {field.relation} AS rel_alias ON
             #     alias.id = rel_alias.{field.column1}
             #     AND rel_alias.{field.column2} IN ({coquery})
-            rel_alias = query.make_alias(alias, field.name)
+            rel_alias = table._make_alias(field.name)
             condition = SQL(
                 "%s = %s",
-                SQL.identifier(alias, 'id'),
+                table.id,
                 SQL.identifier(rel_alias, field.column1),
             )
             if coquery.where_clause:
@@ -2056,23 +2053,23 @@ class BaseModel(metaclass=MetaModel):
                     SQL.identifier(rel_alias, field.column2),
                     coquery.subselect(),
                 )
-            query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
+            table._query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
             return SQL.identifier(rel_alias, field.column2)
 
         else:
-            sql_expr = self._field_to_sql(alias, fname, query)
+            sql_expr = table[fname]
 
-        if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
+        if field_type in ('datetime', 'date'):
             if not granularity:
                 raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
             if granularity not in READ_GROUP_ALL_TIME_GRANULARITY:
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
 
             if granularity in READ_GROUP_NUMBER_GRANULARITY:
-                sql_expr = field._generic_property_to_sql(field.type, sql_expr, granularity, self)
+                sql_expr = sql_expr[granularity]
             elif field.type == 'datetime':
                 # set the timezone only
-                sql_expr = field.property_to_sql('datetime', sql_expr, 'tz', self)
+                sql_expr = sql_expr['tz']
 
             if granularity == 'week':
                 # first_week_day: 0=Monday, 1=Tuesday, ...
@@ -2090,6 +2087,8 @@ class BaseModel(metaclass=MetaModel):
             if field.type == 'date' and granularity not in READ_GROUP_NUMBER_GRANULARITY:
                 # If the granularity uses date_trunc, we need to convert the timestamp back to a date.
                 sql_expr = SQL("%s::date", sql_expr)
+        elif granularity:
+            raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
 
         elif field.type == 'boolean':
             sql_expr = SQL("COALESCE(%s, FALSE)", sql_expr)
@@ -2307,15 +2306,16 @@ class BaseModel(metaclass=MetaModel):
             sql = sql[property_name]
         return sql
 
-    def _read_group_groupby_properties(self, alias: str, field: Field, property_name: str, query: Query) -> tuple[SQL, str]:
+    def _read_group_groupby_properties(self, sql_property: SQL, property_name: str) -> tuple[SQL, str]:
+        table = sql_property._table
+        field = sql_property._field
         fname = field.name
         definition = self.get_property_definition(f"{fname}.{property_name}")
         property_type = definition.get('type')
-        sql_property = self._field_to_sql(alias, f'{fname}.{property_name}', query)
 
         # JOIN on the JSON array
         if property_type in ('tags', 'many2many'):
-            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
+            property_alias = table._make_alias(f'{fname}_{property_name}')
             sql_property = SQL(
                 """ CASE
                         WHEN jsonb_typeof(%(property)s) = 'array'
@@ -2346,7 +2346,7 @@ class BaseModel(metaclass=MetaModel):
                     SQL.identifier(property_alias), SQL.identifier(comodel._table),
                 )
 
-            query.add_join(
+            table._query.add_join(
                 "LEFT JOIN",
                 property_alias,
                 SQL("jsonb_array_elements(%s)", sql_property),
@@ -2359,8 +2359,8 @@ class BaseModel(metaclass=MetaModel):
             options = [option[0] for option in definition.get('selection') or ()]
 
             # check the existence of the option
-            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
-            query.add_join(
+            property_alias = table._make_alias(f'{fname}_{property_name}')
+            table._query.add_join(
                 "LEFT JOIN",
                 property_alias,
                 SQL("(SELECT unnest(%s::text[]) %s)", options, SQL.identifier(property_alias)),
@@ -3242,10 +3242,10 @@ class BaseModel(metaclass=MetaModel):
                 if field.type == 'binary' and (
                         context.get('bin_size') or context.get('bin_size_' + field.name)):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
-                    sql = self._field_to_sql(self._table, field.name, query)
+                    sql = query.table[field.name]
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
                 else:
-                    sql = self._field_to_sql(self._table, field.name, query)
+                    sql = query.table[field.name]
                     # flushing is necessary to retrieve the en_US value of fields without a translation
                     # otherwise, re-create the SQL without flushing
                     if not field.translate:
