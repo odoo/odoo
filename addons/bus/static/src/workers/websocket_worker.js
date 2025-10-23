@@ -33,7 +33,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
     RECONNECTING: 4003,
 });
 /** @deprecated worker version is now retrieved from `session.websocket_worker_bundle` */
-export const WORKER_VERSION = "17.0-1";
+export const WORKER_VERSION = "17.0-2";
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
@@ -46,6 +46,7 @@ const MAXIMUM_RECONNECT_DELAY = 60000;
 export class WebsocketWorker {
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 1000;
+    CONNECTION_CHECK_DELAY = 60_000;
 
     constructor() {
         // Timestamp of start of most recent bus service sender
@@ -318,6 +319,7 @@ export class WebsocketWorker {
                 reason
             );
         }
+        clearInterval(this._connectionCheckInterval);
         this.lastChannelSubscription = null;
         this.firstSubscribeDeferred = new Deferred();
         if (this.isReconnecting) {
@@ -368,6 +370,7 @@ export class WebsocketWorker {
      * @param {MessageEvent} messageEv
      */
     _onWebsocketMessage(messageEv) {
+        this._restartConnectionCheckInterval();
         const notifications = JSON.parse(messageEv.data);
         if (this.isDebug) {
             console.debug(
@@ -400,6 +403,26 @@ export class WebsocketWorker {
             this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
             this.messageWaitQueue = [];
         });
+        this._restartConnectionCheckInterval();
+    }
+
+    /**
+     * Sends a custom application-level message to perform a connection check
+     * on the WebSocket.
+     *
+     * Browsers rely on the OS's TCP mechanism, which can take minutes or
+     * hours to detect a dead connection. Sending data triggers an immediate
+     * I/O operation, quickly revealing any network-level failure. This must be
+     * implemented at the application level because the browser WebSocket API
+     * does not expose the built-in ping/pong mechanism.
+     */
+    _restartConnectionCheckInterval() {
+        clearInterval(this._connectionCheckInterval);
+        this._connectionCheckInterval = setInterval(() => {
+            if (this._isWebsocketConnected()) {
+                this.websocket.send(new Uint8Array([0x00]));
+            }
+        }, this.CONNECTION_CHECK_DELAY);
     }
 
     /**
@@ -437,6 +460,7 @@ export class WebsocketWorker {
             } else {
                 this.firstSubscribeDeferred.then(() => this.websocket.send(payload));
             }
+            this._restartConnectionCheckInterval();
         }
     }
 
