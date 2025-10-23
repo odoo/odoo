@@ -26,7 +26,7 @@ export class FormArchParser {
                 if (exprToBoolean(node.getAttribute("default_focus") || "")) {
                     autofocusFieldIds.push(fieldId);
                 }
-                if (fieldInfo.type === "properties") {
+                if (fieldInfo.type === "properties" || fieldInfo.type === "properties_definition") {
                     activeActions.addPropertyFieldValue = true;
                 }
                 return false;

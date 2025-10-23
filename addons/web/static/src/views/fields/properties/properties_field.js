@@ -323,7 +323,7 @@ export class PropertiesField extends Component {
                     title: property.string,
                     name: property.name,
                     elements: [],
-                    isFolded: property.value ?? property.fold_by_default,
+                    isFolded: this._isFolded(property),
                     hidden: property.hidden,
                 });
             } else {
@@ -491,7 +491,9 @@ export class PropertiesField extends Component {
             toIndex++;
         }
         propertiesValues.splice(toIndex, 0, propertiesValues.splice(fromIndex, 1)[0]);
-        propertiesValues[0].definition_changed = true;
+        if (!this._isPropertyDefinitionWidget()) {
+            propertiesValues[0].definition_changed = true;
+        }
         this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
@@ -528,7 +530,9 @@ export class PropertiesField extends Component {
             targetIndex -= groupSize;
         }
         propertiesValues.splice(targetIndex, 0, ...propertiesValues.splice(fromIndex, groupSize));
-        propertiesValues[0].definition_changed = true;
+        if (!this._isPropertyDefinitionWidget()) {
+            propertiesValues[0].definition_changed = true;
+        }
         this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
@@ -628,11 +632,10 @@ export class PropertiesField extends Component {
     onPropertyDelete(propertyName) {
         let message = _t("Are you sure you want to delete this property field?") + " ";
         if (this.definitionRecordModel !== "properties.base.definition") {
-            const parentName = this.props.record.data[this.definitionRecordField].display_name;
-            const parentFieldLabel = this.props.record.fields[this.definitionRecordField].string;
+            const displayData = this._getDisplayData();
             message += _t(
                 'It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
-                { parentName, parentFieldLabel }
+                { parentName: displayData.parentName, parentFieldLabel: displayData.parentFieldLabel }
             );
         } else {
             message += _t("It will be removed for everyone!");
@@ -645,9 +648,7 @@ export class PropertiesField extends Component {
             confirmClass: "btn-danger",
             confirm: () => {
                 const propertiesDefinitions = this.propertiesList;
-                propertiesDefinitions.find(
-                    (property) => property.name === propertyName
-                ).definition_deleted = true;
+                this._onDeleteConfirm(propertiesDefinitions, propertyName);
                 this.props.record.update({ [this.props.name]: propertiesDefinitions });
             },
             cancel: () => {},
@@ -678,7 +679,7 @@ export class PropertiesField extends Component {
             )
         ) {
             // do not allow to add new field until we set a label on the previous one
-            this.propertiesRef.el.closest(".o_field_properties").classList.add("o_field_invalid");
+            this._getClosestField().classList.add("o_field_invalid");
 
             this.notification.add(_t("Please complete your properties before adding a new one"), {
                 type: "warning",
@@ -687,15 +688,11 @@ export class PropertiesField extends Component {
         }
         const count = propertiesDefinitions.length;
 
-        this.propertiesRef.el.closest(".o_field_properties").classList.remove("o_field_invalid");
+        this._getClosestField().classList.remove("o_field_invalid");
 
         const newName = this.generatePropertyName("char");
-        propertiesDefinitions.push({
-            name: newName,
-            string: _t("Property %s", count + 1),
-            type: "char",
-            definition_changed: true,
-        });
+        propertiesDefinitions.push(this._getNewPropertyDefinition(newName, count));
+
         this.initialValues[newName] = { name: newName, type: "char" };
         this.openPropertyDefinition = newName;
         await this.props.record.update({ [this.props.name]: propertiesDefinitions });
@@ -764,7 +761,7 @@ export class PropertiesField extends Component {
         for (const separatorName of separatorNames) {
             const property = propertiesValues.find((prop) => prop.name === separatorName);
             if (property) {
-                property.value = forceState ?? !(property.value ?? property.fold_by_default);
+                this._toggleSeparatorValue(property, forceState);
             }
         }
         return this.props.record.update({ [this.props.name]: propertiesValues });
@@ -958,10 +955,52 @@ export class PropertiesField extends Component {
      * bus event, if the PropertiesField component cannot enter edit mode.
      */
     _getPropertyEditWarningText() {
-        return _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
-            parentName: this.props.record.data[this.definitionRecordField].display_name,
-            parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
-        });
+        const displayData = this._getDisplayData();
+        return _t(
+            'Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".',
+            { parentFieldLabel: displayData.parentFieldLabel, parentName: displayData.parentName }
+        );
+    }
+
+    /**
+    * Following functions are utility function overwritten in the component PropertiesDefinitionField
+    */
+    _toggleSeparatorValue(property, forceState) {
+        property.value = forceState ?? !(property.value ?? property.fold_by_default);
+    }
+
+    _isFolded(property) {
+        return property.value ?? property.fold_by_default;
+    }
+
+    _getClosestField() {
+        return this.propertiesRef.el.closest(".o_field_properties");
+    }
+
+    _getNewPropertyDefinition(newName, count) {
+        return {
+            name: newName,
+            string: _t("Property %s", count + 1),
+            type: "char",
+            definition_changed: true,
+        }
+    }
+
+    _getDisplayData() {
+        return {
+            'parentName': this.props.record.data[this.definitionRecordField].display_name,
+            'parentFieldLabel': this.props.record.fields[this.definitionRecordField].string,
+        }
+    }
+
+    _onDeleteConfirm(propertiesDefinitions, propertyName) {
+        propertiesDefinitions.find(
+            (property) => property.name === propertyName
+        ).definition_deleted = true;
+    }
+
+    _isPropertyDefinitionWidget() {
+        return false;
     }
 }
 
