@@ -1551,6 +1551,22 @@ test("Export from/to global filters for excel", async function () {
     expect(getCell(exportedModel, "C2", sheetId).format).toBe("m/d/yyyy");
 });
 
+test("Export boolean global filters with undefined value for excel", async function () {
+    const { model } = await createSpreadsheetWithPivotAndList();
+    await addGlobalFilter(model, { id: "42", label: "test", type: "boolean" });
+    const filterPlugin = model["handlers"].find(
+        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+    );
+    const exportData = { styles: [], sheets: [] };
+    filterPlugin.exportForExcel(exportData);
+    const filterSheet = exportData.sheets[0];
+    expect(filterSheet.cells["A1"]).toBe("Filter");
+    expect(filterSheet.cells["A2"]).toBe("test");
+    expect(filterSheet.cells["B1"]).toBe("Value");
+    expect(filterSheet.cells["B2"]).toBe("");
+    model.exportXLSX(); // should not crash
+});
+
 test("Date filter automatic default value for years filter", async function () {
     const label = "This year";
     const { model } = await createSpreadsheetWithPivot();

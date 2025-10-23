@@ -246,7 +246,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const value = this.getGlobalFilterValue(filter.id);
         switch (filter.type) {
             case "boolean":
-                return [[{ value: value.length ? value.join(", ") : "" }]];
+                return [[{ value: value?.length ? value.join(", ") : "" }]];
             case "text":
                 return [[{ value: value || "" }]];
             case "date": {
