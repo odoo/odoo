@@ -4,10 +4,98 @@ import {
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
+<<<<<<< 8e5ef9199f6632b2fcad07ea33bc59f9780b7a8b
 registerWebsitePreviewTour(
     "website_powerbox_snippet",
     {
         edition: true,
+||||||| de3e25d640b6e5b2eca42fbc1e1df1ab148457e9
+registerWebsitePreviewTour("website_powerbox_snippet",{
+    edition: true,
+},
+() => [
+...insertSnippet({
+    id: "s_text_block",
+    name: "Text",
+    groupName: "Text",
+}),
+...clickOnSnippet({
+    id: "s_text_block",
+    name: "Text",
+}),
+{
+    content: "Select the last paragraph",
+    trigger: ":iframe .s_text_block p:last-child",
+    run: "click",
+},
+{
+    content: "Show the powerbox",
+    trigger: ":iframe .s_text_block p:last-child",
+    async run(actions) {
+        await actions.editor(`/`);
+        const wrapwrap = this.anchor.closest("#wrapwrap");
+        wrapwrap.dispatchEvent(
+            new InputEvent("input", {
+                inputType: "insertText",
+                data: "/",
+            })
+        );
+=======
+const setSelection = (
+    document,
+    { anchorNode, anchorOffset, focusNode = anchorNode, focusOffset = anchorOffset }
+) => {
+    const range = document.createRange();
+    range.setStart(anchorNode, anchorOffset);
+    range.setEnd(focusNode, focusOffset);
+    const selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+};
+
+registerWebsitePreviewTour("website_powerbox_snippet",{
+    edition: true,
+},
+() => [
+...insertSnippet({
+    id: "s_text_block",
+    name: "Text",
+    groupName: "Text",
+}),
+...clickOnSnippet({
+    id: "s_text_block",
+    name: "Text",
+}),
+{
+    content: "Select the last paragraph",
+    trigger: ":iframe .s_text_block p:last-child",
+    run: "click",
+},
+// TODO:// "click" command should set the selection inside the element if editable.
+{
+    content: "Put selection in the second paragraph inside the editable",
+    trigger: ":iframe #wrap",
+    run: function () {
+        const p = this.anchor.ownerDocument.querySelector("#wrap p");
+        setSelection(this.anchor.ownerDocument, {
+            anchorNode: p,
+            anchorOffset: p.childNodes.length,
+        });
+    },
+},
+{
+    content: "Show the powerbox",
+    trigger: ":iframe .s_text_block p:last-child",
+    async run(actions) {
+        await actions.editor(`/`);
+        const wrapwrap = this.anchor.closest("#wrapwrap");
+        wrapwrap.dispatchEvent(
+            new InputEvent("input", {
+                inputType: "insertText",
+                data: "/",
+            })
+        );
+>>>>>>> cc09bf5d2362fe20a014c3480b19e308e2fcc206
     },
     () => [
         ...insertSnippet({
@@ -69,6 +157,18 @@ registerWebsitePreviewTour(
             content: "Select the last paragraph",
             trigger: ":iframe .s_text_block p:last-child",
             run: "click",
+        },
+        // TODO:// "click" command should set the selection inside the element if editable.
+        {
+            content: "Put selection in the second paragraph inside the editable",
+            trigger: ":iframe #wrap",
+            run: function () {
+                const p = this.anchor.ownerDocument.querySelector("#wrap p");
+                setSelection(this.anchor.ownerDocument, {
+                    anchorNode: p,
+                    anchorOffset: p.childNodes.length,
+                });
+            },
         },
         {
             content: "Show the powerbox",
