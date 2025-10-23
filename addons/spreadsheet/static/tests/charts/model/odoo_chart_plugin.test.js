@@ -168,8 +168,11 @@ test("Odoo bar chart runtime loads the data", async () => {
         datasets: [
             {
                 backgroundColor: "#4EA7F2",
+                barPercentage: 0.9,
                 borderColor: "#FFFFFF",
+                borderRadius: 2,
                 borderWidth: 1,
+                categoryPercentage: 1,
                 data: [1, 3],
                 label: "Count",
                 xAxisID: "x",
