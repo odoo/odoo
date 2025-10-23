@@ -10,6 +10,29 @@
         <t name="before-content"/>
         <DiscussContent t-if="['inbox', 'starred'].includes(store.discuss.activeTab) and ui.isSmall"/>
         <div t-else="" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
+            <t t-set="itemIndex" t-value="0"/>
+            <t t-foreach="visibleStandaloneMessages" name="standaloneInboxMessages" t-as="message" t-key="message.id">
+                <NotificationItem
+                    isActive="state.activeIndex === itemIndex"
+                    counter="1"
+                    datetime="message?.datetime"
+                    iconSrc="store.DEFAULT_AVATAR"
+                    hasMarkAsReadButton="1"
+                    muted="0"
+                    onClick="(isMarkAsRead) => this.onClickInboxMsg(isMarkAsRead, message)"
+                    onSwipeRight="hasTouch() ? { action: () => message.setDone(), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    nameMaxLine="1"
+                    textMaxLine="2"
+                >
+                    <t t-set-slot="name">
+                        <t t-esc="message?.authorName or ''"/>
+                    </t>
+                    <t t-set-slot="body">
+                        <span t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                    </t>
+                </NotificationItem>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
+            </t>
             <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem

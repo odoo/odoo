@@ -64,6 +64,7 @@ patch(MessagingMenu.prototype, {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
+            this.visibleStandaloneMessages.length > 0 ||
             (this.store.failures.length > 0 && this.store.discuss.activeTab === "notification") ||
             (this.shouldAskPushPermission && this.store.discuss.activeTab === "notification") ||
             (this.canPromptToInstall && this.store.discuss.activeTab === "notification")
