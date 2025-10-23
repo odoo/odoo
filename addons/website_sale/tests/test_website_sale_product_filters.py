@@ -2,6 +2,7 @@
 
 from odoo import Command
 from odoo.tests import tagged
+from odoo.tools import SQL
 
 from odoo.addons.product.tests.test_product_attribute_value_config import (
     TestProductAttributeValueCommon,
@@ -86,6 +87,15 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             cls.computer_case + cls.monitor + cls.computer + cls.windows_pc + cls.mac + generics
         )
 
+        # Archive all products not relevant to the test suite, bypassing ORM constraints
+        cls.env.invalidate_all()
+        cls.env.cr.execute(SQL('; ').join(
+            SQL(
+                'UPDATE %s SET active = false WHERE id NOT IN %s',
+                SQL.identifier(recs._table), recs._ids,
+            ) for recs in (cls.product_tmpls.product_variant_ids, cls.product_tmpls)
+        ))
+
     def test_latest_sold_filter(self):
         """Check the latest sold filter after selling 1 computer and 3 different cases.
 
@@ -93,16 +103,6 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When hiding variants, the case should be the most sold product.
         """
         computer = self.computer.product_variant_id
-        self.env['product.product'].search([
-            (
-                'id',
-                'in',
-                self.env['sale.order.line']._search([
-                    ('order_id.website_id', '!=', False),
-                    ('state', '=', 'sale'),
-                ]).subselect('product_id'),
-            )
-        ]).action_archive()
         self.empty_cart.write({
             'website_id': self.website.id,
             'order_line': [
