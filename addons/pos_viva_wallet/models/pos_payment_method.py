@@ -15,7 +15,7 @@ class PosPaymentMethod(models.Model):
 
     # Viva Wallet
     viva_wallet_merchant_id = fields.Char(string="Merchant ID", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')
-    viva_wallet_api_key = fields.Char(string="API Key", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')
+    viva_wallet_api_key = fields.Char(string="API Key", groups='point_of_sale.group_pos_manager', help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/merchant-id-and-api-key/')
     viva_wallet_client_id = fields.Char(string="Client ID", help='Used when connecting to Viva Wallet: https://developer.vivawallet.com/getting-started/find-your-account-credentials/pos-apis-credentials/#find-your-pos-apis-credentials')
     viva_wallet_client_secret = fields.Char(string="Client secret")
     viva_wallet_terminal_id = fields.Char(string="Terminal ID", help='[Terminal ID of the Viva Wallet terminal], for example: 16002169')
@@ -177,7 +177,7 @@ class PosPaymentMethod(models.Model):
             self.viva_wallet_webhook_verification_key = self._get_verification_key(
                 self._viva_wallet_webhook_get_endpoint(),
                 self.viva_wallet_merchant_id,
-                self.viva_wallet_api_key
+                self.sudo().viva_wallet_api_key
                 )
             if not self.viva_wallet_webhook_verification_key:
                 raise UserError(_("Can't update payment method. Please check the data and update it."))
@@ -193,7 +193,7 @@ class PosPaymentMethod(models.Model):
                 record.viva_wallet_webhook_verification_key = record._get_verification_key(
                     record._viva_wallet_webhook_get_endpoint(),
                     record.viva_wallet_merchant_id,
-                    record.viva_wallet_api_key,
+                    record.sudo().viva_wallet_api_key,
                 )
                 if not record.viva_wallet_webhook_verification_key:
                     raise UserError(_("Can't create payment method. Please check the data and update it."))
