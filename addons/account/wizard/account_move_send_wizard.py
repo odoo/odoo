@@ -21,6 +21,10 @@ class AccountMoveSendWizard(models.TransientModel):
         readonly=False,
         store=True,
     )
+    # Technical field to display the attachments widget
+    display_attachments_widget = fields.Boolean(
+        compute='_compute_display_attachments_widget',
+    )
     extra_edis = fields.Json(
         compute='_compute_extra_edis',
         inverse='_inverse_extra_edis',
@@ -81,6 +85,7 @@ class AccountMoveSendWizard(models.TransientModel):
         store=True,
         readonly=False,
     )
+    attachments_not_supported = fields.Json(compute='_compute_attachments_not_supported')
 
     # -------------------------------------------------------------------------
     # DEFAULTS
@@ -139,6 +144,14 @@ class AccountMoveSendWizard(models.TransientModel):
                 }
                 for method_key, method_label in methods if self._is_applicable_to_company(method_key, wizard.company_id)
             }
+
+    @api.depends('invoice_edi_format')
+    def _compute_display_attachments_widget(self):
+        for wizard in self:
+            wizard.display_attachments_widget = wizard._display_attachments_widget(
+                edi_format=wizard.invoice_edi_format,
+                sending_methods=wizard.sending_methods or [],
+            )
 
     @api.depends('extra_edi_checkboxes')
     def _compute_extra_edis(self):
@@ -216,6 +229,11 @@ class AccountMoveSendWizard(models.TransientModel):
                 + manual_attachments_data
             )
 
+    @api.depends('invoice_edi_format', 'mail_attachments_widget')
+    def _compute_attachments_not_supported(self):
+        for wizard in self:
+            wizard.attachments_not_supported = {}
+
     # -------------------------------------------------------------------------
     # CONSTRAINS
     # -------------------------------------------------------------------------
@@ -256,8 +274,9 @@ class AccountMoveSendWizard(models.TransientModel):
                 'mail_body': self.mail_body,
                 'mail_subject': self.mail_subject,
                 'mail_partner_ids': self.mail_partner_ids.ids,
-                'mail_attachments_widget': self.mail_attachments_widget,
             })
+        if self.display_attachments_widget:
+            send_settings['mail_attachments_widget'] = self.mail_attachments_widget
         return send_settings
 
     def _update_preferred_settings(self):
