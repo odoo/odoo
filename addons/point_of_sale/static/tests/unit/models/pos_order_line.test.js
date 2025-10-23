@@ -248,6 +248,16 @@ test("[canBeMergedWith]: Base test", async () => {
     // Test with same note
     line2.setNote("Test note");
     expect(line1.canBeMergedWith(line2)).toBe(true);
+    // Test with discount applied
+    line1.setDiscount(10.0);
+    expect(line1.canBeMergedWith(line2)).toBe(false);
+    // Test with same discount
+    line2.setDiscount(10.0);
+    expect(line1.canBeMergedWith(line2)).toBe(true);
+    // Test with different price unit
+    line2.price_unit = line1.price_unit + 1;
+    line2.price_type = "manual";
+    expect(line1.canBeMergedWith(line2)).toBe(false);
     // Test to merge lines
     line1.merge(line2);
     expect(line1.qty).toBe(5);
