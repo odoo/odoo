@@ -697,3 +697,46 @@ class TestHrVersion(TransactionCase):
             fields_without_tracking,
             f"The following hr.version fields should have tracking=True: {fields_without_tracking}",
         )
+
+    def test_hr_version_next_version1(self):
+        """
+        Test the added next_version field on hr.version useful for computations on versions.
+        """
+        employee = self.env['hr.employee'].create([
+            {
+                'name': 'Employee',
+                'date_version': '2025-01-01',
+            }
+        ])
+        version1 = employee.version_id
+
+        # Only one version
+        self.assertEqual(version1.next_version, self.env["hr.version"], "no next version exists")
+
+        # 2 versions :
+        # 1 -> 2
+        version2 = employee.create_version({'date_version': '2025-03-01'})
+        self.assertEqual(version1.next_version, version2,
+                         "the next version should be the version 2")
+        self.assertEqual(version2.next_version, self.env["hr.version"],
+                         "the last version should not have a next version")
+
+        # 1 new version in the middle of the 2 previous ones
+        # 1 -> 3 -> 2
+        version3 = employee.create_version({'date_version': '2025-02-01'})
+        self.assertEqual(version1.next_version, version3,
+                         "the next version should be the version 3")
+        self.assertEqual(version3.next_version, version2,
+                         "the next version should be the version 2")
+        self.assertEqual(version2.next_version, self.env["hr.version"],
+                         "the last version should not have a next version")
+
+        # the last version edited to be between the 2 others:
+        # 1 -> 2 -> 3
+        version2.update({'date_version': '2025-01-15'})
+        self.assertEqual(version1.next_version, version2,
+                         "the next version should be the version 2")
+        self.assertEqual(version2.next_version, version3,
+                         "the next version should be the version 3")
+        self.assertEqual(version3.next_version, self.env["hr.version"],
+                         "the last version should not have a next_version")
