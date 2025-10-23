@@ -77,6 +77,12 @@ class AccountMoveSend(models.TransientModel):
         store=True,
         readonly=False,
     )
+    # Technical field to display or not the attachment button
+    display_attachments_widget = fields.Boolean(
+        compute='_compute_display_attachments_widget',
+    )
+    # Technical field to display or not a warning icon besides attachments not supported
+    attachments_not_supported = fields.Json(compute='_compute_attachments_not_supported')
 
     @api.model
     def default_get(self, fields_list):
@@ -241,6 +247,10 @@ class AccountMoveSend(models.TransientModel):
             for attachment in mail_template.attachment_ids
         ]
 
+    def _get_invoice_edi_format(self):
+        # To extends
+        return False
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -331,6 +341,16 @@ class AccountMoveSend(models.TransientModel):
                 )
             else:
                 wizard.mail_attachments_widget = []
+
+    @api.depends('checkbox_send_mail')
+    def _compute_display_attachments_widget(self):
+        for wizard in self:
+            wizard.display_attachments_widget = wizard.checkbox_send_mail
+
+    @api.depends('display_attachments_widget', 'mail_attachments_widget')
+    def _compute_attachments_not_supported(self):
+        for wizard in self:
+            wizard.attachments_not_supported = {}
 
     @api.model
     def _format_error_text(self, error):

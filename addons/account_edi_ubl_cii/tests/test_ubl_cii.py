@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
+from unittest import SkipTest
 from unittest.mock import patch
 
 from odoo import fields, Command
@@ -9,6 +10,11 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
 from odoo.tools.safe_eval import datetime
+
+try:
+    from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
+except ImportError:
+    contents = None
 
 
 @tagged('post_install', '-at_install')
@@ -608,3 +614,65 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         # Importing should not try to create multiple partner bank records with the same account number.
         # It would cause a traceback due to a unique constraint on the (sanitized) account number, partner pair.
         self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number, acc_number])
+
+    def test_send_and_print_extra_attachments(self):
+        if self.env['ir.module.module']._get('test_mimetypes').state != 'installed':
+            raise SkipTest("Module required for the test is not installed (test_mimetypes)")
+        self.partner_a.country_id = self.env.ref('base.be')
+        self.partner_a.commercial_partner_id.ubl_cii_format = 'ubl_bis3'
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+
+        # Supported
+        xlsx_attachment = self.env['ir.attachment'].create({
+            'name': 'xlsx attachment',
+            'raw': contents('xlsx'),
+            'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        # Not supported
+        docx_attachment = self.env['ir.attachment'].create({
+            'name': 'docx attachment',
+            'raw': contents('docx'),
+            'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        xml_attachment = self.env['ir.attachment'].create({
+            'name': 'xml attachment',
+            'raw': "<?xml version='1.0' encoding='UTF-8'?><test/>",
+            'mimetype': 'application/xml',
+        })
+        txt_attachment = self.env['ir.attachment'].create({
+            'name': 'txt attachment',
+            'raw': b'txt attachment'
+        })
+
+        template = self.env.ref('account.email_template_edi_invoice', raise_if_not_found=False)
+        wizard = self.env['account.move.send'].create({
+            'move_ids': invoice.ids,
+            'mail_template_id': template.id,
+        })
+        wizard.checkbox_download = False
+        wizard.checkbox_send_mail = False
+        wizard.checkbox_send_by_post = False
+        wizard.checkbox_ubl_cii_xml = True
+        wizard.mail_attachments_widget = wizard.mail_attachments_widget + [{
+            'id': attachment.id,
+            'name': attachment.name,
+            'mimetype': attachment.mimetype,
+            'placeholder': False,
+            'manual': True,
+        } for attachment in [xlsx_attachment, docx_attachment, xml_attachment, txt_attachment]]
+
+        wizard.action_send_and_print()
+
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        tree = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+
+        attachments_elements = tree.findall('./{*}AdditionalDocumentReference')
+
+        self.assertEqual(len(attachments_elements), 2)
+        self.assertEqual(attachments_elements[0].find('{*}ID').text, invoice.invoice_pdf_report_id.name)
+        self.assertEqual(attachments_elements[1].find('{*}ID').text, xlsx_attachment.name)

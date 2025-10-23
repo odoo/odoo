@@ -23,12 +23,28 @@ export class MailAttachments extends Component {
         return this.props.record.data[this.props.name] || [];
     }
 
+    getRenderedValue() {
+        const attachments = JSON.parse(JSON.stringify(this.getValue()));
+        const attachmentsNotSupported = this.props.record.data.attachments_not_supported || {};
+        for (const attachment of attachments) {
+            if (attachment.id && attachment.id in attachmentsNotSupported) {
+                attachment.tooltip = attachmentsNotSupported[attachment.id];
+            }
+        }
+        return attachments;
+    }
+
     getUrl(attachmentId) {
         return `/web/content/${attachmentId}?download=true`
     }
 
     getExtension(file) {
         return file.name.replace(/^.*\./, "");
+    }
+
+    get iconsSupported() {
+        // Technical getter to display icons in view
+        return this.getRenderedValue().some(attachment => !!attachment.tooltip);
     }
 
     onFileUploaded(files) {
