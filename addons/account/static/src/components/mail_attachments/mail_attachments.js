@@ -22,7 +22,14 @@ export class MailAttachments extends Component {
     }
 
     getValue(){
-        return this.props.record.data[this.props.name] || [];
+        const attachments = this.props.record.data[this.props.name] || [];
+        const attachmentsNotSupported = this.props.record.data.attachments_not_supported || {};
+        for (const attachment of attachments) {
+            if (attachment.id && attachment.id in attachmentsNotSupported) {
+                attachment.tooltip = attachmentsNotSupported[attachment.id];
+            }
+        }
+        return attachments;
     }
 
     getUrl(attachmentId) {
@@ -31,6 +38,11 @@ export class MailAttachments extends Component {
 
     getExtension(file) {
         return file.name.replace(/^.*\./, "");
+    }
+
+    get iconsSupported() {
+        // Technical getter to display icons in view
+        return this.getValue().some(attachment => !!attachment.tooltip);
     }
 
     onFileUploaded(files) {
