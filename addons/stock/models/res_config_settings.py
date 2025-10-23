@@ -84,6 +84,16 @@ class ResConfigSettings(models.TransientModel):
         if self.stock_text_confirmation and self.stock_confirmation_type == 'sms':
             self.module_stock_sms = True
 
+    @api.onchange('module_product_barcodelookup')
+    def onchange_module_product_barcodelookup(self):
+        if not self.module_product_barcodelookup:
+            self.module_stock_barcode_barcodelookup = False
+
+    @api.onchange('module_stock_barcode_barcodelookup')
+    def onchange_module_stock_barcode_barcodelookup(self):
+        if self.module_stock_barcode_barcodelookup:
+            self.module_product_barcodelookup = True
+
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):
         if self.group_stock_adv_location and not self.group_stock_multi_locations:
