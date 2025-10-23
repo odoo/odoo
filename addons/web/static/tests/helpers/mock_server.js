@@ -2317,7 +2317,16 @@ export class MockServer {
                     break;
                 }
             }
-            const result = v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+            let result = 0;
+            if (v1 === undefined && v2 !== undefined) {
+                result = 1;
+            } else if (v1 !== undefined && v2 === undefined) {
+                result = -1;
+            } else if (v1 > v2) {
+                result = 1;
+            } else if (v1 < v2) {
+                result = -1;
+            }
             return order === "DESC" ? -result : result;
         });
 
