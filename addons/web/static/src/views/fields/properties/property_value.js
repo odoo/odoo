@@ -14,6 +14,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { SignatureViewer } from "@web/core/signature/signature_viewer";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useService } from "@web/core/utils/hooks";
@@ -26,6 +27,7 @@ import { parseFloat, parseInteger, parseMonetary } from "@web/views/fields/parse
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { PropertyTags } from "./property_tags";
 import { PropertyText } from "./property_text";
+import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 
 class PropertyValueTag extends Component {
     static template = "web.PropertyValueTag";
@@ -75,6 +77,7 @@ export class PropertyValue extends Component {
         PropertyTags,
         PropertyText,
         PropertyValueTag,
+        SignatureViewer,
     };
 
     static props = {
@@ -189,6 +192,14 @@ export class PropertyValue extends Component {
             });
         } else if (this.props.type === "tags") {
             return value || [];
+        } else if (this.props.type === "signature") {
+            if (!value) {
+                return "";
+            } else {
+                // Use magic-word technique for detecting image type
+                const magic = fileTypeMagicWordMap[value[0]] || "png";
+                return `data:image/${magic};base64,${value}`;
+            }
         }
 
         return value;
@@ -324,6 +335,8 @@ export class PropertyValue extends Component {
             } catch {
                 newValue = 0;
             }
+        } else if (this.props.type === "signature") {
+            newValue = newValue.signatureImage.split(",")[1] || false;
         }
 
         // trigger the onchange event to notify the parent component

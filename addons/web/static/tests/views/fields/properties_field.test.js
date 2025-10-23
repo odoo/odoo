@@ -1,8 +1,3 @@
-import { PropertiesField } from "@web/views/fields/properties/properties_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { WebClient } from "@web/webclient/webclient";
-
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
@@ -33,6 +28,11 @@ import {
     toggleActionMenu,
     toggleMenuItem,
 } from "@web/../tests/web_test_helpers";
+import { PropertiesField } from "@web/views/fields/properties/properties_field";
+import { PROPERTY_TYPES } from "@web/views/fields/properties/property_definition";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { WebClient } from "@web/webclient/webclient";
 
 async function closePopover() {
     // Close the popover by clicking outside
@@ -42,23 +42,7 @@ async function closePopover() {
 }
 
 async function changeType(propertyType) {
-    const TYPES = [
-        "char",
-        "text",
-        "html",
-        "boolean",
-        "integer",
-        "float",
-        "monetary",
-        "date",
-        "datetime",
-        "selection",
-        "tags",
-        "many2one",
-        "many2many",
-        "separator"
-    ];
-    const propertyTypeIndex = TYPES.indexOf(propertyType);
+    const propertyTypeIndex = PROPERTY_TYPES.indexOf(propertyType);
     await click(".o_field_property_definition_type input");
     await animationFrame();
     await click(`.o-dropdown--menu .dropdown-item:eq(${propertyTypeIndex})`);
@@ -2785,4 +2769,39 @@ test("properties: monetary with multiple currency field", async () => {
     await closePopover();
     expect(".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(1)").toHaveText("€");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
+});
+
+test("properties: signature", async () => {
+    onRpc("has_access", () => true);
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+
+    await contains(".o_property_field:first-child .o_field_property_open_popover").click();
+    expect(".o_field_property_definition").toHaveCount(1);
+
+    await changeType("signature");
+    expect(queryAllTexts(".o_field_property_definition .o_form_label")).toEqual(["Label", "Field Type"]);
+
+    await closePopover();
+    expect(".o_field_property_definition").toHaveCount(0);
+    expect(".o_signature").toHaveCount(1);
+    expect(".o_property_field:eq(0) .o_property_field_value_suffix").toHaveCount(0, {
+        message: "suffix should be removed",
+    });
 });
