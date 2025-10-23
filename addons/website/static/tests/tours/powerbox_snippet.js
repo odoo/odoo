@@ -1,5 +1,17 @@
 import {clickOnSnippet, insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
+const setSelection = (
+    document,
+    { anchorNode, anchorOffset, focusNode = anchorNode, focusOffset = anchorOffset }
+) => {
+    const range = document.createRange();
+    range.setStart(anchorNode, anchorOffset);
+    range.setEnd(focusNode, focusOffset);
+    const selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+};
+
 registerWebsitePreviewTour("website_powerbox_snippet",{
     edition: true,
 },
@@ -17,6 +29,18 @@ registerWebsitePreviewTour("website_powerbox_snippet",{
     content: "Select the last paragraph",
     trigger: ":iframe .s_text_block p:last-child",
     run: "click",
+},
+// TODO:// "click" command should set the selection inside the element if editable.
+{
+    content: "Put selection in the second paragraph inside the editable",
+    trigger: ":iframe #wrap",
+    run: function () {
+        const p = this.anchor.ownerDocument.querySelector("#wrap p");
+        setSelection(this.anchor.ownerDocument, {
+            anchorNode: p,
+            anchorOffset: p.childNodes.length,
+        });
+    },
 },
 {
     content: "Show the powerbox",
@@ -62,6 +86,18 @@ registerWebsitePreviewTour(
             content: "Select the last paragraph",
             trigger: ":iframe .s_text_block p:last-child",
             run: "click",
+        },
+        // TODO:// "click" command should set the selection inside the element if editable.
+        {
+            content: "Put selection in the second paragraph inside the editable",
+            trigger: ":iframe #wrap",
+            run: function () {
+                const p = this.anchor.ownerDocument.querySelector("#wrap p");
+                setSelection(this.anchor.ownerDocument, {
+                    anchorNode: p,
+                    anchorOffset: p.childNodes.length,
+                });
+            },
         },
         {
             content: "Show the powerbox",
