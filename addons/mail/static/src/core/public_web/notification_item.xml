@@ -15,7 +15,7 @@
         }">
             <div class="o-mail-NotificationItem-avatarContainer position-relative bg-inherit flex-shrink-0 align-self-start" t-att-class="{ 'o-small': ui.isSmall }">
                 <img t-if="props.iconSrc" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': ui.isSmall, 'rounded': !ui.isSmall }" alt="Notification Item Image" t-att-src="props.iconSrc"/>
-                <t t-slot="icon"/>
+                <t t-if="props.slots and props.slots.icon" t-slot="icon"/>
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': ui.isSmall, 'ps-1': !ui.isSmall }">
                 <div class="o-mail-NotificationItem-line d-flex text-nowrap">
