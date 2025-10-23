@@ -156,9 +156,8 @@ export class CalendarController extends Component {
                 "MMMM"
             )} ${end.year}`;
         } else if (start.month != end.month) {
-            return `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${
-                start.year
-            }`;
+            return `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${start.year
+                }`;
         }
         return `${start.toFormat("MMMM")} ${start.year}`;
     }
@@ -287,6 +286,7 @@ export class CalendarController extends Component {
             viewId: this.model.quickCreateFormViewId,
             title: _t("New Event"),
             context,
+            onRecordSaved: () => this.model.load(),
         };
     }
 
