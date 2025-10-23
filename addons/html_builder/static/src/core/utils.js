@@ -22,10 +22,30 @@ import { useDebounced } from "@web/core/utils/timing";
  * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
  */
 
+/**
+ * Verifies that a DOM node is still attached to a live document.
+ *
+ * @param {Node | undefined} el - The node to check.
+ * @returns {Boolean} - True when the node belongs to an active document.
+ */
 function isConnectedElement(el) {
     return el && el.isConnected && !!el.ownerDocument.defaultView;
 }
 
+/**
+ * Builds a reactive state that refreshes whenever there is a DOM update.
+ *
+ * The provided `getState` callback runs during component start and after every
+ * `DOM_UPDATED` event. The returned state object is updated in place only when
+ * the current editing element is available and still connected to the document
+ * (unless `checkEditingElement` is disabled).
+ *
+ * @param {Function} getState - The function that computes the component state.
+ * @param {{checkEditingElement: Boolean}} - Whether to update the state of the
+ * element if there is no editing element available.
+ * @returns {Object} - A reactive object (the state) that will be updated at
+ * each dom update.
+ */
 export function useDomState(getState, { checkEditingElement = true } = {}) {
     const env = useEnv();
     const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
@@ -51,6 +71,20 @@ export function useDomState(getState, { checkEditingElement = true } = {}) {
     return state;
 }
 
+/**
+ * Extracts action metadata (from the component props or context).
+ *
+ * @returns {{
+ *   actionId: String | undefined,
+ *   actionParam: String | undefined,
+ *   actionValue: String | undefined,
+ *   classAction: String | undefined,
+ *   styleAction: String | undefined,
+ *   styleActionValue: String | undefined,
+ *   attributeAction: String | undefined,
+ *   attributeActionValue: String | undefined
+ * }}
+ */
 export function useActionInfo() {
     const comp = useComponent();
 
@@ -77,6 +111,15 @@ export function useActionInfo() {
     };
 }
 
+/**
+ * Returns the result of a `querySelectorAll` applied on each elements of the
+ * targets.
+ * @param {Array<HTMLElement>} targets - The elements on which to apply the
+ * `querySelectorAll`.
+ * @param {String} selector - The css selector to use on the `querySelectorAll`.
+ * @returns {Array<HTMLElement>} - Elements that are descendants of `targets`
+ * and matches the selector.
+ */
 function querySelectorAll(targets, selector) {
     const elements = new Set();
     for (const target of targets) {
@@ -87,6 +130,9 @@ function querySelectorAll(targets, selector) {
     return [...elements];
 }
 
+/**
+ * Handles the update of the editing elements of a builder component.
+ */
 export function useBuilderComponent() {
     const comp = useComponent();
     const newEnv = {};
@@ -123,6 +169,20 @@ export function useBuilderComponent() {
     }
     useSubEnv(newEnv);
 }
+
+/**
+ * Registers a builder component in the dependency manager for cross-option
+ * communication.
+ *
+ * The registration is optionally deferred until the `onReady` promise resolves,
+ * ensuring `prepare` hooks complete before other components rely on the
+ * provided item.
+ *
+ * @param {String} id - The builder component identifier.
+ * @param {Object} item - Values and callbacks that other components can consume
+ * via the manager.
+ * @param {{onReady: Promise}} - Optional promise deferring the registration.
+ */
 export function useDependencyDefinition(id, item, { onReady } = {}) {
     const comp = useComponent();
     const ignore = comp.env.ignoreBuilderItem;
@@ -139,6 +199,12 @@ export function useDependencyDefinition(id, item, { onReady } = {}) {
     });
 }
 
+/**
+ * Produces an accessor that reports whether dependency-managed items are
+ * active.
+ *
+ * @returns {Function} - A function to subscribe to each requested id.
+ */
 function useIsActiveItem() {
     const env = useEnv();
     const listenedKeys = new Set();
@@ -161,6 +227,11 @@ function useIsActiveItem() {
     };
 }
 
+/**
+ * Produces an accessor that reads the value of dependency-managed items.
+ *
+ * @returns {Function} - A function to subscribe to each requested id.
+ */
 export function useGetItemValue() {
     const env = useEnv();
     const listenedKeys = new Set();
@@ -183,6 +254,19 @@ export function useGetItemValue() {
     };
 }
 
+/**
+ *
+ * Tracks the currently selected option among selectable builder items.
+ *
+ * The hook collects selectable descriptors from descendants, resolves which one
+ * is active based on their priority, and optionally registers the collection
+ * under the provided dependency id.
+ *
+ * @param {String | undefined} id - If provided, the identifier used to expose
+ * the selectable collection via dependencies.
+ * @param {{onItemChange: Function}} - Optional callback executed at selected item
+ * computation.
+ */
 export function useSelectableComponent(id, { onItemChange } = {}) {
     useBuilderComponent();
     const selectableItems = [];
@@ -249,6 +333,22 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 }
 
+/**
+ * Handles selectable item behavior so that it cooperates with selectable
+ * component.
+ *
+ * The hook exposes the same operation helpers as
+ * `useClickableBuilderComponent`, while registering the item inside the nearest
+ * selectable context and keeping an `isActive` state synchronized with the
+ * current selection.
+ *
+ * @param {String | undefined} id - Dependency identifier representing this
+ * selectable item.
+ * @param {{getLabel: Function}} - Function that returns the label of the
+ * selectable item.
+ * @returns {{state: Object, operation: Object}} - The state and the actions
+ * to execute once the item is hovered/selected etc.
+ */
 export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
     const { operation, isApplied, getActions, priority, clean, onReady } =
         useClickableBuilderComponent();
@@ -316,6 +416,15 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
     return { state, operation };
 }
 
+/**
+ * Schedules the "prepare" phase for every action related to the current
+ * component.
+ *
+ * @param {Function} getAllActions - Function that returns all the actions
+ * related to a builder component.
+ * @returns {Promise | undefined} - A promise that is resolved as soon as the
+ * "prepare" phase of all the actions related to a builder option is finished.
+ */
 function usePrepareAction(getAllActions) {
     const env = useEnv();
     const getAction = env.editor.shared.builderActions.getAction;
@@ -358,6 +467,14 @@ function usePrepareAction(getAllActions) {
     return onReady;
 }
 
+/**
+ * Collects reload metadata exposed by any of the component actions.
+ *
+ * @param {Function} getAllActions - Supplier returning all the actions related
+ * to a builder component.
+ * @returns {Object} - Wrapper containing the reload configuration, if
+ * available.
+ */
 function useReloadAction(getAllActions) {
     const env = useEnv();
     const getAction = env.editor.shared.builderActions.getAction;
@@ -373,6 +490,14 @@ function useReloadAction(getAllActions) {
     return { reload };
 }
 
+/**
+ * Evaluates whether a builder component has a preview capability.
+ *
+ * @param {Function} getAllActions - Supplier returning all the actions related
+ * to a builder component.
+ * @returns {Boolean} - True when each action supports preview and the component
+ * is configured to allow it.
+ */
 export function useHasPreview(getAllActions) {
     const comp = useComponent();
     const getAction = comp.env.editor.shared.builderActions.getAction;
@@ -394,6 +519,14 @@ export function useHasPreview(getAllActions) {
     );
 }
 
+/**
+ * Evaluates whether the actions request a loading indicator while committing.
+ *
+ * @param {Function} getAllActions - Supplier returning all the actions related
+ * to a builder component.
+ * @returns {Boolean} - True unless at least one action explicitly disables the
+ * effect.
+ */
 function useWithLoadingEffect(getAllActions) {
     const env = useEnv();
     const getAction = env.editor.shared.builderActions.getAction;
@@ -410,6 +543,22 @@ function useWithLoadingEffect(getAllActions) {
     return withLoadingEffect;
 }
 
+/**
+ * Sets up the full action lifecycle for a clickable builder component.
+ *
+ * The hook wires the component into the builder context, resolves all related
+ * actions (including inherited ones), runs their `prepare` phases, and exposes
+ * helpers to commit/preview/revert while integrating with history, reload,
+ * and dependency tracking.
+ * @returns {{
+ * operation: Object,
+ * isApplied: Function,
+ * clean: Function,
+ * priority: Number,
+ * getActions: Function,
+ * onReady: Promise | undefined,
+ * }}
+ */
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
@@ -468,6 +617,15 @@ export function useClickableBuilderComponent() {
         operation.preview = () => {};
     }
 
+    /**
+     * Handles the `clean` operations related to the builder option.
+     * @param {Array<Object>} nextApplySpecs - The action specifications that
+     * triggered the clean.
+     * @param {Boolean} isPreviewing - Whether the actions should be executed in
+     * preview mode or not.
+     * @returns {Promise} - A promise that is resolved when the `clean`
+     * operations related to the builder option are finished.
+     */
     function clean(nextApplySpecs, isPreviewing) {
         const proms = [];
         for (const { actionId, actionParam, actionValue } of getAllActions()) {
@@ -498,6 +656,14 @@ export function useClickableBuilderComponent() {
         return Promise.all(proms);
     }
 
+    /**
+     * Handles the "clean" and "apply" of all the actions related to a builder
+     * component.
+     * @param {Array<Object>} applySpecs - An array where each element contains
+     * an html element and the action to apply on it.
+     * @param {Boolean} isPreviewing - Whether the actions should be in preview
+     * mode or not.
+     */
     async function callApply(applySpecs, isPreviewing) {
         await comp.env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         const cleans = inheritedActionIds
@@ -564,6 +730,15 @@ export function useClickableBuilderComponent() {
         onReady,
     };
 }
+
+/**
+ * Wraps an apply routine so the editor reloads after the actions run.
+ *
+ * @param {Function} callApply - Function executing the actions related to the
+ * current builder component.
+ * @param {Object} reload - Reload configuration extracted from actions.
+ * @returns {Function}
+ */
 function useOperationWithReload(callApply, reload) {
     const env = useEnv();
     return async (...args) => {
@@ -577,6 +752,17 @@ function useOperationWithReload(callApply, reload) {
     };
 }
 
+/**
+ * Normalizes user input by falling back to the configured default when needed.
+ *
+ * @param {String} userInputValue - Raw value provided by the user.
+ * @param {String | undefined} defaultValue - Default value declared on the
+ * component.
+ * @param {Function} formatRawValue - Formatter applied to the default before
+ * returning it.
+ * @returns {String} - The original input or the formatted default when the
+ * input is empty.
+ */
 function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
     if (defaultValue !== undefined) {
         if (!userInputValue || (typeof userInputValue === "string" && !userInputValue.trim())) {
@@ -586,6 +772,27 @@ function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
     return userInputValue;
 }
 
+/**
+ * Configures an input-style builder component that reads, previews, and commits
+ * values.
+ *
+ * The hook computes the current value from related actions, normalizes user
+ * input with optional format/parse helpers, and exposes commit/preview logic
+ * that cooperates with history, reload, and dependency tracking.
+ *
+ * @param {{
+ * id: String | undefined,
+ * defaultValue: String | undefined,
+ * formatRawValue: Function | undefined,
+ * parseDisplayValue: Function | undefined,
+ * }}
+ * @returns {{
+ * state: Object,
+ * commit: Function,
+ * preview: Function,
+ * onReady: Promise | undefined,
+ * }}
+ */
 export function useInputBuilderComponent({
     id,
     defaultValue,
@@ -691,6 +898,14 @@ export function useInputBuilderComponent({
     };
 }
 
+/**
+ * Generates a helper that toggles the visibility of an element referenced by
+ * name.
+ *
+ * @param {String} refName - Name of the Owl reference pointing to the container
+ * to toggle.
+ * @returns {Function} - Callback that hides the element when content is absent.
+ */
 export function useApplyVisibility(refName) {
     const ref = useRef(refName);
     return (hasContent) => {
@@ -698,6 +913,14 @@ export function useApplyVisibility(refName) {
     };
 }
 
+/**
+ * Observes a content slot and informs a callback when visible nodes are
+ * present.
+ *
+ * @param {String} contentName - Name of the Owl reference containing the
+ * observed content.
+ * @param {Function} callback - Called whenever visibility should change.
+ */
 export function useVisibilityObserver(contentName, callback) {
     const contentRef = useRef(contentName);
 
@@ -731,6 +954,14 @@ export function useVisibilityObserver(contentName, callback) {
     );
 }
 
+/**
+ * Returns a debounced commit handler tied to an input builder component.
+ *
+ * @param {import("@web/core/utils/hooks").Ref} ref - Reference to the input
+ * element whose value should be committed.
+ * @returns {Function} Debounced callback that normalizes and commits the input
+ * value.
+ */
 export function useInputDebouncedCommit(ref) {
     const comp = useComponent();
     return useDebounced(() => {
@@ -760,6 +991,7 @@ export const basicContainerBuilderComponentProps = {
     dataAttributeAction: { validate: () => true, optional: true },
     styleAction: { validate: () => true, optional: true },
 };
+
 const validateIsNull = { validate: (value) => value === null };
 
 export const clickableBuilderComponentProps = {
@@ -780,10 +1012,35 @@ export const clickableBuilderComponentProps = {
     inheritedActions: { type: Array, element: String, optional: true },
 };
 
+/**
+ * Aggregates all actions linked to a builder component and exposes execution
+ * helpers.
+ *
+ * The helpers resolve shorthand, custom, and inherited actions, orchestrate
+ * their application through the history mutex, and report whether the option is
+ * currently applied.
+ *
+ * @param {typeof import("@odoo/owl").Component} comp - The builder component
+ * requesting the actions.
+ * @returns {{getAllActions: Function,
+ * callOperation: Function,
+ * isApplied: Function}}
+ * Helper functions related to the component.
+ */
 export function getAllActionsAndOperations(comp) {
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
 
+    /**
+     * Computes the action specifications related to a builder component. An
+     * action specification contains a target editing element and all the action
+     * information.
+     * @param {Array<Object>} actions - The actions related to a builder
+     * components.
+     * @param {String | undefined} userInputValue - If defined, the input value
+     * provided by the user.
+     * @returns {Array<Object>}
+     */
     function getActionsSpecs(actions, userInputValue) {
         const getAction = comp.env.editor.shared.builderActions.getAction;
         const overridableMethods = ["apply", "clean", "load", "loadOnClean"];
@@ -813,6 +1070,11 @@ export function getAllActionsAndOperations(comp) {
         }
         return specs;
     }
+    /**
+     * Returns the list of shorthand actions related to a builder component (the
+     * one defined in its props and in its context).
+     * @returns {Array<Object>}
+     */
     function getShorthandActions() {
         const actions = [];
         const shorthands = [
@@ -833,6 +1095,10 @@ export function getAllActionsAndOperations(comp) {
         }
         return actions;
     }
+    /**
+     * Returns the custom action related to a builder component if any.
+     * @returns {Object|undefined}
+     */
     function getCustomAction() {
         const actionId = comp.props.action || comp.env.weContext.action;
         if (actionId) {
@@ -844,6 +1110,11 @@ export function getAllActionsAndOperations(comp) {
             };
         }
     }
+    /**
+     * Returns all the actions (shorthand, custom and inherited) related to a
+     * builder component.
+     * @returns {Array<Object>}
+     */
     function getAllActions() {
         const actions = getShorthandActions();
 
@@ -863,6 +1134,13 @@ export function getAllActionsAndOperations(comp) {
                 .flat() || [];
         return actions.concat(inheritedActions || []);
     }
+    /**
+     * Handles the `load` phase of actions and put the actions in a mutex in
+     * order to be executed.
+     * @param {Function} fn - A function to add in the mutex
+     * @param {Object} params - Parameters that describe if the function can be
+     * cancellable, how it should be cancellable, etc...
+     */
     function callOperation(fn, params = {}) {
         const isPreviewing = !!params.preview;
         const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
@@ -890,6 +1168,10 @@ export function getAllActionsAndOperations(comp) {
             ...params.operationParams,
         });
     }
+    /**
+     * Evaluates if an option is considered applied.
+     * @returns {Boolean | undefined}
+     */
     function isApplied() {
         const getAction = comp.env.editor.shared.builderActions.getAction;
         const editingElements = comp.env.getEditingElements();
@@ -910,7 +1192,8 @@ export function getAllActionsAndOperations(comp) {
             });
             return comp.props.inverseAction ? !isApplied : isApplied;
         });
-        // If there is no `isApplied` method for the widget return false
+        // If there is no `isApplied` method related to the builder component
+        // return false.
         if (areActionsActiveTabs.every((el) => el === undefined)) {
             return false;
         }
@@ -927,6 +1210,16 @@ export function getAllActionsAndOperations(comp) {
         isApplied: isApplied,
     };
 }
+
+/**
+ * Determines whether an action should run its "clean" phase instead of "apply".
+ *
+ * @param {import("@odoo/owl").Component} comp - The builder component requesting the action execution.
+ * @param {Boolean} hasClean - Whether the action exposes a `clean` handler.
+ * @param {Boolean} isApplied - Current applied status of the action.
+ * @returns {Boolean} - Whether the "clean" phase should be executed rather than
+ * the "apply".
+ */
 function _shouldClean(comp, hasClean, isApplied) {
     if (!hasClean) {
         return false;
@@ -935,6 +1228,13 @@ function _shouldClean(comp, hasClean, isApplied) {
     const shouldClean = shouldToggle && isApplied;
     return comp.props.inverseAction ? !shouldClean : shouldClean;
 }
+
+/**
+ * Ensures action parameters are shaped as plain objects consumable by actions.
+ *
+ * @param {any} param - Parameter provided by props or the builder context.
+ * @returns {Object} - Original object or a `{mainParam: param}` wrapper.
+ */
 export function convertParamToObject(param) {
     if (param === undefined) {
         param = {};
@@ -946,6 +1246,13 @@ export function convertParamToObject(param) {
     return param;
 }
 
+/**
+ * Base class shared by builder option components to preload dependencies and
+ * helpers.
+ *
+ * It injects the `isActiveItems` accessor and merges the shared builder
+ * components into the extending component's catalog.
+ */
 export class BaseOptionComponent extends Component {
     static components = {};
     static props = {};
@@ -997,6 +1304,16 @@ export class BaseOptionComponent extends Component {
     }
 }
 
+/**
+ * Creates a reactive state object that tracks and updates the status of
+ * specific builder components whenever dependencies in the environment change
+ * or at each DOM update.
+ *
+ * @param {Set<String>} listenedKeys - A set of builder components to track.
+ * @param {Function} newStateFn - The function to update the state of listened
+ * builder components.
+ * @returns {Object} - A reactive object.
+ */
 function useItemStatus(listenedKeys, newStateFn) {
     const env = useEnv();
     const getState = () => {
