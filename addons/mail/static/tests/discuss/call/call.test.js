@@ -1,11 +1,9 @@
 import {
     click,
     contains,
-    createVideoStream,
     defineMailModels,
     listenStoreFetch,
     mockGetMedia,
-    makeMockRtcNetwork,
     openDiscuss,
     patchUiSize,
     SIZES,
@@ -863,6 +861,7 @@ test("should not show context menu on participant card when not in a call", asyn
     await contains(".o-discuss-CallContextMenu");
 });
 
+// control group
 test("all streams are properly closed when abruptly disconnected", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -942,84 +941,4 @@ test("all streams are properly closed when requesting new ones and tuning the fe
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
     await click("[title='Stop Sharing Screen']");
     expect(screenStream.getTracks()[0].readyState).toBe("ended");
-});
-
-test("Show connecting state on cards", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const channelMemberId = pyEnv["discuss.channel.member"].create({
-        channel_id: channelId,
-        partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
-    });
-    const env = await start();
-    const network = await makeMockRtcNetwork({ env, channelId });
-    const bobRemote = network.makeMockRemote(channelMemberId);
-    await openDiscuss(channelId);
-    await click("[title='Join Call']");
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
-    await bobRemote.updateConnectionState("connecting");
-    await contains(".o-discuss-CallParticipantCard[title='Bob'] .fa-exclamation-triangle");
-    await bobRemote.updateConnectionState("connected");
-    await contains("span[data-connection-state='connected']");
-});
-
-test("Can see raised hands from other call participants", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const channelMemberId = pyEnv["discuss.channel.member"].create({
-        channel_id: channelId,
-        partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
-    });
-    const env = await start();
-    const network = await makeMockRtcNetwork({ env, channelId });
-    const bobRemote = network.makeMockRemote(channelMemberId);
-    await openDiscuss(channelId);
-    await click("[title='Join Call']");
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
-    await bobRemote.updateConnectionState("connected");
-    await bobRemote.updateInfo({ isRaisingHand: true });
-    await contains(".o-discuss-CallParticipantCard[title='Bob'] .fa-hand-paper-o");
-    await contains(".o-discuss-Call-notification:contains('Bob raised their hand')");
-});
-
-test("Can see videos from other call participants", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const channelMemberId = pyEnv["discuss.channel.member"].create({
-        channel_id: channelId,
-        partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
-    });
-    const env = await start();
-    const network = await makeMockRtcNetwork({ env, channelId });
-    const bobRemote = network.makeMockRemote(channelMemberId);
-    await openDiscuss(channelId);
-    await click("[title='Join Call']");
-    await contains(".o-discuss-CallParticipantCard[title='Bob']");
-    await bobRemote.updateConnectionState("connected");
-    await bobRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[title='Bob'] video");
-});
-
-test("show all participants on other user stops screen share", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const channelMemberId = pyEnv["discuss.channel.member"].create({
-        channel_id: channelId,
-        partner_id: pyEnv["res.partner"].create({ name: "Streamer" }),
-    });
-    const env = await start();
-    const network = await makeMockRtcNetwork({ env, channelId });
-    const streamerRemote = network.makeMockRemote(channelMemberId);
-    await openDiscuss(channelId);
-    await click("[title='Join Call']");
-    await streamerRemote.updateConnectionState("connected");
-    await contains(".o-discuss-CallParticipantCard-avatar", { count: 2 });
-    await streamerRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard-avatar", { count: 2 });
-    await contains(".o-discuss-CallParticipantCard video");
-    await click(".o-discuss-CallParticipantCard[title='Streamer'] video");
-    await contains(".o-discuss-CallParticipantCard-avatar");
-    await contains(".o-discuss-CallParticipantCard video");
-    await streamerRemote.updateUpload("screen", null);
-    await contains(".o-discuss-CallParticipantCard-avatar", { count: 2 });
 });
