@@ -304,8 +304,6 @@ class HrVersion(models.Model):
                 leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
                 for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
                     leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
-                    # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
-                    interval_leaves = [leave for leave in leaves if not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id]
                     interval_start = leave_interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                     version_vals += [dict([
@@ -315,7 +313,7 @@ class HrVersion(models.Model):
                         ('employee_id', employee.id),
                         ('company_id', version.company_id.id),
                         ('version_id', version.id),
-                    ] + version._get_more_vals_leave_interval(interval, interval_leaves))]
+                    ] + version._get_more_vals_leave_interval(interval, leaves))]
         return version_vals
 
     def _get_work_entries_values(self, date_start, date_stop):
