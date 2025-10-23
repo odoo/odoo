@@ -10,7 +10,17 @@
         'data/test_action_bindings.xml',
         'data/test_orm_data.xml',
         'data/test_translated_field/test_model_data.xml',
-        'security/ir.model.access.csv',
+        # START
+        'security/test_access_rights/ir.model.access.csv',
+        'security/test_action_bindings/ir.model.access.csv',
+        'security/test_config/ir.model.access.csv',
+        'security/test_convert/ir.model.access.csv',
+        'security/test_html_converter/ir.model.access.csv',
+        'security/test_orm/ir.model.access.csv',
+        'security/test_performance/ir.model.access.csv',
+        'security/test_read_group/ir.model.access.csv',
+        'security/test_unity_read/ir.model.access.csv',
+        # END
         'security/test_access_rights_security.xml',
         'security/test_orm_security.xml',
         'views/test_orm_views.xml',
