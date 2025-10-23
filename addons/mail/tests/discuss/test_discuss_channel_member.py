@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests.common import new_test_user, tagged
+from odoo.exceptions import AccessError, ValidationError
+from odoo.tests.common import new_test_user
 
 
-@tagged("post_install", "-at_install")
 class TestDiscussChannelMember(MailCommon):
     @classmethod
     def setUpClass(cls):

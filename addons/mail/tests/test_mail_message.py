@@ -4,7 +4,7 @@ from odoo.addons.mail.tests import common
 from odoo.tests import new_test_user, tagged
 
 
-@tagged("-at_install", "post_install", "mail_message")
+@tagged("mail_message")
 class TestMailMessage(common.MailCommon):
     def test_unlink_failure_message_notify_author(self):
         recipient = new_test_user(self.env, login="Bob", email="invalid_email_addr")

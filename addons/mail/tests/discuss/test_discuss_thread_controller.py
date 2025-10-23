@@ -1,8 +1,10 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
 from odoo.tests import tagged
 
 
-@tagged("-at_install", "post_install", "mail_controller")
+@tagged("mail_controller")
 class TestDiscussThreadController(MailControllerThreadCommon):
 
     def test_internal_channel_message_post_access(self):

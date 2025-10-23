@@ -14,11 +14,10 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, users
+from odoo.tests import HttpCase, users
 from odoo.tools import html_escape, mute_logger
 
 
-@tagged("post_install", "-at_install")
 class TestChannelInternals(MailCommon, HttpCase):
 
     @classmethod

@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
 from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, new_test_user
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 
     def test_01_mail_tour(self):

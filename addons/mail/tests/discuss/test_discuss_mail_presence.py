@@ -9,13 +9,12 @@ except ImportError:
 
 from itertools import product
 
-from odoo.tests import tagged, new_test_user
+from odoo.tests import new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
-@tagged("post_install", "-at_install")
 class TestMailPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, requested_by, target, has_token=False):
         self.env["mail.presence"].search([]).unlink()

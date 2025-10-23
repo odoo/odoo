@@ -5,7 +5,7 @@ from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.tests import tagged, HttpCase
 
 
-@tagged("mail_activity", "-at_install", "post_install")
+@tagged("mail_activity")
 class TestMailActivityChatter(HttpCase):
 
     @classmethod
@@ -38,7 +38,7 @@ class TestMailActivityChatter(HttpCase):
         )
 
 
-@tagged("-at_install", "post_install", "mail_activity")
+@tagged("mail_activity")
 class TestMailActivityIntegrity(ActivityScheduleCase):
 
     def test_mail_activity_type_master_data(self):
