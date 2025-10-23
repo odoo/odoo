@@ -15,8 +15,8 @@
                             <t t-if="blog_posts">
                                 <t t-foreach="blog_posts" t-as="post">
                                     <a class="album_item" t-att-href="post.website_url or '#'">
-                                        <t t-elif="post.image_512">
-                                            <img t-attf-src="/web/image/blog.post/#{post.id}/image_512" t-att-alt="post.name" loading="lazy"/>
+                                        <t t-if="post.image_512">
+                                            <img t-attf-src="/web/image/website.publication/#{post.id}/image_512" t-att-alt="post.name" loading="lazy"/>
                                         </t>
                                         <t t-else="">
                                             <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="post.name" loading="lazy"/>
