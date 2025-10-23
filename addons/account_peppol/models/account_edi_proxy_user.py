@@ -423,7 +423,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'peppol_country_code': self.company_id.country_id.code,
             'peppol_phone_number': self.company_id.account_peppol_phone_number,
             'peppol_contact_email': self.company_id.account_peppol_contact_email,
-            'peppol_migration_key': self.company_id.account_peppol_migration_key,
+            'peppol_migration_key': self.company_id.sudo().account_peppol_migration_key,
             'peppol_webhook_endpoint': self.company_id._get_peppol_webhook_endpoint(),
             'peppol_webhook_token': self._generate_webhook_token(),
         }
@@ -461,13 +461,13 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self._call_peppol_proxy(
             endpoint='/api/peppol/1/register_sender_as_receiver',
             params={
-                'migration_key': company.account_peppol_migration_key,
+                'migration_key': company.sudo().account_peppol_migration_key,
                 'supported_identifiers': list(company._peppol_supported_document_types())
             },
         )
         # once we sent the migration key over, we don't need it
         # but we need the field for future in case the user decided to migrate away from Odoo
-        company.account_peppol_migration_key = False
+        company.sudo().account_peppol_migration_key = False
         company.account_peppol_proxy_state = 'smp_registration'
         company.peppol_external_provider = None
 
