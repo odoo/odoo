@@ -226,8 +226,15 @@ class ProductProduct(models.Model):
         return sum(lots.mapped('total_value'))
 
     def _with_valuation_context(self):
+        self_with_context = self
         valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
-        return self.with_context(location=valued_locations.ids)
+        self_with_context = self.with_context(location=valued_locations.ids)
+        # In FIFO, the stack in on stock.move and their value is already computed base on the owner
+        if self.cost_method != 'fifo':
+            self_with_context = self_with_context.with_context(
+                owners=[False, self.env.company.partner_id.id]
+            )
+        return self_with_context
 
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
