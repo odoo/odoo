@@ -339,7 +339,7 @@ class StockMove(models.Model):
         if self.is_dropship:
             if lot:
                 return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
-            return self.product_qty
+            return self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
         return 0
 
     def _get_manual_value(self, quantity, at_date=None):
