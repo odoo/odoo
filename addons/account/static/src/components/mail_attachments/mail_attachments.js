@@ -18,7 +18,14 @@ export class MailAttachments extends Component {
     }
 
     get attachments() {
-        return this.props.record.data[this.props.name] || [];
+        const attachments = this.props.record.data[this.props.name] || [];
+        const attachmentsNotSupported = this.props.record.data.attachments_not_supported || {};
+        for (const attachment of attachments) {
+            if (attachment.id && attachment.id in attachmentsNotSupported) {
+                attachment.tooltip = attachmentsNotSupported[attachment.id];
+            }
+        }
+        return attachments;
     }
 
     onFileRemove(deleteId) {
