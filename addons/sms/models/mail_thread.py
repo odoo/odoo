@@ -179,6 +179,7 @@ class MailThread(models.AbstractModel):
             'body': body,
             'mail_message_id': message.id,
             'state': 'outgoing',
+            'sms_type': kwargs.get('sms_type'),
         }
 
         # notify from computed recipients_data (followers, specific recipients)
@@ -234,7 +235,7 @@ class MailThread(models.AbstractModel):
 
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {
-            'put_in_queue', 'sms_numbers', 'sms_pid_to_number', 'sms_content',
+            'put_in_queue', 'sms_numbers', 'sms_pid_to_number', 'sms_content', 'sms_type',
         }
 
     @api.model
