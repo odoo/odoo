@@ -474,8 +474,7 @@ class ThreadedServer(CommonServer):
                 if getattr(thread, 'start_time', None):
                     thread_execution_time = time.time() - thread.start_time
                     thread_limit_time_real = config['limit_time_real']
-                    if (getattr(thread, 'type', None) == 'cron' and
-                            config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0):
+                    if (getattr(thread, 'type', None) == 'cron' and config['limit_time_real_cron'] >= 0):
                         thread_limit_time_real = config['limit_time_real_cron']
                     if thread_limit_time_real and thread_execution_time > thread_limit_time_real:
                         _logger.warning(
