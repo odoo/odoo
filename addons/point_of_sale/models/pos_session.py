@@ -163,6 +163,7 @@ class PosSession(models.Model):
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+        data[0]['user_id'] = self.env.uid
         return {
             'data': data,
             'fields': fields
