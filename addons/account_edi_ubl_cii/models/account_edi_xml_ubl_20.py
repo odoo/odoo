@@ -544,7 +544,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
                 'cbc:ID': {'_text': commercial_partner.ref},
             },
             'cac:PartyName': {
-                'cbc:Name': {'_text': partner.display_name},
+                'cbc:Name': {'_text': partner.display_name if partner.name else commercial_partner.display_name},
             },
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyTaxScheme': {
