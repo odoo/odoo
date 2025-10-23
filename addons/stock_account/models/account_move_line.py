@@ -66,6 +66,8 @@ class AccountMoveLine(models.Model):
 
         # FIFO
         moves = self._get_stock_moves()
+        if not moves:
+            return self.product_id._run_fifo(self.quantity)
         return moves._get_price_unit()
 
     def _get_stock_moves(self):
