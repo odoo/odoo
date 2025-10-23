@@ -1,4 +1,5 @@
 from . import models
+from . import wizard
 
 
 def uninstall_hook(env):
