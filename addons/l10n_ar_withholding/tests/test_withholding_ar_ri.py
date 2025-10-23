@@ -256,3 +256,27 @@ class TestL10nArWithholdingArRi(TestAr):
             # Receivable line:
             {'debit': 121000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1210.0, 'reconciled': True}
         ])
+
+    def test_07_invoice_and_payment_with_3_decimals_withholding_amount(self):
+        """ Ensure a correct behavior when the withholding amount has the number 5 as third decimal. """
+        in_invoice_wht = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2025-10-01',
+            'invoice_date': '2025-10-01',
+            'partner_id': self.res_partner_adhoc.id,
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_a.id, 'price_unit': 391683, 'tax_ids': [Command.set(self.tax_21.ids)]}
+            )],
+            'l10n_latam_document_number': '2-5',
+        })
+        in_invoice_wht.action_post()
+        self.tax_wth_test_1.write({'amount': 4.5})
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoice_wht.ids).create({
+            'payment_date': '2025-10-01',
+            'l10n_ar_withholding_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed')), 'amount': 0})],
+        })
+        wizard.l10n_ar_withholding_ids._compute_amount()
+        action = wizard.action_create_payments()
+        payment = self.env['account.payment'].browse(action['res_id'])
+        self.assertEqual(payment.company_id.tax_calculation_rounding_method, 'round_globally')
+        self.assertEqual(payment.l10n_ar_withholding_ids.amount_currency, -17625.74)
