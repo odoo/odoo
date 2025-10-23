@@ -642,7 +642,7 @@ class Properties(Field):
             raise ValueError(f"Missing property name for {self}")
 
         def get_property(record):
-            property_value = self.__get__(record)
+            property_value = self.__get__(record.with_context(property_selection_get_key=True))
             value = property_value.get(property_name)
             if value:
                 return value
