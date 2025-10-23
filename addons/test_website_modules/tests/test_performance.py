@@ -374,9 +374,9 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         # To increase the query count you must ask the permission to al
         query_count, queries = self._get_queries_shop()
 
-        query_count += 3
+        query_count += 2
         queries['account_tax'] += 1
-        queries['account_account_tag'] += 2
+        queries['account_account_tag'] += 1
 
         if self._has_demo_data():
             query_count += 2
