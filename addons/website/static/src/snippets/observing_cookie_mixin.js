@@ -14,7 +14,7 @@ export const ObservingCookieWidgetMixin = {
         } else {
             iframeEl.dataset.nocookieSrc = src;
             iframeEl.setAttribute("src", "about:blank");
-            $(iframeEl).trigger("add_cookies_warning");
+            iframeEl.dispatchEvent(new Event("add_cookies_warning", { bubbles: true }));
         }
     },
 };

@@ -20,13 +20,14 @@
 # Marta Wacławek, 2025
 # Wil Odoo, 2025
 # Vojtěch Olšan <vojtech.olsan@systee.cz>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-16 18:37+0000\n"
-"PO-Revision-Date: 2025-08-25 08:08+0000\n"
-"Last-Translator: Vojtěch Olšan <vojtech.olsan@systee.cz>\n"
+"PO-Revision-Date: 2025-10-22 08:20+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/account/cs/"
 ">\n"
 "Language: cs\n"
@@ -222,6 +223,9 @@ msgid ""
 "(receivable)s\" or \"%(payable)s\" with both options \"%"
 "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) by měl být typ účtu \"%(receivable)s\" "
+"nebo \"%(payable)s\" s aktivovanými oběma možnostmi "
+"\"%(allow_reconciliation)s\" a \"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -599,6 +603,9 @@ msgid ""
 "                        <span>Please make sure that this is a wanted "
 "behavior.</span>"
 msgstr ""
+"<br/>\n"
+"                        <span>Ujistěte se, že se jedná o požadované "
+"chování.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1046,6 +1053,9 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style="
+"\"width: 6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\""
+">nebo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -1393,6 +1403,8 @@ msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
 msgstr ""
+"<span>Jeden nebo více bankovních účtů nastavených u tohoto partnera se "
+"používá také u ostatních:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1429,7 +1441,7 @@ msgstr "<span>Daně</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span>The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Bankovní účet může být duplikátem účtu </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2180,7 +2192,7 @@ msgstr "Průvodce sloučením účtů"
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
 msgid "Account merge wizard line"
-msgstr ""
+msgstr "Řádek průvodce sloučením účtů"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2437,7 +2449,7 @@ msgstr "Vyžadována akce"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__actionable_errors
 msgid "Actionable Errors"
-msgstr ""
+msgstr "Chyby vyžadující akci"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17916,7 +17928,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Ověřte cenu a v případě potřeby ji aktualizujte."
 
 #. module: account
 #. odoo-javascript
@@ -17937,6 +17949,8 @@ msgid ""
 "Want to make your life even easier and automate bill validation from this "
 "vendor ?"
 msgstr ""
+"Chcete si ještě více usnadnit život a automatizovat ověřování faktur od "
+"tohoto dodavatele?"
 
 #. module: account
 #. odoo-javascript
@@ -18107,7 +18121,7 @@ msgstr "S párovacím kontaktem"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "With residual"
-msgstr ""
+msgstr "S pozůstatkem"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -18127,7 +18141,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr ""
+msgstr "Probíhající práce"
 
 #. module: account
 #. odoo-javascript
@@ -18157,7 +18171,7 @@ msgstr "Špatná hodnota má dáti nebo dal v tomto účetním záznamu!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr ""
+msgstr "XML formát"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -18168,7 +18182,7 @@ msgstr "Ročně"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "You are about to send"
-msgstr ""
+msgstr "Chystáte se odeslat"
 
 #. module: account
 #. odoo-python
@@ -18241,7 +18255,7 @@ msgstr "Můžete pouze změnit období/účet pro zaúčtované účetní polož
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Můžete generovat pouze prodejní dokumenty."
 
 #. module: account
 #. odoo-python
@@ -18288,7 +18302,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
-msgstr ""
+msgstr "Uhrazenou fakturu nelze zablokovat."
 
 #. module: account
 #. odoo-python
@@ -18338,6 +18352,8 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"Bez přístupu k mateřské společnosti nelze vytvářet platby pro položky "
+"patřící do různých poboček."
 
 #. module: account
 #. odoo-python
@@ -18366,7 +18382,7 @@ msgstr "Nemůžete smazat výkaz který má varianty."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Nelze generovat faktury, které nebyly zaúčtovány."
 
 #. module: account
 #. odoo-python
@@ -18439,13 +18455,15 @@ msgid ""
 "You can't unlink this company from this account since there are some journal "
 "items linked to it."
 msgstr ""
+"Nemůžete odpojit tuto společnost od tohoto účtu, protože existují položky "
+"deníku, které jsou s ním spojeny."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
-msgstr ""
+msgstr "Nemůžete přidávat/upravovat záznamy před a včetně: %(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -18520,7 +18538,7 @@ msgstr "Nemůžete smazat položku daně, neboť by to ovlivnilo daňový výkaz
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
-msgstr ""
+msgstr "Nemůžete odstranit položky deníku patřící k uzamčenému záznamu deníku."
 
 #. module: account
 #. odoo-python
@@ -18545,7 +18563,7 @@ msgstr ""
 #: code:addons/account/models/mail_template.py:0
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending flow."
-msgstr ""
+msgstr "Tuto šablonu email nelze smazat, používá se v procesu odesílání faktur."
 
 #. module: account
 #. odoo-python
@@ -18587,7 +18605,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "You cannot duplicate a Lock Date Exception."
-msgstr ""
+msgstr "Výjimku data uzamčení nelze upravovat."
 
 #. module: account
 #. odoo-python
@@ -18684,6 +18702,7 @@ msgstr "Nelze upravit pole %s v deníku, který již má účetní záznamy."
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot modify the following readonly fields on a posted move: %s"
 msgstr ""
+"V zaúčtovaným pohybu nemůžete upravit následující pole pouze k náhledu: %s"
 
 #. module: account
 #. odoo-python
@@ -18722,7 +18741,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot register payments for miscellaneous entries."
-msgstr ""
+msgstr "Nelze registrovat platby za různé položky."
 
 #. module: account
 #. odoo-python
@@ -18754,7 +18773,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr ""
+msgstr "Uzamčený záznam deníku nemůžete resetovat na koncept."
 
 #. module: account
 #. odoo-python
@@ -18774,6 +18793,7 @@ msgstr "Nemůžete resetovat na návrh účetní záznam kurzovních rozdílů."
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
 msgstr ""
+"Výjimky z uzamčení data nelze zrušit. Požádejte někoho s rolí \"Poradce\"."
 
 #. module: account
 #. odoo-python
@@ -18792,6 +18812,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Nemůžete nastavit partnera jako fakturační adresu jiného partnera, pokud má "
+"odlišné %(vat_label)s."
 
 #. module: account
 #. odoo-python
@@ -18887,6 +18909,8 @@ msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
 msgstr ""
+"K provedení této akce nemáte potřebná oprávnění, protože nemáte přístup k "
+"následujícím společnostem: %s."
 
 #. module: account
 #. odoo-python
@@ -18926,7 +18950,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr ""
+msgstr "Musíte vybrat alespoň 2 účty."
 
 #. module: account
 #. odoo-python
@@ -19034,7 +19058,7 @@ msgstr "Aktivovat měnu faktury"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-11 02:15+0000\n"
-"PO-Revision-Date: 2025-10-20 06:23+0000\n"
+"PO-Revision-Date: 2025-10-22 09:40+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/mrp/ru/>"
 "\n"
@@ -85,7 +85,7 @@ msgstr "# ведомостей материалов использовано"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Ready Work Orders"
-msgstr ""
+msgstr "# Завершенные этапы производства"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
@@ -110,7 +110,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "%(name)s Sequence production"
-msgstr "Производственная последовательность %(name)s"
+msgstr "%(name)s Последовательность производства"
 
 #. module: mrp
 #. odoo-python
@@ -228,7 +228,7 @@ msgid ""
 "              3 Steps: Pick components from stock, produce, and then move "
 "final product(s) from production area to stock."
 msgstr ""
-"1 шаг: Спишите компоненты со склада и произведите продукцию.\n"
+"1 шаг: Спишите комплектующие со склада и произведите продукцию.\n"
 "              2 шага: Сначала отберите комплектующие, затем произведите "
 "продукцию.\n"
 "              3 шага: Сначала отберите комплектующие, затем произведите "
@@ -1826,7 +1826,7 @@ msgstr "Создать резервный заказ"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr "Создавайте настраиваемые рабочие листы для проверки качества"
+msgstr "Создавайте настраиваемые маршрутные листы для проверки качества"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
@@ -2074,7 +2074,7 @@ msgstr ""
 "  * Разрешено с предупреждением: допускается для всех пользователей модуля "
 "Производство, при этом при закрытии производственного заказа отображается "
 "сводка с отклонениями по фактическому потреблению.\n"
-"  Обратите внимание: в случае ручного учета потребления компонентов, когда "
+"  Обратите внимание: в случае ручного учета потребления комплектующих, когда "
 "списание регистрируется исключительно вручную, предупреждения о различиях в "
 "потреблении также будут выдаваться, если это необходимо.\n"
 "  * Заблокировано: закрыть производственный заказ при несоответствии "
@@ -2651,7 +2651,7 @@ msgstr "Имеет маршрутные линии"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__has_worksheet
 msgid "Has Worksheet"
-msgstr ""
+msgstr "Есть маршрутный лист"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
@@ -3069,7 +3069,7 @@ msgstr "Поздние Мероприятия"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Availability"
-msgstr ""
+msgstr "Задержка поступления"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4388,7 +4388,7 @@ msgstr "Печать этикеток"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
 msgid "Print Work Order"
-msgstr ""
+msgstr "Распечатать этап производства"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -4748,7 +4748,7 @@ msgstr "Потери качества"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control_worksheet
 msgid "Quality Worksheet"
-msgstr "Рабочая таблица качества"
+msgstr "Маршрутный лист контроля качества"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
@@ -6545,10 +6545,11 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"С помощью панели управления рабочим центром Odoo ваш работник может "
-"запускать заказы в магазине и следовать инструкциям рабочего листа. Проверки "
-"качества идеально интегрированы в процесс. Работники могут запускать контуры "
-"обратной связи, предупреждения о техническом обслуживании, браке и т. д."
+"Панель управления рабочими центрами Odoo позволяет сотрудникам запускать "
+"этапы производства в цеху и следовать инструкциям маршрутного листа. "
+"Проверки качества полностью интегрированы в процесс. Сотрудники могут "
+"запускать обратную связь, уведомления о техобслуживании, оформлять брак и т. "
+"д."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning
@@ -6810,17 +6811,17 @@ msgstr "Пользователь работающий над этим произ
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_type
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet
 msgid "Worksheet"
-msgstr "Операционная карта"
+msgstr "Маршрутный лист"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_type
 msgid "Worksheet Type"
-msgstr "Тип рабочего листа"
+msgstr "Тип маршрутного листа"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_google_slide
 msgid "Worksheet URL"
-msgstr "URL-адрес рабочего листа"
+msgstr "URL-адрес маршрутного листа"
 
 #. module: mrp
 #. odoo-python

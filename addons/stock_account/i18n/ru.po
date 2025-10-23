@@ -1,26 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
-# 
+# * stock_account
+#
 # Translators:
 # Nadia Martynova, 2024
 # Ilya Rozhkov, 2024
 # Wil Odoo, 2025
 # Anastasiia Koroleva, 2025
-# 
+#
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-01 07:25+0000\n"
-"PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Anastasiia Koroleva, 2025\n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-10-22 09:40+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
+"stock_account/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -29,6 +34,8 @@ msgid ""
 "\n"
 "Affected valuation layers: %s"
 msgstr ""
+"\n"
+"Затронутые слои оценки: %s"
 
 #. module: stock_account
 #. odoo-python
@@ -47,6 +54,8 @@ msgstr " [Учтено на %s]"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
 msgstr ""
+" себестоимость по партии/серийному номеру обновлена с %(previous)s до "
+"%(new_cost)s."
 
 #. module: stock_account
 #. odoo-python
@@ -62,6 +71,9 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
 "%(reason)s"
 msgstr ""
+"Пользователь %(user)s изменил оценку запасов с %(previous)s на %(new_value)s "
+"– %(product)s\n"
+"%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -161,7 +173,7 @@ msgstr "Добавленная стоимость"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_revalue_layers
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "Скорректировать оценку"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -298,7 +310,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Correction of %s (modification of past move)"
-msgstr ""
+msgstr "Корректировка %s (изменение прошлой операции)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
@@ -424,6 +436,9 @@ msgid ""
 "%(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
+"В связи с изменением категории товара (с %(old_category)s на "
+"%(new_category)s), изменился метод расчета себестоимости для товара "
+"%(product)s: с %(old_method)s на %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -451,6 +466,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
+"Если флажок установлен, оценка будет вестись отдельно по каждой партии/"
+"серийному номеру."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -530,12 +547,14 @@ msgid ""
 "Lot %(lot)s has a negative quantity in stock.\n"
 "Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
+"Партия %(lot)s имеет отрицательный остаток на складе.\n"
+"Исправьте количество перед включением или отключением оценки по партиям."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
-msgstr ""
+msgstr "Оценка партии изменена вручную (с %(old)s на %(new)s)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -552,13 +571,14 @@ msgstr "Лот/серийный номер"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr ""
+msgstr "Переоценка партии/серийного номера"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
 msgstr ""
+"Для товаров, оцениваемых по партиям, необходимо указать партию/серийный номер"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -604,7 +624,7 @@ msgstr "Новое значение по количеству"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "No Reason Given"
-msgstr ""
+msgstr "Причина не указана"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -630,6 +650,10 @@ msgid ""
 "Product %(product)s has quantity in valued location %(location)s without any lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
+"Товар %(product)s имеет остаток в оцениваемой локации %(location)s без "
+"указания партии.\n"
+"Пожалуйста, присвойте партии всем вашим остаткам перед включением оценки по "
+"партиям."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -671,12 +695,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "Счет НЗП по производству"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "Счет накладных расходов НЗП по производству"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -718,7 +742,7 @@ msgstr "Справка"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__lot_id
 msgid "Related lot/serial number"
-msgstr ""
+msgstr "Связанная партия/серийный номер"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
@@ -755,7 +779,7 @@ msgstr "Переоценить"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr ""
+msgstr "Выберите существующую партию/серийный номер для переоценки"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -939,6 +963,8 @@ msgstr ""
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
 msgstr ""
+"Для использования автоматической оценки необходимо задать счета учета "
+"запасов."
 
 #. module: stock_account
 #. odoo-python
@@ -949,6 +975,10 @@ msgid ""
 "the locations in a way that changes the valuation logic defined during the "
 "initial processing."
 msgstr ""
+"Оценка запасов при перемещении определяется типами исходной локации и "
+"локации назначения. Поскольку операция уже проведена, вы не можете изменять "
+"локации таким образом, чтобы это нарушало логику оценки, заданную при "
+"первоначальном проведении."
 
 #. module: stock_account
 #. odoo-python
@@ -977,6 +1007,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for"
 " all lots/SN. Do you want to proceed ? "
 msgstr ""
+"Эта операция может привести к потере данных. Оценка будет одинаковой для "
+"всех партий/серийных номеров. Продолжить? "
 
 #. module: stock_account
 #. odoo-python
@@ -985,6 +1017,8 @@ msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update"
 " the cost of every lot/serial number in stock."
 msgstr ""
+"Товар оценивается по партиям/серийным номерам. Изменение себестоимости "
+"обновит стоимость для всех партий/серийных номеров на складе."
 
 #. module: stock_account
 #. odoo-python
@@ -993,6 +1027,8 @@ msgid ""
 "This product is valuated by lot: an explicit Lot/Serial number is required "
 "when adding quantity"
 msgstr ""
+"Для товара с оценкой по партиям требуется явное указание партии/серийного "
+"номера при добавлении количества"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1067,7 +1103,7 @@ msgstr "Обновление количества на SO/PO"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr ""
+msgstr "Обновление оценки по партиям для товара %s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1117,7 +1153,7 @@ msgstr "Валюта оценки"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr ""
+msgstr "Слои оценки"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1134,7 +1170,7 @@ msgstr "Оценка на дату"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 msgid "Valuation by Lot/Serial number"
-msgstr ""
+msgstr "Оценка по партиям/серийным номерам"
 
 #. module: stock_account
 #. odoo-python
@@ -1149,7 +1185,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuations layers being adjusted"
-msgstr ""
+msgstr "Корректируемые слои оценки"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1175,6 +1211,11 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Стоимость партии (автоматически рассчитывается при использовании метода "
+"AVCO).\n"
+"        Используется для оценки товара, когда стоимость закупки неизвестна ("
+"например, при инвентаризации).\n"
+"        Также используется для расчета маржи по заказам на продажу."
 
 #. module: stock_account
 #. odoo-python
@@ -1221,13 +1262,13 @@ msgstr "Модель мастера для переоценки складски
 #: code:addons/stock_account/models/stock_lot.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "Невозможно скорректировать оценку слоя с нулевым количеством"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr ""
+msgstr "Невозможно скорректировать оценку без указания товара"
 
 #. module: stock_account
 #. odoo-python
@@ -1236,6 +1277,8 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
+"Нельзя изменить метод расчета себестоимости для товара, оцениваемого по "
+"партиям/серийным номерам."
 
 #. module: stock_account
 #. odoo-python
@@ -1244,6 +1287,7 @@ msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
 msgstr ""
+"Нельзя изменить категорию товара, оцениваемого по партиям/серийным номерам."
 
 #. module: stock_account
 #. odoo-python
@@ -1261,7 +1305,7 @@ msgstr "Вы не можете переоценить товар с пустым
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr ""
+msgstr "Невозможно переоценить несколько товаров одновременно"
 
 #. module: stock_account
 #. odoo-python
@@ -1358,4 +1402,4 @@ msgstr "единицы"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
-msgstr ""
+msgstr "график оценки"
