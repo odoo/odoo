@@ -1,6 +1,7 @@
 import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
@@ -194,6 +195,15 @@ export class Store extends BaseStore {
                 }
             }
             return thread2.localId > thread1.localId ? 1 : -1;
+        },
+    });
+
+    standaloneInboxMessages = fields.Many("mail.message", {
+        compute() {
+            const messages = this.store.inbox.messages.filter((m) => !m.thread);
+            return messages.sort(
+                (m1, m2) => compareDatetime(m2.datetime, m1.datetime) || m2.id - m1.id
+            );
         },
     });
 
@@ -404,7 +414,9 @@ export class Store extends BaseStore {
                 // Prevent duplicate inbox push notifications since they're already handled by
                 // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
                 // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
-                const isInbox = this.store.self.notification_preference === "inbox" && model !== "discuss.channel";
+                const isInbox =
+                    this.store.self.notification_preference === "inbox" &&
+                    model !== "discuss.channel";
                 if ((isTabFocused && thread?.isDisplayed) || isInbox) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
