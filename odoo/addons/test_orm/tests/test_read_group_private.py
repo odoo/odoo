@@ -835,14 +835,14 @@ class TestPrivateReadGroup(common.TransactionCase):
         # (same than many2one) ? for public methods ?
         expected = """
             SELECT
-                "test_read_group_task__user_ids"."user_id",
+                "test_read_group_task__user_ids__rel"."user_id",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
             FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
-                    ON ("test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id")
+                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids__rel"
+                    ON ("test_read_group_task"."id" = "test_read_group_task__user_ids__rel"."task_id")
             WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__user_ids"."user_id"
-            ORDER BY "test_read_group_task__user_ids"."user_id" ASC
+            GROUP BY "test_read_group_task__user_ids__rel"."user_id"
+            ORDER BY "test_read_group_task__user_ids__rel"."user_id" ASC
         """
         with self.assertQueries([expected]):
             self.assertEqual(tasks._read_group(
@@ -860,14 +860,14 @@ class TestPrivateReadGroup(common.TransactionCase):
         # Inverse the order, only inverse depending of id (see TODO above)
         expected = """
             SELECT
-                "test_read_group_task__user_ids"."user_id",
+                "test_read_group_task__user_ids__rel"."user_id",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
             FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
-                    ON ("test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id")
+                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids__rel"
+                    ON ("test_read_group_task"."id" = "test_read_group_task__user_ids__rel"."task_id")
             WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__user_ids"."user_id"
-            ORDER BY "test_read_group_task__user_ids"."user_id" DESC
+            GROUP BY "test_read_group_task__user_ids__rel"."user_id"
+            ORDER BY "test_read_group_task__user_ids__rel"."user_id" DESC
         """
         with self.assertQueries([expected]):
             self.assertEqual(tasks._read_group(
@@ -898,20 +898,20 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         expected = """
             SELECT
-                "test_read_group_task__user_ids"."user_id",
+                "test_read_group_task__user_ids__rel"."user_id",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
             FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
+            LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids__rel"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id"
-                    AND "test_read_group_task__user_ids"."user_id" IN (
+                    "test_read_group_task"."id" = "test_read_group_task__user_ids__rel"."task_id"
+                    AND "test_read_group_task__user_ids__rel"."user_id" IN (
                         SELECT "test_read_group_user"."id"
                         FROM "test_read_group_user"
                         WHERE "test_read_group_user"."id" IN %s
                     )
                 )
-            GROUP BY "test_read_group_task__user_ids"."user_id"
-            ORDER BY "test_read_group_task__user_ids"."user_id" ASC
+            GROUP BY "test_read_group_task__user_ids__rel"."user_id"
+            ORDER BY "test_read_group_task__user_ids__rel"."user_id" ASC
         """
         with self.assertQueries([expected]):
             self.assertEqual(
@@ -948,13 +948,13 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertQueries([
             """
-            SELECT "test_read_group_task__tag_ids"."tag_id",
+            SELECT "test_read_group_task__tag_ids__rel"."tag_id",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
             FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__tag_ids"
+            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__tag_ids__rel"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__tag_ids"."task_id"
-                    AND "test_read_group_task__tag_ids"."tag_id" IN (
+                    "test_read_group_task"."id" = "test_read_group_task__tag_ids__rel"."task_id"
+                    AND "test_read_group_task__tag_ids__rel"."tag_id" IN (
                         SELECT
                             "test_read_group_tag"."id"
                         FROM
@@ -964,8 +964,8 @@ class TestPrivateReadGroup(common.TransactionCase):
                     )
                 )
             WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__tag_ids"."tag_id"
-            ORDER BY "test_read_group_task__tag_ids"."tag_id" ASC
+            GROUP BY "test_read_group_task__tag_ids__rel"."tag_id"
+            ORDER BY "test_read_group_task__tag_ids__rel"."tag_id" ASC
             """,
         ]):
             self.assertEqual(
@@ -982,13 +982,13 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertQueries([
             """
-            SELECT "test_read_group_task__active_tag_ids"."tag_id",
+            SELECT "test_read_group_task__active_tag_ids__rel"."tag_id",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
             FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__active_tag_ids"
+            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__active_tag_ids__rel"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__active_tag_ids"."task_id"
-                    AND "test_read_group_task__active_tag_ids"."tag_id" IN (
+                    "test_read_group_task"."id" = "test_read_group_task__active_tag_ids__rel"."task_id"
+                    AND "test_read_group_task__active_tag_ids__rel"."tag_id" IN (
                         SELECT
                             "test_read_group_tag"."id"
                         FROM
@@ -998,8 +998,8 @@ class TestPrivateReadGroup(common.TransactionCase):
                     )
                 )
             WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__active_tag_ids"."tag_id"
-            ORDER BY "test_read_group_task__active_tag_ids"."tag_id" ASC
+            GROUP BY "test_read_group_task__active_tag_ids__rel"."tag_id"
+            ORDER BY "test_read_group_task__active_tag_ids__rel"."tag_id" ASC
             """,
         ]):
             self.assertEqual(
@@ -1016,16 +1016,16 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertQueries([
             """
-            SELECT "test_read_group_task__all_tag_ids"."tag_id",
+            SELECT "test_read_group_task__all_tag_ids__rel"."tag_id",
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
             FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__all_tag_ids"
+            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__all_tag_ids__rel"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__all_tag_ids"."task_id"
+                    "test_read_group_task"."id" = "test_read_group_task__all_tag_ids__rel"."task_id"
                 )
             WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__all_tag_ids"."tag_id"
-            ORDER BY "test_read_group_task__all_tag_ids"."tag_id" ASC
+            GROUP BY "test_read_group_task__all_tag_ids__rel"."tag_id"
+            ORDER BY "test_read_group_task__all_tag_ids__rel"."tag_id" ASC
             """,
         ]):
             self.assertEqual(
@@ -1234,15 +1234,15 @@ class TestPrivateReadGroup(common.TransactionCase):
         # warmup
         RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
         with self.assertQueries(["""
-            SELECT "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id",
+            SELECT "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_base_id",
                     COUNT(*)
             FROM "test_read_group_related_foo"
             LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_foo__bar_id"
                 ON ("test_read_group_related_foo"."bar_id" = "test_read_group_related_foo__bar_id"."id")
-            LEFT JOIN "test_read_group_related_bar_test_read_group_related_base_rel" AS "test_read_group_related_foo__bar_id__base_ids"
-                ON ("test_read_group_related_foo__bar_id"."id" = "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_bar_id")
-            GROUP BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id"
-            ORDER BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" ASC
+            LEFT JOIN "test_read_group_related_bar_test_read_group_related_base_rel" AS "test_read_group_related_foo__bar_id__base_ids__rel"
+                ON ("test_read_group_related_foo__bar_id"."id" = "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_bar_id")
+            GROUP BY "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_base_id"
+            ORDER BY "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_base_id" ASC
         """]):
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
 
@@ -1261,20 +1261,20 @@ class TestPrivateReadGroup(common.TransactionCase):
         RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
         # The related_sudo=True should not bypass ir_rule of the comodel
         with self.assertQueries(["""
-            SELECT "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id", COUNT(*)
+            SELECT "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_base_id", COUNT(*)
             FROM "test_read_group_related_foo"
             LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_foo__bar_id"
                 ON ("test_read_group_related_foo"."bar_id" = "test_read_group_related_foo__bar_id"."id")
-            LEFT JOIN "test_read_group_related_bar_test_read_group_related_base_rel" AS "test_read_group_related_foo__bar_id__base_ids"
-                ON ("test_read_group_related_foo__bar_id"."id" = "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_bar_id"
-                    AND "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" IN (
+            LEFT JOIN "test_read_group_related_bar_test_read_group_related_base_rel" AS "test_read_group_related_foo__bar_id__base_ids__rel"
+                ON ("test_read_group_related_foo__bar_id"."id" = "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_bar_id"
+                    AND "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_base_id" IN (
                         SELECT "test_read_group_related_base"."id"
                         FROM "test_read_group_related_base"
                         WHERE "test_read_group_related_base"."id" IN %s
                     )
                 )
-            GROUP BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id"
-            ORDER BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" ASC
+            GROUP BY "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_base_id"
+            ORDER BY "test_read_group_related_foo__bar_id__base_ids__rel"."test_read_group_related_base_id" ASC
         """]):
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
 
