@@ -3,13 +3,14 @@
 from base64 import b64encode
 
 from odoo import Command, tests
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tools import mute_logger
 from odoo.tools.json import scriptsafe as json_safe
 
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+
 
 @tests.tagged('-at_install', 'post_install')
-class TestWebEditorController(HttpCaseWithUserDemo):
+class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_modify_image(self):
         gif_base64 = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
@@ -28,7 +29,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
             params = {
                 'name': name,
                 'mimetype': 'image/svg+xml',
-                'data': b64encode(svg).decode('ascii')
+                'data': b64encode(svg).decode('ascii'),
             }
             if attachment.res_id:
                 params['res_model'] = attachment.res_model
@@ -49,6 +50,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
             self.assertEqual(200, response.status_code, "Expect response")
             self.assertTrue('image/svg+xml' in response.headers.get('Content-Type'), "Expect SVG mimetype")
             self.assertEqual(svg, response.content, "Expect unchanged SVG")
+            return True
 
         # Admin can modify page
         modify('admin', 'page-admin.gif')
@@ -58,7 +60,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
             'group_ids': [
                 Command.clear(),
                 Command.link(self.env.ref('base.group_user').id),
-            ]
+            ],
         })
         with mute_logger('odoo.http'):
             json = modify('demo', 'page-demofail.gif', True)
@@ -71,7 +73,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
                 Command.link(self.env.ref('base.group_user').id),
                 Command.link(self.env.ref('website.group_website_restricted_editor').id),
                 Command.link(self.env.ref('event.group_event_manager').id),
-            ]
+            ],
         })
         with mute_logger('odoo.http'):
             json = modify('demo', 'page-demofail2.gif', True)
@@ -83,7 +85,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
                 Command.clear(),
                 Command.link(self.env.ref('base.group_user').id),
                 Command.link(self.env.ref('website.group_website_designer').id),
-            ]
+            ],
         })
         modify('demo', 'page-demo.gif')
 
@@ -99,7 +101,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
             'group_ids': [
                 Command.clear(),
                 Command.link(self.env.ref('base.group_user').id),
-            ]
+            ],
         })
         with mute_logger('odoo.http'):
             json = modify('demo', 'event-demofail.gif', True)
@@ -112,7 +114,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
                 Command.link(self.env.ref('base.group_user').id),
                 Command.link(self.env.ref('website.group_website_restricted_editor').id),
                 Command.link(self.env.ref('sales_team.group_sale_manager').id),
-            ]
+            ],
         })
         with mute_logger('odoo.http'):
             json = modify('demo', 'event-demofail2.gif', True)
@@ -125,7 +127,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
                 Command.link(self.env.ref('base.group_user').id),
                 Command.link(self.env.ref('website.group_website_restricted_editor').id),
                 Command.link(self.env.ref('event.group_event_manager').id),
-            ]
+            ],
         })
         modify('demo', 'event-demo.gif')
 
@@ -135,7 +137,7 @@ class TestWebEditorController(HttpCaseWithUserDemo):
                 Command.clear(),
                 Command.link(self.env.ref('base.group_user').id),
                 Command.link(self.env.ref('website.group_website_designer').id),
-            ]
+            ],
         })
         with mute_logger('odoo.http'):
             json = modify('demo', 'event-demofail3.gif', True)
