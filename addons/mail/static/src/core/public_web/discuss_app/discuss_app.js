@@ -1,4 +1,4 @@
-import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
+import { DiscussSidebar } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
 import { Component, useRef, useExternalListener, useEffect, useSubEnv } from "@odoo/owl";

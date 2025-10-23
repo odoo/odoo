@@ -1,4 +1,4 @@
-import { DiscussSidebarCallParticipants } from "@mail/discuss/call/public_web/discuss_sidebar_call_participants";
+import { DiscussSidebarCallParticipants } from "@mail/discuss/call/public_web/discuss_app/sidebar/call_participants";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 import { usePopover } from "@web/core/popover/popover_hook";

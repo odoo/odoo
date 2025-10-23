@@ -1,4 +1,4 @@
-import { Discuss } from "@mail/core/public_web/discuss";
+import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 import { useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";

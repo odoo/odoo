@@ -1,4 +1,4 @@
-import { Discuss } from "@mail/core/public_web/discuss";
+import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 
 import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 

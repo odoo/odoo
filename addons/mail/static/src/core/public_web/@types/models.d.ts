@@ -1,5 +1,5 @@
 declare module "models" {
-    import { DiscussApp as DiscussAppClass } from "@mail/core/public_web/discuss_app_model";
+    import { DiscussApp as DiscussAppClass } from "@mail/core/public_web/discuss_app/discuss_app_model";
 
     export interface DiscussApp extends DiscussAppClass {}
 

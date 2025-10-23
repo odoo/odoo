@@ -1,5 +1,5 @@
-import { DiscussSidebarCallParticipants } from "@mail/discuss/call/public_web/discuss_sidebar_call_participants";
-import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_sidebar_channel";
+import { DiscussSidebarCallParticipants } from "@mail/discuss/call/public_web/discuss_app/sidebar/call_participants";
+import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
 import { patch } from "@web/core/utils/patch";
 
 DiscussSidebarChannel.components = Object.assign(DiscussSidebarChannel.components || {}, {
