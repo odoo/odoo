@@ -2,7 +2,6 @@ import { after, expect, registerDebugInfo } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 import {
     MockServer,
-    asyncStep,
     defineModels,
     getMockEnv,
     getService,
@@ -301,7 +300,7 @@ export function stepWorkerActions(targetActions) {
     patchWithCleanup(getWebSocketWorker(), {
         _onClientMessage(_, { action }) {
             if (targetActions.includes(action)) {
-                asyncStep(action);
+                expect.step(action);
             }
             return super._onClientMessage(...arguments);
         },

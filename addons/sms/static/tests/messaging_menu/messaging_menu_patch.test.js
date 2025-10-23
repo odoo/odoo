@@ -7,7 +7,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { defineSMSModels } from "@sms/../tests/sms_test_helpers";
-import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineSMSModels();
@@ -121,7 +121,7 @@ test("grouped notifications by document model", async () => {
     ]);
     mockService("action", {
         doAction(action) {
-            asyncStep("do_action");
+            expect.step("do_action");
             expect(action.name).toBe("SMS Failures");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.view_mode).toBe("kanban,list,form");
@@ -141,5 +141,5 @@ test("grouped notifications by document model", async () => {
         text: "SMS Failure: Contact",
         contains: [".badge", { text: "2" }],
     });
-    await waitForSteps(["do_action"]);
+    await expect.waitForSteps(["do_action"]);
 });

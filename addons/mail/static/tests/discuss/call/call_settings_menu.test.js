@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, expect } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
-import { asyncStep, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
 
@@ -98,7 +98,7 @@ test("local storage for call settings", async () => {
     patchWithCleanup(localStorage, {
         setItem(key, value) {
             if (key.startsWith("mail_user_setting")) {
-                asyncStep(`${key}: ${value}`);
+                expect.step(`${key}: ${value}`);
             }
             return super.setItem(key, value);
         },
@@ -118,7 +118,7 @@ test("local storage for call settings", async () => {
 
     // testing save to local storage
     await click("input[title='Show video participants only']");
-    await waitForSteps([
+    await expect.waitForSteps([
         "mail_user_setting_use_blur: true",
         "mail_user_setting_show_only_video: false",
     ]);
@@ -126,5 +126,5 @@ test("local storage for call settings", async () => {
     expect(localStorage.getItem("mail_user_setting_use_blur")).toBe(null);
     await editInput(document.body, ".o-Discuss-CallSettings-thresholdInput", 0.3);
     await advanceTime(2000); // threshold setting debounce timer
-    await waitForSteps(["mail_user_setting_voice_threshold: 0.3"]);
+    await expect.waitForSteps(["mail_user_setting_voice_threshold: 0.3"]);
 });

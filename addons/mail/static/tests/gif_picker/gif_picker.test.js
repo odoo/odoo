@@ -13,14 +13,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    asyncStep,
-    getService,
-    onRpc,
-    patchWithCleanup,
-    preloadBundle,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { getService, onRpc, patchWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
 import { animationFrame, queryFirst } from "@odoo/hoot-dom";
@@ -127,7 +120,7 @@ test("Not loading of GIF categories when feature is not available", async () => 
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     let isFeatureEnabled = true;
     onRpc("/discuss/gif/categories", () => {
-        asyncStep("/discuss/gif/categories");
+        expect.step("/discuss/gif/categories");
         if (isFeatureEnabled) {
             return rpc.categories;
         }
@@ -147,7 +140,7 @@ test("Not loading of GIF categories when feature is not available", async () => 
     isFeatureEnabled = true;
     await click("button[title='Add GIFs']");
     await contains(".o-discuss-GifPicker");
-    await waitForSteps(["/discuss/gif/categories"]);
+    await expect.waitForSteps(["/discuss/gif/categories"]);
 });
 
 test("Searching for a GIF", async () => {

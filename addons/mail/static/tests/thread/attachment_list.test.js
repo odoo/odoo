@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockUserAgent } from "@odoo/hoot-mock";
-import { asyncStep, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { download } from "@web/core/network/download";
 import { getOrigin } from "@web/core/utils/urls";
@@ -129,7 +129,7 @@ test("clicking on the delete attachment button multiple times should do the rpc 
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/attachment/delete", () => asyncStep("attachment_unlink"));
+    onRpcBefore("/mail/attachment/delete", () => expect.step("attachment_unlink"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Attachment-unlink");
@@ -137,7 +137,7 @@ test("clicking on the delete attachment button multiple times should do the rpc 
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-Attachment-unlink", { count: 0 });
-    await waitForSteps(["attachment_unlink"]); // The unlink method must be called once
+    await expect.waitForSteps(["attachment_unlink"]); // The unlink method must be called once
 });
 
 test("view attachment", async () => {
@@ -431,7 +431,9 @@ test("download url of non-viewable binary file", async () => {
 
     patchWithCleanup(download, {
         _download: (options) => {
-            expect(options.url).toBe(`${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true`);
+            expect(options.url).toBe(
+                `${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true`
+            );
         },
     });
     await click(".fa-download");

@@ -12,13 +12,8 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Composer } from "@mail/core/common/composer";
-import { beforeEach, describe, test } from "@odoo/hoot";
-import {
-    asyncStep,
-    getService,
-    patchWithCleanup,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -38,14 +33,14 @@ test('do not send typing notification on typing "/" command', async () => {
     let testEnded = false;
     onRpcBefore("/discuss/channel/notify_typing", () => {
         if (!testEnded) {
-            asyncStep("notify_typing");
+            expect.step("notify_typing");
         }
     });
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
     await contains(".o-mail-Composer button[title='Send']:enabled");
-    await waitForSteps([]); // No rpc done
+    await expect.waitForSteps([]); // No rpc done
     testEnded = true;
 });
 
@@ -55,7 +50,7 @@ test('do not send typing notification on typing after selecting suggestion from 
     let testEnded = false;
     onRpcBefore("/discuss/channel/notify_typing", () => {
         if (!testEnded) {
-            asyncStep("notify_typing");
+            expect.step("notify_typing");
         }
     });
     await start();
@@ -64,7 +59,7 @@ test('do not send typing notification on typing after selecting suggestion from 
     await click(":nth-child(1 of .o-mail-Composer-suggestion)");
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
     await insertText(".o-mail-Composer-input", " is user?");
-    await waitForSteps([]); // No rpc done"
+    await expect.waitForSteps([]); // No rpc done"
     testEnded = true;
 });
 
@@ -74,7 +69,7 @@ test("send is_typing on adding emoji", async () => {
     let testEnded = false;
     onRpcBefore("/discuss/channel/notify_typing", () => {
         if (!testEnded) {
-            asyncStep("notify_typing");
+            expect.step("notify_typing");
         }
     });
     await start();
@@ -82,7 +77,7 @@ test("send is_typing on adding emoji", async () => {
     await click("button[title='Add Emojis']");
     await insertText("input[placeholder='Search emoji']", "Santa Claus");
     await click(".o-Emoji", { text: "🎅" });
-    await waitForSteps(["notify_typing"]);
+    await expect.waitForSteps(["notify_typing"]);
     testEnded = true;
 });
 

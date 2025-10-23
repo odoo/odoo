@@ -10,16 +10,9 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { mockUserAgent, tick } from "@odoo/hoot-mock";
-import {
-    asyncStep,
-    Command,
-    onRpc,
-    serverState,
-    waitForSteps,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -105,7 +98,7 @@ test("remove banner when scrolling to bottom", async () => {
             res_id: channelId,
         });
     }
-    onRpc("/discuss/channel/mark_as_read", () => asyncStep("mark_as_read"));
+    onRpc("/discuss/channel/mark_as_read", () => expect.step("mark_as_read"));
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
@@ -120,7 +113,7 @@ test("remove banner when scrolling to bottom", async () => {
     await contains(".o-mail-Thread-banner", { text: "50 new messages" });
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread-banner", { text: "50 new messages", count: 0 });
-    await waitForSteps(["mark_as_read"]);
+    await expect.waitForSteps(["mark_as_read"]);
 });
 
 test("remove banner when opening thread at the bottom", async () => {

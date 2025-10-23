@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { asyncStep, mockService, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -71,7 +71,7 @@ test("click on partner follower details", async () => {
             if (action?.res_id !== partnerId) {
                 return super.doAction(...arguments);
             }
-            asyncStep("do_action");
+            expect.step("do_action");
             expect(action.res_id).toBe(partnerId);
             expect(action.res_model).toBe("res.partner");
             expect(action.type).toBe("ir.actions.act_window");
@@ -85,7 +85,7 @@ test("click on partner follower details", async () => {
     await contains(".o-mail-Follower-details");
     await click(".o-mail-Follower-details:first");
     await openFormDef;
-    await waitForSteps(["do_action"]); // redirect to partner profile
+    await expect.waitForSteps(["do_action"]); // redirect to partner profile
 });
 
 test("click on edit follower", async () => {
@@ -97,7 +97,7 @@ test("click on edit follower", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    onRpcBefore("/mail/read_subscription_data", () => asyncStep("fetch_subtypes"));
+    onRpcBefore("/mail/read_subscription_data", () => expect.step("fetch_subtypes"));
     await start();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
@@ -105,7 +105,7 @@ test("click on edit follower", async () => {
     await contains("[title='Edit subscription']");
     await click("[title='Edit subscription']");
     await contains(".o-mail-Follower", { count: 0 });
-    await waitForSteps(["fetch_subtypes"]);
+    await expect.waitForSteps(["fetch_subtypes"]);
     await contains(".o-mail-FollowerSubtypeDialog");
 });
 
@@ -118,7 +118,7 @@ test("edit follower and close subtype dialog", async () => {
         res_id: threadId,
         res_model: "res.partner",
     });
-    onRpcBefore("/mail/read_subscription_data", () => asyncStep("fetch_subtypes"));
+    onRpcBefore("/mail/read_subscription_data", () => expect.step("fetch_subtypes"));
     await start();
     await openFormView("res.partner", threadId);
     await click(".o-mail-Followers-button");
@@ -126,7 +126,7 @@ test("edit follower and close subtype dialog", async () => {
     await contains("[title='Edit subscription']");
     await click("[title='Edit subscription']");
     await contains(".o-mail-FollowerSubtypeDialog");
-    await waitForSteps(["fetch_subtypes"]);
+    await expect.waitForSteps(["fetch_subtypes"]);
     await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
     await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
@@ -171,13 +171,13 @@ test("removing a follower should reload form view", async function () {
         res_id: threadId,
         res_model: "res.partner",
     });
-    onRpc("res.partner", "web_read", ({ args }) => asyncStep(`read ${args[0][0]}`));
+    onRpc("res.partner", "web_read", ({ args }) => expect.step(`read ${args[0][0]}`));
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button");
-    await waitForSteps([`read ${threadId}`]);
+    await expect.waitForSteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
     await click("[title='Remove this follower']");
     await contains(".o-mail-Followers-counter", { text: "0" });
-    await waitForSteps([`read ${threadId}`]);
+    await expect.waitForSteps([`read ${threadId}`]);
 });

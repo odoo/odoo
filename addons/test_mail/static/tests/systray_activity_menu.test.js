@@ -3,7 +3,7 @@ import { click, contains } from "@mail/../tests/mail_test_helpers_contains";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
-import { asyncStep, mockService, waitForSteps } from "@web/../tests/web_test_helpers";
+import { mockService } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 
 describe.current.tags("desktop");
@@ -89,7 +89,7 @@ test("activity menu widget: activity menu with 2 models", async () => {
                     expect(action[key]).toBe(value);
                 }
             });
-            asyncStep("do_action:" + action.name);
+            expect.step("do_action:" + action.name);
         },
     });
     await click(".o_menu_systray i[aria-label='Activities']");
@@ -117,7 +117,7 @@ test("activity menu widget: activity menu with 2 models", async () => {
     await click(".o_menu_systray i[aria-label='Activities']");
     actionChecks.res_model = "mail.test.activity";
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup", { text: "mail.test.activity" });
-    await waitForSteps(["do_action:res.partner", "do_action:mail.test.activity"]);
+    await expect.waitForSteps(["do_action:res.partner", "do_action:mail.test.activity"]);
 });
 
 test("activity menu widget: close on messaging menu click", async () => {

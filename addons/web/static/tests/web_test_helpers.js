@@ -38,7 +38,6 @@ import { globalCachedFetch } from "./_framework/module_set.hoot";
  * @typedef {import("./_framework/mock_server/mock_server").RouteCallback<T>} RouteCallback
  */
 
-export { asyncStep, waitForSteps } from "./_framework/async_step";
 export {
     findComponent,
     getDropdownMenu,

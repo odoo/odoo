@@ -24,7 +24,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred, press, runAllTimers, tick, waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
-    asyncStep,
     Command,
     getService,
     makeKwArgs,
@@ -32,7 +31,6 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
-    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 
@@ -51,7 +49,7 @@ test("sanity check", async () => {
             (route.startsWith("/mail") || route.startsWith("/discuss")) &&
             !STORE_FETCH_ROUTES.includes(route)
         ) {
-            asyncStep(`${route} - ${JSON.stringify(args)}`);
+            expect.step(`${route} - ${JSON.stringify(args)}`);
         }
     });
     listenStoreFetch();
@@ -74,7 +72,7 @@ test("can change the thread name of #general", async () => {
         create_uid: serverState.userId,
     });
 
-    onRpc("discuss.channel", "channel_rename", ({ route }) => asyncStep(route));
+    onRpc("discuss.channel", "channel_rename", ({ route }) => expect.step(route));
 
     await start();
     await openDiscuss(channelId);
@@ -84,7 +82,7 @@ test("can change the thread name of #general", async () => {
         replace: true,
     });
     triggerHotkey("Enter");
-    await waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
     await contains(".o-mail-DiscussSidebarChannel:contains(special)");
     await contains("input.o-mail-DiscussContent-threadName:value(special)");
 });
@@ -152,7 +150,7 @@ test("can change the thread description of #general", async () => {
         create_uid: serverState.userId,
     });
 
-    onRpc("discuss.channel", "channel_change_description", ({ route }) => asyncStep(route));
+    onRpc("discuss.channel", "channel_change_description", ({ route }) => expect.step(route));
 
     await start();
     await openDiscuss(channelId);
@@ -166,7 +164,7 @@ test("can change the thread description of #general", async () => {
         }
     );
     triggerHotkey("Enter");
-    await waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
     await contains("input.o-mail-DiscussContent-threadDescription:value(I want a burger today!)");
 });
 
@@ -339,14 +337,14 @@ test("No load more when fetch below fetch limit of 60", async () => {
         });
     }
     onRpcBefore("/discuss/channel/messages", (args) => {
-        asyncStep("/discuss/channel/messages");
+        expect.step("/discuss/channel/messages");
         expect(args.fetch_params.limit).toBe(60);
     });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 29 });
     await contains("button", { count: 0, text: "Load More" });
-    await waitForSteps(["/discuss/channel/messages"]);
+    await expect.waitForSteps(["/discuss/channel/messages"]);
 });
 
 test("show date separator above mesages of similar date", async () => {
@@ -706,13 +704,13 @@ test("initially load messages from inbox", async () => {
         res_partner_id: serverState.partnerId,
     });
     onRpcBefore("/mail/inbox/messages", (args) => {
-        asyncStep("/discuss/inbox/messages");
+        expect.step("/discuss/inbox/messages");
         expect(args.fetch_params.limit).toBe(30);
     });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
-    await waitForSteps(["/discuss/inbox/messages"]);
+    await expect.waitForSteps(["/discuss/inbox/messages"]);
 });
 
 test("default active id on mailbox", async () => {
@@ -959,7 +957,7 @@ test("post a simple message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messagePostDef = new Deferred();
     onRpcBefore("/mail/message/post", async (args) => {
-        asyncStep("message_post");
+        expect.step("message_post");
         expect(args.thread_model).toBe("discuss.channel");
         expect(args.thread_id).toBe(channelId);
         expect(args.post_data.body).toBe("Test");
@@ -973,7 +971,7 @@ test("post a simple message", async () => {
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     await press("Enter");
-    await waitForSteps(["message_post"]);
+    await expect.waitForSteps(["message_post"]);
     // optimistically show posted message
     await contains(".o-mail-Composer-input", { value: "" });
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
@@ -1103,7 +1101,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
-                asyncStep("set_counters:discuss");
+                expect.step("set_counters:discuss");
             }
         },
     });
@@ -1124,7 +1122,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { text: "You: New message" });
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
 });
 
 test("out-of-focus notif on needaction message in channel", async () => {
@@ -1141,7 +1139,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
-                asyncStep(`set_counters:discuss:${counters.discuss}`);
+                expect.step(`set_counters:discuss:${counters.discuss}`);
             }
         },
     });
@@ -1164,7 +1162,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
         })
     );
     await contains(".o-mail-ChatBubble");
-    await waitForSteps(["set_counters:discuss:1"]);
+    await expect.waitForSteps(["set_counters:discuss:1"]);
 });
 
 test("receive new chat message: out of odoo focus (notification, chat)", async () => {
@@ -1181,7 +1179,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
-                asyncStep(`set_counters:discuss:${counters.discuss}`);
+                expect.step(`set_counters:discuss:${counters.discuss}`);
             }
         },
     });
@@ -1202,7 +1200,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         })
     );
     await contains(".o-mail-ChatBubble");
-    await waitForSteps(["set_counters:discuss:1"]);
+    await expect.waitForSteps(["set_counters:discuss:1"]);
 });
 
 test("no out-of-focus notif on non-needaction message in channel", async () => {
@@ -1219,7 +1217,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
-                asyncStep("set_counters:discuss");
+                expect.step("set_counters:discuss");
             }
         },
     });
@@ -1239,7 +1237,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { text: "Dumbledore: New message" });
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
 });
 
 test("receive new chat messages: out of odoo focus (tab title)", async () => {
@@ -1269,7 +1267,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
                 return;
             }
             stepCount++;
-            asyncStep("set_counters:discuss");
+            expect.step("set_counters:discuss");
             if (stepCount === 1) {
                 expect(counters.discuss).toBe(1);
             }
@@ -1292,7 +1290,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await waitForSteps(["set_counters:discuss"]);
+    await expect.waitForSteps(["set_counters:discuss"]);
     // simulate receiving a new message in chat 2 with odoo out-of-focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
@@ -1301,7 +1299,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await waitForSteps(["set_counters:discuss"]);
+    await expect.waitForSteps(["set_counters:discuss"]);
     // simulate receiving another new message in chat 2 with odoo focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
@@ -1310,7 +1308,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await waitForSteps(["set_counters:discuss"]);
+    await expect.waitForSteps(["set_counters:discuss"]);
 });
 
 test("new message in tab title has precedence over action name", async () => {
@@ -1413,7 +1411,7 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
     patchWithCleanup(OutOfFocusService.prototype, {
         _playSound() {
-            asyncStep("play_sound");
+            expect.step("play_sound");
         },
     });
     listenStoreFetch("init_messaging");
@@ -1440,7 +1438,7 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     await contains(".o-mail-ChatWindow", { count: 1 });
     await click(".o-mail-ChatWindow button[title='Fold']");
     await contains(".o-mail-ChatBubble", { count: 1 }); // no other chat bubble other than manually folded one
-    await waitForSteps([]); // no sound alert whatsoever
+    await expect.waitForSteps([]); // no sound alert whatsoever
 });
 
 test("receive new message plays sound", async () => {
@@ -1456,7 +1454,7 @@ test("receive new message plays sound", async () => {
     });
     mockService("mail.sound_effects", {
         play(soundEffectName, ...args) {
-            asyncStep(`sound:${soundEffectName}`);
+            expect.step(`sound:${soundEffectName}`);
             return super.play(soundEffectName, ...args);
         },
     });
@@ -1475,7 +1473,7 @@ test("receive new message plays sound", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await waitForSteps(["sound:new-message"]);
+    await expect.waitForSteps(["sound:new-message"]);
 });
 
 test("message sound on receiving new message based on user preferences", async () => {
@@ -1491,7 +1489,7 @@ test("message sound on receiving new message based on user preferences", async (
     });
     mockService("mail.sound_effects", {
         play(soundEffectName, ...args) {
-            asyncStep(`sound:${soundEffectName}`);
+            expect.step(`sound:${soundEffectName}`);
             return super.play(soundEffectName, ...args);
         },
     });
@@ -1511,7 +1509,7 @@ test("message sound on receiving new message based on user preferences", async (
         })
     );
     await waitFor(".o-mail-ChatBubble .badge:contains(1)", { timeout: 3000 });
-    await waitForSteps(["sound:new-message"]);
+    await expect.waitForSteps(["sound:new-message"]);
     // simulate message sound settings turned off
     browser.localStorage.setItem("mail.user_setting.message_sound", false);
     await animationFrame();
@@ -1541,7 +1539,7 @@ test("message sound on receiving new message based on user preferences", async (
         })
     );
     await waitFor(".o-mail-ChatBubble .badge:contains(3)", { timeout: 3000 });
-    await waitForSteps(["sound:new-message"]);
+    await expect.waitForSteps(["sound:new-message"]);
 });
 
 test("should auto-pin chat when receiving a new DM", async () => {
@@ -1746,7 +1744,7 @@ test("Do not trigger chat name server update when it is unchanged", async () => 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
 
-    onRpc("discuss.channel", "channel_set_custom_name", ({ method }) => asyncStep(method));
+    onRpc("discuss.channel", "channel_set_custom_name", ({ method }) => expect.step(method));
 
     await start();
     await openDiscuss(channelId);
@@ -1754,7 +1752,7 @@ test("Do not trigger chat name server update when it is unchanged", async () => 
         replace: true,
     });
     triggerHotkey("Enter");
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
 });
 
 test("Do not trigger channel description server update when channel has no description and editing to empty description", async () => {
@@ -1764,13 +1762,13 @@ test("Do not trigger channel description server update when channel has no descr
         name: "General",
     });
 
-    onRpc("discuss.channel", "channel_change_description", ({ method }) => asyncStep(method));
+    onRpc("discuss.channel", "channel_change_description", ({ method }) => expect.step(method));
 
     await start();
     await openDiscuss(channelId);
     await insertText("input.o-mail-DiscussContent-threadDescription", "");
     triggerHotkey("Enter");
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
 });
 
 test("Channel is added to discuss after invitation", async () => {
@@ -1861,7 +1859,7 @@ test("mark channel as seen if last message is visible when switching channels wh
         },
     ]);
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
-        asyncStep(`rpc:mark_as_read - ${args.channel_id}`);
+        expect.step(`rpc:mark_as_read - ${args.channel_id}`);
     });
     pyEnv["mail.message"].create([
         {
@@ -1877,9 +1875,9 @@ test("mark channel as seen if last message is visible when switching channels wh
     ]);
     await start();
     await openDiscuss(channelId_2);
-    await waitForSteps([`rpc:mark_as_read - ${channelId_2}`]);
+    await expect.waitForSteps([`rpc:mark_as_read - ${channelId_2}`]);
     await click("button", { text: "Bla" });
-    await waitForSteps([`rpc:mark_as_read - ${channelId_1}`]);
+    await expect.waitForSteps([`rpc:mark_as_read - ${channelId_1}`]);
 });
 
 test("warning on send with shortcut when attempting to post message with still-uploading attachments", async () => {

@@ -14,12 +14,10 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import {
-    asyncStep,
     Command,
     getService,
     patchWithCleanup,
     serverState,
-    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 
@@ -39,7 +37,7 @@ test("Close without feedback", async () => {
     await loadDefaultEmbedConfig();
     onRpcBefore((route) => {
         if (route === "/im_livechat/visitor_leave_session" || route === "/im_livechat/feedback") {
-            asyncStep(route);
+            expect.step(route);
         }
     });
     await start({ authenticateAs: false });
@@ -52,7 +50,7 @@ test("Close without feedback", async () => {
     await click(".o-livechat-CloseConfirmation-leave");
     await click("button", { text: "Close" });
     await contains(".o-livechat-LivechatButton");
-    await waitForSteps(["/im_livechat/visitor_leave_session"]);
+    await expect.waitForSteps(["/im_livechat/visitor_leave_session"]);
 });
 
 test("Last operator leaving ends the livechat", async () => {
@@ -82,10 +80,10 @@ test("Feedback with rating and comment", async () => {
     await loadDefaultEmbedConfig();
     onRpcBefore((route, args) => {
         if (route === "/im_livechat/visitor_leave_session") {
-            asyncStep(route);
+            expect.step(route);
         }
         if (route === "/im_livechat/feedback") {
-            asyncStep(route);
+            expect.step(route);
             expect(args.reason).toInclude("Good job!");
             expect(args.rate).toBe(RATING.OK);
         }
@@ -98,12 +96,12 @@ test("Feedback with rating and comment", async () => {
     await contains(".o-mail-Thread:not([data-transient])");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
-    await waitForSteps(["/im_livechat/visitor_leave_session"]);
+    await expect.waitForSteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[alt="${RATING.OK}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:contains(Send):enabled");
     await contains("p", { text: "Thank you for your feedback" });
-    await waitForSteps(["/im_livechat/feedback"]);
+    await expect.waitForSteps(["/im_livechat/feedback"]);
 });
 
 test("Closing folded chat window should open it with feedback", async () => {

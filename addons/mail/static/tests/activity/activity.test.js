@@ -11,13 +11,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
-import {
-    asyncStep,
-    mockService,
-    onRpc,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -283,7 +277,7 @@ test("activity with mail template: preview mail", async () => {
         doAction(action) {
             if (action?.res_model !== "res.partner") {
                 // Click on Preview Mail Template
-                asyncStep("do_action");
+                expect.step("do_action");
                 expect(action.context.default_res_ids).toEqual([partnerId]);
                 expect(action.context.default_model).toBe("res.partner");
                 expect(action.context.default_template_id).toBe(mailTemplateId);
@@ -298,7 +292,7 @@ test("activity with mail template: preview mail", async () => {
     await contains(".o-mail-Activity");
     await contains(".o-mail-ActivityMailTemplate-preview");
     await click(".o-mail-ActivityMailTemplate-preview");
-    await waitForSteps(["do_action"]);
+    await expect.waitForSteps(["do_action"]);
 });
 
 test("activity with mail template: send mail", async () => {
@@ -313,7 +307,7 @@ test("activity with mail template: send mail", async () => {
         res_model: "res.partner",
     });
     onRpc("res.partner", "activity_send_mail", ({ args, method }) => {
-        asyncStep(method);
+        expect.step(method);
         expect(args[0]).toHaveLength(1);
         expect(args[0][0]).toBe(partnerId);
         expect(args[1]).toBe(mailTemplateId);
@@ -325,7 +319,7 @@ test("activity with mail template: send mail", async () => {
     await contains(".o-mail-Activity");
     await contains(".o-mail-ActivityMailTemplate-send");
     await click(".o-mail-ActivityMailTemplate-send");
-    await waitForSteps(["activity_send_mail"]);
+    await expect.waitForSteps(["activity_send_mail"]);
 });
 
 test("activity click on mark as done", async () => {
@@ -382,7 +376,7 @@ test("activity click on edit", async () => {
     mockService("action", {
         doAction(action) {
             if (action?.res_model !== "res.partner") {
-                asyncStep("do_action");
+                expect.step("do_action");
                 expect(action.type).toBe("ir.actions.act_window");
                 expect(action.res_model).toBe("mail.activity");
                 expect(action.res_id).toBe(activityId);
@@ -393,7 +387,7 @@ test("activity click on edit", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Activity .btn", { text: "Edit" });
-    await waitForSteps(["do_action"]);
+    await expect.waitForSteps(["do_action"]);
 });
 
 test("activity click on edit should pass correct context", async () => {
@@ -412,7 +406,7 @@ test("activity click on edit should pass correct context", async () => {
     await openFormView("res.partner", partnerId);
     mockService("action", {
         async doAction(action) {
-            asyncStep("do_action");
+            expect.step("do_action");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.res_model).toBe("mail.activity");
             expect(action.res_id).toBe(activityId);
@@ -425,7 +419,7 @@ test("activity click on edit should pass correct context", async () => {
         },
     });
     await click(".o-mail-Activity .btn", { text: "Edit" });
-    await waitForSteps(["do_action"]);
+    await expect.waitForSteps(["do_action"]);
 });
 
 test("activity click on cancel", async () => {
@@ -439,7 +433,7 @@ test("activity click on cancel", async () => {
         res_model: "res.partner",
     });
     onRpc("mail.activity", "unlink", ({ args, method }) => {
-        asyncStep(method);
+        expect.step(method);
         expect(args[0]).toHaveLength(1);
         expect(args[0][0]).toBe(activityId);
     });
@@ -447,7 +441,7 @@ test("activity click on cancel", async () => {
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Activity .btn", { text: "Cancel" });
     await contains(".o-mail-Activity", { count: 0 });
-    await waitForSteps(["unlink"]);
+    await expect.waitForSteps(["unlink"]);
 });
 
 test("activity mark done popover close on ESCAPE", async () => {
@@ -524,7 +518,7 @@ test("chatter 'activity' button open the activity schedule wizard", async () => 
     mockService("action", {
         async doAction(action, options) {
             if (action?.res_model !== "res.partner") {
-                asyncStep("doAction");
+                expect.step("doAction");
                 const expectedAction = {
                     context: {
                         active_ids: [fakeId],
@@ -555,7 +549,7 @@ test("chatter 'activity' button open the activity schedule wizard", async () => 
             </form>`,
     });
     await click("button", { text: "Activity" });
-    await waitForSteps(["doAction"]);
+    await expect.waitForSteps(["doAction"]);
 });
 
 test("Activity avatar should have a unique timestamp", async () => {

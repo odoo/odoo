@@ -12,8 +12,8 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { asyncStep, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -83,7 +83,7 @@ test("can close confirm livechat with keyboard", async () => {
     await loadDefaultEmbedConfig();
     onRpcBefore((route) => {
         if (route === "/im_livechat/visitor_leave_session") {
-            asyncStep(route);
+            expect.step(route);
         }
     });
     await start({ authenticateAs: false });
@@ -103,6 +103,6 @@ test("can close confirm livechat with keyboard", async () => {
         text: "Leaving will end the live chat. Do you want to proceed?",
     });
     await triggerHotkey("Enter");
-    await waitForSteps(["/im_livechat/visitor_leave_session"]);
+    await expect.waitForSteps(["/im_livechat/visitor_leave_session"]);
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
 });

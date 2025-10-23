@@ -20,13 +20,11 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
 import {
-    asyncStep,
     Command,
     makeKwArgs,
     mockService,
     patchWithCleanup,
     serverState,
-    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 
@@ -167,7 +165,7 @@ test("rendering with PWA installation request", async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwaService.installationState") {
-                asyncStep("getItem " + key);
+                expect.step("getItem " + key);
                 // in this test, installation has not yet proceeded
                 return null;
             }
@@ -179,13 +177,13 @@ test("rendering with PWA installation request", async () => {
     await start();
     mockService("pwa", {
         show() {
-            asyncStep("show prompt");
+            expect.step("show prompt");
         },
     });
     // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
-    await waitForSteps(["getItem pwaService.installationState"]);
+    await expect.waitForSteps(["getItem pwaService.installationState"]);
     await contains(".o-mail-MessagingMenu-counter");
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -200,7 +198,7 @@ test("rendering with PWA installation request", async () => {
         text: "Come here often? Install the app for quick and easy access!",
     });
     await click(".o-mail-NotificationItem a.btn-primary");
-    await waitForSteps(["show prompt"]);
+    await expect.waitForSteps(["show prompt"]);
 });
 
 test("installation of the PWA request can be dismissed", async () => {
@@ -210,7 +208,7 @@ test("installation of the PWA request can be dismissed", async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwaService.installationState") {
-                asyncStep("getItem " + key);
+                expect.step("getItem " + key);
                 // in this test, installation has not yet proceeded
                 return null;
             }
@@ -218,7 +216,7 @@ test("installation of the PWA request can be dismissed", async () => {
         },
         setItem(key, value) {
             if (key === "pwaService.installationState") {
-                asyncStep("installationState value:  " + value);
+                expect.step("installationState value:  " + value);
             }
             return super.setItem(key, value);
         },
@@ -226,16 +224,16 @@ test("installation of the PWA request can be dismissed", async () => {
     await start();
     mockService("pwa", {
         show() {
-            asyncStep("show prompt should not be triggered");
+            expect.step("show prompt should not be triggered");
         },
     });
     // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
-    await waitForSteps(["getItem pwaService.installationState"]);
+    await expect.waitForSteps(["getItem pwaService.installationState"]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem .oi-close");
-    await waitForSteps([
+    await expect.waitForSteps([
         "getItem pwaService.installationState",
         'installationState value:  {"/odoo":"dismissed"}',
     ]);
@@ -250,7 +248,7 @@ test("rendering with PWA installation request (dismissed)", async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwaService.installationState") {
-                asyncStep("getItem " + key);
+                expect.step("getItem " + key);
                 // in this test, installation has been previously dismissed by the user
                 return `{"/odoo":"dismissed"}`;
             }
@@ -261,7 +259,7 @@ test("rendering with PWA installation request (dismissed)", async () => {
     // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
-    await waitForSteps(["getItem pwaService.installationState"]);
+    await expect.waitForSteps(["getItem pwaService.installationState"]);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -275,7 +273,7 @@ test("rendering with PWA installation request (already running as PWA)", async (
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwaService.installationState") {
-                asyncStep("getItem " + key);
+                expect.step("getItem " + key);
                 // in this test, we remove any value that could contain localStorage so the service would be allowed to prompt
                 return null;
             }
@@ -285,7 +283,7 @@ test("rendering with PWA installation request (already running as PWA)", async (
     await start();
     // The 'beforeinstallprompt' event is not triggered here, since the
     // browser wouldn't trigger it when the app is already launched
-    await waitForSteps(["getItem pwaService.installationState"]);
+    await expect.waitForSteps(["getItem pwaService.installationState"]);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -365,7 +363,7 @@ test("grouped notifications by document model", async () => {
     ]);
     mockService("action", {
         doAction(action) {
-            asyncStep("do_action");
+            expect.step("do_action");
             expect(action.name).toBe("Mail Failures");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.view_mode).toBe("kanban,list,form");
@@ -389,7 +387,7 @@ test("grouped notifications by document model", async () => {
         text: "Email Failure: Contact",
         contains: [".badge", { text: "2" }],
     });
-    await waitForSteps(["do_action"]);
+    await expect.waitForSteps(["do_action"]);
 });
 
 test("multiple grouped notifications by document model, sorted by the most recent message of each group", async () => {
@@ -474,13 +472,13 @@ test("mark unread channel as read", async () => {
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([currentMemberId], { seen_message_id: messagId_1 });
-    onRpcBefore("/discuss/channel/mark_as_read", (args) => asyncStep("mark_as_read"));
+    onRpcBefore("/discuss/channel/mark_as_read", (args) => expect.step("mark_as_read"));
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     await contains(".o-mail-NotificationItem.text-muted");
-    await waitForSteps(["mark_as_read"]);
+    await expect.waitForSteps(["mark_as_read"]);
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem [title='Mark As Read']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
@@ -1230,14 +1228,14 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     const def = new Deferred();
     listenStoreFetch("init_messaging", {
         async onRpc() {
-            asyncStep("before init_messaging");
+            expect.step("before init_messaging");
             await def;
         },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
-    await waitForSteps(["before init_messaging"]);
+    await expect.waitForSteps(["before init_messaging"]);
     def.resolve();
     await waitStoreFetch("init_messaging");
 });
@@ -1249,14 +1247,14 @@ test("can open messaging menu even if channels are not fetched", async () => {
     const def = new Deferred();
     listenStoreFetch("channels_as_member", {
         async onRpc() {
-            asyncStep("before channels_as_member");
+            expect.step("before channels_as_member");
             await def;
         },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-DiscussSystray", { text: "Loading…" });
-    await waitForSteps(["before channels_as_member"]);
+    await expect.waitForSteps(["before channels_as_member"]);
     def.resolve();
     await waitStoreFetch("channels_as_member");
     await contains(".o-mail-NotificationItem", { text: "General" });

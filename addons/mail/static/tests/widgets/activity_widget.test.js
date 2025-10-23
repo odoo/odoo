@@ -10,13 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-dom";
-import {
-    asyncStep,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate } from "@web/core/l10n/dates";
 
 defineMailModels();
@@ -41,7 +35,7 @@ test("list activity widget with no activity", async () => {
             count_limit: 10001,
             domain: [],
         });
-        asyncStep("web_search_read");
+        expect.step("web_search_read");
     });
     listenStoreFetch("init_messaging");
     await start();
@@ -49,7 +43,7 @@ test("list activity widget with no activity", async () => {
     await openListView("res.users", {
         arch: `<list><field name="activity_ids" widget="list_activity"/></list>`,
     });
-    await waitForSteps(["web_search_read"]);
+    await expect.waitForSteps(["web_search_read"]);
     await contains(".o-mail-ActivityButton i.fa-clock-o");
     await contains(".o-mail-ListActivity-summary", { text: "" });
 });
@@ -149,7 +143,7 @@ test("list activity widget: open dropdown", async () => {
     });
     onRpc("mail.activity", "activity_format", (params) => {
         expect(params.args).toEqual([[activityId_1, activityId_2]]);
-        asyncStep("activity_format");
+        expect.step("activity_format");
     });
     onRpc("mail.activity", "action_feedback", (params) => {
         pyEnv["res.partner"].write([serverState.partnerId], {
@@ -162,7 +156,7 @@ test("list activity widget: open dropdown", async () => {
             activity_type_id: activityTypeId_2,
         });
         expect(params.args).toEqual([[activityId_1]]);
-        asyncStep("action_feedback");
+        expect.step("action_feedback");
     });
     await start();
     await openListView("res.users", {
@@ -170,12 +164,12 @@ test("list activity widget: open dropdown", async () => {
     });
     await contains(".o-mail-ListActivity-summary", { text: "Call with Al" });
     await click(".o-mail-ActivityButton");
-    await waitForSteps(["activity_format"]);
+    await expect.waitForSteps(["activity_format"]);
     await click(
         ":nth-child(1 of .o-mail-ActivityListPopoverItem) .o-mail-ActivityListPopoverItem-markAsDone"
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await waitForSteps(["action_feedback"]);
+    await expect.waitForSteps(["action_feedback"]);
     await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
 });
 
@@ -198,7 +192,7 @@ test("list activity widget: batch selection from list", async (assert) => {
         doAction(action, options) {
             if (action.res_model === "mail.activity.schedule") {
                 scheduleWizardContext = action.context;
-                asyncStep("do_action_activity");
+                expect.step("do_action_activity");
                 options.onClose();
                 wizardOpened.resolve();
                 return true;
@@ -230,7 +224,7 @@ test("list activity widget: batch selection from list", async (assert) => {
         active_id: matildeId,
         active_model: "res.partner",
     });
-    await waitForSteps(["do_action_activity"]);
+    await expect.waitForSteps(["do_action_activity"]);
     // We select 2 among the 3 partners created above and click on the clock of one of them
     await click(".o_list_record_selector .o-checkbox", { target: matildeRow });
     await click(".o_list_record_selector .o-checkbox", { target: marioRow });
@@ -279,7 +273,7 @@ test("list activity widget: batch selection from list", async (assert) => {
         active_id: matildeId,
         active_model: "res.partner",
     });
-    await waitForSteps(["do_action_activity", "do_action_activity", "do_action_activity"]);
+    await expect.waitForSteps(["do_action_activity", "do_action_activity", "do_action_activity"]);
 });
 
 test("list activity exception widget with activity", async () => {

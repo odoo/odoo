@@ -7,7 +7,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { defineSnailmailModels } from "@snailmail/../tests/snailmail_test_helpers";
-import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineSnailmailModels();
@@ -123,7 +123,7 @@ test("grouped notifications by document model", async (assert) => {
     ]);
     mockService("action", {
         doAction(action) {
-            asyncStep("do_action");
+            expect.step("do_action");
             expect(action.name).toBe("Snailmail Failures");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.view_mode).toBe("kanban,list,form");
@@ -146,5 +146,5 @@ test("grouped notifications by document model", async (assert) => {
     await contains(".o-mail-NotificationItem", { text: "Snailmail Failure: Contact" });
     await contains(".o-mail-NotificationItem-counter", { text: "2" });
     await click(".o-mail-NotificationItem");
-    await waitForSteps(["do_action"]);
+    await expect.waitForSteps(["do_action"]);
 });

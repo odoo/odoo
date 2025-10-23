@@ -2,12 +2,7 @@ import { expect, getFixture, test } from "@odoo/hoot";
 import { queryOne, queryRect, resize, scroll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useRef, useState, xml } from "@odoo/owl";
-import {
-    contains,
-    defineStyle,
-    mountWithCleanup,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { contains, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Popover } from "@web/core/popover/popover";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
@@ -426,7 +421,7 @@ test("popover position is updated when the content dimensions change", async () 
     expect.verifySteps(["onPositioned"]);
     await contains("#popover button").click();
     expect("#popover span").toHaveCount(1);
-    await waitForSteps(["onPositioned"]);
+    await expect.waitForSteps(["onPositioned"]);
 });
 
 test("arrow follows target and can get sucked", async () => {
