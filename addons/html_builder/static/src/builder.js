@@ -85,6 +85,7 @@ export class Builder extends Component {
         this.lastTrigerUpdateId = 0;
         this.editorBus = new EventBus();
         this.colorPresetToShow = null;
+        this.shadowSizeToShow = null;
         this.activeTargetEl = null;
         const mobileBreakpoint = this.props.config.mobileBreakpoint ?? "lg";
 
@@ -232,6 +233,7 @@ export class Builder extends Component {
             editorBus: this.editorBus,
             triggerDomUpdated: this.triggerDomUpdated.bind(this),
             editColorCombination: this.editColorCombination.bind(this),
+            editShadow: this.editShadow.bind(this),
         });
         onWillDestroy(() => {
             this.editor.destroy();
@@ -286,7 +288,7 @@ export class Builder extends Component {
      * @param {Number | null} presetId the color preset expanding on "theme" tab
      * open.
      */
-    onTabClick(tab, presetId = null) {
+    onTabClick(tab, { presetId = null, shadowSize = null } = {}) {
         if (this.state.activeTab === tab) {
             // If the tab is already active, do nothing.
             return;
@@ -295,6 +297,7 @@ export class Builder extends Component {
         // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
         if (tab === "theme" || tab === "blocks") {
             this.colorPresetToShow = presetId;
+            this.shadowSizeToShow = shadowSize;
             this.activeTargetEl = this.activeTargetEl || this.getActiveTarget();
             this.editor.shared.builderOptions.deactivateContainers();
         } else if (this.activeTargetEl) {
@@ -336,7 +339,11 @@ export class Builder extends Component {
     }
 
     editColorCombination(presetId) {
-        this.onTabClick("theme", presetId);
+        this.onTabClick("theme", { presetId });
+    }
+
+    editShadow(shadowSize) {
+        this.onTabClick("theme", { shadowSize });
     }
 
     getActiveTarget() {

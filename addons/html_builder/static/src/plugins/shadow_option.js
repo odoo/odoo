@@ -12,4 +12,8 @@ export class ShadowOption extends BaseOptionComponent {
         setShadowModeAction: "setShadowMode",
         setShadowStyleAction: "setShadowStyle",
     };
+
+    getOnClick(shadowClass) {
+        return () => this.env.editShadow(shadowClass);
+    }
 }
