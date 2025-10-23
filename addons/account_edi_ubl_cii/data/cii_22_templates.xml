@@ -107,7 +107,7 @@
                 xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <!-- Contact. -->
-                <ram:Name t-out="partner.display_name"/>
+                <ram:Name t-out="partner.display_name if partner.name else partner.commercial_partner_id.display_name"/>
                 <ram:SpecifiedLegalOrganization t-if="specified_legal_organization_val">
                     <ram:ID t-att-schemeID="str('0002')"
                             t-out="specified_legal_organization_val"/>
