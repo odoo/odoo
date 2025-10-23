@@ -18,7 +18,7 @@ import {
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
 import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
@@ -36,8 +36,13 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 describe.current.tags("desktop");
 defineMailModels();
 
+let streams;
 beforeEach(() => {
-    mockGetMedia();
+    streams = mockGetMedia();
+});
+after(() => {
+    streams = [];
+    streams.splice(0); // just for eslint
 });
 
 test("basic rendering", async () => {
