@@ -3,7 +3,7 @@
 from markupsafe import Markup
 from unittest.mock import patch
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tests import Form, HttpCase, tagged, users
 from odoo.tools import convert_file, mute_logger
@@ -32,6 +32,15 @@ class TestMailTemplate(MailCommon):
             'model_id': cls.env.ref('base.model_res_partner').id,
             'use_default_to': False,
         })
+
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='employee_2@test.com',
+            groups='base.group_user',
+            login='employee_2',
+            name='Albertine Another Employee',
+        )
 
     @users('admin')
     @mute_logger('odoo.addons.mail.models.mail_template')
@@ -78,7 +87,6 @@ class TestMailTemplate(MailCommon):
             mail_template.write({
                 'model_id': self.env['ir.model']._get_id('res.partner'),
             })
-
 
     @users('employee')
     def test_mail_compose_message_content_from_template(self):
@@ -356,6 +364,90 @@ class TestMailTemplate(MailCommon):
             employee_template.with_context(lang='fr_FR').subject = '{{ object.city }}'
 
         employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.city }}'
+
+    def test_mail_template_copy(self):
+        (self.user_employee + self.user_employee_2).write({
+            'group_ids': [(4, self.env.ref('mail.group_mail_template_editor').id)],
+        })
+        attachment_data_list = self._generate_attachments_data(4, self.mail_template._name, self.mail_template.id)
+        self.mail_template.write({
+            'attachment_ids': [
+                (0, 0, attachment_data)
+                for attachment_data in attachment_data_list[:2]
+            ],
+        })
+        original_attachments = self.mail_template.attachment_ids
+        # users access template, can read attachments
+        for test_user in (self.user_employee, self.user_employee_2):
+            with self.subTest(user_name=test_user.name):
+                template = self.mail_template.with_user(test_user)
+                self.assertEqual(
+                    set(template.attachment_ids.mapped('name')),
+                    {'AttFileName_00.txt', 'AttFileName_01.txt'},
+                )
+        # other template for multi copy support
+        mail_template_2 = self.env['mail.template'].create({
+            'name': 'Test Template 2',
+        })
+
+        # employee make a private copy -> other template should still be readable
+        new_template, new_template_2 = (self.mail_template + mail_template_2).with_user(self.user_employee).copy()
+        new_template.user_id = self.user_employee
+        self.assertEqual(
+            set(new_template.attachment_ids.mapped('name')),
+            {'AttFileName_00.txt', 'AttFileName_01.txt'},
+        )
+        self.assertFalse(
+            new_template.attachment_ids & original_attachments,
+            'Template copy should copy attachments, not keep the same, to avoid ACLs / ownership issues',
+        )
+        self.assertFalse(new_template_2.attachment_ids, 'Should not take attachments from first template in multi copy')
+        self.assertEqual(new_template.name, f'{self.mail_template.name} (copy)', 'Default name should be the old one + copy')
+        self.assertEqual(new_template_2.name, f'{mail_template_2.name} (copy)', 'Default name should be the old one + copy')
+        # linked to their respective template
+        self.assertEqual(new_template.attachment_ids.mapped('res_id'), new_template.ids * 2)
+        self.assertEqual(original_attachments.mapped('res_id'), self.mail_template.ids * 2)
+
+        new_template_as2 = new_template.with_user(self.user_employee_2)
+        self.assertEqual(
+            set(new_template_as2.attachment_ids.mapped('name')),
+            {'AttFileName_00.txt', 'AttFileName_01.txt'},
+        )
+
+        # check default is correctly used instead of copy
+        newer_template, newer_template_2 = (self.mail_template + mail_template_2).with_user(self.user_employee).copy(default={
+            'attachment_ids': [
+                (0, 0, attachment_data_list[2]),
+                (0, 0, attachment_data_list[3]),
+            ],
+            'name': 'My Copy',
+        })
+        self.assertEqual(
+            set(newer_template.attachment_ids.mapped('name')),
+            {'AttFileName_02.txt', 'AttFileName_03.txt'},
+        )
+        self.assertEqual(
+            set(newer_template_2.attachment_ids.mapped('name')),
+            {'AttFileName_02.txt', 'AttFileName_03.txt'},
+        )
+        self.assertFalse(
+            newer_template.attachment_ids & (original_attachments & new_template.attachment_ids),
+            'Template copy should copy attachments, not keep the same, to avoid ACLs / ownership issues',
+        )
+        self.assertFalse(
+            newer_template_2.attachment_ids & newer_template.attachment_ids,
+            'Template copy should copy attachments, not keep the same, to avoid ACLs / ownership issues',
+        )
+        self.assertEqual(newer_template.name, 'My Copy', 'Copy should respect given default')
+        self.assertEqual(newer_template_2.name, 'My Copy', 'Copy should respect given default')
+        # linked to their respective template
+        self.assertEqual(newer_template.attachment_ids.mapped('res_id'), newer_template.ids * 2)
+        self.assertEqual(newer_template_2.attachment_ids.mapped('res_id'), newer_template_2.ids * 2)
+        self.assertEqual(newer_template.attachment_ids.mapped('res_model'), [newer_template._name] * 2)
+        self.assertEqual(newer_template.attachment_ids.mapped('res_id'), newer_template.ids * 2)
+        self.assertEqual(newer_template.attachment_ids.mapped('res_model'), [newer_template._name] * 2)
+        self.assertEqual(original_attachments.mapped('res_id'), self.mail_template.ids * 2)
+        self.assertEqual(original_attachments.mapped('res_model'), [self.mail_template._name] * 2)
 
     def test_mail_template_parse_partner_to(self):
         for partner_to, expected in [
