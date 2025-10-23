@@ -438,7 +438,9 @@
                     <filter name="not_acknowledged" string="Not Acknowledged" domain="[('state', '=', 'purchase'), ('acknowledged', '=', False)]"/>
                     <filter name="late_receipt" string="Late Receipts" domain="[('is_late', '=', True)]"/>
                     <separator/>
-                    <filter name="order_date" string="Order Date" date="date_order"/>
+                    <filter name="order_date" date="date_order"/>
+                    <separator/>
+                    <filter name="filter_date_approve" date="date_approve" default_period="month"/>
                     <filter invisible="1" string="My Activities" name="filter_activities_my"
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
@@ -455,7 +457,8 @@
                     <group>
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
-                        <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter name="group_date_approve_month" context="{'group_by': 'date_approve:month'}"/>
                     </group>
                 </search>
             </field>
@@ -479,8 +482,9 @@
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status', '=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
                     <separator/>
-                    <filter name="order_date" string="Order Date" date="date_order"/>
+                    <filter name="order_date" date="date_order"/>
                     <separator/>
+                    <filter name="filter_date_approve" date="date_approve" default_period="month"/>
                     <filter invisible="1" string="My Activities" name="filter_activities_my"
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
@@ -497,7 +501,8 @@
                     <group>
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
-                        <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter name="group_date_approve_month" context="{'group_by': 'date_approve:month'}"/>
                     </group>
                 </search>
             </field>
@@ -801,7 +806,7 @@
                     <filter string="Status" name="purchase_state" domain="[('state', '=', 'purchase')]"/>
                     <separator/>
                     <filter name="filter_date_order" date="date_order" default_period="month"/>
-                    <filter name="order_date_last_year" string="Order Date: Last 365 Days"
+                    <filter name="order_date_last_year" string="Order DeadLine: Last 365 Days"
                         domain="[
                             ('date_order', '>', 'today -1y')
                         ]" invisible="1"/>
@@ -809,8 +814,7 @@
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <separator/>
-                        <filter string="Order Date" name="group_by_date_order" context="{'group_by': 'date_order'}"/>
+                        <filter name="group_by_date_order" context="{'group_by': 'date_order'}"/>
                     </group>
                 </search>
             </field>
