@@ -2848,3 +2848,85 @@ test("properties: signature", async () => {
         message: "suffix should be removed",
     });
 });
+
+/**
+ * tests todo: edit, delete, display
+ */
+test("properties definition: test display and edit", async () => {
+    onRpc("has_access", () => true);
+
+    await mountView({
+        type: "form",
+        resModel: "res.company",
+        resId: 37,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="id" invisible="1"/>
+                        <field name="definitions" widget="properties_definition"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    // Base state
+    expect(".o_property_field_value").toHaveCount(4, {
+        message: "4 field value should be present : 1 for each definition.",
+    });
+    expect(".o_property_field_value .o_input").toHaveCount(0, {
+        message: "It shouldn't be possible to add a value to a property definition",
+    });
+
+    // Edit an existing definition
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+    expect(".o_field_property_open_popover").toHaveCount(4, {
+        message: "4 popover buttons should be present : 1 for each definition.",
+    });
+    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
+    await animationFrame();
+    expect(".o_field_property_selection_option").toHaveCount(3, {
+        message: "Only the 3 options from the demo data should be displayed.",
+    })
+    await click(".o_field_property_selection .fa-plus");
+    await animationFrame();
+    await edit("New option");
+    await closePopover();
+    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
+    await animationFrame();
+    expect(".o_field_property_selection_option").toHaveCount(4, {
+        message: "The added option should now be displayed.",
+    })
+    await closePopover();
+
+    // Add a new definition
+    await click(".o_field_property_add button");
+    await waitFor(".o_property_field_popover");
+    expect(".o_property_field_popover").toHaveCount(1, {
+        message: "Should have opened the definition popover",
+    });
+    expect(".o_field_property_definition_header").toHaveValue("Property 5", {
+        message: "Should have added a default label",
+    });
+    expect(".o_field_property_definition_type input").toHaveValue("Text", {
+        message: "Default type must be text",
+    });
+    await closePopover();
+    expect(".o_property_field_value").toHaveCount(5, {
+        message: "5 field value should be present : 1 for each definition.",
+    });
+
+    // Delete an existing definition
+    await click(".o_property_field:first-child .o_field_property_open_popover");
+    await animationFrame();
+    await click(".o_field_property_definition_delete");
+    await animationFrame();
+    await click(".modal-content .btn-danger");
+    await animationFrame();
+    expect(".o_property_field_value").toHaveCount(4, {
+        message: "4 field value should be present : 1 for each definition.",
+    });
+});
