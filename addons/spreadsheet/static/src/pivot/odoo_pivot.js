@@ -377,7 +377,11 @@ export class OdooPivot {
             case "float":
                 return "#,##0.00";
             case "monetary":
-                return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
+                try {
+                    return this.getters.getCompanyCurrencyFormat() || "#,##0.00";
+                } catch {
+                    return "#,##0.00";
+                }
             case "date":
             case "datetime": {
                 const timeAdapter = pivotTimeAdapter(granularity);
