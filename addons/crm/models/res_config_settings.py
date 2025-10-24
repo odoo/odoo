@@ -16,6 +16,7 @@ class ResConfigSettings(models.TransientModel):
     # Membership
     is_membership_multi = fields.Boolean(string='Multi Teams', config_parameter='sales_team.membership_multi')
     module_partnership = fields.Boolean("Membership / Partnership")
+    module_website_partnership = fields.Boolean("Partners Website Page")
     # Lead assignment
     crm_use_auto_assignment = fields.Boolean(
         string='Rule-Based Assignment', config_parameter='crm.lead.auto.assignment')

@@ -34,6 +34,9 @@
                         <setting id="partnership_settings" help="Manage members or partners. Members get levels and pricelists, partners allow lead assignment and commission plans.">
                             <field name="module_partnership"/>
                         </setting>
+                        <setting id="website_partnership_settings" help="Display your partners on a dedicated website page." invisible="not module_partnership">
+                            <field name="module_website_partnership"/>
+                        </setting>
                     </block>
                     <block>
                         <field name="predictive_lead_scoring_fields_str" invisible="1"/>
