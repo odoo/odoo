@@ -5,7 +5,7 @@
     <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
         <div class="d-flex align-items-center p-2">
             <button class="o_pager_nav_angle btn btn-secondary bg-transparent border-0"
-                    t-on-click="this.props.onClose">
+                    t-on-click="this.props.onClose" t-ref="backButton">
                     <i class="fa fa-angle-left" aria-hidden="true"/>
                     <span class="visually-hidden">Back</span>
                     <span class="ps-2 text-white" t-out="props.selectorTitle"/>
