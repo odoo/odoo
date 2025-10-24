@@ -509,7 +509,7 @@ export class BuilderOverlay {
         // Lock the mutex.
         let sizingResolve;
         const sizingProm = new Promise((resolve) => (sizingResolve = () => resolve()));
-        this.next(async () => await sizingProm, { withLoadingEffect: false });
+        this.next(async () => await sizingProm, { withLoadingEffect: false, canTimeout: false });
         const cancelSizing = this.history.makeSavePoint();
 
         const handleEl = ev.currentTarget;
