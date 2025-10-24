@@ -378,7 +378,7 @@
                                         </div>
                                         <field name="employee_type"/>
                                         <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
-                                        <field name="structure_type_id" string="Pay Category" placeholder="Pay Category"
+                                        <field name="structure_id" string="Pay Category" placeholder="Pay Category"
                                                 domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
                                         <separator name="schedule" string="Schedule"/>
@@ -502,7 +502,7 @@
                     <field name="wage" widget="monetary" optional="hide"/>
                     <field name="employee_type" optional="hide"/>
                     <field name="contract_type_id" optional="hide"/>
-                    <field name="structure_type_id" optional="hide"/>
+                    <field name="structure_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
                     <field name="activity_date_deadline" widget="remaining_days" optional="hide"/>
@@ -554,7 +554,7 @@
                     <field name="wage" widget="monetary" optional="hide"/>
                     <field name="employee_type" optional="hide"/>
                     <field name="contract_type_id" optional="hide"/>
-                    <field name="structure_type_id" optional="hide"/>
+                    <field name="structure_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
                     <field name="activity_date_deadline" widget="remaining_days" optional="show"/>
