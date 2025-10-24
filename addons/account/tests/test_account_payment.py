@@ -879,3 +879,36 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             'amount_signed': -100,
             'amount_company_currency_signed': -50,
         }])
+
+    def test_payment_state_computation(self):
+        def create_invoice(post=False, kwargs=None):
+            move = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            })
+            if post:
+                move.action_post()
+            if kwargs is not None:
+                move.update({**kwargs})
+            return move
+
+        for post, payment_state, expected in [
+            (False, 'not_paid', 'draft'),
+            (False, 'partial', 'partial'),
+            (False, 'in_payment', 'in_payment'),
+            (False, 'paid', 'paid'),
+            (True, 'partial', 'partial'),
+            (True, 'in_payment', 'in_payment'),
+            (True, 'paid', 'paid'),
+            (True, 'reversed', 'reversed'),
+        ]:
+            invoice = create_invoice(post=post, kwargs={'payment_state': payment_state})
+            self.assertEqual(invoice.status_in_payment, expected)
+
+        for is_move_sent, expected in [
+            (True, 'sent'),
+            (False, 'posted'),
+        ]:
+            invoice = create_invoice(post=True, kwargs={'is_move_sent': is_move_sent})
+            self.assertEqual(invoice.status_in_payment, expected)
