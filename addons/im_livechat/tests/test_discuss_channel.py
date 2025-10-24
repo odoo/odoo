@@ -4,12 +4,11 @@ from freezegun import freeze_time
 from markupsafe import Markup
 
 from odoo import Command, fields
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
 
 
-@tagged("-at_install", "post_install")
 class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
     def test_unfollow_from_non_member_does_not_close_livechat(self):
         bob_user = new_test_user(

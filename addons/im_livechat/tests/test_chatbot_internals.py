@@ -4,13 +4,12 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests import chatbot_common
-from odoo.tests.common import JsonRpcException, new_test_user, tagged
+from odoo.tests.common import JsonRpcException, new_test_user
 from odoo.tools.misc import mute_logger
 from odoo.addons.mail.tests.common import freeze_all_time, MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
 
-@tagged("post_install", "-at_install")
 class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_duplicate(self):

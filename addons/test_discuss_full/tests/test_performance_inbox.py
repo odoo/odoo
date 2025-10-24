@@ -6,7 +6,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import HttpCase, tagged, warmup
 
 
-@tagged("post_install", "-at_install", "is_query_count")
+@tagged("is_query_count")
 class TestInboxPerformance(HttpCase, MailCommon):
     @warmup
     def test_fetch_with_rating_stats_enabled(self):

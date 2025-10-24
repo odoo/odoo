@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
 
-import odoo
 from odoo.addons.im_livechat.controllers.main import LivechatController
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
-@odoo.tests.tagged("-at_install", "post_install")
+
 class TestImLivechatSupportPage(TestGetOperatorCommon):
     def test_load_modules(self):
         operator = self._create_operator()

@@ -7,10 +7,9 @@ from unittest.mock import patch, PropertyMock
 from odoo import fields
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user
 
 
-@tagged("post_install", "-at_install")
 class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
     def test_get_discuss_channel(self):
         """For a livechat with 5 available operators, we open 5 channels 5 times (25 channels total).

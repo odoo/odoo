@@ -5,10 +5,9 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
-from odoo.tests.common import new_test_user, tagged
+from odoo.tests.common import new_test_user
 
 
-@tagged("post_install", "-at_install")
 class TestImLivechatReport(TestImLivechatCommon):
     def setUp(self):
         super().setUp()

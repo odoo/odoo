@@ -1,9 +1,9 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import fields
-from odoo.tests.common import tagged
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
-@tagged("post_install", "-at_install")
 class TestUserLivechatUsername(TestGetOperatorCommon):
     def test_user_livechat_username_channel_invite_notification(self):
         john = self._create_operator("fr_FR")

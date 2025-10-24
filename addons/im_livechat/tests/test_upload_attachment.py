@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests.common import HttpCase
 from odoo.tools import mute_logger, file_open
 
 
-@tagged("post_install", "-at_install")
 class TestUploadAttachment(HttpCase):
     def test_visitor_cannot_upload_on_closed_livechat(self):
         self.authenticate(None, None)
