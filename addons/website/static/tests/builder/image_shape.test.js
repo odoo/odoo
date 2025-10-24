@@ -542,3 +542,18 @@ test("Should reset crop when removing shape with ratio", async () => {
     await waitSidebarUpdated();
     expect(`:iframe .test-options-target img`).not.toHaveAttribute("data-aspect-ratio");
 });
+
+test("Should have the correct active shape in the image shape selector", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+
+    await contains(":iframe .test-options-target img").click();
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+    await waitSidebarUpdated();
+    await contains("[data-label='Shape'] .dropdown").click();
+    expect("[data-action-value='html_builder/geometric/geo_tetris']").toHaveClass("active");
+});
