@@ -9,6 +9,9 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { toRawValue } from "@mail/utils/common/local_storage";
+import { Settings } from "@mail/core/common/settings_model";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, test, expect } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -94,7 +97,8 @@ test("local storage for call settings", async () => {
     localStorage.setItem("mail_user_setting_background_blur_amount", "3");
     localStorage.setItem("mail_user_setting_edge_blur_amount", "5");
     localStorage.setItem("mail_user_setting_show_only_video", "true");
-    localStorage.setItem("mail_user_setting_use_blur", "true");
+    const useBlurLocalStorageKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
+    localStorage.setItem(useBlurLocalStorageKey, toRawValue(true));
     patchWithCleanup(localStorage, {
         setItem(key, value) {
             if (key.startsWith("mail_user_setting")) {
@@ -118,12 +122,9 @@ test("local storage for call settings", async () => {
 
     // testing save to local storage
     await click("input[title='Show video participants only']");
-    await expect.waitForSteps([
-        "mail_user_setting_use_blur: true",
-        "mail_user_setting_show_only_video: false",
-    ]);
+    await expect.waitForSteps(["mail_user_setting_show_only_video: false"]);
     await click("input[title='Blur video background']");
-    expect(localStorage.getItem("mail_user_setting_use_blur")).toBe(null);
+    expect(localStorage.getItem(useBlurLocalStorageKey)).toBe(null);
     await editInput(document.body, ".o-Discuss-CallSettings-thresholdInput", 0.3);
     await advanceTime(2000); // threshold setting debounce timer
     await expect.waitForSteps(["mail_user_setting_voice_threshold: 0.3"]);

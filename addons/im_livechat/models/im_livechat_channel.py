@@ -6,7 +6,7 @@ import random
 import re
 from urllib.parse import urlparse
 
-from odoo import api, Command, fields, models, _
+from odoo import api, Command, fields, models, release, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
@@ -577,13 +577,16 @@ class Im_LivechatChannel(models.Model):
 
     def get_livechat_info(self, username=None):
         self.ensure_one()
-
         if username is None:
             username = _('Visitor')
         info = {}
         info['available'] = self._is_livechat_available()
         info['server_url'] = self.get_base_url()
-        info["websocket_worker_version"] = WebsocketConnectionHandler._VERSION
+        info["session_info"] = {
+            "server_version": release.version,
+            "server_version_info": release.version_info,
+            "websocket_worker_version": WebsocketConnectionHandler._VERSION,
+        }
         if info['available']:
             info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username

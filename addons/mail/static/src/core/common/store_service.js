@@ -730,7 +730,7 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui", "popover"],
+    dependencies: ["bus_service", "im_status", "ui", "popover", "discuss.upgrade"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

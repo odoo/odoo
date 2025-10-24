@@ -78,7 +78,9 @@ import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_set
 import { Network } from "@mail/discuss/call/common/rtc_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
-import { DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
+import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
 export * from "./mail_test_helpers_contains";
 
@@ -771,15 +773,19 @@ export function setupChatHub({ opened = [], folded = [] } = {}) {
 }
 
 export function setDiscussSidebarCategoryFoldState(categoryId, val) {
+    const localId = DiscussAppCategory.localId(categoryId);
+    const lse = new LocalStorageEntry(makeRecordFieldLocalId(localId, "is_open"));
     if (val) {
-        localStorage.setItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${categoryId}`, val);
+        lse.set(!val);
     } else {
-        localStorage.removeItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${categoryId}`);
+        lse.remove();
     }
 }
 
 export function isDiscussSidebarCategoryFolded(categoryId) {
-    return localStorage.getItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${categoryId}`) === "true";
+    const localId = DiscussAppCategory.localId(categoryId);
+    const lse = new LocalStorageEntry(makeRecordFieldLocalId(localId, "is_open"));
+    return !(lse.get() ?? true);
 }
 
 export function assertChatHub({ opened = [], folded = [] }) {
