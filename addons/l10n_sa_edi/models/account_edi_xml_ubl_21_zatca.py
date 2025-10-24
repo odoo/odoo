@@ -81,7 +81,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             return True
 
         def tax_grouping_function(base_line, tax_data):
-            tax = tax_data['tax']
+            tax = tax_data and tax_data['tax']
 
             # Ignore withholding taxes
             if tax and tax.l10n_sa_is_retention:
