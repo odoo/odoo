@@ -154,7 +154,7 @@ export class PosOrderlineAccounting extends Base {
             is_refund: this.qty * priceUnit < 0,
             ...customValues,
         };
-        if (order?.fiscal_position_id) {
+        if (order?.fiscal_position_id && product !== this.config.discount_product_id) {
             // Recompute taxes based on product and fiscal position.
             values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(
                 values.product_id.taxes_id

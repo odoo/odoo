@@ -19,6 +19,7 @@
                             <t t-set="line" t-value="scope.line" />
                              <Orderline line="line"
                                 mode="'split'"
+                                t-if="line.product_id.id != pos.config?.discount_product_id?.id"
                                 t-on-click="() => this.onClickLine(line)"
                                 class="{'selected active': qtyTracker[line.uuid] and qtyTracker[line.uuid] !== 0}" />
                         </OrderDisplay>
@@ -40,6 +41,11 @@
                             <div class="text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
                                 <t t-esc="this.getNumberOfProducts()" /> product(s) selected
+                            </div>
+                            <t t-set="discountPc" t-value="getGlobalDiscountPc()" />
+                            <div t-if="discountPc" class="text-dark"
+                                t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
+                                With <t t-esc="discountPc" />% discount
                             </div>
                         </div>
 
