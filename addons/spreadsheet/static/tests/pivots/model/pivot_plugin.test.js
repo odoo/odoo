@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, Deferred } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     defineSpreadsheetActions,
@@ -12,7 +12,6 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { Deferred } from "@web/core/utils/concurrency";
 
 import {
     addGlobalFilter,
@@ -1112,6 +1111,7 @@ test("PIVOT formulas with monetary measure are correctly formatted at evaluation
                     <field name="pognon" type="measure"/>
                 </pivot>`,
     });
+    await animationFrame();
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00[$€]");
 });
 
@@ -2347,4 +2347,33 @@ test("Pivot headers day of week are still correct after updating the locale's we
     });
     await waitForDataLoaded(model);
     expect(getEvaluatedGrid(model, "A22:A24")).toEqual([["Sunday"], ["Wednesday"], ["Thursday"]]);
+});
+
+test("`getPivotCellFromPosition` should not throw on missing company default currency", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        mockRPC: async function (route, args) {
+            if (args.method === "get_company_currency_for_spreadsheet") {
+                return false;
+            }
+        },
+        arch: /* xml */ `
+            <pivot>
+                <field name="foo" type="col"/>
+                <field name="bar" type="row"/>
+                <field name="pognon" type="measure"/>
+            </pivot>`,
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const [pivotId] = model.getters.getPivotIds();
+    updatePivot(model, pivotId, {
+        sortedColumn: {
+            domain: [],
+            order: "desc",
+            measure: "pognon:avg",
+        },
+    });
+    await animationFrame();
+    expect(() => {
+        model.getters.getPivotCellFromPosition({ sheetId, col: 0, row: 0 });
+    }).not.toThrow();
 });
