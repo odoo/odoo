@@ -859,4 +859,195 @@ test("should not show context menu on participant card when not in a call", asyn
     );
     await contains(".o-discuss-CallContextMenu");
 });
-// reverted mock network and stream tests
+
+test("a", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});
+
+test("b", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});
+
+test("c", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});
+
+test("d", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});
+
+test("e", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});
+
+test("f", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});
+
+test("g", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});
+
+test("h", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+});

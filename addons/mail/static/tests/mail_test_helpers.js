@@ -470,11 +470,7 @@ export function mockGetMedia() {
      * The video streams are real MediaStreams created from a 1x1 canvas at 1fps.
      */
     const createVideoStream = (constraints) => {
-        const canvas = document.createElement("canvas");
-        canvas.width = 1;
-        canvas.height = 1;
-        const stream = canvas.captureStream(1);
-        return stream;
+        return new MediaStream([new globalThis.MediaStreamTrackGenerator({ kind: "video" })]);
     };
     // Mock permissions API to return "granted" by default.
     patchWithCleanup(browser.navigator.permissions, {
