@@ -279,7 +279,7 @@ class AccountBankStatementLine(models.Model):
                                       f'{st_line._origin.id:0>10}'
 
     @api.depends('journal_id', 'currency_id', 'amount', 'foreign_currency_id', 'amount_currency',
-                 'move_id.checked',
+                 'move_id.review_state',
                  'move_id.line_ids.account_id', 'move_id.line_ids.amount_currency',
                  'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.currency_id',
                  'move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids')
@@ -292,7 +292,7 @@ class AccountBankStatementLine(models.Model):
             _liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
 
             # Compute residual amount
-            if not st_line.checked:
+            if st_line.review_state in ('todo', 'anomaly'):
                 st_line.amount_residual = -st_line.amount_currency if st_line.foreign_currency_id else -st_line.amount
             elif suspense_lines.account_id.reconcile:
                 st_line.amount_residual = sum(suspense_lines.mapped('amount_residual_currency'))
@@ -465,7 +465,7 @@ class AccountBankStatementLine(models.Model):
 
         for st_line in self:
             st_line.with_context(force_delete=True, skip_readonly_check=True).write({
-                'checked': True,
+                'review_state': 'reviewed',
                 'line_ids': [Command.clear()] + [
                     Command.create(line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
             })
