@@ -220,6 +220,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
             'taxes_id': [Command.set((self.tax_sale_a + self.tax_sale_b).ids)],
             'supplier_taxes_id': [Command.set((self.tax_purchase_a + self.tax_purchase_b).ids)],
+            'is_storable': True
         })
         kit_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_final_prod.product_tmpl_id.id,
