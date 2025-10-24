@@ -359,7 +359,11 @@ export function formatDateTime(value, options = {}) {
     let format = options.format;
     if (!format) {
         if (options.showSeconds === false) {
-            format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
+            let timeFormat = localization.shortTimeFormat;
+            if (/hh?/.test(timeFormat) && !/a/i.test(timeFormat)) {
+                timeFormat += ' a';
+            }
+            format = `${localization.dateFormat} ${timeFormat}`;
         } else {
             format = localization.dateTimeFormat;
         }
