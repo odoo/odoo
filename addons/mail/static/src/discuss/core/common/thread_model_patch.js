@@ -193,6 +193,13 @@ const threadPatch = {
             (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
         );
     },
+    /** Equivalent to DiscussChannel._allow_invite_by_email */
+    get allow_invite_by_email() {
+        return (
+            this.channel_type === "group" ||
+            (this.channel_type === "channel" && !this.group_public_id)
+        );
+    },
     get areAllMembersLoaded() {
         return this.member_count === this.channel?.channel_member_ids.length;
     },
