@@ -1,10 +1,11 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged, new_test_user
+from odoo.tests.common import new_test_user
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
-@tagged("post_install", "-at_install")
 class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCase):
     def test_get_session_create_history(self):
         john = self._create_operator("fr_FR")

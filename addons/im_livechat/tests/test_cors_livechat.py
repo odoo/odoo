@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, HttpCase, JsonRpcException
+from odoo.tests import HttpCase, JsonRpcException
 
 
-@tagged("post_install", "-at_install")
 class TestCorsLivechat(HttpCase):
     @classmethod
     def setUpClass(cls):

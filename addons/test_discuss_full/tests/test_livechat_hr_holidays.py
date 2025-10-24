@@ -3,11 +3,10 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests.common import HttpCase
 from odoo.addons.mail.tests.common import MailCommon
 
 
-@tagged("post_install", "-at_install")
 class TestLivechatHrHolidays(HttpCase, MailCommon):
     """Tests for bridge between im_livechat and hr_holidays modules."""
 

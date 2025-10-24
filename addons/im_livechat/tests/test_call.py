@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, HttpCase, JsonRpcException
+from odoo.tests.common import HttpCase, JsonRpcException
 
 
-@tagged("post_install", "-at_install")
 class TestCall(HttpCase):
     def test_visitor_cannot_start_call(self):
         self.authenticate(None, None)

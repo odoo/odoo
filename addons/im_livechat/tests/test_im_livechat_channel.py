@@ -1,13 +1,14 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import timedelta
 
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.im_livechat.tests.test_get_operator import TestGetOperator
 from odoo.fields import Command, Datetime
 
 
-@tagged("-at_install", "post_install")
 class TestImLivechatChannel(TestImLivechatCommon, TestGetOperator):
     def test_user_cant_join_livechat_channel(self):
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")

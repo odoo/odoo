@@ -1,10 +1,11 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 
 
-@tagged("post_install", "-at_install")
 class TestFwOperator(ChatbotCase, HttpCase, TestLivechatCommon):
     def setUp(self):
         super().setUp()

@@ -1,12 +1,13 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import date, timedelta
 
 from odoo import Command
-from odoo.tests import tagged, users
+from odoo.tests import users
 from odoo.tests.common import HttpCase, new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 
 
-@tagged("post_install", "-at_install")
 class TestAvatarCardTour(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):

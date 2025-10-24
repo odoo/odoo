@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, tests
@@ -7,7 +6,7 @@ from odoo.addons.website_livechat.tests.common import TestLivechatCommon as Test
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
-@tests.tagged('post_install', '-at_install', 'is_tour')
+@tests.tagged("is_tour")
 class TestLivechatChatbotUICommon(TestGetOperatorCommon, TestWebsiteLivechatCommon, ChatbotCase):
     def setUp(self):
         super().setUp()
@@ -68,7 +67,6 @@ class TestLivechatChatbotUICommon(TestGetOperatorCommon, TestWebsiteLivechatComm
         self.start_tour("/contactus", "website_livechat.chatbot_redirect")
 
 
-@tests.tagged("post_install", "-at_install")
 class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
 
     def _check_complete_chatbot_flow_result(self):
@@ -325,7 +323,6 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         self.start_tour("/", "website_livechat.chatbot_continue_tour")
 
 
-@tests.tagged("post_install", "-at_install")
 class TestLivechatChatbotUIMoblie(TestLivechatChatbotUICommon):
     browser_size = '375x667'
 
