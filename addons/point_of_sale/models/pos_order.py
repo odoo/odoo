@@ -373,6 +373,8 @@ class PosOrder(models.Model):
                        AND MOD(session_id, 10) = %s
                     )""", '% _____-___-__' + value[1:], int(value[0]))
                 return [('id', 'in', sql)]
+            else:
+                raise UserError(_("The search on Order Number only supports up to 3 digits."))
 
         raise NotImplementedError(_("Unsupported search operation"))
 
