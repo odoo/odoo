@@ -9,7 +9,7 @@ import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/co
 import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { Deferred } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 
@@ -43,7 +43,6 @@ export class MassMailingHtmlField extends HtmlField {
             loadBundle("mass_mailing.assets_builder");
         }
 
-        this.keepLastIframe = new KeepLast();
         this.resetIframe();
         this.iframeRef = useChildRef();
         this.codeViewButtonRef = useRef("codeViewButtonRef");
@@ -127,7 +126,16 @@ export class MassMailingHtmlField extends HtmlField {
 
     resetIframe() {
         this.iframeLoaded = new Deferred();
-        this.lastIframeLoaded = this.keepLastIframe.add(this.iframeLoaded);
+    }
+
+    /**
+     * @returns {Boolean} whether the current iframe finished loading and is
+     *          still currently in use.
+     */
+    async ensureIframeLoaded() {
+        const iframeLoaded = this.iframeLoaded;
+        await iframeLoaded;
+        return iframeLoaded === this.iframeLoaded;
     }
 
     onIframeLoad(iframeLoaded) {
@@ -276,9 +284,15 @@ export class MassMailingHtmlField extends HtmlField {
             !this.editor.isDestroyed &&
             this.props.record.data[this.props.inlineField].toString() === ""
         ) {
-            await this.lastIframeLoaded;
-            this.isDirty = true;
-            this.lastValue = undefined;
+            if ((await this.ensureIframeLoaded()) && this.editor && !this.editor.isDestroyed) {
+                this.isDirty = true;
+                this.lastValue = undefined;
+            } else {
+                return;
+            }
+        }
+        if (this.editor?.isDestroyed) {
+            return;
         }
         return super._commitChanges({ urgent });
     }
@@ -290,7 +304,9 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     async updateValue(value) {
-        await this.lastIframeLoaded;
+        if (!(await this.ensureIframeLoaded())) {
+            return;
+        }
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         this.isDirty = false;
         const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
