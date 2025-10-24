@@ -2,10 +2,17 @@
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 import { onChange } from "@mail/utils/common/misc";
-import { IS_DELETED_SYM, IS_RECORD_SYM, isFieldDefinition, isRelation } from "./misc";
+import {
+    IS_DELETED_SYM,
+    IS_RECORD_SYM,
+    isFieldDefinition,
+    isRelation,
+    makeRecordFieldLocalId,
+} from "./misc";
 import { RecordList } from "./record_list";
 import { reactive, toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
+import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
@@ -53,16 +60,26 @@ export class RecordInternal {
     fieldsComputeOnNeed = new Map();
     /** @type {Map<string, () => void>} */
     fieldsOnUpdateObserves = new Map();
-    /** @type {Map<string, this>} */
+    /** @type {Map<string, Record>} */
     fieldsSortProxy2 = new Map();
-    /** @type {Map<string, this>} */
+    /** @type {Map<string, Record>} */
     fieldsComputeProxy2 = new Map();
+    /** @type {Map<string, any>} */
+    fieldsDefault = new Map();
     uses = new RecordUses();
     updatingAttrs = new Map();
     proxyUsed = new Map();
     /** @type {string} */
     localId;
     gettingField = false;
+    /**
+     * For fields that use local storage, this map contains the "ls" object that eases interactions on the related
+     * local storage entry. For instance, instead of having to write `browser.localStorage.setItem(EXACT_LOCAL_STORAGE_ENTRY_OF_FIELD, value)`,
+     * this "ls" object allow to just write the equivalent expression with `ls.set(value)`
+     *
+     * @type {Map<string, LocalStorageEntry>}
+     */
+    fieldsLocalStorage = new Map();
 
     /**
      * @param {Record} record
@@ -92,6 +109,17 @@ export class RecordInternal {
             record[fieldName] = isFieldDefinition(record[fieldName])
                 ? record[fieldName].default
                 : record[fieldName];
+        }
+        this.fieldsDefault.set(fieldName, record[fieldName]);
+        // register local storage fields
+        for (const lsFieldName of Model._.fieldsLocalStorage) {
+            const { localStorageKeyToRecordFields } = record.store._;
+            const localStorageKey = makeRecordFieldLocalId(record.localId, lsFieldName);
+            if (!localStorageKeyToRecordFields.has(localStorageKey)) {
+                localStorageKeyToRecordFields.set(localStorageKey, new Map());
+            }
+            localStorageKeyToRecordFields.get(localStorageKey).set(record, lsFieldName);
+            this.fieldsLocalStorage.set(lsFieldName, new LocalStorageEntry(localStorageKey));
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
@@ -256,7 +284,9 @@ export class RecordInternal {
          * need reactive (observe is called separately).
          */
         try {
-            Model._.fieldsOnUpdate.get(fieldName).call(record._proxyInternal);
+            Model._.fieldsOnUpdate
+                .get(fieldName)
+                .forEach((fn) => fn.call(record._proxyInternal, record._proxyInternal[fieldName]));
         } catch (err) {
             store.handleError(err);
         }

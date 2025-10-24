@@ -5,17 +5,8 @@ import { fields, Record } from "@mail/model/export";
 import { debounce } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 
-const MESSAGE_SOUND = "mail.user_setting.message_sound";
-
 export class Settings extends Record {
     id;
-
-    static new() {
-        const record = super.new(...arguments);
-        record.onStorage = record.onStorage.bind(record);
-        browser.addEventListener("storage", record.onStorage);
-        return record;
-    }
 
     setup() {
         super.setup();
@@ -30,11 +21,6 @@ export class Settings extends Record {
         this._loadLocalSettings();
     }
 
-    delete() {
-        browser.removeEventListener("storage", this.onStorage);
-        super.delete(...arguments);
-    }
-
     // Notification settings
     /**
      * @type {"mentions"|"all"|"no_notif"}
@@ -44,33 +30,8 @@ export class Settings extends Record {
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
         },
     });
-    messageSound = fields.Attr(true, {
-        compute() {
-            return browser.localStorage.getItem(MESSAGE_SOUND) !== "false";
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.messageSound) {
-                browser.localStorage.removeItem(MESSAGE_SOUND);
-            } else {
-                browser.localStorage.setItem(MESSAGE_SOUND, "false");
-            }
-        },
-    });
-    useCallAutoFocus = fields.Attr(true, {
-        /** @this {import("models").Settings} */
-        compute() {
-            return !browser.localStorage.getItem("mail_user_setting_disable_call_auto_focus");
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.useCallAutoFocus) {
-                browser.localStorage.removeItem("mail_user_setting_disable_call_auto_focus");
-                return;
-            }
-            browser.localStorage.setItem("mail_user_setting_disable_call_auto_focus", "true");
-        },
-    });
+    messageSound = fields.Attr(true, { localStorage: true });
+    useCallAutoFocus = fields.Attr(true, { localStorage: true });
 
     // Voice settings
     // DeviceId of the audio input selected by the user
@@ -91,19 +52,7 @@ export class Settings extends Record {
     backgroundBlurAmount = 10;
     edgeBlurAmount = 10;
     showOnlyVideo = false;
-    useBlur = fields.Attr(false, {
-        compute() {
-            return browser.localStorage.getItem("mail_user_setting_use_blur") === "true";
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.useBlur) {
-                browser.localStorage.setItem("mail_user_setting_use_blur", "true");
-            } else {
-                browser.localStorage.removeItem("mail_user_setting_use_blur");
-            }
-        },
-    });
+    useBlur = fields.Attr(false, { localStorage: true });
     blurPerformanceWarning = fields.Attr(false, {
         compute() {
             const rtc = this.store.rtc;
@@ -388,9 +337,6 @@ export class Settings extends Record {
         this.backgroundBlurAmount = backgroundBlurAmount ? parseInt(backgroundBlurAmount) : 10;
         const edgeBlurAmount = browser.localStorage.getItem("mail_user_setting_edge_blur_amount");
         this.edgeBlurAmount = edgeBlurAmount ? parseInt(edgeBlurAmount) : 10;
-        this.useCallAutoFocus = !browser.localStorage.getItem(
-            "mail_user_setting_disable_call_auto_focus"
-        );
     }
     /**
      * @private
@@ -424,14 +370,6 @@ export class Settings extends Record {
             [[this.id], partnerId, volume],
             { guest_id: guestId }
         );
-    }
-    onStorage(ev) {
-        if (ev.key === MESSAGE_SOUND) {
-            this.messageSound = ev.newValue !== "false";
-        }
-        if (ev.key === "mail_user_setting_use_blur") {
-            this.useBlur = ev.newValue === "true";
-        }
     }
     /**
      * @private

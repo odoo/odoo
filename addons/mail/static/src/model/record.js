@@ -192,6 +192,9 @@ export class Record {
             const recordProxy = new Model.Class();
             const record = toRaw(recordProxy)._raw;
             Object.assign(record._, { localId: Model.localId(ids) });
+            for (const name of Model._.fields.keys()) {
+                record._.prepareField(record, name, recordProxy);
+            }
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
             if (record.Model.getName() === "Store") {

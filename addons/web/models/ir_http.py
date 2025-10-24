@@ -170,6 +170,7 @@ class IrHttp(models.AbstractModel):
     def get_frontend_session_info(self):
         user = self.env.user
         session_uid = request.session.uid
+        version_info = odoo.service.common.exp_version()
         session_info = {
             'is_admin': user._is_admin() if session_uid else False,
             'is_system': user._is_system() if session_uid else False,
@@ -188,16 +189,12 @@ class IrHttp(models.AbstractModel):
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
+            'server_version': version_info.get('server_version'),
+            'server_version_info': version_info.get('server_version_info'),
             'test_mode': config['test_enable'],
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
-        if session_uid:
-            version_info = odoo.service.common.exp_version()
-            session_info.update({
-                'server_version': version_info.get('server_version'),
-                'server_version_info': version_info.get('server_version_info')
-            })
         return session_info
 
     @api.deprecated("Deprecated since 19.0, use get_all_currencies on 'res.currency'")

@@ -1,10 +1,11 @@
+import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { markup, reactive, toRaw } from "@odoo/owl";
 import { mockService } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/model/export";
-import { AND, fields } from "@mail/model/misc";
+import { AND, fields, makeRecordFieldLocalId } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 
@@ -1464,4 +1465,34 @@ test("accessing fields through empty _inherits parent returns empty values", asy
     expect(user.partner).toBe(undefined);
     expect(user.name).toBe(undefined);
     expect(user.partners).toHaveLength(0);
+});
+
+test("Fields with { localStorage: true } are saved in local storage", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body = fields.Attr("", { localStorage: true });
+    }).register(localRegistry);
+    const store = await start();
+    const message = store.Message.insert(1);
+    const bodyLocalId = makeRecordFieldLocalId(message.localId, "body");
+    expect(localStorage.getItem(bodyLocalId)).toBe(null);
+    message.body = "test";
+    expect(localStorage.getItem(bodyLocalId)).toBe(toRawValue("test"));
+    message.body = "test2";
+    expect(localStorage.getItem(bodyLocalId)).toBe(toRawValue("test2"));
+});
+
+test("Fields with { localStorage: true } are restored from local storage", async () => {
+    class Message extends Record {
+        static id = "id";
+        id;
+        body = fields.Attr("", { localStorage: true });
+    }
+    Message.register(localRegistry);
+    const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
+    localStorage.setItem(bodyLocalId, toRawValue("test"));
+    const store = await start();
+    const message = store.Message.insert(1);
+    expect(message.body).toBe("test");
 });
