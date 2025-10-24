@@ -176,7 +176,8 @@
                                     invisible="not show_details_visible or has_tracking != 'serial'"
                                     optional="hide"
                                     context="{'default_product_id': product_id}"
-                                    domain="[('product_id','=',product_id)]"/>
+                                    domain="[('product_id','=',product_id)]"
+                                    readonly="not id"/>
                                 <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"
