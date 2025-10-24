@@ -68,7 +68,7 @@
                     <field name="create_date"/>
                     <filter name="my_documents_filter"
                         string="My Document(s)"
-                        domain="[('create_uid','=',uid)]"
+                        domain="[('create_uid','expr','user')]"
                         help="Filter on my documents"/>
                     <filter name="url_filter" string="URL" domain="[('type', '=', 'url')]"/>
                     <filter name="binary_filter" string="Stored" domain="[('type', '=', 'binary')]"/>

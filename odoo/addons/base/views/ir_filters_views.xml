@@ -61,7 +61,7 @@
                 <search string="Filters">
                     <field name="name" string="Filter Name"/>
                     <filter string="Global" domain="[('user_ids','=',False)]" name="shared" help="Filters shared with all users"/>
-                    <filter string="My filters" domain="[('user_ids','in',[uid])]" name="my_filters" help="Filters shared with myself"/>
+                    <filter string="My filters" domain="[('user_ids', 'expr', 'user')]" name="my_filters" help="Filters shared with myself"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group>
