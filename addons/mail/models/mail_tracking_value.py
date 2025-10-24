@@ -174,7 +174,7 @@ class MailTrackingValue(models.Model):
         return values
 
     @api.model
-    def _create_tracking_values_property(self, initial_value, col_name, col_info, record):
+    def _create_tracking_values_property(self, initial_value, new_value, col_name, col_info, record):
         """Generate the values for the <mail.tracking.values> corresponding to a property."""
         col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
 
@@ -188,7 +188,7 @@ class MailTrackingValue(models.Model):
             value = [t for t in initial_value.get('tags', []) if t[0] in value]
 
         tracking_values = self.env['mail.tracking.value']._create_tracking_values(
-            value, False, col_name, col_info, record)
+            value, new_value.get('value', False), col_name, col_info, record)
         return {**tracking_values, 'field_info': field_info}
 
     def _tracking_value_format(self):

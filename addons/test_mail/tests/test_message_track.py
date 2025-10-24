@@ -447,7 +447,7 @@ class TestTrackingInternals(MailCommon):
         cls.properties_linked_records = cls.env['mail.test.ticket'].create([{'name': f'Record {i}'} for i in range(3)])
         cls.properties_parent_1, cls.properties_parent_2 = cls.env['mail.test.track.all.properties.parent'].create([{
             'definition_properties': [
-                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value'},
+                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value', 'tracking': True},
                 {'name': 'separator', 'type': 'separator'},
                 {'name': 'property_int', 'string': 'Property Int', 'type': 'integer', 'default': 1337},
                 {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one',
@@ -671,65 +671,46 @@ class TestTrackingInternals(MailCommon):
         ])
 
     def test_mail_track_properties(self):
-        """Test that the old properties values are logged when the parent changes."""
-        record = self.properties_record_2
-        # change the parent, it will change the properties values
-        record.properties_parent_id = self.properties_parent_1
-        self.flush_tracking()
-        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
-        self.assertEqual(len(formatted_values), 5)
-        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
-        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
-        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
-        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
-        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property Date')
-        self.assertEqual(formatted_values[1]['oldValue'], '2024-01-03')
-        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Datetime')
-        self.assertEqual(formatted_values[2]['oldValue'], '2024-01-02 12:59:01Z')
-        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Tags')
-        self.assertEqual(formatted_values[3]['oldValue'], 'AA, BB')
-        self.assertEqual(formatted_values[4]['fieldInfo']['changedField'], 'Properties: Property M2M')
-        self.assertEqual(formatted_values[4]['oldValue'], 'Record 0, Record 1, Record 2')
-
+        """Test that the tracked properties values are logged."""
         record = self.properties_record_1
-        record.properties_parent_id = self.properties_parent_2
-        self.flush_tracking()
-        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
-        self.assertEqual(len(formatted_values), 4)
-        self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
-        self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
-        self.assertTrue(all(f['fieldInfo']['isPropertyField'] for f in formatted_values[1:]))
-        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties Parent')
-        self.assertEqual(formatted_values[1]['fieldInfo']['changedField'], 'Properties: Property M2O')
-        self.assertEqual(formatted_values[1]['oldValue'], 'Record 0')
-        self.assertEqual(formatted_values[2]['fieldInfo']['changedField'], 'Properties: Property Int')
-        self.assertEqual(formatted_values[2]['oldValue'], 1337)
-        self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Char')
-        self.assertEqual(formatted_values[3]['oldValue'], 'char value')
-
-        # changing the parent and then changing again
-        # to the original one to not create tracking values
-        with self.mock_mail_gateway():
-            record.properties_parent_id = self.properties_parent_1
-            record.properties_parent_id = self.properties_parent_2
-            self.flush_tracking()
-        self.assertFalse(self._new_mails)
-
-        # do not create tracking if the value was false
         record.properties = {
-            'property_m2m': False,
-            'property_tags': ['aa'],
-            'property_datetime': False,
-            'property_date': False,
+            'property_char': 'changed',
+            'property_int': record.properties.get('property_int'),
+            'property_m2o': record.properties.get('property_m2o').id,
         }
         self.flush_tracking()
+        self.assertEqual(len(record.mapped("message_ids.tracking_value_ids")), 1,
+            "Only the property_char should have been tracked")
+        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
+        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties: Property Char')
+        self.assertEqual(formatted_values[0]['oldValue'], 'char value')
+        self.assertEqual(formatted_values[0]['newValue'], 'changed')
         record.message_ids.unlink()
-        record.properties_parent_id = self.properties_parent_1
+
+        record.properties = {
+            'property_char': record.properties.get('property_char'),
+            'property_int': 123,
+            'property_m2o': record.properties.get('property_m2o').id,
+        }
         self.flush_tracking()
-        self.assertEqual(len(record.mapped("message_ids.tracking_value_ids")), 2,
-            "Only the parent and the tags property should have been tracked")
-        self.assertEqual(record._mail_track_get_field_sequence("properties"), 100,
-            "Properties field should have the same sequence as their parent")
+        self.assertEqual(len(record.mapped("message_ids.tracking_value_ids")), 0,
+            "The property_int should not be tracked")
+        record.message_ids.unlink()
+
+        record.properties = {
+            'property_char': 'yet another value',
+            'property_int': 321,
+            'property_m2o': record.properties.get('property_m2o').id,
+        }
+        self.flush_tracking()
+        self.assertEqual(len(record.mapped("message_ids.tracking_value_ids")), 1,
+            "Only the property_char should have been tracked")
+        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
+        self.assertEqual(formatted_values[0]['fieldInfo']['changedField'], 'Properties: Property Char')
+        self.assertEqual(formatted_values[0]['oldValue'], 'changed')
+        self.assertEqual(formatted_values[0]['newValue'], 'yet another value')
+        record.message_ids.unlink()
+
 
     @users('employee')
     def test_mail_track_selection_invalid(self):

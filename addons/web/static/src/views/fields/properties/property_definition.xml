@@ -176,20 +176,23 @@
                             t-on-change="onSuffixChange"
                         />
                     </div>
+                    <div class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                        <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
+                            Display in Cards
+                            <sup class="text-info" title="Whether or not this Property Field is displayed in the Calendar, Cards &amp; Kanban views">?</sup>
+                        </label>
+                        <CheckBox
+                            id="getUniqueDomID('kanban')"
+                            value="props.propertyDefinition.view_in_cards"
+                            disabled="props.readonly"
+                            onChange.bind="onViewInKanbanChange"
+                        />
+                    </div>
+                    <div t-if="!['html', 'many2many', 'tags'].includes(state.propertyDefinition.type)" class="o_field_property_definition_tracking d-contents mb-3 mb-sm-0">
+                        <label t-att-for="getUniqueDomID('tracking')" class="o_form_label align-self-center text-900">Track in chatter</label>
+                        <CheckBox id="getUniqueDomID('tracking')" value="props.propertyDefinition.tracking" disabled="props.readonly" onChange.bind="onTrackingChange"/>
+                    </div>
                 </t>
-                <div t-if="!['separator', 'signature'].includes(state.propertyDefinition.type)"
-                    class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
-                        Display in Cards
-                        <sup class="text-info" title="Whether or not this Property Field is displayed in the Calendar, Cards &amp; Kanban views">?</sup>
-                    </label>
-                    <CheckBox
-                        id="getUniqueDomID('kanban')"
-                        value="props.propertyDefinition.view_in_cards"
-                        disabled="props.readonly"
-                        onChange.bind="onViewInKanbanChange"
-                    />
-                </div>
                 <div t-elif="state.propertyDefinition.type === 'separator'" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
                     <t t-set="separatorId" t-value="getUniqueDomID('separator')"/>
                     <label t-att-for="separatorId" class="o_form_label align-self-center text-900">

@@ -390,6 +390,18 @@ export class PropertyDefinition extends Component {
     }
 
     /**
+     * @param {boolean} tracking
+     */
+    onTrackingChange(tracking) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            tracking,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
+    /**
      * We activate / deactivate the property in the kanban view.
      *
      * @param {boolean} newValue
