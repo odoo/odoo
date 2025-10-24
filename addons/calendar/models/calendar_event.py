@@ -687,9 +687,13 @@ class CalendarEvent(models.Model):
             partners = self.env['res.partner'].browse(partner_ids).with_prefetch(partner_ids)
 
             for vals, vals_partner_ids in zip(vals_list, vals_partner_list):
+                organizer = organizers.browse(vals.get('user_id', False))
+                current_partners = partners.browse(vals_partner_ids)
+                contact_partner = self._get_contact_partner_for_description(vals, organizer, current_partners)
                 contact_description = self._get_contact_details_description(
-                    organizers.browse(vals.get('user_id', False)),
-                    partners.browse(vals_partner_ids),
+                    organizer,
+                    current_partners,
+                    contact_partner=contact_partner,
                 )
                 if not is_html_empty(contact_description):
                     base_description = f"{vals['description']}<br/>" if not is_html_empty(vals.get('description')) else ''
@@ -1649,7 +1653,16 @@ class CalendarEvent(models.Model):
         return result
 
     @api.model
-    def _get_contact_details_description(self, organizer, partners):
+    def _get_contact_partner_for_description(self, vals, organizer, partners):
+        """
+        Hook for modules to specify the primary contact partner for the description.
+        By default, it's the first partner which is not the organizer.
+        """
+        odoobot = self.env.ref('base.user_root')
+        return partners.filtered(lambda partner: partner not in (odoobot.partner_id + organizer.partner_id))[:1]
+
+    @api.model
+    def _get_contact_details_description(self, organizer, partners, contact_partner=None):
         """Build sanitized HTML with the organizer details and the details
         of the contact partner (the first partner which is not the organizer).
         """
@@ -1658,12 +1671,11 @@ class CalendarEvent(models.Model):
         # Organizer
         if organizer and organizer != odoobot:
             contact_description.extend(self._prepare_partner_contact_details_html(_("Organized by"), organizer.partner_id))
-        # First contact partner
-        first_partner = partners.filtered(lambda partner: partner not in (odoobot.partner_id + organizer.partner_id))[:1]
-        if first_partner:
+
+        if contact_partner:
             if contact_description:
                 contact_description.append("")  # To add a blank line between the organizer and partner details
-            contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), first_partner))
+            contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), contact_partner))
         return Markup("<br/>").join(contact_description)
 
     @api.model
