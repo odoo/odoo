@@ -2,8 +2,9 @@
 
 import logging
 
+import odoo
 import odoo.tools
-from odoo import http
+from odoo import http, release
 from odoo.modules import Manifest
 from odoo.http import request
 from odoo.tools.misc import file_path
@@ -91,7 +92,13 @@ class WebClient(http.Controller):
 
     @http.route('/web/tests', type='http', auth='user', readonly=True)
     def unit_tests_suite(self, mod=None, **kwargs):
-        return request.render('web.unit_tests_suite', {'session_info': {'view_info': request.env['ir.ui.view'].get_view_info()}})
+        return request.render('web.unit_tests_suite', {
+            'session_info': {
+                "server_version": release.version,
+                "server_version_info": release.version_info,
+                'view_info': request.env['ir.ui.view'].get_view_info()
+            },
+        })
 
     @http.route('/web/tests/legacy', type='http', auth='user', readonly=True)
     def test_suite(self, mod=None, **kwargs):

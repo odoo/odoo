@@ -37,6 +37,7 @@ import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { WebsiteBuilder } from "@website/builder/website_builder";
+import { session } from "@web/session";
 
 class Website extends models.Model {
     _name = "website";
@@ -257,8 +258,16 @@ export async function setupWebsiteBuilder(
         await originalIframeLoaded;
     }
     if (loadIframeBundles) {
+        const targetDoc = iframe.contentDocument;
+        const sessionScriptEl = targetDoc.createElement("script");
+        sessionScriptEl.type = "text/javascript";
+        sessionScriptEl.textContent = `
+            odoo = {};
+            odoo.__session_info__ = ${JSON.stringify(session)}
+        `;
+        targetDoc.head.append(sessionScriptEl);
         await loadBundle("web.assets_frontend", {
-            targetDoc: iframe.contentDocument,
+            targetDoc,
             js: loadAssetsFrontendJS,
         });
     }

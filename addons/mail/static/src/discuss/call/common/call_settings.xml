@@ -99,7 +99,7 @@
                     <t t-set="onchange" t-value="onChangeShowOnlyVideo"/>
                 </t>
             </div>
-            <div t-if="store.settings.hasCanvasFilterSupport" class="d-flex flex-column my-1">
+            <div t-if="store.settings.hasCanvasFilterSupport" class="d-flex flex-column my-1 o-discuss-CallSettings-item">
                 <t t-call="discuss.CallSettings.textToggler">
                     <t t-set="text">Blur video background</t>
                     <t t-set="value" t-value="store.settings.useBlur"/>

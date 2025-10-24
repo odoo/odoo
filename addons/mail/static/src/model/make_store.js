@@ -166,9 +166,6 @@ export function makeStore(env, { localRegistry } = {}) {
                         store = record;
                         Record.store = store;
                     }
-                    for (const name of Model._.fields.keys()) {
-                        record._.prepareField(record, name, recordProxy);
-                    }
                     return recordProxy;
                 }
             },

@@ -1,7 +1,7 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
-import { LAST_DISCUSS_ACTIVE_ID_LS } from "@mail/core/public_web/discuss_app/discuss_app_model";
+import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import {
     click,
     contains,
@@ -39,6 +39,9 @@ import {
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { Settings } from "@mail/core/common/settings_model";
+import { toRawValue } from "@mail/utils/common/local_storage";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -597,7 +600,11 @@ test("sidebar: Inbox should have icon", async () => {
 test("last discuss conversation is remembered", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    browser.localStorage.setItem(LAST_DISCUSS_ACTIVE_ID_LS, "discuss.channel_" + channelId);
+    const LAST_DISCUSS_ACTIVE_ID_LS = makeRecordFieldLocalId(DiscussApp.localId(), "lastActiveId");
+    browser.localStorage.setItem(
+        LAST_DISCUSS_ACTIVE_ID_LS,
+        toRawValue(`${"discuss.channel_" + channelId}`)
+    );
     await start();
     await openDiscuss();
     await contains('[role="heading"]', { text: "Welcome to #General!" });
@@ -622,6 +629,7 @@ test("channel deletion fallbacks to no conversation selected", async () => {
 test("sidebar: change active", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const LAST_DISCUSS_ACTIVE_ID_LS = makeRecordFieldLocalId(DiscussApp.localId(), "lastActiveId");
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button.o-active", { text: "Inbox" });
@@ -629,7 +637,9 @@ test("sidebar: change active", async () => {
     await click("button", { text: "Starred messages" });
     await contains("button:not(.o-active)", { text: "Inbox" });
     await contains("button.o-active", { text: "Starred messages" });
-    expect(browser.localStorage.getItem(LAST_DISCUSS_ACTIVE_ID_LS)).toBe("mail.box_starred");
+    expect(browser.localStorage.getItem(LAST_DISCUSS_ACTIVE_ID_LS)).toBe(
+        toRawValue("mail.box_starred")
+    );
 });
 
 test("sidebar: basic channel rendering", async () => {
@@ -1531,7 +1541,8 @@ test("message sound on receiving new message based on user preferences", async (
     await waitFor(".o-mail-ChatBubble .badge:contains(1)", { timeout: 3000 });
     await expect.waitForSteps(["sound:new-message"]);
     // simulate message sound settings turned off
-    browser.localStorage.setItem("mail.user_setting.message_sound", false);
+    const MESSAGE_SOUND_LS = makeRecordFieldLocalId(Settings.localId(), "messageSound");
+    browser.localStorage.setItem(MESSAGE_SOUND_LS, toRawValue(false));
     await animationFrame();
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1546,8 +1557,7 @@ test("message sound on receiving new message based on user preferences", async (
     await waitFor(".o-mail-ChatBubble .badge:contains(2)", { timeout: 3000 });
     expect.verifySteps([]);
     // simulate message sound settings turned on
-    browser.localStorage.setItem("mail.user_setting.message_sound", null);
-    browser.localStorage.removeItem("mail.user_setting.message_sound");
+    browser.localStorage.removeItem(MESSAGE_SOUND_LS);
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {

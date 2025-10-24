@@ -1,29 +1,8 @@
 import { compareDatetime } from "@mail/utils/common/misc";
 import { fields, Record } from "@mail/model/export";
-import { browser } from "@web/core/browser/browser";
-
-export const DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS = "discuss_sidebar_category_folded_";
 
 export class DiscussAppCategory extends Record {
     static id = "id";
-
-    static new() {
-        const record = super.new(...arguments);
-        record.onStorage = record.onStorage.bind(record);
-        browser.addEventListener("storage", record.onStorage);
-        return record;
-    }
-
-    delete() {
-        browser.removeEventListener("storage", this.onStorage);
-        super.delete(...arguments);
-    }
-
-    onStorage(ev) {
-        if (ev.key === `${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`) {
-            this.is_open = ev.newValue !== "true";
-        }
-    }
 
     /**
      * @param {import("models").Thread} t1
@@ -70,26 +49,7 @@ export class DiscussAppCategory extends Record {
     /** @type {number} */
     sequence;
 
-    is_open = fields.Attr(false, {
-        /** @this {import("models").DiscussApp} */
-        compute() {
-            return !(
-                browser.localStorage.getItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`) ??
-                false
-            );
-        },
-        /** @this {import("models").DiscussApp} */
-        onUpdate() {
-            if (!this.is_open) {
-                browser.localStorage.setItem(
-                    `${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`,
-                    true
-                );
-            } else {
-                browser.localStorage.removeItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`);
-            }
-        },
-    });
+    is_open = fields.Attr(true, { localStorage: true });
 
     threads = fields.Many("mail.thread", {
         sort(t1, t2) {

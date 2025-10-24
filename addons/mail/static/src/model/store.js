@@ -161,6 +161,15 @@ export class Store extends Record {
                             }
                         }
                     }
+                    for (const lsFieldName of record.Model._.fieldsLocalStorage) {
+                        const { localStorageKeyToRecordFields } = record.store._;
+                        const key = record._.fieldsLocalStorage.get(lsFieldName).key;
+                        const lsKeyMap = localStorageKeyToRecordFields.get(key);
+                        lsKeyMap.delete(record);
+                        if (lsKeyMap.size === 0) {
+                            localStorageKeyToRecordFields.delete(key);
+                        }
+                    }
                     deletingRecordsByLocalId.set(record.localId, record);
                     this.recordByLocalId.delete(record.localId);
                     this._.ADD_QUEUE("hard_delete", toRaw(record));

@@ -14,7 +14,9 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app/discuss_app_model";
+import { toRawValue } from "@mail/utils/common/local_storage";
+import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
@@ -1021,7 +1023,11 @@ test("Can make sidebar smaller", async () => {
 });
 
 test("Sidebar compact is locally persistent (saved in local storage)", async () => {
-    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
+    const DISCUSS_SIDEBAR_COMPACT_LS = makeRecordFieldLocalId(
+        DiscussApp.localId(),
+        "isSidebarCompact"
+    );
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, toRawValue(true));
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar.o-compact");
@@ -1038,7 +1044,7 @@ test("Sidebar compact is locally persistent (saved in local storage)", async () 
         position: { x: 0 },
     });
     await contains(".o-mail-DiscussSidebar.o-compact");
-    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe("true");
+    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(toRawValue(true));
 });
 
 test("Sidebar compact is crosstab synced", async () => {
