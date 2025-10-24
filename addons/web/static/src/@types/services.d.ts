@@ -61,7 +61,7 @@ declare module "services" {
         popover: typeof popoverService;
         profiling: typeof profilingService;
         public_components: typeof publicComponentService;
-        shareTarget: typeof shareTargetService;
+        share_target: typeof shareTargetService;
         sortable: typeof sortableService;
         title: typeof titleService;
         tooltip: typeof tooltipService;
