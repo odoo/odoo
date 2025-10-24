@@ -711,6 +711,12 @@ export class PosOrder extends PosOrderAccounting {
         return pos_categ_id_A - pos_categ_id_B;
     }
 
+    getDiscountLine() {
+        return this.lines?.find(
+            (line) => line.product_id.id === this.config.discount_product_id?.id
+        );
+    }
+
     getName() {
         let name = this.floatingOrderName || "";
         if (this.isRefund) {
