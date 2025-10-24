@@ -644,6 +644,8 @@ class MrpWorkorder(models.Model):
                 if raise_on_invalid_state:
                     continue
                 raise UserError(_('You cannot start a work order that is already done or cancelled'))
+            if wo.state == 'blocked':
+                raise UserError(_('You cannot start a work order that is blocked by an other one'))
 
             if wo.product_tracking == 'serial' and wo.qty_producing == 0:
                 wo.qty_producing = 1.0

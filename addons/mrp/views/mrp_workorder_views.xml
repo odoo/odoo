@@ -85,7 +85,7 @@
                   invisible="production_state == 'draft'"
                   readonly="is_user_working" sum="real duration"/>
                 <button name="button_start" type="object" title="Start" class="btn-success px-2"
-                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working" icon="fa-play"/>
+                  invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel', 'blocked') or is_user_working" icon="fa-play"/>
                 <button name="button_pending" type="object" title="Pause" class="btn-warning px-2" icon="fa-pause"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
                 <button name="button_finish" type="object" title="Done" class="btn-success px-2" icon="fa-check"

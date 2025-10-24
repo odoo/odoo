@@ -4,11 +4,11 @@ from freezegun import freeze_time
 
 from . import common
 from odoo import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, HttpCase
 
 
 @tagged('-at_install', 'post_install')
-class TestWorkcenterOverview(common.TestMrpCommon):
+class TestWorkcenterOverview(common.TestMrpCommon, HttpCase):
 
     @freeze_time('2020-03-13')  # Friday
     def test_workcenter_graph_data(self):
@@ -54,3 +54,32 @@ class TestWorkcenterOverview(common.TestMrpCommon):
         self.assertEqual(load_graph_data[self.workcenter_2.id][0]['is_sample_data'], False)
         self.assertListEqual(load_graph_data[self.workcenter_2.id][0]['labels'], list(week_range.values()))
         self.assertListEqual(load_graph_data[self.workcenter_2.id][0]['values'], [[0, 20.0, 40.0, 0, 0], 40.0, [0, 0, 20.0, 0, 0]])
+
+    def test_work_order_dependency(self):
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'Operation 1',
+            'workcenter_id': self.workcenter_1.id,
+            'bom_id': bom.id,
+            'sequence': 1,
+        })
+
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'Operation 2',
+            'workcenter_id': self.workcenter_2.id,
+            'bom_id': bom.id,
+            'sequence': 2,
+        })
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_2.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+
+        self.start_tour(f"odoo/manufacturing/{mo.id}/shop-floor", "test_work_order_dependency", login="admin")
