@@ -109,8 +109,11 @@ patch(Checkout.prototype, {
         // add modal to body and bind 'save' button
         this.renderAt('website_sale_mondialrelay', {}, document.querySelector('body'));
         this.mondialRelayModal = document.querySelector('#modal_mondialrelay');
-        this.mondialRelayModal.querySelector('#btn_confirm_relay').addEventListener(
-            'click', this.onClickBtnConfirmRelay.bind(this)
+        const confirmRelayButton = this.mondialRelayModal.querySelector('#btn_confirm_relay');
+        const boundConfirmRelay = this.onClickBtnConfirmRelay.bind(this);
+        confirmRelayButton.addEventListener('click', boundConfirmRelay);
+        this.registerCleanup(
+            () => confirmRelayButton.removeEventListener('click', boundConfirmRelay)
         );
 
         // load mondial relay script
