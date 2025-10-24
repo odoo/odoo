@@ -2,8 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import _, api, fields, models
-from odoo.tools import html_escape
+from odoo import api, fields, models
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 
@@ -177,10 +176,10 @@ class BlogPost(models.Model):
                 blog_post.website_url = "/blog/%s/%s" % (self.env['ir.http']._slug(blog_post.blog_id), self.env['ir.http']._slug(blog_post))
 
     def _default_content(self):
-        text = html_escape(_("Start writing here..."))
-        return """
-            <p>%(text)s</p>
-        """ % {"text": text}
+        is_regular_cover = self.env.website.is_view_active('website_blog.opt_blog_post_regular_cover')
+        template_to_render = 'website_blog.blog_text_block' if is_regular_cover else 'website_blog.blog_text_block_small'
+        return self.env['ir.ui.view'].with_context(inherit_branding=False)._render_template(template_to_render)
+
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
