@@ -179,8 +179,8 @@
                     <field name="tax_ids" widget="many2many_tax_tags" optional="hide" readonly="1"/>
                     <field name="amount_currency" string="In Currency" groups="base.group_multi_currency" optional="hide" readonly="1" invisible="is_same_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
-                    <field name="debit" sum="Total Debit" readonly="1"/>
-                    <field name="credit" sum="Total Credit" readonly="1"/>
+                    <field name="debit" sum="Total Debit" readonly="1" decoration-muted="debit == 0"/>
+                    <field name="credit" sum="Total Credit" readonly="1" decoration-muted="credit == 0"/>
                     <field name="tax_tag_ids" string="Tax Grids" options="{'no_create': True, 'no_create_edit': True}" domain="[('applicability', '=', 'taxes')]" widget="many2many_tags" optional="hide"/>
                     <field name="discount_date" string="Discount Date" optional="hide" />
                     <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
@@ -202,6 +202,11 @@
                     <field name="deductible_amount" optional="hide"/>
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                    </groupby>
+                    <groupby name="move_id">
+                        <button name="action_post" type="object" string="Post" class="btn-primary" invisible="state != 'draft'" groups="account.group_account_user"/>
+                        <button name="set_moves_checked" type="object" string="Review" class="btn-primary" invisible="state != 'posted' or checked" groups="account.group_account_user"/>
+                        <button name="edit_move" type="edit" icon="fa-edit" string="Edit"/>
                     </groupby>
                 </list>
             </field>
