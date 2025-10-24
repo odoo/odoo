@@ -536,8 +536,7 @@
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
                     <field name="amount_untaxed_in_currency_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
-                    <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="show" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="base.group_multi_currency"/>
-                    <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="hide" decoration-bf="1" decoration-warning="abnormal_amount_warning" groups="!base.group_multi_currency"/>
+                    <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="show" decoration-bf="1" decoration-warning="abnormal_amount_warning"/>
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
                     <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
                     <field name="company_currency_id" column_invisible="True"/>
