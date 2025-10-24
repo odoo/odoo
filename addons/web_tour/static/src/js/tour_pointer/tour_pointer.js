@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { getScrollParent, isInPage } from "@web_tour/js/utils/tour_utils";
+import { getScrollParent, isInPage, hideTourPointer } from "@web_tour/js/utils/tour_utils";
 
 const oppositeSides = {
     left: "right",
@@ -224,7 +224,7 @@ export class TourPointer extends Component {
     }
 
     get isVisible() {
-        return this.trigger && isInPage(this.trigger) && this.triggerPosition !== "unknow";
+        return this.trigger && isInPage(this.trigger) && this.triggerPosition !== "unknow" && !hideTourPointer();
     }
 
     /**

@@ -101,3 +101,7 @@ export function isInPage(element) {
     }
     return false;
 }
+
+export function hideTourPointer() {
+    return !!(document.querySelector(".hideTourPointer") && document.querySelector(".modal"));
+}
