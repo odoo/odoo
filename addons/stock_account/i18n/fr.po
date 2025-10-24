@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-14 11:16+0000\n"
+"PO-Revision-Date: 2025-10-23 13:56+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/fr/>\n"
@@ -346,7 +346,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
 msgid "Daily"
-msgstr ""
+msgstr "Journalière"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
@@ -361,9 +361,9 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"Date à laquelle les écritures comptables seront créées en cas d'évaluation "
-"de stock automatisée. Si la date n'est pas renseignée, la date d'inventaire "
-"sera utilisée."
+"Date à laquelle les écritures comptables seront créées en cas de "
+"valorisation d'inventaire automatisée. Si la date n'est pas renseignée, la "
+"date d'inventaire sera utilisée."
 
 #. module: stock_account
 #. odoo-javascript
@@ -438,7 +438,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__fifo
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__fifo
 msgid "First In First Out (FIFO)"
-msgstr "First In First Out (FIFO)"
+msgstr "Premier rentré premier sorti (FIFO)"
 
 #. module: stock_account
 #. odoo-python
@@ -540,7 +540,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 msgid "Inventory Valuation"
-msgstr "Valorisation des stocks"
+msgstr "Valorisation d'inventaire"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -651,7 +651,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
 msgid "Monthly"
-msgstr ""
+msgstr "Mensuelle"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
@@ -674,14 +674,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "Périodique (à la clôture)"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "Perpétuelle (à la facture)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -1081,8 +1081,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Quand la valorisation des stocks automatisée est activée sur un article, ce "
-"compte contient la valeur actuelle des articles."
+"Quand la valorisation d'inventaire automatisée est activée sur un article, "
+"ce compte contient la valeur actuelle des articles."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -1090,8 +1090,8 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Quand la valorisation des stocks est automatisée, c'est le journal comptable "
-"dans lequel les entrées seront automatiquement postées lorsque les "
+"Quand la valorisation d'inventaire est automatisée, c'est le journal "
+"comptable dans lequel les entrées seront automatiquement postées lorsque les "
 "mouvements de stock seront réalisés."
 
 #. module: stock_account

@@ -4,13 +4,14 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-15 12:14+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"PO-Revision-Date: 2025-10-23 09:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/fr/>\n"
 "Language: fr\n"
@@ -46,7 +47,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's %(action_name)s"
-msgstr ""
+msgstr "%(action_name)s de %(name)s"
 
 #. module: sale_project
 #. odoo-python
@@ -161,6 +162,10 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"Un projet doit être défini sur le devis %(order)s ou sur le formulaire des "
+"produits créant une tâche lors de la commande.\n"
+"Le produit suivant nécessite un projet dans lequel enregistrer sa tâche : "
+"%(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -222,7 +227,7 @@ msgstr "Annulé"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
 msgid "Confirm & Close"
-msgstr ""
+msgstr "Confirmer & Fermer"
 
 #. module: sale_project
 #. odoo-python
@@ -231,18 +236,20 @@ msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
 msgstr ""
+"Convertir ce modèle en projet classique le dissociera de ses produits "
+"associés."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold"
-msgstr ""
+msgstr "Coûts des marchandises vendues"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Coût des marchandises vendues"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -253,7 +260,7 @@ msgstr "Créer un projet"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Créer une commande client"
 
 #. module: sale_project
 #. odoo-python
@@ -264,7 +271,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Créer une tâche"
 
 #. module: sale_project
 #. odoo-python
@@ -369,7 +376,7 @@ msgstr "Campagne de marketing digital (projet)"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
 msgid "Discard"
-msgstr ""
+msgstr "Ignorer"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
@@ -448,7 +455,7 @@ msgstr "En cours"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Internal link"
-msgstr ""
+msgstr "Lien interne"
 
 #. module: sale_project
 #. odoo-python
@@ -577,7 +584,7 @@ msgstr "Peinture"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partenaire"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -597,7 +604,7 @@ msgstr "Services de plomberie"
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Commande client portail"
 
 #. module: sale_project
 #. odoo-python
@@ -666,7 +673,7 @@ msgstr "Modèle de projet"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "Assistant de création de modèle de projet"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_update
@@ -818,7 +825,7 @@ msgstr "Rechercher dans la facture"
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Rechercher dans article de la commande"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -886,7 +893,7 @@ msgstr "Analyse des tâches"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "La commande client doit contenir au moins un produit de service."
 
 #. module: sale_project
 #. odoo-python
@@ -925,6 +932,8 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
 msgstr ""
+"Le projet n’a pas pu être créé car la commande client doit être confirmée ou "
+"est déjà liée à un projet."
 
 #. module: sale_project
 #. odoo-python
@@ -1002,19 +1011,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "[Project] %(task_name)s"
-msgstr ""
+msgstr "[Projet] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "delivered_manual"
-msgstr ""
+msgstr "delivered_manual"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
-msgstr ""
+msgstr "sale_line_id"
 
 #~ msgid ""
 #~ "<span class=\"o_stat_text\">Customer</span>\n"

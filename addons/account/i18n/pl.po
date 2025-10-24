@@ -57,7 +57,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-21 14:23+0000\n"
+"PO-Revision-Date: 2025-10-22 13:44+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/account/"
 "pl/>\n"
@@ -194,6 +194,8 @@ msgstr ""
 msgid ""
 "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
+"Aktywowano automatyczne księgowanie %(auto_post_name)s : Następna data "
+"księgowania: %(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -390,8 +392,9 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- Nowe pole \" Razem (z VAT) \" w celu przyspieszenia i kontroli kodowania "
-"poprzez automatyzację tworzenia linii z właściwym kontem &amp; podatkiem."
+"- Nowe pole \"Suma (z VAT)\", które ma na celu przyspieszenie i kontrolę "
+"kodowania poprzez automatyzację tworzenia wierszy z właściwym kontem &amp; "
+"podatkiem."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1415,7 +1418,7 @@ msgid ""
 "                                                Preview"
 msgstr ""
 "<i class=\"oi oi-arrow-right\"/>\n"
-"Podgląd"
+"                                                Podgląd"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1902,7 +1905,7 @@ msgstr "<span>Konto bankowe może być duplikatem konta</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>This document might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Ten dokument może być duplikatem </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2037,7 +2040,7 @@ msgstr "<strong>Typ: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid "<strong>WARNING - This change is irreversible</strong>"
-msgstr ""
+msgstr "<strong>OSTRZEŻENIE - Ta zmiana jest nieodwracalna</strong>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_einvoice_notification
@@ -2633,7 +2636,7 @@ msgstr "Zapis na koncie"
 #: model:ir.model.fields,field_description:account.field_account_move__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_group_codes
 msgid "Account Fiscal Country Group Codes"
-msgstr ""
+msgstr "Kody krajów podatkowych do celów księgowych"
 
 #. module: account
 #: model:ir.model,name:account.model_account_group
@@ -2754,7 +2757,7 @@ msgstr "Numer konta"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
-msgstr "Konto zobowiązań"
+msgstr "Zobowiązania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
@@ -3076,7 +3079,7 @@ msgstr "Mapowanie kont pozycji fiskalnej"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payable
 msgid "Accounts Payable"
-msgstr ""
+msgstr "Zobowiązania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -3092,7 +3095,7 @@ msgstr "Prefiksy kont"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_receivable
 msgid "Accounts Receivable"
-msgstr ""
+msgstr "Należności"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_pos_receivable
@@ -3531,6 +3534,8 @@ msgstr "Wszystkie dzienniki bankowe i kasowe"
 msgid ""
 "All expenses made for your office or workplace that are not material goods"
 msgstr ""
+"Wszystkie wydatki poniesione w biurze lub w miejscu pracy, które nie są "
+"dobrami materialnymi"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_insurance
@@ -3993,7 +3998,7 @@ msgstr ""
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
 msgstr ""
-"Każda pozycja dziennika na koncie płatnym musi mieć termin płatności i "
+"Każda pozycja dziennika na koncie zobowiązań musi mieć termin płatności i "
 "odwrotnie."
 
 #. module: account
@@ -8467,6 +8472,8 @@ msgid ""
 "Expenses made for the repair and maintenance of laptops, peripherals, and "
 "computing equipment"
 msgstr ""
+"Wydatki poniesione na naprawę i konserwację laptopów, urządzeń peryferyjnych "
+"i sprzętu komputerowego"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__expired
@@ -8880,6 +8887,8 @@ msgid ""
 "Food or drinks incurred outside of bars or restaurants, like receptions, "
 "canteen and food delivery, etc"
 msgstr ""
+"Żywność i napoje spożywane poza barami i restauracjami, jak recepcje, "
+"stołówki i dostawa żywności itp."
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_food
@@ -9715,6 +9724,8 @@ msgid ""
 "If checked, the lines below this section will not be displayed in reports "
 "and portal."
 msgstr ""
+"Jeśli to pole jest zaznaczone, wiersze poniżej tej sekcji nie będą "
+"wyświetlane w raportach i portalu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__collapse_prices
@@ -9722,6 +9733,8 @@ msgid ""
 "If checked, the prices of the lines below this section will not be displayed "
 "in reports and portal."
 msgstr ""
+"Jeśli to pole jest zaznaczone, ceny wierszy poniżej tej sekcji nie będą "
+"wyświetlane w raportach i portalu."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9781,10 +9794,10 @@ msgid ""
 "If not, this account will belong to Trade Receivable/Payable in reports and "
 "filters."
 msgstr ""
-"Jeśli ustawione, to konto będzie należało do Non Trade Receivable/Payable w "
-"raportach i filtrach.\n"
-"Jeśli nie, konto to będzie należało do kategorii Trade Receivable/Payable w "
-"raportach i filtrach."
+"Jeśli ustawione, to konto będzie należało do należności/zobowiązania "
+"niehandlowe w raportach i filtrach.\n"
+"Jeśli nie, konto to będzie należało do kategorii należności/zobowiązania "
+"handlowe w raportach i filtrach."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -10209,6 +10222,8 @@ msgid ""
 "Insurance premiums that cover medical costs and wage replacement for "
 "employees injured on the job"
 msgstr ""
+"Składki ubezpieczeniowe pokrywające koszty zdrowotne i rekompensatę "
+"wynagrodzenia dla pracowników, którzy doznali urazu w miejscu pracy"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -11069,25 +11084,25 @@ msgstr "Info o wpisie do dziennika"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
-msgstr "Pozycja wpisu"
+msgstr "Pozycja dziennika"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr "Pozycja wpisu %s została utworzona"
+msgstr "Pozycja dziennika %s została utworzona"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr "Pozycja wpisu księgowego %s została usunięta"
+msgstr "Pozycja dziennika %s została usunięta"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s updated"
-msgstr "Aktualizacja pozycji %s w dzienniku"
+msgstr "Aktualizacja pozycji dziennika %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -11110,7 +11125,7 @@ msgstr "Etykieta pozycji dziennika"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
-msgstr "Pozycje wpisów"
+msgstr "Pozycje dziennika"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11633,6 +11648,7 @@ msgstr ""
 #: model:account.account,description:account.2_account_account_us_property_tax
 msgid "Local taxes that have to be paid due to the ownership of property"
 msgstr ""
+"Lokalne podatki, które powinny być zapłacone z tytułu własności nieruchomości"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_local_tax
@@ -16287,6 +16303,8 @@ msgid ""
 "Some lines can be on the next page, display them to unlock actions on "
 "section."
 msgstr ""
+"Niektóre wiersze mogą znajdować się na następnej stronie, wyświetl je, aby "
+"odblokować działania w sekcji."
 
 #. module: account
 #. odoo-javascript
@@ -16967,7 +16985,7 @@ msgstr "Podatek do zapłaty"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__tax_payable_account_id
 msgid "Tax Payable Account"
-msgstr "Konto płatności podatkowych"
+msgstr "Konto zobowiązań podatkowych"
 
 #. module: account
 #: model:account.account,name:account.1_tax_receivable
@@ -18359,7 +18377,7 @@ msgid ""
 "'receivable' or 'payable'."
 msgstr ""
 "Typ domyślnego konta kredytowego/debetowego dziennika nie powinien być "
-"\"należny\" lub \"płatny\"."
+"\"należności\" lub \"zobowiązania\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -18733,6 +18751,8 @@ msgid ""
 "This journal is for self-billing invoices. Invoices will be created using a "
 "different sequence per partner."
 msgstr ""
+"Ten dziennik jest na samofaktury. Faktury będą tworzone z użyciem różnych "
+"sekwencji wg partnera."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -18768,6 +18788,8 @@ msgid ""
 "This move is configured to be posted automatically at the accounting date: "
 "%s."
 msgstr ""
+"Ten ruch jest skonfigurowany tak, aby był księgowany automatycznie w dniu "
+"księgowania: %s."
 
 #. module: account
 #. odoo-python
@@ -20508,7 +20530,7 @@ msgid ""
 "Receivable or Payable."
 msgstr ""
 "Nie można zmienić typu konta ustawionego jako Rachunek bankowy na dzienniku "
-"na należność lub płatność."
+"na należność lub zobowiązanie."
 
 #. module: account
 #. odoo-python
@@ -20690,8 +20712,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
-"Nie możesz mieć konta należności/płatności, którego nie można uzgodnić. (kod "
-"do konta: %s)"
+"Nie możesz mieć konta należności/zobowiązań, którego nie można uzgodnić. ("
+"kod do konta: %s)"
 
 #. module: account
 #. odoo-python
@@ -21106,6 +21128,8 @@ msgid ""
 "access to all Accounting features, including reporting, asset management, "
 "analytic accounting, without configuration rights."
 msgstr ""
+"dostęp do wszystkich funkcji Księgowości, w tym: raportowania, zarządzania "
+"aktywami, księgowości analitycznej bez uprawnień do konfiguracji."
 
 #. module: account
 #: model:res.groups,comment:account.group_account_readonly

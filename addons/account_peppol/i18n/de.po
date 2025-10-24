@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-21 05:30+0000\n"
+"PO-Revision-Date: 2025-10-22 13:44+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/de/>\n"
@@ -2001,6 +2001,8 @@ msgstr ""
 msgid ""
 "This connection has been superseded by another database. Register again."
 msgstr ""
+"Diese Verbindung wurde durch eine andere Datenbank ersetzt. Registrieren Sie "
+"sich erneut."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2009,6 +2011,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"Dieses Feld wird verwendet, um anzuzeigen, dass das EDI-Benutzertoken nicht "
+"mit dem Proxy-Server synchronisiert ist. Es wird auf „True“ gesetzt, wenn "
+"das Token aktualisiert werden muss."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -2020,7 +2025,7 @@ msgstr "Die Rechnung wurde auch"
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "This number is used for identification purposes only."
-msgstr ""
+msgstr "Diese Nummer dient ausschließlich zu Identifikationszwecken."
 
 #. module: account_peppol
 #. odoo-python
@@ -2056,12 +2061,12 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
-msgstr ""
+msgstr "Token nicht synchronisiert"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
-msgstr ""
+msgstr "UBL 2.0"
 
 #. module: account_peppol
 #. odoo-python
@@ -2096,12 +2101,12 @@ msgstr "Unbekannter Peppol-Fehler: %s"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
 msgid "Use Parent Connection"
-msgstr ""
+msgstr "Übergeordnete Verbindung verwenden"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
 msgid "Use Parent Connection Selection"
-msgstr ""
+msgstr "Auswahl der übergeordneten Verbindung verwenden"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -2171,13 +2176,13 @@ msgstr "Assistent"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "You are not allowed to send invoice on behalf of %s."
-msgstr ""
+msgstr "Sie dürfen keine Rechnungen im Namen von %s versenden."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You are not authorized to change the contact email."
-msgstr ""
+msgstr "Sie sind nicht berechtigt, die Kontakt-E-Mail-Adresse zu ändern."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2191,7 +2196,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending from"
-msgstr ""
+msgstr "Sie senden von"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2264,7 +2269,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol identification is:"
-msgstr ""
+msgstr "Ihre Peppol-Identifikation lautet:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2272,6 +2277,8 @@ msgid ""
 "Your Peppol registration is being processed, it should be active within a "
 "day."
 msgstr ""
+"Ihre Peppol-Registrierung wird derzeit bearbeitet und sollte innerhalb eines "
+"Tages aktiv sein."
 
 #. module: account_peppol
 #. odoo-python
@@ -2302,6 +2309,10 @@ msgid ""
 "                                        Make sure to reconnect the correct "
 "database."
 msgstr ""
+"Ihre Datenbank ist nicht mehr mit Peppol verbunden. Dies könnte auf eine "
+"Duplizierung oder Wiederherstellung der Datenbank zurückzuführen sein.\n"
+"                                        Stellen Sie sicher, dass Sie die "
+"richtige Datenbank erneut verbinden."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2348,7 +2359,7 @@ msgstr "Ihre Anfrage wird derzeit bearbeitet."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "and send invoices via Peppol on their behalf."
-msgstr ""
+msgstr "und senden Rechnungen über Peppol in ihrem Namen."
 
 #. module: account_peppol
 #. odoo-python

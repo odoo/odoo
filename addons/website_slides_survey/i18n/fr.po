@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-21 14:24+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"PO-Revision-Date: 2025-10-23 09:15+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "website_slides_survey/fr/>\n"
 "Language: fr\n"
@@ -28,13 +28,13 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
 msgid "# Certified Attendees"
-msgstr ""
+msgstr "# Participants certifiés"
 
 #. module: website_slides_survey
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid "- %(certification)s (Courses - %(courses)s)"
-msgstr ""
+msgstr "- %(certification)s (Cours - %(courses)s)"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -98,7 +98,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Obtenir une certification"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -165,7 +165,7 @@ msgstr "<span class=\"ms-1\">Certifications</span>"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
 msgid "<span class=\"o_stat_text\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Certifié</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -343,7 +343,7 @@ msgstr "Certifications"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Certifications are exams that you successfully passed. <br/>"
-msgstr ""
+msgstr "Les certifications sont des examens que vous avez réussis. <br/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -357,7 +357,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__survey_certification_success
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_partner_view_search
 msgid "Certified"
-msgstr ""
+msgstr "Certifié"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
@@ -367,7 +367,7 @@ msgstr "Chaise"
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
-msgstr ""
+msgstr "Canal / Partenaires (Membres)"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -480,7 +480,7 @@ msgstr "Marquer comme à faire"
 #. odoo-python
 #: code:addons/website_slides_survey/models/slide_channel.py:0
 msgid "No Attendee passed this course certification yet!"
-msgstr ""
+msgstr "Aucun participant n'a encore réussi la certification de ce cours !"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
@@ -542,7 +542,7 @@ msgstr "Rechercher des tentatives..."
 #. odoo-javascript
 #: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Select a certification"
-msgstr ""
+msgstr "Sélectionner une certification"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
@@ -556,6 +556,8 @@ msgid ""
 "Select an existing certification from the list. Creating or editing a "
 "certification can be done from the backend."
 msgstr ""
+"Sélectionnez une certification existante dans la liste. Vous pouvez créer ou "
+"modifier une certification dans le backend."
 
 #. module: website_slides_survey
 #: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
@@ -687,6 +689,11 @@ msgid ""
 "The courses that need them are:\n"
 "%s"
 msgstr ""
+"Oups ! Vous ne pouvez pas supprimer des sondages utilisés comme "
+"Certification de cours ! Sinon, les étudiants pourraient penser que les "
+"diplômes tombent du ciel.\n"
+"Les cours concernés sont :\n"
+"%s"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3

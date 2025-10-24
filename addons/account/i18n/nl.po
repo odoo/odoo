@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-21 16:17+0000\n"
+"PO-Revision-Date: 2025-10-23 09:15+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/account/nl/"
 ">\n"
@@ -863,11 +863,11 @@ msgstr ""
 "                <br/><br/>\n"
 "                Hierbij ontvang je jouw\n"
 "                <t t-if=\"object.name\">\n"
-"                    zelf opgemaakte creditfactuur <span style=\"font-"
+"                    self-billing creditfactuur <span style=\"font-"
 "weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    zelf opgemaakte creditfactuur\n"
+"                    self-billing creditfactuur\n"
 "                </t>\n"
 "                <t t-if=\"object.invoice_origin\">\n"
 "                    (met referentie: <t t-out=\"object.invoice_origin or ''\""
@@ -1112,11 +1112,11 @@ msgstr ""
 "        <br/><br/>\n"
 "        Hierbij ontvang je jouw\n"
 "        <t t-if=\"object.name\">\n"
-"            zelfopgestelde factuur <span style=\"font-weight:bold;\" t-out=\""
+"            self-billing factuur <span style=\"font-weight:bold;\" t-out=\""
 "object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            zelfopgestelde factuur\n"
+"            self-billing factuur\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (met referentie: <t t-out=\"object.invoice_origin or ''\""
@@ -1127,7 +1127,7 @@ msgstr ""
 "143.750,00</span>\n"
 "        van <t t-out=\"object.company_id.name or ''\">JouwBedrijf</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"            Deze zelfopgestelde factuur is reeds betaald.\n"
+"            Deze self-billing factuur is reeds betaald.\n"
 "        </t>\n"
 "        <t t-if="
 "\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
@@ -1425,7 +1425,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"badge text-bg-info\">\n"
-"                                        Beoordelen\n"
+"                                        Te controleren\n"
 "                                    </span>"
 
 #. module: account
@@ -1742,6 +1742,9 @@ msgid ""
 "                                                        <span "
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
+"<span>1.00</span>\n"
+"                                                        <span groups="
+"\"uom.group_uom\">Eenheden</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1981,7 +1984,7 @@ msgstr "<strong>Subtotaal</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Taxable Supply</strong>"
-msgstr ""
+msgstr "<strong>Belastbare levering</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2211,9 +2214,10 @@ msgid ""
 "You\n"
 "                should receive this periodically from your bank."
 msgstr ""
-"Een kredietoverzicht is een samenvatting van alle financiële transacties die "
-"binnen een bepaalde periode op een kredietrekening plaatsvinden. Je ontvangt "
-"dit doorgaans periodiek van je bank."
+"Een kredietoverzicht is een samenvatting van alle financiële transacties\n"
+"                die binnen een bepaalde periode op een kredietrekening "
+"plaatsvinden. Je\n"
+"                ontvangt dit doorgaans periodiek van je bank."
 
 #. module: account
 #. odoo-python
@@ -2238,7 +2242,7 @@ msgid ""
 "                related to the day-to-day business."
 msgstr ""
 "Een dagboek wordt gebruikt om alle verrichtingen uit het dagelijkse "
-"zakenleven in je boekhouding op te slaan."
+"bedrijfsvoering in je boekhouding op te slaan."
 
 #. module: account
 #. odoo-python
@@ -2322,7 +2326,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "A temporary number can not be used in a real matching"
-msgstr "Een tijdelijk nummer kan niet worden gebruikt bij een echte matching"
+msgstr "Een tijdelijk nummer kan niet worden gebruikt bij een echte aflettering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
@@ -2903,7 +2907,7 @@ msgstr "Rekeningen"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Boekhoudkundige mapping  - fiscale positie"
+msgstr "Boekhoudkundige mapping - fiscale positie"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payable
@@ -3658,10 +3662,10 @@ msgid ""
 "law\n"
 "                to disclose a certain amount of information."
 msgstr ""
-"Een rekening maakt deel uit van een grootboek waarmee je bedrijf een "
-"registratie kan maken van allerlei debet- en credittransacties.\n"
+"Een rekening maakt deel uit van een grootboek waarmee je bedrijf\n"
+"een registratie kan maken van allerlei debet- en credittransacties.\n"
 "Bedrijven presenteren hun jaarrekening in twee hoofddelen: de\n"
-"balans en de resultatenrekening (winst en verliesrekening). De jaarrekening "
+"balans en de resultatenrekening (winst- en verliesrekening). De jaarrekening "
 "van een bedrijf is wettelijk verplicht\n"
 "om een bepaalde hoeveelheid informatie vrij te geven."
 
@@ -3712,7 +3716,7 @@ msgstr "Analytische rekeningen"
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analytisch verdeelmodel"
+msgstr "Analytische verdeling"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
@@ -4238,7 +4242,7 @@ msgstr "Terug naar klantfactuur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Bacon Burger"
-msgstr "Bacon Burger"
+msgstr "Baconburger"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
@@ -5452,7 +5456,7 @@ msgstr "Land van commercieel partner"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_common_stock
 msgid "Common Stock"
-msgstr ""
+msgstr "Gewone aandelen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -6735,7 +6739,7 @@ msgstr "Dagen"
 #: model:ir.model.fields,field_description:account.field_res_partner__days_sales_outstanding
 #: model:ir.model.fields,field_description:account.field_res_users__days_sales_outstanding
 msgid "Days Sales Outstanding (DSO)"
-msgstr "Days Sales Outstanding (DSO)"
+msgstr "Gemiddelde betalingstermijn klanten (DSO)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_after_end_of_month
@@ -7275,7 +7279,7 @@ msgstr "Rekeningvoorvoegsel weergeven"
 #: model:ir.model.fields,field_description:account.field_res_company__display_account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_account_storno
 msgid "Display Account Storno"
-msgstr ""
+msgstr "Stornoboekhouding weergeven"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
@@ -7300,7 +7304,7 @@ msgstr "Toon dagen volgende maand"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_hash
 msgid "Display Force Hash"
-msgstr ""
+msgstr "Hash forceren weergeven"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -7489,29 +7493,29 @@ msgstr "Afvalkosten"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
 msgid "Distribution"
-msgstr "Distributie"
+msgstr "Verdeling"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Distributie analytisch rekening"
+msgstr "Analytische verdeling"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
-msgstr "Distributie voor facturen"
+msgstr "Verdeling voor facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
-msgstr "Distributie voor creditfacturen"
+msgstr "Verdeling voor creditfacturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Refunds"
-msgstr "Distributie voor credits"
+msgstr "Verdeling voor terugbetalingen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
@@ -7526,7 +7530,7 @@ msgstr "Verdeling wanneer de btw wordt gebruikt voor een factuur"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_distributions
 msgid "Distributions"
-msgstr ""
+msgstr "Verdelingen"
 
 #. module: account
 #: model:account.account,name:account.1_dividends
@@ -7759,7 +7763,7 @@ msgstr "Vervaltermijnen"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_subscriptions
 msgid "Dues & Subscriptions"
-msgstr ""
+msgstr "Contributies & abonnementen"
 
 #. module: account
 #. odoo-javascript
@@ -7804,6 +7808,8 @@ msgid ""
 "During perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"Bij permanente waardering bevat deze rekening het prijsverschil tussen de "
+"standaardprijs en de factuurprijs."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -7993,6 +7999,8 @@ msgid ""
 "Employer contributions to state (SUI) or federal unemployment insurance "
 "programs"
 msgstr ""
+"Werkgeversbijdragen aan staats- (SUI) of federale "
+"werkloosheidsverzekeringsprogramma's"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_payroll_tax
@@ -8426,7 +8434,7 @@ msgid ""
 "line"
 msgstr ""
 "Factor die moet worden toegepast op de boekingsregels die vanuit deze "
-"distributieregel worden gegenereerd"
+"verdelingsregel worden gegenereerd"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -9642,8 +9650,9 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
-"Indien aangevinkt wordt het bedrag berekend door deze belasting aan dezelfde "
-"analytische rekening (indien aanwezig) toegewezen."
+"Indien ingeschakeld, wordt het bedrag dat door deze belasting wordt berekend "
+"toegewezen aan dezelfde analytische rekening als de factuurregel (indien "
+"aanwezig)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -10020,7 +10029,7 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
-"Incoterms zijn een reeks van verkoop condities.   Deze worden gebruikt om de "
+"Incoterms zijn een reeks van verkoopvoorwaarden. Deze worden gebruikt om de "
 "transactiekosten en de verantwoordelijkheden tussen koper en verkoper te "
 "verdelen."
 
@@ -10434,7 +10443,7 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"De verdeling van facturen en creditfactuur's moet elk precies één regel als "
+"De verdeling van facturen en creditfacturen moet elk precies één regel als "
 "grondslag hebben."
 
 #. module: account
@@ -10444,7 +10453,7 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
-"De distributie van facturen en creditnota's moet een totale factor (+) "
+"De verdeling van facturen en creditfacturen moet een totale factor (+) "
 "gelijk aan 100 hebben."
 
 #. module: account
@@ -10454,7 +10463,7 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
 msgstr ""
-"De distributie van facturen en creditnota's moet een totale factor (-) "
+"De verdeling van facturen en creditfacturen moet een totale factor (-) "
 "gelijk aan 100 hebben."
 
 #. module: account
@@ -10473,7 +10482,7 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"De verdeling van facturen en creditfactuur's moet overeenkomen (dezelfde "
+"De verdeling van facturen en creditfacturen moet overeenkomen (dezelfde "
 "percentages, in dezelfde volgorde)."
 
 #. module: account
@@ -11698,9 +11707,8 @@ msgstr ""
 "Batchstorting: Verzamel meerdere klantcheques tegelijk door een "
 "batchstorting te genereren en in te dienen bij je bank. De module "
 "account_batch_payment is vereist.\n"
-"SEPA SEPA Direct Debit: Ontvang betalingen binnen de SEPA-zone via een "
-"mandaat dat je partner aan jou heeft verleend. De module account_sepa is "
-"vereist.\n"
+"SEPA-incassomandaat: Ontvang betalingen binnen de SEPA-zone via een mandaat "
+"dat je partner aan jou heeft verleend. De module account_sepa is vereist.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -13125,7 +13133,7 @@ msgstr "Herkomst van de btw"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Distribution Line"
-msgstr "Initiator btw verdelingsregel"
+msgstr "Oorspronkelijke btw-verdelingsregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
@@ -15167,14 +15175,14 @@ msgstr "Herziening Inzendingen"
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Review Statements"
-msgstr "Verklaringen beoordelen"
+msgstr "Afschriften beoordelen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__checked
 #: model:ir.model.fields,field_description:account.field_account_move__checked
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reviewed"
-msgstr "Beoordeeld"
+msgstr "Gecontroleerd"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -17301,8 +17309,8 @@ msgid ""
 "The Early Payment Discount functionality can only be used with payment terms "
 "using a single 100% line. "
 msgstr ""
-"De roegbetalingskorting kan alleen worden gebruikt met betaalvoorwaarden die "
-"één enkele 100% regel gebruiken. "
+"De vroegbetalingskorting kan alleen worden gebruikt met betaalvoorwaarden "
+"die slechts één 100% regel gebruiken. "
 
 #. module: account
 #. odoo-python
@@ -17505,7 +17513,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "The cash basis transition account needs to allow reconciliation."
-msgstr "De overgangsrekening voor kasstelsel moet afstemming toestaan."
+msgstr "De overgangsrekening voor kasstelsel moet aflettering toestaan."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17552,7 +17560,7 @@ msgstr "De commerciële partner is bijgewerkt voor alle gerelateerde boekingen."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr "Het bedrijf waartoe deze verdeelregel behoord."
+msgstr "Het bedrijf waartoe deze verdeelregel behoort."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -18008,7 +18016,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Het afstemmingsmodel wordt alleen toegepast wanneer de omschrijving van de "
+"Het afletteringsmodel wordt alleen toegepast wanneer de omschrijving van de "
 "bankregel, de transactiegegevens of de notitie overeenkomt met een van de "
 "volgende voorwaarden:\n"
 "        * Bevat: De bankregel moet deze tekenreeks bevatten "
@@ -18837,7 +18845,7 @@ msgstr "Te betalen"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Review"
-msgstr "Beoordelen"
+msgstr "Te controleren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -18903,7 +18911,7 @@ msgstr "Om een journaalpost terug te draaien, moet deze eerst worden geboekt."
 #. odoo-javascript
 #: code:addons/account/static/src/components/char_with_placeholder_field_to_check/char_with_placeholder_field.xml:0
 msgid "To review"
-msgstr "Beoordelen"
+msgstr "Te controleren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -19730,7 +19738,7 @@ msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
 msgstr ""
-"Bevestig de afschriftregel automatisch (afletteren gebaseerd op je regels)"
+"Bevestig de afschriftregel automatisch (afletteren gebaseerd op je regel)"
 
 #. module: account
 #. odoo-javascript
@@ -19914,8 +19922,8 @@ msgstr ""
 "Leveranciersfacturen kunnen op voorhand gegenereerd worden  \n"
 "                gebaseerd op inkooporders\n"
 "                of ontvangsten. Dit staat je toe de facturen te beheren\n"
-"                die je ontvangt van leveranciers aan de hand van het "
-"concept\n"
+"                die je ontvangt van leveranciers aan de hand van het concept-"
+"\n"
 "                document in Odoo."
 
 #. module: account
@@ -20558,8 +20566,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot deprecate an account that is used in a tax distribution."
 msgstr ""
-"Je kunt een account dat in het kader van belastingtoewijzing wordt gebruikt, "
-"niet deactiveren."
+"Je kan geen rekening deactiveren die wordt gebruikt in een btw-verdeling."
 
 #. module: account
 #. odoo-python
@@ -20976,7 +20983,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
-msgstr "Je moet dit document bijwerken om je T&C weer te geven."
+msgstr ""
+"Je moet dit document bijwerken om je algemene voorwaarden weer te geven."
 
 #. module: account
 #. odoo-javascript
