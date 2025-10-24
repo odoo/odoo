@@ -1,8 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
-import { onWillStart, useRef, useEffect, useState } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { useRef, useEffect, useState } from "@odoo/owl";
 
 export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
     static props = [
@@ -74,14 +73,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
         this.notification = useService('notification');
         this.orm = useService("orm");
         this.http = useService("http");
-        this.shareTarget = useService("shareTarget");
         this.createdExpenseIds = [];
-        onWillStart(async () => {
-            if (this.shareTarget.hasSharedFiles()) {
-                const files = this.shareTarget.getSharedFilesToUpload();
-                await this._onChangeFileInput(files);
-            }
-        });
     }
 
     async generateOpenExpensesAction(currentAction) {
@@ -92,13 +84,24 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
             domain = Domain.or([domain, currentAction.domain]).toList();
             options['stackPosition'] = 'replaceCurrentAction';
         }
+        const views = this.env.isSmall
+            ? [
+                [false, "kanban"],
+                [false, "list"],
+                [false, "form"],
+            ]
+            : [
+                [false, "list"],
+                [false, "kanban"],
+                [false, "form"],
+            ];
         await this.actionService.doAction({
             'name': actionName,
-            'res_model': 'hr.expense',
+            'res_model': this.modelName,
             'type': 'ir.actions.act_window',
-            'views': [[false, this.viewType], [false, 'form']],
+            'views': views,
             'domain': domain,
-            'context': this.props.context,
+            'context': this.context,
         }, options);
     }
 
@@ -106,7 +109,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
         const params = {
             csrf_token: odoo.csrf_token,
             ufile : files,
-            model: 'hr.expense',
+            model: this.modelName,
             id: 0,
         };
 
@@ -127,7 +130,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
         }
 
         const createdExpenseIds = await this.orm.call(
-            'hr.expense',
+            this.modelName,
             'create_expense_from_attachments',
             [attachmentIds, this.viewType],
             { context: this.context },
@@ -139,8 +142,8 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
         return this.env.isSmall ? "kanban" : "list";
     }
 
-    get context() {
-        return user.context;
+    get modelName() {
+        return "hr.expense";
     }
 }
 
