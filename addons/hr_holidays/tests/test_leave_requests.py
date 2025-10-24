@@ -1086,6 +1086,23 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'supported_attachment_ids': [(6, 0, [])],  # Sent by webclient
             })
 
+    def test_create_supported_attachments_link_attachment_ids(self):
+        with freeze_time('2025-10-21'):
+            attachment = self.env['ir.attachment'].create({
+                'name': "an attachment",
+                'datas': 'My attachment',
+                'res_model': 'hr.leave',
+            })
+            leave = self.env['hr.leave'].create({
+                'employee_id': 1,
+                'state': 'confirm',
+                'holiday_status_id': self.holidays_support_document.id,
+                'request_date_from': '2025-10-24',
+                'request_date_to': '2025-10-24',
+                'supported_attachment_ids': [[4, attachment.id]],
+            })
+            self.assertTrue(leave.attachment_ids)
+
     def test_prevent_misplacement_of_allocations_without_end_date(self):
         """
             The objective is to check that it is not possible to place leaves
