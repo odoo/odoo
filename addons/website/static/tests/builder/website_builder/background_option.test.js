@@ -51,8 +51,11 @@ test("change the background shape of elements", async () => {
         </div>`);
     await contains(":iframe .selector").click();
     await contains("[data-label='Shape'] button").click();
+    expect(
+        ".o_pager_container .o-hb-bg-shape-btn:nth-child(1) .btn.active[data-action-id='setBackgroundShape']"
+    ).toHaveCount();
     await contains(
-        ".o_pager_container .o-hb-bg-shape-btn:nth-child(2) [data-action-id='setBackgroundShape']"
+        ".o_pager_container .o-hb-bg-shape-btn:nth-child(2) .btn:not(.active)[data-action-id='setBackgroundShape']"
     ).click();
     expect(":iframe .selector div#first").toHaveAttribute(
         "data-oe-shape-data",
