@@ -1508,11 +1508,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # check that cart is valid
         order_sudo = request.cart
-        redirection = self._check_cart(order_sudo)
-        open_editor = request.params.get('open_editor') == 'true'
-        # Do not redirect if it is to edit
-        # (the information is transmitted via the "open_editor" parameter in the url)
-        if not open_editor and redirection:
+        if redirection := self._check_cart(order_sudo):
             return redirection
 
         values = {
