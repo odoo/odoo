@@ -232,13 +232,22 @@ export class TicketScreen extends Component {
         }
     }
     _onUpdateSelectedOrderline({ key, buffer }) {
+        const selectedOrderlineId = this.getSelectedOrderlineId();
+        const orderline = this.getSelectedOrder().lines.find(
+            (line) => line.id == selectedOrderlineId
+        );
+        if (orderline && orderline.product_id.id === this.pos.config.discount_product_id?.id) {
+            return this.dialog.add(AlertDialog, {
+                title: _t("Oh snap !"),
+                body: _t("You cannot edit a discount line."),
+            });
+        }
+
         const order = this.getSelectedOrder();
         if (!order) {
             return this.numberBuffer.reset();
         }
 
-        const selectedOrderlineId = this.getSelectedOrderlineId();
-        const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (!orderline) {
             return this.numberBuffer.reset();
         }
@@ -371,6 +380,21 @@ export class TicketScreen extends Component {
         this.pos.ticket_screen_mobile_pane = "left";
         destinationOrder.setScreenData({ name: "PaymentScreen" });
         this.pos.navigate("PaymentScreen", { orderUuid: destinationOrder.uuid });
+
+        const discountLine = order.getDiscountLine();
+        if (discountLine && destinationOrder && !destinationOrder.getDiscountLine()) {
+            const globalDiscount = -discountLine.priceIncl;
+            const priceUnit =
+                (globalDiscount * destinationOrder.prices.taxDetails.total_amount) /
+                    (order.amount_total + globalDiscount) || 1;
+
+            this.pos.models["pos.order.line"].create({
+                qty: 1,
+                price_unit: destinationOrder.orderSign * priceUnit,
+                product_id: this.pos.config.discount_product_id,
+                order_id: destinationOrder,
+            });
+        }
     }
 
     async onDeleteOrder(order) {

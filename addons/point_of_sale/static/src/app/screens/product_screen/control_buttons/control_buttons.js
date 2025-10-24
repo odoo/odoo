@@ -10,6 +10,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { SelectPartnerButton } from "@point_of_sale/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 
 export class ControlButtons extends Component {
     static template = "point_of_sale.ControlButtons";
@@ -149,6 +150,19 @@ export class ControlButtons extends Component {
     breakSelectedCombo() {
         const selectedOrderline = this.currentOrder?.getSelectedOrderline();
         return this.pos.isSelectedLineCombo && this.pos.breakCombo(selectedOrderline.parentLine);
+    }
+    async clickDiscount() {
+        this.dialog.add(NumberPopup, {
+            title: _t("Discount Percentage"),
+            startingValue: this.pos.config.discount_pc,
+            getPayload: (num) => {
+                const percent = Math.max(
+                    0,
+                    Math.min(100, this.env.utils.parseValidFloat(num.toString()))
+                );
+                this.pos.applyDiscount(percent);
+            },
+        });
     }
 }
 

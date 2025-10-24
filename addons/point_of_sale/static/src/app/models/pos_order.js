@@ -755,6 +755,12 @@ export class PosOrder extends PosOrderAccounting {
                 !(line.combo_line_ids?.length || line.combo_parent_id)
         );
     }
+
+    getDiscountLine() {
+        return this.lines?.find(
+            (line) => line.product_id.id === this.config.discount_product_id?.id
+        );
+    }
 }
 
 registry.category("pos_available_models").add(PosOrder.pythonModel, PosOrder);

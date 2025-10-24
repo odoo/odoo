@@ -158,7 +158,7 @@ class PosConfig(models.Model):
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_avatax = fields.Boolean("AvaTax PoS Integration", help="Use automatic taxes mapping with Avatax in PoS")
-    module_pos_discount = fields.Boolean("Global Discounts")
+    iface_discount = fields.Boolean("Global Discounts")
     module_pos_appointment = fields.Boolean("Online Booking")
     use_posbox = fields.Boolean("PosBox")
     use_header_or_footer = fields.Boolean("Custom Header & Footer")
@@ -212,6 +212,10 @@ class PosConfig(models.Model):
         'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
         store=True, help="These payment methods will be available for fast payment", readonly=False)
     statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
+
+    discount_pc = fields.Float(string='Discount Percentage', help='The default discount percentage when clicking on the Discount button', default=10.0)
+    discount_product_id = fields.Many2one('product.product', string='Discount Product',
+        domain=[('sale_ok', '=', True)], help='The product used to apply the discount on the ticket.')
 
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()
@@ -611,7 +615,7 @@ class PosConfig(models.Model):
             prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('use_order_printer', '=', True)], limit=1) > 0
 
     @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
-        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment')
+        'iface_available_categ_ids', 'module_pos_hr', 'iface_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment')
     def _compute_local_data_integrity(self):
         self.last_data_change = self.env.cr.now()
 
@@ -751,7 +755,6 @@ class PosConfig(models.Model):
                     field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
                     field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
 
-
     def execute(self):
         return {
              'type': 'ir.actions.client',
@@ -807,6 +810,9 @@ class PosConfig(models.Model):
         self._validate_fields(self._fields)
 
         self._check_company_has_fiscal_country()
+
+        if not self.current_session_id and self.iface_discount and not self.discount_product_id:
+            raise UserError(_('A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it.'))
         return self._action_to_open_ui()
 
     def close_ui(self):
@@ -899,7 +905,11 @@ class PosConfig(models.Model):
         return False
 
     def _get_special_products(self):
-        return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
+        tip_product = self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
+        default_discount_product = self.env.ref('point_of_sale.product_product_consumable', raise_if_not_found=False) or self.env['product.product']
+        discount_products = self.env['pos.config'].search([]).mapped('discount_product_id')
+
+        return tip_product | default_discount_product | discount_products
 
     def update_customer_display(self, order, device_uuid):
         self.ensure_one()
@@ -1201,3 +1211,16 @@ class PosConfig(models.Model):
         for rec in self:
             if rec.epson_printer_ip:
                 rec.epson_printer_ip = format_epson_certified_domain(rec.epson_printer_ip)
+
+    @api.model
+    def _default_discount_value_on_module_install(self):
+        configs = self.env['pos.config'].search([])
+        open_configs = (
+            self.env['pos.session']
+            .search(['|', ('state', '!=', 'closed'), ('rescue', '=', True)])
+            .mapped('config_id')
+        )
+        # Do not modify configs where an opened session exists.
+        product = self.env.ref("point_of_sale.product_product_consumable", raise_if_not_found=False)
+        for conf in (configs - open_configs):
+            conf.discount_product_id = product if conf.iface_discount and product and (not product.company_id or product.company_id == conf.company_id) else False

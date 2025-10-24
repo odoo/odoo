@@ -96,7 +96,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             currency = order.session_id.currency_id
 
             for line in order.lines:
-                if order.config_id.module_pos_discount and line.product_id.id == order.config_id.discount_product_id.id:
+                if order.config_id.iface_discount and line.product_id.id == order.config_id.discount_product_id.id:
                     continue
                 if not line.order_id.is_refund:
                     products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
@@ -330,6 +330,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                         'name': method_name,
                         'total': payment['total'],
                     }
+        global_discount_lines = orders.lines.filtered(lambda l: l.product_id.id == l.order_id.config_id.discount_product_id.id)
 
         return {
             'opening_note': sessions[0].opening_notes if len(sessions) == 1 else False,
@@ -358,6 +359,8 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'total_paid': totalPaymentsAmount,
             'payments_per_method': payments_per_method.values(),
             'show_payment_per_method': not session_ids,
+            'global_discount_number': len(global_discount_lines.order_id),
+            'global_discount_amount': sum(global_discount_lines.mapped('price_subtotal_incl')) * -1,
         }
 
     def _get_product_total_amount(self, line):

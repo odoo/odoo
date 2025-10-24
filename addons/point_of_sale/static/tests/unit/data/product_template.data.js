@@ -542,6 +542,19 @@ export class ProductTemplate extends models.ServerModel {
             sequence: 1,
             product_tag_ids: [],
         },
+        {
+            id: 151,
+            name: "Discount",
+            display_name: "Discount",
+            list_price: 0,
+            standard_price: 0,
+            type: "consu",
+            service_tracking: "none",
+            categ_id: false,
+            uom_id: 1,
+            available_in_pos: true,
+            active: true,
+        },
     ];
     get_product_info_pos() {
         return {

@@ -11,7 +11,6 @@ class TestTaxesGlobalDiscountPOS(TestTaxCommonPOS, TestTaxesGlobalDiscount):
     def setUpClass(cls):
         super().setUpClass()
         cls.main_pos_config.iface_discount = True
-        cls.main_pos_config.module_pos_discount = True
         cls.main_pos_config.discount_product_id = cls.env['product.product'].create({
             'name': 'discount',
             'available_in_pos': True,
