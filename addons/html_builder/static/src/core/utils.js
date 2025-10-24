@@ -139,25 +139,6 @@ export function useDependencyDefinition(id, item, { onReady } = {}) {
     });
 }
 
-export function useDependencies(dependencies) {
-    const env = useEnv();
-    const isDependenciesVisible = () => {
-        const deps = Array.isArray(dependencies) ? dependencies : [dependencies];
-        return deps.filter(Boolean).every((dependencyId) => {
-            const match = dependencyId.match(/(!)?(.*)/);
-            const inverse = !!match[1];
-            const id = match[2];
-            const isActiveFn = env.dependencyManager.get(id)?.isActive;
-            if (!isActiveFn) {
-                return false;
-            }
-            const isActive = isActiveFn();
-            return inverse ? !isActive : isActive;
-        });
-    };
-    return isDependenciesVisible;
-}
-
 function useIsActiveItem() {
     const env = useEnv();
     const listenedKeys = new Set();
