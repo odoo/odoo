@@ -58,6 +58,21 @@ class WebManifest(http.Controller):
             'type': 'image/png',
         } for size in icon_sizes]
         manifest['shortcuts'] = self._get_shortcuts()
+        if self._has_share_target():
+            manifest['share_target'] = {
+                'action': '/odoo?share_target=trigger',
+                'method': 'POST',
+                'enctype': 'multipart/form-data',
+                'params': {
+                    'title': 'title',
+                    'text': 'text',
+                    'url': 'url',
+                    'files': [{
+                        'name': 'externalMedia',
+                        'accept': ['image/*', 'video/*', 'application/*']
+                    }]
+                }
+            }
         return manifest
 
     @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'], readonly=True)
@@ -183,3 +198,6 @@ class WebManifest(http.Controller):
             'sizes': 'any',
             'type': mimetypes.guess_type(src)[0] or 'image/png'
         }]
+
+    def _has_share_target(self):
+        return False
