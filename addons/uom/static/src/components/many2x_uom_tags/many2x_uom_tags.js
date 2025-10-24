@@ -65,7 +65,12 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
         };
         records = records.map((record) => {
             let relativeInfo = this.referenceUnit && this.referenceUnit.id !== record.id ? `${roundPrecision((this.props.productQuantity || 1) * record.factor / this.referenceUnit.factor, this.referenceUnit.rounding)} ${this.referenceUnit.name}` : "";
-            if (this.referenceUnit && record.id !== this.referenceUnit.id && hasCommonReference(record, this.referenceUnit)) {
+            if (
+                this.referenceUnit &&
+                record.id !== this.referenceUnit.id &&
+                hasCommonReference(record, this.referenceUnit) &&
+                record.relative_uom_id
+            ) {
                 relativeInfo = `${roundPrecision((this.props.productQuantity || 1) * record.relative_factor, this.referenceUnit.rounding)} ${record.relative_uom_id[1]}`;
             }
             return {
