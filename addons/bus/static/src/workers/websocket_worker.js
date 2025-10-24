@@ -33,7 +33,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
     RECONNECTING: 4003,
 });
 /** @deprecated worker version is now retrieved from `session.websocket_worker_bundle` */
-export const WORKER_VERSION = "17.0-2";
+export const WORKER_VERSION = "17.0-3";
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
@@ -255,9 +255,10 @@ export class WebsocketWorker {
             this.isWaitingForNewUID = false;
             this.currentUID = uid;
         }
-        if ((this.currentUID !== uid && isCurrentUserKnown) || this.currentDB !== db) {
+        this.currentDB ||= db;
+        if ((this.currentUID !== uid && isCurrentUserKnown) || (db && this.currentDB !== db)) {
             this.currentUID = uid;
-            this.currentDB = db;
+            this.currentDB = db || this.currentDB;
             if (this.websocket) {
                 this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
             }
