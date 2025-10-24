@@ -458,7 +458,7 @@ class AccountJournal(models.Model):
              WHERE st_line.journal_id IN %s
                AND st_line.company_id IN %s
                AND st_line.is_reconciled IS NOT TRUE
-               AND st_line_move.checked IS TRUE
+               AND (st_line_move.review_state IS NULL OR st_line_move.review_state NOT IN ('todo', 'anomaly'))
                AND st_line_move.state = 'posted'
           GROUP BY st_line.journal_id
         """, [tuple(bank_cash_journals.ids), tuple(self.env.companies.ids)])
@@ -506,7 +506,7 @@ class AccountJournal(models.Model):
                 domain=[
                     ('journal_id', 'in', bank_cash_journals.ids),
                     ('move_id.company_id', 'in', self.env.companies.ids),
-                    ('move_id.checked', '=', False),
+                    ('move_id.review_state', 'in', ('todo', 'anomaly')),
                     ('move_id.state', '=', 'posted'),
                 ],
                 groupby=['journal_id'],
@@ -752,7 +752,7 @@ class AccountJournal(models.Model):
         query = self.env['account.move']._search([
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
-            ('checked', '=', False),
+            ('review_state', 'in', ('todo', 'anomaly')),
             ('state', '=', 'posted'),
         ])
         selects = [
@@ -1009,7 +1009,7 @@ class AccountJournal(models.Model):
         return self.env['account.bank.statement.line'].search([
             ('journal_id', '=', self.id),
             ('move_id.company_id', 'in', self.env.companies.ids),
-            ('move_id.checked', '=', False),
+            ('move_id.review_state', 'in', ('todo', 'anomaly')),
             ('move_id.state', '=', 'posted'),
         ])
 
