@@ -10,7 +10,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
-from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+from odoo.addons.website_partnership.controllers.main import WebsitePartnership
 from odoo.fields import Domain
 
 from odoo.tools.translate import _, LazyTranslate
@@ -185,7 +185,7 @@ class WebsiteAccount(CustomerPortal):
             })
 
 
-class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
+class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
     _references_per_page = 40
 
     def _get_gmap_domains(self, **kw):
@@ -212,7 +212,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         slug = env['ir.http']._slug
         base_partner_domain = [
-            ('is_company', '=', True),
             ('grade_id', '!=', False),
             ('website_published', '=', True),
             ('grade_id.website_published', '=', True),
@@ -241,25 +240,15 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
-        if not request.env.user.has_group('website.group_website_restricted_editor'):
-            base_partner_domain += [('grade_id.website_published', '=', True)]
-        if search:
-            base_partner_domain += Domain.OR(
-                Domain(field, 'ilike', search)
-                for field in ('name', 'website_description', 'street', 'street2', 'city', 'zip', 'state_id', 'country_id')
-            )
+        base_partner_domain = self._get_base_partner_domain(search, searched_fields=('name', 'website_description', 'street', 'street2', 'city', 'zip', 'state_id', 'country_id'))
 
-        # Infer Country
         if not country and not country_all:
             if request.geoip.country_code:
                 country = country_obj.search([('code', '=', request.geoip.country_code)], limit=1)
-
         # Group by country
         country_domain = list(base_partner_domain)
         if grade:
             country_domain += [('grade_id', '=', grade.id)]
-
         country_groups = partner_obj.sudo()._read_group(
             country_domain + [('country_id', '!=', False)],
             ["country_id"], ["__count"], order="country_id")
@@ -270,24 +259,18 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         if fallback_all_countries:
             country = None
 
-        # Group by grade
         grade_domain = list(base_partner_domain)
         if country:
             grade_domain += [('country_id', '=', country.id)]
-        grade_groups = partner_obj.sudo()._read_group(
-            grade_domain, ["grade_id"], ["__count"], order="grade_id")
-        grades = [{
-            'grade_id_count': sum(count for __, count in grade_groups),
-            'grade_id': (0, ""),
-            'active': grade is None,
-        }]
-        for g_grade, count in grade_groups:
-            grades.append({
-                'grade_id_count': count,
-                'grade_id': (g_grade.id, g_grade.display_name),
-                'active': grade and grade.id == g_grade.id,
-            })
+        grades = self._get_grades(grade, grade_domain)
 
+        # Group by country
+        country_domain = list(base_partner_domain)
+        if grade:
+            country_domain += [('grade_id', '=', grade.id)]
+        country_groups = partner_obj.sudo()._read_group(
+            country_domain + [('country_id', '!=', False)],
+            ["country_id"], ["__count"], order="country_id")
         countries = [{
             'country_id_count': sum(count for __, count in country_groups),
             'country_id': (0, _("All Countries")),
@@ -300,24 +283,22 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
                 'active': country and g_country.id == country.id,
             })
 
-        # current search
-        if grade:
-            base_partner_domain += [('grade_id', '=', grade.id)]
-        if country:
-            base_partner_domain += [('country_id', '=', country.id)]
-        if current_industry:
-            base_partner_domain += [('implemented_partner_ids.industry_id', 'in', current_industry.id)]
+        # current search, modify the base_partner_domain
+        if request.website.is_view_active("website_partnership.categories_setting") and grade:
+            base_partner_domain = Domain.AND([base_partner_domain, Domain('grade_id', '=', grade.id)])
+        if request.website.is_view_active("website_crm_partner_assign.countries_setting") and country:
+            base_partner_domain = Domain.AND([base_partner_domain, Domain('country_id', '=', country.id)])
+        if request.website.is_view_active("website_crm_partner_assign.industries_setting") and current_industry:
+            base_partner_domain = Domain.AND([base_partner_domain, Domain('implemented_partner_ids.industry_id', 'in', current_industry.id)])
 
         # format pager
         slug = request.env['ir.http']._slug
-        if grade and not country:
-            url = '/partners/grade/' + slug(grade)
-        elif country and not grade:
-            url = '/partners/country/' + slug(country)
-        elif country and grade:
-            url = '/partners/grade/' + slug(grade) + '/country/' + slug(country)
-        else:
-            url = '/partners'
+        url = '/partners'
+        if grade:
+            url += '/grade/' + slug(grade)
+        if country:
+            url += '/country/' + slug(country)
+
         url_args = {}
         if search:
             url_args['search'] = search
@@ -331,13 +312,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             url=url, total=partner_count, page=page, step=references_per_page, scope=7,
             url_args=url_args)
 
-        # search partners matching current search parameters
-        partner_ids = partner_obj.sudo().search(
-            base_partner_domain, order="grade_sequence ASC, implemented_partner_count DESC, complete_name ASC, id ASC",
-            offset=pager['offset'], limit=references_per_page)
-        partners = partner_ids.sudo()
-
         google_maps_api_key = request.website.google_maps_api_key
+        partners = self._get_partners(base_partner_domain, pager, references_per_page=references_per_page, search_order="grade_sequence ASC, implemented_partner_count DESC, complete_name ASC, id ASC")
 
         values = {
             'industries': industries,
@@ -369,7 +345,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True, list_as_website_content=_lt("Partners"))
+    ], type='http', sitemap=sitemap_partners)
     def partners(self, country=None, grade=None, page=0, **post):
         values = self._get_partners_values(
             country=country,
@@ -378,7 +354,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             references_per_page=self._references_per_page,
             **post
         )
-        return request.render("website_crm_partner_assign.index", values, status=values.get('partners') and 200 or 404)
+        return request.render("website_crm_partner_assign.index", values)
 
     # Do not use semantic controller due to sudo()
     @http.route()
