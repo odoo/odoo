@@ -223,3 +223,13 @@ class AccountMoveSend(models.AbstractModel):
                     invoice._l10n_tr_nilvera_submit_einvoice(xml_file, customer_alias)
                 else:   # E-Archive
                     invoice._l10n_tr_nilvera_submit_earchive(xml_file)
+
+    @api.model
+    def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
+        # EXTENDS account_edi_ubl_cii
+        # Nilvera rejects XMLs with the PDF attachment.
+
+        if invoice_data['invoice_edi_format'] == 'ubl_tr':
+            return
+
+        return super()._postprocess_invoice_ubl_xml(invoice, invoice_data)
