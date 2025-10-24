@@ -88,7 +88,7 @@ class MailComposeMessage(models.TransientModel):
         'mail.message', 'Parent Message', ondelete='set null')
     template_id = fields.Many2one(
         'mail.template', 'Use template',
-        domain="[('model', '=', model), '|', ('user_id','=', False), ('user_id', '=', uid)]"
+        domain="[('model', '=', model), '|', ('user_id','=', False), ('user_id', 'expr', 'user')]"
     )
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
