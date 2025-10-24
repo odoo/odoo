@@ -6,7 +6,6 @@ import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 
@@ -58,14 +57,6 @@ export class CallActionList extends Component {
         });
     }
 
-    /** @deprecated */
-    get isPromotingFullscreen() {
-        return Boolean(
-            !this.env.pipWindow &&
-                this.props.thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
-        );
-    }
-
     get MORE() {
         return _t("More");
     }
@@ -80,24 +71,5 @@ export class CallActionList extends Component {
 
     get isMobileOS() {
         return isMobileOS();
-    }
-
-    onMouseenterMore() {
-        if (this.isPromotingFullscreen) {
-            this.popover.open(this.more.el, { tooltip: _t("Enter full screen!") });
-            this.props.thread.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
-        }
-    }
-
-    onMouseleaveMore() {
-        if (this.popover.isOpen) {
-            this.popover.close();
-        }
-    }
-
-    onClickMore() {
-        if (this.popover.isOpen) {
-            this.popover.close();
-        }
     }
 }

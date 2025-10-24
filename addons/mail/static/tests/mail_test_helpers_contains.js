@@ -6,17 +6,6 @@ import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
 
-/**
- * Use `expect.step` instead
- * @deprecated
- */
-export const step = expect.step;
-/**
- * Use `expect.waitForSteps` instead
- * @deprecated
- */
-export const assertSteps = expect.waitForSteps;
-
 /** @param {EventInit} [args] */
 const mapBubblingEvent = (args) => ({ ...args, bubbles: true });
 
