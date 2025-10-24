@@ -641,6 +641,7 @@ class HrLeave(models.Model):
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
             holiday.attachment_ids = holiday.supported_attachment_ids
+        self.invalidate_recordset(['attachment_ids'])
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
