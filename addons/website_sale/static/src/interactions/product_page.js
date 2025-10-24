@@ -30,11 +30,6 @@ export class ProductPage extends Interaction {
         this._applySearchParams();
         this._triggerVariantChange(this.el);
         this._startZoom();
-        // Triggered when selecting a product variant in a carousel.
-        window.addEventListener('hashchange', ev => {
-            this._applySearchParams();
-            this._triggerVariantChange(this.el);
-        });
     }
 
     destroy() {

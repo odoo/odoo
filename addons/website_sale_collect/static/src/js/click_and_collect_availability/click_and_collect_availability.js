@@ -1,7 +1,7 @@
-import { Component, onWillDestroy, useState } from '@odoo/owl';
+import { Component, useState } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
-import { useService } from '@web/core/utils/hooks';
+import { useBus, useService } from '@web/core/utils/hooks';
 
 import {
     LocationSelectorDialog
@@ -31,9 +31,11 @@ export class ClickAndCollectAvailability extends Component {
             deliveryStockData: this.props.deliveryStockData,
             active: this.props.active,
         });
-        const updateState = this._updateStateWithCombinationInfo.bind(this);
-        this.env.bus.addEventListener('updateCombinationInfo', res => updateState(res.detail));
-        onWillDestroy(() => this.env.bus.removeEventListener('updateCombinationInfo', updateState));
+        useBus(
+            this.env.bus,
+            'updateCombinationInfo',
+            (ev) => this._updateStateWithCombinationInfo(ev.detail),
+        );
     }
 
     /**

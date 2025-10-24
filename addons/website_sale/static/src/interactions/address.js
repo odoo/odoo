@@ -8,21 +8,11 @@ patch(CustomerAddress.prototype, {
         super.setup();
         // There is two main buttons in the DOM for mobile or desktop. User can switch from one mode
         // to the other by rotating their tablet.
-        this.submitButtons = document.getElementsByName("website_sale_main_button");
-        if (this.submitButtons) {
-            this._boundSaveAddress = this.saveAddress.bind(this);
-            this.submitButtons.forEach(
-                submitButton => submitButton.addEventListener('click', this._boundSaveAddress)
-            );
-        }
-    },
-
-    destroy() {
-        if (this.submitButtons) {
-            this.submitButtons.forEach(
-                submitButton => submitButton.removeEventListener('click', this._boundSaveAddress)
-            );
-        }
-        super.destroy();
+        const submitButtons = document.getElementsByName('website_sale_main_button');
+        const boundSaveAddress = this.saveAddress.bind(this);
+        submitButtons.forEach(submitButton => {
+            submitButton.addEventListener('click', boundSaveAddress);
+            this.registerCleanup(() => submitButton.removeEventListener('click', boundSaveAddress));
+        });
     },
 });
