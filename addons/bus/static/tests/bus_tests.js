@@ -228,11 +228,15 @@ QUnit.test("Websocket disconnects upon user log out", async () => {
     const firstTabEnv = await makeTestEnv();
     firstTabEnv.services["bus_service"].start();
     await waitForBusEvent(firstTabEnv, "connect");
-    // second tab connects to the worker after disconnection: user_id
-    // is now false.
-    patchWithCleanup(session, { user_id: false });
+    patchWithCleanup(session, { db: undefined });
+    // second tab connects to the worker, ommiting the DB name. Consider same DB.
     const env2 = await makeTestEnv();
     env2.services["bus_service"].start();
+    await waitForBusEvent(firstTabEnv, "disconnect", { received: false });
+    // third tab connects to the worker after disconnection: user_id is now false.
+    patchWithCleanup(session, { user_id: false });
+    const env3 = await makeTestEnv();
+    env3.services["bus_service"].start();
     await waitForBusEvent(firstTabEnv, "disconnect");
 });
 
