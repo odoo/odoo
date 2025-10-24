@@ -178,6 +178,11 @@ export class ResetCropAction extends BuilderAction {
 export class ReplaceMediaAction extends BuilderAction {
     static id = "replaceMedia";
     static dependencies = ["media_website"];
+
+    setup() {
+        this.canTimeout = false;
+    }
+
     async apply({ editingElement: mediaEl }) {
         await this.dependencies.media_website.replaceMedia(mediaEl);
     }

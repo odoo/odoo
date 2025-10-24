@@ -128,6 +128,7 @@ export class BlockTab extends Component {
             {
                 withLoadingEffect: false,
                 shouldInterceptClick: true,
+                canTimeout: false,
             }
         );
     }
@@ -258,6 +259,7 @@ export class BlockTab extends Component {
                 );
                 this.shared.operation.next(async () => await dragAndDropProm, {
                     withLoadingEffect: false,
+                    canTimeout: false,
                 });
                 const restoreDragSavePoint = this.shared.history.makeSavePoint();
                 this.cancelDragAndDrop = () => {
@@ -466,6 +468,7 @@ export class BlockTab extends Component {
                             {
                                 withLoadingEffect: false,
                                 shouldInterceptClick: true,
+                                canTimeout: false,
                             }
                         );
                     }
