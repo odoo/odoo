@@ -229,7 +229,6 @@ class ResPartner(models.Model):
                         msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
                     partner._origin.message_post(body=msg)
                 _logger.warning("The VAT number %s failed VIES check.", partner.vies_vat_to_check)
-                partner.vies_valid = False
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
