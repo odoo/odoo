@@ -413,6 +413,7 @@ class IrAccess(models.Model):
         _logger.info(
             "Access Denied for operation: %s on record ids: %r, uid: %s, model: %s",
             operation, records.ids[:6], self.env.uid, records._name,
+            stack_info=_logger.isEnabledFor(logging.DEBUG),
         )
         self = self.with_context(self.env.user.context_get())  # noqa: PLW0642
 
