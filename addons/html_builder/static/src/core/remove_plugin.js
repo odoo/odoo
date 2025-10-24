@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const unremovableNodePredicates = [
     (node) => !isEditable(node.parentNode),
@@ -15,14 +16,6 @@ const unremovableNodePredicates = [
 export function isRemovable(el) {
     return !unremovableNodePredicates.some((p) => p(el));
 }
-
-const layoutElementsSelector = [
-    ".o_we_shape",
-    ".o_we_bg_filter",
-    // Website only
-    ".s_parallax_bg",
-    ".o_bg_video_container",
-].join(",");
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
@@ -76,13 +69,15 @@ export class RemovePlugin extends Plugin {
             childrenEls.length === 1 &&
             childrenEls[0].matches("figcaption");
 
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
         const isEmpty =
             isEmptyFigureEl ||
             (el.textContent.trim() === "" &&
-                childrenEls.every((el) =>
-                    // Consider layout-only elements (like bg-shapes) as empty
-                    el.matches(layoutElementsSelector)
-                ));
+                (!systemNodeSelectors ||
+                    childrenEls.every((el) =>
+                        // Consider layout-only elements (like bg-shapes) as empty
+                        closestElement(el, systemNodeSelectors)
+                    )));
 
         return (
             isEmpty &&
