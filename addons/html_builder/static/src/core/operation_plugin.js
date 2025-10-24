@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { Operation } from "./operation";
 import { useComponent } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { Operation } from "./operation";
 
 /** @typedef {import("./operation").OperationParams} OperationParams */
 
@@ -12,9 +13,10 @@ import { useComponent } from "@odoo/owl";
 export class OperationPlugin extends Plugin {
     static id = "operation";
     static dependencies = ["history"];
-    static shared = ["next"];
+    static shared = ["next", "hasTimedOut"];
 
     setup() {
+        this._hasTimedOut = false;
         this.operation = new Operation(this.document);
 
         // Revert any potential preview as soon as the user does anything, to
@@ -32,8 +34,39 @@ export class OperationPlugin extends Plugin {
      * @param {OperationParams} params
      * @returns {Promise<void>}
      */
-    next(fn, params) {
-        return this.operation.next(fn, params);
+    async next(fn, params = { canTimeout: false }) {
+        let rollback;
+        const result = await this.operation.next(() => {
+            if (params.canTimeout) {
+                rollback = this.dependencies.history.makeSavePoint();
+            }
+            if (fn) {
+                return fn();
+            }
+        }, params);
+        if (result && result.hasFailed && rollback) {
+            this._hasTimedOut = true;
+            this.onTimeout(rollback);
+        }
+        return result;
+    }
+
+    onTimeout(rollback) {
+        rollback();
+
+        this.services.notification.add(
+            _t(
+                "A technical issue occured in the builder, you should save or discard your changes."
+            ),
+            {
+                type: "danger",
+                sticky: true,
+            }
+        );
+    }
+
+    hasTimedOut() {
+        return this._hasTimedOut;
     }
 }
 

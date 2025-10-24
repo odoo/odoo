@@ -46,6 +46,7 @@ import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customi
 import { Plugin } from "@html_editor/plugin";
 import { revertPreview } from "@html_builder/core/utils";
 import { rpc } from "@web/core/network/rpc";
+import { redirect } from "@web/core/utils/urls";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -125,6 +126,7 @@ export class WebsiteBuilder extends Component {
         } else {
             this.props.builderProps.closeEditor();
         }
+        this.reloadAfterTimeout();
     }
 
     onBeforeUnload(event) {
@@ -159,15 +161,43 @@ export class WebsiteBuilder extends Component {
         return true;
     }
 
+    reloadAfterTimeout() {
+        if (this.editor.shared.operation.hasTimedOut()) {
+            const currentUrl = new URL(window.location.href);
+            // A timed-out operation might still be running; reload the page to avoid side effects
+            redirect(`/@${currentUrl.pathname}`);
+        }
+    }
+
     async save() {
+        if (this.editor.shared.operation.hasTimedOut()) {
+            const shouldContinue = await new Promise((resolve) => {
+                this.dialog.add(ConfirmationDialog, {
+                    title: _t("Corrupted content"),
+                    body: _t(
+                        "This page may be corrupted if you save these changes. Are you sure you want to continue?"
+                    ),
+                    confirmLabel: _t("Save anyway"),
+                    confirmClass: "btn-danger",
+                    confirm: () => resolve(true),
+                    cancel: () => resolve(false),
+                    dismiss: () => resolve(false),
+                });
+            });
+            if (!shouldContinue) {
+                return;
+            }
+        }
+
         // TODO: handle the urgent save and the fail of the save operation
         await this.editor.shared.operation.next(
             async () => {
                 await this.editor.shared.savePlugin.save();
                 this.props.builderProps.closeEditor();
             },
-            { withLoadingEffect: false }
+            { withLoadingEffect: false, canTimeout: false }
         );
+        this.reloadAfterTimeout();
     }
 
     get builderProps() {

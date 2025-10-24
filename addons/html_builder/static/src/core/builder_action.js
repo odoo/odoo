@@ -62,6 +62,9 @@ export class BuilderAction {
         this.preview ??= this.reload ? false : true;
         this.withLoadingEffect ??= true;
         this.loadOnClean ??= false;
+        // canTimeout is enabled when no load is used to avoid staying stuck
+        // in the mutex if apply fails silently.
+        this.canTimeout ??= !this.has("load");
     }
 
     /**
