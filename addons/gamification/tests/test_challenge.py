@@ -5,7 +5,7 @@ from freezegun import freeze_time
 from datetime import timedelta
 
 from odoo.addons.gamification.tests.common import TransactionCaseGamification
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.tools import mute_logger
@@ -179,13 +179,6 @@ class test_challenge(TestGamificationCommon):
         )
 
     def test_40_create_challenge_with_sum_goal(self):
-        challenge = self.env['gamification.challenge'].create({
-            'name': 'Test Challenge',
-            'state': 'draft',
-            'user_domain': '[("active", "=", True)]',
-            'reward_id': 1,
-        })
-
         model = self.env['ir.model'].search([('model', '=', 'gamification.badge')], limit=1)
 
         field = self.env['ir.model.fields'].search([
@@ -195,47 +188,20 @@ class test_challenge(TestGamificationCommon):
 
         self.assertNotIn(field.ttype, {'integer', 'float', 'monetary'}, "Field should not be numeric")
 
-        sum_goal = self.env['gamification.goal.definition'].create({
-            'name': 'Test Definition',
-            'computation_mode': 'sum',
-            'model_id': model.id,
-            'field_id': field.id,
-        })
+        with self.assertRaises(ValidationError):
+            self.env['gamification.goal.definition'].create({
+                'name': 'Test Definition',
+                'computation_mode': 'sum',
+                'model_id': model.id,
+                'field_id': field.id,
+            })
 
-        existing_badges_count = len(self.env['gamification.badge'].with_user(self.user_demo.id).search([]))
-
-        self.env['gamification.challenge.line'].create({
-            'challenge_id': challenge.id,
-            'definition_id': sum_goal.id,
-            'condition': 'higher',
-            'target_goal': existing_badges_count + 1,
-        })
-
-        challenge.action_start()
-        self.assertEqual(challenge.state, 'inprogress', "Challenge failed to start")
-
-        goal = self.env['gamification.goal'].search([
-            ('user_id', '=', self.user_demo.id),
-            ('definition_id', '=', sum_goal.id)
-        ])
-        self.assertLess(goal.current, goal.target_goal, "Current goal should be less than the target goal")
-        self.assertEqual(goal.state, 'inprogress')
-
-        badge = self.env['gamification.badge'].create({
-            'name': self.user_demo.name + " triggered",
-            'rule_auth': 'users',
-            'rule_auth_user_ids': self.user_demo,
-        })
-
-        badge_user_wizard = self.env['gamification.badge.user.wizard'].create({
-            'user_id': self.user_demo.id,
-            'badge_id': badge.id,
-        })
-        badge_user_wizard.action_grant_badge()
-
-        goal.update_goal()
-        self.assertEqual(goal.current, goal.target_goal, "Current goal should be equal to the target goal")
-        self.assertEqual(goal.state, 'reached')
+        with self.assertRaises(ValidationError):
+            self.env['gamification.goal.definition'].create({
+                'name': 'Test Definition',
+                'computation_mode': 'sum',
+                'model_id': model.id,
+            })
 
     def test_send_report_in_ranking(self):
         gamification_model = self.env['ir.model']._get_id('gamification.badge')
