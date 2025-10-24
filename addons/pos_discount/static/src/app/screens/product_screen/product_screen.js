@@ -15,4 +15,18 @@ patch(ProductScreen.prototype, {
             return button;
         });
     },
+    async addProductToOrder(product) {
+        await super.addProductToOrder(product);
+        const discountLine = this.currentOrder.getDiscountLine();
+        if (discountLine) {
+            const percentage = discountLine.extra_tax_data?.discount_percentage;
+            if (percentage) {
+                const selectLine = this.currentOrder?.getSelectedOrderline();
+                await this.pos.applyDiscount(percentage, this.currentOrder);
+                this.pos.selectOrderLine(this.currentOrder, selectLine);
+            } else {
+                discountLine.delete();
+            }
+        }
+    },
 });
