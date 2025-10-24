@@ -137,13 +137,6 @@ class ResConfigSettings(models.TransientModel):
             'res_id': self.env['ir.model.data']._xmlid_to_res_id("website_sale.mail_template_sale_cart_recovery"),
         }
 
-    def action_open_extra_info(self):
-        self.ensure_one()
-        # Add the "edit" parameter in the url to tell the controller
-        # that we want to edit even if we are not in a payment flow
-        return self.env["website"].get_client_action(
-            '/shop/extra_info?open_editor=true', mode_edit=True, website_id=self.website_id.id)
-
     @api.readonly
     def action_open_sale_mail_templates(self):
         return {
