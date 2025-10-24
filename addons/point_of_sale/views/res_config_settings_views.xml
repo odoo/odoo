@@ -287,10 +287,17 @@
                                     <field name="pos_manual_discount"/>
                                 </setting>
                                 <setting id="pos_global_discount" help="Adds a button to set a global discount" documentation="/applications/sales/point_of_sale/pricing/discounts.html">
-                                    <field name="pos_module_pos_discount"/>
-                                    <div class="content-group mt16" invisible="not pos_module_pos_discount">
+                                    <field name="pos_iface_discount" readonly="pos_has_active_session"/>
+                                    <div class="content-group mt16" invisible="not pos_iface_discount">
                                         <div class="text-warning mb4" id="warning_text_pos_discount" >
-                                            Save this page and come back here to set up the feature.
+                                            <div class="row">
+                                                <label string="Discount Product" for="pos_discount_product_id" class="col-lg-3 o_light_label"/>
+                                                <field name="pos_discount_product_id" required="pos_iface_discount"/>
+                                            </div>
+                                            <div class="row">
+                                                <label string="Discount %" for="pos_discount_pc" class="col-lg-3 o_light_label"/>
+                                                <field name="pos_discount_pc"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </setting>

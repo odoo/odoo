@@ -754,8 +754,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             has a tax set on it.
         """
 
-        if not self.env["ir.module.module"].search([("name", "=", "pos_discount"), ("state", "=", "installed")]):
-            self.skipTest("pos_discount module is required for this test")
         LoyaltyProgram = self.env['loyalty.program']
         (LoyaltyProgram.search([])).write({'pos_ok': False})
 
@@ -787,7 +785,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'payment_method_ids': self.cash_payment_method
         })
         self.main_pos_config2.write({
-            'module_pos_discount' : True,
+            'iface_discount': True,
             'discount_product_id': self.discount_product.id,
             'discount_pc': 20,
         })
@@ -1106,8 +1104,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("PosLoyalty2DiscountsSpecificGlobal")
 
     def test_specific_product_discount_with_global_discount(self):
-        if self.env['ir.module.module']._get('pos_discount').state != 'installed':
-            self.skipTest("pos_discount module is required for this test")
 
         self.env['loyalty.program'].search([]).write({'active': False})
 
@@ -1119,7 +1115,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config2 = self.main_pos_config.copy({
-            'module_pos_discount': True,
+            'iface_discount': True,
             'discount_product_id': self.discount_product.id,
             'discount_pc': 50,
         })

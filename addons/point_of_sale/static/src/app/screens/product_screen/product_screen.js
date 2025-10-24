@@ -145,7 +145,7 @@ export class ProductScreen extends Component {
         const defaultLastRowValues =
             DEFAULT_LAST_ROW.map((button) => button.value) + [BACKSPACE.value];
 
-        return getButtons(DEFAULT_LAST_ROW, [
+        const buttons = getButtons(DEFAULT_LAST_ROW, [
             { value: "quantity", text: _t("Qty") },
             {
                 value: "discount",
@@ -174,6 +174,16 @@ export class ProductScreen extends Component {
                 ${button.value === "discount" ? "numpad-discount rounded-0" : ""}
             `,
         }));
+        if (!this.currentOrder?.getSelectedOrderline()?.isDiscountLine) {
+            return buttons;
+        }
+        const toDisable = new Set(["quantity", "discount"]);
+        return buttons.map((button) => {
+            if (toDisable.has(button.value)) {
+                return { ...button, disabled: true };
+            }
+            return button;
+        });
     }
     onNumpadClick(buttonValue) {
         if (["quantity", "discount", "price"].includes(buttonValue)) {
@@ -399,6 +409,18 @@ export class ProductScreen extends Component {
         }
         const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
         this.showOptionalProductPopupIfNeeded(product);
+
+        const discountLine = this.currentOrder.getDiscountLine();
+        if (discountLine) {
+            const percentage = discountLine.extra_tax_data?.discount_percentage;
+            if (percentage) {
+                const selectLine = this.currentOrder?.getSelectedOrderline();
+                await this.pos.applyDiscount(percentage, this.currentOrder);
+                this.pos.selectOrderLine(this.currentOrder, selectLine);
+            } else {
+                discountLine.delete();
+            }
+        }
 
         return line;
     }

@@ -41,3 +41,36 @@ test("fastValidate", async () => {
     expect(order.state).toBe("paid");
     expect(order.amount_paid).toBe(3.45);
 });
+
+test("getNumpadButtons", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product1 = store.models["product.template"].get(5);
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: product1,
+            qty: 1,
+        },
+        order
+    );
+    const productScreen = await mountWithCleanup(ProductScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    await store.applyDiscount(10);
+    const receivedButtonsDisableStatue = productScreen
+        .getNumpadButtons()
+        .filter((button) => ["quantity", "discount"].includes(button.value))
+        .map((button) => button.disabled);
+    let discountLine = order.getSelectedOrderline();
+    expect(Math.abs(discountLine.priceIncl).toString()).toBe(
+        (order.lines[0].priceIncl * 0.1).toPrecision(2)
+    );
+    expect(receivedButtonsDisableStatue).toEqual([true, true]);
+
+    await productScreen.addProductToOrder(product1);
+    discountLine = order.getDiscountLine();
+
+    expect(Math.abs(discountLine.priceIncl).toString()).toBe(
+        (order.lines[0].priceIncl * 0.1).toPrecision(2)
+    );
+});

@@ -77,6 +77,38 @@ describe("onClickLine", () => {
         expect(screen.qtyTracker[order.lines[1].uuid]).toBe(1);
         expect(screen.qtyTracker[order.lines[2].uuid]).toBe(1);
     });
+
+    test("getGlobalDiscountPc", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+
+        const productScreen = await mountWithCleanup(SplitBillScreen, {
+            props: { orderUuid: order.uuid },
+        });
+        await store.applyDiscount(10);
+        expect(productScreen.getGlobalDiscountPc()).toEqual(10);
+    });
+
+    test("splittedOrder", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const screen = await mountWithCleanup(SplitBillScreen, {
+            props: {
+                orderUuid: order.uuid,
+            },
+        });
+
+        await store.applyDiscount(10);
+
+        const line = order.getOrderlines()[0];
+        screen.onClickLine(line);
+        await screen.createSplittedOrder();
+        const splittedOrder = store.models["pos.order"].find((o) => o.id != order.id);
+        const discountLine = splittedOrder.getOrderlines().find((ol) => ol.isDiscountLine === true);
+        expect(Math.abs(discountLine.priceIncl).toString()).toBe(
+            (splittedOrder.lines[0].priceIncl * 0.1).toPrecision(2)
+        );
+    });
 });
 
 test("_getOrderName", async () => {

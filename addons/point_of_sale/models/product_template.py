@@ -219,6 +219,14 @@ class ProductTemplate(models.Model):
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
         self._process_pos_ui_product_product(read_records, config)
+        discount_product_id = config.discount_product_id.id
+        product_ids_set = {product['id'] for product in read_records}
+
+        if config.iface_discount and discount_product_id not in product_ids_set:
+            productModel = self.env['product.template'].with_context({**self.env.context, 'display_default_code': False})
+            fields = self.env['product.template']._load_pos_data_fields(config)
+            product = productModel.search_read([('id', '=', discount_product_id)], fields=fields, load=False)
+            read_records.extend(product)
         return read_records
 
     def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=None):

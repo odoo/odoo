@@ -5,6 +5,7 @@ import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.point_of_sale.tests.test_taxes_global_discount import TestTaxesGlobalDiscountPOS
 from odoo import Command
 import json
 
@@ -235,7 +236,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         })
 
 
-class TestFrontend(TestFrontendCommon):
+class TestFrontend(TestTaxesGlobalDiscountPOS, TestFrontendCommon):
 
     def test_01_pos_restaurant(self):
         self.pos_user.write({
@@ -836,3 +837,7 @@ class TestFrontend(TestFrontendCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_name_preset_skip_screen')
+
+    def test_global_discount_split(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SplitBillScreenTourTransfer')
