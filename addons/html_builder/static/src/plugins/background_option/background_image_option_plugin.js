@@ -26,6 +26,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
             DynamicColorAction,
         },
         content_not_editable_selectors: ".o_we_bg_filter",
+        system_node_selectors: ".o_we_bg_filter",
         get_target_element_providers: withSequence(5, (el) => el),
     };
     /**

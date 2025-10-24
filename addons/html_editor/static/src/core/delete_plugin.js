@@ -1172,6 +1172,12 @@ export class DeletePlugin extends Plugin {
     }
 
     shouldSkip(leaf, blockSwitch) {
+        // A system node is a node that should be ignored by the editor. In
+        // other words, if the editor had a VDOM, it would be absent from it.
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
+        if (systemNodeSelectors && closestElement(leaf, systemNodeSelectors)) {
+            return true;
+        }
         if (leaf.nodeType === Node.TEXT_NODE) {
             return false;
         }

@@ -38,6 +38,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
             ToggleBgVideoAction,
             ReplaceBgVideoAction,
         },
+        system_node_selectors: ".o_bg_video_container",
     };
     loadReplaceBackgroundVideo() {
         return new Promise((resolve) => {
