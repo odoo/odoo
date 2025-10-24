@@ -18,7 +18,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
-import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
+import { parseWidthAttribute, resetDateFieldWidths } from "@web/views/list/column_width_hook";
 
 describe.current.tags("desktop");
 
@@ -142,6 +142,15 @@ function expectedColumnWidthsToBeCloseTo(expectedColumnWidths) {
 }
 
 // width computation
+test(`width computation: parseWidthAttribute`, async () => {
+    expect(parseWidthAttribute("40")).toEqual({ min: 40, max: 40 });
+    expect(parseWidthAttribute("75px")).toEqual({ min: 75, max: 75 });
+    expect(parseWidthAttribute("[92]")).toEqual({ min: 92 });
+    expect(parseWidthAttribute("[24px]")).toEqual({ min: 24 });
+    expect(parseWidthAttribute("[120,200]")).toEqual({ min: 120, max: 200 });
+    expect(parseWidthAttribute("[75px,148px]")).toEqual({ min: 75, max: 148 });
+});
+
 test(`width computation: no record, lot of fields`, async () => {
     Foo._records = [];
     await mountView({
@@ -447,7 +456,7 @@ test(`width computation: widget with listViewWidth in its definition`, async () 
     expect(getColumnWidths()).toEqual([40, 180, 580]);
 });
 
-test(`width computation: list with width attribute in arch`, async () => {
+test(`width computation: list with width attribute in arch (fixed widths)`, async () => {
     await mountView({
         type: "list",
         resModel: "foo",
@@ -460,6 +469,21 @@ test(`width computation: list with width attribute in arch`, async () => {
             </list>`,
     });
     expect(getColumnWidths()).toEqual([40, 61, 72, 102, 524]);
+});
+
+test(`width computation: list with width attribute in arch (min/max widths)`, async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="int_field" width="[52,100]"/>
+                <field name="foo"/>
+                <field name="qux" width="[30]"/>
+                <field name="currency_id"/>
+            </list>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 109, 165, 179, 306]);
 });
 
 test(`width computation: datetime in numeric, am/pm format`, async () => {
