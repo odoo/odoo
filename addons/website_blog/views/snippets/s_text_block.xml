@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Default text block for blogs -->
+<template id="s_text_block_small" name="Text" inherit_id="website.s_text_block" primary="True">
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" remove="container" separator=" "/>
+        <attribute name="class" add="o_container_small" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

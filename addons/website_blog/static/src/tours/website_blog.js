@@ -74,7 +74,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ":iframe #o_wblog_post_content p",
+            trigger: ":iframe #o_wblog_post_content .o_wblog_post_content_field",
             content: markup(
                 _t(
                     "<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs."

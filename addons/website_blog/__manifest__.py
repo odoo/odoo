@@ -21,6 +21,7 @@
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
         'views/snippets/s_dynamic_snippet_blog_posts_preview_data.xml',
+        'views/snippets/s_text_block.xml',
         'views/website_pages_views.xml',
         'views/blog_post_add.xml',
         'security/ir.model.access.csv',
