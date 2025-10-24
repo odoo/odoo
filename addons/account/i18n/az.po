@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-16 18:37+0000\n"
-"PO-Revision-Date: 2025-10-22 14:06+0000\n"
+"PO-Revision-Date: 2025-10-24 22:20+0000\n"
 "Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-18/"
 "account/az/>\n"
@@ -1671,7 +1671,7 @@ msgstr ""
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Vergi maliyyə mövqeyi eyni vergi üzrə yalnız bir dəfə müəyyən edilə bilər."
+"Vergi fiskal mövqeyi eyni vergi üzrə yalnız bir dəfə müəyyən edilə bilər."
 
 #. module: account
 #. odoo-python
@@ -2235,7 +2235,7 @@ msgstr "Hesablar"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Maliyyə Vəziyyəti üzrə Hesabların Qarşılaşdırılması"
+msgstr "Fiskal Mövqe üzrə Hesabların Qarşılaşdırılması"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2860,7 +2860,7 @@ msgstr ""
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
 msgstr ""
-"Hesabatın maliyyə mövqeyi eyni hesabat üzrə yalnız bir dəfə müəyyən edilə "
+"Hesabatın fiskal mövqeyi eyni hesabat üzrə yalnız bir dəfə müəyyən edilə "
 "bilər."
 
 #. module: account
@@ -3881,7 +3881,7 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
-"Aktiv sahənin işarəsini götürərək, maliyyə vəziyyətini silmədən gizlədə "
+"Aktiv sahənin işarəsini götürərək, fiskal mövqeyini silmədən gizlədə "
 "bilərsiniz."
 
 #. module: account
@@ -5017,7 +5017,7 @@ msgstr "Ünvan kitabınızda yeni müştəri yaradın"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "Yeni maliyyə vəziyyəti yaradın"
+msgstr "Yeni fiskal mövqe yaradın"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -7381,13 +7381,13 @@ msgstr "Fiskal Müddətlər"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "Fiskal Pozisyon"
+msgstr "Fiskal Mövqe"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Fiskal Vəziyyət"
+msgstr "Fiskal Mövqelər"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -7397,7 +7397,7 @@ msgstr "Maliyyə İlinin Sonu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr "Maliyyə Vəziyyəti"
+msgstr "Fiskal mövqe"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -7407,9 +7407,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"Maliyyə vəziyyəti müəyyən müştərilər və ya satış sifarişləri/ fakturaları "
-"üçün vergi və hesabları uyğunlaşdırmaqda istifadə olunur. Susmaya görə dəyər "
-"müştəridən qaynaqlanır."
+"Fiskal mövqe müəyyən müştərilər və ya satış sifarişləri/ fakturaları üçün "
+"vergi və hesabları uyğunlaşdırmaqda istifadə olunur. Defolt dəyər müştəridən "
+"gəlir."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -13446,7 +13446,7 @@ msgstr "Axtarış paneli"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "Maliyyə Vəziyyətini Axtarın"
+msgstr "Fiskal Mövqeləri Axtarın"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -14584,7 +14584,7 @@ msgstr "Vergilərin Bağlanması"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Fiskal Vəziyyətin Vergi qarşılaşdırılması"
+msgstr "Fiskal Mövqeyin Vergi qarşılaşdırılması"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -15346,8 +15346,7 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
-"Fiskal vəziyyət bu əlaqa üçün istifadə edilən vergiləri/hesabları müəyyən "
-"edir."
+"Fiskal mövqe bu əlaqa üçün istifadə edilən vergiləri/hesabları müəyyən edir."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
