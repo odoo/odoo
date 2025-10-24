@@ -8,7 +8,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, tick } from "@odoo/hoot-dom";
 import { useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -320,4 +320,34 @@ test("reload action: apply, clean save and reload are called in the right order 
     cleanDef.resolve();
     await reloadDef.promise;
     expect.verifySteps(["clean async", "save sync", "save async", "reload"]);
+});
+
+test("shows notification when a BuilderAction.apply times out", async () => {
+    addBuilderAction({
+        timeoutAction: class extends BuilderAction {
+            static id = "timeoutAction";
+
+            async apply() {
+                expect.step("apply start");
+                await new Promise((resolve) => setTimeout(resolve, 15000));
+                expect.step("apply end");
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'timeoutAction'"/>`;
+        }
+    );
+
+    await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-id='timeoutAction']").click();
+
+    await advanceTime(15000);
+    await tick();
+
+    expect(".o_notification").toHaveCount(1);
+    expect.verifySteps(["apply start", "apply end"]);
 });

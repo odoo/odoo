@@ -466,6 +466,22 @@ function useWithLoadingEffect(getAllActions) {
     return withLoadingEffect;
 }
 
+function useCanTimeout(getAllActions) {
+    const env = useEnv();
+    const getAction = env.editor.shared.builderActions.getAction;
+    let canTimeout = true;
+    for (const descr of getAllActions()) {
+        if (descr.actionId) {
+            const action = getAction(descr.actionId);
+            if (action.canTimeout === false) {
+                canTimeout = false;
+            }
+        }
+    }
+
+    return canTimeout;
+}
+
 export function revertPreview(editor) {
     if (editor.isDestroyed) {
         return;
@@ -492,17 +508,24 @@ export function useClickableBuilderComponent() {
     const operationWithReload = useOperationWithReload(callApply, reload);
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
+    const canTimeout = useCanTimeout(getAllActions);
 
     let preventNextPreview = false;
     const operation = {
         commit: () => {
             preventNextPreview = false;
             if (reload) {
-                callOperation(operationWithReload);
+                callOperation(operationWithReload, {
+                    operationParams: {
+                        withLoadingEffect: withLoadingEffect,
+                        canTimeout: canTimeout,
+                    },
+                });
             } else {
                 callOperation(applyOperation.commit, {
                     operationParams: {
                         withLoadingEffect: withLoadingEffect,
+                        canTimeout: canTimeout,
                     },
                 });
             }
@@ -518,6 +541,7 @@ export function useClickableBuilderComponent() {
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
+                    canTimeout: canTimeout,
                 },
             });
         },
@@ -761,6 +785,7 @@ export function useInputBuilderComponent({
     const { reload } = useReloadAction(getAllActions);
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
+    const canTimeout = useCanTimeout(getAllActions);
 
     onWillUpdateProps((nextProps) => {
         if ("default" in nextProps) {
@@ -809,11 +834,20 @@ export function useInputBuilderComponent({
         userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
         const rawValue = parseDisplayValue(userInputValue);
         if (reload) {
-            callOperation(operationWithReload, { userInputValue: rawValue });
+            callOperation(operationWithReload, {
+                userInputValue: rawValue,
+                operationParams: {
+                    withLoadingEffect: withLoadingEffect,
+                    canTimeout: canTimeout,
+                },
+            });
         } else {
             callOperation(applyOperation.commit, {
                 userInputValue: rawValue,
-                withLoadingEffect: withLoadingEffect,
+                operationParams: {
+                    withLoadingEffect: withLoadingEffect,
+                    canTimeout: canTimeout,
+                },
             });
         }
         if (rawValue === null || (rawValue === defaultValue && rawValue === state.value)) {
@@ -835,6 +869,7 @@ export function useInputBuilderComponent({
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
+                    canTimeout: canTimeout,
                 },
             });
         }
