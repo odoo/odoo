@@ -29,6 +29,9 @@ class PurchaseOrderLine(models.Model):
                 re['route_ids'] = [Command.link(route_id) for route_id in self.sale_line_id.route_ids.ids]
         return res
 
+    def _get_sale_order_line_product(self):
+        return self.sale_line_id.product_id
+
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         # if this is defined, this is a dropshipping line, so no
         # this is to correctly map delivered quantities to the so lines
