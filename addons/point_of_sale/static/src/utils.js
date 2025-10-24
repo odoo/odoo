@@ -176,7 +176,7 @@ export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export const LONG_PRESS_DURATION = session.test_mode ? 100 : 1000;
+export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
 
 export async function getImageDataUrl(imageUrl) {
     const res = await fetch(imageUrl);
