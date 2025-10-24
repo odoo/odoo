@@ -219,6 +219,7 @@ export class DragAndDropPlugin extends Plugin {
                 );
                 this.dependencies.operation.next(async () => await dragAndDropProm, {
                     withLoadingEffect: false,
+                    canTimeout: false,
                 });
                 const restoreDragSavePoint = this.dependencies.history.makeSavePoint();
                 this.cancelDragAndDrop = () => {
