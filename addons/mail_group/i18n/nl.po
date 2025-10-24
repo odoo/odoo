@@ -3,12 +3,13 @@
 # * mail_group
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-14 08:07+0000\n"
+"PO-Revision-Date: 2025-10-23 09:16+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mail_group/"
 "nl/>\n"
@@ -22,17 +23,17 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "#Leden"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "#Berichten"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "#Te Reviewen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -45,6 +46,8 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    Begin het gesprek door een e-mail te sturen naar"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -68,6 +71,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hallo,<br/><br/>\n"
+"                Je hebt je aangemeld voor de mailinglijst <strong t-out="
+"\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Klik op de volgende link om je inschrijving te bevestigen: "
+"<strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t "
+"t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                Was dit niet de bedoeling? Geen probleem, negeer dit bericht "
+"dan gewoon.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -86,6 +102,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hallo,<br/><br/>\n"
+"                Je hebt gevraagd om je uit te schrijven van de mailinglijst "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Klik op de volgende link om dit te bevestigen: <strong t-if="
+"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
+"\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                Was dit niet de bedoeling? Geen zorgen, negeer dit bericht "
+"dan gewoon.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -99,6 +128,14 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hallo <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Hieronder vind je de richtlijnen van de <t t-out="
+"\"object.mail_group_id.name\"/> mailinglijst.</p>\n"
+"                <p><t t-out="
+"\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -132,6 +169,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Verkeer\" "
+"title=\"Verkeer\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -453,13 +492,15 @@ msgstr "Kies of configureer een aangepast domein"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Closed"
-msgstr ""
+msgstr "Gesloten"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
+"Gesloten groepen kunnen weer worden geopend, maar e-mails die naar deze "
+"groepen worden gestuurd, komen terug."
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -661,6 +702,12 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"Hallo,\n"
+"    <br/><br/>\n"
+"    De mailinglijst die je probeert te bereiken is gesloten en accepteert "
+"geen nieuwe berichten meer.\n"
+"    <br/><br/>\n"
+"    Met vriendelijke groet,"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -724,7 +771,7 @@ msgstr "Is verbannen"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
 msgid "Is Closed"
-msgstr ""
+msgstr "Is gesloten"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
@@ -915,7 +962,7 @@ msgstr "Berichten die een actie nodig hebben"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "Modereren"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1078,7 +1125,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "Oeps, hier zijn geen berichten."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1247,7 +1294,7 @@ msgstr "Bericht met uitleg verwijderen"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsibles"
-msgstr ""
+msgstr "Verantwoordelijken"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1272,7 +1319,7 @@ msgstr "Moderatielijst zoeken"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "Selecteer gebruikers"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1308,12 +1355,12 @@ msgstr "Stuur een e-mail naar de auteur van het bericht"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
 msgid "Send email"
-msgstr ""
+msgstr "Verzend e-mail"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "Stuur richtlijnen naar nieuwe leden"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1523,13 +1570,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "Het is niet mogelijk om lid te worden van een gesloten groep."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "Je kunt geen richtlijnen voor een gesloten groep verzenden."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1569,7 +1616,7 @@ msgstr "bijv. \"Nieuwsbrief\""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "bijv. \"Deze groep gaat over ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1579,7 +1626,7 @@ msgstr "bijv. mycompany.com"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "bijv. \"Wees alsjeblieft beleefd en ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1594,7 +1641,7 @@ msgstr "is geweest"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "leden<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1604,7 +1651,7 @@ msgstr "berichten / maand"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "berichten te reviewen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short

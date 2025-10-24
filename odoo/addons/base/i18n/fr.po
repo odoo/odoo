@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-10-21 12:30+0000\n"
+"PO-Revision-Date: 2025-10-23 11:33+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/base/fr/>"
 "\n"
@@ -689,6 +689,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Utiliser les imprimantes iMin ePOS sans l'IoT Box dans le Point de Vente\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -753,6 +756,9 @@ msgid ""
 "        Augment Livechat with AI Agents.\n"
 "    "
 msgstr ""
+"\n"
+"        Améliorez Live Chat avec des agents IA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
@@ -3511,9 +3517,9 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Gestion des actifs\n"
+"Gestion des immobilisations\n"
 "=========================\n"
-"Gestion des actifs détenues par une société ou une personne.\n"
+"Gestion des immobilisations détenues par une société ou une personne.\n"
 "Assure le suivi des amortissements et crée des pièces comptables "
 "correspondantes.\n"
 "\n"
@@ -3821,6 +3827,62 @@ msgid ""
 "- Configuration note: The .pfx certificate should be set on the payroll "
 "configuration.\n"
 msgstr ""
+"\n"
+"Déclarations DIMONA automatiques\n"
+"=============================\n"
+"\n"
+"Conditions préalables :\n"
+"--------------\n"
+"\n"
+"- Vous avez besoin d'un certificat numérique conforme au gouvernement belge, "
+"délivré par Global \n"
+"Sign. Voir : https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Générez des fichiers de certificat à partir de votre certificat SSL ("
+"fichier .pfx) nécessaires à la création d'un utilisateur \n"
+"technique (fichier .cer) et à l'authentification à distance auprès du "
+"fichier ONSS (.pem). Sur un système \n"
+"UNIX, vous pouvez utiliser les commandes suivantes :\n"
+"\n"
+"- PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"- CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"- PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Avant de pouvoir utiliser le web service REST de la sécurité sociale, vous "
+"devez créer un compte \n"
+"pour vous-même ou pour votre client et paramétrer la sécurité. (L'ensemble "
+"de la procédure est \n"
+"disponible sur https://www.socialsecurity.be/site_fr/employer/applics/dimona/"
+"introduction/webservice.htm)\n"
+"\n"
+"- Gestion des comptes utilisateurs : Suivez la Procédure https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"- Créer un utilisateur technique : Votre client doit maintenant créer un "
+"utilisateur technique dans le service en ligne de \n"
+"gestion des accès. Suivez cette procédure : https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR."
+"pdf\n"
+"\n"
+"- Activer un canal de service web : Une fois l'utilisateur technique créé, "
+"votre client doit \n"
+"activer le canal de service web dans la gestion des accès. Le manuel suivant "
+"explique les étapes à suivre pour activer le canal : https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"- À la fin de la procédure, vous devriez recevoir un "
+"\"ONSS Expeditor Number\", vous pourrez\n"
+"encoder dans les paramètres de paie, avec le fichier .pem et le mot de passe "
+"associé, le cas échéant.\n"
+"\n"
+"- Remarque de configuration : le certificat .pfx doit être défini dans la "
+"configuration de la paie.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -8016,7 +8078,7 @@ msgid ""
 "    - Exception (Received and invoiced quantities differ)\n"
 msgstr ""
 "\n"
-"Gérer la correspondance à 3 voies de vos factures fournisseurs\n"
+"Gérer la réconciliation à 3 voies de vos factures fournisseurs\n"
 "================================================================\n"
 "\n"
 "Dans le secteur de la fabrication, les personnes reçoivent souvent les "
@@ -12407,6 +12469,13 @@ msgid ""
 "due to conflicts with other serial devices - only install it if you need "
 "it.\n"
 msgstr ""
+"\n"
+"Ce module ajoute la prise en charge de l’IoT Box pour les balances "
+"électroniques Adam Equipment\n"
+"connectées via un port série. Ce pilote n’est pas installé par défaut sur l’"
+"IoT Box\n"
+"car il peut entrer en conflit avec d’autres périphériques série. Installez-"
+"le uniquement si vous en avez besoin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -17373,6 +17442,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_pos_self_order_qfpay
 msgid "Addon for the Self Order App that allows customers to pay by QFPay."
 msgstr ""
+"Module complémentaire pour l’application Commande autonome qui permet aux "
+"clients de payer via QFPay."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_razorpay
@@ -17495,7 +17566,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot_adam_scale
 msgid "Adds an IoT driver for Adam Equipment Scales"
-msgstr ""
+msgstr "Ajoute un pilote IoT pour les balances Adam Equipment"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_loyalty_delivery
@@ -19326,6 +19397,8 @@ msgid ""
 "An addon for the Self Order App (KIOSK) that allows customers to pay using "
 "the Pine Labs POS Terminal."
 msgstr ""
+"Module complémentaire de l’application Commande autonome (KIOSK) qui permet "
+"aux clients d’effectuer leur paiement à l’aide du terminal PdV Pine Labs."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__tag
@@ -20339,12 +20412,12 @@ msgstr "Assets"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr "Gestion des actifs"
+msgstr "Gestion des immobilisations"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset_fleet
 msgid "Assets/Fleet bridge"
-msgstr "Module passerelle actifs/Parc automobile"
+msgstr "Module passerelle Immobilisations/Parc automobile"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -21935,8 +22008,8 @@ msgstr ""
 msgid ""
 "Bridge created to add the number of assets linked to an AA to a project form"
 msgstr ""
-"Module passerelle créé pour ajouter le nombre d'actifs d'un compte "
-"analytique à un formulaire de projet"
+"Module passerelle créé pour ajouter le nombre d’immobilisations liées à un "
+"compte analytique dans un formulaire de projet"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_hr_payroll_account
@@ -31539,7 +31612,7 @@ msgstr "Intégrez votre PdV avec les terminaux de paiement Pine Labs"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_glory_cash
 msgid "Integrate your POS with a Glory automatic cash payment device"
-msgstr ""
+msgstr "Intégrez votre PdV avec un dispositif de paiement automatique Glory"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_razorpay
@@ -31584,7 +31657,7 @@ msgstr "Intégrez votre PdV avec un terminal Mercado Pago Smart Point"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_qfpay
 msgid "Integrate your POS with the QFPay terminal in Hong Kong"
-msgstr ""
+msgstr "Intégrez votre PdV avec le terminal QFPay à Hong Kong"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_viva_com
@@ -34093,7 +34166,7 @@ msgstr "Gérer et publier une plateforme eLearning"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_asset_fleet
 msgid "Manage assets with fleets"
-msgstr "Gestion des actifs avec les parcs automobiles"
+msgstr "Gestion des immobilisations avec parcs automobiles"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_certificate
@@ -39436,7 +39509,7 @@ msgstr "Scan de barres-codes PdV dans Mobile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_glory_cash
 msgid "POS Glory Cash Machines"
-msgstr ""
+msgstr "Machines à espèces automatiques Glory pour PdV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_restaurant
@@ -39461,7 +39534,7 @@ msgstr "PdV Pine Labs"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_qfpay
 msgid "POS QFPay"
-msgstr ""
+msgstr "QFPay PdV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_test_pos_qr_payment
@@ -39506,12 +39579,12 @@ msgstr "PdV Commande autonome IoT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_pine_labs
 msgid "POS Self Order Pine Labs"
-msgstr ""
+msgstr "Commande autonome PdV Pine Labs"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_qfpay
 msgid "POS Self Order QFPay"
-msgstr ""
+msgstr "Commande autonome PdV QFPay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_razorpay
@@ -39561,7 +39634,7 @@ msgstr "PdV UrbanPiper - Uber Eats"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_imin
 msgid "POS iMin"
-msgstr ""
+msgstr "iMin PdV"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__prc
@@ -40673,7 +40746,7 @@ msgstr "PdV – Vente Événement"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot_adam_scale
 msgid "PoS IoT Adam Equipment Scales"
-msgstr ""
+msgstr "Balances Adam Equipment IoT PdV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot_ingenico
@@ -41180,7 +41253,7 @@ msgstr "Projet - Compétences"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
 msgid "Project Accounting Assets"
-msgstr "Projet Comptabilité Actifs"
+msgstr "Projet Comptabilité Immobilisations"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_budget
@@ -41449,7 +41522,7 @@ msgstr "Projet Comptabilité Budget"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account_asset
 msgid "Project accounting assets"
-msgstr "Projet Comptabilité Actifs"
+msgstr "Projet Comptabilité Immobilisations"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_holidays
@@ -51573,7 +51646,7 @@ msgstr "html_value"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_imin
 msgid "iMin ePOS Printers in PoS"
-msgstr ""
+msgstr "Imprimantes iMin ePOS dans le PdV"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__embedded_parent_res_id

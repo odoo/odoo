@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-10-21 05:28+0000\n"
+"PO-Revision-Date: 2025-10-22 11:51+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/base/de/>"
 "\n"
@@ -693,6 +693,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Verwenden Sie iMin-ePOS-Drucker ohne IoT-Box im Kassensystem\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -756,6 +759,9 @@ msgid ""
 "        Augment Livechat with AI Agents.\n"
 "    "
 msgstr ""
+"\n"
+"        Livechat steigern mit KI-Agenten.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
@@ -819,6 +825,35 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Fügen Sie einen Bericht über das MwSt.-Buch hinzu, der in Argentinien "
+"gesetzlich vorgeschrieben ist und die detaillierten Informationen über die "
+"MwSt. der in einem bestimmten Zeitraum getätigten Verkäufe oder Einkäufe "
+"enthält.\n"
+"* Fügen Sie einen MwSt.-Zusammenfassungsberichts hinzu, der zur Analyse der "
+"Rechnungsstellung verwendet wird.\n"
+"* Fügen Sie die Funktion für digitale MwSt.-Bücher hinzu, mit der wir TXT-"
+"Dateien für den Import in ARCA erzeugen können. Die Dateien, die wir "
+"implementieren, sind:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Offizielle Dokumentation von ARCA\n"
+"\n"
+"* Digitales MwSt.-Buch - Eintragsgestaltung https://www.afip.gob.ar/"
+"libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - Design des Datensatzes (identisch mit dem digitalen MwSt.-Buch): "
+"https://www.afip.gob.ar/comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - Spezifikation (enthält weitere Informationen über die Formatierung "
+"der Zahlen und die Füllung der numerischen/alphanumerischen Felder): https://"
+"www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-"
+"Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports_simple
@@ -826,6 +861,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* Fügen Sie den Export von einfachen IVA-Steuerberichten hinzu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -900,6 +937,9 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- Versenden und empfangen Sie Dokumente über das Nemhandel-Netzwerk im "
+"OIOUBL 2.1-Format\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -1256,6 +1296,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"Kontoüberweisungen\n"
+"===========================\n"
+"Ein Hilfsmodell zur Verwaltung von Überweisungen zwischen Konten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -1582,6 +1626,8 @@ msgid ""
 "\n"
 "Accounting Expense Bridge\n"
 msgstr ""
+"\n"
+"Brücke zwischen Buchhaltung und Spesenabrechnung\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant_fleet
@@ -1589,6 +1635,8 @@ msgid ""
 "\n"
 "Accounting Fleet Bridge\n"
 msgstr ""
+"\n"
+"Buchhaltung/Fuhrpark-Brücke\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -2668,6 +2716,8 @@ msgid ""
 "\n"
 "Accounting returns for Sweden\n"
 msgstr ""
+"\n"
+"Steuererklärungen für Schweden\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2760,6 +2810,79 @@ msgid ""
 "validate VAT numbers for each country that have or not have the possibility "
 "to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Fügen Sie ein neues Modell mit dem Namen „Identifikationsart“ hinzu, das die "
+"Funktionalität des Umsatzsteuerfeldes im Partner erweitert und es dem "
+"Benutzer ermöglicht, sich nicht nur mit seiner Ust-IdNr. (MwSt.), sondern "
+"auch mit anderen Arten von Identifikationen wie nationalen Dokumenten, "
+"Pässen, ausländischen IDs usw. zu identifizieren (eventuell eine Rechnung). "
+"Wenn dieses Modul installiert ist, sehen Sie jetzt in der "
+"Partnerformularansicht zwei Felder:\n"
+"\n"
+"* Identifikationsart\n"
+"* Identifikationsnummer\n"
+"\n"
+"Dieses Verhalten ist eine allgemeine Anforderung für einige Latam-Länder wie "
+"Argentinien und Chile. Wenn Ihre Lokalisierung diese Anforderungen erfüllt, "
+"müssen Sie sich auf dieses Modul verlassen und in Ihrem Lokalisierungsmodul "
+"die in Ihrem Land verwendeten Identifikationsarten definieren. Im "
+"Allgemeinen werden diese Identifikationsarten von den Regierungsbehörden "
+"definiert, die die steuerliche Vorgänge regeln. Zum Beispiel:\n"
+"\n"
+"* ARCA in Argentinien definiert DNI, CUIT (Mehrwertsteuer für juristische "
+"Personen), CUIL (Mehrwertsteuer für natürliche Personen) und weitere 80 "
+"gültige Identifikationsarten.\n"
+"\n"
+"Jede Identifikation enthält diese Informationen:\n"
+"\n"
+"* Name: Kurzname der Identifikation\n"
+"* Beschreibung: könnte der gleiche Kurzname oder ein langer Name sein\n"
+"* country_id: das Land, in das diese Kennung gehört\n"
+"* is_vat: Dieser Datensatz ist als die entsprechende MwSt. für das jeweilige "
+"Land zu identifizieren.\n"
+"* Seqeunz: Sortieren Sie die Identifikationsarten nach den am häufigsten "
+"verwendeten.\n"
+"* aktiv: wir können die Identifikationen aktivieren/deaktivieren, um es "
+"unseren Kunden leichter zu machen\n"
+"\n"
+"Um dieses Modul für Mehrfirmenumgebungen kompatibel zu machen, in denen wir "
+"Unternehmen haben, die diese Anforderung nicht benötigen/unterstützen, haben "
+"wir generische Identifikationsarten und generische Regeln hinzugefügt, um "
+"die Kontaktinformationen zu verwalten und sie für den Benutzer transparent "
+"zu machen, wenn nur die Mehrwertsteuer, wie wir sie früher kannten, "
+"verwendet wird.\n"
+"\n"
+"Generische Identifikationen:\n"
+"\n"
+"* MwSt.: Die Ust-IdNr. oder MwSt.-Nummer wird standardmäßig als "
+"Identifikationsart ausgewählt, sodass der Benutzer nur die zugehörige "
+"Umsatzsteuer-Identifikationsnummer hinzufügen muss.\n"
+"* Reisepass\n"
+"* Ausländische ID (Ausländisches Dokument)\n"
+"\n"
+"Regeln beim Anlegen eines neuen Partners: Wir sehen nur die "
+"Identifikationsarten, die unter Berücksichtigung dieser Regeln sinnvoll sind:"
+"\n"
+"\n"
+"* Wenn der Partner keine Länderadresse eingestellt hat: Zeigt die "
+"generischen Identifikationsarten plus die im Land des zugehörigen "
+"Unternehmens des Partners definierten Identifikationsarten an (Wenn der "
+"Partner kein spezifisches Unternehmen hat, werden die Identifikationsarten "
+"angezeigt, die mit dem aktuellen Benutzerunternehmen verbunden sind)\n"
+"\n"
+"* Wenn der Partner eine Länderadresse hat: zeigt die generischen "
+"Identifikationsarten plus die für das Land des Partners definierten.\n"
+"\n"
+"Beim Anlegen eines neuen Unternehmens wird dem zugehörigen Partner immer die "
+"zugehörige Länderidentifikationsart is_vat zugewiesen.\n"
+"\n"
+"Alle definierten Identifikationsarten können im Menü „Kontakte / "
+"Konfiguration / Identifikationsart“ überprüft und aktiviert/deaktiviert "
+"werden.\n"
+"\n"
+"Dieses Modul ist mit dem Modul base_vat kompatibel, um die MwSt.-Nummer für "
+"jedes Land zu validieren, das die Möglichkeit hat, mehrere "
+"Identifikationsarten zu verwalten oder nicht.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -2779,6 +2902,20 @@ msgid ""
 "- the option 'automatic_invoice' is enabled in the website settings "
 "(\"Invoice automatically on payment\")\n"
 msgstr ""
+"\n"
+"Fügen Sie im Bestellvorgang der Website/des E-Commerce einen zusätzlichen "
+"Reiter mit den mexikanischen Feldern hinzu:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_ieps_breakdown (res.partner)\n"
+"\n"
+"Der zusätzliche Reiter erscheint, wenn\n"
+"\n"
+"- das mit der Website verknüpfte Unternehmen mexikanisch ist\n"
+"- die Option „automatic_invoice“ in den Website-Einstellungen aktiviert ist "
+"(„Rechnung automatisch bei Zahlung“)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -2885,6 +3022,8 @@ msgid ""
 "\n"
 "Adds Arabic as a secondary language for the lots and serial numbers\n"
 msgstr ""
+"\n"
+"Fügt Arabisch als zweite Sprache für die Los- und Seriennummern hinzu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice
@@ -2893,6 +3032,9 @@ msgid ""
 "Adds Arabic as a secondary language on your invoice, credit note, debit "
 "note, vendor bill, and refund bill\n"
 msgstr ""
+"\n"
+"Fügt Arabisch als zweite Sprache auf Ihrer Rechnung, Gutschrift, "
+"Lastschrift, Lieferantenrechnung und Rückerstattungsrechnung hinzu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -2900,6 +3042,8 @@ msgid ""
 "\n"
 "Adds Arabic as a secondary language on your receipt\n"
 msgstr ""
+"\n"
+"Fügt Arabisch als zweite Sprache auf Ihrer Quittung hinzu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -2995,6 +3139,8 @@ msgid ""
 "\n"
 "Adds the ability to set folder templates on products.\n"
 msgstr ""
+"\n"
+"Erweitert die Möglichkeit, Ordnervorlagen für Produkte festzulegen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -3926,6 +4072,12 @@ msgid ""
 "well.\n"
 "It should be renamed later to ai_documents_automation.\n"
 msgstr ""
+"\n"
+"Sortieren Sie Ihre Dokumente automatisch.\n"
+"Dieses Modul dient ausschließlich der automatischen Sortierung von "
+"Dokumenten und kann nicht für Funktionen im Zusammenhang mit KI-Dokumenten "
+"verwendet werden, da es ebenfalls auf base_automation basiert.\n"
+"Es sollte später in ai_documents_automation umbenannt werden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -4154,6 +4306,8 @@ msgid ""
 "\n"
 "Base module for the Cambodian reports\n"
 msgstr ""
+"\n"
+"Basismodul für die Berichte aus Kambodscha\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kr_reports
@@ -15087,7 +15241,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
 msgid " 1:00:00 PM"
-msgstr ""
+msgstr " 13:00:00"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
@@ -15136,7 +15290,7 @@ msgstr "%(company_currency_name)s per %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "%(date_label)s - %(author)s"
-msgstr ""
+msgstr "%(date_label)s - %(author)s"
 
 #. module: base
 #. odoo-python
@@ -15199,7 +15353,7 @@ msgstr "%s (Kopie)"
 #. odoo-python
 #: code:addons/base/models/properties_base_definition.py:0
 msgid "%s Properties"
-msgstr ""
+msgstr "%s Eigenschaften"
 
 #. module: base
 #. odoo-python
@@ -15421,7 +15575,7 @@ msgstr "1099-Berichte"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%h:%m:%s
 msgid "13:00:00"
-msgstr ""
+msgstr "13:00:00"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
@@ -15436,7 +15590,7 @@ msgstr "360°-Feedback"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_3pl_logistic_company
 msgid "3PL Logistic Company"
-msgstr ""
+msgstr "3PL-Logistikunternehmen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_external_tax
@@ -15470,6 +15624,9 @@ msgid ""
 "                        No Outgoing Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        Noch keine Ausgangsserver\n"
+"                    </b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form

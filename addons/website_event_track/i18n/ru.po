@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
+"PO-Revision-Date: 2025-10-22 11:28+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "website_event_track/ru/>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_event_track
@@ -62,7 +62,7 @@ msgstr "%s Онлайн-заявка на проведение мероприя�
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "(timezone:"
-msgstr ""
+msgstr "(часовой пояс:"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
@@ -170,6 +170,12 @@ msgid ""
 "class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                    <i class=\"fa fa-close mr4\" role=\"img\""
+" aria-label=\"Error\" title=\"Ошибка\"/>\n"
+"                                    <span class="
+"\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -177,6 +183,9 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
 "                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Описание выступления</span>"
+"\n"
+"                                        <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -184,11 +193,14 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
 "                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Название выступления</span>"
+"\n"
+"                                        <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "<span class=\"text-muted\"> tracks</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> метки</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -652,7 +664,7 @@ msgstr "Активность"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Оформление исключения активности"
+msgstr "Оформление задачи-исключения"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
@@ -834,12 +846,12 @@ msgstr "Доступные теги треков"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 msgid "Available on all event Agenda pages"
-msgstr ""
+msgstr "Доступно на всех страницах с описанием программы мероприятия"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
 msgid "Back to All Talks"
-msgstr ""
+msgstr "Назад ко всем выступлениям"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1026,7 +1038,7 @@ msgstr "Почта для связи"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact Information"
-msgstr ""
+msgstr "Контактная информация"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
@@ -1090,6 +1102,8 @@ msgid ""
 "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
 "OF ALL EVENTS"
 msgstr ""
+"ПЕРЕТАЩИТЕ БЛОКИ СЮДА, ЧТОБЫ ОНИ БЫЛИ ДОСТУПНЫ НА СТРАНИЦАХ ЗАЯВОК ДЛЯ ВСЕХ "
+"МЕРОПРИЯТИЙ"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1321,7 +1335,7 @@ msgstr "Метки мероприятия"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr "Меню \"Дорожки событий"
+msgstr "Меню направлений мероприятия"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_21
@@ -1358,7 +1372,7 @@ msgstr "Избранное"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks"
-msgstr ""
+msgstr "Фильтр меток"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1555,7 +1569,7 @@ msgstr "Иконка"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Значок, обозначающий исключение Дела."
+msgstr "Иконка, указывающая на задачу-исключение."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
@@ -2170,7 +2184,7 @@ msgstr "Предложение"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Proposals are closed."
-msgstr ""
+msgstr "Прием заявок завершен."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
@@ -2285,7 +2299,7 @@ msgstr "Ошибка доставки SMS"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Search a talk ..."
-msgstr ""
+msgstr "Поиск выступления..."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
@@ -2296,7 +2310,7 @@ msgstr "Обеспечение сохранности пиломатериало
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form_tags.js:0
 msgid "Select Categories"
-msgstr ""
+msgstr "Выбор категорий"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
@@ -2832,12 +2846,12 @@ msgstr "Треки на сайте"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Тип Дела для исключения в записи."
+msgstr "Тип задачи-исключения в записи."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -2857,6 +2871,8 @@ msgstr "Непрочитанные сообщения"
 #: code:addons/website_event_track/models/website_visitor.py:0
 msgid "Unsupported 'Not In' operation on track wishlist visitors"
 msgstr ""
+"Операция «Не входит в» не поддерживается для посетителей, которые добавили "
+"мероприятие в избранное"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
@@ -2958,6 +2974,13 @@ msgid ""
 "                                audience, it will be considered for\n"
 "                                inclusion in the programme."
 msgstr ""
+"Мы принимаем широкий спектр\n"
+"                                презентаций – от академических\n"
+"                                коммерческих докладов до обучающих\n"
+"                                сессий и примеров из практики. Любая\n"
+"                                интересная и потенциально полезная\n"
+"                                презентация будет рассмотрена для\n"
+"                                включения в программу."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2974,7 +2997,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We're sorry, this event does not accept proposals anymore"
-msgstr ""
+msgstr "К сожалению, это мероприятие больше не принимает заявки"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website

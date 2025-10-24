@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 04:37+0000\n"
+"PO-Revision-Date: 2025-10-22 11:17+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "account_edi/ru/>\n"
@@ -18,27 +18,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing error(s)"
-msgstr ""
+msgstr "%(count)s ошибка(и) электронного выставления счетов"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing info(s)"
-msgstr ""
+msgstr "%(count)s сообщение(ия) об электронном выставлении счетов"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing warning(s)"
-msgstr ""
+msgstr "%(count)s предупреждение(ия) об электронном выставлении счетов"
 
 #. module: account_edi
 #. odoo-python
@@ -63,6 +63,7 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
+"Вы уверены, что хотите отменить этот счет без аннулирования EDI-документа?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -224,7 +225,7 @@ msgstr "Кнопка отмены показа Edi"
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr ""
+msgstr "EDI показать кнопку принудительной отмены"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
@@ -265,7 +266,7 @@ msgstr "Ошибка"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Force Cancel"
-msgstr ""
+msgstr "Принудительная отмена"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
@@ -354,7 +355,7 @@ msgstr "Процесс сейчас"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr ""
+msgstr "Переделайте последовательность записей в журнале."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
@@ -407,7 +408,7 @@ msgstr ""
 #: code:addons/account_edi/wizard/account_resequence.py:0
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
-msgstr ""
+msgstr "Следующие документы уже отправлены и не подлежат перенумерации: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -440,6 +441,8 @@ msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation "
 "request."
 msgstr ""
+"Этот счет был отменен, хотя для EDI %s все еще ожидалось выполнение запроса "
+"на отмену."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
