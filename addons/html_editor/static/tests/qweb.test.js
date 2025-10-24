@@ -318,7 +318,7 @@ test("cleaning does not remove t-out links", async () => {
         { config }
     );
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<ul> <li> <a href="xyz" t-out="xyz" data-oe-protected="true" contenteditable="false"> </a> </li> </ul>`
+        `<ul> <li><a href="xyz" t-out="xyz" data-oe-protected="true" contenteditable="false"></a></li> </ul>`
     );
     expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
         '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
