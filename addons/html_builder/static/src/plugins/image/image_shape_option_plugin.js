@@ -442,6 +442,15 @@ export class SetImageShapeAction extends BuilderAction {
         const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
         img.dataset.fileName = `${imgFilename}.svg`;
     }
+    isApplied({ editingElement: img, value }) {
+        const datasetShape = img.dataset.shape;
+        if (!datasetShape) {
+            return false;
+        }
+        // Compatibility with old shapes.
+        const currentShape = datasetShape.replace("web_editor", "html_builder");
+        return currentShape === value;
+    }
 }
 export class SetImgShapeColorAction extends BuilderAction {
     static id = "setImgShapeColor";
