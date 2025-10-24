@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { registries } from "@odoo/o-spreadsheet";
 import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
 import {
@@ -126,6 +126,7 @@ test("computed format is exported", async function () {
             `,
     });
     setCellContent(model, "A1", '=PIVOT.VALUE(1,"pognon:avg")');
+    await animationFrame();
     expect(getCell(model, "A1").format).toBe(undefined);
     expect(getEvaluatedCell(model, "A1").format).toBe("#,##0.00[$€]");
     const data = await freezeOdooData(model);
