@@ -10,7 +10,7 @@ import pprint
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, http
+from odoo import _, http, release
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -97,6 +97,13 @@ class AdyenController(http.Controller):
             'amount': {
                 'value': converted_amount,
                 'currency': request.env['res.currency'].browse(currency_id).name,  # ISO 4217
+            },
+            'applicationInfo': {
+                'externalPlatform': {
+                    'name': 'Odoo',
+                    'version': release.version,
+                    'integrator': 'Odoo SA',
+                }
             },
             'countryCode': partner_country_code,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
             'reference': reference,
