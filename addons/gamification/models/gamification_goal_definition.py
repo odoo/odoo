@@ -37,7 +37,7 @@ class GamificationGoalDefinition(models.Model):
     model_inherited_ids = fields.Many2many('ir.model', related='model_id.inherited_model_ids')
     field_id = fields.Many2one(
         'ir.model.fields', string='Field to Sum',
-        domain=DOMAIN_TEMPLATE % ''
+        domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('integer', 'float', 'monetary'))"
     )
     field_date_id = fields.Many2one(
         'ir.model.fields', string='Date Field', help='The date to use for the time period evaluated',
@@ -61,6 +61,24 @@ class GamificationGoalDefinition(models.Model):
        help="A goal is considered as completed when the current value is compared to the value to reach")
     action_id = fields.Many2one('ir.actions.act_window', string="Action", help="The action that will be called to update the goal value.")
     res_id_field = fields.Char("ID Field of user", help="The field name on the user profile (res.users) containing the value for res_id for action.")
+
+    @api.constrains("computation_mode", "model_id", "field_id")
+    def _check_computation_mode(self):
+        errors = []
+        for definition in self:
+            if definition.computation_mode != "sum":
+                continue
+
+            if not definition.field_id:
+                errors.append(_("A field is required to compute the sum for '%s'.", definition.name))
+                continue
+
+            if definition.field_id.ttype not in {"integer", "float", "monetary"}:
+                errors.append(_("The sum cannot be computed for '%(definition)s' on '%(field)s'.",
+                    definition=definition.name, field=definition.field_id.name))
+
+        if errors:
+            raise exceptions.ValidationError(' '.join(errors))
 
     @api.depends('suffix', 'monetary')  # also depends of user...
     def _compute_full_suffix(self):
