@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-16 18:38+0000\n"
+"POT-Creation-Date: 2025-10-24 18:36+0000\n"
 "PO-Revision-Date: 2025-10-21 22:20+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/"
@@ -7833,6 +7833,12 @@ msgid ""
 msgstr " 환불 요청 수량이 환불 가능 수량보다 큽니다."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "The search on Order Number only supports up to 3 digits."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
@@ -8995,8 +9001,9 @@ msgstr "다음 이전부터 시작하는 세션을 만들 수 없습니다: %(lo
 msgid ""
 "You cannot delete a customer that has point of sales orders. You can archive "
 "it instead."
-msgstr "고객에게 POS 주문서가 있는 경우에는 삭제할 수 없습니다. 대신 보관함으로 "
-"이동하세요."
+msgstr ""
+"고객에게 POS 주문서가 있는 경우에는 삭제할 수 없습니다. 대신 보관함으로 이동"
+"하세요."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9024,6 +9031,14 @@ msgstr "게시가 완료된 주문서는 결제를 수정할 수 없습니다."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "다른 회사의 주문에 대해서는 청구서를 발행할 수 없습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"You cannot reset to draft an invoice linked to a POS order. You must refund "
+"the order or create a credit note instead."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

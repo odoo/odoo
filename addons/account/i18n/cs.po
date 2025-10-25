@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-16 18:37+0000\n"
+"POT-Creation-Date: 2025-10-24 18:36+0000\n"
 "PO-Revision-Date: 2025-10-22 08:20+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/account/cs/"
@@ -224,8 +224,8 @@ msgid ""
 "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
 "%(tax_account)s (%(account_name)s) by měl být typ účtu \"%(receivable)s\" "
-"nebo \"%(payable)s\" s aktivovanými oběma možnostmi "
-"\"%(allow_reconciliation)s\" a \"%(non_trade)s\"."
+"nebo \"%(payable)s\" s aktivovanými oběma možnostmi \"%"
+"(allow_reconciliation)s\" a \"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -604,8 +604,8 @@ msgid ""
 "behavior.</span>"
 msgstr ""
 "<br/>\n"
-"                        <span>Ujistěte se, že se jedná o požadované "
-"chování.</span>"
+"                        <span>Ujistěte se, že se jedná o požadované chování."
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1053,9 +1053,8 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style="
-"\"width: 6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\""
-">nebo</span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">nebo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -3883,6 +3882,22 @@ msgstr "Sekvence dávkové platby"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "Hromadné platby"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, activate the cron to enable "
+"batch sending of invoices."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, contact your system "
+"administrator to activate the cron to enable batch sending of invoices."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -7975,6 +7990,12 @@ msgstr "Získejte upozornění při fakturaci konkrétním zákazníkům"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "Globální datum uzamčení"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Go to cron configuration"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -18563,7 +18584,8 @@ msgstr ""
 #: code:addons/account/models/mail_template.py:0
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending flow."
-msgstr "Tuto šablonu email nelze smazat, používá se v procesu odesílání faktur."
+msgstr ""
+"Tuto šablonu email nelze smazat, používá se v procesu odesílání faktur."
 
 #. module: account
 #. odoo-python
