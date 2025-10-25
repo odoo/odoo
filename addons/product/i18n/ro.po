@@ -7,15 +7,15 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 21:36+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-24 06:49+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/product/"
 "ro/>\n"
 "Language: ro\n"
@@ -34,6 +34,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"Notă: produsele la care nu aveți acces nu vor fi afișate mai sus."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -66,6 +69,10 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
+"%(base)s cu un %(discount)s %% %(discount_type)s și o taxă suplimentară de "
+"%(surcharge)s\n"
+"Exemplu: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -74,24 +81,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
+"%(item_name)s: data de sfârșit (%(end_date)s) trebuie să fie după data de "
+"început (%(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s pe %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% reducere pe %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% reducere la prețul de vânzare"
 
 #. module: product
 #. odoo-python
@@ -114,25 +123,26 @@ msgstr "'Etichete produse - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.uom_id.name)"
-msgstr ""
+msgstr "'Ambalaje produse - %s' % (object.uom_id.name)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "(e.g: product description, ebook, legal notice, ...)."
 msgstr ""
+"(de ex: descrierea produsului, carte electronică, notificare legală, ...)."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s taxă suplimentară"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s rabat"
 
 #. module: product
 #. odoo-python
@@ -140,6 +150,8 @@ msgstr ""
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- Codul de bare \"%(barcode)s\" este deja atribuit produselor: "
+"%(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -151,11 +163,18 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Instantaneu: Toate variantele posibile sunt create imediat ce atributul și "
+"valorile sale sunt adăugate unui produs.\n"
+"        - Dinamic: Fiecare variantă este creată numai atunci când atributele "
+"și valorile corespunzătoare sunt adăugate unei comenzi de vânzare.\n"
+"        - Niciodată: Variantele nu sunt niciodată create pentru atribut.\n"
+"        Notă: acest lucru nu poate fi schimbat odată ce atributul este "
+"folosit pe un produs."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_month_1
 msgid "1 month"
-msgstr ""
+msgstr "1 lună"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_1
@@ -170,7 +189,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 Unități"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_height_100
@@ -200,7 +219,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs"
-msgstr ""
+msgstr "160x80cm, cu picioare mari"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -298,11 +317,13 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
+">Contactați-ne</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>Sfat: doriți să rotunjiți la 9,99?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -335,7 +356,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Produse</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -372,31 +393,31 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "Un cod de bare poate fi atribuit unui singur ambalaj."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "O opțiune combo nu poate conține produse duplicate."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "O opțiune combo nu poate conține produse de tip „combo”."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "O opțiune combo trebuie să conțină cel puțin 1 produs."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "Un produs combo trebuie să conțină cel puțin o opțiune combo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -406,14 +427,15 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"O descriere a produsului, accesibilă clienților. Această descriere va fi "
-"copiată în fiecare comandă de vânzare sau factură emisă"
+"O descriere a produsului pe care doriți să o comunicați clienților dvs. "
+"Această descriere va fi copiată în fiecare comandă de vânzare, comandă de "
+"livrare și factură/notă de credit client"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "Un ambalaj folosește deja codul de bare"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -424,18 +446,21 @@ msgid ""
 "            This is the perfect tool to handle several pricings, seasonal "
 "discounts, etc."
 msgstr ""
+"Un preț este un set de prețuri de vânzare sau reguli pentru a calcula prețul "
+"linie de comandă de vânzare pe baza produselor, categoriilor de produse, "
+"datelor și cantităților comandate."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_uom.py:0
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Un produs folosește deja codul de bare"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "Un produs combo vândabil poate conține doar produse vândabile."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -483,7 +508,7 @@ msgstr "Activ"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Produse active"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
@@ -517,24 +542,24 @@ msgstr "Pictograma tipului de activitate"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Adăugare"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr ""
+msgstr "Adăugare produse"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Adăugare produse la raportul de listă de prețuri"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Add a price"
-msgstr ""
+msgstr "Adăugare preț"
 
 #. module: product
 #. odoo-javascript
@@ -549,28 +574,33 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Adăugați produse folosind butonul „Adăugați produse” din dreapta sus pentru "
+"a\n"
+"                                le include în raport."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Adaugă la toate produsele"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Adaugă la produsele existente"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Adaugă la produse"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_ids
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
 msgstr ""
+"Ambalaje suplimentare pentru acest produs care pot fi utilizate pentru "
+"vânzări"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_adidas
@@ -580,23 +610,23 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "All"
-msgstr ""
+msgstr "Toate"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "All Categories"
-msgstr ""
+msgstr "Toate categoriile"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Toate etichetele de produs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Toate variantele de produs care utilizează această etichetă"
 
 #. module: product
 #. odoo-python
@@ -608,35 +638,35 @@ msgstr "Toate produsele"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All categories"
-msgstr ""
+msgstr "Toate categoriile"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "All countries"
-msgstr ""
+msgstr "Toate țările"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/controllers/product_document.py:0
 msgid "All files uploaded"
-msgstr ""
+msgstr "Toate fișierele încărcate"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All products"
-msgstr ""
+msgstr "Toate produsele"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "Toate variantele"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "Permite clienților să-și stabilească propria valoare"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_legs_aluminium
@@ -646,7 +676,7 @@ msgstr "Aluminiu"
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_apple
 msgid "Apple"
-msgstr ""
+msgstr "Apple"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
@@ -699,6 +729,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"La maximum %s cantități pot fi afișate simultan. Eliminați o cantitate "
+"selectată pentru a adăuga altele."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -798,11 +830,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Coduri de bare deja atribuite:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_uom_uom__product_uom_ids
 msgid "Barcodes"
-msgstr ""
+msgstr "Coduri de bare"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -812,6 +847,11 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Preț de bază pentru calcul.\n"
+"Preț de vânzare: Prețul de bază va fi prețul de vânzare.\n"
+"Preț de cost: Prețul de bază va fi prețul de cost.\n"
+"Altă listă de prețuri: Calculul prețului de bază se bazează pe o altă listă "
+"de prețuri."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -925,6 +965,11 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
+"Schimbarea unității de măsură pentru produsul dvs. va aplica o conversie 1 "
+"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Toate înregistrările existente (comenzi de vânzare, comenzi de cumpărare, "
+"etc.) care utilizează acest produs vor fi actualizate prin înlocuirea "
+"numelui unității."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -1337,7 +1382,7 @@ msgstr "Descriere"
 #. module: product
 #: model:product.template,description_sale:product.product_order_01_product_template
 msgid "Design and plan smart offices with ease"
-msgstr ""
+msgstr "Proiectați și planificați birouri inteligente cu ușurință"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1452,7 +1497,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_ids
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Documents"
-msgstr ""
+msgstr "Documente"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
@@ -1529,7 +1574,7 @@ msgstr "Fiecare valoare trebuie definită o singură dată pe atribut per produs
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "Scaun din lemn ecologic"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1758,7 +1803,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Goods"
-msgstr ""
+msgstr "Bunuri"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type

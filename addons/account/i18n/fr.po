@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-23 13:56+0000\n"
+"PO-Revision-Date: 2025-10-24 16:20+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/account/"
 "fr/>\n"
@@ -3206,7 +3206,7 @@ msgstr "Ajouter une section"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Add a subsection"
-msgstr ""
+msgstr "Ajouter une sous-section"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5799,7 +5799,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Cost and Revenue"
-msgstr ""
+msgstr "Coûts et revenus"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -6756,7 +6756,7 @@ msgstr "Dates"
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__datetime
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__datetime
 msgid "Datetime"
-msgstr "Datetime"
+msgstr "Date et heure"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__nb_days
@@ -8954,7 +8954,7 @@ msgstr "De"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "From Category"
-msgstr ""
+msgstr "Depuis la catégorie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
@@ -9363,7 +9363,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
-msgstr ""
+msgstr "Masquer la structure"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -9374,7 +9374,7 @@ msgstr "Masquer le bouton Comptabiliser"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
-msgstr ""
+msgstr "Masquer les prix"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
@@ -11788,6 +11788,23 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Manuel : Payez ou recevez un paiement par n'importe quel moyen en dehors "
+"d’Odoo.\n"
+"Fournisseurs de paiement : Chaque fournisseur de paiement dispose de son "
+"propre moyen de paiement. Demandez une transaction sur/vers une carte grâce "
+"à un jeton de paiement enregistré par le partenaire lors d’un achat ou d’un "
+"abonnement en ligne.\n"
+"Chèque : Payez vos factures par chèque et imprimez-les depuis Odoo.\n"
+"Dépôt groupé : Collectez plusieurs chèques clients à la fois en générant et "
+"en soumettant un dépôt groupé à votre banque. Le module "
+"account_batch_payment est nécessaire.\n"
+"Virement SEPA : Payez dans la zone SEPA en soumettant un fichier de virement "
+"SEPA à votre banque. Le module account_iso20022 est nécessaire.\n"
+"Prélèvement SEPA : Recevez des paiements dans la zone SEPA grâce à un mandat "
+"que votre partenaire vous aura accordé. Le module account_iso20022 est "
+"nécessaire.\n"
+"ISO20022 américain : Payez aux États-Unis en soumettant un fichier ISO20022 "
+"à votre banque. Le module account_iso20022 est nécessaire.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_line_id
@@ -13184,17 +13201,17 @@ msgstr "Ligne de relevé du donneur d'ordre"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Originator Tax"
-msgstr "Taxe d'origine"
+msgstr "Taxe à la source"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Distribution Line"
-msgstr "Ligne de répartition de la taxe d'origine"
+msgstr "Ligne de répartition de la taxe à la source"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
 msgid "Originator tax group"
-msgstr "Groupe de la taxe d'origine"
+msgstr "Groupe de la taxe à la source"
 
 #. module: account
 #. odoo-javascript
@@ -14183,7 +14200,7 @@ msgstr "Dépenses prépayées"
 #: model:account.account,name:account.2_account_account_us_prepayments
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_prepayments
 msgid "Prepayments"
-msgstr "Acomptes"
+msgstr "Prépaiements"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model
@@ -14896,7 +14913,7 @@ msgstr "Refaire la séquence des pièces comptables."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Remove empty lines"
-msgstr ""
+msgstr "Supprimer les lignes vides"
 
 #. module: account
 #. odoo-python
@@ -15671,7 +15688,7 @@ msgstr "Sélectionner un type"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Select an old purchase document"
-msgstr ""
+msgstr "Sélectionner un ancien document d'achat"
 
 #. module: account
 #. odoo-javascript
@@ -20080,7 +20097,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "We've noticed some empty lines on your invoice."
-msgstr ""
+msgstr "Nous avons remarqué quelques lignes vides sur votre facture."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
