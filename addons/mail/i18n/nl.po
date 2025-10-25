@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-23 13:56+0000\n"
+"PO-Revision-Date: 2025-10-24 07:50+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mail/nl/>\n"
 "Language: nl\n"
@@ -310,7 +310,7 @@ msgstr "%(user)s verbonden. Dit is hun eerste verbinding. Wens ze succes."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s deleted the thread \"%(thread_name)s\""
-msgstr ""
+msgstr "%(user)s heeft de Thread \"%(thread_name)s\" verwijderd"
 
 #. module: mail
 #. odoo-python
@@ -506,6 +506,9 @@ msgid ""
 "                        No Incoming Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        Nog geen inkomende mailservers\n"
+"                    </b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -931,7 +934,7 @@ msgstr "Authenticatiecode Account"
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Account SID"
-msgstr ""
+msgstr "Account-SID"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
@@ -1774,7 +1777,7 @@ msgstr "Bijlagen"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Audio Output"
-msgstr ""
+msgstr "Audio-uitgang"
 
 #. module: mail
 #. odoo-javascript
@@ -1892,7 +1895,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Available everywhere"
-msgstr ""
+msgstr "Overal beschikbaar"
 
 #. module: mail
 #. odoo-javascript
@@ -2050,7 +2053,7 @@ msgstr "Achtergrond vervagen"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur background"
-msgstr ""
+msgstr "Achtergrond vervagen"
 
 #. module: mail
 #. odoo-javascript
@@ -3626,7 +3629,7 @@ msgstr "E-mails verwijderen"
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Delete Thread"
-msgstr ""
+msgstr "Thread verwijderen"
 
 #. module: mail
 #. odoo-javascript
@@ -3749,7 +3752,7 @@ msgstr "Negeren"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Discard editing"
-msgstr ""
+msgstr "Bewerking verwijderen"
 
 #. module: mail
 #. odoo-javascript
@@ -5304,7 +5307,7 @@ msgstr "Alle gesprekken verbergen"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Hide camera preview"
-msgstr ""
+msgstr "Cameravoorvertoning verbergen"
 
 #. module: mail
 #. odoo-javascript
@@ -5796,7 +5799,7 @@ msgstr "Inkomende oproep"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call from %(inviter)s"
-msgstr ""
+msgstr "Inkomende oproep van %(inviter)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -8490,6 +8493,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het versturen van een "
+"e-mail. Als deze niet is ingesteld, wordt de taal van de hoofdpartner "
+"gebruikt. Dit moet meestal een 'placeholder expression' zijn die de juiste "
+"taal voorziet, bv. {{ object.partner_id.lang }}."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8538,34 +8545,34 @@ msgstr "Anders kun je deze e-mail veilig negeren."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_from
 msgid "Out Of Office From"
-msgstr ""
+msgstr "Afwezig vanaf"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_to
 msgid "Out Of Office To"
-msgstr ""
+msgstr "Afwezig tot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_out_of_office
 msgid "Out of Office"
-msgstr ""
+msgstr "Afwezig"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Out-of-office"
-msgstr ""
+msgstr "Afwezig"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__out_of_office
 msgid "Out-of-office Message"
-msgstr ""
+msgstr "Afwezigheidsbericht"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Out-of-office message"
-msgstr ""
+msgstr "Afwezigheidsbericht"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -8595,7 +8602,7 @@ msgstr "Uitgaande e-mailserver"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__outgoing_mail_server_type
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "Type uitgaande mailserver"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
@@ -8838,13 +8845,13 @@ msgstr "Payload"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Performance Warning:"
-msgstr ""
+msgstr "Prestatiewaarschuwing:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 msgid "Permanently delete this thread?"
-msgstr ""
+msgstr "Deze thread definitief verwijderen?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -9028,7 +9035,7 @@ msgstr "Geef een geldig e-mailadres op"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Please set your email before connecting your mail server."
-msgstr ""
+msgstr "Stel je e-mail in voordat je verbinding maakt met je mailserver."
 
 #. module: mail
 #. odoo-javascript
@@ -9043,6 +9050,9 @@ msgid ""
 "- By Emails: notifications are sent to your email address\n"
 "- In Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Beleid voor omgang met Chatter-meldingen:\n"
+"- Per e-mail: meldingen worden naar je e-mailadres gestuurd\n"
+"- In Odoo: meldingen verschijnen in je Odoo-inbox"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -9175,6 +9185,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Voorkom het versturen van berichten naar contacten op de zwarte lijst. Deze "
+"functie alleen uitschakelen als het absoluut noodzakelijk is."
 
 #. module: mail
 #. odoo-javascript
@@ -9204,7 +9216,7 @@ msgstr "Privacy"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Private"
-msgstr ""
+msgstr "Privé"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__object_id
@@ -9277,8 +9289,9 @@ msgstr "Push-To-Talk-snelkoppeling"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
+#, fuzzy
 msgid "Push-to-Talk"
-msgstr ""
+msgstr "Push-to-Talk"
 
 #. module: mail
 #. odoo-javascript
@@ -9290,7 +9303,7 @@ msgstr "Push-to-talk-toets"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 msgid "Queued"
-msgstr ""
+msgstr "In de wachtrij"
 
 #. module: mail
 #. odoo-javascript
@@ -9388,7 +9401,7 @@ msgstr "Gereed om te versturen"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Ready to join?"
-msgstr ""
+msgstr "Klaar om deel te nemen?"
 
 #. module: mail
 #. odoo-javascript
@@ -9427,7 +9440,7 @@ msgstr "Ontvanger"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_email_address
 msgid "Recipient email address"
-msgstr ""
+msgstr "E-mailadres van de ontvanger"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -9577,7 +9590,7 @@ msgstr "Volgers verwijderen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Remove Star"
-msgstr ""
+msgstr "Ster verwijderen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -9785,7 +9798,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "Restrict usage to a user"
-msgstr ""
+msgstr "Gebruik beperken tot een gebruiker"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__restricted_attachment_count
@@ -9893,7 +9906,7 @@ msgstr "SSL/TLS"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "STUN"
-msgstr ""
+msgstr "STUN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__user_id
@@ -10043,6 +10056,8 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Screen sharing access blocked. Enable in browser settings."
 msgstr ""
+"Toegang tot scherm delen geblokkeerd. Schakel toegang in bij "
+"browserinstellingen."
 
 #. module: mail
 #. odoo-javascript
@@ -10074,7 +10089,7 @@ msgstr "Zoek groepen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "Search ICE Servers"
-msgstr ""
+msgstr "ICE-servers zoeken"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -10136,7 +10151,7 @@ msgstr "Zoek op naam"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
-msgstr ""
+msgstr "Gesprekken zoeken"
 
 #. module: mail
 #. odoo-javascript
@@ -10301,7 +10316,7 @@ msgstr "Verzenden & Sluiten"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send & New Invitation"
-msgstr ""
+msgstr "Verzenden & nieuwe uitnodiging"
 
 #. module: mail
 #. odoo-javascript
@@ -10319,18 +10334,18 @@ msgstr "E-mail verzenden als"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 msgid "Send From"
-msgstr ""
+msgstr "Verzenden van"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Send Instantly"
-msgstr ""
+msgstr "Onmiddellijk verzenden"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send Invitation"
-msgstr ""
+msgstr "Uitnodiging versturen"
 
 #. module: mail
 #. odoo-javascript
@@ -10400,7 +10415,7 @@ msgstr "Dit bericht voor eeuwig naar de prullenbak sturen?"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender & Recipients"
-msgstr ""
+msgstr "Afzender & Ontvangers"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
@@ -10420,7 +10435,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender's email"
-msgstr ""
+msgstr "E-mailadres van de afzender"
 
 #. module: mail
 #. odoo-javascript
@@ -10537,12 +10552,16 @@ msgstr ""
 msgid ""
 "Set up your own server for large group calls by routing connections centrally"
 msgstr ""
+"Stel je eigen server in voor grote groepsgesprekken door verbindingen "
+"centraal te routeren"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Set up your own server for small group calls using peer-to-peer connections"
 msgstr ""
+"Je eigen server opzetten voor kleine groepsgesprekken met peer-to-peer "
+"verbindingen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -10569,12 +10588,12 @@ msgstr "Scherm delen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared"
-msgstr ""
+msgstr "Gedeeld"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Shared with all users"
-msgstr ""
+msgstr "Gedeeld met alle gebruikers"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
@@ -10636,7 +10655,7 @@ msgstr "Toon alle records waarvan de volgende activiteitsdatum is verstreken"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Show camera preview"
-msgstr ""
+msgstr "Cameravoorvertoning tonen"
 
 #. module: mail
 #. odoo-javascript
@@ -10755,13 +10774,13 @@ msgstr "Met ster"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Starred message"
-msgstr ""
+msgstr "Bericht met ster"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "Starred messages"
-msgstr ""
+msgstr "Berichten met ster"
 
 #. module: mail
 #. odoo-javascript
@@ -11031,13 +11050,13 @@ msgstr "Ondersteuning Outlook-verificatie"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Switch Camera"
-msgstr ""
+msgstr "Camera wisselen"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Switching back to the default server."
-msgstr ""
+msgstr "Terugschakelen naar de standaardserver."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -11135,7 +11154,7 @@ msgstr "Sjabloon voorbeeld taal"
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Template Preview: \"%(template_name)s\""
-msgstr ""
+msgstr "Sjabloonvoorbeeld: \"%(template_name)s\""
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -11204,12 +11223,12 @@ msgstr "Testen & Bevestigen"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Test Connection"
-msgstr ""
+msgstr "Verbinding testen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Test Record"
-msgstr ""
+msgstr "Record testen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
@@ -11503,12 +11522,16 @@ msgstr ""
 msgid ""
 "The server \"%s\" cannot be forced as it belongs to a user and is archived."
 msgstr ""
+"De server \"%s\" kan niet worden geforceerd omdat deze bij een gebruiker "
+"hoort en gearchiveerd is."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "The server \"%s\" cannot be forced as it belongs to a user."
 msgstr ""
+"De server \"%s\" kan niet worden geforceerd omdat deze bij een gebruiker "
+"hoort."
 
 #. module: mail
 #. odoo-python
@@ -11516,6 +11539,8 @@ msgstr ""
 msgid ""
 "The server \"%s\" cannot be forced as the owner does not use it anymore."
 msgstr ""
+"De server \"%s\" kan niet worden geforceerd omdat de eigenaar deze niet meer "
+"gebruikt."
 
 #. module: mail
 #. odoo-python
@@ -11555,6 +11580,8 @@ msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration."
 msgstr ""
+"Er is een fout opgetreden bij het afleveren van je e-mail. Controleer je "
+"configuratie."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -11590,7 +11617,7 @@ msgstr "Deze actie verzend een e-mail."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This applicant has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "Deze sollicitant zit al %(numberOfDays)s dagen vast in deze fase."
 
 #. module: mail
 #. odoo-javascript
@@ -11626,7 +11653,7 @@ msgstr "Dit gesprek heeft geen vastgezette berichten."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "This conversation isn’t available."
-msgstr ""
+msgstr "Dit gesprek is niet beschikbaar."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -11668,13 +11695,13 @@ msgstr "Dit is het begin van groep %(conversationName)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of the #%(channelName)s channel"
-msgstr ""
+msgstr "Dit is het begin van het kanaal #%(channelName)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of your direct chat with %(userName)s"
-msgstr ""
+msgstr "Dit is het begin van je privéchat met %(userName)s"
 
 #. module: mail
 #. odoo-python
@@ -11686,7 +11713,7 @@ msgstr "Deze lay-out lijkt niet meer te bestaan."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This lead has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "Deze lead zit al %(numberOfDays)s dagen vast in deze fase."
 
 #. module: mail
 #. odoo-javascript
@@ -11725,7 +11752,7 @@ msgstr "Dit record heeft een activiteit met uitzondering."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This record has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "Dit record zit al %(numberOfDays)s dagen vast in deze fase."
 
 #. module: mail
 #. odoo-javascript
@@ -11750,7 +11777,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This task has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "Deze taak zit al %(numberOfDays)s dagen vast in deze fase."
 
 #. module: mail
 #. odoo-javascript
@@ -11790,13 +11817,13 @@ msgstr "Thread"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
 msgid "Thread \"%(thread_name)s\" has been deleted"
-msgstr ""
+msgstr "De thread \"%(thread_name)s\" werd verwijderd"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Thread Actions"
-msgstr ""
+msgstr "Thread-acties"
 
 #. module: mail
 #. odoo-javascript
@@ -11835,7 +11862,7 @@ msgstr "Gesprekken"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Thumbnail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
@@ -11846,7 +11873,7 @@ msgstr "Tijdzone"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Tip: Write /field to insert dynamic content!"
-msgstr ""
+msgstr "Tip: Typ /field om dynamische inhoud in te voegen!"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -12032,7 +12059,7 @@ msgstr "Ontvangers volgen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Tracked Changes"
-msgstr ""
+msgstr "Bijgehouden wijzigingen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__tracking_value_ids
@@ -12235,7 +12262,7 @@ msgstr "Niet-toegewezen activiteiten"
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "Unauthorized server for some of the sending mails."
-msgstr ""
+msgstr "Niet-geautoriseerde server voor sommige verzonden mails."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -12470,7 +12497,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Camera"
-msgstr ""
+msgstr "Camera gebruiken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -12492,12 +12519,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
-msgstr ""
+msgstr "Microfoon gebruiken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
-msgstr ""
+msgstr "SFU-server gebruiken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -12560,7 +12587,7 @@ msgstr "Gebruik message_notify om een melding naar een gebruiker te verzenden."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
 msgid "Use microphone and camera"
-msgstr ""
+msgstr "Microfoon en camera gebruiken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -12578,6 +12605,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
 msgstr ""
+"Gebruik je eigen servers voor oproepen om zwaar verkeer te beheren en "
+"betrouwbaarheid te garanderen als Twilio niet beschikbaar is"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
@@ -12585,6 +12614,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
 msgstr ""
+"Gebruik je eigen servers voor oproepen om zwaar verkeer te beheren en "
+"betrouwbaarheid te garanderen als Twilio niet beschikbaar is."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12681,7 +12712,7 @@ msgstr "Gebruikerstype"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "User email"
-msgstr ""
+msgstr "E-mail van de gebruiker"
 
 #. module: mail
 #. odoo-javascript
@@ -12768,6 +12799,8 @@ msgstr ""
 msgid ""
 "Using picture-in-picture lets you stay in the call while you do other things."
 msgstr ""
+"Door picture-in-picture te gebruiken kan je in het gesprek blijven terwijl "
+"je andere dingen doet."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -12783,7 +12816,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
 msgid "Vacation Responder"
-msgstr ""
+msgstr "Afwezigheidsbericht"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -12890,7 +12923,7 @@ msgstr "Alle activiteiten bekijken"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View chat with %(channel_name)s"
-msgstr ""
+msgstr "Chat mit %(channel_name)s bekijken"
 
 #. module: mail
 #. odoo-javascript
@@ -12902,7 +12935,7 @@ msgstr "Kanalen bekijken of eraan deelnemen"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View the %(channel_name)s channel"
-msgstr ""
+msgstr "Kanal %(channel_name)s bekijken"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -13139,7 +13172,7 @@ msgstr "Schrijf je bericht hier..."
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Wrong email address %s."
-msgstr ""
+msgstr "Verkeerd e-mailadres %s."
 
 #. module: mail
 #. odoo-python
@@ -13239,7 +13272,7 @@ msgstr "Je kunt de doelrecord van een gepland bericht niet wijzigen."
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to create a personal mail server."
-msgstr ""
+msgstr "Je bent niet gemachtigd om een persoonlijke e-mailserver in te stellen."
 
 #. module: mail
 #. odoo-python
@@ -13251,7 +13284,7 @@ msgstr "Je mag dit geplande bericht niet verzenden"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to test personal mail servers."
-msgstr ""
+msgstr "Je bent niet gemachtigd om persoonlijke mailservers te testen."
 
 #. module: mail
 #. odoo-python
@@ -13298,7 +13331,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "You can still turn off your %s anytime."
-msgstr ""
+msgstr "Je kan je %s altijd nog uitschakelen."
 
 #. module: mail
 #. odoo-python
@@ -13367,7 +13400,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You don't have access to invite users to this channel."
-msgstr ""
+msgstr "Je bent niet gemachtigd om gebruikers uit te nodigen voor dit kanaal."
 
 #. module: mail
 #. odoo-python
@@ -13390,7 +13423,7 @@ msgstr "Je bent uitgenodigd voor #%s"
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "You may not create a message using another user's mail server."
-msgstr ""
+msgstr "Je mag geen bericht maken via de mailserver van een andere gebruiker."
 
 #. module: mail
 #. odoo-python
@@ -13470,7 +13503,7 @@ msgstr "Je browser ondersteunt webRTC niet."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Your call is in another window."
-msgstr ""
+msgstr "Je gesprek bevindt zich in een ander venster."
 
 #. module: mail
 #. odoo-python
@@ -13479,6 +13512,8 @@ msgid ""
 "Your email address is used by an alias domain, and so you can not create a "
 "mail server for it."
 msgstr ""
+"Je e-mailadres wordt gebruikt door een aliasdomein, dus je kan er geen "
+"mailserver voor aanmaken."
 
 #. module: mail
 #. odoo-javascript
@@ -13490,7 +13525,7 @@ msgstr "Je naam"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Your out-of-office message..."
-msgstr ""
+msgstr "Je afwezigheidsbericht..."
 
 #. module: mail
 #. odoo-python
@@ -13737,7 +13772,7 @@ msgstr "Bijv. Bespreken van de offerte"
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. Hello, how may I help you?"
-msgstr ""
+msgstr "bv. Hallo, hoe kan ik je helpen?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
@@ -13757,19 +13792,19 @@ msgstr "bijv. Een afspraak plannen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. Welcome to MyCompany!"
-msgstr ""
+msgstr "bv: Welkom bij MijnBedrijf!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/shortcut_char_field/shortcut_char_field.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. hello"
-msgstr ""
+msgstr "bv. hallo"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. info@company.com"
-msgstr ""
+msgstr "bv. info@bedrijf.com"
 
 #. module: mail
 #. odoo-javascript
@@ -13802,7 +13837,7 @@ msgstr "bijv: Bestelbevestiging verzenden"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__outgoing_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__outgoing_email_to
 msgid "emails To"
-msgstr ""
+msgstr "E-mails naar"
 
 #. module: mail
 #. odoo-javascript
@@ -13994,7 +14029,7 @@ msgstr "andere leden."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_ir_mail_server_unique_owner_user_id
 msgid "owner_user_id must be unique"
-msgstr ""
+msgstr "owner_user_id moet uniek zijn"
 
 #. module: mail
 #. odoo-javascript
@@ -14054,7 +14089,7 @@ msgstr "verdoven:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "stun:stun.google.com:19302 or turn:turn.example.com:3478"
-msgstr ""
+msgstr "stun:stun.google.com:19302 of turn:turn.example.com:3478"
 
 #. module: mail
 #. odoo-python
