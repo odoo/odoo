@@ -5658,7 +5658,11 @@ class AccountMove(models.Model):
             ('state', '=', 'posted'),
         ]
         limit = job_count + 1
-        to_process = self.env['account.move'].search(domain, limit=limit)
+        to_process = self.env['account.move'].search(
+            domain,
+            order='date asc, invoice_date asc, sequence_number asc, id asc',
+            limit=limit,
+        )
         total_to_process = self.env['account.move'].search_count(domain)
 
         need_retrigger = len(to_process) > job_count

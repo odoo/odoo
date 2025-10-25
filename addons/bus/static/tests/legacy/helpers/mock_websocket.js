@@ -76,6 +76,10 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
         WebSocket: function () {
             return new WebSocketMock();
         },
+        // Browser can't be imported in the worker bundle, but intervals should
+        // be cleared during tests.
+        setInterval: browser.setInterval.bind(browser),
+        clearInterval: browser.clearInterval.bind(browser),
     });
     websocketWorker = websocketWorker || new WebsocketWorker();
     patchWithCleanup(websocketWorker, params);

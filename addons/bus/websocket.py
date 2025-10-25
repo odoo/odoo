@@ -890,7 +890,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "18.0-5"
+    _VERSION = "18.0-6"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -1028,6 +1028,9 @@ class WebsocketConnectionHandler:
             # worker version.
             websocket.disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
+            if message == b'\x00':
+                # Ignore internal sentinel message used to detect dead/idle connections.
+                continue
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
                     req.serve_websocket_message(message)

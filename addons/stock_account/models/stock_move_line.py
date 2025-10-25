@@ -87,7 +87,7 @@ class StockMoveLine(models.Model):
 
     def _action_done(self):
         for line in self:
-            if not line.lot_id and not line.lot_name and line.product_id.lot_valuated:
+            if not line.lot_id and not line.lot_name and line.product_id.lot_valuated and line.quantity:
                 raise UserError(_("Lot/Serial number is mandatory for product valuated by lot"))
         return super()._action_done()
 

@@ -7,7 +7,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { uniqueId } from "@web/core/utils/functions";
-import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
 import publicWidget from "@web/legacy/js/public/public_widget";
@@ -23,6 +22,7 @@ import {
 import { touching } from "@web/core/utils/ui";
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
 import { scrollTo } from "@web_editor/js/common/scrolling";
+import { generateVideoIframe } from "@website/js/content/generate_video_iframe";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -875,6 +875,7 @@ const MobileYoutubeAutoplayMixin = {
 registry.mediaVideo = publicWidget.Widget.extend(
     MobileYoutubeAutoplayMixin, ObservingCookieWidgetMixin, {
     selector: '.media_iframe_video',
+    disabledInEditableMode: false,
 
     /**
      * @override
@@ -886,13 +887,16 @@ registry.mediaVideo = publicWidget.Widget.extend(
         const proms = [this._super.apply(this, arguments)];
         let iframeEl = this.el.querySelector(':scope > iframe');
 
-        // The following code is only there to ensure compatibility with
-        // videos added before bug fixes or new Odoo versions where the
-        // <iframe/> element is properly saved.
+        // Generate the video `<iframe/>` element when restarting public
+        // widgets. In some cases (e.g., when adding a new video block),
+        // we don’t need to rebuild the same iframe while starting the widget.
         if (!iframeEl) {
-            iframeEl = this._generateIframe();
+            iframeEl = generateVideoIframe(this.$target[0]);
         }
 
+        if (iframeEl && !iframeEl.getAttribute("aria-label")) {
+            iframeEl.setAttribute("aria-label", _t("Media video"));
+        }
         if (this.el.dataset.needCookiesApproval) {
             const sizeContainerEl = this.el.querySelector(":scope > .media_iframe_video_size");
             sizeContainerEl.classList.add("d-none");
@@ -922,63 +926,15 @@ registry.mediaVideo = publicWidget.Widget.extend(
      * @override
      */
     destroy() {
+        if (this.editableMode) {
+            // Destroy video iframes so they are never saved in the DOM.
+            this.el.replaceChildren();
+        }
         if (this._showSizeContainerEl) {
             document.removeEventListener("optionalCookiesAccepted", this._showSizeContainerEl);
             this._showSizeContainerEl();
         }
         return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _generateIframe: function () {
-        // Bug fix / compatibility: empty the <div/> element as all information
-        // to rebuild the iframe should have been saved on the <div/> element
-        this.$el.empty();
-
-        // Add extra content for size / edition
-        this.$el.append(
-            '<div class="css_editable_mode_display">&nbsp;</div>' +
-            '<div class="media_iframe_video_size">&nbsp;</div>'
-        );
-
-        // Rebuild the iframe. Depending on version / compatibility / instance,
-        // the src is saved in the 'data-src' attribute or the
-        // 'data-oe-expression' one (the latter is used as a workaround in 10.0
-        // system but should obviously be reviewed in master).
-        var src = escape(this.$el.data('oe-expression') || this.$el.data('src'));
-        // Validate the src to only accept supported domains we can trust
-        var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
-        if (!m) {
-            // Unsupported protocol or wrong URL format, don't inject iframe
-            return;
-        }
-        var domain = m[1].replace(/^www\./, '');
-        const supportedDomains = [
-            "youtu.be", "youtube.com", "youtube-nocookie.com",
-            "instagram.com",
-            "player.vimeo.com", "vimeo.com",
-            "dailymotion.com",
-            "player.youku.com", "youku.com",
-        ];
-        if (!supportedDomains.includes(domain)) {
-            // Unsupported domain, don't inject iframe
-            return;
-        }
-
-        const iframeEl = $('<iframe/>', {
-            frameborder: '0',
-            allowfullscreen: 'allowfullscreen',
-            "aria-label": _t("Media video"),
-        })[0];
-        this.$el.append(iframeEl);
-        this._manageIframeSrc(this.el, src);
-        return iframeEl;
     },
 });
 

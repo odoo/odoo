@@ -2,11 +2,48 @@ from datetime import datetime, timedelta
 
 from odoo import Command
 from odoo.http import Request
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import HttpCase, tagged
 
 
 @tagged('-at_install', 'post_install')
 class TestUsersHttp(HttpCase):
+
+    def test_account_holder_name_update(self):
+        """Test that bank account holder name updates when partner name changes via /my/account route."""
+        login = 'test_portal_user'
+        portal_user = mail_new_test_user(
+            self.env,
+            login,
+            name='Partner A',
+        )
+
+        bank_account = self.env['res.partner.bank'].create({
+            'acc_number': '123456789',
+            'partner_id': portal_user.partner_id.id,
+            'acc_holder_name': 'Partner A Holder',
+            'acc_type': 'bank',
+        })
+
+        common_data = {
+            'phone': '1234567890',
+            'email': 'test@example.com',
+            'street': '123 Main St',
+            'city': 'Anytown',
+            'zipcode': '12345',
+            'country_id': self.env.ref('base.us').id,
+        }
+
+        self.authenticate(login, login)
+        # request 1: request without changing partner name
+        response = self.url_open(url='/my/account', data={**common_data, 'name': portal_user.partner_id.name, 'csrf_token': Request.csrf_token(self)})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(bank_account.acc_holder_name, 'Partner A Holder')
+
+        # request 2: request with changed partner name
+        response2 = self.url_open(url='/my/account', data={**common_data, 'name': 'Partner New Name', 'csrf_token': Request.csrf_token(self)})
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(bank_account.acc_holder_name, 'Partner New Name')
 
     def test_deactivate_portal_user(self):
         # Create a portal user with data which should be removed on deactivation

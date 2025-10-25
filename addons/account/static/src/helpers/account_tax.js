@@ -1069,8 +1069,8 @@ export const accountTaxHelpers = {
             let display_base_amount;
             let display_base_amount_currency;
             if (involved_amount_types.size === 1 && involved_amount_types.has("fixed")) {
-                display_base_amount = null;
-                display_base_amount_currency = null;
+                display_base_amount = false;
+                display_base_amount_currency = false;
             } else if (
                 involved_amount_types.size === 1
                 && involved_amount_types.has("division")
@@ -1096,7 +1096,7 @@ export const accountTaxHelpers = {
                 display_base_amount_currency = values.base_amount_currency;
             }
 
-            if (display_base_amount_currency !== null) {
+            if (typeof display_base_amount_currency === "number") {
                 encountered_base_amounts.add(parseFloat(display_base_amount_currency.toFixed(currency.decimal_places)));
             }
 
