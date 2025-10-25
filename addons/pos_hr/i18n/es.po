@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-10-24 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -169,6 +170,14 @@ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
 msgstr "Empleado: %(employee)s - Configuración del TPV: %(config_list)s \n"
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid ""
+"Employees linked to users with the PoS Manager role are automatically added "
+"to this list"
+msgstr ""
+
+#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
@@ -214,14 +223,6 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "Si se deja vacío, todos los empleados pueden acceder al TPV"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "If left empty, only Odoo users have extended rights in PoS"
-msgstr ""
-"Si se deja vacío, solo los usuarios de Odoo tendrán derechos extendidos en "
-"el TPV"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -382,5 +383,10 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
-"No puede eliminar un empleado que puede estar en uso en una sesión activa de"
-" TPV, primero cierre las sesiones: \n"
+"No puede eliminar un empleado que puede estar en uso en una sesión activa de "
+"TPV, primero cierre las sesiones: \n"
+
+#~ msgid "If left empty, only Odoo users have extended rights in PoS"
+#~ msgstr ""
+#~ "Si se deja vacío, solo los usuarios de Odoo tendrán derechos extendidos "
+#~ "en el TPV"

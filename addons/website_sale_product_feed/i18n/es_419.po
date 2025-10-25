@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-17 18:37+0000\n"
+"POT-Creation-Date: 2025-10-24 18:38+0000\n"
 "PO-Revision-Date: 2025-10-21 22:03+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -72,6 +72,11 @@ msgid "Connect your eCommerce via a product file."
 msgstr "Conecta tu comercio electrónico mediante un archivo de productos."
 
 #. module: website_sale_product_feed
+#: model:ir.model.constraint,message:website_sale_product_feed.constraint_website_check_gmc_ecommerce_access
+msgid "Constraint disabled"
+msgstr ""
+
+#. module: website_sale_product_feed
 #: model_terms:ir.ui.view,arch_db:website_sale_product_feed.product_feed_form
 #: model_terms:ir.ui.view,arch_db:website_sale_product_feed.product_feed_list
 msgid "Copy URL"
@@ -92,11 +97,6 @@ msgstr "Creado el"
 #: model_terms:ir.ui.view,arch_db:website_sale_product_feed.product_feed_list
 msgid "Default"
 msgstr "Predeterminado"
-
-#. module: website_sale_product_feed
-#: model:ir.model.constraint,message:website_sale_product_feed.constraint_res_config_settings_check_gmc_ecommerce_access
-msgid "Disable the constraint"
-msgstr "Desactiva la restricción"
 
 #. module: website_sale_product_feed
 #: model:ir.model.fields,field_description:website_sale_product_feed.field_product_feed__display_name
@@ -345,3 +345,6 @@ msgstr "Historial de comunicación del sitio web"
 #: model_terms:ir.ui.view,arch_db:website_sale_product_feed.product_feed_search
 msgid "eCommerce Category"
 msgstr "Categoría de comercio electrónico"
+
+#~ msgid "Disable the constraint"
+#~ msgstr "Desactiva la restricción"

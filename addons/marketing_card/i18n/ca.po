@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-10-24 18:37+0000\n"
 "PO-Revision-Date: 2025-08-25 22:00+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -44,8 +44,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
 "title=\"Shares\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title="
-"\"Shares\"/>"
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -139,6 +139,14 @@ msgid "Activity Type Icon"
 msgstr "Icona de tipus d'activitat"
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid ""
+"An error occured while rendering a card for %(record_name)s. Try again or "
+"check the server logs for more details."
+msgstr ""
+
+#. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
 msgid "Archived"
@@ -209,8 +217,8 @@ msgstr "Campanya amb targetes"
 #: code:addons/marketing_card/models/mailing_mailing.py:0
 msgid "Card Campaign Mailing should target model %(model_name)s"
 msgstr ""
-"El correu de la campanya de targetes hauria de ser dirigit al model "
-"%(model_name)s"
+"El correu de la campanya de targetes hauria de ser dirigit al model %"
+"(model_name)s"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_click_count
