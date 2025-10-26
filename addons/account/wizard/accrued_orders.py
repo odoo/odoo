@@ -244,6 +244,16 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         }
         return move_vals, orders_with_entries
 
+    def _get_accrual_message_body(self, move, reverse_move):
+        self.ensure_one()
+        return _(
+            'Accrual entry created on %(date)s: %(accrual_entry)s.\
+                And its reverse entry: %(reverse_entry)s.',
+            date=self.date,
+            accrual_entry=move._get_html_link(),
+            reverse_entry=reverse_move._get_html_link(),
+        )
+
     def create_entries(self):
         self.ensure_one()
 
@@ -259,18 +269,11 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         }])
         reverse_move._post()
         for order in orders_with_entries:
-            body = _(
-                'Accrual entry created on %(date)s: %(accrual_entry)s.\
-                    And its reverse entry: %(reverse_entry)s.',
-                date=self.date,
-                accrual_entry=move._get_html_link(),
-                reverse_entry=reverse_move._get_html_link(),
-            )
-            order.message_post(body=body)
+            order.message_post(body=self._get_accrual_message_body(move, reverse_move))
         return {
             'name': _('Accrual Moves'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'view_mode': 'list,form',
-            'domain': [('id', 'in', (move.id, reverse_move.id))],
+            'domain': [('id', 'in', (move | reverse_move).ids)],
         }
