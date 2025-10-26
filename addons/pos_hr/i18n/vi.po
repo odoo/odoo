@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
 # Wil Odoo, 2024
 # Tiffany Chang, 2024
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-10-24 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_hr
@@ -73,8 +73,8 @@ msgid ""
 "Can't generate a report per employee! as selected session has no orders "
 "associated with any employee."
 msgstr ""
-"Không thể tạo báo cáo cho từng nhân viên! Vì phiên đã chọn không có đơn hàng"
-" nào được liên kết với bất kỳ nhân viên nào."
+"Không thể tạo báo cáo cho từng nhân viên! Vì phiên đã chọn không có đơn hàng "
+"nào được liên kết với bất kỳ nhân viên nào."
 
 #. module: pos_hr
 #. odoo-javascript
@@ -167,6 +167,14 @@ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
 msgstr "Nhân viên: %(employee)s - (Các) cấu hình PoS: %(config_list)s \n"
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid ""
+"Employees linked to users with the PoS Manager role are automatically added "
+"to this list"
+msgstr ""
+
+#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
@@ -189,12 +197,6 @@ msgstr "Nhập PIN của bạn"
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "Nếu để trống, tất cả nhân viên đều có thể đăng nhập vào POS"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "If left empty, only Odoo users have extended rights in PoS"
-msgstr "Nếu để trống, chỉ người dùng Odoo có quyền mở rộng trong POS"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -355,5 +357,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
-"Bạn không thể xóa một nhân viên có thể được sử dụng trong một phiên POS đang"
-" hoạt động, trước tiên hãy đóng (các) phiên:\n"
+"Bạn không thể xóa một nhân viên có thể được sử dụng trong một phiên POS đang "
+"hoạt động, trước tiên hãy đóng (các) phiên:\n"
+
+#~ msgid "If left empty, only Odoo users have extended rights in PoS"
+#~ msgstr "Nếu để trống, chỉ người dùng Odoo có quyền mở rộng trong POS"
