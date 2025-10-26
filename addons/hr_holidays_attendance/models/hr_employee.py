@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
-from odoo.fields import Domain
 
 
 class HrEmployee(models.Model):
@@ -10,16 +9,16 @@ class HrEmployee(models.Model):
     @api.model
     def get_overtime_data(self, domain=None, employee_id=None):
         overtime_data = super().get_overtime_data(domain, employee_id)
-        domain = [] if domain is None else domain
+        allocation_domain = [
+            ('holiday_status_id.overtime_deductible', '=', True),
+            ('state', '=', 'confirm'),
+        ]
+        if employee_id:
+            allocation_domain.append(('employee_id', '=', employee_id))
         overtime_adjustments = {
             allocation[0].id: allocation[1]
             for allocation in self.env["hr.leave.allocation"]._read_group(
-                domain=Domain.AND(
-                    domain,
-                    [
-                        ('holiday_status_id.overtime_deductible', '=', True),
-                        ('state', '=', 'confirm'),
-                    ]),
+                domain=allocation_domain,
                 groupby=['employee_id'],
                 aggregates=['number_of_hours_display:sum']
             )
