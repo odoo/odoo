@@ -55,7 +55,7 @@
                         </button>
                         <t t-set-slot="content">
                             <div t-if="customerFacingDisplayButtonIsShown" class="d-flex gap-2 p-2 border-bottom">
-                                <ProxyStatus t-if="pos.config.use_proxy" />
+                                <ProxyStatus t-if="pos.config.useProxy" />
                                 <span t-on-click="openCustomerDisplay" class="btn btn-secondary btn-lg w-100 text-center" title="Customer Display">
                                     <i class="fa fa-fw fa-desktop"/>
                                 </span>
