@@ -398,6 +398,8 @@ class HTML_Editor(http.Controller):
         """
         self._clean_context()
         attachment = request.env['ir.attachment'].browse(attachment.id)
+        if not data and attachment.datas:
+            data = attachment.datas
 
         fields = {
             'original_id': attachment.id,
