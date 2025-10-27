@@ -1173,6 +1173,36 @@
         <field name="category" eval="'absence'"/>
     </record>
 
+    <record id="l10n_eg_work_entry_type_overtime_work_days_daytime" model="hr.work.entry.type">
+        <field name="name">Overtime Workday Daytime</field>
+        <field name="code">OVTWD</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.35</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_work_entry_type_overtime_work_days_nighttime" model="hr.work.entry.type">
+        <field name="name">Overtime Workday Nighttime</field>
+        <field name="code">OVTWDN</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.7</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_work_entry_type_overtime_rest_days" model="hr.work.entry.type">
+        <field name="name">Overtime Restday</field>
+        <field name="code">OVTWEND</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">2</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
 <!-- HK : Hong Kong -->
     <record id="l10n_hk_work_entry_type_sick_leave_80" model="hr.work.entry.type">
         <field name="name">Sick Leave 80%</field>
