@@ -320,12 +320,25 @@ export class DiscussChannel extends models.ServerModel {
             DiscussChannelMember.write([memberOfCurrentUser.id], {
                 fetched_message_id: lastMessage.id,
             });
-            BusBus._sendone(channel, "discuss.channel.member/fetched", {
-                channel_id: channel.id,
-                id: memberOfCurrentUser.id,
-                last_message_id: lastMessage.id,
-                partner_id: this.env.user.partner_id,
-            });
+            BusBus._sendone(
+                channel,
+                "mail.record/insert",
+                new mailDataHelpers.Store()
+                    .add(
+                        DiscussChannelMember.browse(memberOfCurrentUser.id),
+                        makeKwArgs({
+                            fields: [
+                                mailDataHelpers.Store.one(
+                                    "channel_id",
+                                    makeKwArgs({ as_thread: true, fields: [] })
+                                ),
+                                "fetched_message_id",
+                                ...DiscussChannelMember._to_store_persona([]),
+                            ],
+                        })
+                    )
+                    .get_result()
+            );
         }
     }
 
