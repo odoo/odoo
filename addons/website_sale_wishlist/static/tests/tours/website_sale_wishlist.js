@@ -22,7 +22,24 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "remove first item in whishlist",
             trigger: '.o_wish_rm:first',
             run: "click",
+<<<<<<< 12457579f7b9d8bf13835f5746c873c427b72ad1
             expectUnloadPage: true,
+||||||| 2c87f3b2b397f268f0e50cb73cd81de992ddd42e
+        },
+        {
+            content: "go back to the store",
+            trigger: "a[href='/shop']",
+            run: "click",
+=======
+        },
+        {
+            trigger: ":not(:has(.my_wish_quantity:visible))",
+        },
+        {
+            content: "go back to the store",
+            trigger: "a[href='/shop']",
+            run: "click",
+>>>>>>> ab179ed9670624f1f92a1b7d562ac9133c7a2918
         },
         {
             content: "hover card && click on add to wishlist",
@@ -94,10 +111,66 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
+            trigger: ":not(:has(tr:contains('Steel')))",
+        },
+        {
+            trigger: ":not(:has(tr:contains('Aluminium')))",
+        },
+        {
+<<<<<<< 12457579f7b9d8bf13835f5746c873c427b72ad1
+||||||| 2c87f3b2b397f268f0e50cb73cd81de992ddd42e
+            content: "check B2B wishlist mode",
+            trigger: "input#b2b_wish",
+            run: "click",
+        },
+        {
+            content: "add item to cart",
+            trigger: '.o_wish_add:eq(1)',
+            run: "click",
+        },
+        {
+            content: "check that cart contains 1 item",
+            trigger: ".my_cart_quantity:contains(1)",
+        },
+        {
             content: "check that wishlist contains 1 item",
             trigger: ".my_wish_quantity:contains(1)",
         },
         {
+            content: "remove B2B wishlist mode",
+            trigger: "input#b2b_wish",
+            run: "click",
+        },
+        {
+=======
+            content: "check B2B wishlist mode",
+            trigger: "input#b2b_wish",
+            run: "click",
+        },
+        {
+            content: "check that wishlist contains 1 item",
+            trigger: ".my_wish_quantity:contains(1)",
+        },
+        {
+            content: "add item to cart",
+            trigger: '.o_wish_add:eq(1)',
+            run: "click",
+        },
+        {
+            content: "check that cart contains 1 item",
+            trigger: ".my_cart_quantity:contains(1)",
+        },
+        {
+            content: "check that wishlist contains 1 item",
+            trigger: ".my_wish_quantity:contains(1)",
+        },
+        {
+            content: "remove B2B wishlist mode",
+            trigger: "input#b2b_wish",
+            run: "click",
+        },
+        {
+>>>>>>> ab179ed9670624f1f92a1b7d562ac9133c7a2918
             content: "add last item to cart",
             trigger: '.o_wish_add:eq(1)',
             run: "click",
