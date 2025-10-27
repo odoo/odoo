@@ -3,7 +3,7 @@
     <record id="tax_report" model="account.report">
         <field name="name">KMD Report</field>
         <field name="name@et">KMD aruanne</field>
-        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="root_report_id" eval="False"/>
         <field name="country_id" ref="base.ee"/>
         <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
@@ -547,5 +547,19 @@
                 </field>
             </record>
         </field>
+    </record>
+
+    <record id="kmd_inf_tax_report" model="account.report">
+        <field name="name">KMD Report</field>
+        <field name="name@et">KMD aruanne</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ee"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="use_sections" eval="True"/>
+        <field name="section_report_ids" eval="[
+            Command.set([
+                ref('l10n_ee.tax_report'),
+            ])]"/>
     </record>
 </odoo>
