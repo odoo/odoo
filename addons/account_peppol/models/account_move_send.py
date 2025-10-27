@@ -56,7 +56,7 @@ class AccountMoveSend(models.AbstractModel):
             'level': 'info',
             'action_text': _("Why should you use it ?"),
             'action': {
-                'name': _("Why should I use PEPPOL ?"),
+                'name': _("Why should I use Peppol ?"),
                 'type': 'ir.actions.client',
                 'tag': 'account_peppol.what_is_peppol',
                 'target': 'new',

@@ -74,7 +74,7 @@ class ResCompany(models.Model):
             ('receiver', 'Can send and receive'),
             ('rejected', 'Rejected'),
         ],
-        string='PEPPOL status', required=True, default='not_registered',
+        string='Peppol status', required=True, default='not_registered',
     )
     account_peppol_edi_user = fields.Many2one(
         comodel_name='account_edi_proxy_client.user',
