@@ -1979,7 +1979,8 @@ class PropertiesCase(TestPropertiesMixin):
             self.message_1['attributes']['state']
         with self.assertRaises(KeyError):
             self.message_2['attributes']['state']
-        self.assertEqual(self.message_3['attributes']['state'], 'Draft')
+        self.assertEqual(self.message_3['attributes']['state'], 'draft')
+        self.assertEqual(self.message_3.with_context(property_selection_get_label=True)['attributes']['state'], 'Draft')
 
         self.message_1.attributes = [{
             'name': 'tags',

@@ -45,7 +45,7 @@ def render_res_ids(model, res_ids, results):
     For falsy ids, use an empty recordset.
     """
     res_ids, falsy_ids = tools.partition(lambda id_: id_ or isinstance(id_, api.NewId), res_ids)
-    yield from model.browse(res_ids)
+    yield from model.browse(res_ids).with_context(property_selection_get_label=True)
     if not falsy_ids:
         return
     yield model.browse()
