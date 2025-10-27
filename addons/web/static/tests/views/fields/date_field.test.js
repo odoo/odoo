@@ -91,7 +91,7 @@ test("open datepicker on Control+Enter", async () => {
     await press(["ctrl", "enter"]);
     await animationFrame();
     assertDateTimePicker({
-        title: "January 1997",
+        title: "Jan 1997",
         date: [
             {
                 cells: [
@@ -395,7 +395,7 @@ test("date field supports internationalization", async () => {
     expect(".o_field_date").toHaveText("3. feb. 2017");
     await contains(".o_field_date button").click();
     expect(".o_field_date input").toHaveValue("02/03/2017");
-    expect(".o_zoom_out strong").toHaveText("februar 2017");
+    expect(".o_zoom_out strong").toHaveText("feb 2017");
 
     await contains(getPickerCell("22")).click();
     await clickSave();

@@ -56,7 +56,7 @@ describe("DateTimeInput (date)", () => {
         await animationFrame();
 
         assertDateTimePicker({
-            title: "January 1997",
+            title: "Jan 1997",
             date: [
                 {
                     cells: [
@@ -269,7 +269,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
 
         assertDateTimePicker({
-            title: "January 1997",
+            title: "Jan 1997",
             date: [
                 {
                     cells: [

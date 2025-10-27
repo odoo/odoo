@@ -40,7 +40,7 @@ test(`Mount a CalendarDatePicker`, async () => {
     expect(`.o_datetime_picker`).toHaveCount(1);
     expect(`.o_datetime_picker .o_selected`).toHaveCount(1);
     expect(`.o_datetime_picker .o_selected`).toHaveText("14");
-    expect(`.o_datetime_picker_header .o_datetime_button`).toHaveText("August 2021");
+    expect(`.o_datetime_picker_header .o_datetime_button`).toHaveText("Aug 2021");
     expect(queryAllTexts`.o_datetime_picker .o_day_of_week_cell`).toEqual([
         "S",
         "M",

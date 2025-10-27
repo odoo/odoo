@@ -445,7 +445,7 @@ test("Render with initial empty value and optional start date", async () => {
 
     await contains("input[data-field=datetime_end]").click();
     expect(".o_datetime_picker").toHaveCount(1);
-    expect(".o_toggle_range").toHaveCount(1);
+    expect(".o_toggle_range").toHaveCount(2);
 
     // Select a value (today)
     await contains(".o_today").click();
