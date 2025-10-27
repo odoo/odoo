@@ -78,7 +78,6 @@
                     <field name="chatbot_script_id"/>
                     <field name="chatbot_answers_path_str" string="Chatbot Answers"/>
                     <field name="session_expertises" string="Expertise"/>
-                    <field name="conversation_tag_ids" string="Tags"/>
                     <field name="visitor_partner_id"/>
                     <filter name="my_session" domain="[('partner_id.user_ids', '=', uid)]" string="My Sessions"/>
                     <separator/>
@@ -106,7 +105,6 @@
                         <filter name="group_by_chatbot" string="Chatbot" domain="[]" context="{'group_by':'chatbot_script_id'}"/>
                         <filter name="group_by_chatbot_answers" domain="[]" context="{'group_by':'chatbot_answers_path'}"/>
                         <filter name="group_by_expertise" string="Expertise" domain="[]" context="{'group_by':'session_expertises'}"/>
-                        <filter name="group_by_conversation_tag" string="Tags" domain="[]" context="{'group_by':'conversation_tag_ids'}"/>
                         <filter name="group_by_customer" domain="[]" context="{'group_by':'visitor_partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter name="group_by_hour" string="Hour of Day" domain="[]" context="{'group_by':'start_hour'}"/>

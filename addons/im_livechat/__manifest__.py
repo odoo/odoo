@@ -29,7 +29,6 @@ Help your customers with this chat, and analyse their feedback.
         'views/chatbot_script_views.xml',
         "views/discuss_channel_views.xml",
         "views/res_partner_views.xml",
-        "views/im_livechat_conversation_tag_views.xml",
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
         "views/im_livechat_chatbot_templates.xml",

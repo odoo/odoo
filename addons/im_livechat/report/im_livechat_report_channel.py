@@ -70,12 +70,6 @@ class Im_LivechatReportChannel(models.Model):
         related="channel_id.livechat_expertise_ids",
         string="Expertises used in this session",
     )
-    conversation_tag_ids = fields.Many2many(
-        "im_livechat.conversation.tag",
-        readonly=True,
-        related="channel_id.livechat_conversation_tag_ids",
-        string="Tags used in this conversation",
-    )
     agent_requesting_help_history = fields.Many2one(
         "im_livechat.channel.member.history",
         related="channel_id.livechat_agent_requesting_help_history",
