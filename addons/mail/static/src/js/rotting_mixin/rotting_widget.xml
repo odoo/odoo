@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.KanbanRottingField">
-        <div class="badge rounded-pill o_mail_resource_rotting_bg d-flex align-items-center" t-if="props.record.data.is_rotting"
+        <div class="badge rounded-pill d-flex align-items-center text-bg-danger" t-if="props.record.data.is_rotting"
             t-att-title="title">
             <t t-out="dayCount"/>
         </div>
@@ -9,7 +9,7 @@
 
     <t t-name="mail.ListBadgeSelectionRotting" t-inherit="web.ListBadgeSelectionField" t-inherit-mode="primary">
         <t t-else="" position="after">
-            <span class="badge rounded-pill o_mail_resource_rotting_bg ms-2" t-if="props.record.data.is_rotting">
+            <span class="badge rounded-pill text-bg-danger ms-2" t-if="props.record.data.is_rotting">
                 <t t-out="dayCount"/>
         </span>
         </t>
