@@ -10,6 +10,7 @@ function getAllPricesData(otherData = {}) {
             {
                 id: 1,
                 name: "Test Order",
+                lines: [1],
             },
         ],
         "pos.order.line": [
@@ -27,82 +28,85 @@ function getAllPricesData(otherData = {}) {
 }
 
 describe("pos.order.line", () => {
-    test("[getAllPrices()] Base test", async () => {
+    test("[get prices()] Base test", async () => {
         const store = await setupPosEnv();
         const models = store.models;
         const data = models.loadConnectedData(getAllPricesData());
 
-        const lineTax = data["pos.order.line"][0].getAllPrices();
-        expect(lineTax.priceWithTax).toBe(230.0);
-        expect(lineTax.priceWithoutTax).toBe(200.0);
-        expect(lineTax.taxesData[0].tax).toEqual(models["account.tax"].getFirst());
-        expect(lineTax.taxDetails[1].base).toBe(200.0);
-        expect(lineTax.taxDetails[1].amount).toBe(30.0);
+        const lineTax = data["pos.order.line"][0].prices;
+        expect(lineTax.total_included).toBe(230.0);
+        expect(lineTax.total_excluded).toBe(200.0);
+        expect(lineTax.taxes_data[0].base_amount).toBe(200.0);
+        expect(lineTax.taxes_data[0].tax_amount).toBe(30.0);
 
         // Test with line qty = 0
         data["pos.order.line"][0].qty = 0;
-        const zeroQtyLineTax = data["pos.order.line"][0].getAllPrices();
-        expect(zeroQtyLineTax.priceWithTax).toBe(0.0);
-        expect(zeroQtyLineTax.priceWithoutTax).toBe(0.0);
-        expect(zeroQtyLineTax.tax).toBe(0.0);
-        expect(Object.keys(zeroQtyLineTax.taxDetails).length).toBe(1);
+        const zeroQtyLineTax = data["pos.order.line"][0].prices;
+        expect(zeroQtyLineTax.total_included).toBe(0.0);
+        expect(zeroQtyLineTax.total_excluded).toBe(0.0);
+        expect(zeroQtyLineTax.taxes_data[0].base_amount).toBe(0.0);
+        expect(zeroQtyLineTax.taxes_data[0].tax_amount).toBe(0.0);
     });
 
-    test("[getAllPrices()] with discount applied", async () => {
+    test("[get prices()] with discount applied", async () => {
         const store = await setupPosEnv();
         const models = store.models;
         const data = models.loadConnectedData(getAllPricesData());
         const orderLine = data["pos.order.line"][0];
-        orderLine.setDiscount(10.0); // 10% discount
-        const lineTax = orderLine.getAllPrices();
+
         // Prices with a discount of 10% applied: 230 * 0.9 = 207.0
-        expect(lineTax.priceWithTax).toBe(207.0);
-        expect(lineTax.priceWithoutTax).toBe(180.0);
-        expect(lineTax.taxDetails[1].amount).toBe(27.0);
+        orderLine.setDiscount(10.0); // 10% discount
+        const lineTax = orderLine.prices;
+        expect(lineTax.total_included).toBe(207.0);
+        expect(lineTax.total_excluded).toBe(180.0);
+        expect(lineTax.taxes_data[0].tax_amount).toBe(27.0);
+
         // Price with a discount of 100% applied
         orderLine.setDiscount(100.0);
-        const updatedLineTax = orderLine.getAllPrices();
-        expect(updatedLineTax.priceWithoutTax).toBe(0.0);
-        expect(updatedLineTax.priceWithTax).toBe(0.0);
-        expect(updatedLineTax.tax).toBe(0.0);
-        expect(updatedLineTax.taxDetails[1].amount).toBe(0.0);
+        const updatedLineTax = orderLine.prices;
+        expect(updatedLineTax.total_excluded).toBe(0.0);
+        expect(updatedLineTax.total_included).toBe(0.0);
+        expect(updatedLineTax.taxes_data[0].tax_amount).toBe(0.0);
     });
 
-    test("[getAllPrices()] with multiple taxes settings", async () => {
+    test("[get prices()] with multiple taxes settings", async () => {
         const store = await setupPosEnv();
         const models = store.models;
-        const data = models.loadConnectedData(getAllPricesData());
+        const rawData = getAllPricesData();
+        const product = models["product.product"].get(5);
+        product.taxes_id = models["account.tax"].readMany([1, 2]); // Set two taxes on the product
+        rawData["pos.order.line"][0].qty = 1;
+        rawData["pos.order.line"][0].tax_ids = [1, 2];
+
+        const data = models.loadConnectedData(rawData);
         const orderLine = data["pos.order.line"][0];
+
         // Test with two taxes applied (15% and 25%)
-        orderLine.tax_ids = [1, 2];
-        orderLine.qty = 1;
-        const lineTax = orderLine.getAllPrices();
-        expect(lineTax.priceWithoutTax).toBe(100.0);
-        expect(lineTax.priceWithTax).toBe(140.0);
-        expect(lineTax.tax).toBe(40.0);
-        expect(lineTax.taxDetails[1].amount).toBe(15.0);
-        expect(lineTax.taxDetails[2].amount).toBe(25.0);
+        const lineTax = orderLine.prices;
+        expect(lineTax.total_excluded).toBe(100.0);
+        expect(lineTax.total_included).toBe(140.0);
+        expect(lineTax.taxes_data[0].tax_amount).toBe(15.0);
+        expect(lineTax.taxes_data[1].tax_amount).toBe(25.0);
 
         // Test with "include_base_amount" and "include_base_amount" to true for both taxes
         models["account.tax"].get(1).include_base_amount = true;
         models["account.tax"].get(2).include_base_amount = true;
-        const updatedLineTax = data["pos.order.line"][0].getAllPrices();
-        expect(updatedLineTax.priceWithoutTax).toBe(100.0);
-        expect(updatedLineTax.priceWithTax).toBe(143.75);
-        expect(updatedLineTax.tax).toBe(43.75);
-        expect(updatedLineTax.taxDetails[1].amount).toBe(15.0);
-        expect(updatedLineTax.taxDetails[2].amount).toBe(28.75);
+        const updatedLineTax = data["pos.order.line"][0].prices;
+        expect(updatedLineTax.total_excluded).toBe(100.0);
+        expect(updatedLineTax.total_included).toBe(143.75);
+        expect(updatedLineTax.taxes_data[0].tax_amount).toBe(15.0);
+        expect(updatedLineTax.taxes_data[1].tax_amount).toBe(28.75);
 
         // Test without any taxes
-        orderLine.tax_ids = [];
-        const noTaxLine = data["pos.order.line"][0].getAllPrices();
-        expect(noTaxLine.priceWithoutTax).toBe(100.0);
-        expect(noTaxLine.priceWithTax).toBe(100.0);
-        expect(noTaxLine.tax).toBe(0.0);
-        expect(Object.keys(noTaxLine.taxDetails).length).toBe(0);
+        product.taxes_id = [];
+        data["pos.order.line"][0].tax_ids = [];
+        const noTaxLine = data["pos.order.line"][0].prices;
+        expect(noTaxLine.total_excluded).toBe(100.0);
+        expect(noTaxLine.total_included).toBe(100.0);
+        expect(noTaxLine.taxes_data).toHaveLength(0);
     });
 
-    test("[getAllPrices()] with fixed-amount tax", async () => {
+    test("[get prices()] with fixed-amount tax", async () => {
         const store = await setupPosEnv();
         const models = store.models;
         const data = models.loadConnectedData(getAllPricesData());
@@ -110,30 +114,32 @@ describe("pos.order.line", () => {
         const orderLine = data["pos.order.line"][0];
         orderLine.qty = 3;
         orderLine.price_unit = 10.0;
-        const lineTax = orderLine.getAllPrices();
+        const lineTax = orderLine.prices;
         // 3 * 10 = 30, tax = 3 * 15 = 45
-        expect(lineTax.priceWithoutTax).toBe(30.0);
-        expect(lineTax.priceWithTax).toBe(75.0);
-        expect(lineTax.tax).toBe(45.0);
-        expect(lineTax.taxDetails[1].amount).toBe(45.0);
+        expect(lineTax.total_excluded).toBe(30.0);
+        expect(lineTax.total_included).toBe(75.0);
+        expect(lineTax.taxes_data[0].tax_amount).toBe(45.0);
     });
 
-    test("[getAllPrices()] with one price-included and one price-excluded tax", async () => {
+    test("[get prices()] with one price-included and one price-excluded tax", async () => {
         const store = await setupPosEnv();
         const models = store.models;
-        const data = models.loadConnectedData(getAllPricesData());
+        const product = models["product.product"].get(5);
+        const rawData = getAllPricesData();
+        models["account.tax"].get(1).price_include = true;
+        product.taxes_id = models["account.tax"].readMany([1, 2]);
+        rawData["pos.order.line"][0].tax_ids = [1, 2];
+
+        const data = models.loadConnectedData(rawData);
         const orderLine = data["pos.order.line"][0];
-        orderLine.tax_ids = [1, 2];
         orderLine.qty = 1;
         orderLine.price_unit = 115.0; // price includes 15% tax
-        models["account.tax"].get(1).price_include = true;
-        const lineTax = orderLine.getAllPrices();
+        const lineTax = orderLine.prices;
         // priceWithoutTax: 115 / 1.15 = 100, 25% tax = 25, priceWithTax = 115 + 25 = 140
-        expect(lineTax.priceWithoutTax).toBe(100.0);
-        expect(lineTax.priceWithTax).toBe(140.0);
-        expect(lineTax.tax).toBe(40.0);
-        expect(lineTax.taxDetails[1].amount).toBe(15.0);
-        expect(lineTax.taxDetails[2].amount).toBe(25.0);
+        expect(lineTax.total_excluded).toBe(100.0);
+        expect(lineTax.total_included).toBe(140.0);
+        expect(lineTax.taxes_data[0].tax_amount).toBe(15.0);
+        expect(lineTax.taxes_data[1].tax_amount).toBe(25.0);
     });
 
     test("[get quantityStr] Base test", async () => {

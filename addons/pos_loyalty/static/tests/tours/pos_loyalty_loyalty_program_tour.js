@@ -266,7 +266,7 @@ registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
             ProductScreen.clickDisplayedProduct("Product"),
             ProductScreen.addOrderline("Desk Organizer", "1"),
             Order.hasLine({ productName: "10% on the cheapest product" }),
-            PosLoyalty.orderTotalIs("6.00"),
+            PosLoyalty.orderTotalIs("6.01"), // taxe of 9 cents (≈ 10% HT)
         ].flat(),
 });
 

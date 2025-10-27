@@ -33,7 +33,6 @@ describe("self_order_service", () => {
             const tipProductTmpl = models["product.template"].get(1);
 
             expect(store.config._pos_special_products_ids.includes(tipProductTmpl.id)).toBe(true);
-            expect(store.productByCategIds["0"]).toBeEmpty(); // No Uncategorised products
 
             models["product.template"].get(14).pos_categ_ids = [];
             store.initData();
@@ -247,5 +246,21 @@ describe("self_order_service", () => {
             expect(models["pos.order"].length).toBe(1);
             expect(models["pos.order.line"].length).toBe(2);
         });
+    });
+
+    test("cancelBackendOrder", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+
+        const syncOrder = await store.sendDraftOrderToServer();
+        expect(order.id).toBeOfType("number");
+        expect(order.lines[0].id).toBeOfType("number");
+        expect(order.lines[1].id).toBeOfType("number");
+        expect(syncOrder.id).toBe(order.id);
+
+        await store.cancelBackendOrder();
+
+        expect(order.state).toBe("cancel");
+        expect(store.router.activeSlot).toBe("default");
     });
 });

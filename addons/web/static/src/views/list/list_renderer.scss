@@ -501,22 +501,22 @@
         */
         // 1. we set the global separator (gray line) of the table on the row (bottom) and not on the cell (bottom)
         .o_data_row {
-            border-bottom-width: 1px;
+            border-bottom-width: var(--ListRenderer-data-row-border-bottom-width, 1px);
 
             &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
                 $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
 
                 --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
-                --#{$variable-prefix}table-striped-bg: #{$-focus-bg};
+                --#{$variable-prefix}table-striped-bg: var(--ListRenderer-data-row-focused-striped-bg, #{$-focus-bg});
             }
         }
 
         // 2. we remove the bottom border (added by BS5) on all cells (this force to show the top border of selected cell)
-        .o_data_row > .o_data_cell {
+        .o_data_row > td {
             border-bottom-width: 0;
         }
         // 3. we add only a bottom border to selected cells (this force to show the bottom border of the selected cell)
-        .o_data_row.o_data_row_selected > .o_data_cell {
+        .o_data_row.o_data_row_selected > td {
             border-bottom-width: 1px;
         }
     }
