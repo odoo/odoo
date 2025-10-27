@@ -125,6 +125,7 @@ class TestSnippets(HttpCase):
 
     def test_snippet_image_gallery_thumbnail_update(self):
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.s_banner_default_image_2', 's_default_image_2.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image_gallery_thumbnail_update', login='admin')
 
     def test_dropdowns_and_header_hide_on_scroll(self):
