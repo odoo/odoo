@@ -6,6 +6,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     changeOptionInPopover,
+    clickOnEditAndWaitEditMode,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour('snippet_image_gallery', {
@@ -137,6 +138,7 @@ registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
         id: "s_image_gallery",
         name: "Image Gallery",
     }),
+    ...changeOptionInPopover("Image Gallery", "Indicators", "Squared Miniatures"),
     changeOption("Image Gallery", "addImage"),
 {
     content: "Click on the default image",
@@ -146,8 +148,48 @@ registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     addMedia(),
 {
     content: "Check that the new image has been added",
-    trigger: ":iframe .s_image_gallery:has(img[data-index='3'])",
+    trigger: ":iframe .s_image_gallery_indicators_squared:has(img[data-index='3'])",
 }, {
     content: "Check that the thumbnail of the first image has not been changed",
     trigger: ":iframe .s_image_gallery div.carousel-indicators button:first-child[style='background-image: url(/web/image/website.library_image_08)']",
+},
+    ...clickOnSave(),
+    ...clickOnEditAndWaitEditMode(),
+{
+    content: "Check that the thumbnail of the new image is displayed",
+    trigger: ":iframe .s_image_gallery div.carousel-indicators button:nth-child(4)[style*='s_default_image']",
+}, {
+    content: "Select the first image in the gallery",
+    trigger: ":iframe .s_image_gallery .carousel-item:first-child img",
+    run: "click",
+}, {
+    content: "Open the replace media dialog",
+    trigger: "[data-action-id='replaceMedia']",
+    run: "click",
+}, {
+    content: "Pick another image to replace the first one",
+    trigger: ".o_select_media_dialog img[title='s_default_image_2.jpg']",
+    run: "click",
+},
+    ...clickOnSave(),
+    ...clickOnEditAndWaitEditMode(),
+{
+    content: "Check that the first image has been replaced",
+    trigger: ":iframe .s_image_gallery .carousel-item:first-child img[src*='s_default_image_2']",
+}, {
+    content: "Check that the thumbnail of the first image is updated",
+    trigger: ":iframe .s_image_gallery div.carousel-indicators button:first-child[style*='s_default_image_2']",
+}, {
+    content: "Select the second image in the gallery",
+    trigger: ":iframe .s_image_gallery .carousel-control-next-icon",
+    run: "click",
+},
+    changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
+{
+    content: "Click on the first image shape",
+    trigger: "[data-action-id='setImageShape']",
+    run: "click",
+}, {
+    content: "Check that the thumbnail of the second image is an SVG",
+    trigger: ":iframe .s_image_gallery div.carousel-indicators button:nth-child(2)[style*='data:image/svg+xml']",
 }]);

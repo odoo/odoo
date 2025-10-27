@@ -261,6 +261,7 @@ export class ImagePostProcessPlugin extends Plugin {
                 delete el.dataset[key];
             }
         }
+        this.dispatchTo("on_image_updated_handlers", { imageEl: el });
     }
 }
 
