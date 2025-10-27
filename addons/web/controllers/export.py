@@ -316,7 +316,7 @@ class Export(http.Controller):
             target_model = Model.env[Model._fields[definition_record].comodel_name]
             domain_definition = [(definition_record_field, '!=', False)]
             # Depends of the records selected to avoid showing useless Properties
-            if domain:
+            if domain and Model._fields[definition_record].store:
                 self_subquery = Model.with_context(active_test=False)._search(domain)
                 field_to_get = Model._field_to_sql(Model._table, definition_record, self_subquery)
                 domain_definition.append(('id', 'in', self_subquery.subselect(field_to_get)))
