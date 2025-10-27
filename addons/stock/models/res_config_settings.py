@@ -41,7 +41,7 @@ class ResConfigSettings(models.TransientModel):
     barcode_separator = fields.Char(
         "Separator", config_parameter='stock.barcode_separator',
         help="Character(s) used to separate data contained within an aggregate barcode (i.e. a barcode containing multiple barcode encodings)")
-    module_stock_fleet = fields.Boolean("Dispatch Management System")
+    module_stock_fleet = fields.Boolean("Transport Management")
     replenish_on_order = fields.Boolean("Replenish on Order (MTO)", compute='_compute_replenish_on_order', inverse='_inverse_replenish_on_order')
     stock_text_confirmation = fields.Boolean(related='company_id.stock_text_confirmation', string='Stock Text Validation with stock move', readonly=False)
     stock_confirmation_type = fields.Selection(related='company_id.stock_confirmation_type', string='Stock Text Validation type', readonly=False)
