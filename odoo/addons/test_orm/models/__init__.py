@@ -3,6 +3,7 @@ from . import (
     test_access_monetary_related,
     test_access_rights,
     test_action_bindings,
+    test_attributes,
     test_config,
     test_convert,
     test_html_converter,

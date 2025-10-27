@@ -5,7 +5,7 @@ from odoo.tests import tagged, common
 class TestAttributes(common.TransactionCase):
 
     def test_we_cannot_add_attributes(self):
-        Model = self.env['test_orm.category']
+        Model = self.env['test_attributes.category']
         instance = Model.create({'name': 'Foo'})
 
         with self.assertRaises(AttributeError):
