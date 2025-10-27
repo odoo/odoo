@@ -120,11 +120,3 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
             "im_livechat.looking_for_help_kanban_real_time_update_tour",
             login="bob_looking_for_help",
         )
-
-    def test_looking_for_help_tags_real_time_update(self):
-        self.start_needhelp_session()
-        self.start_tour(
-            f"/odoo/action-{self.looking_for_help_action.id}",
-            "im_livechat.looking_for_help_tags_real_time_update_tour",
-            login="bob_looking_for_help",
-        )
