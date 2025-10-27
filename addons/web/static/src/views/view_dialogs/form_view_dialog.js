@@ -44,7 +44,7 @@ export class FormViewDialog extends Component {
         this.modalRef = useChildRef();
         this.env.dialogData.dismiss = () => this.discardRecord();
 
-        const buttonTemplate = this.props.isToMany
+        const buttonDialogTemplate = this.props.isToMany
             ? "web.FormViewDialog.ToMany.buttons"
             : "web.FormViewDialog.ToOne.buttons";
 
@@ -56,7 +56,7 @@ export class FormViewDialog extends Component {
 
         this.viewProps = {
             type: "form",
-            buttonTemplate,
+            buttonDialogTemplate,
 
             context: this.props.context || {},
             display: { controlPanel: false },

@@ -116,7 +116,7 @@ export class TimeOffFormViewDialog extends FormViewDialog {
 
         this.viewProps = Object.assign(this.viewProps, {
             jsClass: "timeoff_dialog_form",
-            buttonTemplate: "hr_holidays.FormViewDialog.buttons",
+            buttonDialogTemplate: "hr_holidays.FormViewDialog.buttons",
             onCancelLeave: () => {
                 this.props.close();
             },

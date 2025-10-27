@@ -4,8 +4,8 @@
         <xpath expr="./div[@t-ref='root']" position="attributes">
             <attribute name="class">o-settings-form-view o_field_highlight</attribute>
         </xpath>
-        <xpath expr="//Layout/t[@t-set-slot='layout-actions']" position="replace">
-            <t t-set-slot="layout-actions">
+        <xpath expr="//Layout/t[@t-set-slot='control-panel-actions']" position="replace">
+            <t t-set-slot="control-panel-actions">
                 <div class="o_cp_searchview d-flex w-100" role="search">
                     <div class="o_searchview form-control d-flex align-items-center py-1" role="search" aria-autocomplete="list">
                         <i class="o_searchview_icon oi oi-search me-2" role="img" aria-label="Search..." title="Search..." />
@@ -16,9 +16,9 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//Layout/t[@t-set-slot='control-panel-create-button']" position="replace">
-            <t t-set-slot="control-panel-create-button">
-                <t t-call="{{ props.buttonTemplate }}"/>
+        <xpath expr="//Layout/t[@t-set-slot='control-panel-buttons']" position="replace">
+            <t t-set-slot="control-panel-buttons">
+                <t t-call="{{ props.buttonDialogTemplate }}"/>
             </t>
         </xpath>
         <xpath expr="//Layout/t[@t-set-slot='control-panel-status-indicator']" position="replace">

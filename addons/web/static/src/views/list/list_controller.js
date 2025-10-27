@@ -500,7 +500,7 @@ export class ListController extends Component {
             ...this.props.display,
             controlPanel: {
                 ...controlPanel,
-                layoutActions: !this.hasSelectedRecords,
+                controlPanelActions: !this.hasSelectedRecords,
             },
         };
     }

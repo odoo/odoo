@@ -4,7 +4,7 @@ export class AllocationFormViewDialog extends FormViewDialog {
     setup() {
         super.setup();
         Object.assign(this.viewProps, {
-            buttonTemplate: 'hr_holidays.AllocationFormViewDialog.buttons',
+            buttonDialogTemplate: "hr_holidays.AllocationFormViewDialog.buttons",
         });
     }
 };

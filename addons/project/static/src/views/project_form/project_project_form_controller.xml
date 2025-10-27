@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="project.ProjectFormView" t-inherit="resource.FormViewWithHtmlExpander" t-inherit-mode="primary">
+    <t t-name="project.ProjectFormView.Buttons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary">
         <button class="btn btn-outline-primary o_form_button_create" position="replace">
             <ProjectTemplateDropdown t-if="canCreate"
                 onCreate="() => this.create()"

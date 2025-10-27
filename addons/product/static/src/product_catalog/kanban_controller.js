@@ -5,8 +5,6 @@ import { useDebounced } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
 
 export class ProductCatalogKanbanController extends KanbanController {
-    static template = "ProductCatalogKanbanController";
-
     setup() {
         super.setup();
         this.orm = useService("orm");

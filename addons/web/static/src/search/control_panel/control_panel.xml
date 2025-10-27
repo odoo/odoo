@@ -22,17 +22,13 @@
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-2 gap-lg-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-on-keydown="onMainButtonsKeydown">
-                        <t t-slot="control-panel-create-button"/>
-                        <t t-slot="layout-buttons"/>
-                        <t t-slot="control-panel-always-buttons"/>
+                        <t t-slot="control-panel-buttons"/>
                         <Dropdown t-if="env.isSmall" menuClass="'o-control-panel-adaptive-dropdown'" onOpened.bind="dropdownifyButtons">
                             <button class="btn btn-secondary o-control-panel-adaptive-dropdown" title="More">
                                 <i class="oi oi-fw oi-ellipsis-v" />
                             </button>
                             <t t-set-slot="content">
-                                <t t-slot="control-panel-create-button"/>
-                                <t t-slot="layout-buttons"/>
-                                <t t-slot="control-panel-always-buttons"/>
+                                <t t-slot="control-panel-buttons"/>
                             </t>
                         </Dropdown>
                     </div>
@@ -73,7 +69,7 @@
                 </div>
 
                 <div class="o_control_panel_actions d-empty-none d-flex align-items-center justify-content-start justify-content-lg-around order-2 order-lg-1 w-100 mw-100 w-lg-auto">
-                    <t t-if="display.layoutActions" t-slot="layout-actions"/>
+                    <t t-if="display.controlPanelActions" t-slot="control-panel-actions"/>
                     <t t-slot="control-panel-selection-actions"/>
                 </div>
 
