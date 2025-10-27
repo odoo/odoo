@@ -642,7 +642,7 @@ class Properties(Field):
             raise ValueError(f"Missing property name for {self}")
 
         def get_property(record):
-            property_value = self.__get__(record.with_context(property_selection_get_key=True))
+            property_value = self.__get__(record)
             value = property_value.get(property_name)
             if value:
                 return value
@@ -828,9 +828,10 @@ class Property(abc.Mapping):
             return self.record.env[prop.get('comodel')].browse(prop.get('value'))
 
         if prop.get('type') == 'selection' and prop.get('value'):
-            if self.record.env.context.get('property_selection_get_key'):
-                return next((sel[0] for sel in prop.get('selection') if sel[0] == prop['value']), False)
-            return next((sel[1] for sel in prop.get('selection') if sel[0] == prop['value']), False)
+            option = next((sel for sel in prop.get('selection') if sel[0] == prop['value']), False)
+            if not option:
+                return option
+            return option[1] if self.record.env.context.get('property_selection_get_label') else option[0]
 
         if prop.get('type') == 'tags' and prop.get('value'):
             return ', '.join(tag[1] for tag in prop.get('tags') if tag[0] in prop['value'])
