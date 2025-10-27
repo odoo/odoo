@@ -2,10 +2,10 @@
 
 {
     'name': "Peppol",
-    'summary': "This module is used to send/receive documents with PEPPOL",
+    'summary': "This module is used to send/receive documents with Peppol",
     'description': """
-- Register as a PEPPOL participant
-- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 format
+- Register as a Peppol participant
+- Send and receive documents via Peppol network in Peppol BIS Billing 3.0 format
     """,
     'category': 'Accounting/Accounting',
     'version': '1.1',

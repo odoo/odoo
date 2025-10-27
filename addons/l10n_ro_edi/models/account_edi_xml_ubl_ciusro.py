@@ -139,7 +139,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
         if 'peppol_endpoint' in partner_vals:
             # ANAF allows for endpoints to be an address mail, since we don't want to create a new
-            # user with an address mail as a PEPPOL endpoint, we simply remove it in that case.
+            # user with an address mail as a Peppol endpoint, we simply remove it in that case.
             error = self.env['res.partner']._build_error_peppol_endpoint(False, partner_vals['peppol_endpoint'])
             if error:
                 partner_vals['peppol_endpoint'] = False
