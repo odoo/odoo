@@ -27,4 +27,12 @@
     <field name="path">website_event/static/src/snippets/s_searchbar/000.xml</field>
 </record>
 
+<!--
+grep: /website_event/static/src/img/speaker.png
+Note: this URL was used like that (and saved in databases' HTML fields) in the
+old `s_speaker_bio` snippet. That snippet disappeared by mistake from version
+15.1 to 19.0 without action, it was thus removed for 19.1. The speaker image was
+kept for compatibility, but it might be removed in a future refactoring though.
+-->
+
 </odoo>
