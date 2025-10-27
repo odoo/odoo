@@ -21,9 +21,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     * Official doc for EHF Billing 3.0 is the OpenPeppol BIS 3 doc +
       https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/
 
-        "Based on work done in PEPPOL BIS Billing 3.0, Difi has included Norwegian rules in PEPPOL BIS Billing 3.0 and
+        "Based on work done in Peppol BIS Billing 3.0, Difi has included Norwegian rules in Peppol BIS Billing 3.0 and
         does not see a need to implement a different CIUS targeting the Norwegian market. Implementation of EHF Billing
-        3.0 is therefore done by implementing PEPPOL BIS Billing 3.0 without extensions or extra rules."
+        3.0 is therefore done by implementing Peppol BIS Billing 3.0 without extensions or extra rules."
 
     Thus, EHF 3 and Bis 3 are actually the same format. The specific rules for NO defined in Bis 3 are added in Bis 3.
 

@@ -17,7 +17,7 @@ BATCH_SIZE = 50
 class Account_Edi_Proxy_ClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
-    proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})
+    proxy_type = fields.Selection(selection_add=[('peppol', 'Peppol')], ondelete={'peppol': 'cascade'})
 
     # -------------------------------------------------------------------------
     # HELPER METHODS

@@ -8,18 +8,17 @@ from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    peppol_message_uuid = fields.Char(string='PEPPOL message ID')
+    peppol_message_uuid = fields.Char(string='Peppol message ID')
     peppol_move_state = fields.Selection(
         selection=[
             ('ready', 'Ready to send'),
             ('to_send', 'Queued'),
-            ('skipped', 'Skipped'),  # TODO remove this state in master, we now put a regular error.
             ('processing', 'Pending Reception'),
             ('done', 'Done'),
             ('error', 'Error'),
         ],
         compute='_compute_peppol_move_state', store=True,
-        string='PEPPOL status',
+        string='Peppol status',
         copy=False,
     )
 
@@ -32,7 +31,7 @@ class AccountMove(models.Model):
         # if the peppol_move_state is processing/done
         # then it means it has been already sent to peppol proxy and we can't cancel
         if any(move.peppol_move_state in {'processing', 'done'} for move in self):
-            raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
+            raise UserError(_("Cannot cancel an entry that has already been sent to Peppol"))
         self.peppol_move_state = False
         self.sending_data = False
 
