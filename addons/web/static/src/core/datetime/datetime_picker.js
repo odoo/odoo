@@ -143,7 +143,7 @@ const PRECISION_LEVELS = new Map()
         nextTitle: _t("Next month"),
         prevTitle: _t("Previous month"),
         step: { month: 1 },
-        getTitle: (date) => `${date.monthLong} ${date.year}`,
+        getTitle: (date) => `${date.monthShort} ${date.year}`,
         getItems: (date, { maxDate, minDate, showWeekNumbers, isDateValid, dayCellClass }) => {
             const startDates = [date];
 

@@ -54,7 +54,7 @@ test("default params", async () => {
     await mountWithCleanup(DateTimePicker);
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -92,7 +92,7 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -175,7 +175,7 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
     await animationFrame();
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -202,7 +202,7 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -298,7 +298,7 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
     await animationFrame();
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -330,7 +330,7 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -420,7 +420,7 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
     await animationFrame();
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -474,7 +474,7 @@ test("twelve-hour clock", async () => {
     await mountWithCleanup(DateTimePicker);
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -513,7 +513,7 @@ test("hide time picker", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -566,7 +566,7 @@ test("next month and previous month", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -587,7 +587,7 @@ test("next month and previous month", async () => {
     await animationFrame();
 
     assertDateTimePicker({
-        title: "March 2023",
+        title: "Mar 2023",
         date: [
             {
                 cells: [
@@ -608,7 +608,7 @@ test("next month and previous month", async () => {
     await animationFrame();
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -660,7 +660,7 @@ test("range value", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -705,7 +705,7 @@ test("range value on small device", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -746,7 +746,7 @@ test("range value, previous month", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -768,7 +768,7 @@ test("range value, previous month", async () => {
     await animationFrame();
 
     assertDateTimePicker({
-        title: "March 2023",
+        title: "Mar 2023",
         date: [
             {
                 cells: [
@@ -795,7 +795,7 @@ test("days of week narrow format", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -975,7 +975,7 @@ test("custom invalidity function", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -1184,7 +1184,7 @@ test("focus proper month when changing props out of current month", async () => 
     const parent = await mountWithCleanup(Parent);
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
@@ -1229,7 +1229,7 @@ test("disable show week numbers", async () => {
     });
 
     assertDateTimePicker({
-        title: "April 2023",
+        title: "Apr 2023",
         date: [
             {
                 cells: [
