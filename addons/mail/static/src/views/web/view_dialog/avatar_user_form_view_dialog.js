@@ -5,7 +5,7 @@ export class AvatarUserFormViewDialog extends FormViewDialog {
     setup() {
         super.setup();
         Object.assign(this.viewProps, {
-            buttonTemplate: this.props.isToMany
+            buttonDialogTemplate: this.props.isToMany
                 ? "mail.UserFormViewDialog.ToMany.buttons"
                 : "mail.UserFormViewDialog.ToOne.buttons",
         });

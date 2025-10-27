@@ -145,6 +145,7 @@ export class FormController extends Component {
         Compiler: Function,
         archInfo: Object,
         buttonTemplate: String,
+        buttonDialogTemplate: String,
         preventCreate: { type: Boolean, optional: true },
         preventEdit: { type: Boolean, optional: true },
         onDiscard: { type: Function, optional: true },

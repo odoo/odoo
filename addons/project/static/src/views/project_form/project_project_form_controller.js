@@ -4,7 +4,6 @@ import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_e
 import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
 
 export class ProjectProjectFormController extends FormControllerWithHTMLExpander {
-    static template = "project.ProjectFormView";
     static components = {
         ...FormControllerWithHTMLExpander.components,
         ProjectTemplateDropdown,

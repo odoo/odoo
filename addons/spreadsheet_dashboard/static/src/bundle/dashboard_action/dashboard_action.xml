@@ -2,7 +2,7 @@
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardAction" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
         <ControlPanel display="controlPanelDisplay">
-            <t t-set-slot="layout-actions" t-if="!loader.getActiveDashboard()?.isSample">
+            <t t-set-slot="control-panel-actions" t-if="!loader.getActiveDashboard()?.isSample">
                 <t t-set="status" t-value="loader.getActiveDashboard() and loader.getActiveDashboard().status"/>
                 <div class="d-flex flex-wrap w-100">
                     <DashboardSearchBar t-if="status === Status.Loaded and loader.getActiveDashboard().model.getters.getGlobalFilters().length"

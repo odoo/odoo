@@ -3,7 +3,7 @@
 
     <t t-name="web.Layout">
         <t t-if="env.inDialog" t-portal="'#' + env.dialogId + ' .modal-footer'">
-            <t t-slot="layout-buttons"/>
+            <t t-slot="control-panel-buttons"/>
         </t>
         <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="props.display.controlPanel" display="props.display.controlPanel"/>
         <main t-ref="content" class="o_content" t-attf-class="{{props.className}}" t-att-class="{ 'o_component_with_search_panel': props.display.searchPanel }">

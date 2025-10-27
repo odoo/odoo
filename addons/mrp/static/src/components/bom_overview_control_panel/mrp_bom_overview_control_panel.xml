@@ -3,10 +3,8 @@
 
     <t t-name="mrp.BomOverviewControlPanel">
         <ControlPanel display="controlPanelDisplay">
-            <t t-set-slot="control-panel-create-button">
+            <t t-set-slot="control-panel-buttons">
                 <button t-if="props.showOptions.mode == 'forecast'" t-on-click="manufactureFromBoM" type="button" class="btn btn-primary">Manufacture</button>
-            </t>
-            <t t-set-slot="control-panel-always-buttons">
                 <button t-on-click="() => this.props.print()" type="button" class="btn btn-secondary">Print</button>
                 <!-- <t t-if="props.showVariants"> commented, waiting for ui update
                     <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
@@ -14,7 +12,7 @@
                 </t> -->
                 <button t-if="props.foldable" t-on-click="clickTogglefold" type="button" class="btn btn-secondary" t-esc="foldButtonText"/>
             </t>
-            <t t-set-slot="layout-actions">
+            <t t-set-slot="control-panel-actions">
                 <div t-if="props.showVariants" class="input-group align-items-center">
                     <div class="col-4 col-md-auto pe-2 fw-bold">Variant</div>
                     <div class="col">

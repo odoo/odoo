@@ -5,7 +5,7 @@
     <t t-name="product.ProductPricelistReport">
         <div class="o_action">
             <Layout display="{ controlPanel: {} }">
-                <t t-set-slot="control-panel-always-buttons">
+                <t t-set-slot="control-panel-buttons">
                     <button t-on-click="onClickPrint" type="button" class="btn btn-primary" title="Print">Print</button>
                     <select name="formats" id="formats" class="form-select border-1 w-auto">
                         <option value="pdf">pdf</option>
@@ -13,7 +13,7 @@
                         <option value="xlsx">xlsx</option>
                     </select>
                 </t>
-                <t t-set-slot="layout-actions">
+                <t t-set-slot="control-panel-actions">
                     <form class="o_pricelist_report_form d-flex flex-row gap-1">
                         <div class="d-flex align-items-center gap-3 w-100">
                             <label class="visually-hidden" for="pricelists">Username</label>

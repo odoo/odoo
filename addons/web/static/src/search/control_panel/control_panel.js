@@ -301,7 +301,7 @@ export class ControlPanel extends Component {
      */
     get display() {
         return {
-            layoutActions: true,
+            controlPanelActions: true,
             ...this.props.display,
         };
     }

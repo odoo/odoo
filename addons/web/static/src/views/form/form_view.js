@@ -14,6 +14,7 @@ export const formView = {
     Model: RelationalModel,
     Compiler: FormCompiler,
     buttonTemplate: "web.FormView.Buttons",
+    buttonDialogTemplate: "web.FormView.DialogButtons",
 
     props: (genericProps, view) => {
         const { ArchParser } = view;
@@ -28,6 +29,7 @@ export const formView = {
             Model: view.Model,
             Renderer: view.Renderer,
             buttonTemplate: genericProps.buttonTemplate || view.buttonTemplate,
+            buttonDialogTemplate: genericProps.buttonDialogTemplate || view.buttonDialogTemplate,
             Compiler: view.Compiler,
             archInfo,
         };
