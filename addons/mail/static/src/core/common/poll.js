@@ -6,7 +6,7 @@ const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Props
- * @property {import("models").Poll} poll
+ * @property {import("models").MailPollModel} poll
  * @extends {Component<Props, Env>}
  */
 export class Poll extends Component {
