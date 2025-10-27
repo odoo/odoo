@@ -911,3 +911,45 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po_form.save()
         self.assertEqual(po.order_line.product_qty, 10.0)
         self.assertEqual(po.order_line.name, '[HHH] product_a')
+
+    def test_purchase_order_mail_links_to_correct_website(self):
+        """Check that purchase order emails link to the order's company website."""
+        if 'website_id' not in self.env.company:
+            self.skipTest("The `website` module is required to support multiple company websites.")
+
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        companies = company1 + company2
+        companies.website_id = None
+        self.env['website'].create([{
+            'name': f"{company.name}'s Website",
+            'domain': f"http://website{company.id}.example.com",
+            'company_id': company.id,
+        } for company in companies])
+        self.assertEqual(len(companies.website_id), 2)
+
+        rfq = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company2.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        })
+
+        email_ctx = rfq.action_rfq_send().get('context', {})
+        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id'))
+        mail_template.auto_delete = False
+
+        message = rfq.with_context(**email_ctx).message_post_with_source(
+            mail_template, subtype_xmlid='mail.mt_comment',
+        )
+        self.assertIn(
+            company2.website_id.domain, message.mail_ids.body_html,
+            "Mail should link to the website of the order's company",
+        )
+        self.assertNotIn(
+            company1.website_id.domain, message.mail_ids.body_html,
+            "Mail shouldn't link to the website of the first company",
+        )
+        self.assertNotIn(
+            self.env['base'].get_base_url(), message.mail_ids.body_html,
+            "Mail shouldn't link to the base URL",
+        )
