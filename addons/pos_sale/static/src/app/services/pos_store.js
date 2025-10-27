@@ -182,7 +182,11 @@ patch(PosStore.prototype, {
             }
 
             // Order line can only hold one lot, so we need to split the line if there are multiple lots
-            if (line.product_id.tracking == "lot" && converted_line.lot_names.length > 0) {
+            if (
+                line.product_id.tracking == "lot" &&
+                converted_line.lot_names.length > 0 &&
+                useLoadedLots
+            ) {
                 newLine.delete();
                 for (const lot of converted_line.lot_names) {
                     const splitted_line = this.models["pos.order.line"].create({
