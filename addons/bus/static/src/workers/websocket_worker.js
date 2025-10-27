@@ -50,6 +50,7 @@ const logger = new Logger("bus_websocket_worker");
 export class WebsocketWorker {
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 1000;
+    CONNECTION_CHECK_DELAY = 60_000;
 
     constructor(name) {
         this.name = name;
@@ -342,6 +343,7 @@ export class WebsocketWorker {
      * closed.
      */
     _onWebsocketClose({ code, reason }) {
+        clearInterval(this._connectionCheckInterval);
         this._logDebug("_onWebsocketClose", code, reason);
         this._updateState(WORKER_STATE.DISCONNECTED);
         this.lastChannelSubscription = null;
@@ -389,6 +391,7 @@ export class WebsocketWorker {
      * @param {MessageEvent} messageEv
      */
     _onWebsocketMessage(messageEv) {
+        this._restartConnectionCheckInterval();
         const notifications = JSON.parse(messageEv.data);
         this._logDebug("_onWebsocketMessage", notifications);
         this.lastNotificationId = notifications[notifications.length - 1].id;
@@ -420,6 +423,27 @@ export class WebsocketWorker {
             this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
             this.messageWaitQueue = [];
         });
+        this._restartConnectionCheckInterval();
+    }
+
+    /**
+     * Sends a custom application-level message to perform a connection check
+     * on the WebSocket.
+     *
+     * Browsers rely on the OS's TCP mechanism, which can take minutes or
+     * hours to detect a dead connection. Sending data triggers an immediate
+     * I/O operation, quickly revealing any network-level failure. This must be
+     * implemented at the application level because the browser WebSocket API
+     * does not expose the built-in ping/pong mechanism.
+     */
+    _restartConnectionCheckInterval() {
+        clearInterval(this._connectionCheckInterval);
+        this._connectionCheckInterval = setInterval(() => {
+            if (this._isWebsocketConnected()) {
+                this.websocket.send(new Uint8Array([0x00]));
+                this._logDebug("connection_checked");
+            }
+        }, this.CONNECTION_CHECK_DELAY);
     }
 
     /**
@@ -459,6 +483,7 @@ export class WebsocketWorker {
             } else {
                 this.firstSubscribeDeferred.then(() => this.websocket.send(payload));
             }
+            this._restartConnectionCheckInterval();
         }
     }
 

@@ -1101,6 +1101,9 @@ class WebsocketConnectionHandler:
             # worker version.
             websocket.close(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
+            if message == b'\x00':
+                # Ignore internal sentinel message used to detect dead/idle connections.
+                continue
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
                     req.serve_websocket_message(message)
