@@ -62,7 +62,11 @@
                                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                                 </group>
                                 <group>
-                                    <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
+                                    <field name="template_id"
+                                        domain="[('model', '=', model), '|', ('user_id', '=', False), ('user_id', '=', uid), '|', ('use_default_to', '=', True), '|', '|', ('email_to', '!=', False), ('partner_to', '!=', False), ('email_cc', '!=', False)]"
+                                        string="Load template"
+                                        options="{'no_create': True}"
+                                        class="w-50"
                                         context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
                                 </group>
                             </div>
