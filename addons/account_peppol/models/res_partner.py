@@ -117,7 +117,7 @@ class ResPartner(models.Model):
 
         try:
             decoded_response = response.json()
-        except requests.exceptions.JSONDecodeError:
+        except ValueError:
             _logger.error('invalid JSON response %s when querying peppol participant %s', response.status_code, edi_identification)
             return
 

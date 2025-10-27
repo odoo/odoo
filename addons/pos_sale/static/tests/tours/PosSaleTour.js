@@ -388,3 +388,17 @@ registry.category("web_tour.tours").add("test_multiple_lots_sale_order", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_import_so_to_pos_no_existing_lot", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectNthOrder(1),
+            {
+                'content': 'Ensure at least one line is imported',
+                'trigger': '.order-container .orderline',
+                run: 'click',
+            },
+        ].flat(),
+});
