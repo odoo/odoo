@@ -4,6 +4,7 @@
 import operator as py_operator
 from operator import attrgetter
 from re import findall as regex_findall, split as regex_split
+from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -118,14 +119,14 @@ class StockLot(models.Model):
             prod_lot.display_complete = prod_lot.id or self._context.get('display_complete')
 
     def _compute_delivery_ids(self):
-        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
+        delivery_ids_by_lot = self._find_delivery_ids_by_lot_iterative()
         for lot in self:
             lot.delivery_ids = delivery_ids_by_lot[lot.id]
             lot.delivery_count = len(lot.delivery_ids)
 
     def _compute_last_delivery_partner_id(self):
         serial_products = self.filtered(lambda l: l.product_id.tracking == 'serial')
-        delivery_ids_by_lot = serial_products._find_delivery_ids_by_lot()
+        delivery_ids_by_lot = serial_products._find_delivery_ids_by_lot_iterative()
         (self - serial_products).last_delivery_partner_id = False
         for lot in serial_products:
             if lot.product_id.tracking == 'serial' and len(delivery_ids_by_lot[lot.id]) > 0:
@@ -291,3 +292,69 @@ class StockLot(models.Model):
 
             delivery_by_lot[lot.id] = list(delivery_ids)
         return delivery_by_lot
+
+    def _find_delivery_ids_by_lot_iterative(self):
+        """ Retrieve all delivery IDs (outgoing picking) linked to the lots
+            in self and all the lots found when parcouring the produce lines.
+            :return: A dictionary where keys are the IDs of the original 'stock.lot'
+                      records (self) and values are lists of associated 'stock.picking' IDs.
+            :rtype: dict
+        """
+
+        all_lot_ids = set(self.ids)
+        barren_lines = defaultdict(set)
+        parent_map = defaultdict(set)
+
+        # Prefetch the lines linked to lots and split them between producing lines
+        # and barren lines (lines that have `produce_line_ids` and lines that don't
+        # have them respectively) and build the map of the parents of each lot (so we
+        # can browse the tree from the leaves to the root and propagate the pickings)
+        queue = list(self.ids)
+        while queue:
+            domain = [
+                ('lot_id', 'in', queue),
+                ('state', '=', 'done'),
+            ]
+            domain_restriction = self._get_outgoing_domain()
+            domain = expression.AND([domain, domain_restriction])
+
+            queue = []
+            move_lines = self.env['stock.move.line'].search(domain)
+            for line in move_lines:
+                lot_id = line.lot_id.id
+
+                produce_line_lot_ids = line.produce_line_ids.lot_id.ids
+                if produce_line_lot_ids:
+                    for child_lot_id in produce_line_lot_ids:
+                        parent_map[child_lot_id].add(lot_id)
+                else:
+                    barren_lines[lot_id].add(line.id)
+
+                next_lots = set(produce_line_lot_ids) - all_lot_ids
+                all_lot_ids.update(next_lots)
+                queue.extend(next_lots)
+
+        # Initialize delivery_by_lot with barren lines (i.e. the leaves of the lot tree)
+        lots_to_propagate = set()
+        delivery_by_lot = {lot_id: set() for lot_id in all_lot_ids}
+        for lot_id in barren_lines:
+            barren_line_ids = barren_lines[lot_id]
+            if barren_line_ids:
+                barren_move_lines = self.env['stock.move.line'].browse(barren_line_ids)
+                delivery_by_lot[lot_id].update(barren_move_lines.picking_id.ids)
+                lots_to_propagate.add(lot_id)
+
+        # Propagate the deliveries from the children to their parent lots.
+        # This loop processes lots whose delivery sets have just been updated,
+        # ensuring the new results are merged upward through the parent graph until
+        # all deliveries are propagated
+        while lots_to_propagate:
+            lot_id = lots_to_propagate.pop()
+
+            parent_ids = parent_map[lot_id]
+            for parent_id in parent_ids:
+                if not delivery_by_lot[lot_id].issubset(delivery_by_lot[parent_id]):
+                    delivery_by_lot[parent_id].update(delivery_by_lot[lot_id])
+                    lots_to_propagate.add(parent_id)
+
+        return {lot_id: list(delivery_by_lot[lot_id]) for lot_id in delivery_by_lot}
