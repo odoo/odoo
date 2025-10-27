@@ -5,6 +5,9 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="attributes">
+                <attribute name="class" add="mb-4" separator=" "/>
+            </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <field name="image_1024" widget="image" class="oe_avatar me-4"/>
             </xpath>

@@ -11,7 +11,7 @@
                     </button>
                 </span>
             </div>
-            <button class="btn btn-secondary" data-tooltip="Add" t-on-click="() => this.onAdd()" t-ref="addButton">
+            <button class="btn btn-primary" data-tooltip="Add" t-on-click="() => this.onAdd()" t-ref="addButton">
                 Add
             </button>
             <button t-if="this.props.reactive.nbSelected > 0" class="btn btn-secondary" data-tooltip="Delete" t-on-click="() => this.onDelete()">
