@@ -14,7 +14,6 @@ import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 const { DateTime } = luxon;
-const INDEXED_DB_VERSION = 1;
 const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData extends Reactive {
@@ -150,7 +149,7 @@ export class PosData extends Reactive {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, resolve);
+            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
         });
     }
 
