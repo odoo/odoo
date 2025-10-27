@@ -11,4 +11,15 @@ patch(CustomerDisplayPosAdapter.prototype, {
         data.l10n_in_hsn_code = line.getProduct().l10n_in_hsn_code || "";
         return data;
     },
+    getQrPaymentData(order) {
+        const data = super.getQrPaymentData(order);
+        if (!data || order.company_id.country_id.code !== "IN") {
+            return data;
+        }
+        const paymentMethod = order.getSelectedPaymentline()?.qrPaymentData?.paymentMethod || {};
+        const { upi_identifier = "", _qr_payment_icon_urls = [] } = paymentMethod;
+
+        data.paymentMethod = { upi_identifier, _qr_payment_icon_urls };
+        return data;
+    },
 });

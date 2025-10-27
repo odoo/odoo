@@ -12,7 +12,6 @@ import { registry } from "@web/core/registry";
 
 function isQRDisplayedinDialog() {
     return [
-        Dialog.is({ title: "QR Code" }),
         {
             content: "Verify QR image is displayed",
             trigger: ".modal-content img[src^='data:image/png;base64,']",
@@ -31,15 +30,16 @@ function addProductandPay(isPartialPay = false) {
         ...(isPartialPay
             ? [
                   PaymentScreen.clickPaymentMethod("QR Code"),
+                  Dialog.discard(),
                   PaymentScreen.clickNumpad("⌫"),
                   PaymentScreen.clickNumpad("+10"),
+                  {
+                      content: "Display QR Code Payment dialog",
+                      trigger: ".button.send_payment_request.highlight",
+                      run: "click",
+                  },
               ]
             : [PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" })]),
-        {
-            content: "Display QR Code Payment dialog",
-            trigger: ".button.send_payment_request.highlight",
-            run: "click",
-        },
     ].flat();
 }
 
@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
             // --- FULL PAYMENT ---
             addProductandPay(),
             isQRDisplayedinDialog(),
-            Dialog.cancel(),
+            Dialog.discard(),
             PaymentScreen.validateButtonIsHighlighted(false),
             {
                 content: "Retry to display QR Code Payment dialog",
@@ -103,11 +103,6 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentSwiss", {
             ProductScreen.clickPayButton(),
             PaymentScreen.totalIs("48"),
             PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" }),
-            {
-                content: "Display QR Code Payment dialog",
-                trigger: ".button.send_payment_request.highlight",
-                run: "click",
-            },
             PaymentScreen.validateButtonIsHighlighted(false),
             isQRDisplayedinDialog(),
             Dialog.confirm(),

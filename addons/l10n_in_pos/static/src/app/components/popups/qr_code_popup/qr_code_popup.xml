@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_in_pos.QRPopup" t-inherit="point_of_sale.QRPopup" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('qr-code-amount')]" position="after">
+            <div t-if="props.paymentMethod?.upi_identifier" class="text-muted">
+                UPI: <t t-out="props.paymentMethod.upi_identifier"/>
+            </div>
+            <div t-if="props.paymentMethod?._qr_payment_icon_urls?.length > 0" class="supported-method-icons d-flex align-items-center justify-content-center flex-wrap gap-1 mt-1">
+                <t t-foreach="props.paymentMethod?._qr_payment_icon_urls" t-as="icon" t-key="icon[0]">
+                    <img t-att-src="icon[1]" alt="Icon" class="mx-1 " style="width: 35px; height: 35px;"/>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

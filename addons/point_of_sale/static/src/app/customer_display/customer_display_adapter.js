@@ -1,5 +1,4 @@
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
-import { toRaw } from "@odoo/owl";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 const CONSOLE_COLOR = "#FF8269";
@@ -47,7 +46,7 @@ export class CustomerDisplayPosAdapter {
             change: order.change && formatCurrency(order.change, order.currency),
             paymentLines: order.payment_ids.map((pl) => this.getPaymentData(pl)),
             lines: order.lines.map((l) => this.getOrderlineData(l)),
-            qrPaymentData: toRaw(order.getSelectedPaymentline()?.qrPaymentData),
+            qrPaymentData: this.getQrPaymentData(order),
         };
     }
 
@@ -74,6 +73,17 @@ export class CustomerDisplayPosAdapter {
         return {
             name: payment.payment_method_id.name,
             amount: formatCurrency(payment.amount, this.currency),
+        };
+    }
+
+    getQrPaymentData(order) {
+        const qrPaymentData = order.getSelectedPaymentline()?.qrPaymentData;
+        if (!qrPaymentData) {
+            return null;
+        }
+        return {
+            ...qrPaymentData,
+            isCustomerDisplay: true,
         };
     }
 }

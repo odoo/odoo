@@ -1,24 +1,22 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { Dialog } from "@web/core/dialog/dialog";
+import { Component } from "@odoo/owl";
 
-export class QRPopup extends ConfirmationDialog {
-    static template = "point_of_sale.QRConfirmationDialog";
+export class QRPopup extends Component {
+    static template = "point_of_sale.QRPopup";
+    static components = { Dialog };
     static props = {
-        ...ConfirmationDialog.props,
-        line: Object,
-        order: Object,
-        qrCode: String,
-    };
-    static defaultProps = {
-        ...ConfirmationDialog.defaultProps,
-        confirmLabel: _t("Confirm Payment"),
-        cancelLabel: _t("Cancel Payment"),
-        title: _t("QR Code Payment"),
+        amount: { type: String },
+        confirm: { type: Function, optional: true, default: false },
+        cancel: { type: Function, optional: true, default: false },
+        close: { type: Function, optional: true, default: false },
+        isCustomerDisplay: { type: Boolean, optional: true, default: false },
+        paymentMethod: { type: Object, optional: true, default: {} },
+        qrCode: { type: String },
+        line: { type: Object, optional: true, default: null },
     };
 
-    setup() {
-        super.setup();
-        this.props.body = _t("Please scan the QR code with %s", this.props.title);
-        this.amount = this.env.utils.formatCurrency(this.props.line.amount);
+    confirm() {
+        this.props.confirm();
+        this.props.close();
     }
 }

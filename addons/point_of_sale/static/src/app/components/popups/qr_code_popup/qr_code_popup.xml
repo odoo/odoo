@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
-    <t t-name="point_of_sale.QRConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
-        <xpath expr="//p" position="replace">
-            <div class="d-flex flex-column align-items-center justify-content-center">
-                <p t-out="props.body" class="text-prewrap" style="font-weight: bold;"/>
-                <img t-att-src="props.qrCode" alt="QR Code" style="width: 200px; height: 200px;"/>
-                <div class="mt-1">
-                    <strong>Amount: </strong>
-                    <t t-out="amount" />
+    <t t-name="point_of_sale.QRPopup">
+        <Dialog size="props.isCustomerDisplay ? 'md' : 'sm'" contentClass="'rounded-5 p-2'" header="false">
+            <div class="d-flex flex-column align-items-center" t-att-class="{'pt-2 pb-3':props.isCustomerDisplay}" >
+                <h2 class="border-bottom border-dark w-75 text-center pb-1">QR Payment</h2>
+                <img t-att-src="props.qrCode" alt="QR Code" class="my-2 w-75"/>
+                <div class="qr-code-amount fs-2">
+                    <strong>Amount: <t t-out="props.amount" /></strong>
                 </div>
             </div>
-        </xpath>
-        <xpath expr="//button[@t-on-click='_confirm']" position="attributes">
-            <attribute name="class" add="btn-secondary" remove="btn-primary" separator=" " />
-        </xpath>
-        <xpath expr="//button[@t-on-click='_cancel']" position="attributes">
-            <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" " />
-        </xpath>
+            <t t-if="!props.isCustomerDisplay" t-set-slot="footer">
+                <div class="qr-code-popup-footer d-flex align-items-center justify-content-center w-100 mt-2" >
+                    <button class="btn btn-primary btn-lg confirm-button mx-2" t-on-click="confirm">Confirm</button>
+                    <button class="btn btn-secondary btn-lg cancel-button mx-2" t-on-click="props.close">Discard</button>
+                </div>
+            </t>
+        </Dialog>
     </t>
-
 </templates>

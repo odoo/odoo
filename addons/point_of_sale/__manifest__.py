@@ -224,6 +224,7 @@
             "point_of_sale/static/src/app/components/orderline/*",
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/app/utils/use_timed_press.js",
+            "point_of_sale/static/src/app/components/popups/qr_code_popup/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
         ],

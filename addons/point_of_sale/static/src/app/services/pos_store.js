@@ -172,8 +172,25 @@ export class PosStore extends WithLazyGetterTrap {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
+        this.handleQRPaymentLines();
     }
 
+    handleQRPaymentLines() {
+        // Ensure that all Bank QR payments in the 'waiting' status are automatically set to 'retry'
+        // when the POS session is started or restarted.
+        const order = this.getOrder();
+        if (!order) {
+            return;
+        }
+        order.payment_ids?.forEach((payment) => {
+            if (
+                payment.payment_method_id.payment_method_type === "qr_code" &&
+                payment.getPaymentStatus() === "waiting"
+            ) {
+                payment.setPaymentStatus("retry");
+            }
+        });
+    }
     navigate(routeName, routeParams = {}) {
         const pageParams = registry.category("pos_pages").get(routeName);
         const component = pageParams.component;
@@ -2494,6 +2511,11 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async showQR(payment) {
+        if (this.currency.isZero(payment.amount)) {
+            this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
+            return false;
+        }
+        payment.setPaymentStatus("waiting");
         let qr;
         try {
             qr = await this.data.call("pos.payment.method", "get_qr_code", [
@@ -2523,17 +2545,15 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
         payment.qrPaymentData = {
-            name: payment.payment_method_id.name,
             amount: this.env.utils.formatCurrency(payment.amount),
             qrCode: qr,
+            paymentMethod: payment.payment_method_id,
         };
         return await ask(
             this.env.services.dialog,
             {
-                title: payment.name,
+                ...payment.qrPaymentData,
                 line: payment,
-                order: payment.pos_order_id,
-                qrCode: qr,
             },
             {},
             QRPopup

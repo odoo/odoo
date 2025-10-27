@@ -10,6 +10,7 @@
     ],
     'data': [
         'views/pos_order_line_views.xml',
+        'views/pos_payment_method_views.xml',
         'views/res_config_settings_views.xml',
         'data/pos_bill_data.xml',
     ],
@@ -25,6 +26,9 @@
         'web.assets_tests': [
             'l10n_in_pos/static/tests/tours/**/*',
         ],
+        'point_of_sale.customer_display_assets': [
+            'l10n_in_pos/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml',
+        ]
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
