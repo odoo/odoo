@@ -284,9 +284,10 @@ export class WebsocketWorker {
             this.isWaitingForNewUID = false;
             this.currentUID = uid;
         }
-        if ((this.currentUID !== uid && isCurrentUserKnown) || this.currentDB !== db) {
+        this.currentDB ||= db;
+        if ((this.currentUID !== uid && isCurrentUserKnown) || (db && this.currentDB !== db)) {
             this.currentUID = uid;
-            this.currentDB = db;
+            this.currentDB = db || this.currentDB;
             if (this.websocket) {
                 this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
             }
