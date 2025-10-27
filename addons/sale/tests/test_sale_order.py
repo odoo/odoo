@@ -538,6 +538,16 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(discount_line.invoice_status, 'to invoice')
         self.assertEqual(self.sale_order.invoice_status, 'to invoice')
 
+    def test_so_with_fixed_discount_zero_amount(self):
+        """ Applying a fixed discount of 0.0 should have no effect on the order total. """
+        initial_total = self.sale_order.amount_total
+        self.env['sale.order.discount'].create({
+            'sale_order_id': self.sale_order.id,
+            'discount_amount': 0.0,
+            'discount_type': 'amount',
+        }).action_apply_discount()
+        self.assertEqual(self.sale_order.amount_total, initial_total)
+
     def test_sale_order_line_product_taxes_on_branch(self):
         """ Check taxes populated on SO lines from product on branch company.
             Taxes from the branch company should be taken with a fallback on parent company.
