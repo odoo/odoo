@@ -10,8 +10,29 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+<<<<<<< 876baa4fad1ed80a70b91fa6262f58570ddb0e48
 
 import { describe, expect, test } from "@odoo/hoot";
+||||||| e1c37c1a1195d8b43538c125b664d1e2d5834183
+import { describe, test } from "@odoo/hoot";
+import {
+    asyncStep,
+    Command,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+=======
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    asyncStep,
+    Command,
+    getService,
+    serverState,
+    waitForSteps,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+>>>>>>> 34b99f68f880aa42e6c268cb91b95980b3f00359
 import { press } from "@odoo/hoot-dom";
 
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
