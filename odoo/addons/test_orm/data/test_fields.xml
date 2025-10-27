@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record id="fields_category_0" model="test_fields.category">
+            <field name="name">Chat</field>
+        </record>
+        <record id="fields_category_0_0" model="test_fields.category">
+            <field name="name">Foolish</field>
+            <field name="parent" ref="fields_category_0"/>
+        </record>
+
+        <record id="fields_discussion_0" model="test_fields.discussion">
+            <field name="name">Stuff</field>
+            <field name="participants" eval="[Command.link(ref('base.user_root'))]"/>
+        </record>
+
+        <record id="fields_message_0_0" model="test_fields.message">
+            <field name="discussion" ref="fields_discussion_0"/>
+            <field name="body">Hey dude!</field>
+            <field name="label">hello</field>
+        </record>
+        <record id="fields_message_0_1" model="test_fields.message">
+            <field name="discussion" ref="fields_discussion_0"/>
+            <field name="body">What's up?</field>
+        </record>
+        <record id="fields_message_0_2" model="test_fields.message">
+            <field name="discussion" ref="fields_discussion_0"/>
+            <field name="body">This is a much longer message</field>
+        </record>
+
+        <record id="fields_emailmessage_0_0" model="test_fields.emailmessage">
+            <field name="message" ref="fields_message_0_0"/>
+            <field name="email_to">first@example.localhost</field>
+        </record>
+    </data>
+</odoo>
