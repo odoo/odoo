@@ -116,7 +116,7 @@
 <!-- ======   Template: Date Selector   ========================================
 ============================================================================ -->
 <template id="date_selector">
-    <select name="archive" oninput="location = this.value;" class="form-select post_link">
+    <select name="archive" class="form-select post_link">
         <option t-att-value="blog_url(date_begin=False, date_end=False, tag=tag)"
                 t-att="[('selected' if (not date_begin) else 'unselected' ) , 'true' ]">
                 All dates
