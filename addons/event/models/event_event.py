@@ -760,6 +760,7 @@ class EventEvent(models.Model):
         self.ensure_one()
         now = datetime.now().astimezone(ZoneInfo(self.env.user.tz or 'UTC'))
         next_hour = now + timedelta(hours=1)
+        initial_date = min(max(datetime.now(), self.date_begin), self.date_end)
         return {
             'type': 'ir.actions.act_window',
             'name': _('Slots'),
@@ -770,13 +771,13 @@ class EventEvent(models.Model):
             'domain': [('event_id', '=', self.id)],
             'context': {
                 'default_event_id': self.id,
-                # Default hours for the list view and mobile quick create.
-                # Desktop calendar multi create using defaults in local storage
-                # (= the last selected time range or fallback on 12PM-1PM).
+                'default_date': initial_date,
+                # Default hours except for the desktop calendar multi create (multi create uses
+                # defaults from range picker saved in local storage or fallback on 12PM-1PM).
                 'default_start_hour': next_hour.hour,
                 'default_end_hour': (next_hour + timedelta(hours=1)).hour,
                 # Calendar view initial date.
-                'initial_date': min(max(datetime.now(), self.date_begin), self.date_end),
+                'initial_date': initial_date,
             },
         }
 

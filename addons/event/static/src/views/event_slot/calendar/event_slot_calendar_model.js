@@ -3,8 +3,8 @@ import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 
 /**
  * Slots are created differently depending on the screen size.
- * Desktop: Using the multi create feature.
- * Mobile: Using the calendar quick create dialog.
+ * Desktop: "New" button or multi create feature.
+ * Mobile: "New" button or quick create dialog.
  */
 export class EventSlotCalendarModel extends CalendarModel {
 

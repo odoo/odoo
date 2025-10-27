@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="event.EventSlotCalendarMultiSelectionButtons" t-inherit="web.MultiSelectionButtons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_multi_selection_buttons')]" position="after">
+            <h5 t-elif="!this.env.isSmall" class="position-fixed start-0 end-0 text-muted text-center mb-0">
+                Select days to add slots
+            </h5>
+        </xpath>
+    </t>
+</templates>

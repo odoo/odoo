@@ -6,9 +6,16 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
+import { EventSlotCalendarMultiSelectionButtons } from "./event_slot_multi_selection_buttons";
+
 const { DateTime } = luxon;
 
 export class EventSlotCalendarController extends CalendarController {
+    static template = "event.EventSlotCalendarController";
+    static components = {
+        ...CalendarController.components,
+        MultiSelectionButtons: EventSlotCalendarMultiSelectionButtons,
+    };
 
     setup() {
         super.setup();
@@ -98,6 +105,22 @@ export class EventSlotCalendarController extends CalendarController {
             },
             title: _t("New Slot"),
         };
+    }
+
+    onClickAddButton() {
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: _t("New Slot"),
+                res_model: "event.slot",
+                views: [[false, "form"]],
+                target: "new",
+            },
+            {
+                additionalContext: this.props.context,
+                onClose: () => this.model.load(),
+            }
+        );
     }
 
     /**

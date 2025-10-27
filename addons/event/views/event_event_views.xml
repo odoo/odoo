@@ -40,6 +40,13 @@
                                 help="Total Registrations for this Event">
                             <field name="seats_taken" widget="statinfo" string="Attendees"/>
                         </button>
+                        <button name="action_open_slot_calendar"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-calendar"
+                                invisible="not is_multi_slots">
+                            <field name="event_slot_count" widget="statinfo" string="Slots"/>
+                        </button>
                     </div>
                     <field name="active" invisible="1"/>
                     <field name="company_id" invisible="1"/>
