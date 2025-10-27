@@ -163,6 +163,7 @@ test("pager buttons", async () => {
     await simulateBarCode(["O", "C", "D", "P", "A", "G", "E", "R", "L", "A", "S", "T", "Enter"]);
     // need to await 2 macro steps
     await macroIsComplete();
+    await animationFrame();
     expect(".o_field_widget input").toHaveValue("Cabinet with Doors");
 
     // OCDPAGERFIRST
@@ -184,5 +185,6 @@ test("pager buttons", async () => {
     ]);
     // need to await 2 macro steps
     await macroIsComplete();
+    await animationFrame();
     expect(".o_field_widget input").toHaveValue("Large Cabinet");
 });
