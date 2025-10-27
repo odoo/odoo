@@ -39,10 +39,12 @@ export function settleNthOrder(n, options = {}) {
             run: "click",
         },
     ];
-    if (loadSN) {
+    if (loadSN !== undefined) {
         step.push({
             content: `Choose to auto link the lot number to the order line`,
-            trigger: `.modal-content:contains('Do you want to load the SN/Lots linked to the Sales Order?') button:contains('Ok')`,
+            trigger: `.modal-content:contains('Do you want to load the SN/Lots linked to the Sales Order?') button:contains('${
+                loadSN ? "Ok" : "Cancel"
+            }')`,
             run: "click",
         });
     }
