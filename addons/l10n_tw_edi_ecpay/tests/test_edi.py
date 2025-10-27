@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -235,6 +236,47 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         send_and_print = self.create_send_and_print(invoice_d)
         with self.assertRaises(UserError):
             send_and_print.action_send_and_print()
+
+    def test_08_invoice_with_downpayment(self):
+        """Ensure downpayment with -ve quantity is normalized for ECPay JSON."""
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_a, products=self.product_a,
+        )
+        invoice.write({
+            "invoice_line_ids": [
+                Command.create({
+                    "name": "Downpayment",
+                    "price_unit": 10.0,
+                    "quantity": -1.0,
+                    "tax_ids": self.tax_sale_a,
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        self.assertListEqual(
+            invoice._l10n_tw_edi_generate_invoice_json()['Items'],
+            [
+                {
+                    'ItemSeq': 1,
+                    'ItemName': 'product_a',
+                    'ItemCount': 1.0,
+                    'ItemWord': 'Units',
+                    'ItemPrice': 1000.0,
+                    'ItemTaxType': '1',
+                    'ItemAmount': 1000.0
+                },
+                {
+                    'ItemSeq': 2,
+                    'ItemName': 'Downpayment',
+                    'ItemCount': 1.0,
+                    'ItemWord': False,
+                    'ItemPrice': -10.0,
+                    'ItemTaxType': '1',
+                    'ItemAmount': -10.0
+                },
+            ],
+        )
 
     # -------------------------------------------------------------------------
     # Patched methods
