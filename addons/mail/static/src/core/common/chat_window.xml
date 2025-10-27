@@ -28,7 +28,7 @@
                         <t t-set-slot="content">
                             <t t-if="props.chatWindow.exists()">
                                 <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 4)"/>
-                                <ActionList actions="[quickActionsInDropdown, partitionedActions.other, ...partitionedActions.group]" dropdown="true" thread="channel.thread"/>
+                                <ActionList actions="[quickActionsInDropdown, partitionedActions.other, ...partitionedActions.group]" dropdown="true"/>
                             </t>
                         </t>
                     </Dropdown>
@@ -51,7 +51,7 @@
             </div>
             <div class="ms-1 flex-grow-1"/>
             <div class="d-flex flex-shrink-0 me-1">
-                <ActionList actions="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" inline="true" thread="channel.thread"/>
+                <ActionList actions="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" inline="true"/>
             </div>
             <t t-if="this.store.inPublicPage and !this.store.self_user">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
