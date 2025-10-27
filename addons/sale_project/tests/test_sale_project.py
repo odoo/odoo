@@ -1329,3 +1329,23 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         so.action_confirm()
         self.assertFalse(self.product_order_service2.project_id.task_ids)
         self.assertFalse(sol.task_id)
+
+    def test_sol_compute_qty_delivered_method(self):
+        """
+        This test checks that the qty_delivered_method is correctly computed
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+        so.action_confirm()
+        SaleOrderLine = self.env['sale.order.line'].with_context(default_order_id=so.id)
+
+        self.product_order_service1.service_type = 'manual'
+        sol = SaleOrderLine.create({
+            'product_id': self.product_order_service1.id,
+            'product_uom_qty': 10,
+        })
+        self.assertEqual(sol.qty_delivered_method, 'manual', "Service product with service_type 'manual' should have qty_delivered_method 'manual'.")
+
+        self.product_order_service1.service_type = 'milestones'
+        self.assertEqual(sol.qty_delivered_method, 'milestones', "Service product with service_type 'milestones' should have qty_delivered_method 'milestones'.")

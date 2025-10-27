@@ -105,7 +105,7 @@ class SaleOrderLine(models.Model):
             if line.product_id.type == 'service' and line.state == 'sale':
                 line.product_updatable = False
 
-    @api.depends('product_id')
+    @api.depends('product_id.type', 'product_id.service_type', 'is_expense')
     def _compute_qty_delivered_method(self):
         milestones_lines = self.filtered(lambda sol:
             not sol.is_expense
