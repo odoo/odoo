@@ -153,12 +153,12 @@ class CrmTeam(models.Model):
             users_current = team.member_ids
             users_new = users_current - memberships.user_id
 
-            # add missing memberships
-            self.env['crm.team.member'].create([{'crm_team_id': team.id, 'user_id': user.id} for user in users_new])
-
             # activate or deactivate other memberships depending on members
             for membership in memberships:
                 membership.active = membership.user_id in users_current
+
+            # add missing memberships
+            self.env['crm.team.member'].create([{'crm_team_id': team.id, 'user_id': user.id} for user in users_new])
 
     @api.depends('is_membership_multi', 'member_ids')
     def _compute_member_warning(self):

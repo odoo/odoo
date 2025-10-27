@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions
+from psycopg2.errors import UniqueViolation
+
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
@@ -80,7 +81,7 @@ class TestMembership(TestSalesCommon):
         self.assertTrue(set(new_team_memberships.mapped('active')), set([False, True]))
 
         # still avoid duplicated team / user entries
-        with self.assertRaises(exceptions.UserError):
+        with self.assertRaises(UniqueViolation), mute_logger('odoo.sql_db'):
             self.env['crm.team.member'].create({'crm_team_id': new_team.id, 'user_id': new_user.id})
 
     @users('user_sales_manager')
@@ -115,7 +116,7 @@ class TestMembership(TestSalesCommon):
         self.env.flush_all()
 
         # still avoid duplicated team / user entries
-        with self.assertRaises(exceptions.UserError):
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation):
             self.env['crm.team.member'].create({'crm_team_id': new_team.id, 'user_id': new_user.id})
 
     @users('user_sales_manager')
@@ -172,7 +173,7 @@ class TestMembership(TestSalesCommon):
         self.assertFalse(new_st_1.active)
 
         # try to activate duplicate memberships again, which should trigger issues
-        with self.assertRaises(exceptions.UserError):
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation):
             new_st_1.action_unarchive()
 
     @users('user_sales_manager')
@@ -218,7 +219,7 @@ class TestMembership(TestSalesCommon):
         self.assertEqual(sales_team_1.member_ids, self.user_admin | self.user_sales_leads)
 
         # try to activate duplicate memberships again, which should trigger issues
-        with self.assertRaises(exceptions.UserError):
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation):
             old_st_1.action_unarchive()
 
     @users('user_sales_manager')
@@ -280,7 +281,7 @@ class TestMembership(TestSalesCommon):
         self.assertFalse(admin_archived.active)
 
         # change team of membership should raise unicity constraint
-        with self.assertRaises(exceptions.UserError), mute_logger('odoo.sql_db'):
+        with self.assertRaises(UniqueViolation), mute_logger('odoo.sql_db'):
             added.write({'crm_team_id': sales_team_1.id})
 
     def test_users_sale_team_id(self):
