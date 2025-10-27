@@ -21,8 +21,8 @@ class PosSession(models.Model):
             data += ['hr.employee']
         return data
 
-    def set_opening_control(self, cashbox_value: int, notes: str):
-        super().set_opening_control(cashbox_value, notes)
+    def _set_opening_control_data(self, cashbox_value: int, notes: str):
+        super()._set_opening_control_data(cashbox_value, notes)
         if author_id := self._get_message_author():
             self.message_post(body=plaintext2html(_('Opened register')), author_id=author_id.id)
 
