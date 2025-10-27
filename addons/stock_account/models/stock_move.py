@@ -366,6 +366,11 @@ class StockMove(models.Model):
     def _get_value_from_quotation(self, quantity, at_date=None):
         return dict(VALUATION_DICT)
 
+    def _get_value_from_production(self, quantity, at_date=None):
+        # TODO: Maybe move _cal_price here
+        self.ensure_one()
+        return quantity * self.price_unit
+
     def _get_value_from_returns(self, quantity, at_date=None):
         if self.origin_returned_move_id and self.origin_returned_move_id.is_out:
             origin_move = self.origin_returned_move_id
