@@ -1,5 +1,6 @@
 import {
     clickOnEditAndWaitEditMode,
+    clickOnSave,
     clickOnSnippet,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
@@ -67,6 +68,35 @@ registerWebsitePreviewTour(
             content: "Click on Discard",
             trigger: ".o-snippets-top-actions [data-action='cancel']",
             run: "click",
+        },
+        {
+            content: "Go to 'All' blogs",
+            trigger: ":iframe a[href='/blog']",
+            run: "click",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Open inline editor on blog landing title",
+            trigger: ":iframe #o_wblog_blog_top .h1",
+            run: "dblclick",
+        },
+        {
+            content: "Edit the blog landing title",
+            trigger: ":iframe #o_wblog_blog_top .h1[contenteditable='true']",
+            run: "editor Latest Posts Edited",
+        },
+        {
+            trigger: ":iframe #o_wblog_blog_top .h1:contains('Latest Posts Edited')",
+        },
+        ...clickOnSave(),
+        {
+            content: "Ensure the title was saved and remains editable",
+            trigger: ":iframe #o_wblog_blog_top .h1:contains('Latest Posts Edited')",
+            run() {
+                if (this.anchor.classList.contains("o_not_editable")) {
+                    console.error("Latest Posts heading should not keep the o_not_editable class.");
+                }
+            },
         },
         {
             content: "Click on the first article",
