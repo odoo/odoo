@@ -1347,3 +1347,49 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_import_so_to_pos_no_existing_lot', login="accountman")
+
+    def test_amount_unpaid_with_downpayment_and_credit_note(self):
+        """ Test that amount_unpaid is well calculated when a downpayment is not made in the PoS """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': 500,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 300,
+            'deposit_account_id': self.company_data['default_account_revenue'].id,
+        })
+        res = payment.create_invoices()
+        invoice = self.env['account.move'].browse(res['res_id'])
+        invoice.action_post()
+
+        self.assertEqual(sale_order.amount_unpaid, 200.0)
+
+        credit_note = invoice._reverse_moves()
+        credit_note.action_post()
+
+        self.assertEqual(sale_order.amount_unpaid, 500.0)
+
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+        })
+        res = payment.create_invoices()
+        invoice = self.env['account.move'].browse(res['res_id'])
+        invoice.action_post()
+
+        self.assertEqual(sale_order.amount_unpaid, 0.0)
