@@ -249,7 +249,7 @@ test("Remove step during recording", async () => {
     checkTourSteps([".o_child"]);
     await click(".o_button_steps");
     await animationFrame();
-    contains(".o_button_delete_step").click();
+    await contains(".o_button_delete_step").click();
     await click(".o_button_steps");
     await animationFrame();
     checkTourSteps([]);
@@ -305,7 +305,7 @@ test("Save custom tour", async () => {
 
     await click(".o_button_save");
     await animationFrame();
-    await contains("input[name='name']").click();
+    await contains("#tour_name").click();
     await edit("tour_name");
     await animationFrame();
     await click(".o_button_save_confirm");
@@ -459,6 +459,8 @@ test("Check Tour Recorder State", async () => {
     await click(".o_button_record");
     await animationFrame();
     await click(".o_tour_recorder_close_button");
+    await animationFrame();
+    await click(".modal-footer .btn-primary");
     await animationFrame();
     expect(tourRecorderState.getCurrentTourRecorder()).toEqual([]);
     expect(tourRecorderState.isRecording()).toBe("0");

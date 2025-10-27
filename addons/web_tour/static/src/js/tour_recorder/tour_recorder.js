@@ -3,10 +3,13 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
-import { Component, useState, useExternalListener } from "@odoo/owl";
+import { Component, useState, useExternalListener, useRef } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { tourRecorderState } from "./tour_recorder_state";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 const PRECISE_IDENTIFIERS = ["data-menu-xmlid", "name", "contenteditable"];
 const ODOO_CLASS_REGEX = /^oe?(-|_)[\w-]+$/;
@@ -89,6 +92,29 @@ const reducePath = (paths) => {
     return path;
 };
 
+const useTourRecorderDraggable = makeDraggableHook({
+    name: "useTourRecorderDraggable",
+    onWillStartDrag({ ctx, addCleanup, addStyle }) {
+        ctx.current.container = document.createElement("div");
+        addStyle(ctx.current.container, {
+            position: "fixed",
+            top: "0",
+            bottom: "0",
+            left: "0",
+            right: "0",
+        });
+        ctx.current.element.after(ctx.current.container);
+        addCleanup(() => ctx.current.container.remove());
+    },
+    onDrop({ ctx, getRect }) {
+        const { bottom, left } = getRect(ctx.current.element);
+        return {
+            left: left - ctx.current.elementRect.left,
+            bottom: bottom - ctx.current.elementRect.bottom,
+        };
+    },
+});
+
 export class TourRecorder extends Component {
     static template = "web_tour.TourRecorder";
     static components = { Dropdown, DropdownItem };
@@ -104,21 +130,43 @@ export class TourRecorder extends Component {
 
     setup() {
         this.originClickEvent = false;
+        this.destClickEvent = false;
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.action = useService("action");
+        this.dialog = useService("dialog");
         this.state = useState({
             ...TourRecorder.defaultState,
             steps: [],
+            position: {
+                x: 0,
+                y: 0,
+            },
         });
+        this.tourRecorderRef = useRef("tour_recorder");
+        this.dropdownState = useDropdownState();
 
         this.state.steps = tourRecorderState.getCurrentTourRecorder();
         this.state.recording = tourRecorderState.isRecording() === "1";
         useExternalListener(document, "pointerdown", this.setStartingEvent, { capture: true });
-        useExternalListener(document, "pointerup", this.recordClickEvent, { capture: true });
+        useExternalListener(document, "pointerup", this.onPointerUpEvent, { capture: true });
+        useExternalListener(document, "click", this.recordClickEvent, { capture: true });
         useExternalListener(document, "keydown", this.recordConfirmationKeyboardEvent, {
             capture: true,
         });
         useExternalListener(document, "keyup", this.recordKeyboardEvent, { capture: true });
+
+        useTourRecorderDraggable({
+            ref: this.tourRecorderRef,
+            elements: ".o_tour_recorder",
+            handle: ".o_tour_recorder_handler",
+            cursor: "grabbing",
+            edgeScrolling: { enabled: false },
+            onDrop: ({ bottom, left }) => {
+                this.state.position.x += left;
+                this.state.position.y -= bottom;
+            },
+        });
     }
 
     /**
@@ -131,14 +179,28 @@ export class TourRecorder extends Component {
         this.originClickEvent = ev.composedPath().filter((p) => p instanceof Element);
     }
 
+    onPointerUpEvent(ev) {
+        if (!this.state.recording || ev.target.closest(".o_tour_recorder")) {
+            return;
+        }
+        this.destClickEvent = ev.composedPath().filter((p) => p instanceof Element);
+    }
+
     /**
      * @param {PointerEvent} ev
      */
     recordClickEvent(ev) {
-        if (!this.state.recording || ev.target.closest(".o_tour_recorder")) {
+        if (
+            !this.state.recording ||
+            ev.target.closest(".o_tour_recorder") ||
+            (!this.originClickEvent && this.destClickEvent)
+        ) {
             return;
+        } else if (!this.originClickEvent && !this.destClickEvent) {
+            this.originClickEvent = ev.composedPath().filter((p) => p instanceof Element);
+            this.destClickEvent = this.originClickEvent;
         }
-        const pathElements = ev.composedPath().filter((p) => p instanceof Element);
+        const pathElements = this.destClickEvent;
         this.addTourStep([...pathElements]);
 
         const lastStepInput = this.state.steps.at(-1);
@@ -155,6 +217,8 @@ export class TourRecorder extends Component {
         }
 
         tourRecorderState.setCurrentTourRecorder(this.state.steps);
+        this.originClickEvent = false;
+        this.destClickEvent = false;
     }
 
     /**
@@ -195,6 +259,22 @@ export class TourRecorder extends Component {
             ev.target.closest(".o_tour_recorder")
         ) {
             return;
+        }
+
+        if (ev.target.closest(".o_command_palette_search") && !this.state.editedElement) {
+            const lastStepPalette = this.state.steps.at(-1);
+            if (!lastStepPalette || lastStepPalette.trigger != "[data-menu='shortcuts']") {
+                this.state.steps.push(
+                    {
+                        trigger: ".o_user_menu button",
+                        run: "click",
+                    },
+                    {
+                        trigger: "[data-menu='shortcuts']",
+                        run: "click",
+                    }
+                );
+            }
         }
 
         if (!this.state.editedElement) {
@@ -244,8 +324,23 @@ export class TourRecorder extends Component {
 
         const result = await this.orm.create("web_tour.tour", [newTour]);
         if (result) {
-            this.notification.add(_t("Custom tour '%s' has been added.", newTour.name), {
+            const removeNotification = this.notification.add(_t("'%s' created", newTour.name), {
                 type: "success",
+                buttons: [
+                    {
+                        name: _t("View tour"),
+                        onClick: () => {
+                            this.action.doAction({
+                                type: "ir.actions.act_window",
+                                res_model: "web_tour.tour",
+                                res_id: result[0],
+                                views: [[false, "form"]],
+                                target: "current",
+                            });
+                            removeNotification();
+                        },
+                    },
+                ],
             });
             this.resetTourRecorderState();
         } else {
@@ -272,6 +367,40 @@ export class TourRecorder extends Component {
             ) && target;
         this.state.steps.push({
             trigger: shortestPath,
+        });
+    }
+
+    removeStep(index) {
+        this.state.steps.splice(index, 1);
+        tourRecorderState.setCurrentTourRecorder(this.state.steps);
+    }
+
+    openResetStepsDialog() {
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Clear all steps?"),
+            body: _t("Are you sure you want to clear all steps?\nAll steps will be lost."),
+            confirmLabel: _t("Clear"),
+            cancelLabel: _t("Cancel"),
+            confirm: () => {
+                this.resetTourRecorderState();
+                this.dropdownState.close();
+            },
+            cancel: () => {},
+        });
+    }
+
+    openCloseRecorderDialog() {
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Close tour recorder?"),
+            body: _t(
+                "Are you sure you want to close the tour recorder?\nAll changes will be lost."
+            ),
+            confirmLabel: _t("Close recorder"),
+            cancelLabel: _t("Cancel"),
+            confirm: () => {
+                this.props.onClose();
+            },
+            cancel: () => {},
         });
     }
 }
