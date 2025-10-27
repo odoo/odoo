@@ -270,7 +270,7 @@ class ProductPricelistItem(models.Model):
         base_selection_vals = dict(self._fields['base']._description_selection(self.env))
         self.rule_tip = False
         for item in self:
-            if item.compute_price != 'formula':
+            if item.compute_price != 'formula' or not item.base:
                 continue
             base_amount = 100
             discount = item.price_discount if item.base != 'standard_price' else -item.price_markup
