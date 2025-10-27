@@ -126,7 +126,6 @@ export const SEND_QR = {
     onlinePaymentData: {},
     qrPaymentData: {
         amount: "$ 2,972.75",
-        name: "CARD",
         qrCode: QR_URL,
     },
 };

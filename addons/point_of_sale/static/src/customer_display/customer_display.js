@@ -6,7 +6,7 @@ import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
 import { mountComponent } from "@web/env";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { CustomerFacingQR } from "./customer_facing_qr";
+import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 
 export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
@@ -29,7 +29,7 @@ export class CustomerDisplay extends Component {
         useEffect(
             (qrPaymentData) => {
                 if (qrPaymentData) {
-                    singleDialog.open(CustomerFacingQR, qrPaymentData);
+                    singleDialog.open(QRPopup, qrPaymentData);
                 } else {
                     singleDialog.close();
                 }

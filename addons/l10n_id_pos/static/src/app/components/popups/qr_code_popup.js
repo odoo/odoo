@@ -10,7 +10,7 @@ patch(QRPopup.prototype, {
         this.orm = useService("orm");
     },
 
-    async _confirm() {
+    async confirm() {
         // Verify whether the payment has been recieved by QRIS
 
         this.setButtonsDisabled(true);
@@ -41,6 +41,12 @@ patch(QRPopup.prototype, {
             return false;
         }
         this.setButtonsDisabled(false);
-        return super._confirm();
+        return super.confirm();
+    },
+
+    setButtonsDisabled(disabled) {
+        for (const button of [...document.querySelectorAll(".modal-content button")]) {
+            button.disabled = disabled;
+        }
     },
 });
