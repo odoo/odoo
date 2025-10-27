@@ -34,11 +34,12 @@ function match(pattern, strs) {
 function _match(pattern, str) {
     let totalScore = 0;
     let currentScore = 0;
-    const len = str.length;
     let patternIndex = 0;
 
     pattern = unaccent(pattern, false);
     str = unaccent(str, false);
+
+    const len = str.length;
 
     for (let i = 0; i < len; i++) {
         if (str[i] === pattern[patternIndex]) {
