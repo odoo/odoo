@@ -4,6 +4,7 @@ from . import (
     test_access_rights,
     test_action_bindings,
     test_attributes,
+    test_autovacuum,
     test_config,
     test_convert,
     test_html_converter,

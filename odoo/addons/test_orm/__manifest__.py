@@ -15,6 +15,8 @@
         'security/test_access_rights/ir.model.access.csv',
         'security/test_action_bindings/ir.model.access.csv',
         'security/test_attributes/ir.model.access.csv',
+        'security/test_autovacuum/ir.model.access.csv',
+        # WIP
         'security/test_config/ir.model.access.csv',
         'security/test_convert/ir.model.access.csv',
         'security/test_html_converter/ir.model.access.csv',
