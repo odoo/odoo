@@ -18,6 +18,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image:  radial-gradient(
+        at 50% 50%,
+        #{$o-view-background-color} 0px,
+        #{rgba($o-view-background-color, 0.5)} 100%
+    );
 
     .o_nocontent_help {
         @include o-nocontent-empty;
