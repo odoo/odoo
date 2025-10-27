@@ -1635,8 +1635,9 @@ class PosSession(models.Model):
         stock_account_moves = pickings.move_ids.account_move_id
         cash_moves = self.statement_line_ids.mapped('move_id')
         bank_payment_moves = self.bank_payment_ids.mapped('move_id')
+        reversal_moves = self.mapped('order_ids.reversed_move_ids')
         other_related_moves = self._get_other_related_moves()
-        return invoices | invoice_payments | self.move_id | stock_account_moves | cash_moves | bank_payment_moves | other_related_moves
+        return invoices | invoice_payments | self.move_id | stock_account_moves | cash_moves | bank_payment_moves | reversal_moves | other_related_moves
 
     def _get_receivable_account(self, payment_method):
         """Returns the default pos receivable account if no receivable_account_id is set on the payment method."""
