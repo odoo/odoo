@@ -1431,16 +1431,19 @@ class DiscussChannel(models.Model):
             """, member_query))
             members = cursor_self.env['discuss.channel.member'].browse([r[0] for r in to_update])
             channel2message = members.channel_id._get_last_messages().grouped('channel_id')
+            updated_members_by_channel = defaultdict(cursor_self.env["discuss.channel.member"].browse)
             for member in members:
                 last_message = channel2message[member.channel_id]
                 if member.fetched_message_id != last_message:
                     member.fetched_message_id = last_message
-                    member.channel_id._bus_send('discuss.channel.member/fetched', {
-                        'channel_id': member.channel_id.id,
-                        'id': member.id,
-                        'last_message_id': last_message.id,
-                        'partner_id': cursor_self.env.user.partner_id.id,
-                    })
+                    updated_members_by_channel[member.channel_id] |= member
+            for channel in updated_members_by_channel:
+                store = Store(bus_channel=channel)
+                store.add(updated_members_by_channel[channel], fields=[
+                    Store.One("channel_id", []),
+                    "fetched_message_id",
+                    *cursor_self.env["discuss.channel.member"]._to_store_persona(store.target, [])
+                ]).bus_send()
 
     def channel_set_custom_name(self, name):
         self.ensure_one()

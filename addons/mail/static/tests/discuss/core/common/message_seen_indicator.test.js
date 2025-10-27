@@ -9,7 +9,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, test } from "@odoo/hoot";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -192,6 +192,7 @@ test("rendering when just everyone has seen the message", async () => {
 test("'channel_fetch' notification received is correctly handled", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
@@ -212,16 +213,10 @@ test("'channel_fetch' notification received is correctly handled", async () => {
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 0 });
 
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
-    // Simulate received channel fetched notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
-        id: pyEnv["discuss.channel.member"].search([
-            ["channel_id", "=", channelId],
-            ["partner_id", "=", partnerId],
-        ])[0],
-        channel_id: channelId,
-        last_message_id: 100,
-        partner_id: partnerId,
-    });
+    // Simulate other user fetching
+    await withUser(userId, () =>
+        getService("orm").call("discuss.channel", "channel_fetched", [[channel.id]])
+    );
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 1 });
 });
 
@@ -269,6 +264,7 @@ test("mark channel as seen from the bus", async () => {
 test("should display message indicator when message is fetched/seen", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Recipient" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
@@ -288,16 +284,10 @@ test("should display message indicator when message is fetched/seen", async () =
     await contains(".o-mail-Message");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 0 });
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
-    // Simulate received channel fetched notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
-        id: pyEnv["discuss.channel.member"].search([
-            ["channel_id", "=", channelId],
-            ["partner_id", "=", partnerId],
-        ])[0],
-        channel_id: channelId,
-        last_message_id: messageId,
-        partner_id: partnerId,
-    });
+    // Simulate other user fetching
+    await withUser(userId, () =>
+        getService("orm").call("discuss.channel", "channel_fetched", [[channel.id]])
+    );
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 1 });
     // Simulate received channel seen notification
     const DiscussChannelMember = pyEnv["discuss.channel.member"];

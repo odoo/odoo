@@ -1,4 +1,4 @@
-import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { LAST_DISCUSS_ACTIVE_ID_LS } from "@mail/core/public_web/discuss_app/discuss_app_model";
@@ -1342,7 +1342,6 @@ test("new message in tab title has precedence over action name", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await waitNotifications(["discuss.channel.member/fetched"]);
     await expect.waitForSteps(["(1) Inbox"]);
 });
 
