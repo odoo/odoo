@@ -661,6 +661,39 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
 
+    def test_split_multiple_MOs(self):
+        """
+        Test that when multiple MOs are selected and the split
+        action is triggered, each MO is processed and split correctly.
+        """
+        mos = self.env['mrp.production'].create([
+            {
+                'product_id': self.product_4.id,
+                'product_qty': 10,
+            }, {
+                'product_id': self.product_6.id,
+                'product_qty': 20,
+            }
+        ])
+        for mo in mos:
+            self.assertEqual(mo.state, 'draft')
+
+        # trigger the split wizard for both MOs
+        action = mos.action_split()
+        wizard = Form.from_action(self.env, action)
+        wizard_record = wizard.save()
+
+        # simulate clicking the “Split Production” button for each MO line
+        for line in wizard_record.production_ids:
+            split_action = line.action_prepare_split()
+            split_wizard = Form.from_action(self.env, split_action)
+            split_wizard.max_batch_size = 5
+            split_wizard.save().action_split()
+
+        # verify that each MO is split into expected number of productions
+        self.assertEqual(len(mos[0].production_group_id.production_ids), 2)
+        self.assertEqual(len(mos[1].production_group_id.production_ids), 4)
+
     def test_split_mo_partially_available(self):
         """
         Test that an MO components availability is correct after split.
