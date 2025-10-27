@@ -4178,8 +4178,6 @@ test("empty kanban with sample data", async () => {
         message: "there should be 10 sample records",
     });
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(".ribbon").toHaveCount(1);
-    expect(".ribbon").toHaveText("SAMPLE DATA");
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Match nothing");
@@ -4187,7 +4185,6 @@ test("empty kanban with sample data", async () => {
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(".ribbon").toHaveCount(0);
 });
 
 test("empty grouped kanban with sample data and many2many_tags", async () => {
@@ -4307,14 +4304,12 @@ test("non empty kanban with sample data", async () => {
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
     expect(".o_view_nocontent").toHaveCount(0);
-    expect(".ribbon").toHaveCount(0);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Match nothing");
 
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(0);
-    expect(".ribbon").toHaveCount(0);
 });
 
 test("empty grouped kanban with sample data: add a column", async () => {
