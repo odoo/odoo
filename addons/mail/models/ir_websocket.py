@@ -58,8 +58,9 @@ class IrWebsocket(models.AbstractModel):
         guest_ids = [int(p[1]) for p in simplified_presence_channels if p[0] == "mail.guest"]
         guests = self.env["mail.guest"].sudo().search([("id", "in", guest_ids)]).sudo(False)
         allowed_partners, allowed_guests = self._filter_accessible_presences(partners, guests)
-        data["channels"].update((partner, "presence") for partner in allowed_partners)
-        data["channels"].update((guest, "presence") for guest in allowed_guests)
+        partner, guest = self.env["res.partner"]._get_current_persona()
+        data["channels"].update((partner, "presence") for partner in allowed_partners | partner)
+        data["channels"].update((guest, "presence") for guest in allowed_guests | guest)
         # There is a gap between a subscription client side (which is debounced)
         # and the actual subcription thus presences can be missed. Send a
         # notification to avoid missing presences during a subscription.

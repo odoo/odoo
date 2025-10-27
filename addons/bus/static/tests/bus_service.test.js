@@ -206,16 +206,23 @@ test("websocket disconnects when user logs out", async () => {
         ["connect", () => asyncStep("connect")],
         ["disconnect", () => asyncStep("disconnect")]
     );
-    patchWithCleanup(session, { user_id: null });
+    patchWithCleanup(session, { user_id: null, db: "openerp" });
     patchWithCleanup(user, { userId: 1 });
     const firstTabEnv = await makeMockEnv();
-    startBusService(firstTabEnv);
+    await startBusService(firstTabEnv);
     await waitForSteps(["connect"]);
-    patchWithCleanup(user, { userId: null });
+    // second tab connects to the worker, omitting the DB name. Consider same DB.
+    patchWithCleanup(session, { db: undefined });
     restoreRegistry(registry);
     const env2 = await makeMockEnv(null, { makeNew: true });
-    startBusService(env2);
-    await waitForSteps(["disconnect"]);
+    await startBusService(env2);
+    await waitForSteps([]);
+    // third tab connects to the worker after disconnection: userId is now false.
+    patchWithCleanup(user, { userId: false });
+    restoreRegistry(registry);
+    const env3 = await makeMockEnv(null, { makeNew: true });
+    await startBusService(env3);
+    await waitForSteps(["disconnect", "connect"]);
 });
 
 test("websocket reconnects upon user log in", async () => {
