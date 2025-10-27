@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:39+0000\n"
-"PO-Revision-Date: 2025-10-15 23:41+0000\n"
+"PO-Revision-Date: 2025-10-27 23:40+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "payment_adyen/ja/>\n"
@@ -29,8 +29,8 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
-"<strong>警告:</strong>金額を手動でキャプチャするには、\n"
-"                    アカウント設定で遅延キャプチャも設定する必要があります。"
+"<strong>警告:</strong>金額を手動で確定するには、\n"
+"                    アカウント設定で遅延確定も設定する必要があります。"
 
 #. module: payment_adyen
 #. odoo-python
@@ -136,7 +136,7 @@ msgstr "参照に一致する取引が見つかりません%s。"
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr "支払キャプチャウィザード"
+msgstr "支払確定ウィザード"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
@@ -221,7 +221,7 @@ msgstr "APIエンドポイント用ベースURL"
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The capture of the transaction with reference %s failed."
-msgstr "参照%sの取引のキャプチャに失敗しました。"
+msgstr "参照%sの取引の確定に失敗しました。"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -229,7 +229,7 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
-"取引のキャプチャまたはボイドがAdyenで処理され、Odooに反映されるまでに\n"
+"取引の確定またはボイドがAdyenで処理され、Odooに反映されるまでに\n"
 "数分かかる場合があります。"
 
 #. module: payment_adyen
@@ -238,7 +238,7 @@ msgstr ""
 msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
-msgstr " %(amount)sのキャプチャ要求(参照%(ref)sの取引用)が要求されました(%(provider_name)s)"
+msgstr "%(amount)sの確定要求(参照%(ref)sの取引用)が要求されました(%(provider_name)s)"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
