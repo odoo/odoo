@@ -116,6 +116,7 @@
 <!-- ======   Template: Date Selector   ========================================
 ============================================================================ -->
 <template id="date_selector">
+    <!-- TODO: remove oninput in master -->
     <select name="archive" oninput="location = this.value;" class="form-select">
         <!-- TODO: remove in master -->
         <option t-if="False" t-att-value="blog_url(date_begin=False, date_end=False) if blog else '/blog'"
