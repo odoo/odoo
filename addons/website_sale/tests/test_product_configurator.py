@@ -148,6 +148,28 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         self.assertTrue(show_configurator)
 
+    def test_optional_products_not_visible_on_other_websites(self):
+        """Optional products assigned to a different website should not be shown"""
+        second_website = self.env['website'].create({'name': 'second website'})
+        optional_product = self.env['product.template'].create({
+            'name': "Optional product",
+            'website_published': True,
+            'website_id': second_website.id
+        })
+
+        main_product = self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'optional_product_ids': [Command.set(optional_product.ids)],
+        })
+
+        with MockRequest(self.env, website=self.website):
+            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
+                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+            )
+
+        self.assertFalse(show_configurator)
+
     def test_product_configurator_single_variant(self):
         """Test that the product configurator isn't shown if the product has a single variant."""
         attribute = self.env['product.attribute'].create({
