@@ -1672,9 +1672,11 @@ class PosSession(models.Model):
             return {}
         return self.config_id.open_ui()
 
-    def set_opening_control(self, cashbox_value: int, notes: str):
-        if self.state != 'opening_control':
-            return
+    def _set_opening_control_data(self, cashbox_value: int, notes: str):
+        """
+        Internal logic for opening the session.
+        Inherit this method to add custom logic before the sequence is assigned.
+        """
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
 
@@ -1688,6 +1690,18 @@ class PosSession(models.Model):
             message = _('Opening control message: ')
             message += notes
             self.message_post(body=plaintext2html(message))
+
+    def set_opening_control(self, cashbox_value: int, notes: str):
+        """
+        Public method to open the session.
+        This calls the internal logic and, if successful, assigns the sequence name.
+
+        DO NOT INHERIT THIS METHOD. Inherit _set_opening_control_data instead.
+        """
+        if self.state != 'opening_control':
+            return
+
+        self._set_opening_control_data(cashbox_value, notes)
 
         if not self.rescue:
             self.name = self.env['ir.sequence'].with_context(company_id=self.config_id.company_id.id).next_by_code('pos.session')
