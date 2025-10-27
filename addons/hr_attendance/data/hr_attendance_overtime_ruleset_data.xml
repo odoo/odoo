@@ -38,5 +38,51 @@
             <field name="quantity_period">day</field>
             <field name="expected_hours_from_contract" eval="True"/>
         </record>
+<!-- EG : Egypt -->
+        <record id="hr_attendance_overtime_ruleset_eg" model="hr.attendance.overtime.ruleset">
+            <field name="name">Egypt Ruleset</field>
+            <field name="rate_combination_mode">sum</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+
+        <record id="hr_attendance_overtime_rule_1_eg" model="hr.attendance.overtime.rule">
+            <field name="name">Week Days - Daytime</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">17</field>
+            <field name="timing_stop">21</field>
+            <field name="amount_rate">1.35</field>
+            <field name="ruleset_id" ref="hr_attendance_overtime_ruleset_eg"/>
+        </record>
+
+        <record id="hr_attendance_overtime_rule_2_eg" model="hr.attendance.overtime.rule">
+            <field name="name">Week Days - Nighttime</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">21</field>
+            <field name="timing_stop">24</field>
+            <field name="amount_rate">1.7</field>
+            <field name="ruleset_id" ref="hr_attendance_overtime_ruleset_eg"/>
+        </record>
+        
+        <record id="hr_attendance_overtime_rule_3_eg" model="hr.attendance.overtime.rule">
+            <field name="name">Week Days - Nighttime</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">4</field>
+            <field name="amount_rate">1.7</field>
+            <field name="ruleset_id" ref="hr_attendance_overtime_ruleset_eg"/>
+        </record>
+        
+        <record id="hr_attendance_overtime_rule_4_eg" model="hr.attendance.overtime.rule">
+            <field name="name">Rest Days</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">non_work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">24</field>
+            <field name="amount_rate">2</field>
+            <field name="ruleset_id" ref="hr_attendance_overtime_ruleset_eg"/>
+        </record>
     </data>
 </odoo>
