@@ -100,13 +100,19 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
-            content: "check that wishlist contains 1 item",
-            trigger: ".my_wish_quantity:contains(1)",
+            trigger: ":not(:has(tr:contains('Steel')))",
+        },
+        {
+            trigger: ":not(:has(tr:contains('Aluminium')))",
         },
         {
             content: "check B2B wishlist mode",
             trigger: "input#b2b_wish",
             run: "click",
+        },
+        {
+            content: "check that wishlist contains 1 item",
+            trigger: ".my_wish_quantity:contains(1)",
         },
         {
             content: "add item to cart",
