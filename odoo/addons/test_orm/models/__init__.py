@@ -5,6 +5,7 @@ from . import (
     test_action_bindings,
     test_attributes,
     test_autovacuum,
+    test_check_access,
     test_config,
     test_convert,
     test_html_converter,
