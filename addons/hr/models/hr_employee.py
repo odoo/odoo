@@ -780,8 +780,7 @@ class HrEmployee(models.Model):
 
             employee.with_context(version_id=old_version.id).wage
         """
-        context_version_id = self.env.context.get('version_id', False)
-        context_version = self.env['hr.version'].browse(context_version_id).exists() if context_version_id else self.env['hr.version']
+        context_version = self.env['hr.version'].browse(self.env.context.get('version_id', False))
 
         for employee in self:
             if context_version.employee_id == employee:

@@ -48,6 +48,7 @@
         'views/hr_employee_skill_views.xml',
         'views/hr_job_skill_views.xml',
         'views/hr_views.xml',
+        'report/hr_employee_certification_report_views.xml',
         'report/hr_employee_skill_report_views.xml',
         'report/hr_employee_skill_history_report_views.xml',
         'views/res_config_settings_views.xml',
