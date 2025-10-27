@@ -227,6 +227,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             return (
                 should_show_product
                 and product_template._is_add_to_cart_possible()
+                and product_template.filtered_domain(request.website.website_domain())
             )
         return should_show_product
 
