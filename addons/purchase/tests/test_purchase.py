@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, Form
-from odoo import Command, fields
-from odoo.exceptions import UserError
-from odoo.tools import mute_logger
-
 
 from datetime import timedelta
+
 from freezegun import freeze_time
 from psycopg2.errors import IntegrityError
-import pytz
+from pytz import timezone
+
+from odoo import Command, fields
+from odoo.exceptions import UserError
+from odoo.tests import Form, tagged
+from odoo.tools import mute_logger
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -155,7 +156,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         # check date_planned is correctly set
         self.assertEqual(po.date_planned, date_planned)
-        po_tz = pytz.timezone(po.user_id.tz)
+        po_tz = timezone(po.user_id.tz)
         localized_date_planned = po.date_planned.astimezone(po_tz)
         self.assertEqual(localized_date_planned, po.get_localized_date_planned())
         # Ensure that the function get_localized_date_planned can accept a date in string format
@@ -1070,6 +1071,48 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.price_unit, 6)
         po.order_line.product_qty = 2
         self.assertEqual(po.order_line.price_unit, 5)
+
+    def test_purchase_order_mail_links_to_correct_website(self):
+        """Check that purchase order emails link to the order's company website."""
+        if 'website_id' not in self.env.company:
+            self.skipTest("The `website` module is required to support multiple company websites.")
+
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        companies = company1 + company2
+        companies.website_id = None
+        self.env['website'].create([{
+            'name': f"{company.name}'s Website",
+            'domain': f"http://website{company.id}.example.com",
+            'company_id': company.id,
+        } for company in companies])
+        self.assertEqual(len(companies.website_id), 2)
+
+        rfq = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company2.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        })
+
+        email_ctx = rfq.action_rfq_send().get('context', {})
+        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id'))
+        mail_template.auto_delete = False
+
+        message = rfq.with_context(**email_ctx).message_post_with_source(
+            mail_template, subtype_xmlid='mail.mt_comment',
+        )
+        self.assertIn(
+            company2.website_id.domain, message.mail_ids.body_html,
+            "Mail should link to the website of the order's company",
+        )
+        self.assertNotIn(
+            company1.website_id.domain, message.mail_ids.body_html,
+            "Mail shouldn't link to the website of the first company",
+        )
+        self.assertNotIn(
+            self.env['base'].get_base_url(), message.mail_ids.body_html,
+            "Mail shouldn't link to the base URL",
+        )
 
     def test_purchase_order_lock(self):
         """
