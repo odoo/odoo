@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_cmr" model="report.paperformat">
+            <field name="name">CMR</field>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">8</field>
+            <field name="margin_right">8</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_report_cmr" model="ir.actions.report">
+            <field name="name">Consignment Note (CMR)</field>
+            <field name="model">stock.picking</field>
+            <field name="domain">[('picking_type_id.code', '=', 'outgoing')]</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock_fleet.report_cmr</field>
+            <field name="report_file">stock_fleet.report_cmr</field>
+            <field name="paperformat_id" ref="paperformat_cmr"/>
+            <field name="print_report_name">'CMR - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_cmr_batch" model="ir.actions.report">
+            <field name="name">Consignment Note (CMR)</field>
+            <field name="model">stock.picking.batch</field>
+            <field name="domain" eval="[('picking_type_id.code', '=', 'outgoing')]"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock_fleet.report_cmr_batch</field>
+            <field name="report_file">stock_fleet.report_cmr_batch</field>
+            <field name="paperformat_id" ref="paperformat_cmr"/>
+            <field name="print_report_name">'CMR - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_stock_picking_batch"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
