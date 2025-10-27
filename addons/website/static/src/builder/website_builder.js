@@ -141,7 +141,7 @@ export class WebsiteBuilder extends Component {
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);
         const websitePlugins = this.props.translation
-            ? TRANSLATION_PLUGINS
+            ? [...TRANSLATION_PLUGINS, ...registry.category("website-translation-plugins").getAll()]
             : [
                   ...registry.category("builder-plugins").getAll(),
                   ...registry.category("website-plugins").getAll(),

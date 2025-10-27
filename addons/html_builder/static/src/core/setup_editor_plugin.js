@@ -16,6 +16,7 @@ export class SetupEditorPlugin extends Plugin {
             "#wrap .o_homepage_editor_welcome_message"
         );
         welcomeMessageEl?.remove();
+        this.dispatchTo("before_setup_editor_handlers");
         let editableEls = this.getEditableElements(
             this.getResource("o_editable_selectors").join(", ")
         )
