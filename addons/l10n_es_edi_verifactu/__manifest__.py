@@ -9,6 +9,7 @@
     'data': [
         'security/ir.model.access.csv',
         'wizard/account_move_reversal_views.xml',
+        'wizard/account_resequence_views.xml',
         'views/account_move_views.xml',
         'views/account_tax_views.xml',
         'views/certificate_certificate_views.xml',
