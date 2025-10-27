@@ -9,6 +9,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { uniqueId } from "@web/core/utils/functions";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 
 export class ImageGalleryImagesOption extends BaseOptionComponent {
     static template = "website.ImageGalleryImagesOption";
@@ -44,6 +45,9 @@ class ImageGalleryOption extends Plugin {
         reorder_items_handlers: this.reorderGalleryItems.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
+        on_replaced_media_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
+        on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
+        on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
             this.addCarouselListener(carousels);
@@ -420,6 +424,12 @@ class ImageGalleryOption extends Plugin {
             const images = this.getImages(this.imageRemovedGalleryElement);
             this.setImages(this.imageRemovedGalleryElement, mode, images);
             this.imageRemovedGalleryElement = undefined;
+        }
+    }
+
+    updateCarouselThumbnail(mediaEl) {
+        if (mediaEl.matches(".s_image_gallery img")) {
+            forwardToThumbnail(mediaEl);
         }
     }
 }
