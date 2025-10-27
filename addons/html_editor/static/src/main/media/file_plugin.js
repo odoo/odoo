@@ -6,10 +6,11 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { isZwnbsp } from "@html_editor/utils/dom_info";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history"];
+    static dependencies = ["dom", "history", "selection"];
     static defaultConfig = {
         allowFile: true,
     };
@@ -33,6 +34,7 @@ export class FilePlugin extends Plugin {
             description: _t("Upload a file"),
         }),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_file_box"),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
         ...(this.config.allowFile &&
             this.config.allowMediaDocuments && {
                 media_dialog_extra_tabs: {
@@ -60,6 +62,12 @@ export class FilePlugin extends Plugin {
     }
 
     async uploadAndInsertFiles() {
+        // Temporary placeholder
+        const tempSpan = renderStaticFileBox("Uploading...", "uploading", "#");
+        this.dependencies.history.ignoreDOMMutations(() => {
+            this.dependencies.dom.insert(tempSpan);
+            this.dispatchTo("normalize_handlers", tempSpan.parentElement);
+        });
         // Upload
         const attachments = await this.services.uploadLocalFiles.upload(this.recordInfo, {
             multiple: true,
@@ -68,6 +76,7 @@ export class FilePlugin extends Plugin {
         if (!attachments.length) {
             // No files selected or error during upload
             this.editable.focus();
+            tempSpan.remove();
             return;
         }
         if (this.config.onAttachmentChange) {
@@ -75,9 +84,17 @@ export class FilePlugin extends Plugin {
         }
         // Render
         const fileCards = attachments.map(this.renderDownloadBox.bind(this));
+        const cursors = this.dependencies.selection.preserveSelection();
+        // remove untracked feff nodes
+        for (const node of [tempSpan.previousSibling, tempSpan.nextSibling]) {
+            if (isZwnbsp(node)) {
+                node.remove();
+            }
+        }
         // Insert
-        fileCards.forEach(this.dependencies.dom.insert);
+        tempSpan.replaceWith(...fileCards);
         this.dependencies.history.addStep();
+        cursors.restore();
     }
 
     renderDownloadBox(attachment) {
@@ -88,5 +105,11 @@ export class FilePlugin extends Plugin {
         });
         const { name: filename, mimetype, id } = attachment;
         return renderStaticFileBox(filename, mimetype, url, id);
+    }
+
+    cleanForSave({ root } = {}) {
+        for (const el of root.querySelectorAll(".o_file_box:has([data-mimetype^='uploading'])")) {
+            el.remove();
+        }
     }
 }

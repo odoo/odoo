@@ -1344,7 +1344,7 @@ export class DeletePlugin extends Plugin {
         }
 
         if (
-            (isEmpty(closestUnmergeable) ||
+            (isEmpty(closestElement(closestUnmergeable)) ||
                 this.getResource("is_empty_predicates").some((p) => p(closestUnmergeable))) &&
             !this.isUnremovable(closestUnmergeable)
         ) {

@@ -9,9 +9,10 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
-import { insertText } from "./_helpers/user_actions";
+import { getContent, setSelection } from "./_helpers/selection";
+import { insertText, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
+import { dispatchCleanForSave } from "./_helpers/dispatch";
 
 const configWithEmbeddedFile = {
     Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
@@ -22,17 +23,27 @@ const configWithoutEmbeddedFile = {
     Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS],
 };
 
-const patchUpload = (editor) => {
+const patchUpload = (editor, nbrFiles = 1, lag = 0) => {
     const mockedUploadPromise = new Promise((resolve) => {
         patchWithCleanup(editor.services.uploadLocalFiles, {
             async upload() {
+                if (lag) {
+                    await new Promise((r) => setTimeout(r, lag));
+                }
+                const files = [];
+                for (let i = 0; i < nbrFiles; i++) {
+                    files.push({ id: i + 1, name: "file.txt", mimetype: "text/plain" });
+                }
                 resolve();
-                return [{ id: 1, name: "file.txt" }];
+                return files;
             },
         });
     });
     return mockedUploadPromise;
 };
+const fileBoxRegex =
+    /<span class="o_file_box (?:(?!mimetype).)+mimetype="([^"]+)"(?:(?!mimetype).)+<\/span>/g;
+const getReplacedContent = (el) => getContent(el).replaceAll(fileBoxRegex, "<fileBox:$1>");
 
 describe("file command", () => {
     test("/file uploads a file via the system's selector, skipping the media dialog", async () => {
@@ -67,6 +78,85 @@ describe("file command", () => {
         expect(fileCard.firstElementChild).toHaveClass(["alert", "alert-info"]);
         // No download button in file card.
         expect(".o_file_box .fa-download").toHaveCount(0);
+    });
+    test("file uploaded with network lag should insert a file card at the initial selection location", async () => {
+        const { editor, el } = await setupEditor("<p>a[]b<b>c</b></p>", {
+            config: configWithoutEmbeddedFile,
+        });
+        patchUpload(editor, 1, 50);
+        execCommand(editor, "uploadFile");
+        // should have temporay card
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeff[]b<b>c</b></p>`);
+        // move selection
+        const bChild = el.querySelector("p>b");
+        setSelection({ anchorNode: bChild, anchorOffset: 0, focusNode: bChild, focusOffset: 0 });
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeffb<b>[]c</b></p>`);
+        // wait for the file to be uploaded
+        await new Promise((r) => setTimeout(r, 100));
+        // temporay card should be replaced with real file card
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:text/plain>\ufeffb<b>[]c</b></p>`);
+    });
+    test("multiple file uploaded with network lag should insert files cards at the initial selection location", async () => {
+        const { editor, el } = await setupEditor("<p>a[]b<b>c</b></p>", {
+            config: configWithoutEmbeddedFile,
+        });
+        patchUpload(editor, 2, 50);
+        execCommand(editor, "uploadFile");
+        // should have temporay card
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeff[]b<b>c</b></p>`);
+        // move selection
+        const bChild = el.querySelector("p>b");
+        setSelection({ anchorNode: bChild, anchorOffset: 0, focusNode: bChild, focusOffset: 0 });
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeffb<b>[]c</b></p>`);
+        // wait for the file to be uploaded
+        await new Promise((r) => setTimeout(r, 100));
+        // temporay card should be replaced with real file card
+        expect(getReplacedContent(el)).toBe(
+            `<p>a\ufeff<fileBox:text/plain>\ufeff<fileBox:text/plain>\ufeffb<b>[]c</b></p>`
+        );
+    });
+    test("uploaded with lag handle undo correctly", async () => {
+        const { editor, el } = await setupEditor("<p>a[]b<b>c</b></p>", {
+            config: configWithoutEmbeddedFile,
+        });
+        patchUpload(editor, 1, 50);
+        execCommand(editor, "uploadFile");
+        // should have temporay card
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeff[]b<b>c</b></p>`);
+        // move selection
+        const bChild = el.querySelector("p>b");
+        setSelection({ anchorNode: bChild, anchorOffset: 0, focusNode: bChild, focusOffset: 0 });
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeffb<b>[]c</b></p>`);
+        await insertText(editor, "x");
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeffb<b>x[]c</b></p>`);
+        // wait for the file to be uploaded
+        await new Promise((r) => setTimeout(r, 100));
+        // temporary card should be replaced with real file card
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:text/plain>\ufeffb<b>x[]c</b></p>`);
+        undo(editor);
+        expect(getReplacedContent(el)).toBe(`<p>ab<b>x[]c</b></p>`);
+        undo(editor);
+        expect(getReplacedContent(el)).toBe(`<p>ab<b>[]c</b></p>`);
+    });
+    test("temporary file card should not be saved", async () => {
+        const { editor, el } = await setupEditor("<p>a[]b<b>c</b></p>", {
+            config: configWithoutEmbeddedFile,
+        });
+        patchUpload(editor, 1, 50);
+        execCommand(editor, "uploadFile");
+        // should have temporay card
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeff[]b<b>c</b></p>`);
+        // move selection
+        const bChild = el.querySelector("p>b");
+        setSelection({ anchorNode: bChild, anchorOffset: 0, focusNode: bChild, focusOffset: 0 });
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeffb<b>[]c</b></p>`);
+        await insertText(editor, "x");
+        expect(getReplacedContent(el)).toBe(`<p>a\ufeff<fileBox:uploading>\ufeffb<b>x[]c</b></p>`);
+        // wait for the file to be uploaded
+        dispatchCleanForSave(editor, { root: el });
+        // wait to ensure the cleanForSave handlers did not create issue when upload finish
+        await new Promise((r) => setTimeout(r, 100));
+        expect(getReplacedContent(el)).toBe(`<p>ab<b>x[]c</b></p>`);
     });
 });
 
@@ -170,7 +260,7 @@ describe("zero width no-break space", () => {
 
     test("should not add two contiguous ZWNBSP between two file cards", async () => {
         const { editor, el } = await setupEditor("<p>[]<br></p>", {
-            config: { ...configWithEmbeddedFile, resources: {} }, // disable embedded component rendering
+            config: { ...configWithEmbeddedFile, resources: { embedded_components: [] } }, // disable embedded component rendering
         });
         let mockUpload = patchUpload(editor);
         execCommand(editor, "uploadFile");
@@ -188,7 +278,7 @@ describe("zero width no-break space", () => {
     test("should not add two contiguous ZWNBSP between two file cards (2)", async () => {
         const { el } = await setupEditor(
             '<p>abc<span data-embedded="file" class="o_file_box"></span>x[]<span data-embedded="file" class="o_file_box"></span></p>',
-            { config: { ...configWithEmbeddedFile, resources: {} } } // disable embedded component rendering
+            { config: { ...configWithEmbeddedFile, resources: { embedded_components: [] } } } // disable embedded component rendering
         );
         expect(getContent(el)).toBe(
             '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeffx[]\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
