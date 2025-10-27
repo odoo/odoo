@@ -484,8 +484,10 @@ class PurchaseOrder(models.Model):
             if self.env.context.get('is_reminder'):
                 access_opt['title'] = _('View')
             else:
-                access_opt['title'] = _('View Quotation') if self.state in ('draft', 'sent') else _('View Order')
-                access_opt['url'] = self.get_confirm_url()
+                access_opt.update(
+                    title=_("View Quotation") if self.state in ('draft', 'sent') else _("View Order"),
+                    url=self.get_base_url() + self.get_confirm_url(),
+                )
 
         return groups
 
