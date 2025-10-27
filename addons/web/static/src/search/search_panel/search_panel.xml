@@ -185,8 +185,8 @@
             t-att-class="isChildList ? env.isSmall ? '' : 'o_treeEntry' : 'ps-0'"
             >
             <header
-                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0 border-0"
-                t-att-class="{'active text-900 fw-bold': state.active[section.id] === valueId}"
+                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0"
+                t-attf-class="{{state.active[section.id] === valueId ? 'active text-900 fw-bold' : 'border-0'}}"
                 t-on-click="() => this.toggleCategory(section, value)"
                 >
                 <div
