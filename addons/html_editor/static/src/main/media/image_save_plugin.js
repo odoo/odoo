@@ -195,6 +195,7 @@ export class ImageSavePlugin extends Plugin {
         } else {
             el.setAttribute("src", newAttachmentSrc);
         }
+        this.dispatchTo("on_image_saved_handlers", { imageEl: el });
     }
 
     getRecordInfo(editableEl = null) {
