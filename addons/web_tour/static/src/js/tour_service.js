@@ -11,6 +11,7 @@ import {
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
 } from "@web_tour/js/tour_recorder/tour_recorder_state";
 import { redirect } from "@web/core/utils/urls";
+import { _t } from "@web/core/l10n/translation";
 
 class OnboardingItem extends Component {
     static components = { DropdownItem };
@@ -69,6 +70,7 @@ export class TourService {
         this.overlay = services["overlay"];
         this.toursEnabled = session?.tour_enabled;
         this.removePointer = () => {};
+        this.removeTourRecorder = () => {};
         this.addOnboardingItemInDebugMenu();
 
         if (window.frameElement) {
@@ -143,6 +145,12 @@ export class TourService {
             },
             { sequence: 99999 }
         );
+
+        this.removeTourRecorder = () => {
+            remove();
+            browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
+            tourRecorderState.clear();
+        };
     }
 
     /**
@@ -271,6 +279,7 @@ export class TourService {
      */
     async startTour(name, options = {}) {
         this.removePointer();
+        this.removeTourRecorder();
         const tour = await this.getTour(name, options);
         if (!tour) {
             return;
@@ -334,5 +343,20 @@ registry.category("services").add("tour_service", {
         odoo.startTour = service.startTour.bind(service);
         odoo.isTourReady = service.isTourReady.bind(service);
         return service;
+    },
+});
+
+registry.category("command_provider").add("tour_recorder", {
+    provide: (env, options) => {
+        const result = [];
+        if (options.searchValue.toLowerCase() === "record") {
+            result.push({
+                action() {
+                    env.services["tour_service"].startTourRecorder();
+                },
+                name: _t("Enable the tour recorder"),
+            });
+        }
+        return result;
     },
 });
