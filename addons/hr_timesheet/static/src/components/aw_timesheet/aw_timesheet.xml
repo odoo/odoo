@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="hr_timesheet.ActivityWatchTimesheet">
+    <div class="o_activitywatch_sync d-flex">
+
+      <!-- LEFT SIDE: suggestions -->
+      <div class="o_suggestions w-50 pe-3">
+        <t t-if="state.loading">
+          <span>Loading ActivityWatch data...</span>
+        </t>
+        <t t-else="">
+          <t t-foreach="Object.keys(state.grouped)" t-as="groupKey" t-key="groupKey">
+            <div class="card mb-3 p-3 shadow-sm">
+              <!-- group title -->
+              <t t-set="ids" t-value="groupKey.split('_')"/>
+              <t t-set="project_id" t-value="parseId(ids[0])"/>
+              <t t-set="task_id" t-value="parseId(ids[1])"/>
+              <h6>
+                Project <t t-esc="project_id or 'Unknown Project'"/> /
+                Task <t t-esc="task_id or 'Unknown Task'"/>
+              </h6>
+
+              <!-- list of activities inside this group -->
+              <ul class="list-group mb-2">
+                <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center py-1"
+                    t-att-class="{
+                      'bg-danger-subtle': this.isSuggestionClicked(groupKey, title),
+                    }"
+                    t-on-click="() => this.onSelectSuggestion(groupKey, title)"
+                  >
+                    <span><t t-esc="title"/></span>
+                    <span class="badge bg-light text-dark">
+                      <t t-esc="(state.grouped[groupKey][title] / 60).toFixed(1)"/> min
+                    </span>
+                    <button
+                      class="btn btn-primary"
+                      t-on-click="() => this.onTake(groupKey, title)"
+                    >
+                      Take
+                    </button>
+
+                    <button
+                      class="btn btn-secondary"
+                      t-on-click="() => this.onDelete(groupKey, title)"
+                    >
+                      Delete
+                    </button>
+                  </li>
+                </t>
+              </ul>
+            </div>
+          </t>
+        </t>
+      </div>
+
+      <!-- RIGHT SIDE: form + billable + non-billable -->
+      <div class="o_form flex-grow-1 border-start ps-3">
+
+        <!-- Timesheet form -->
+        <div class="mb-4">
+          <t t-if="!state.selected">
+            <TimesheetTimer/>
+          </t>
+          <t t-else="">
+            <TimesheetTimer data="state.selectedData"/>
+          </t>
+        </div>
+
+        <!-- Billable section
+        <div class="mb-4">
+          <h6 class="fw-bold text-success mb-2">
+            Billable -
+            <t t-esc="state.billableTime.toFixed(2)"/>h
+            (<t t-esc="state.billablePercentage.toFixed(1)"/>%)
+          </h6>
+          <t t-if="state.billableTimesheets.length === 0">
+            <p class="text-muted small mb-0">No billable timesheets today.</p>
+          </t>
+          <t t-else="">
+            <ul class="list-group list-group-flush">
+              <t t-foreach="state.billableTimesheets" t-as="tsh" t-key="tsh.id">
+                <li class="list-group-item py-1">
+                  <div class="fw-semibold"><t t-esc="tsh.name"/></div>
+                  <small class="text-muted">
+                    <t t-esc="tsh.unit_amount"/>h —
+                    <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/> /
+                    <t t-esc="tsh.date"/>
+                  </small>
+                </li>
+              </t>
+            </ul>
+          </t>
+        </div> -->
+
+        <!-- Non-Billable section -->
+        <div>
+          <h6 class="fw-bold text-secondary mb-2">
+            Non-Billable -
+            <t t-esc="state.nonBillableTime.toFixed(2)"/>h
+            (<t t-esc="state.nonBillablePercentage.toFixed(1)"/>%)
+          </h6>
+          <t t-if="state.nonBillableTimesheets.length === 0">
+            <p class="text-muted small mb-0">No non-billable timesheets today.</p>
+          </t>
+          <t t-else="">
+            <ul class="list-group list-group-flush">
+              <t t-foreach="state.nonBillableTimesheets" t-as="tsh" t-key="tsh.id">
+                <li class="list-group-item py-1">
+                  <div class="fw-semibold"><t t-esc="tsh.name"/></div>
+                  <small class="text-muted">
+                    <t t-esc="tsh.unit_amount"/>h —
+                    <t t-esc="tsh.project_id[1]"/> / <t t-esc="tsh.task_id[1]"/> /
+                    <t t-esc="tsh.date"/>
+                  </small>
+                </li>
+              </t>
+            </ul>
+          </t>
+        </div>
+      </div>
+    </div>
+  </t>
+</templates>

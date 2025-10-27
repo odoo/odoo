@@ -2,17 +2,138 @@
 
 import re
 from collections import defaultdict
+from copy import deepcopy
 from datetime import datetime, time
 from statistics import mode
 
+import re
+
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
+
+    def get_events(self):
+        now = datetime.today()
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        start = start_of_day.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        end = (now + relativedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT) # for test, else should be now
+
+        def get_planning_slots():
+            res = []
+            if not self.env['ir.module.module']._get('planning').state == 'installed':
+                return res
+
+            fields = ['name', 'start_datetime', 'end_datetime']
+            if self.env['ir.module.module']._get('project_forecast').state == 'installed':
+                fields.append('project_id')
+
+            for slot in self.env["planning.slot"].search_read(
+                domain=[
+                    ('user_id', '=', self.env.user.id),
+                    ('start_datetime', '<=', end),
+                    ('end_datetime', '>=', start),
+                ],
+                fields=fields,
+                order='start_datetime', # assuming no overlap
+            ):
+                for formated_field_name, field_name in {"start": "start_datetime", "stop": "end_datetime"}.items():
+                    slot[formated_field_name] = slot[field_name]
+                    del slot[field_name]
+
+                slot['type'] = 'planning_slot'
+                slot['name'] = self.env._("Planning Slot - %(name)s", name=slot['name'])
+                if project:=slot.get("project_id"):
+                    slot["project_id"] = project[0]
+                res.append(slot)
+
+            return res
+
+        def get_calendar_events():
+            res = []
+            if self.env['ir.module.module']._get('calendar').state != 'installed':
+                return res
+
+            for event in self.env["calendar.event"].search_read(
+                domain=[
+                    ('user_id', '=', self.env.user.id),
+                    ('start', '<=', end),
+                    ('stop', '>=', start),
+                ],
+                fields=['name', 'start', 'stop', 'partner_ids'],
+                order='start', # assuming no overlap
+            ):
+                partner_ids = self.env["res.partner"].browse(list(filter(lambda id: id != self.env.user.partner_id.id, event["partner_ids"])))
+                del event["partner_ids"]
+
+                # for poc simplicity, i'm assuming that partner_ids contains at most partner linked to a project
+                # we need to decide later on how timesheeting if more than customer are on a meet
+                partners_linked_to_project = partner_ids.filtered(lambda p: p.project_ids)
+                if partners_linked_to_project:
+                    # assuming that client is linked to one project
+                    # to check later, how to deal with customer having more than a project, on which one timesheeting
+                    project_id = partners_linked_to_project[0].project_ids[0]
+                    event["project_id"] = project_id.id
+
+                event['type'] = 'calendar_event'
+                event["name"] = self.env._("Calendar Event - %(name)s", name=event["name"])
+                res.append(event)
+
+            return res
+
+        def merge(ranges, intervals_to_include):
+            if len(intervals_to_include) == 0:
+                return ranges
+
+            size = len(ranges)
+            if size == 0:
+                return intervals_to_include
+
+            gaps = []
+            if intervals_to_include[0]['start'] < ranges[0]['start']:
+                gaps.append((intervals_to_include[0]['start'], ranges[0]['start']))
+
+            for i in range(size-1):
+                if ranges[i]['stop'] < ranges[i+1]['start']:
+                    gaps.append((ranges[i]['stop'], ranges[i+1]['start']))
+
+            if intervals_to_include[-1]['stop'] > ranges[-1]['stop']:
+                gaps.append((ranges[-1]['stop'], intervals_to_include[-1]['stop']))
+
+            j = 0
+            res = ranges
+            for gap in gaps:
+                # advance if ranges not intersecting with gap
+                while j < len(intervals_to_include) and intervals_to_include[j]['stop'] <= gap[0]:
+                    j += 1
+
+                if j ==  len(intervals_to_include):
+                    break
+
+                # move to next gap if no ranges intersecting with the gap
+                if intervals_to_include[j]['start'] >= gap[1]:
+                    continue
+
+                interval = deepcopy(intervals_to_include[j])
+                interval['start'] = max(gap[0], interval['start'])
+                interval['stop'] = min(gap[1], interval['stop'])
+
+                res.append(interval)
+
+            return sorted(res, key=lambda r: r['start'])
+
+        # priority order can be discussed later, for now, calendar then planning
+        ranges = []
+        for userRanges in [get_calendar_events(), get_planning_slots()]: # order is important and can be configurable by user
+            ranges = merge(ranges, userRanges)
+
+        return ranges
 
     def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id

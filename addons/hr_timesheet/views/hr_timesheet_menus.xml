@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="action_activitywatch_sync" model="ir.actions.client">
+        <field name="name">ActivityWatch Sync</field>
+        <field name="tag">hr_timesheet_activitywatch_action</field>
+    </record>
+    
     <menuitem id="timesheet_menu_root"
               name="Timesheets"
               sequence="75"
@@ -60,5 +66,10 @@
                   groups="base.group_system"
                   sequence="100"
         />
+        <menuitem id="menu_activitywatch_sync"
+                name="ActivityWatch"
+                action="action_activitywatch_sync"
+                sequence="200"
+            />
     </menuitem>
 </odoo>
