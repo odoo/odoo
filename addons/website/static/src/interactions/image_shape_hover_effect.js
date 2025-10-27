@@ -137,7 +137,7 @@ export class ImageShapeHoverEffect extends Interaction {
                 return;
             }
             this.adjustImageSourceFrom(preloadedImg);
-            this.lastImgSrc = preloadedImg.getAttribute("src");
+            this.hoveringImgSrc = preloadedImg.getAttribute("src");
             this.el.onload = () => {
                 resolve();
             };
@@ -163,7 +163,3 @@ export class ImageShapeHoverEffect extends Interaction {
 registry
     .category("public.interactions")
     .add("website.image_shape_hover_effect", ImageShapeHoverEffect);
-
-registry.category("public.interactions.edit").add("website.image_shape_hover_effect", {
-    Interaction: ImageShapeHoverEffect,
-});
