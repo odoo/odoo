@@ -2406,11 +2406,13 @@ export const accountTaxHelpers = {
             ["", expected_base_amount - current_base_amount, company.currency_id],
         ]) {
             const target_factors = sorted_base_lines.map((base_line) => ({
-                factor: Math.abs(
-                    (base_line.tax_details.total_excluded_currency +
-                        base_line.tax_details.delta_total_excluded_currency) /
-                        current_base_amount_currency
-                ),
+                factor: current_base_amount_currency
+                    ? Math.abs(
+                          (base_line.tax_details.total_excluded_currency +
+                              base_line.tax_details.delta_total_excluded_currency) /
+                              current_base_amount_currency
+                      )
+                    : 0.0,
                 base_line: base_line,
             }));
             const amounts_to_distribute = this.distribute_delta_amount_smoothly(
