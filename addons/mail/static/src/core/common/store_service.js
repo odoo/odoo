@@ -408,7 +408,9 @@ export class Store extends BaseStore {
                 // Prevent duplicate inbox push notifications since they're already handled by
                 // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
                 // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
-                const isInbox = this.store.self.notification_preference === "inbox" && model !== "discuss.channel";
+                const isInbox =
+                    this.store.self.main_user_id?.notification_type === "inbox" &&
+                    model !== "discuss.channel";
                 if ((isTabFocused && thread?.isDisplayed) || isInbox) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
