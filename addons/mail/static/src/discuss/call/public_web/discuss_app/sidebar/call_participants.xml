@@ -67,10 +67,10 @@
     <t t-name="mail.DiscussSidebarCallParticipants.participant">
         <div class="o-mail-DiscussSidebarCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="attClass" t-on-click="(ev) => this.onClickParticipant(ev, session)">
             <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px;margin:1px;">
-                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle object-fit-cover" t-att-src="session.channel_member_id.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar" t-att-title="session.channel_member_id.name"/>
+                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle object-fit-cover" t-att-src="session.channel_member_id?.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar" t-att-title="session.channel_member_id?.name"/>
             </div>
-            <span t-if="!isCompact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bold smaller user-select-none" t-att-title="session.channel_member_id.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
-                <t t-esc="session.channel_member_id.name"/>
+            <span t-if="!isCompact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bold smaller user-select-none" t-att-title="session.channel_member_id?.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
+                <t t-esc="session.channel_member_id?.name"/>
             </span>
             <div t-if="!isCompact" class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarCallParticipants-status small opacity-75" t-att-class="{ 'position-absolute bottom-0 end-0 bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': isCompact, 'ms-1 d-flex align-items-center justify-content-center': !isCompact }">
