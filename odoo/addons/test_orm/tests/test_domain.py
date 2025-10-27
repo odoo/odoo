@@ -25,7 +25,7 @@ class TestDomain(TransactionExpressionCase):
         # Existing rows/tuples will be undefined/empty
         self.env['ir.model.fields'].create({
             'name': 'x_bool_new_undefined',
-            'model_id': self.env.ref('test_orm.model_domain_bool').id,
+            'model_id': self.env.ref('test_orm.model_test_domain_bool').id,
             'field_description': 'A new boolean column',
             'ttype': 'boolean',
         })
@@ -33,7 +33,7 @@ class TestDomain(TransactionExpressionCase):
         self.env.ref('test_orm.bool_3').write({'x_bool_new_undefined': True})
         self.env.ref('test_orm.bool_4').write({'x_bool_new_undefined': False})
 
-        model = self.env['domain.bool']
+        model = self.env['test_domain.bool']
         all_bool = model.search([])
         for f in ['bool_true', 'bool_false', 'bool_undefined', 'x_bool_new_undefined']:
             eq_1 = self._search(model, [(f, '=', False)])
@@ -48,7 +48,7 @@ class TestDomain(TransactionExpressionCase):
             self.assertEqual(neq_1 + neq_2, all_bool, 'not True + not False != all')
 
     def test_empty_int(self):
-        EmptyInt = self.env['test_orm.empty_int']
+        EmptyInt = self.env['test_domain.empty_int']
         records = EmptyInt.create([
             {'number': 42},     # stored as 42
             {'number': 0},      # stored as 0
@@ -61,7 +61,7 @@ class TestDomain(TransactionExpressionCase):
         # check database value
         self.env.flush_all()
 
-        sql = SQL("SELECT number FROM test_orm_empty_int WHERE id IN %s ORDER BY id", records._ids)
+        sql = SQL("SELECT number FROM test_domain_empty_int WHERE id IN %s ORDER BY id", records._ids)
         rows = self.env.execute_query(sql)
         self.assertEqual([row[0] for row in rows], [42, 0, 0, None])
 
@@ -97,7 +97,7 @@ class TestDomain(TransactionExpressionCase):
                 )
 
     def test_empty_char(self):
-        EmptyChar = self.env['test_orm.empty_char']
+        EmptyChar = self.env['test_domain.empty_char']
         records = EmptyChar.create([
             {'name': 'name'},
             {'name': ''},      # stored as ''
@@ -110,7 +110,7 @@ class TestDomain(TransactionExpressionCase):
         # check database value
         self.env.flush_all()
 
-        sql = SQL("SELECT name FROM test_orm_empty_char WHERE id IN %s ORDER BY id", records._ids)
+        sql = SQL("SELECT name FROM test_domain_empty_char WHERE id IN %s ORDER BY id", records._ids)
         rows = self.env.execute_query(sql)
         self.assertEqual([row[0] for row in rows], ['name', '', None, None])
 
@@ -152,7 +152,7 @@ class TestDomain(TransactionExpressionCase):
         self.assertListEqual(self._search(EmptyChar, ['!', ('name', '=like', 'na%')]).mapped('name'), ['', False, False])
 
     def test_empty_translation(self):
-        records_en = self.env['test_orm.indexed_translation'].with_context(lang='en_US').create([
+        records_en = self.env['test_domain.indexed_translation'].with_context(lang='en_US').create([
             {'name': 'English'},
             {'name': 'English'},
             {'name': 'English'},
@@ -199,8 +199,8 @@ class TestDomain(TransactionExpressionCase):
                 )
 
     def test_anys_many2one(self):
-        Parent = self.env['test_orm.any.parent']
-        Child = self.env['test_orm.any.child']
+        Parent = self.env['test_domain.any.parent']
+        Child = self.env['test_domain.any.child']
 
         parent_1, parent_2 = Parent.create([
             {
@@ -249,7 +249,7 @@ class TestDomain(TransactionExpressionCase):
         self.assertEqual(res_search, parent_2.child_ids)
 
     def test_anys_many2one_implicit(self):
-        Parent = self.env['test_orm.any.parent']
+        Parent = self.env['test_domain.any.parent']
 
         parent_1, parent_2 = Parent.create([
             {
@@ -275,7 +275,7 @@ class TestDomain(TransactionExpressionCase):
         self.assertEqual(res_search, parent_2)
 
     def test_anys_one2many(self):
-        Parent = self.env['test_orm.any.parent']
+        Parent = self.env['test_domain.any.parent']
 
         parent_1, parent_2, parent_3 = Parent.create([
             {
@@ -313,7 +313,7 @@ class TestDomain(TransactionExpressionCase):
 
     def test_anys_many2many(self):
         # bypass_search_access + without
-        Child = self.env['test_orm.any.child']
+        Child = self.env['test_domain.any.child']
 
         child_1, child_2, child_3 = Child.create([
             {
@@ -341,7 +341,7 @@ class TestDomain(TransactionExpressionCase):
 class TestDomainComplement(TransactionExpressionCase):
 
     def test_inequalities_int(self):
-        Model = self.env['test_orm.empty_int']
+        Model = self.env['test_domain.empty_int']
         Model.create([{}])
         Model.create([{'number': n} for n in range(-5, 6)])
         self._search(Model, [('number', '>', 2)])
@@ -350,7 +350,7 @@ class TestDomainComplement(TransactionExpressionCase):
         self._search(Model, [('number', '<=', 1)])
 
     def test_inequalities_float(self):
-        Model = self.env['test_orm.mixed']
+        Model = self.env['test_domain.mixed']
         Model.create([{}])
         Model.create([{'number2': n} for n in (-5, -3.3, 0.0, 0.1, 3, 4.5)])
         self._search(Model, [('number2', '>', 2)])
@@ -360,7 +360,7 @@ class TestDomainComplement(TransactionExpressionCase):
         self._search(Model, [('number2', '<=', 1)])
 
     def test_inequalities_char(self):
-        Model = self.env['test_orm.empty_char']
+        Model = self.env['test_domain.empty_char']
         Model.create([{}])
         Model.create([{'name': n} for n in (False, '', 'hello', 'world')])
         self._search(Model, [('name', '>', 'a')])
@@ -370,7 +370,7 @@ class TestDomainComplement(TransactionExpressionCase):
         self._search(Model, [('name', '<', '')])
 
     def test_inequalities_datetime(self):
-        Model = self.env['test_orm.mixed']
+        Model = self.env['test_domain.mixed']
         Model.create([{}])
         Model.create([{'moment': datetime(2000, 5, n)} for n in range(5, 10)])
         self._search(Model, [('moment', '>', datetime(2000, 5, 3))])
@@ -380,7 +380,7 @@ class TestDomainComplement(TransactionExpressionCase):
         self._search(Model, [('moment', '<=', datetime(2000, 5, 7))])
 
     def test_inequalities_m2o(self):
-        Model = self.env['test_orm.model_active_field']
+        Model = self.env['test_domain.model_active_field']
 
         active_parent = Model.create({'name': 'Parent'})
         Model.create({'name': "Child of active", 'parent_id': active_parent.id})
@@ -400,7 +400,7 @@ class TestDomainOptimize(TransactionCase):
     number_domain = Domain('number', '>', 5)
 
     def test_bool_optimize(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         self.assertIs(Domain.TRUE.optimize(model), Domain.TRUE)
         self.assertIs(Domain.FALSE.optimize(model), Domain.FALSE)
 
@@ -418,19 +418,19 @@ class TestDomainOptimize(TransactionCase):
         self.assertIsInstance(Domain('a', 'any', [('x', '>', 1)]).value, list)
 
     def test_condition_optimize_optimal(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         domain = self.number_domain
         self.assertIs(domain.optimize(model), domain, "Domain is already optimized")
 
     def test_condition_optimize_invalid_field(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         domain = Domain("xxx_inexisting", "=", False)
         with self.assertRaises(ValueError):
             # fields must be validated
             domain.optimize(model)
 
     def test_condition_optimize_search(self):
-        model = self.env['test_orm.bar']
+        model = self.env['test_domain.bar']
         foo = model.foo.create({"name": "ok"})
         self.assertEqual(
             Domain('foo', '=', foo.id).optimize_full(model),
@@ -443,7 +443,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_traverse(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         self.assertEqual(
             Domain('currency_id.id', '>', 5).optimize(model),
             Domain('currency_id', 'any', Domain('id', '>', 5)),
@@ -454,7 +454,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_in(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         domain = Domain('id', 'in', range(5)).optimize(model)
         self.assertIsInstance(domain.value, OrderedSet)
         domain = Domain('id', 'in', [9, 99]).optimize(model)
@@ -471,7 +471,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_any(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
 
         domain = Domain('currency_id', 'any!', model.currency_id._search([]))
         self.assertIs(domain.optimize(model), domain, "Idempotent with a Query value")
@@ -494,13 +494,13 @@ class TestDomainOptimize(TransactionCase):
         self.assertIs(domain.optimize(model), domain, "Idempotent")
 
     def test_condition_optimize_any_non_relational(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         domain = Domain('number', 'any', Domain('id', '>', 0))
         with self.assertRaises(ValueError):
             domain.optimize(model)
 
     def test_condition_optimize_any_id(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         self.assertEqual(
             Domain('id', 'any', self.number_domain).optimize(model),
             self.number_domain,
@@ -511,7 +511,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_like(self):
-        model = self.env['test_orm.message']
+        model = self.env['test_domain.message']
         domain = Domain('name', 'like', 'ok')
         self.assertIs(
             domain.optimize(model),
@@ -538,7 +538,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_like_relational(self):
-        model = self.env['test_orm.message']
+        model = self.env['test_domain.message']
         self.assertEqual(
             Domain('discussion', 'like', '').optimize(model),
             Domain('discussion', 'not in', OrderedSet([False])),
@@ -556,7 +556,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_bool(self):
-        model = self.env['test_orm.message']
+        model = self.env['test_domain.message']
         is_important = Domain('important', 'in', OrderedSet([True]))
         self.assertIs(
             is_important.optimize(model),
@@ -586,7 +586,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_date(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         self.assertEqual(
             Domain('date', '=', date(2024, 1, 5)).optimize(model),
             Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
@@ -627,7 +627,7 @@ class TestDomainOptimize(TransactionCase):
             self.assertEqual(list(Domain('date', '=', 'today').optimize_full(model).value), [date(2024, 1, 5)])
 
     def test_condition_optimize_datetime(self):
-        model = self.env['test_orm.mixed'].with_context(tz='UTC')
+        model = self.env['test_domain.mixed'].with_context(tz='UTC')
         self.assertEqual(
             Domain('moment', '=', date(2024, 1, 5)).optimize(model),
             Domain('moment', '<', datetime(2024, 1, 5, second=1))
@@ -687,7 +687,7 @@ class TestDomainOptimize(TransactionCase):
             self.assertIn(datetime(2024, 1, 5), [v for cond in today_domain.iter_conditions() for v in ([cond.value] if isinstance(cond.value, datetime) else cond.value)])
 
     def test_condition_optimize_datetime_timezone(self):
-        model = self.env['test_orm.mixed'].with_context(tz='Europe/Brussels')
+        model = self.env['test_domain.mixed'].with_context(tz='Europe/Brussels')
         self.assertEqual(
             Domain('moment', '>=', '2024-01-01 10:00:00').optimize(model),
             Domain('moment', '>=', datetime(2024, 1, 1, 10)),
@@ -705,7 +705,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_datetime_millisecond(self):
-        model = self.env['test_orm.mixed'].with_context(tz='UTC')
+        model = self.env['test_domain.mixed'].with_context(tz='UTC')
         self.assertEqual(
             Domain('moment', '=', '2024-01-05').optimize(model),
             Domain('moment', '<', datetime(2024, 1, 5, second=1))
@@ -736,7 +736,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_maybe_eq(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         self.assertEqual(
             Domain('number', '=?', 5).optimize(model),
             Domain('number', '=', 5).optimize(model),
@@ -747,7 +747,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_child_parent_of(self):
-        model = self.env['test_orm.category']
+        model = self.env['test_domain.category']
         categ = model.create({'name': 'parent'})
         categ_child = model.create({'name': 'child', 'parent': categ.id})
         self.assertEqual(
@@ -767,7 +767,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_sudo_optimize(self):
-        model = self.env['test_orm.discussion'].with_user(self.env.ref('base.public_user'))
+        model = self.env['test_domain.discussion'].with_user(self.env.ref('base.public_user'))
         self.assertEqual(
             Domain('moderator', 'any', Domain('login', 'like', 'one')).optimize_full(model),
             Domain('moderator', 'any', Domain('login', 'like', 'one')),
@@ -793,7 +793,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_nary_optimize_sort(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         self.assertEqual(
             Domain.AND([
                 Domain('number', '=', 5),
@@ -813,7 +813,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_nary_optimize_in(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
 
         def domain(op, values):
             if not values:
@@ -875,7 +875,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_nary_optimize_in_relational(self):
-        model = self.env['test_orm.discussion']
+        model = self.env['test_domain.discussion']
 
         # check when the optimizations are applied, the results are checked
         # by the previous test function
@@ -904,7 +904,7 @@ class TestDomainOptimize(TransactionCase):
             self.assertEqual((~d1 | ~d2).optimize(model), ~d1 | ~d2)
 
     def test_nary_optimize_any(self):
-        model = self.env['test_orm.discussion']
+        model = self.env['test_domain.discussion']
 
         for field_name, left, right in [
             # many2one
@@ -952,7 +952,7 @@ class TestDomainOptimize(TransactionCase):
                 )
 
     def test_nary_optimize_same(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         self.assertEqual(
             (self.number_domain & self.number_domain).optimize(model),
             self.number_domain,
@@ -963,15 +963,15 @@ class TestDomainOptimize(TransactionCase):
             # groups values to check that it is called once
             return [('name', '=', str(tuple(value)))]
 
-        self.patch(self.registry['test_orm.bar'], '_search_foo', search_foo)
-        bar = self.env['test_orm.bar']
+        self.patch(self.registry['test_domain.bar'], '_search_foo', search_foo)
+        bar = self.env['test_domain.bar']
         domain = Domain('foo', '=', 4) | Domain('foo', '=', 5)
         domain = domain.optimize_full(bar)
         self.assertEqual(domain, Domain('name', 'in', OrderedSet(['(4, 5)'])))
 
     @users('admin')  # just so it's not SUPERUSER to be able to de-escalate su.
     def test_bypass_comodel_id_lookup(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_domain.mixed']
         base_domain = Domain('currency_id.id', '=', 2)
         self.assertEqual(  # without sudo
             list(base_domain.optimize_full(model)),

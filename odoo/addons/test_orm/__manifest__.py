@@ -8,6 +8,7 @@
     'data': [
         'data/test_access_rights_data.xml',
         'data/test_action_bindings.xml',
+        'data/test_domain.xml',
         'data/test_orm_data.xml',
         'data/test_translated_field/test_model_data.xml',
         # START
@@ -21,6 +22,7 @@
         'security/test_config/ir.model.access.csv',
         'security/test_convert/ir.model.access.csv',
         'security/test_convert_env/ir.model.access.csv',
+        'security/test_domain/ir.model.access.csv',
         # WIP
         'security/test_html_converter/ir.model.access.csv',
         'security/test_orm/ir.model.access.csv',
