@@ -1858,7 +1858,9 @@ class CustomerPortal(portal.CustomerPortal):
     @http.route('/my/orders/reorder_modal_content', type='json', auth='public', website=True)
     def _get_saleorder_reorder_content_modal(self, order_id, access_token):
         try:
-            sale_order = self._document_check_access('sale.order', order_id, access_token=access_token)
+            sale_order = self._document_check_access(
+                'sale.order', order_id, access_token=access_token,
+            ).with_user(request.env.user).sudo()
         except (AccessError, MissingError):
             return request.redirect('/my')
 
