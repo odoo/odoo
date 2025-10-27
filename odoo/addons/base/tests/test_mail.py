@@ -801,6 +801,42 @@ class TestEmailTools(BaseCase):
                 with self.subTest(pair=pair, charset=charset):
                     self.assertEqual(formataddr(pair, charset), expected)
 
+    def test_email_formataddr_refold(self):
+        cases = [(
+            'Bob, bob@malicious.com',
+            '"Bob, bob@malicious.com"',
+        ), (
+            'Bob the h4ck3r who wants to send an email twice to different people, bob@malicious.com',
+            '"Bob the h4ck3r who wants to send an email twice to different pe..."',
+        ), (
+            'Bob the h4ck3r who wants to send an email twice to different pe"ople, bob@malicious.com',
+            '"Bob the h4ck3r who wants to send an email twice to different pe..."',
+        ), (
+            'Bob the h4ck3r who wants to send an email twice to different p"eople, bob@malicious.com',
+            '"Bob the h4ck3r who wants to send an email twice to different p..."',
+        ), (
+            'Bob the h4ck3r who wants to send an email twice to different ""eople, bob@malicious.com',
+            R'"Bob the h4ck3r who wants to send an email twice to different \"..."',
+        ), (
+            R'Bob the h4ck3r who wants to send an email twice to different \eople, bob@malicious.com',
+            '"Bob the h4ck3r who wants to send an email twice to different ..."',
+        ), (
+            R'\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ',
+            '"..."',
+        )]
+
+        for display_name, expected_display_name in cases:
+            for charset in ('ascii', 'utf-8'):
+                with self.subTest(display_name=display_name, charset=charset):
+                    mailbox = formataddr((display_name, 'test@example.com'))
+                    formatted_display_name, _, email = mailbox.rpartition(" ")
+                    self.assertLessEqual(len(formatted_display_name), 78 - len('Reply-To: '),
+                        f"The display name would be folded on multiple lines, this is a security risk: {formatted_display_name}")
+                    self.assertEqual(formatted_display_name, expected_display_name)
+                    self.assertEqual(email, '<test@example.com>')
+
+            # refold
+
     def test_extract_rfc2822_addresses(self):
         cases = [
             ('"Admin" <admin@example.com>', ['admin@example.com']),

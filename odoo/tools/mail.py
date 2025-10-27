@@ -843,7 +843,10 @@ def formataddr(pair, charset='utf-8'):
             # ascii name, escape it if needed
             # rfc2822 - Internet Message Format
             #   #section-3.4 - Address Specification
+            # ensure the display-name fits on one line, bpo36041
             name = email_addr_escapes_re.sub(r'\\\g<0>', name)
+            if len(name) > 66:  # 78 - len('Reply-To: ""')
+                name = name[:63].rstrip('\\') + '...'
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
 
