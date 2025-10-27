@@ -37,7 +37,7 @@ class TestEnv(common.TransactionCase):
             odoo(
                 record(
                     field("a", name="name"),
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                     id="test_convert.testing",
                 ),
                 uid="base.user_admin",
@@ -53,7 +53,7 @@ class TestEnv(common.TransactionCase):
         self.importer(
             odoo(
                 function(
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                     name="create",
                     eval="[[{'name': 'b'}]]",
                 ),
@@ -61,7 +61,7 @@ class TestEnv(common.TransactionCase):
             ),
         )
 
-        r = self.env['test_convert.usered'].search([])
+        r = self.env['test_convert_env.usered'].search([])
         self.assertEqual(r.name, 'b')
         self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
         self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
@@ -71,7 +71,7 @@ class TestEnv(common.TransactionCase):
             odoo(
                 record(
                     field('c', name="name"),
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                     id="test_convert.testing",
                     uid="base.user_admin",
                 ),
@@ -88,7 +88,7 @@ class TestEnv(common.TransactionCase):
         self.importer(
             odoo(
                 function(
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                     name="create",
                     uid="base.user_admin",
                     eval="[[{'name': 'd'}]]",
@@ -96,7 +96,7 @@ class TestEnv(common.TransactionCase):
                 uid="base.user_root",
             ),
         )
-        r = self.env['test_convert.usered'].search([])
+        r = self.env['test_convert_env.usered'].search([])
         self.assertEqual(r.name, 'd')
         self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
         self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
@@ -106,14 +106,14 @@ class TestEnv(common.TransactionCase):
         self.importer(
             odoo(
                 function(
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                     name="create",
                     eval="[[{'name': 'e'}]]",
                 ),
                 context="{'tz': 'Asia/Kabul'}",
             ),
         )
-        r = self.env['test_convert.usered'].search([])
+        r = self.env['test_convert_env.usered'].search([])
         self.assertEqual(r.name, 'e')
         self.assertEqual(r.tz, 'Asia/Kabul')
 
@@ -122,7 +122,7 @@ class TestEnv(common.TransactionCase):
         self.importer(
             odoo(
                 function(
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                     name="create",
                     context="{'tz': 'Pacific/Apia'}",
                     eval="[[{'name': 'e'}]]",
@@ -130,7 +130,7 @@ class TestEnv(common.TransactionCase):
                 context="{'tz': 'Asia/Kabul'}",
             ),
         )
-        r = self.env['test_convert.usered'].search([])
+        r = self.env['test_convert_env.usered'].search([])
         self.assertEqual(r.name, 'e')
         self.assertEqual(r.tz, 'Pacific/Apia')
 
@@ -140,12 +140,12 @@ class TestEnv(common.TransactionCase):
             odoo(
                 record(
                     field("f", name="name"),
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                 ),
                 context="{'tz': 'America/Knox_IN'}",
             ),
         )
-        r = self.env['test_convert.usered'].search([])
+        r = self.env['test_convert_env.usered'].search([])
         self.assertEqual(r.name, 'f')
         self.assertEqual(r.tz, 'America/Knox_IN')
 
@@ -155,12 +155,12 @@ class TestEnv(common.TransactionCase):
             odoo(
                 record(
                     field("f", name="name"),
-                    model="test_convert.usered",
+                    model="test_convert_env.usered",
                     context="{'tz': 'America/Adak'}",
                 ),
                 context="{'tz': 'America/Knox_IN'}",
             ),
         )
-        r = self.env['test_convert.usered'].search([])
+        r = self.env['test_convert_env.usered'].search([])
         self.assertEqual(r.name, 'f')
         self.assertEqual(r.tz, 'America/Adak')

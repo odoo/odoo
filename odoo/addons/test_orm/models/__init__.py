@@ -9,6 +9,7 @@ from . import (
     test_company_checks,
     test_config,
     test_convert,
+    test_convert_env,
     test_html_converter,
     test_orm,
     test_performance,

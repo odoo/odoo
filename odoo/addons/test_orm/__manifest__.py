@@ -18,9 +18,10 @@
         'security/test_autovacuum/ir.model.access.csv',
         'security/test_check_access/ir.model.access.csv',
         'security/test_company_checks/ir.model.access.csv',
-        # WIP
         'security/test_config/ir.model.access.csv',
         'security/test_convert/ir.model.access.csv',
+        'security/test_convert_env/ir.model.access.csv',
+        # WIP
         'security/test_html_converter/ir.model.access.csv',
         'security/test_orm/ir.model.access.csv',
         'security/test_performance/ir.model.access.csv',
