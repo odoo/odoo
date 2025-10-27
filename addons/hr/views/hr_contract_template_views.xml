@@ -13,7 +13,6 @@
                     </div>
                     <group name="top_info">
                         <group name="top_info_left">
-                            <field name="job_id" groups="hr.group_hr_manager"/>
                             <field name="department_id" groups="hr.group_hr_manager"/>
                         </group>
                         <group name="top_info_right">
@@ -52,7 +51,6 @@
         <field name="arch" type="xml">
             <list string="Contract Templates" default_order='name'>
                 <field name="name"/>
-                <field name="job_id"/>
                 <field name="department_id" optional="show"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="wage" widget="monetary" optional="show"/>
