@@ -22,7 +22,24 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "remove first item in whishlist",
             trigger: '.o_wish_rm:first',
             run: "click",
+<<<<<<< fbf5d4ca20038084c0edead1cf6206fab4294a85
             expectUnloadPage: true,
+||||||| 2c87f3b2b397f268f0e50cb73cd81de992ddd42e
+        },
+        {
+            content: "go back to the store",
+            trigger: "a[href='/shop']",
+            run: "click",
+=======
+        },
+        {
+            trigger: ":not(:has(.my_wish_quantity:visible))",
+        },
+        {
+            content: "go back to the store",
+            trigger: "a[href='/shop']",
+            run: "click",
+>>>>>>> 7ac739282a6cbbd6ebe60224d293ea2a992f413c
         },
         {
             content: "hover card && click on add to wishlist",
