@@ -5,7 +5,7 @@
             <div class="card-body d-flex flex-column gap-1 p-3">
                 <p class="card-title text-start fw-bold mb-0" t-esc="props.poll.poll_question"/>
                 <p class="card-subtitle mb-2 text-muted smaller">
-                    <t t-if="props.allow_multiple_options">Select one or more options</t>
+                    <t t-if="props.poll.allow_multiple_options">Select one or more options</t>
                     <t t-else="">Select one option</t>
                 </p>
                 <div class="o-mail-PollOption rounded" t-foreach="props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="percentageAttStyle(option)" t-att-class="{'o-selected': state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
@@ -19,7 +19,7 @@
                     </div>
                     <label t-else="" class="d-flex justify-content-between p-2 cursor-pointer">
                         <span class="fw-bold me-1 text-truncate" t-esc="option.option_label"/>
-                        <input class="form-check-input" t-att-disabled="state.voting" t-att-checked="state.selectedOptionIds.has(option.id)" t-on-change="(ev) => this.onOptionCheckboxToggle(option.id, ev.target.checked)" type="checkbox"/>
+                        <input class="form-check-input" t-att-disabled="state.voting" t-att-checked="state.selectedOptionIds.has(option.id)" t-on-change="(ev) => this.onOptionCheckboxToggle(option.id, ev.target.checked)" t-att-type="props.poll.allow_multiple_options ? 'checkbox' : 'radio'"/>
                     </label>
                 </div>
                 <div class="d-flex align-items-center mt-2">
