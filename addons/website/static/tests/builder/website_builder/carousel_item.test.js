@@ -16,7 +16,7 @@ test("Reordering a carousel item should update the container title", async () =>
     firstItemEl.classList.add("first-slide");
 
     const editor = getEditor();
-    const builderOptions = editor.shared["builderOptions"];
+    const builderOptions = editor.shared.builderOptions;
     const expectOptionContainerToInclude = (elem) => {
         expect(builderOptions.getContainers().map((container) => container.element)).toInclude(
             elem

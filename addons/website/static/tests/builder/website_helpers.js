@@ -10,7 +10,7 @@ import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { describe } from "@odoo/hoot";
+import { after, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
@@ -34,7 +34,8 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { WebsiteBuilder } from "@website/builder/website_builder";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 
 class Website extends models.Model {
     _name = "website";
@@ -284,83 +285,34 @@ async function openBuilderSidebar(editAssetsLoaded) {
     await animationFrame();
 }
 
-export function addPlugin(...Plugin) {
-    patchWithCleanup(WebsiteBuilder.prototype, {
-        get builderProps() {
-            const props = super.builderProps;
-            props.Plugins.push(...Plugin);
-            return props;
-        },
+export function addPlugin(Plugin) {
+    registry.category("website-plugins").add(Plugin.id, Plugin);
+    after(() => {
+        registry.category("website-plugins").remove(Plugin.id);
     });
 }
 
-export function addOption({
-    selector,
-    exclude,
-    applyTo,
-    template,
-    Component,
-    sequence,
-    cleanForSave,
-    props,
-    editableOnly,
-    title,
-    reloadTarget,
-}) {
+export function addOption(option) {
     const pluginId = uniqueId("test-option");
-    const Class = makeOptionPlugin({
-        pluginId,
-        OptionComponent: Component,
-        template,
-        selector,
-        exclude,
-        applyTo,
-        sequence,
-        cleanForSave,
-        props,
-        editableOnly,
-        title,
-        reloadTarget,
-    });
-    addPlugin(Class);
-}
-function makeOptionPlugin({
-    pluginId,
-    template,
-    selector,
-    exclude,
-    applyTo,
-    sequence,
-    OptionComponent,
-    cleanForSave,
-    props,
-    editableOnly,
-    title,
-    reloadTarget,
-}) {
-    const option = {
-        OptionComponent,
-        template,
-        selector,
-        exclude,
-        applyTo,
-        cleanForSave,
-        props,
-        editableOnly,
-        title,
-        reloadTarget,
-    };
+    const BaseComponent = option.Component || BaseOptionComponent;
+    class Option extends BaseComponent {
+        static components = { ...BaseComponent.components, BorderConfigurator };
+    }
+    const staticProps = { ...option };
+    const sequence = staticProps.sequence;
+    delete staticProps.Component;
+    delete staticProps.sequence;
+    Object.assign(Option, staticProps);
 
-    const Class = {
+    const P = {
         [pluginId]: class extends Plugin {
             static id = pluginId;
             resources = {
-                builder_options: sequence ? withSequence(sequence, option) : option,
+                builder_options: sequence ? withSequence(sequence, Option) : Option,
             };
         },
     }[pluginId];
-
-    return Class;
+    addPlugin(P);
 }
 
 export function addActionOption(actions = {}) {

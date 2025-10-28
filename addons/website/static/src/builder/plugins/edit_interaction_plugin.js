@@ -31,7 +31,7 @@ export class EditInteractionPlugin extends Plugin {
             { once: true }
         );
         const event = new CustomEvent("edit_interaction_plugin_loaded");
-        event.shared = this.config.getShared();
+        event.shared = this.__editor.shared;
         window.parent.document.dispatchEvent(event);
     }
     destroy() {

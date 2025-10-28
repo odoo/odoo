@@ -26,27 +26,19 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    class TestComponent extends BaseOptionComponent {
-        static template = xml`<BasicMany2Many selection="props.selection" model="'test'" setSelection="props.setSelection.bind(this)"/>`;
-        static props = {
-            selection: Array,
-            setSelection: Function,
-        };
-    }
     const selection = reactive([]);
-    addBuilderOption({
-        selector: ".test-options-target",
-        Component: TestComponent,
-        props: {
-            selection: selection,
-            setSelection(newSelection) {
-                selection.length = 0;
-                for (const item of newSelection) {
-                    selection.push(item);
-                }
-            },
-        },
-    });
+    class TestComponent extends BaseOptionComponent {
+        static selector = ".test-options-target";
+        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection="this.setSelection.bind(this)"/>`;
+        selection = selection;
+        setSelection(newSelection) {
+            selection.length = 0;
+            for (const item of newSelection) {
+                selection.push(item);
+            }
+        }
+    }
+    addBuilderOption(TestComponent);
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();

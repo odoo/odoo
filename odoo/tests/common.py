@@ -1268,6 +1268,7 @@ class ChromeBrowser:
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
     def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False):
+        self.throttling_factor = 1
         self._logger = test_case._logger
         self.test_case = test_case
         self.success_signal = success_signal
@@ -1342,6 +1343,14 @@ class ChromeBrowser:
             self.stop()
             exit()
 
+    def throttle(self, factor: int | None) -> None:
+        if not factor:
+            return
+
+        assert 1 <= factor <= 50  # arbitrary upper limit
+        self.throttling_factor = factor
+        self._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': factor})
+
     def stop(self):
         # method may be called during `_open_websocket`
         if hasattr(self, 'ws'):
@@ -1385,17 +1394,37 @@ class ChromeBrowser:
 
     @property
     def executable(self):
-        return _find_executable()
+        try:
+            return _find_executable()
+        except Exception:
+            self._logger.warning('Chrome executable not found')
+            raise
 
     def _spawn_chrome(self, cmd):
-        # pylint: disable=subprocess-popen-preexec-fn
-        proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=_preexec)  # noqa: PLW1509
+        log_path = pathlib.Path(self.user_data_dir, 'err.log')
+        with log_path.open('wb') as log_file:
+            # pylint: disable=subprocess-popen-preexec-fn
+            proc = subprocess.Popen(cmd, stderr=log_file, preexec_fn=_preexec)  # noqa: PLW1509
+
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
             time.sleep(CHECK_BROWSER_SLEEP)
             if port_file.is_file() and port_file.stat().st_size > 5:
                 with port_file.open('r', encoding='utf-8') as f:
                     return proc, int(f.readline())
+
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait()
+        self._logger.warning('Chrome headless failed to start:\n%s', log_path.read_text(encoding="utf-8"))
+        # since the chrome never started, it's not going to be `stop`-ed so we
+        # need to cleanup the directory here
+        shutil.rmtree(self.user_data_dir, ignore_errors=True)
+
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
 
     def _chrome_start(
@@ -1599,7 +1628,7 @@ class ChromeBrowser:
 
         f = self._websocket_send(method, params=params, with_future=True)
         try:
-            return f.result(timeout=timeout)
+            return f.result(timeout=timeout * self.throttling_factor)
         except concurrent.futures.TimeoutError:
             raise TimeoutError(f'{method}({params or ""})')
 
@@ -1795,6 +1824,7 @@ which leads to stray network requests and inconsistencies."""
         self._websocket_request('Network.deleteCookies', params=params)
 
     def _wait_ready(self, ready_code=None, timeout=60):
+        timeout *= self.throttling_factor
         ready_code = ready_code or "document.readyState === 'complete'"
         self._logger.info('Evaluate ready code "%s"', ready_code)
         start_time = time.time()
@@ -1820,6 +1850,7 @@ which leads to stray network requests and inconsistencies."""
         return False
 
     def _wait_code_ok(self, code, timeout, error_checker=None):
+        timeout *= self.throttling_factor
         self.error_checker = error_checker
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
@@ -2430,13 +2461,11 @@ class HttpCase(TransactionCase):
             cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
 
             if cpu_throttling:
-                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
-                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
                 _logger.log(
                     logging.INFO if cpu_throttling_os else logging.WARNING,
                     'CPU throttling mode is only suitable for local testing - '
                     'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
-                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
+                browser.throttle(cpu_throttling)
 
             browser.navigate_to(url, wait_stop=not bool(ready))
             atexit.callback(browser.stop)

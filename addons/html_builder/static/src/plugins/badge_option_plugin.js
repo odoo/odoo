@@ -2,16 +2,17 @@ import { ANIMATE, before } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class BadgeOption extends BaseOptionComponent {
+    static template = "html_builder.BadgeOption";
+    static selector = ".s_badge";
+}
 
 class BadgeOptionPlugin extends Plugin {
     static id = "badgeOption";
     resources = {
-        builder_options: [
-            withSequence(before(ANIMATE), {
-                template: "html_builder.BadgeOption",
-                selector: ".s_badge",
-            }),
-        ],
+        builder_options: [withSequence(before(ANIMATE), BadgeOption)],
         so_content_addition_selector: [".s_badge"],
     };
 }

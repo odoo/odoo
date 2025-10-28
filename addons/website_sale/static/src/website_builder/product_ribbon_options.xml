@@ -4,7 +4,7 @@
         <BuilderRow label.translate="Ribbon">
             <BuilderSelect
                 action="'setRibbon'"
-                t-key="props.count.value"
+                t-key="this.count.value"
                 className="'o_wsale_ribbon_select'"
                 t-on-click="() => state.ribbonEditMode = false"
             >

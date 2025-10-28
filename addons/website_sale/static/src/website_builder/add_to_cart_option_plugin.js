@@ -7,12 +7,7 @@ class AddToCartOptionPlugin extends Plugin {
     static id = "addToCartOption";
     static dependencies = ["builderActions"];
     resources = {
-        builder_options: [
-            {
-                OptionComponent: AddToCartOption,
-                selector: ".s_add_to_cart",
-            },
-        ],
+        builder_options: [AddToCartOption],
         so_content_addition_selector: [".s_add_to_cart"],
         builder_actions: {
             ProductToCartAction,

@@ -4,6 +4,7 @@ import { isRemovable } from "./remove_plugin";
 import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
+import { OptionsContainer } from "@html_builder/sidebar/option_container";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
@@ -27,6 +28,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getCloneDisabledReason",
         "getReloadSelector",
         "setNextTarget",
+        "getBuilderOptionContext",
     ];
     resources = {
         before_add_step_handlers: this.onWillAddStep.bind(this),
@@ -54,10 +56,19 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
-        this.builderOptions = withIds(this.getResource("builder_options"));
+        this.builderOptions = this.getResource("builder_options");
+        this.builderOptionsContext = new Map();
+        this.builderOptionsDependencies = new Map();
+        const options = this.builderOptions.concat([OptionsContainer]);
+        for (const Option of options) {
+            this.getBuilderDependencies(Option);
+            this.getBuilderOptionContext(Option);
+        }
+
         this.elementsToOptionsTitleComponents = withIds(
             this.getResource("elements_to_options_title_components")
         );
+        // todo: remove that resource as we should be able to patch the class the normal way
         this.getResource("patch_builder_options").forEach((option) => {
             this.patchBuilderOptions(option);
         });
@@ -188,10 +199,10 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     computeContainers(target) {
-        const mapElementsToOptions = (options) => {
+        const mapElementsToOptions = (Options) => {
             const map = new Map();
-            for (const option of options) {
-                const { selector, exclude, editableOnly } = option;
+            for (const Option of Options) {
+                const { selector, exclude, editableOnly } = Option;
                 let elements = getClosestElements(target, selector);
                 if (!elements.length) {
                     continue;
@@ -200,9 +211,9 @@ export class BuilderOptionsPlugin extends Plugin {
 
                 for (const element of elements) {
                     if (map.has(element)) {
-                        map.get(element).push(option);
+                        map.get(element).push(Option);
                     } else {
-                        map.set(element, [option]);
+                        map.set(element, [Option]);
                     }
                 }
             }
@@ -298,13 +309,13 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     cleanForSave({ root }) {
-        for (const option of this.builderOptions) {
-            const { selector, exclude, cleanForSave } = option;
+        for (const Option of this.builderOptions) {
+            const { selector, exclude, cleanForSave } = Option;
             if (!cleanForSave) {
                 continue;
             }
             for (const el of getElementsWithOption(root, selector, exclude)) {
-                cleanForSave(el);
+                cleanForSave(el, this.getBuilderOptionContext(Option));
             }
         }
     }
@@ -452,6 +463,35 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         return { option: requestedOption, targetEl };
+    }
+    /**
+     * Get all dependencies of an OptionComponent and all its descendants.
+     */
+    getBuilderDependencies(OptionComponent) {
+        const cachedDeps = this.builderOptionsDependencies.get(OptionComponent);
+        if (cachedDeps) {
+            return cachedDeps;
+        }
+        const deps = OptionComponent.dependencies || [];
+        this.builderOptionsDependencies.set(OptionComponent, deps);
+        const childDeps = Object.values(OptionComponent.components || {}).flatMap(
+            this.getBuilderDependencies.bind(this)
+        );
+        deps.push(...childDeps);
+        return deps;
+    }
+    /**
+     * Get all the methods (window, document, getResources, ...) that are available in plugins. Provide the OptionComponent to set the right dependencies.
+     */
+    getBuilderOptionContext(OptionComponent) {
+        const context = this.builderOptionsContext.get(OptionComponent);
+        if (!context) {
+            const deps = this.getBuilderDependencies(OptionComponent);
+            const context = this.__editor.getEditorContext(deps);
+            this.builderOptionsContext.set(OptionComponent, context);
+            return context;
+        }
+        return context;
     }
 }
 

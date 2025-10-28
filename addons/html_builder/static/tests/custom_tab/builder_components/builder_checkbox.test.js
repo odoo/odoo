@@ -1,4 +1,5 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -6,10 +7,12 @@ import { contains } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 
 test("Click on checkbox", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderCheckbox classAction="'checkbox-action'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderCheckbox classAction="'checkbox-action'"/>`;
+        }
+    );
     const { getEditableContent } = await setupHTMLBuilder(`<p class="test-options-target">b</p>`);
     const editableContent = getEditableContent();
 
@@ -27,14 +30,18 @@ test("Click on checkbox", async () => {
     expect(editableContent).toHaveInnerHTML(`<p class="test-options-target">b</p>`);
 });
 test("hide/display base on applyTo", async () => {
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
-    });
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`<BuilderCheckbox classAction="'checkbox-action'" applyTo="'.my-custom-class'"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderCheckbox classAction="'checkbox-action'" applyTo="'.my-custom-class'"/>`;
+        }
+    );
     const { getEditableContent } = await setupHTMLBuilder(
         `<div class="parent-target"><p class="child-target b">b</p></div>`
     );
@@ -56,10 +63,12 @@ test("hide/display base on applyTo", async () => {
 });
 
 test("click on BuilderCheckbox with inverseAction", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderCheckbox classAction="'my-custom-class'" inverseAction="true"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderCheckbox classAction="'my-custom-class'" inverseAction="true"/>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(":iframe .test-options-target").not.toHaveClass("my-custom-class");

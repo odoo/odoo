@@ -16,8 +16,8 @@ patch(PosOrder.prototype, {
                     company.name,
                     company.vat,
                     this.date_order,
-                    this.getTotalWithTax(),
-                    this.getTotalTax()
+                    this.priceIncl,
+                    this.amountTaxes
                 );
                 const qr_code_svg = new XMLSerializer().serializeToString(
                     codeWriter.write(qr_values, 200, 200)

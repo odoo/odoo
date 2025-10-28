@@ -2,16 +2,19 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class ProductAttributeOption extends BaseOptionComponent {
+    static template = "website_sale.ProductAttributeOption";
+    static selector = "#product_detail .o_wsale_product_attribute";
+    static editableOnly = false;
+    static reloadTarget = true;
+}
 
 class ProductAttributeOptionPlugin extends Plugin {
     static id = "productAttributeOption";
     resources = {
-        builder_options: {
-            template: "website_sale.ProductAttributeOption",
-            selector: "#product_detail .o_wsale_product_attribute",
-            editableOnly: false,
-            reloadTarget: true,
-        },
+        builder_options: ProductAttributeOption,
         builder_actions: {
             ProductAttributeDisplayAction,
         },

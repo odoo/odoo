@@ -24,13 +24,20 @@ test("change the background shape of elements", async () => {
     addOption({
         selector: ".selector",
         applyTo: ".applyTo",
-        Component: BackgroundOption,
-        props: {
-            withColors: true,
-            withImages: true,
-            // todo: handle with_videos
-            withShapes: true,
-            withColorCombinations: false,
+        Component: class TestBackgroundOption extends BackgroundOption {
+            static props = {
+                ...BackgroundOption.props,
+                withColors: { type: Boolean, optional: true },
+                withImages: { type: Boolean, optional: true },
+                withColorCombinations: { type: Boolean, optional: true },
+            };
+            static defaultProps = {
+                withColors: true,
+                withImages: true,
+                // todo: handle with_videos
+                withShapes: true,
+                withColorCombinations: false,
+            };
         },
     });
     await setupWebsiteBuilder(`

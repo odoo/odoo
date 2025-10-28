@@ -1,41 +1,139 @@
 import { Plugin } from "@html_editor/plugin";
-import { splitTextNode } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
-import { DIRECTIONS } from "@html_editor/utils/position";
-
+import { isBlock, closestBlock } from "@html_editor/utils/blocks";
+import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
+import { isElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
+import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
+import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history", "input"];
+    static dependencies = ["selection", "history", "input", "split", "feff"];
     resources = {
         input_handlers: this.onInput.bind(this),
+        selectionchange_handlers: this.handleSelectionChange.bind(this),
+        feff_providers: (root, cursors) =>
+            [...selectElements(root, ".o_inline_code")].flatMap((code) =>
+                this.dependencies.feff.surroundWithFeffs(code, cursors)
+            ),
     };
+
+    setup() {
+        this.addDomListener(this.document, "keydown", this.onKeyDown.bind(this));
+    }
+
+    handleSelectionChange() {
+        if (this.historySavePointRestore) {
+            delete this.historySavePointRestore;
+        }
+    }
+
+    onKeyDown() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (
+            selection.isCollapsed ||
+            closestElement(selection.anchorNode, "code") ||
+            closestElement(selection.focusNode, "code")
+        ) {
+            return;
+        }
+        const targetBlocks = this.dependencies.selection.getTargetedBlocks();
+        const hasTextNode = this.dependencies.selection.getTargetedNodes().some(isTextNode);
+        if (targetBlocks.size === 1 && hasTextNode) {
+            this.historySavePointRestore = this.dependencies.history.makeSavePoint();
+        }
+    }
 
     onInput(ev) {
         const selection = this.dependencies.selection.getEditableSelection();
         if (ev.data !== "`" || closestElement(selection.anchorNode, "code")) {
             return;
         }
+        if (this.historySavePointRestore) {
+            this.historySavePointRestore();
+            let { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
+                this.dependencies.split.splitSelection();
+            const blockEl = closestBlock(anchorNode);
+            // Adjust if anchor/focus directly equals block element
+            const deepChild = (node, offset) => (node === blockEl ? node.childNodes[offset] : node);
+            anchorNode = deepChild(anchorNode, anchorOffset);
+            focusNode = deepChild(focusNode, focusOffset);
+            if (direction === DIRECTIONS.LEFT) {
+                // Swap anchorNode and focusNode
+                [anchorNode, anchorOffset, focusNode, focusOffset] = [
+                    focusNode,
+                    focusOffset,
+                    anchorNode,
+                    anchorOffset,
+                ];
+            }
+            const furthestAnchorElement = findFurthest(anchorNode, blockEl, (n) => !isBlock(n));
+            let start = this.dependencies.split.splitAroundUntil(anchorNode, furthestAnchorElement);
+            const furthestFocusElement = findFurthest(focusNode, blockEl, (n) => !isBlock(n));
+            const end = this.dependencies.split.splitAroundUntil(focusNode, furthestFocusElement);
+
+            let codeElement = this.document.createElement("code");
+            codeElement.classList.add("o_inline_code");
+            start.before(codeElement);
+            while (start) {
+                if (isElement(start)) {
+                    for (const code of selectElements(start, "code")) {
+                        start = unwrapContents(code)[0];
+                    }
+                }
+                const next = start.nextSibling;
+                if (start.nodeName === "IMG") {
+                    // Only create <code> if we still have nodes to process
+                    // after this one.
+                    if (start !== end && next) {
+                        codeElement = this.document.createElement("code");
+                        codeElement.classList.add("o_inline_code");
+                    }
+                } else {
+                    if (!codeElement.isConnected) {
+                        start.before(codeElement);
+                    }
+                    codeElement.appendChild(start);
+                }
+                if (start === end) {
+                    break;
+                }
+                start = next;
+            }
+            this.dispatchTo("to_inline_code_processors", codeElement);
+            this.dependencies.selection.setSelection({
+                anchorNode: codeElement,
+                anchorOffset: nodeSize(codeElement),
+            });
+            this.dependencies.history.addStep();
+            delete this.historySavePointRestore;
+            return;
+        }
+
         // We just inserted a backtick, check if there was another
         // one in the text.
         let textNode = selection.startContainer;
-        let offset = selection.startOffset;
-        let sibling = textNode.previousSibling;
-        while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-            offset += sibling.textContent.length;
-            sibling.textContent += textNode.textContent;
-            textNode.remove();
-            textNode = sibling;
-            sibling = textNode.previousSibling;
-        }
-        sibling = textNode.nextSibling;
-        while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-            textNode.textContent += sibling.textContent;
-            sibling.remove();
-            sibling = textNode.nextSibling;
-        }
-        const textHasTwoTicks = /`.*`/.test(textNode.textContent);
+        const wholeText = textNode.wholeText;
+        const textHasTwoTicks = /`.*`/.test(wholeText);
         // We don't apply the code tag if there is no content between the two `
-        if (textHasTwoTicks && textNode.textContent.replace(/`/g, "").length) {
+        if (textHasTwoTicks && wholeText.replace(/`/g, "").length) {
+            let offset = selection.startOffset;
+            let sibling = textNode.previousSibling;
+            while (sibling && sibling.nodeType === Node.TEXT_NODE) {
+                if (!isZwnbsp(sibling)) {
+                    offset += sibling.textContent.length;
+                }
+                sibling.textContent += textNode.textContent;
+                textNode.remove();
+                textNode = sibling;
+                sibling = sibling.previousSibling;
+            }
+            sibling = textNode.nextSibling;
+            while (sibling && sibling.nodeType === Node.TEXT_NODE) {
+                if (!isZwnbsp(sibling)) {
+                    textNode.textContent += sibling.textContent;
+                }
+                sibling.remove();
+                sibling = sibling.nextSibling;
+            }
             this.dependencies.selection.setSelection({
                 anchorNode: textNode,
                 anchorOffset: offset,
@@ -44,7 +142,7 @@ export class InlineCodePlugin extends Plugin {
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
-                insertedBacktickIndex - 1
+                insertedBacktickIndex
             );
             let startOffset, endOffset;
             const isClosingForward = textBeforeInsertedBacktick.includes("`");
@@ -76,26 +174,26 @@ export class InlineCodePlugin extends Plugin {
             codeElement.classList.add("o_inline_code");
             textNode.before(codeElement);
             codeElement.append(textNode);
-            if (
-                !codeElement.previousSibling ||
-                codeElement.previousSibling.nodeType !== Node.TEXT_NODE
-            ) {
-                codeElement.before(document.createTextNode("\u200B"));
-            }
-            if (isClosingForward) {
+            if (!codeElement.textContent.length) {
+                this.dependencies.history.addStep();
+                this.dependencies.selection.setSelection({
+                    anchorNode: codeElement.firstChild,
+                    anchorOffset: 1,
+                });
+            } else if (isClosingForward) {
                 // Move selection out of code element.
-                codeElement.after(document.createTextNode("\u200B"));
+                this.dependencies.history.addStep();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.nextSibling,
                     anchorOffset: 1,
                 });
             } else {
+                this.dependencies.history.addStep();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 0,
                 });
             }
         }
-        this.dependencies.history.addStep();
     }
 }

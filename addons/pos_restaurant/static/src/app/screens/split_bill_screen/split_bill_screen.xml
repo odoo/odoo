@@ -34,7 +34,7 @@
                                 </span>
                                 <span class="text-dark text-start ms-2"
                                     t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
-                                    / <PriceFormatter price="env.utils.formatCurrency(currentOrder.getTotalWithTax())" />
+                                    / <PriceFormatter price="env.utils.formatCurrency(currentOrder.priceIncl)" />
                                 </span>
                             </div>
                             <div class="text-dark"

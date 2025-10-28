@@ -8,6 +8,13 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ProductsRibbonOption } from "./product_ribbon_options";
 
+export class ProductHeaderShopOption2 extends ProductsRibbonOption {
+    static name = 'ProductsRibbonOption';
+    static selector = "#products_grid .oe_product";
+    static editableOnly = false;
+    static groups = ['website.group_website_designer'];
+}
+
 class ProductsRibbonOptionPlugin extends Plugin {
     static id = 'productsRibbonOptionPlugin';
     static dependencies = ['history'];
@@ -21,23 +28,15 @@ class ProductsRibbonOptionPlugin extends Plugin {
         '_setRibbon',
         'setProductTemplateID',
         'getProductTemplateID',
-        'addProductTemplatesRibbons'
+        'addProductTemplatesRibbons',
+        'loadInfo',
+        'getCount',
     ];
     count = reactive({ value: 0 });
 
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC_NEXT, {
-                OptionComponent: ProductsRibbonOption,
-                name: 'ProductsRibbonOption',
-                props: {
-                    loadInfo: this.loadInfo.bind(this),
-                    count: this.count,
-                },
-                selector: "#products_grid .oe_product",
-                editableOnly: false,
-                groups: ['website.group_website_designer'],
-            }),
+            withSequence(SNIPPET_SPECIFIC_NEXT, ProductHeaderShopOption2),
         ],
         builder_actions: {
             SetRibbonAction,
@@ -52,6 +51,9 @@ class ProductsRibbonOptionPlugin extends Plugin {
         this.styleClasses = { ribbon: "o_wsale_ribbon", tag: "o_wsale_badge" };
         this.productTemplatesRibbons = [];
         this.editMode = false;
+    }
+    getCount() {
+        return this.count;
     }
 
     async loadInfo() {

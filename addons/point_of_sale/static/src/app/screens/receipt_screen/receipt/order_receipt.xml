@@ -15,12 +15,12 @@
                 </Orderline>
             </OrderDisplay>
             <t t-if="!props.basic_receipt">
-                <t t-set="taxTotals" t-value="order.taxTotals"/>
+                <t t-set="taxTotals" t-value="order.prices.taxDetails"/>
                 <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes pt-3">
                     <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
                         <div class="d-flex">
                             <span class="text-nowrap mw-100">Subtotal</span>
-                            <span t-out="formatCurrency(subtotal.base_amount_currency)" class="ms-auto font-monospace"/>
+                            <span t-out="formatCurrency(order.priceExcl)" class="ms-auto font-monospace"/>
                         </div>
 
                         <div t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="d-flex">
@@ -42,16 +42,16 @@
                 <!-- Total -->
                 <div class="pos-receipt-amount receipt-total fw-bolder">
                     <span class="label-total">Total</span>
-                    <span t-out="formatCurrency(taxTotals.order_sign * taxTotals.order_total)" class="pos-receipt-right-align font-monospace"/>
+                    <span t-out="order.currencyDisplayPrice" class="pos-receipt-right-align font-monospace"/>
                 </div>
-                <t t-if="order.showRounding">
+                <t t-if="order.appliedRounding">
                     <div class="pos-receipt-amount receipt-rounding">
                         <span class="label-rounding">Rounding</span>
-                        <span t-out='formatCurrency(taxTotals.order_sign * taxTotals.order_rounding)' class="pos-receipt-right-align font-monospace"/>
+                        <span t-out='formatCurrency(order.appliedRounding)' class="pos-receipt-right-align font-monospace"/>
                     </div>
                     <div class="pos-receipt-amount receipt-to-pay">
                         To Pay
-                        <span t-out='formatCurrency(taxTotals.order_sign * (taxTotals.order_total + taxTotals.order_rounding))' class="pos-receipt-right-align font-monospace"/>
+                        <span t-out='formatCurrency(order.totalDue)' class="pos-receipt-right-align font-monospace"/>
                     </div>
                 </t>
 
@@ -63,7 +63,7 @@
 
                 <div t-if="order.showChange" class="pos-receipt-amount receipt-change">
                     <span class="label-change">Change</span>
-                    <span t-out="formatCurrency(order.orderChange)" class="pos-receipt-right-align font-monospace"/>
+                    <span t-out="formatCurrency(order.change)" class="pos-receipt-right-align font-monospace"/>
                 </div>
 
                 <!-- Extra Payment Info -->

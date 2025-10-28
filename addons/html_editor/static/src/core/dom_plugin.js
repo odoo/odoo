@@ -574,10 +574,30 @@ export class DomPlugin extends Plugin {
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
+    /**
+     * Determines if a block element can be safely retagged.
+     *
+     * Certain blocks (like 'o_editable') should not be retagged because doing so
+     * will recreate the block, potentially causing issues. This function checks
+     * if retagging a block is safe.
+     *
+     * @param {HTMLElement} block
+     * @returns {boolean}
+     */
+    isRetaggingSafe(block) {
+        return !(
+            (isParagraphRelatedElement(block) ||
+                isListItemElement(block) ||
+                isPhrasingContent(block)) &&
+            this.getResource("unremovable_node_predicates").some((predicate) => predicate(block))
+        );
+    }
+
     getBlocksToSet() {
         const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
         return targetedBlocks.filter(
             (block) =>
+                this.isRetaggingSafe(block) &&
                 !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
                 block.isContentEditable
         );
@@ -616,6 +636,7 @@ export class DomPlugin extends Plugin {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
+                this.dispatchTo("before_set_tag_handlers", block);
                 const newEl = this.setTagName(block, tagName);
                 cursors.remapNode(block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
@@ -639,7 +660,6 @@ export class DomPlugin extends Plugin {
             }
         }
         cursors.restore();
-        this.dispatchTo("set_tag_handlers", newEls);
         this.dependencies.history.addStep();
     }
 

@@ -1441,7 +1441,7 @@ class Field(typing.Generic[T]):
                     yield '$'
                 # no need to match r'.*' in else because we only use .match()
 
-            like_regex = re.compile("".join(build_like_regex(unaccent(value), "=" in operator)))
+            like_regex = re.compile("".join(build_like_regex(unaccent(value), "=" in operator)), flags=re.DOTALL)
             return lambda rec: like_regex.match(unaccent(getter(rec)))
 
         # -------------------------------------------------

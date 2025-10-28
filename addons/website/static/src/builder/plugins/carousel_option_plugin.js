@@ -8,6 +8,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { between } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export const CAROUSEL_CARDS_SEQUENCE = between(WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW);
 
@@ -19,6 +20,26 @@ const carouselControlsSelector =
 const carouselItemOptionSelector =
     ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
 
+export class CarouselOption extends BaseOptionComponent {
+    static template = "website.CarouselOption";
+    static selector = "section";
+    static exclude =
+        ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)";
+    static applyTo = ":scope > .carousel";
+}
+
+export class CarouselBottomControllersOption extends BaseOptionComponent {
+    static template = "website.CarouselBottomControllersOption";
+    static selector = "section";
+    static applyTo = ".s_carousel_intro, .s_quotes_carousel_compact";
+}
+
+export class CarouselCardsOption extends BaseOptionComponent {
+    static template = "website.CarouselCardsOption";
+    static selector = "section";
+    static applyTo = ".s_carousel_cards";
+}
+
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
     static dependencies = ["clone", "builderOptions", "builderActions"];
@@ -26,23 +47,9 @@ export class CarouselOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            {
-                template: "website.CarouselOption",
-                selector: "section",
-                exclude:
-                    ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)",
-                applyTo: ":scope > .carousel",
-            },
-            {
-                template: "website.CarouselBottomControllersOption",
-                selector: "section",
-                applyTo: ".s_carousel_intro, .s_quotes_carousel_compact",
-            },
-            withSequence(CAROUSEL_CARDS_SEQUENCE, {
-                template: "website.CarouselCardsOption",
-                selector: "section",
-                applyTo: ".s_carousel_cards",
-            }),
+            CarouselOption,
+            CarouselBottomControllersOption,
+            withSequence(CAROUSEL_CARDS_SEQUENCE, CarouselCardsOption),
         ],
         builder_header_middle_buttons: {
             Component: CarouselItemHeaderMiddleButtons,
@@ -305,7 +312,7 @@ export class CarouselOptionPlugin extends Plugin {
             updateCarouselIndicators(carouselEl, newPosition);
 
             // Activate the active slide.
-            this.dependencies["builderOptions"].setNextTarget(activeItemEl);
+            this.dependencies.builderOptions.setNextTarget(activeItemEl);
         }
     }
 }

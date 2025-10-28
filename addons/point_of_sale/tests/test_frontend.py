@@ -627,7 +627,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_pricelist', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_02_decimal_order_quantity', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_03_tax_position', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FloatingOrderTour', login="pos_user")
@@ -805,6 +804,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'rounding_method': rouding_method.id,
             'cash_rounding': True,
+            'only_round_cash_method': True,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -827,48 +827,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'rounding_method': rouding_method.id,
             'cash_rounding': True,
+            'only_round_cash_method': True,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="pos_user")
         self.env["pos.order"].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenTotalDueWithOverPayment', login="pos_user")
-
-    def test_rounding_half_up(self):
-        rouding_method = self.env['account.cash.rounding'].create({
-            'name': 'Rounding HALF-UP',
-            'rounding': 0.5,
-            'rounding_method': 'HALF-UP',
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 1.20',
-            'available_in_pos': True,
-            'list_price': 1.2,
-            'taxes_id': False,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 1.25',
-            'available_in_pos': True,
-            'list_price': 1.25,
-            'taxes_id': False,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 1.4',
-            'available_in_pos': True,
-            'list_price': 1.4,
-            'taxes_id': False,
-        })
-
-        self.main_pos_config.write({
-            'rounding_method': rouding_method.id,
-            'cash_rounding': True,
-        })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="pos_user")
 
     def test_pos_closing_cash_details(self):
         """Test cash difference *loss* at closing.
@@ -1728,27 +1693,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'ProductComboDiscountTour',
             login="pos_user",
         )
-
-    def test_cash_rounding_payment(self):
-        """Verify than an error popup is shown if the payment value is more precise than the rounding method"""
-        rounding_method = self.env['account.cash.rounding'].create({
-            'name': 'Down 0.10',
-            'rounding': 0.10,
-            'strategy': 'add_invoice_line',
-            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
-            'loss_account_id': self.company_data['default_account_expense'].copy().id,
-            'rounding_method': 'DOWN',
-        })
-
-        self.main_pos_config.write({
-            'cash_rounding': True,
-            'only_round_cash_method': False,
-            'rounding_method': rounding_method.id,
-        })
-
-        self.env['ir.config_parameter'].sudo().set_param('barcode.max_time_between_keys_in_ms', 1)
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
 
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
