@@ -661,6 +661,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
             'ref': 'Test vendor bill reference',
             'invoice_line_ids': [
                 (0, 0, {
@@ -714,6 +715,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
             'ref': 'Test vendor bill reference',
             'invoice_line_ids': [
                 (0, 0, {
