@@ -184,8 +184,7 @@ Content-Type: text/plain; charset="UTF-8"
 
 I want to work for you!"""
 
-        applicant_from_email = self.env["mail.thread"].message_process("hr.applicant", email)
-        applicant = self.env["hr.applicant"].browse(applicant_from_email)
+        applicant = self.env["mail.thread"].message_process("hr.applicant", email)
         self.assertEqual(
             applicant.department_id, mystery_department, "Applicant should be assigned to the right department"
         )
