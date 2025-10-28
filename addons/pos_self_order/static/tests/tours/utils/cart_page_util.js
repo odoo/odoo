@@ -59,6 +59,25 @@ export function selectRandomValueInInput(inputSelector) {
     };
 }
 
+export function selectSpecificValueInInput(inputSelector, value) {
+    return {
+        content: `Select Specific Value in Input`,
+        trigger: inputSelector,
+        run: (helpers) => {
+            const options = document.querySelectorAll(`${inputSelector} option`);
+            const targetOption = Array.from(options).find((option) =>
+                option.textContent.includes(value)
+            );
+            if (targetOption) {
+                helpers.anchor.value = targetOption.value;
+                helpers.anchor.dispatchEvent(new Event("change"));
+            } else {
+                throw new Error(`Slot "${value}" was not found`);
+            }
+        },
+    };
+}
+
 export function fillInput(inputPlaceholder, value) {
     return {
         content: `Fill input with ${value}`,
@@ -140,13 +159,16 @@ export function cancelOrder() {
 
 export function checkSlotUnavailable(slotValue) {
     return {
-        content: `Check that the first available slot is not ${slotValue}`,
+        content: `Check that ${slotValue} is not available`,
         trigger: ".slot-select",
         run: () => {
             const select = document.querySelector(".slot-select");
-            // select[0] and select[1] are header values
-            if (select[2].innerText === slotValue) {
-                throw new Error(`${slotValue} should not be available`);
+            const options = select.querySelectorAll("option");
+            const targetOption = Array.from(options).find((option) =>
+                option.textContent.includes(slotValue)
+            );
+            if (targetOption) {
+                throw new Error(`${slotValue} is still available`);
             }
         },
     };
