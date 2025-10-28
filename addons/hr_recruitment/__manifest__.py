@@ -39,7 +39,6 @@
         'views/mail_activity_views.xml',
         'views/mail_activity_plan_views.xml',
         'views/digest_views.xml',
-        'views/hr_contract_template_views.xml',
         'wizard/applicant_refuse_reason_views.xml',
         'wizard/applicant_send_mail_views.xml',
         'wizard/talent_pool_add_applicants_views.xml',
