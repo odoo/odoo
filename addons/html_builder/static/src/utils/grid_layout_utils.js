@@ -225,9 +225,10 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
             isImageWithoutPadding && !borderLeft ? imageEl.offsetLeft : columnEl.offsetLeft;
         if (isRtl) {
             const parentWidth = columnEl.offsetParent.clientWidth;
-            columnLeft = isImageWithoutPadding && !borderLeft
-                ? parentWidth - imageEl.offsetLeft - imageEl.offsetWidth
-                : parentWidth - columnEl.offsetLeft - columnEl.offsetWidth;
+            columnLeft =
+                isImageWithoutPadding && !borderLeft
+                    ? parentWidth - imageEl.offsetLeft - imageEl.offsetWidth
+                    : parentWidth - columnEl.offsetLeft - columnEl.offsetWidth;
         }
         // Getting the width of the column.
         const paddingLeft = parseFloat(style.paddingLeft);

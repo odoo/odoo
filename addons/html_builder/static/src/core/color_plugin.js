@@ -7,7 +7,7 @@ export class ColorPlugin extends EditorColorPlugin {
     }
 
     getPropsForColorSelector(type) {
-        const props = {...super.getPropsForColorSelector(type)};
+        const props = { ...super.getPropsForColorSelector(type) };
         props.themeColorPrefix = "hb-cp-";
         return props;
     }

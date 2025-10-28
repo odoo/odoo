@@ -429,8 +429,8 @@ export class SnippetModel extends Reactive {
         // definition.
         if (!label || label === "Parallax") {
             const contentEl = snippetEl.children[0];
-            const hasParallax = contentEl.matches(".parallax")
-                || !!contentEl.querySelector(".parallax");
+            const hasParallax =
+                contentEl.matches(".parallax") || !!contentEl.querySelector(".parallax");
             return hasParallax ? _t("Parallax") : "";
         }
         return label;

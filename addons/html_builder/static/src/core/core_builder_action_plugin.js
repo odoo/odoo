@@ -227,10 +227,12 @@ export class StyleAction extends BuilderAction {
     static id = "styleAction";
     static dependencies = ["color"];
     getValue({ editingElement: el, params: { mainParam: styleName } }) {
-        if (styleName === "--box-border-width"
-                || CSS_SHORTHANDS["--box-border-width"].includes(styleName)
-                || styleName === "--box-border-radius"
-                || CSS_SHORTHANDS["--box-border-radius"].includes(styleName)) {
+        if (
+            styleName === "--box-border-width" ||
+            CSS_SHORTHANDS["--box-border-width"].includes(styleName) ||
+            styleName === "--box-border-radius" ||
+            CSS_SHORTHANDS["--box-border-radius"].includes(styleName)
+        ) {
             // When reading a CSS variable, we need to get the computed value
             // of the actual property it controls, ideally. Not only because the
             // panel should reflect what the user actually sees but also because
