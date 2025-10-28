@@ -19,9 +19,21 @@ export class SetupEditorPlugin extends Plugin {
     static shared = ["getEditableAreas"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
+        system_classes: "o_editable",
         clean_for_save_handlers: this.cleanForSave.bind(this),
         closest_savable_providers: withSequence(10, (el) => el.closest(".o_editable")),
         unremovable_node_predicates: (node) => node.classList?.contains("o_editable"),
+        clipboard_content_processors: withSequence(20, (clonedContents) => {
+            for (const node of clonedContents.querySelectorAll("*")) {
+                for (const attr of [...node.attributes]) {
+                    if (attr.name.startsWith("data-oe-")) {
+                        node.removeAttribute(attr.name);
+                    }
+                }
+                node.removeAttribute("contenteditable");
+                node.classList.remove("o_dirty");
+            }
+        }),
     };
 
     setup() {
