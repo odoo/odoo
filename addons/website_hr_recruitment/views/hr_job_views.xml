@@ -17,6 +17,18 @@
                     Job Page
                 </a>
             </xpath>
+            <xpath expr="//div[@name='large_screen_job_page_div']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@name='mobile_job_page_div']/button[@name='%(hr_recruitment.action_hr_job_applications)d']"
+                position="replace">
+                <a type="object" name="open_website_url" class="btn btn-primary" role="button">
+                    Job Page
+                </a>
+            </xpath>
+            <xpath expr="//div[@name='mobile_job_page_div']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
         </field>
     </record>
 

@@ -118,7 +118,7 @@
                                         <div t-if="record.company_id.raw_value" class="col align-content-center" groups="base.group_multi_company">
                                             <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/>
                                         </div>
-                                        <div class="col align-content-center">
+                                        <div name="large_screen_job_page_div" class="col align-content-center" invisible="1">
                                             <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
                                                 Job Page
                                             </button>
@@ -147,7 +147,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex">
-                                        <div class="col-6 d-flex align-items-center justify-content-center">
+                                        <div name="mobile_job_page_div" class="col-6 d-flex align-items-center justify-content-center" invisible="1">
                                             <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
                                                 Job Page
                                             </button>
