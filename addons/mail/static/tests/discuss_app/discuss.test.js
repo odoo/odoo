@@ -771,11 +771,10 @@ test("basic top bar rendering", async () => {
     await contains(".o-mail-DiscussContent-threadName", { value: "Starred messages" });
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
-    await contains(".o-mail-DiscussContent-header button", { count: 9 });
+    await contains(".o-mail-DiscussContent-header button", { count: 8 });
     await contains(".o-mail-DiscussContent-header button[title='Start Video Call']");
     await contains(".o-mail-DiscussContent-header button[title='Start Call']");
     await contains(".o-mail-DiscussContent-header button[title='Notification Settings']");
-    await contains(".o-mail-DiscussContent-header button[title='Invite People']");
     await contains(".o-mail-DiscussContent-header button[title='Search Messages']");
     await contains(".o-mail-DiscussContent-header button[title='Threads']");
     await contains(".o-mail-DiscussContent-header button[title='Attachments']");
@@ -1704,17 +1703,6 @@ test("should auto-pin chat when receiving a new DM", async () => {
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Demo')");
 });
 
-test("'Invite People' button should be displayed in the topbar of channels", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "general",
-        channel_type: "channel",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains("button[title='Invite People']");
-});
-
 test("'Invite People' button should be displayed in the topbar of chats", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
@@ -1724,21 +1712,6 @@ test("'Invite People' button should be displayed in the topbar of chats", async 
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains("button[title='Invite People']");
-});
-
-test("'Invite People' button should be displayed in the topbar of groups", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "group",
     });
     await start();
     await openDiscuss(channelId);

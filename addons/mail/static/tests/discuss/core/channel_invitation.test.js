@@ -15,7 +15,7 @@ import { Command, getService, serverState, withUser } from "@web/../tests/web_te
 describe.current.tags("desktop");
 defineMailModels();
 
-test("should display the channel invitation form after clicking on the invite button of a chat", async () => {
+test("Can invite people from member panel", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -32,8 +32,8 @@ test("should display the channel invitation form after clicking on the invite bu
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-header button[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation");
+    await click("button[title='Invite People']");
+    await contains(".o-mail-ActionPanel-header:text('Invite people')");
 });
 
 test("can invite users in channel from chat window", async () => {
@@ -85,7 +85,7 @@ test("should be able to search for a new user to invite from an existing chat", 
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await click("button[title='Invite People']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await contains(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
 });
@@ -107,7 +107,7 @@ test("Invitation form should display channel group restriction", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await click("button[title='Invite People']");
     await contains(
         ".o-discuss-ChannelInvitation div:text('Access restricted to group \"testGroup\"')",
         {

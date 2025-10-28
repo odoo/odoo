@@ -3,6 +3,10 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("discuss.invite_by_email", {
     steps: () => [
         {
+            trigger: "button[title='Members']",
+            run: "click",
+        },
+        {
             trigger: "button[title='Invite People']",
             run: "click",
         },
@@ -39,9 +43,6 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
         {
             trigger: "button:contains(Invite to Group Chat)",
             run: "click",
-        },
-        {
-            trigger: "body:not(:has(.o-mail-ActionPanel))",
         },
     ],
 });
