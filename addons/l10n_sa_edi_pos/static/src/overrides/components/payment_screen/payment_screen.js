@@ -10,7 +10,13 @@ patch(PaymentScreen.prototype, {
         await super._finalizeValidation(...arguments);
         const order = this.currentOrder;
         // note: isSACompany guarantees order.is_to_invoice()
-        if (order.isSACompany() && order.finalized && order.l10n_sa_invoice_edi_state !== "sent") {
+        // Skip if invoice is not mandatory(Ex: settlement)
+        if (
+            order.isSACompany() &&
+            order.finalized &&
+            order.l10n_sa_invoice_edi_state !== "sent" &&
+            order.isInvoiceMandatoryForSA()
+        ) {
             const orderError = _t("%s by going to Backend > Orders > Invoice", order.pos_reference);
             const href = `/odoo/customer-invoices/${this.currentOrder?.raw?.account_move}`;
             const link = markup`<a target="_blank" href=${href} class="text-info fw-bolder">${_t(
