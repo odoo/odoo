@@ -1308,6 +1308,7 @@ class DiscussChannel(models.Model):
                     'lang': lang,
                     'name': name,
                     'notif': "email" if partner_share else "inbox",
+                    'push_allowed': False,
                     'share': partner_share,
                     'type': 'user' if not partner_share else 'customer',
                     'uid': uid,
@@ -1347,6 +1348,9 @@ class DiscussChannel(models.Model):
                 ]),
             ]),
         ])
+        domain &= self._get_push_domain_by_channel_type().get(
+            self.channel_type, Domain.TRUE,
+        )
         # sudo: discuss.channel.member - read to get the members of the channel and res.users.settings of the partners
         members = self.env["discuss.channel.member"].sudo().search(domain)
         for member in members:
@@ -1358,6 +1362,7 @@ class DiscussChannel(models.Model):
                 "groups": [],
                 "lang": member.partner_id.lang,
                 "notif": "web_push",
+                "push_allowed": True,
                 "share": member.partner_id.partner_share,
                 "type": "customer",
                 "uid": False,
@@ -1379,6 +1384,17 @@ class DiscussChannel(models.Model):
 
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {"silent"}
+
+    def _get_push_domain_by_channel_type(self):
+        domain_by_channel_type = {
+            "channel": Domain(
+                "partner_id.user_ids.res_users_settings_ids.channel_push", "=", True,
+            ),
+            "chat": Domain(
+                "partner_id.user_ids.res_users_settings_ids.chat_push", "=", True,
+            ),
+        }
+        return domain_by_channel_type
 
     def _notify_thread(self, message, **kwargs):
         # link message to channel

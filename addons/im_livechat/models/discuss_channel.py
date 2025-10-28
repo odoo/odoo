@@ -602,6 +602,13 @@ class DiscussChannel(models.Model):
         """
         return _('Visitor left the conversation.')
 
+    def _get_push_domain_by_channel_type(self):
+        domain_by_channel_type = super()._get_push_domain_by_channel_type()
+        domain_by_channel_type["livechat"] = Domain(
+            "partner_id.user_ids.res_users_settings_ids.livechat_push", "=", True,
+        )
+        return domain_by_channel_type
+
     def _close_livechat_session(self, message):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()

@@ -35,13 +35,14 @@ export class MailCoreWeb {
         });
         this.busService.subscribe("mail.message/notification", (payload, { id: notifId }) => {
             const { message_id: messageId, store_data } = payload;
+            const user = this.store.self_user;
             this.store.insert(store_data);
             /** @type {import("models").Message} */
             const message = this.store["mail.message"].get(messageId);
             if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
                 message.thread.message_needaction_counter++;
             }
-            if (this.store.self_user?.im_status !== "busy") {
+            if (user?.im_status !== "busy" && user?.res_users_settings_id?.inbox_push) {
                 this.store.env.services["mail.out_of_focus"].notify(message);
             }
         });
