@@ -531,8 +531,12 @@
         <field name="binding_model_id" ref="product.model_product_product"/>
         <field name="state">code</field>
         <field name="code">
-ctx = env.context
-ctx.update({'default_pricelist': env['product.pricelist'].search([], limit=1).id})
+pricelist = env['product.pricelist'].search([], limit=1)
+if not pricelist:
+    raise UserError("No pricelist found. Please create a pricelist first.")
+
+ctx = dict(env.context)
+ctx.update({'default_pricelist': pricelist.id})
 action = {
     'name': 'Pricelist Report',
     'type': 'ir.actions.client',
