@@ -77,6 +77,9 @@ class DiscussChannel(models.Model):
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
     avatar_cache_key = fields.Char(compute="_compute_avatar_cache_key")
+    discuss_category_id = fields.Many2one(
+        "discuss.category", string="Category", ondelete="set null", index=True
+    )
     channel_partner_ids = fields.Many2many(
         'res.partner', string='Partners',
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
@@ -505,6 +508,7 @@ class DiscussChannel(models.Model):
         res = defaultdict(list)
         res[None] += [
             Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
+            Store.One("discuss_category_id", ["name"], sudo=True),  # sudo: discuss.category - reading name is acceptable
             "channel_type",
             "create_uid",
             "default_display_mode",
@@ -1228,6 +1232,7 @@ class DiscussChannel(models.Model):
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         res = [
             Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
+            Store.One("discuss_category_id", ["name"], sudo=True),  # sudo: discuss.category - reading name is acceptable
             "channel_type",
             "create_uid",
             Store.Many(

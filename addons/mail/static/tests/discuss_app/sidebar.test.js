@@ -28,6 +28,49 @@ import { getOrigin } from "@web/core/utils/urls";
 describe.current.tags("desktop");
 defineMailModels();
 
+test("Display discuss categories", async () => {
+    const pyEnv = await startServer();
+    const [categoryId1, categoryId2] = pyEnv["discuss.category"].create([
+        { name: "rd" },
+        { name: "services" },
+    ]);
+    pyEnv["discuss.channel"].create([
+        {
+            name: "general",
+            channel_type: "channel",
+        },
+        {
+            name: "rd-Discuss",
+            channel_type: "channel",
+            discuss_category_id: categoryId1,
+        },
+        {
+            name: "office",
+            channel_type: "channel",
+            discuss_category_id: categoryId2,
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory", { text: "Channels" });
+    await contains(".o-mail-DiscussSidebarCategory", { text: "rd" });
+    await contains(".o-mail-DiscussSidebarCategory", { text: "services" });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "general",
+        after: [".o-mail-DiscussSidebarCategory", { text: "Channels" }],
+        before: [".o-mail-DiscussSidebarCategory", { text: "rd" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "rd-Discuss",
+        after: [".o-mail-DiscussSidebarCategory", { text: "rd" }],
+        before: [".o-mail-DiscussSidebarCategory", { text: "services" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "office",
+        after: [".o-mail-DiscussSidebarCategory", { text: "services" }],
+    });
+});
+
 test("toggling category button hide category items", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });

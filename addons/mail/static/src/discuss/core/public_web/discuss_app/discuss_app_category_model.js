@@ -52,7 +52,12 @@ export class DiscussAppCategory extends Record {
     /** @string */
     id;
     /** @type {string} */
-    name;
+    name = fields.Attr("", {
+        compute() {
+            return this.discussCategoryAsAppCategory?.name || this.name || "";
+        },
+    });
+    discussCategoryAsAppCategory = fields.One("discuss.category", { inverse: "appCategory" });
     hideWhenEmpty = false;
     canView = false;
     app = fields.One("DiscussApp", {
