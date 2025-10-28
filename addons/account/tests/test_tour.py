@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-from odoo import Command
+from odoo import Command, fields
 
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 
@@ -102,6 +102,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
         move = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner.id,
+            'invoice_date': fields.Date.today(),
             'line_ids': [Command.create({'name': "T-shirt", 'deductible_amount': 50.0})],
         })
         move.action_post()
