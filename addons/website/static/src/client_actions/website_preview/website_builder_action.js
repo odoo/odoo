@@ -636,23 +636,11 @@ export class WebsiteBuilderClientAction extends Component {
         const websiteDoc = this.websiteContent.el?.contentDocument;
         const fallBackDoc = this.iframefallback.el?.contentDocument;
         if (!this.state.isEditing && websiteDoc && fallBackDoc) {
-            if (websiteDoc.head) {
-                fallBackDoc.head
-                    .querySelectorAll("link[rel='stylesheet'], style")
-                    .forEach((el) => el.remove());
-                for (const el of websiteDoc.head.querySelectorAll(
-                    "link[rel='stylesheet'], style"
-                )) {
-                    fallBackDoc.head.appendChild(el.cloneNode(true));
-                }
-            }
-            if (websiteDoc.body) {
-                fallBackDoc.body.replaceWith(websiteDoc.body.cloneNode(true));
-                const currentScrollEl = getScrollingElement(websiteDoc);
-                const scrollElement = getScrollingElement(fallBackDoc);
-                scrollElement.scrollTop = currentScrollEl.scrollTop;
-                this.cleanIframeFallback();
-            }
+            fallBackDoc.documentElement.replaceWith(websiteDoc.documentElement.cloneNode(true));
+            const currentScrollEl = getScrollingElement(websiteDoc);
+            const scrollElement = getScrollingElement(fallBackDoc);
+            scrollElement.scrollTop = currentScrollEl.scrollTop;
+            this.cleanIframeFallback();
         }
     }
 
