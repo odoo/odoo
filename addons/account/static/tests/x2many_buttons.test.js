@@ -121,7 +121,7 @@ test("redirect to list view and discards edits when clicking on last button with
                     [false, "form"],
                 ],
                 context: {
-                    form_view_ref: "account.view_duplicated_moves_tree_js",
+                    list_view_ref: "account.view_duplicated_moves_tree_js",
                 },
             });
         },
