@@ -6,6 +6,7 @@ from . import chatbot
 from . import main
 from . import messaging_menu
 from . import rtc
+from . import settings
 from . import thread
 from . import webclient
 from . import cors

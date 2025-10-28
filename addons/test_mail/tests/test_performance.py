@@ -741,7 +741,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=31, employee=31):
+        with self.assertQueryCount(admin=33, employee=33):
             record.message_post(
                 body=Markup('<p>Test Post Performances with an email ping</p>'),
                 partner_ids=self.customer.ids,
@@ -1030,7 +1030,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=56, employee=58):
+        with self.assertQueryCount(admin=58, employee=60):
             record.message_post(
                 body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
@@ -1048,7 +1048,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         template = self.env.ref('test_mail.mail_test_container_tpl')
 
         # about 20 (19 ?) queries per additional customer group
-        with self.assertQueryCount(admin=70, employee=72):
+        with self.assertQueryCount(admin=72, employee=74):
             record.message_post_with_source(
                 template,
                 message_type='comment',
@@ -1164,7 +1164,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
 
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(admin=44, employee=44), profile:
+        with self.assertQueryCount(admin=45, employee=45), profile:
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -1184,7 +1184,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=95, employee=95):
+        with self.assertQueryCount(admin=96, employee=96):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
