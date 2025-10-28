@@ -231,6 +231,9 @@ class ResCompany(models.Model):
         accounts = inventory_data.keys() | accounting_data.keys()
         for account in accounts:
             account_variation = False
+            # Continental accounting
+            if account.account_stock_variation_id and account.account_stock_expense_id:
+                account_variation = account.account_stock_expense_id
             if account.account_stock_variation_id:
                 account_variation = account.account_stock_variation_id
             if not account_variation and account.account_stock_expense_id:
