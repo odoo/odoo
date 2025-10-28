@@ -24,6 +24,10 @@ class StockMove(models.Model):
     value = fields.Monetary(
         "Value", currency_field='company_currency_id',
         help="The current value of the move. It's zero if the move is not valued.")
+    value_justification = fields.Text(
+        "Value Description", compute="_compute_value_justification")
+    value_computed_justification = fields.Text(
+        "Computed Value Description", compute="_compute_value_justification")
     # Useful for testing and custom valuation
     value_manual = fields.Monetary(
         "Manual Value", currency_field='company_currency_id',
@@ -78,6 +82,22 @@ class StockMove(models.Model):
     def _compute_value_manual(self):
         for move in self:
             move.value_manual = move.value
+
+    def _compute_value_justification(self):
+        self.value_justification = False
+        self.value_computed_justification = False
+        for move in self:
+            if not move.is_in:
+                continue
+            move.value_justification = move._get_value_data()['description']
+            computed_value_data = move._get_value_data(ignore_manual_update=True)
+            if computed_value_data['description'] == move.value_justification:
+                move.value_computed_justification = False
+            else:
+                value = move.currency_id.format(computed_value_data['value'])
+                move.value_computed_justification = self.env._(
+                    'Computed value: %(value)s\n%(description)s',
+                    value=value, description=computed_value_data['description'])
 
     @api.depends('quantity', 'product_id.stock_move_ids.value')
     def _compute_remaining_qty(self):
