@@ -1921,7 +1921,7 @@ class MrpProduction(models.Model):
             'orderpoint_id': self.orderpoint_id.id,
         }
 
-    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False, skip_workorder_quantity=False):
         """ Splits productions into productions smaller quantities to produce, i.e. creates
         its backorders.
 
@@ -1933,6 +1933,7 @@ class MrpProduction(models.Model):
         an additional backorder, e.g. having product_qty=5 if mrp.production(1,) product_qty was 10.
         :param bool set_consumed_qty: whether to set quantity on move lines to the reserved quantity
         or the initial demand if no reservation, except for the remaining backorder.
+        :param bool skip_workorder_quantity: Whether to skip updating the workorder quantity produced or not.
         :return: mrp.production records in order of [orig_prod_1, backorder_prod_1,
         backorder_prod_2, orig_prod_2, backorder_prod_2, etc.]
         """
@@ -2137,20 +2138,20 @@ class MrpProduction(models.Model):
             # Adapt duration
             for workorder in bo.workorder_ids:
                 workorder.duration_expected = workorder._get_duration_expected()
-
-            # Adapt quantities produced
-            for workorder in production.workorder_ids.sorted('id'):
-                initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
-                if workorder.production_id.id not in (self.env.context.get('mo_ids_to_backorder') or []):
-                    workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
-            workorders_len = len(production.workorder_ids)
-            for index, workorder in enumerate(bo.workorder_ids):
-                remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
-                workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
-                if remaining_qty:
-                    initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
-                else:
-                    workorders_to_cancel += workorder
+            if not skip_workorder_quantity:
+                # Adapt quantities produced
+                for workorder in production.workorder_ids.sorted('id'):
+                    initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
+                    if workorder.production_id.id not in (self.env.context.get('mo_ids_to_backorder') or []):
+                        workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
+                workorders_len = len(production.workorder_ids)
+                for index, workorder in enumerate(bo.workorder_ids):
+                    remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
+                    workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
+                    if remaining_qty:
+                        initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
+                    else:
+                        workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
         backorders._action_confirm_mo_backorders()
 

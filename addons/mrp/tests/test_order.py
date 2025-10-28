@@ -5310,6 +5310,45 @@ class TestMrpOrder(TestMrpCommon):
         copied_operation = bom.operation_ids[1]
         self.assertFalse(copied_operation.bom_product_template_attribute_value_ids, "'Apply on Variants' should not be copied to the new operation.")
 
+    def test_mo_split(self):
+        """Test to ensure that splitting MO from the `Change Quantity to Produce` is working as intended
+        i.e Only splitting with a quantity less than the original quantity to produce and more than 0.
+        """
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'product_qty': 10,
+        })
+        mo.action_confirm()
+        wiz = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 8
+        })
+        wiz.action_split_mo()
+        self.assertEqual(mo.product_qty, wiz.product_qty)  # MO product_qty = 8
+        with self.assertRaises(UserError):
+            wiz.action_split_mo()
+        wiz.product_qty = 0
+        with self.assertRaises(UserError):
+            wiz.action_split_mo()
+        wiz.product_qty = -1
+        with self.assertRaises(UserError):
+            wiz.action_split_mo()
+
+    def test_mo_split_skip_workorder_quantity(self):
+        """Test to ensure that `_split_productions` is correctly skipping workorder quantity. when
+        `skip_workorder_quantity` param is passed as true.
+        """
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+            'product_qty': 10,
+        })
+        mo.action_confirm()
+        mo.workorder_ids[0].action_mark_as_done()
+        # User error is thrown when `_split_productions` tries to update workorder quantity in a `done` state.
+        with self.assertRaises(UserError):
+            mo._split_productions(amounts={mo.id: [7, 3]})
+        self.assertTrue(mo._split_productions(amounts={mo.id: [7, 3]}, skip_workorder_quantity=True))
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
