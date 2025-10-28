@@ -359,3 +359,12 @@ export function shippingLaterHighlighted() {
         trigger: ".button:contains('Ship Later').highlight",
     };
 }
+
+export function isInvoiceButtonUnchecked() {
+    return [
+        {
+            content: "check invoice button is not highlighted",
+            trigger: ".js_invoice:not(.highlight)",
+        },
+    ];
+}
