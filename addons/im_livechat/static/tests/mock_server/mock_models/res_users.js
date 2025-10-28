@@ -9,6 +9,9 @@ export class ResUsers extends mailModels.ResUsers {
         super._init_store_data(...arguments);
         store.add({
             has_access_livechat: this.env.user?.group_ids.includes(serverState.groupLivechatId),
+            is_livechat_manager: this.env.user?.group_ids.includes(
+                serverState.groupLivechatManagerId
+            ),
         });
     }
 }

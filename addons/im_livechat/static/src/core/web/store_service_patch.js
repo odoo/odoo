@@ -10,6 +10,7 @@ const storePatch = {
         super.setup(...arguments);
         this.livechatChannels = this.makeCachedFetchData("im_livechat.channel");
         this.has_access_livechat = false;
+        this.is_livechat_manager = false;
     },
     /**
      * @override

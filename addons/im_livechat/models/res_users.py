@@ -146,3 +146,6 @@ class ResUsers(models.Model):
     def _init_store_data(self, store: Store):
         super()._init_store_data(store)
         store.add_global_values(has_access_livechat=self.env.user.has_access_livechat)
+        store.add_global_values(
+            is_livechat_manager=self.env.user.has_group("im_livechat.im_livechat_group_manager")
+        )

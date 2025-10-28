@@ -441,6 +441,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "hasMessageTranslationFeature": False,
                 "has_access_create_lead": False,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
+                "is_livechat_manager": False,
                 "mt_comment": self.env.ref("mail.mt_comment").id,
                 "mt_note": self.env.ref("mail.mt_note").id,
                 "odoobot": self.user_root.partner_id.id,

@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import Command, fields, models
+from odoo import api, Command, fields, models
 
 
 class Im_LivechatExpertise(models.Model):
@@ -49,3 +49,9 @@ class Im_LivechatExpertise(models.Model):
         for expertise, users in users_by_expertise.items():
             users_by_expertise[expertise] = users.with_prefetch(user_settings.user_id.ids)
         return users_by_expertise
+
+    @api.model
+    def name_create(self, name):
+        if existing_tag := self.search([("name", "=", name.strip())]):
+            return existing_tag.id, existing_tag.display_name
+        return super().name_create(name)

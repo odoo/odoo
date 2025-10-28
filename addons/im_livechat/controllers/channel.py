@@ -59,3 +59,18 @@ class LivechatChannelController(ChannelController):
                 },
                 subchannel="LOOKING_FOR_HELP",
             )
+
+    @route(
+        "/im_livechat/conversation/update_expertises", auth="user", methods=["POST"], type="jsonrpc"
+    )
+    def livechat_conversation_update_expertises(self, channel_id, expertise_ids, mode):
+        if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            return
+        if channel := request.env["discuss.channel"].search(
+            [("id", "=", channel_id), ("channel_type", "=", "livechat")]
+        ):
+            # sudo: discuss.channel - live chat users can update the expertises of any live chat.
+            channel.sudo().livechat_expertise_ids = [
+                Command.link(expertise_id) if mode == "ADD" else Command.unlink(expertise_id)
+                for expertise_id in expertise_ids
+            ]
