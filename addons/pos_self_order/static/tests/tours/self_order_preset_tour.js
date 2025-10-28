@@ -89,8 +89,7 @@ registry.category("web_tour.tours").add("test_slot_limit_orders", {
         ProductPage.clickProduct("Free"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
-        // Will always pick the first available: 00:00
-        CartPage.selectRandomValueInInput(".slot-select"),
+        CartPage.selectSpecificValueInInput(".slot-select", "18:00"),
         CartPage.fillInput("Name", "Dr Dre"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
@@ -99,6 +98,6 @@ registry.category("web_tour.tours").add("test_slot_limit_orders", {
         ProductPage.clickProduct("Free"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
-        CartPage.checkSlotUnavailable("00:00"),
+        CartPage.checkSlotUnavailable("18:00"),
     ],
 });
