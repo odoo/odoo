@@ -11,12 +11,7 @@ class StockLocation(models.Model):
     valuation_account_id = fields.Many2one(
         'account.account', 'Stock Valuation Account',
         domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
-        help="Used for inventory valuation. When set on a virtual location (non internal type), "
-             "this account will be used to hold the value of products "
-             "into this location, instead of the generic Stock Account set on the product. "
-             "This has no effect for internal locations."
-             "In real-time: The product's account will be used as counterparty account."
-             "During closing: The company's stock valuation account will be used as counterparty account.")
+        help="Expense account used to re-qualify products removed from stock and sent to this location")
     is_valued_internal = fields.Boolean('Is valued inside the company', compute="_compute_is_valued", search="_search_is_valued")
     is_valued_external = fields.Boolean('Is valued outside the company', compute="_compute_is_valued")
 

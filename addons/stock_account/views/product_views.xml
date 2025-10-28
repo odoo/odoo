@@ -33,6 +33,7 @@
             <field name="arch" type="xml">
                 <field name="property_account_expense_categ_id" position="after">
                     <field name="property_stock_valuation_account_id" string="Stock Account" options="{'no_create': True}"/>
+                    <field name="account_stock_variation_id" string="Stock Variation" options="{'no_create': True}"/>
                     <field name="property_price_difference_account_id" options="{'no_create': True}" invisible="not (property_cost_method == 'standard' and property_valuation == 'real_time')"/>
                 </field>
             </field>
