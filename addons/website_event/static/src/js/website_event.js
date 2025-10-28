@@ -76,19 +76,9 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         const buttonEl = ev.currentTarget.closest("[type='submit']");
         const post = this._getPost();
         buttonEl.disabled = true;
-        const [modal, recaptchaToken] = await Promise.all([
+        const [modal] = await Promise.all([
             rpc(formEl.action, post),
-            this._recaptcha.getToken("website_event_registration"),
         ]);
-        if (recaptchaToken.error) {
-            this.notification.add(recaptchaToken.error, {
-                type: "danger",
-                title: _t("Error"),
-                sticky: true,
-            });
-            buttonEl.disabled = false;
-            return false;
-        }
         const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
         const form = modalEl.querySelector("form#attendee_registration");
         const _onClick = () => {
@@ -99,12 +89,26 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         };
         modalEl.querySelector(".js_goto_event").addEventListener("click", _onClick);
         modalEl.querySelector(".btn-close").addEventListener("click", _onClick);
-        modalEl.querySelector("form").addEventListener("submit", (ev) => {
+        modalEl.querySelector("form").addEventListener("submit", async (ev) => {
+            ev.preventDefault();
+
+            const form = ev.currentTarget;
+            const recaptchaToken = await this._recaptcha.getToken('website_event_registration');
+            if (recaptchaToken.error) {
+                this.notification.add(recaptchaToken.error, {
+                    type: "danger",
+                    title: _t("Error"),
+                    sticky: true,
+                });
+                buttonEl.disabled = false;
+                return false;
+            }
             const tokenInput = document.createElement("input");
             tokenInput.setAttribute("name", "recaptcha_token_response");
             tokenInput.setAttribute("type", "hidden");
             tokenInput.setAttribute("value", recaptchaToken.token);
-            ev.currentTarget.appendChild(tokenInput);
+            form.appendChild(tokenInput);
+            form.submit();
         });
         // the turnstile container needs to be already appended to the dom before rendering
         // see modal.js for events
