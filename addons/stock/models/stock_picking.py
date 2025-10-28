@@ -657,6 +657,8 @@ class StockPicking(models.Model):
     is_locked = fields.Boolean(default=True, copy=False, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
+    is_date_editable = fields.Boolean(
+        'Is Scheduled Date Editable', compute='_compute_is_date_editable')
 
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
@@ -742,6 +744,13 @@ class StockPicking(models.Model):
     def _compute_is_signed(self):
         for picking in self:
             picking.is_signed = picking.signature
+
+    def _compute_is_date_editable(self):
+        for picking in self:
+            if picking.state in ['done', 'cancel']:
+                picking.is_date_editable = not picking.is_locked
+            else:
+                picking.is_date_editable = True
 
     @api.depends('state', 'picking_type_code', 'scheduled_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_products_availability(self):

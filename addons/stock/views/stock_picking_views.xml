@@ -236,7 +236,7 @@
                         <group>
                             <label for="scheduled_date"/>
                             <div class="o_row">
-                                <field name="scheduled_date" readonly="state in ['cancel', 'done']" required="id"
+                                <field name="scheduled_date" readonly="not is_date_editable" required="id"
                                     decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
@@ -252,7 +252,7 @@
                                 decoration-success="state == 'assigned' or products_availability_state == 'available'"
                                 decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
                                 decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
-                            <field name="date_done" string="Effective Date" invisible="state != 'done'"/>
+                            <field name="date_done" string="Effective Date" invisible="state != 'done'" readonly="not is_date_editable"/>
                             <field name="origin" placeholder="e.g. PO0032" readonly="state in ['cancel', 'done']"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
                                    invisible="picking_type_code != 'incoming'"
