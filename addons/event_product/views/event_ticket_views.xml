@@ -61,6 +61,7 @@
                 />
             </field>
             <field name="description" position="after">
+                <field name="currency_id" column_invisible="True"/> <!-- Used to get the currency symbol on the ticket price. -->
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
             </field>
         </field>
