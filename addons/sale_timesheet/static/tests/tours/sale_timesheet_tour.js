@@ -322,32 +322,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: ".o_rightpanel_section[name='profitability'] .o_rightpanel_data > div > .o_rightpanel_subsection:eq(2) > table > thead > tr > th:eq(0):contains('Total')",
     content: 'Check the user sees Profitability subsection row',
 }, {
-    trigger: ".o_rightpanel_section[name='milestones'] .o_rightpanel_title:contains('Milestones')",
-    content: 'Check the user sees Milestones section',
-    run: "click",
-}, {
-    trigger: ".o_add_milestone a",
-    content: "Add a first milestone",
-    run: "click",
-}, {
-    trigger: ".o_list_button_add",
-    content: "Add a first milestone",
-    run: "click",
-}, {
-    trigger: "div.o_field_widget[name=name] input",
-    run: "edit New milestone",
-}, {
-    trigger: "input[data-field=deadline]",
-    content: "Edit new Milestone",
-    run: "edit 12/12/2099",
-}, {
-    trigger: ".o_list_button_save",
-    content: "Save new Milestone",
-    run: "click",
-}, {
-    trigger: ".breadcrumb-item.o_back_button",
-    run: "click",
-}, {
     trigger: ".o-kanban-button-new",
     content: "Create new Project Update",
     run: "click",
@@ -358,9 +332,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: ".o_field_widget[name=description] h3:contains('Profitability')",
     content: "Profitability title must be in description",
-}, {
-    trigger: ".o_field_widget[name=description] h3:contains('Milestones')",
-    content: "Milestones title must be in description",
 },
 // Those steps are currently needed in order to prevent the following issue:
 // "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."

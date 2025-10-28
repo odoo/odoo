@@ -144,46 +144,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     content: "Open Dashboard",
     run: "click",
 }, {
-    trigger: ".o_add_milestone a",
-    content: "Add a first milestone",
-    run: "click",
-}, {
-    trigger: ".o_list_button_add",
-    content: "Create new milestone",
-    run: "click",
-}, {
-    trigger: "div.o_field_widget[name=name] input",
-    run: "edit New milestone",
-}, {
-    trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2099",
-}, {
-    trigger: ".o_list_button_save",
-    run: "click",
-}, {
-    trigger: ".o_list_button_add",
-    content: "Make sure the milestone is saved before continuing",
-}, {
-    trigger: "td[data-tooltip='New milestone'] + td",
-    run: "click",
-}, {
-    trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2100 && click body"
-},  {
-    trigger: ".o_list_button_add",
-    content: "Create new milestone",
-    run: "click",
-}, {
-    trigger: "div.o_field_widget[name=name] input",
-    run: "edit Second milestone",
-}, {
-    trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2022 && click body",
-}, {
-    trigger: ".breadcrumb-item.o_back_button",
-    run: "click",
-}, {
-    trigger: ".o-kanban-button-new",
+    trigger: ".o_project_update_kanban_view .o-kanban-button-new",
     content: "Create a new update",
     run: "click",
 }, {
@@ -192,16 +153,6 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".o_form_button_save",
     run: "click",
-}, {
-    trigger: ".o_field_widget[name='description'] h1:contains('Activities')",
-}, {
-    trigger: ".o_field_widget[name='description'] h3:contains('Milestones')",
-}, {
-    trigger: ".o_field_widget[name='description'] div[name='milestone'] ul li:contains('(12/12/2099 => 12/12/2100)')",
-}, {
-    trigger: ".o_field_widget[name='description'] div[name='milestone'] ul li:contains('(due 12/12/2022)')",
-}, {
-    trigger: ".o_field_widget[name='description'] div[name='milestone'] ul li:contains('(due 12/12/2100)')",
 }, {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project',
