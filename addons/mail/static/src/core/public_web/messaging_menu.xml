@@ -37,7 +37,6 @@
                     </t>
                     <t t-set-slot="body">
                         <t t-if="message?.hasOnlyAttachments">
-                            <i class="fa me-1" t-att-class="message.previewIcon"/>
                             <t t-out="message.previewText" />
                         </t>
                         <span t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
@@ -45,12 +44,6 @@
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" member="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ' + (thread.correspondent.isTyping ? 'ms-n2' : 'ms-n1')"/>
                         <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
-                    </t>
-                    <t t-if="message" t-set-slot="body-icon">
-                        <t t-call="mail.message_preview_prefix">
-                            <t t-set="message" t-value="message"/>
-                            <t t-set="channel" t-value="thread.channel"/>
-                        </t>
                     </t>
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>

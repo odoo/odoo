@@ -10,10 +10,7 @@
                     <span t-if="message" class="text-muted smaller flex-shrink-0" t-esc="dateText(message)"/>
                 </div>
                 <div class="o-mail-SubChannelPreview-lastMessage text-start text-muted fw-normal smaller overflow-hidden ms-2">
-                    <t t-if="message" t-call="mail.message_preview_prefix">
-                        <t t-set="message" t-value="message"/>
-                    </t>
-                    <t t-out="message?.inlineBody"/>
+                    <t t-out="message?.previewText"/>
                 </div>
             </div>
             <i t-if="env.inMessage" class="oi oi-chevron-right ms-2 opacity-50"/>

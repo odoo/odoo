@@ -462,28 +462,43 @@ export class Message extends Record {
     previewText = fields.Html("", {
         /** @this {import("models").Message} */
         compute() {
+            let messageBody = "";
             if (!this.hasOnlyAttachments) {
-                return this.inlineBody || this.subtype_id?.description;
+                messageBody = this.inlineBody || this.subtype_id?.description;
+            } else {
+                const attachments = this.attachment_ids;
+                switch (attachments.length) {
+                    case 1:
+                        messageBody = attachments[0].previewName;
+                        break;
+                    case 2:
+                        messageBody = _t("%(file1)s and %(file2)s", {
+                            file1: attachments[0].previewName,
+                            file2: attachments[1].previewName,
+                            count: attachments.length - 1,
+                        });
+                        break;
+                    default:
+                        messageBody = _t("%(file1)s and %(count)s other attachments", {
+                            file1: attachments[0].previewName,
+                            count: attachments.length - 1,
+                        });
+                }
+                messageBody = markup`<i class="fa me-1 ${this.previewIcon}"></i>${messageBody}`;
             }
-            const { attachment_ids: attachments } = this;
-            if (!attachments || attachments.length === 0) {
-                return "";
+            if (this.isSelfAuthored) {
+                return markup`<i class="fa fa-mail-reply me-1 opacity-75"></i>${_t(
+                    "You: %(message_content)s",
+                    { message_content: messageBody }
+                )}`;
             }
-            switch (attachments.length) {
-                case 1:
-                    return attachments[0].previewName;
-                case 2:
-                    return _t("%(file1)s and %(file2)s", {
-                        file1: attachments[0].previewName,
-                        file2: attachments[1].previewName,
-                        count: attachments.length - 1,
-                    });
-                default:
-                    return _t("%(file1)s and %(count)s other attachments", {
-                        file1: attachments[0].previewName,
-                        count: attachments.length - 1,
-                    });
+            if (!this.author || this.author.notEq(this.thread?.channel?.correspondent?.persona)) {
+                return _t("%(authorName)s: %(message_content)s", {
+                    authorName: this.authorName,
+                    message_content: messageBody,
+                });
             }
+            return messageBody;
         },
     });
 
