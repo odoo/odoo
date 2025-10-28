@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_jo_edi_pos.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <td name="delete-column" position="before">
+            <td class="align-middle text-end">
+                <div t-if="showJoEdiStatus" class="col p-2" name="EDI status" t-esc="joEdiStatus"/>
+            </td>
+        </td>
+    </t>
+</templates>
