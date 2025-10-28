@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-10-27 23:40+0000\n"
+"PO-Revision-Date: 2025-10-28 10:32+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/mrp/da/"
 ">\n"
@@ -386,7 +386,7 @@ msgstr "<span class=\"o_stat_text\">Operationer</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Operations<br/>Performance</span>"
-msgstr "<span class=\"o_stat_text\">Processernes<br/>ydeevne</span>"
+msgstr "<span class=\"o_stat_text\">Operationernes<br/>ydeevne</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -852,7 +852,7 @@ msgstr "Anvend på Varianter"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Archive Operation"
-msgstr "Arkivér proces"
+msgstr "Arkivér operation"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1675,12 +1675,12 @@ msgstr "Forbrugs Advarsel"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Copy Existing Operations"
-msgstr "Kopiere eksisterende processer"
+msgstr "Kopiere eksisterende operationer"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_copy_to_bom_tree_view
 msgid "Copy selected operations"
-msgstr "Kopiere valgte processer"
+msgstr "Kopiere valgte operationer"
 
 #. module: mrp
 #. odoo-javascript
@@ -1750,7 +1750,7 @@ msgstr "Enhedsomkostninger for komponenter"
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Cost of Operations per unit"
-msgstr "Procesomkostninger for komponenter"
+msgstr "Operationsomkostninger for komponenter"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -1797,7 +1797,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Create a new operation"
-msgstr "Opret en ny proces"
+msgstr "Opret en ny operation"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1844,7 +1844,7 @@ msgid ""
 msgstr ""
 "Opret driftsafhængigheder, der påvirker planlægning og arbejdsordrestatus "
 "ved bekræftelse af produktionsordrer. Hvis funktionen er aktiveret, og der "
-"ikke er angivet nogen afhængigheder, antager Odoo, at alle processer kan "
+"ikke er angivet nogen afhængigheder, antager Odoo, at alle operationer kan "
 "starte samtidig."
 
 #. module: mrp
@@ -2988,7 +2988,7 @@ msgid ""
 msgstr ""
 "Det er ikke muligt at fjerne planlægningen for en enkelt arbejdsordre. Fjern "
 "i stedet planlægningen for hele produktionsordren for at kunne fjerne "
-"planlægningen for alle tilknyttede processer."
+"planlægningen for alle tilknyttede operationer."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -4053,7 +4053,7 @@ msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
 "                Each operation is done at a specific Work Center and has a specific duration."
 msgstr ""
-"Processer definerer, hvad der skal udføres for at gennemføre arbejdet på et "
+"Operation definerer, hvad der skal udføres for at gennemføre arbejdet på et "
 "arbejdscenter.\n"
 "                Hver operation udføres på et specifikt arbejdscenter og har "
 "en angivet varighed."
@@ -4096,17 +4096,17 @@ msgstr "Planlagte operationer"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Operations Search Filters"
-msgstr "Søgefiltre for processer"
+msgstr "Søgefiltre for operationer"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 msgid "Operations that cannot start before this operation is completed."
-msgstr "Processer, der ikke kan påbegyndes, inden denne proces er afsluttet."
+msgstr "Operationer, der ikke kan påbegyndes, inden denne proces er afsluttet."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
 msgid "Operations that need to be completed before this operation can start."
-msgstr "Processer, der skal afsluttes, inden denne proces kan påbegyndes."
+msgstr "Operationer, der skal afsluttes, inden denne proces kan påbegyndes."
 
 #. module: mrp
 #. odoo-python
@@ -4439,7 +4439,7 @@ msgstr "Prioritet"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason5
 msgid "Process Defect"
-msgstr "Procesfejl"
+msgstr "Operationsfejl"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5132,13 +5132,13 @@ msgstr "Sikkerhedsgennemløbstid"
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,help:mrp.field_res_config_settings__manufacturing_lead
 msgid "Security days for each manufacturing operation."
-msgstr "Sikkerhedsdage for hver produktionsproces."
+msgstr "Sikkerhedsdage for hver produktionsoperation."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 msgid "Select Operations to Copy"
-msgstr "Vælg processer til kopiering"
+msgstr "Vælg operationer til kopiering"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
@@ -6447,10 +6447,10 @@ msgid ""
 "manufacturing orders with different BoMs."
 msgstr ""
 "Hvis der ved indkøb findes en \"produktionsproces\" med en fastlagt "
-"procestype, vil systemet forsøge at oprette en produktionsordre for "
-"produktet med en stykliste af samme procestype. Hvis dette ikke er "
-"tilfældet, vil procestypen ikke blive taget i betragtning ved søgning efter "
-"styklister. På denne måde kan der defineres lagerregler, som udløser "
+"operationstype, vil systemet forsøge at oprette en produktionsordre for "
+"produktet med en stykliste af samme operationstype. Hvis dette ikke er "
+"tilfældet, vil operationstypen ikke blive taget i betragtning ved søgning "
+"efter styklister. På denne måde kan der defineres lagerregler, som udløser "
 "forskellige produktionsordrer med forskellige styklister."
 
 #. module: mrp
@@ -6818,7 +6818,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You can only merge manufacturing with the same operation type"
-msgstr "Du kan kun sammenlægge produktionsordrer med samme procestype"
+msgstr "Du kan kun sammenlægge produktionsordrer med samme operationstype"
 
 #. module: mrp
 #. odoo-python

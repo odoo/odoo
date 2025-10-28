@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-10-27 23:40+0000\n"
+"PO-Revision-Date: 2025-10-28 12:55+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "maintenance/da/>\n"
@@ -469,7 +469,7 @@ msgstr "Redigér..."
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__effective_date
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__effective_date
 msgid "Effective Date"
-msgstr "Effektiv dato"
+msgstr "Ikrafttrædelsesdato"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_email
@@ -609,7 +609,7 @@ msgstr "Følgere (partnere)"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome-ikon, f.eks. fa-opgaver"
+msgstr "FontAwesome-ikon, f.eks. fa-opgaver"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_type__forever
@@ -685,8 +685,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID for overordnet record indeholdende aliaset (eksempel: projekt, der "
-"indeholder opgaveoprettelses aliaset)"
+"ID for det overordnede alias-datasæt (f.eks. et projekt, der indeholder "
+"aliasset til oprettelse af opgaver)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
@@ -1135,8 +1135,8 @@ msgid ""
 "creation of new records completely."
 msgstr ""
 "Valgfri ID for en tråd (record), som alle indgående meddelelser vil blive "
-"vedhæftet, selvom de ikke svarede på det. Hvis opsat, vil dette fuldstændigt"
-" deaktivere oprettelsen af nye poster."
+"vedhæftet, selv om de ikke svarede på det. Hvis opsat, vil dette "
+"fuldstændigt deaktivere oprettelsen af nye poster."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -1165,7 +1165,7 @@ msgstr "Overordnet model"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Overordnet tråd (record) ID"
+msgstr "Tråd-ID for overordnet datasæt"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_model_id
@@ -1360,12 +1360,12 @@ msgstr "Planlagt dato"
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
 msgid "Scrap"
-msgstr "Skrot"
+msgstr "Kasseringer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__scrap_date
 msgid "Scrap Date"
-msgstr "Skrotdato"
+msgstr "Kasseringsdato"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
@@ -1507,8 +1507,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Navnet på e-mail aliaset, f.eks. 'jobs', hvis du vil fange e-mails til "
-"<jobs@example.odoo.com>"
+"Navnet på e-mailaliasset, f.eks. 'jobs', hvis du vil modtage e-mails sendt "
+"til <jobs@example.odoo.com>"
 
 #. module: maintenance
 #. odoo-python
