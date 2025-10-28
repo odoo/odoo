@@ -66,13 +66,8 @@ class ProductValue(models.Model):
                 product_value.current_value_description = False
                 product_value.computed_value_description = False
                 continue
-            product_value.current_value_description = product_value.move_id._get_value_data()['description']
-            computed_value_data = product_value.move_id._get_value_data(ignore_manual_update=True)
-            if computed_value_data['description'] == product_value.current_value_description:
-                product_value.computed_value_description = False
-            else:
-                value = product_value.currency_id.format(computed_value_data['value'])
-                product_value.computed_value_description = _('Computed value: %(value)s\n%(description)s', value=value, description=computed_value_data['description'])
+            product_value.current_value_description = product_value.move_id.value_justification
+            product_value.computed_value_description = product_value.move_id.value_computed_justification
 
     @api.model_create_multi
     def create(self, vals_list):
