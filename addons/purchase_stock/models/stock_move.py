@@ -175,9 +175,9 @@ class StockMove(models.Model):
             valuation_data['quantity'] = quantity
             valuation_data['value'] = quantity * value / aml_quantity
         account_moves = self.env['account.move.line'].browse(aml_ids).move_id
-        valuation_data['description'] = _('%(value)s for %(quantity)s %(unit)s from %(bills)s',
-            value=value, quantity=quantity, unit=self.product_id.uom_id.name,
-            bills=', '.join(account_move.name for account_move in account_moves))
+        valuation_data['description'] = self.env._('%(value)s for %(quantity)s %(unit)s from %(bills)s',
+            value=self.company_currency_id.format(value), quantity=aml_quantity, unit=self.product_id.uom_id.name,
+            bills=account_moves.mapped('display_name'))
         return valuation_data
 
     def _get_value_from_quotation(self, quantity, at_date=None):
@@ -187,10 +187,13 @@ class StockMove(models.Model):
         price_unit = self.purchase_line_id._get_stock_move_price_unit()
         uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
         quantity = min(quantity, uom_quantity)
+        value = price_unit * quantity
         return {
-            'value': price_unit * quantity,
+            'value': value,
             'quantity': quantity,
-            'description': _('From %(quotation)s', quotation=self.purchase_line_id.order_id.name),
+            'description': self.env._('%(value)s for %(quantity)s %(unit)s from %(quotation)s (not billed)',
+                value=self.company_currency_id.format(value), quantity=quantity, unit=self.product_id.uom_id.name,
+                quotation=self.purchase_line_id.order_id.display_name),
         }
 
     def _get_related_invoices(self):
