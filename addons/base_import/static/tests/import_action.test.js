@@ -293,8 +293,8 @@ describe("Import view", () => {
         onRpc("partner", "get_import_templates", ({ route }) => {
             expect.step(route);
             return [
-              { label: "Some Import Template", template: templateURL },
-              { label: "Another Import Template", template: secondTemplateURL },
+                { label: "Some Import Template", template: templateURL },
+                { label: "Another Import Template", template: secondTemplateURL },
             ];
         });
         onRpc("base_import.import", "create", ({ route }) => expect.step(route));
@@ -308,18 +308,20 @@ describe("Import view", () => {
         expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-2/import");
         expect(".o_import_action").toHaveCount(1);
         expect(".o_nocontent_help .btn-outline-primary").toHaveCount(2);
-        expect(
-          ".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary"
-        ).toHaveText("Some Import Template");
-        expect(
-          ".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary"
-        ).toHaveProperty("href", "https://www.hoot.test" + templateURL);
-        expect(
-          ".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary"
-        ).toHaveText("Another Import Template");
-        expect(
-          ".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary"
-        ).toHaveProperty("href", "https://www.hoot.test" + secondTemplateURL);
+        expect(".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary").toHaveText(
+            "Some Import Template"
+        );
+        expect(".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary").toHaveProperty(
+            "href",
+            "https://www.hoot.test" + templateURL
+        );
+        expect(".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary").toHaveText(
+            "Another Import Template"
+        );
+        expect(".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary").toHaveProperty(
+            "href",
+            "https://www.hoot.test" + secondTemplateURL
+        );
         expect(".o_control_panel button").toHaveCount(2);
     });
 
@@ -1454,24 +1456,22 @@ describe("Import view", () => {
     });
 });
 
-describe("Import action", () => {
-    test("field selection has a clear button", async () => {
-        await mountWebClient();
-        await getService("action").doAction(1);
+test("field selection has a clear button", async () => {
+    await mountWebClient();
+    await getService("action").doAction(1);
 
-        // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
-        await contains(".o_control_panel_main_buttons .o_import_file").click();
-        await setInputFiles([file]);
-        await animationFrame();
-        await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Bar");
-        expect(".o_select_menu_toggler_clear").toHaveCount(2, {
-            message: "clear button is present for each field to unselect it",
-        });
-
-        await contains(".o_select_menu_toggler_clear").click();
-        expect("tr:nth-child(2) .o_select_menu").toHaveText("To import, select a field...");
+    // Set and trigger the change of a file for the input
+    const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+    await contains(".o_control_panel_main_buttons .o_import_file").click();
+    await setInputFiles([file]);
+    await animationFrame();
+    await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Bar");
+    expect(".o_select_menu_toggler_clear").toHaveCount(2, {
+        message: "clear button is present for each field to unselect it",
     });
+
+    await contains(".o_select_menu_toggler_clear").click();
+    expect("tr:nth-child(2) .o_select_menu").toHaveText("To import, select a field...");
 });
 
 describe("Import a CSV", () => {
