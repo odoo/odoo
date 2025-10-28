@@ -550,7 +550,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         :param ignore_duplicates: if true, inputs that match records already in the DB will be ignored
         """
-        def deref_values(values, model):
+        def deref_values(values, model, raise_if_not_found_ref):
             """Replace xml_id references by database ids in all provided values.
 
             This allows to define all the data before the records even exist in the database.
@@ -580,12 +580,19 @@ class AccountChartTemplate(models.AbstractModel):
                             last_part = last_part[0]
                         # (0, 0, {'test': 'account.ref_name'}) -> Command.Create({'test': 13})
                         if command in (Command.CREATE, Command.UPDATE):
-                            deref_values(last_part, self.env[field.comodel_name])
+                            deref_values(last_part, self.env[field.comodel_name], raise_if_not_found_ref)
                         # (6, 0, ['account.ref_name']) -> Command.Set([13])
                         elif command == Command.SET:
+                            filtered_last_part = []
                             for subvalue_idx, subvalue in enumerate(last_part):
                                 if isinstance(subvalue, str):
-                                    last_part[subvalue_idx] = self.ref(subvalue).id
+                                    sub_object = self.ref(subvalue, raise_if_not_found=raise_if_not_found_ref)
+                                    if (raise_if_not_found_ref or sub_object):
+                                        filtered_last_part.append(sub_object.id)
+                                else:
+                                    filtered_last_part.append(subvalue)
+                            last_part.clear()
+                            last_part.extend(filtered_last_part)
                         elif command == Command.LINK and isinstance(_id, str):
                             value[i] = Command.link(self.ref(_id).id)
                 elif field.type in ('one2many', 'many2many') and isinstance(value, str):
@@ -651,6 +658,7 @@ class AccountChartTemplate(models.AbstractModel):
                 created_models.add(model)
 
         created_records = {}
+        raise_if_not_found_ref = self.env.context.get('raise_if_not_found_ref', True)
         for model, model_data in delay(list(deepcopy(data).items())):
             all_records_vals = []
             for xml_id, record_vals in model_data.items():
@@ -668,7 +676,7 @@ class AccountChartTemplate(models.AbstractModel):
 
                 all_records_vals.append({
                     'xml_id': xml_id,
-                    'values': deref_values(record_vals, self.env[model]),
+                    'values': deref_values(record_vals, self.env[model], raise_if_not_found_ref),
                     'noupdate': True,
                 })
             created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals, ignore_duplicates=ignore_duplicates)

@@ -73,7 +73,7 @@ class ResCompany(models.Model):
         for company in companies_need_update_fp:
             ChartTemplate = self.env['account.chart.template'].with_company(company)
             fiscal_position_data = ChartTemplate._get_in_account_fiscal_position()
-            ChartTemplate._load_data({'account.fiscal.position': fiscal_position_data})
+            ChartTemplate.with_context(raise_if_not_found_ref=False)._load_data({'account.fiscal.position': fiscal_position_data})
 
     @api.constrains('l10n_in_pan')
     def _check_l10n_in_pan(self):
