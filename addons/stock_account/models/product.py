@@ -456,8 +456,8 @@ class ProductCategory(models.Model):
             ('real_time', 'Perpetual (at invoicing)'),
         ],
         company_dependent=True, copy=True, tracking=True,
-        help="""Manual: The accounting entries to value the inventory are not posted automatically.
-        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
+        help="""Periodic: The accounting entries are suggested manually in the inventory valuation report.
+        Perpetual: An accounting entry is automatically created to value the inventory when a product is billed or invoiced.
         """)
     property_cost_method = fields.Selection(
         string="Costing Method",
@@ -485,6 +485,9 @@ class ProductCategory(models.Model):
         'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
         check_company=True,
         help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
+    account_stock_variation_id = fields.Many2one(
+        'account.account', string="Stock Variation Account", readonly=False,
+        related="property_stock_valuation_account_id.account_stock_variation_id")
 
     @api.depends_context('company')
     def _compute_anglo_saxon_accounting(self):
