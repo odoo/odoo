@@ -96,8 +96,8 @@
     <t t-set="btnClass" t-value="attClassObjectToString({
         [btnClass]: true,
         'o-text-white border-0 o-simulateDarkTheme': store.shouldSimulateDarkTheme(this),
-        'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and !action.tags.includes('CALL_LAYOUT'),
-        'bg-transparent': store.shouldSimulateDarkTheme(this) and action.tags.includes('CALL_LAYOUT'),
+        'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and hasBtnBg,
+        'bg-transparent': store.shouldSimulateDarkTheme(this) and !hasBtnBg,
     })"/>
     <!-- dynamic classes-->
     <t t-set="btnClass" t-value="attClassObjectToString({
