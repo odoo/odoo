@@ -20,6 +20,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
 
@@ -192,7 +193,12 @@ export class MassMailingIframe extends Component {
         );
     }
 
+    get isBrowserSafari() {
+        return isBrowserSafari();
+    }
+
     async setupIframe() {
+        this.iframeRef.el?.contentDocument.head.appendChild(this.renderHeadContent());
         await this.loadIframeAssets();
         if (status(this) === "destroyed") {
             return;
@@ -204,7 +210,6 @@ export class MassMailingIframe extends Component {
         } else {
             this.iframeRef.el.contentDocument.body.classList.add("bg-white");
         }
-        this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
         htmlResizeObserver.observe(
             this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
