@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-16 18:38+0000\n"
-"PO-Revision-Date: 2025-10-20 08:19+0000\n"
+"POT-Creation-Date: 2025-10-24 18:36+0000\n"
+"PO-Revision-Date: 2025-10-27 22:20+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/it/>\n"
@@ -7969,6 +7969,12 @@ msgstr ""
 "La quantità richiesta da rimborsare è superiore alla quantità rimborsabile."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "The search on Order Number only supports up to 3 digits."
+msgstr "La ricerca per numero d'ordine supporta solo fino a 3 cifre."
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
@@ -9204,6 +9210,16 @@ msgstr "Non è possibile modificare il pagamento di un ordine registrato."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "Non è possibile fatturare gli ordini appartenenti ad aziende diverse."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"You cannot reset to draft an invoice linked to a POS order. You must refund "
+"the order or create a credit note instead."
+msgstr ""
+"Non è possibile reimpostare a bozza una fattura collegata a un ordine POS. È "
+"necessario rimborsare l'ordine o creare una nota di credito."
 
 #. module: point_of_sale
 #. odoo-python

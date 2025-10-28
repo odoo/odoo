@@ -1503,6 +1503,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     && inputEl.name !== this.$target[0].querySelector(".s_website_form_input")?.name
                     && !existingDependencyNames.includes(inputEl.name) && !this._findCircular(el)) {
                 const button = document.createElement('we-button');
+                button.dataset.noSplit = true;
                 button.textContent = el.querySelector('.s_website_form_label_content').textContent;
                 button.dataset.setVisibilityDependency = inputEl.name;
                 selectDependencyEl.append(button);
