@@ -416,12 +416,26 @@ class HrEmployee(models.Model):
         if self.env.context.get('ignored_leave_ids'):
             leaves_domain.append(('id', 'not in', self.env.context.get('ignored_leave_ids')))
 
+        cash_outs_domain = [
+            ('leave_type_id', 'in', leave_types.ids),
+            ('employee_id', 'in', employees.ids),
+            ('state', 'in', ['confirm', 'validate1', 'validate', 'paid']),
+        ]
+        if self.env.context.get('ignored_cash_out_ids'):
+            cash_outs_domain.append(('id', 'not in', self.env.context.get('ignored_cash_out_ids')))
+
         if not target_date:
             target_date = fields.Date.today()
         if ignore_future:
             leaves_domain.append(('date_from', '<=', target_date))
         leaves = self.env['hr.leave'].search(leaves_domain)
         leaves_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave']))
+
+        cash_outs = self.env['hr.leave.cash.out'].search(cash_outs_domain)
+        cash_outs_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave.cash.out']))
+        for cash_out in cash_outs:
+            cash_outs_per_employee_type[cash_out.employee_id][cash_out.leave_type_id] |= cash_out
+
         for leave in leaves:
             leaves_per_employee_type[leave.employee_id][leave.holiday_status_id] |= leave
 
@@ -499,7 +513,38 @@ class HrEmployee(models.Model):
                 'leaves_taken': 0,
                 'virtual_leaves_taken': 0,
             })
+        for employee in employees:
+            for leave_type in leave_types:
+                leave_type_data = allocations_leaves_consumed[employee][leave_type]
+                for cash_out in cash_outs_per_employee_type[employee][leave_type]:
+                    if not leave_type.requires_allocation:
+                        continue
 
+                    quantity = cash_out.quantity
+                    allocation = cash_out.leave_allocation_id
+                    max_allowed_duration = min(
+                        quantity,
+                        leave_type_data[allocation]['virtual_remaining_leaves'],
+                    )
+                    if not max_allowed_duration:
+                        continue
+                    allocated_time = min(max_allowed_duration, quantity)
+                    leave_type_data[allocation]['virtual_leaves_taken'] += allocated_time
+                    leave_type_data[allocation]['virtual_remaining_leaves'] -= allocated_time
+                    leave_type_data[allocation]['virtual_cash_out_taken'] += allocated_time
+                    if cash_out.state == 'validate':
+                        leave_type_data[allocation]['leaves_taken'] += allocated_time
+                        leave_type_data[allocation]['remaining_leaves'] -= allocated_time
+                        leave_type_data[allocation]['cash_out_taken'] += allocated_time
+
+                    quantity -= allocated_time
+
+                    if round(quantity, 2) > 0:
+                        to_recheck_leaves_per_leave_type[employee][leave_type]['excess_days']['cash_out'] = {
+                            'amount': quantity,
+                            'is_virtual': cash_out.state != 'validate',
+                            'cash_out_id': cash_out.id,
+                        }
         for employee in employees:
             for leave_type in leave_types:
                 if not leave_type.requires_allocation:
@@ -599,6 +644,7 @@ class HrEmployee(models.Model):
                         if leave.state == 'validate':
                             leave_type_data[False]['remaining_leaves'] -= allocated_time
                             leave_type_data[False]['leaves_taken'] += allocated_time
+
         for employee in to_recheck_leaves_per_leave_type:
             for leave_type in to_recheck_leaves_per_leave_type[employee]:
                 content = to_recheck_leaves_per_leave_type[employee][leave_type]

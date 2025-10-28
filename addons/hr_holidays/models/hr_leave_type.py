@@ -125,6 +125,10 @@ class HrLeaveType(models.Model):
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
     max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
+    allow_cash_out_request = fields.Boolean(default=False, string="Allow Cash Out Request",
+        help="Allow employee to request cash out for this leave type.")
+    allow_employee_request = fields.Boolean(default=False, string="Allow Employee Request",
+        help="Allow employee to request cash out for this leave type. If disabled, only managers can request cash out.")
 
     _check_negative = models.Constraint(
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
@@ -513,7 +517,8 @@ class HrLeaveType(models.Model):
             target_date = fields.Date.today()
 
         allocations_leaves_consumed, extra_data = employees.with_context(
-            ignored_leave_ids=self.env.context.get('ignored_leave_ids')
+            ignored_leave_ids=self.env.context.get('ignored_leave_ids'),
+            ignored_cash_out_ids=self.env.context.get('ignored_cash_out_ids'),
         )._get_consumed_leaves(self, target_date)
 
         for employee in employees:
@@ -525,6 +530,8 @@ class HrLeaveType(models.Model):
                     {
                         'remaining_leaves': 0,
                         'virtual_remaining_leaves': 0,
+                        'virtual_cash_out_taken': 0,
+                        'cash_out_taken': 0,
                         'max_leaves': 0,
                         'accrual_bonus': 0,
                         'leaves_taken': 0,
@@ -547,12 +554,21 @@ class HrLeaveType(models.Model):
                     leave_type.id)
                 for excess_date, excess_days in extra_data[employee][leave_type]['excess_days'].items():
                     amount = excess_days['amount']
-                    lt_info[1]['virtual_excess_data'].update({
-                        excess_date.strftime('%Y-%m-%d'): excess_days
-                    }),
+                    if excess_date != "cash_out":
+                        lt_info[1]['virtual_excess_data'].update({
+                            excess_date.strftime('%Y-%m-%d'): excess_days,
+                        })
+                    else:
+                        lt_info[1]['virtual_excess_data'].update({
+                            'cash_out': excess_days,
+                        })
                     lt_info[1]['total_virtual_excess'] += amount
                     if not leave_type.allows_negative:
                         continue
+                    if excess_date == "cash_out":
+                        lt_info[1]['virtual_cash_out_taken'] += amount
+                        if not excess_days['is_virtual']:
+                            lt_info[1]['cash_out_taken'] += amount
                     lt_info[1]['virtual_leaves_taken'] += amount
                     lt_info[1]['virtual_remaining_leaves'] -= amount
                     if excess_days['is_virtual']:
@@ -582,9 +598,11 @@ class HrLeaveType(models.Model):
                             continue
                     lt_info[1]['remaining_leaves'] += data['remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data['virtual_remaining_leaves']
+                    lt_info[1]['virtual_cash_out_taken'] += data['virtual_cash_out_taken']
                     lt_info[1]['max_leaves'] += data['max_leaves']
                     lt_info[1]['accrual_bonus'] += data['accrual_bonus']
                     lt_info[1]['leaves_taken'] += data['leaves_taken']
+                    lt_info[1]['cash_out_taken'] += data['cash_out_taken']
                     lt_info[1]['virtual_leaves_taken'] += data['virtual_leaves_taken']
                     lt_info[1]['leaves_requested'] += data['virtual_leaves_taken'] - data['leaves_taken']
                     lt_info[1]['leaves_approved'] += data['leaves_taken']

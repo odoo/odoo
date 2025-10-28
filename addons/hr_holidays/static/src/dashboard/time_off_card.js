@@ -25,6 +25,7 @@ export class TimeOffCardPopover extends Component {
         "timeOffType",
         "employeeId",
         "employeeCompany",
+        "taken_leaves",
     ];
 
     setup() {
@@ -79,6 +80,31 @@ export class TimeOffCardPopover extends Component {
             list_view_ref: "hr_holidays.hr_leave_view_tree_my",
             form_view_ref: "hr_holidays.hr_leave_view_form",
         }
+
+        openLeaveWindow(this.actionService, resModel, name, domain, context);
+    }
+
+    async navigateCashOutInfo(stateList) {
+        const { employeeId, timeOffType, employeeCompany } = this.props;
+        const isInHolidaysUserGroup = await user.hasGroup("hr_holidays.group_hr_holidays_user");
+
+        const resModel = "hr.leave.cash.out";
+        const name = "My Cash Out Requests";
+        const domain = [
+            ["state", "in", stateList],
+            ["leave_type_id", "=", timeOffType],
+            ["company_id", "=", employeeCompany],
+            employeeId ? ["employee_id", "=", employeeId] : ["user_id", "=", user.userId],
+        ];
+        const context = isInHolidaysUserGroup
+            ? {
+                  search_default_group_date_from: true,
+              }
+            : {
+                  search_default_group_date_from: true,
+                  list_view_ref: "hr_holidays.hr_leave_cash_out_view_tree_my",
+                  form_view_ref: "hr_holidays.hr_leave_cash_out_view_form",
+              };
 
         openLeaveWindow(this.actionService, resModel, name, domain, context);
     }
@@ -143,9 +169,13 @@ export class TimeOffCard extends Component {
         this.popover.open(ev.target, {
             allocated: formatNumber(this.lang, data.max_leaves),
             accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
-            approved: formatNumber(this.lang, data.leaves_approved),
-            planned: formatNumber(this.lang, data.leaves_requested),
+            approved: formatNumber(this.lang, data.leaves_approved - data.cash_out_taken),
+            planned: formatNumber(
+                this.lang,
+                data.leaves_requested - (data.virtual_cash_out_taken - data.cash_out_taken)
+            ),
             left: formatNumber(this.lang, data.virtual_remaining_leaves),
+            taken_leaves: formatNumber(this.lang, data.cash_out_taken),
             warning: this.warning,
             closest: data.closest_allocation_duration,
             request_unit: data.request_unit,
@@ -194,7 +224,7 @@ export class TimeOffCard extends Component {
     }
 }
 
-function openLeaveWindow(actionService, resModel, name, domain, context) {
+export function openLeaveWindow(actionService, resModel, name, domain, context) {
     actionService.doAction({
         type: "ir.actions.act_window",
         name: name,
