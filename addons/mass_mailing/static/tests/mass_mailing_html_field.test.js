@@ -194,25 +194,26 @@ describe("field HTML", () => {
         // When those popovers are killed, OWL tries to reconcile its element List
         // in OverlayContainer, displaces the node that contains the iframe
         // and the editor subsequently crashes
-        const base64Img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
-        onRpc("/html_editor/get_image_info", () => {
-            return {
-                original: { image_src: base64Img },
-            };
-        });
+        const base64Img =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        onRpc("/html_editor/get_image_info", () => ({
+            original: { image_src: base64Img },
+        }));
         class SomeModel extends models.Model {
-            _name = "some.model"
-            mailing_ids = fields.One2many({relation: "mailing.mailing"});
+            _name = "some.model";
+            mailing_ids = fields.One2many({ relation: "mailing.mailing" });
 
-            _records = [{
-                id: 1,
-                mailing_ids: [1],
-            }]
+            _records = [
+                {
+                    id: 1,
+                    mailing_ids: [1],
+                },
+            ];
         }
 
         Mailing._views["form"] = mailViewArch;
         defineModels([SomeModel]);
-        const arch = `<form><field name="mailing_ids"> <list><field name="display_name" /></list> </field></form>`
+        const arch = `<form><field name="mailing_ids"> <list><field name="display_name" /></list> </field></form>`;
         await mountView({
             type: "form",
             resModel: "some.model",
@@ -223,9 +224,12 @@ describe("field HTML", () => {
         await waitFor(".o_dialog");
         await contains(".o_dialog [data-name='event']").click();
         await waitFor(".o_dialog .o_mass_mailing-builder_sidebar", { timeout: 1000 });
-        await contains(".o_dialog :iframe p", { timeout: 1000}).click();
-        await waitFor(".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)");
-        const overlayOptionsSelect = ".o-main-components-container .o-overlay-container .o_overlay_options"
+        await contains(".o_dialog :iframe p", { timeout: 1000 }).click();
+        await waitFor(
+            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)"
+        );
+        const overlayOptionsSelect =
+            ".o-main-components-container .o-overlay-container .o_overlay_options";
         await waitFor(overlayOptionsSelect + ":has(button[title='Move up'])");
         await contains(".o_dialog :iframe img").click();
         await waitFor(overlayOptionsSelect + ":not(:has(button[title='Move up']))");
