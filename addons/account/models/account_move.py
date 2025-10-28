@@ -4,7 +4,7 @@ import ast
 import calendar
 from collections import Counter, defaultdict
 from collections.abc import Mapping
-from contextlib import ExitStack, contextmanager
+from contextlib import ExitStack, contextmanager, nullcontext
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from hashlib import sha256
@@ -5470,13 +5470,14 @@ class AccountMove(models.Model):
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly (if the user didnt' change the rate manually)
-            if not invoice.invoice_date and invoice.is_invoice(include_receipts=True):
-                if invoice.invoice_currency_rate != invoice.expected_currency_rate:
+            if not invoice.invoice_date:
+                if invoice.is_sale_document(include_receipts=True):
+                    is_manual_rate = invoice.invoice_currency_rate != invoice.expected_currency_rate
                     # keep the rate set by the user
-                    with self.env.protecting([self._fields['invoice_currency_rate']], invoice):
+                    with self.env.protecting([self._fields['invoice_currency_rate']], invoice) if is_manual_rate else nullcontext():
                         invoice.invoice_date = fields.Date.context_today(self)
-                else:
-                    invoice.invoice_date = fields.Date.context_today(self)
+                elif invoice.is_purchase_document(include_receipts=True):
+                    validation_msgs.add(_("The Bill/Refund date is required to validate this document."))
 
         for move in self:
             if move.state in ['posted', 'cancel']:
