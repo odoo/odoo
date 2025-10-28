@@ -191,14 +191,19 @@
                         <group>
                             <group string="Salary Package" name="recruitment_contract" groups="hr_recruitment.group_hr_recruitment_user">
                                 <label for="salary_expected"/>
-                                <div class="o_row">
-                                    <field name="salary_expected" placeholder="Expected"/>
+                                <field name="currency_id" invisible="1"/>
+                                <div class="d-flex gap-2 align-items-baseline">
+                                    <field name="salary_expected" placeholder="Expected" class="oe_inline" widget="monetary"/>
+                                    <span> / </span>
+                                    <field name="schedule_pay" class="oe_inline" placeholder="Month"/>
                                     <span invisible="not salary_expected_extra"> + </span>
                                     <field name="salary_expected_extra" placeholder="Other benefits"/>
                                 </div>
                                 <label for="salary_proposed"/>
-                                <div class="o_row">
-                                    <field name="salary_proposed"/>
+                                <div class="d-flex gap-2 align-items-baseline">
+                                    <field name="salary_proposed" placeholder="Expected" class="oe_inline" widget="monetary"/>
+                                    <span> / </span>
+                                    <field name="schedule_pay" class="oe_inline" placeholder="Month"/>
                                     <span invisible="not salary_proposed_extra"> + </span>
                                     <field name="salary_proposed_extra" placeholder="Other benefits"/>
                                 </div>

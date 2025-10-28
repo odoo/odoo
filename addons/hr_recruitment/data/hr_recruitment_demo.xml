@@ -12,32 +12,49 @@
         <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
     </record>
 
+     <!-- Job Tags -->
+    <record id="multi_site_job_tag" model="hr.job.tag">
+        <field name="name">Multi-Site</field>
+    </record>
+    <record id="cross_departmental_job_tag" model="hr.job.tag">
+        <field name="name">Cross-Departmental</field>
+    </record>
+    <record id="recruiter_sourced_job_tag" model="hr.job.tag">
+        <field name="name">Recruiter Sourced</field>
+    </record>
+
     <!--Manage the job_id to get in hr.applicant-->
     <record id="hr.job_developer" model="hr.job">
         <field name="no_of_recruitment">4</field>
         <field name="no_of_hired_employee">56</field>
         <field name="expected_degree" ref="degree_graduate"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('recruiter_sourced_job_tag')])]"/>
     </record>
     <record id="hr.job_cto" model="hr.job">
         <field name="no_of_hired_employee">1</field>
         <field name="expected_degree" ref="degree_licenced"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('cross_departmental_job_tag')])]"/>
     </record>
     <record id="hr.job_consultant" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="no_of_hired_employee">17</field>
         <field name="expected_degree" ref="degree_bachelor"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('multi_site_job_tag')])]"/>
     </record>
     <record id="hr.job_hrm" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="no_of_hired_employee">5</field>
         <field name="expected_degree" ref="degree_graduate"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('recruiter_sourced_job_tag')])]"/>
     </record>
     <record id="hr.job_marketing" model="hr.job">
         <field name="no_of_recruitment">3</field>
         <field name="no_of_hired_employee">2</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('cross_departmental_job_tag')])]"/>
     </record>
     <record id="hr.job_trainee" model="hr.job">
         <field name="no_of_recruitment">6</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('recruiter_sourced_job_tag')])]"/>
     </record>
 
     <record id="hr_recruitment_linkedin_developer" model="hr.recruitment.source">
