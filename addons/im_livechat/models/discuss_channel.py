@@ -602,6 +602,11 @@ class DiscussChannel(models.Model):
         """
         return _('Visitor left the conversation.')
 
+    def _get_push_notification_preferences(self, user_setting):
+        data = super()._get_push_notification_preferences(user_setting)
+        data["livechat"] = user_setting.livechat_push
+        return data
+
     def _close_livechat_session(self, message):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()

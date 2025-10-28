@@ -515,9 +515,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "res.users.settings": [
                 {
                     "channel_notifications": False,
+                    "channel_push": True,
+                    "chat_push": True,
                     "id": user_0.res_users_settings_id.id,
+                    "inbox_push": True,
                     "livechat_expertise_ids": [],
                     "livechat_lang_ids": [],
+                    "livechat_push": True,
                     "livechat_username": False,
                     "volume_settings_ids": [],
                 },
