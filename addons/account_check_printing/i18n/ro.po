@@ -1,44 +1,46 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_check_printing
+# * account_check_printing
 #
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2022
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2022
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-#
+# Cuciureanu Larisa <larisa.cuciureanu@nexterp.ro>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2025-10-27 11:56+0000\n"
+"Last-Translator: Cuciureanu Larisa <larisa.cuciureanu@nexterp.ro>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"account_check_printing/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr ""
+msgstr "%(journal)s: Secvență număr cec"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "%(number)s in journal %(journal)s"
-msgstr ""
+msgstr "%(number)s în jurnalul %(journal)s"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "<span>&amp;nbsp;</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -63,7 +65,7 @@ msgstr "Valoarea în cuvinte"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Bills"
-msgstr ""
+msgstr "Facturi"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -173,7 +175,7 @@ msgstr "Creat în"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Default"
-msgstr ""
+msgstr "Implicit"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
@@ -194,7 +196,7 @@ msgstr "Du-te la panoul de configurare"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
 msgid "Has Check Layout"
-msgstr ""
+msgstr "Are format de cec"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -255,6 +257,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Manual: Plătește sau primește plata prin orice metodă în afara Odoo.\n"
+"Furnizori de plăți: Fiecare furnizor de plăți are propria metodă de plată. "
+"Solicită o tranzacție pe/un card folosind un token de plată salvat de "
+"partener când cumpără sau se abonează online.\n"
+"Cec: Plătește facturile prin cec și tipărește-l din Odoo.\n"
+"Depunere în lot: Colectează mai multe cecuri de la clienți simultan, "
+"generând și trimițând o depunere în lot către bancă. Modulul "
+"account_batch_payment este necesar.\n"
+"Transfer SEPA: Plătește în zona SEPA prin trimiterea unui fișier de transfer "
+"SEPA către bancă. Modulul account_iso20022 este necesar.\n"
+"Debit Direct SEPA: Primește plata în zona SEPA datorită unui mandat acordat "
+"de partener. Modulul account_iso20022 este necesar.\n"
+"ISO20022 SUA: Plătește în SUA prin trimiterea unui fișier ISO20022 către "
+"bancă. Modulul account_iso20022 este necesar.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -288,7 +304,17 @@ msgstr "Metoda de plată"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
 msgid "Payment Methods"
-msgstr "Metode de plată"
+msgstr ""
+"Manual: Plătiți sau primiți plata prin orice metodă în afara Odoo.\n"
+"Furnizori de plăți: Fiecare furnizor de plăți are propria metodă de plată. "
+"Solicitați o tranzacție pe/un card folosind un token de plată salvat de "
+"partener la cumpărare sau abonare online.\n"
+"Cec: Plătiți facturi prin cec și tipăriți-l din Odoo.\n"
+"Depunere în lot: Colectați mai multe cecuri de la clienți simultan, generând "
+"și trimițând o depunere în lot către bancă. Modulul account_batch_payment "
+"este necesar.\n"
+"Transfer SEPA Credit: Plătiți în zona SEPA prin trimiterea unui fișier SEPA "
+"Credit Transfer către bancă. Modulul account_iso20022 este necesar."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -347,7 +373,7 @@ msgstr "Tipăriți cecuri numerotate în prealabil"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Refunds"
-msgstr ""
+msgstr "Restituiri"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -379,7 +405,7 @@ msgstr "Numărul secvenței pentru următoarele cecuri tipărite."
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "Afișează numărul cecului"
 
 #. module: account_check_printing
 #. odoo-python
@@ -474,19 +500,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "check_number"
-msgstr ""
+msgstr "număr cec"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "out_refund"
-msgstr ""
+msgstr "restituire externă"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "sep"
-msgstr ""
+msgstr "sep"
 
 #~ msgid "Contact"
 #~ msgstr "Contact"
