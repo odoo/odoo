@@ -11,7 +11,6 @@ import {
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -98,7 +97,8 @@ export class EditorOverlay extends Component {
             useActiveElement("root");
         }
         const topDocument = editable.ownerDocument.defaultView.top.document;
-        const container = closestScrollable(editable) || topDocument.documentElement;
+        const scrollContainer = getScrollContainer(editable);
+        const container = scrollContainer || topDocument.documentElement;
         const resizeObserver = new ResizeObserver(() => position.unlock());
         resizeObserver.observe(container);
         onWillDestroy(() => resizeObserver.disconnect());
@@ -201,13 +201,37 @@ export class EditorOverlay extends Component {
 }
 
 /**
- * Wrapper around closestScrollableY that keeps searching outside of iframes.
+ * The scroll container is an ancestor of {@link el} that is:
+ * - scrollable and
+ * - not also ancestor of a fixed element encosing `el` in the same
+ * document (as this makes `el` fixed and not affected by scrolls of
+ * that ancestor)
  *
  * @param {HTMLElement} el
+ * @returns {HTMLElement|null}
  */
-function closestScrollable(el) {
-    if (!el) {
-        return null;
+export function getScrollContainer(el) {
+    const isScrollable = (/** @type {HTMLElement} */ el) => {
+        if (el.tagName === "HTML") {
+            return el.scrollHeight > el.ownerDocument.defaultView.visualViewport.height;
+        }
+        return (
+            el.scrollHeight > el.clientHeight &&
+            /\bauto\b|\bscroll\b/.test(getComputedStyle(el)["overflow-y"])
+        );
+    };
+    const isFixed = (el) => getComputedStyle(el).position === "fixed";
+    while (el) {
+        if (isScrollable(el)) {
+            return el;
+        }
+        if (isFixed(el)) {
+            // Any scrollable ancestor in the same document does not affect it.
+            // Search in the enclosing document, if any.
+            el = el.ownerDocument.defaultView.frameElement;
+            continue;
+        }
+        el = el.parentElement || el.ownerDocument.defaultView.frameElement;
     }
-    return closestScrollableY(el) || closestScrollable(el.ownerDocument.defaultView.frameElement);
+    return null;
 }
