@@ -225,7 +225,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="stock_quant_action"> <!-- Used in dashboard -->
-        <field name="name">Locations</field>
+        <field name="name">Stock Locations</field>
         <field name="context">
         {
             'search_default_internal_loc': 1,
@@ -359,7 +359,7 @@ in this location. That leads to a negative stock.
     </record>
 
     <menuitem id="menu_action_inventory_tree" name="Physical Inventory" parent="menu_stock_adjustments" sequence="10" action="action_view_inventory_tree"/>
-    <menuitem id="menu_valuation" name="Locations"
+    <menuitem id="menu_valuation" name="Stock Locations"
               parent="stock.menu_warehouse_report" sequence="150"
               action="action_view_quants" groups="stock.group_stock_multi_locations,stock.group_tracking_owner,base.group_no_one"/>
 </odoo>
