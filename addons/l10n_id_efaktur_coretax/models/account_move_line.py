@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
-from odoo.tools.float_utils import float_repr
+from odoo import _, models
+from odoo.tools.float_utils import float_repr, float_compare
+from odoo.exceptions import ValidationError
 
 
 class AccountMoveLine(models.Model):
@@ -12,6 +13,9 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         idr = self.env.ref('base.IDR')
 
+        if float_compare(self.price_subtotal, 0.0, precision_rounding=self.currency_id.rounding) < 0:
+            raise ValidationError(_("Price for line '%s' cannot be a negative amount. Please check again.", self.name))
+
         # initialize
         if not vals.get('lines'):
             vals['lines'] = []
@@ -21,8 +25,15 @@ class AccountMoveLine(models.Model):
         # Separate tax into the regular and luxury component
         ChartTemplate = self.env['account.chart.template'].with_company(self.company_id)
         luxury_tax_group = ChartTemplate.ref('l10n_id_tax_group_luxury_goods', raise_if_not_found=False)
+        stlg_tax_group = ChartTemplate.ref('l10n_id_tax_group_stlg', raise_if_not_found=False)
+        zero_tax_group_0 = ChartTemplate.ref('l10n_id_tax_group_0', raise_if_not_found=False)
+        zero_tax_group_exempt = ChartTemplate.ref('l10n_id_tax_group_exempt', raise_if_not_found=False)
+        zero_tax_groups = {zero_tax_group_0, zero_tax_group_exempt} - {False}
+
+        zero_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id in zero_tax_groups)
         luxury_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == luxury_tax_group)
-        regular_tax = self.tax_ids - luxury_tax
+        stlg_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == stlg_tax_group)
+        regular_tax = self.tax_ids - luxury_tax - stlg_tax - zero_tax
 
         # "Price" is unit price calculation excluding tax and discount
         # "TotalDiscount" is total of "Price" * quantity * discount
@@ -38,23 +49,15 @@ class AccountMoveLine(models.Model):
             "TotalDiscount": idr.round(self.discount * tax_res['total_excluded'] * self.quantity / 100),
             "TaxBase": idr.round(self.price_subtotal),  # DPP
             "VATRate": 12,
-            "STLGRate": luxury_tax.amount if luxury_tax else 0.0,
+            "STLGRate": stlg_tax.amount if stlg_tax else 0.0,
         }
-
-        # Code 04 represents "Using other value as tax base". This code is now the norm
-        # being used if user is selling non-luxury item where we have to multiply original price
-        # by ratio of 11/12 and having VATRate of 12 resulting to effectively 11% tax.
-        if self.move_id.l10n_id_kode_transaksi == "04":
-            line_val['VATRate'] = 12
-            line_val['OtherTaxBase'] = idr.round(self.price_subtotal * 11 / 12)
-        # For all other code, OtherTaxBase will follow TaxBase and calculation of VAT should follow the amount of tax itself
-        else:
-            line_val['VATRate'] = regular_tax.amount
+        if self.move_id.l10n_id_kode_transaksi == "01" or (not regular_tax and not zero_tax):
             line_val['OtherTaxBase'] = line_val['TaxBase']
+        else:
+            line_val['OtherTaxBase'] = idr.round(self.price_subtotal * 11 / 12)
 
         line_val['VAT'] = idr.round(line_val['OtherTaxBase'] * line_val['VATRate'] / 100)
         line_val['STLG'] = idr.round(line_val['STLGRate'] * line_val['OtherTaxBase'] / 100)
-
         # for numerical attributes in line_val, use float_repr to ensure proper formatting
         numerical_fields = ['Price', 'TotalDiscount', 'TaxBase', 'OtherTaxBase', 'VAT', 'STLG']
         for field in numerical_fields:
