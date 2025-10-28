@@ -1,7 +1,11 @@
+from unittest.mock import patch
+
+from odoo.tests import tagged
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_sa_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
-from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
@@ -28,3 +32,39 @@ class TestGenericSAEdi(TestGenericLocalization):
             'zip': '42317',
             'l10n_sa_edi_building_number': '1234',
         })
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestUi(TestPointOfSaleHttpCommon):
+
+    @classmethod
+    @AccountEdiTestCommon.setup_country('sa')
+    def setUpClass(cls):
+        super().setUpClass()
+
+    @patch('odoo.addons.l10n_sa_edi.models.account_journal.AccountJournal._l10n_sa_ready_to_submit_einvoices',
+           new=lambda self: True)
+    def test_ZATCA_invoice_not_mandatory_if_settlement(self):
+        """
+        Tests that the invoice is  not mandatory in POS payment for ZATCA if it's a settlement.
+        """
+        self.test_partner = self.env["res.partner"].create({"name": "AAA Partner"})
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            'ZATCA_invoice_not_mandatory_if_settlement',
+            login="pos_admin",
+        )
+
+    @patch('odoo.addons.l10n_sa_edi.models.account_journal.AccountJournal._l10n_sa_ready_to_submit_einvoices',
+           new=lambda self: True)
+    def test_ZATCA_invoice_mandatory_if_not_settlement(self):
+        """
+        Tests that the invoice is mandatory in POS payment for ZATCA.
+        Also is by default checked.
+        """
+        self.test_partner = self.env["res.partner"].create({"name": "AAA Partner"})
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            'ZATCA_invoice_mandatory_if_not_settlement',
+            login="pos_admin",
+        )
