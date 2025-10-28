@@ -9,6 +9,8 @@ patch(ResUsersSettings.prototype, {
         this.livechat_expertise_ids = undefined;
         /** @type {number[]} */
         this.livechat_lang_ids = undefined;
+        /** @type {boolean} */
+        this.livechat_push;
         /** @type {string|undefined} */
         this.livechat_username = undefined;
     },
