@@ -1035,7 +1035,7 @@
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
                                 <field name="invoice_date" nolabel="1" options="{'warn_future': true}"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
-                                       readonly="state != 'draft'" placeholder="Today"/>
+                                       readonly="state != 'draft'"/>
 
                                 <field name="date" string="Accounting Date"
                                        invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode and not (state == 'posted' and date != invoice_date)"
