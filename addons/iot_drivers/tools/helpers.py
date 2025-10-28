@@ -39,9 +39,6 @@ from odoo.tools.misc import file_path
 lock = Lock()
 _logger = logging.getLogger(__name__)
 
-if IS_RPI:
-    import crypt
-
 
 class Orientation(Enum):
     """xrandr/wlr-randr screen orientation for kiosk mode"""
@@ -177,15 +174,13 @@ def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
 
 
 def generate_password():
+    """Resets (pi) user password generating a new random one.
+
+    :return: The new generated password
     """
-    Generate an unique code to secure raspberry pi
-    """
-    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
-    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    password = secrets.token_urlsafe(16)
     try:
-        shadow_password = crypt.crypt(password, crypt.mksalt())
-        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
-        subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        subprocess.run(['sudo', 'chpasswd'], input=f"pi:{password}", text=True, check=True)
         return password
     except subprocess.CalledProcessError as e:
         _logger.exception("Failed to generate password: %s", e.output)
