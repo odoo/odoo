@@ -772,7 +772,7 @@
                                     <tr
                                         t-if="is_section or is_subsection"
                                         name="tr_section"
-                                        t-attf-class="border-dark {{'fw-bold o_line_section bg-200' if is_section else 'fw-medium o_line_subsection bg-100'}}"
+                                        t-attf-class="{{'fw-bold o_line_section bg-200' if is_section else 'fw-medium o_line_subsection border-dark bg-100'}}"
                                     >
                                         <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
                                         <t
