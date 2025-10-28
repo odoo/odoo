@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="matching_applicant_view_list" model="ir.ui.view">
+        <field name="name">matching.applicant.view.list</field>
+        <field name="model">matching.applicant</field>
+        <field name="arch" type="xml">
+            <list string="matching applicants" create="False">
+                <header>
+                    <button
+                        name="action_move_applicants_to_job"
+                        type="object"
+                        string="Move Applicants to Job"
+                    />
+                    <button
+                        name="action_copy_applicants_to_job"
+                        type="object"
+                        string="Copy Applicants to Job"
+                    />
+                </header>
+                <field name="applicant_id"/>
+                <field name="job_id"/>
+                <field name="matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score"/>
+                <field name="matching_skills" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="missing_skills" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </list>
+        </field>
+    </record>
+</odoo>
