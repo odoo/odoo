@@ -67,11 +67,11 @@
             <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100" t-ref="core">
                 <t name="core-content">
                     <t t-if="thread">
-                        <div class="d-flex flex-column flex-grow-1 bg-inherit">
+                        <div t-if="!ui.isSmall or !threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit">
                             <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent"/></t>
                             <Composer t-if="thread.model !== 'mail.box' or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="true" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                         </div>
-                        <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0">
+                        <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0" t-att-class="{ 'w-100': ui.isSmall }">
                             <t t-component="threadActions.activeAction.actionPanelComponent" thread="thread" t-props="threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
