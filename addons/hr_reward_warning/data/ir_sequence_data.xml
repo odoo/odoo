@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    General Announcement Sequence    -->
+    <record id="seq_general_announcement" model="ir.sequence">
+        <field name="name">General Announcement</field>
+        <field name="code">hr.announcement.general</field>
+        <field name="prefix">GA</field>
+        <field eval="4" name="padding"/>
+    </record>
+
+    <!--     Announcement Sequence   -->
+    <record id="seq_announcement" model="ir.sequence">
+        <field name="name">Announcement</field>
+        <field name="code">hr.announcement</field>
+        <field name="prefix">AN</field>
+        <field eval="4" name="padding"/>
+    </record>
+</odoo>

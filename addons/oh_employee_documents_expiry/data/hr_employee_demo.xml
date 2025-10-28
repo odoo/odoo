@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Creating new employee.-->
+        <record id="hr_employee_data_joe" model="hr.employee">
+            <field name="name">Joe</field>
+            <field name="job_title">Chief Medical Officer</field>
+            <field name="work_location_id" ref="hr_work_location_data"/>
+            <field name="work_phone">(376)-3852-7863</field>
+            <field name="work_email">joe@example.com</field>
+            <field name="image_1920" type="base64"
+                   file="oh_employee_documents_expiry/static/description/image/employee_image.jpeg"/>
+        </record>
+    </data>
+</odoo>

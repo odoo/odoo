@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Scheduled action to sent mail about the document expiry.-->
+        <record id="ir_cron_scheduler_employee_data_reminder" model="ir.cron">
+            <field name="name">Employee Document Expiration</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_hr_employee_document"/>
+            <field name="state">code</field>
+            <field name="code">model.mail_reminder()</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--To view their own record only-->
+    <record id="hr_resignation_rule_user" model="ir.rule">
+        <field name="name">Employee Resignation User</field>
+        <field name="model_id" ref="hr_resignation.model_hr_resignation"/>
+        <field name="domain_force">[('employee_id.user_id','=',user.id)]
+        </field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <!--    Manager permission to view all record   -->
+    <record id="hr_resignation_rule_manager" model="ir.rule">
+        <field name="name">Employee Resignation Manager</field>
+        <field name="model_id" ref="hr_resignation.model_hr_resignation"/>
+        <field name="domain_force">
+            ['|',('employee_id.user_id','!=',user.id),('employee_id.user_id','=',False)]
+        </field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+
+</odoo>

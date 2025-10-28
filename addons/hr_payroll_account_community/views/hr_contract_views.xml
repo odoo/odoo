@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_template_form_view" model="ir.ui.view">
+        <field name="name">hr.version.view.form.inherit.hr.payroll.account.community</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='top_info_right']" position="after">
+                <group string="Accounting">
+                    <field name="analytic_account_id"
+                           groups="analytic.group_analytic_accounting"/>
+                    <field name="journal_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

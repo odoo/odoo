@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Kanban View of Salary Rule-->
+    <record id="hr_salary_rule_view_kanban" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.kanban</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-8">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <div class="col-4">
+                                    <span class="float-right">
+                                        <field name="category_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <span>Code:
+                                        <field name="code"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+<!--    List View of Salary Rule-->
+    <record id="hr_salary_rule_view_tree" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.list</field>
+        <field name="model">hr.salary.rule</field>
+        <field eval="20" name="priority"/>
+        <field name="arch" type="xml">
+            <list string="Salary Rules">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id" invisible="1"/>
+                <field name="sequence" invisible="1"/>
+                <field name="register_id"/>
+                                <field name="company_id"
+                       options="{'no_create': True}"/>
+                <field name="company_id" groups="base.group_multi_company"
+                       options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+<!--    Form View of Salary Rule-->
+    <record id="hr_salary_rule_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.form</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <form string="Salary Rules">
+                <label for="name" class="oe_edit_only"/>
+                <h1>
+                    <field name="name"/>
+                </h1>
+                <label for="category_id" class="oe_edit_only"/>
+                <h2>
+                    <field name="category_id"/>
+                </h2>
+                <group col="4">
+                    <field name="code"/>
+                    <field name="sequence"/>
+                    <field name="active"/>
+                    <field name="appears_on_payslip"/>
+                    <field name="company_id" options="{'no_create': True}"
+                           groups="base.group_multi_company"/>
+                </group>
+                <notebook colspan="6">
+                    <page string="General">
+                        <group col="4">
+                            <separator colspan="4" string="Conditions"/>
+                            <field name="condition_select"/>
+                            <newline/>
+                            <field name="condition_python"
+                                   invisible="condition_select != 'python'"
+                                   required="condition_select == 'python'"
+                                   colspan="4"/>
+                            <newline/>
+                            <field name="condition_range"
+                                   invisible="condition_select != 'range'"
+                                   required="condition_select == 'range'"/>
+                            <newline/>
+                            <field name="condition_range_min" colspan="2"
+                                   invisible="condition_select != 'range'"
+                                   required="condition_select == 'range'"/>
+                            <newline/>
+                            <field name="condition_range_max" colspan="2"
+                                   invisible="condition_select != 'range'"
+                                   required="condition_select == 'range'"/>
+                            <newline/>
+                            <separator colspan="4" string="Computation"/>
+                            <field name="amount_select"/>
+                            <newline/>
+                            <field name="amount_percentage_base"
+                                   invisible="amount_select != 'percentage'"
+                                   required="amount_select == 'percentage'"/>
+                            <newline/>
+                            <field name="quantity"
+                                   invisible="amount_select != 'code'"
+                                   required="amount_select == 'code'"/>
+                            <newline/>
+                            <field name="amount_fix"
+                                   invisible="amount_select != 'fix'"
+                                   required="amount_select == 'fix'"/>
+                            <newline/>
+                            <field colspan="4" name="amount_python_compute"
+                                   invisible="amount_select != 'code'"
+                                   required="amount_select == 'code'"/>
+                            <field name="amount_percentage"
+                                   invisible="amount_select != 'percentage'"
+                                   required="amount_select == 'percentage'"/>
+                            <separator colspan="4"
+                                       string="Company Contribution"/>
+                            <field name="register_id"/>
+                        </group>
+                    </page>
+                    <page name="rules" string="Child Rules">
+                        <field name="parent_rule_id"/>
+                        <separator string="Children Definition"/>
+                        <field name="child_ids"/>
+                    </page>
+                    <page string="Inputs">
+                        <field name="input_ids" mode="list">
+                            <list string="Input Data" editable="bottom">
+                                <field name="name"/>
+                                <field name="code"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Description">
+                        <field name="note"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+<!--    Search option for Salary Rule-->
+    <record id="hr_salary_rule_search" model="ir.ui.view">
+        <field name="name">hr.salary.rule.search</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <search string="Search Salary Rule">
+                <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                <field name="category_id"/>
+                <field name="condition_range_min"/>
+                <group>
+                    <filter string="Category" name="head" context="{'group_by':'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+<!--    Menu Action for Salary Rule-->
+    <record id="hr_salary_rule_action" model="ir.actions.act_window">
+        <field name="name">Salary Rules</field>
+        <field name="res_model">hr.salary.rule</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('parent_rule_id','=',False)]</field>
+        <field name="search_view_id" ref="hr_salary_rule_search"/>
+    </record>
+    <menuitem id="menu_action_hr_salary_rule_form"
+              action="hr_salary_rule_action"
+              parent="menu_hr_payroll_community_configuration"
+              sequence="12"/>
+    <record id="hr_salary_rule_action" model="ir.actions.act_window">
+        <field name="name">All Children Rules</field>
+        <field name="res_model">hr.salary.rule</field>
+    </record>
+</odoo>

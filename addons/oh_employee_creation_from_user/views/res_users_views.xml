@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Inherited the form view of res.users and added the field-->
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.oh.employee.creation.from.user</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[1]/field[@name='partner_id']" position="after">
+                <field name="employee_id" readonly="1" required="0"
+                   groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Hr Leave Type form view -->
+        <record id="edit_holiday_status_form" model="ir.ui.view">
+            <field name="name">hr_leave_type.view.form.inherit.hr.payroll.community</field>
+            <field name="model">hr.leave.type</field>
+            <field name="inherit_id"
+                   ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <field name="request_unit" position="before">
+                    <field name="code" string="Payroll Code"/>
+                </field>
+            </field>
+        </record>
+</odoo>

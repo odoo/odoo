@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Inherit res_config_settings form view to include alias_prefix
+    and alias_domain fields-->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr
+            .leave.request.aliasing
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="30"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Time Off" string="Time Off" name="hr_leave"
+                     data-key="hr_leave_request_aliasing"
+                     groups="hr_holidays.group_hr_holidays_manager"
+                     logo="/hr_holidays/static/description/icon.png">
+                    <block title="Leaves" id="hr_leaves">
+                        <setting string="Leave Email Alias"
+                                 help="You can set up a generic email alias to easily create incoming leave requests. To submit a request, send an email with the subject line starting with prefix, and include ‘Date From:’ and ‘Date To:’ in the email body">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="alias_prefix"
+                                           string="Prefix"
+                                           class="col-md-3"/>
+                                    <field name="alias_prefix"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="alias_domain"
+                                           string="Domain"
+                                           class="col-md-3"/>
+                                    <field name="alias_domain"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+    <!--    Action of res_config_settings menu in hr_holidays-->
+    <record id="res_config_settings_action_email_alias"
+            model="ir.actions.act_window">
+        <field name="name">Leave Configuration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module' : 'hr_leave', 'bin_size': False}</field>
+    </record>
+    <!--    res_config_settings menu in hr_holidays-->
+    <menuitem id="res_config_settings_menu_email_alias"
+              name="Settings"
+              parent="hr_holidays.menu_hr_holidays_configuration"
+              sequence="0"
+              action="res_config_settings_action_email_alias"
+              groups="base.group_system"/>
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Customizing the hr.payslip.run search view to include a filter for the 'journal_id' field.-->
+    <record id="hr_payslip_run_search" model="ir.ui.view">
+        <field name="name">hr.payslip.run.view.search.inherit.hr.payroll.account.community</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id"
+               ref="hr_payroll_community.hr_payslip_run_search"/>
+        <field name="arch" type="xml">
+            <filter name='done_filter' position="after">
+                <field name="journal_id"/>
+            </filter>
+        </field>
+    </record>
+    <!-- Customizing the hr.payslip.run list view to include the 'journal_id' field after the 'date_end' field. -->
+    <record id="hr_payslip_run_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.view.list.inherit.hr.payroll.account.community</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id"
+               ref="hr_payroll_community.hr_payslip_run_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="date_end" position="after">
+                <field name="journal_id"/>
+            </field>
+        </field>
+    </record>
+    <!-- Customizing the hr.payslip.run form view to include the 'journal_id' field before the 'credit_note' field. -->
+    <record id="hr_payslip_run_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.view.form.inherit.hr.payroll.account.community</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id"
+               ref="hr_payroll_community.hr_payslip_run_view_form"/>
+        <field name="arch" type="xml">
+            <field name="credit_note" position="before">
+                <field name="journal_id" readonly="state != 'draft'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

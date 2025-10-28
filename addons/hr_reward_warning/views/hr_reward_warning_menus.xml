@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--  Root menu for hr.announcement.   -->
+    <menuitem id="hr_announcement_menu_root"
+              name="Announcements"
+              groups="hr.group_hr_user,hr.group_hr_manager"
+              web_icon="hr_reward_warning,static/description/icon.png"
+              sequence="-6"/>
+
+    <!--  HR Announcements Menu  -->
+    <menuitem id="hr_announcement_menu_view_announcements"
+              name="Announcements"
+              action="hr_announcement_action"
+              parent="hr_announcement_menu_root"
+              groups="hr.group_hr_user,hr.group_hr_manager"
+              sequence="1"/>
+</odoo>

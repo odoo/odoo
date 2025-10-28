@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Hr res_config_settings for adding advanced features settings-->
+    <record id="view_hr_general_config_advanced_features" model="ir.ui.view">
+        <field name="name">Hr Advanced Features</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr']" position="inside">
+                <block title="Advanced Features" name="advanced_features">
+                    <setting id="module_hr_custody"
+                             help="Manage the company properties when it is in the custody of an employee">
+                        <field name="module_hr_custody" on_change="1" string="Custody Management"/>
+                        <field name="test_module_hr_custody" invisible="True"/>
+                        <span style="color: orangered;" invisible="test_module_hr_custody == False">
+                            Module is not Present in Your Repository.
+                            <br/>
+                            <a href="https://www.odoo.com/apps/modules/17.0/hr_custody/" class="badge text-bg-primary oe_inline o_enterprise_label" target="_blank">
+                                    Get This App
+                            </a>
+                        </span>
+                    </setting>
+                    <setting id="module_hr_insurance"
+                             help="Manage Insurance for employees">
+                        <field name="module_hr_insurance" on_change="1" string="Employee Insurance"/>
+                        <field name="test_module_hr_insurance" invisible="True"/>
+                        <span style="color: orangered;" invisible="test_module_hr_insurance == False">
+                            Module is not Present in Your Repository.
+                            <br/>
+                            <a href="https://www.odoo.com/apps/modules/17.0/hr_insurance/" class="badge text-bg-primary oe_inline o_enterprise_label" target="_blank">
+                                    Get This App
+                            </a>
+                        </span>
+                    </setting>
+                    <setting id="module_oh_hr_lawsuit_management"
+                             help="Manages legal actions">
+                        <field name="module_oh_hr_lawsuit_management" on_change="1" string="Lawsuit Management"/>
+                        <field name="test_module_oh_hr_lawsuit_management" invisible="True"/>
+                        <span style="color: orangered;" invisible="test_module_oh_hr_lawsuit_management == False">
+                            Module is not Present in Your Repository.
+                            <br/>
+                            <a href="https://www.odoo.com/apps/modules/17.0/oh_hr_lawsuit_management/" class="badge text-bg-primary oe_inline o_enterprise_label" target="_blank">
+                                    Get This App
+                            </a>
+                        </span>
+                    </setting>
+                    <setting id="module_hr_resignation"
+                             help="Handle the resignation process of the employee">
+                        <field name="module_hr_resignation" on_change="1" string="Resignation Process"/>
+                        <field name="test_module_hr_resignation" invisible="True"/>
+                        <span style="color: orangered;" invisible="test_module_hr_resignation == False">
+                            Module is not Present in Your Repository.
+                            <br/>
+                            <a href="https://www.odoo.com/apps/modules/17.0/hr_resignation/" class="badge text-bg-primary oe_inline o_enterprise_label" target="_blank">
+                                    Get This App
+                            </a>
+                        </span>
+                    </setting>
+                    <setting id="module_oh_hr_zk_attendance"
+                             help="Manage biometric device (Model: ZKteco uFace 202) integration with HR attendance (Face + Thumb)">
+                        <field name="module_oh_hr_zk_attendance" on_change="1" string="Biometric Device Integration"/>
+                        <field name="test_module_oh_hr_zk_attendance" invisible="True"/>
+                        <span style="color: orangered;" invisible="test_module_oh_hr_zk_attendance == False">
+                            Module is not Present in Your Repository.
+                            <br/>
+                            <a href="https://www.odoo.com/apps/modules/17.0/oh_hr_zk_attendance/" class="badge text-bg-primary oe_inline o_enterprise_label" target="_blank">
+                                    Get This App
+                            </a>
+                        </span>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+<!-- Leave Advanced features settings-->
+    <record id="view_hr_leave_configuration_inherited" model="ir.ui.view">
+        <field name="name">Leave Advanced Features</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_leave_request_aliasing.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@data-key='hr_leave_request_aliasing']" position="inside">
+                <block title="Advanced Features" name="advanced_features">
+                    <setting id="module_hr_employee_shift"
+                             help="Manage different type of shifts">
+                        <field name="module_hr_employee_shift" on_change="1" string="Employee Shift"/>
+                        <field name="test_module_hr_employee_shift" invisible="True"/>
+                        <span style="color: orangered;" invisible="test_module_hr_employee_shift == False">
+                            Module is not Present in Your Repository.
+                            <br/>
+                            <a href="https://www.odoo.com/apps/modules/17.0/hr_employee_shift/" class="badge text-bg-primary oe_inline o_enterprise_label" target="_blank">
+                                    Get This App
+                            </a>
+                        </span>
+                    </setting>
+                    <setting id="module_hr_vacation_mngmt"
+                             help="Manage employee vacation">
+                        <field name="module_hr_vacation_mngmt" on_change="1" string="Vacation Management"/>
+                        <field name="test_module_hr_vacation_mngmt" invisible="True"/>
+                        <span style="color: orangered;" invisible="test_module_hr_vacation_mngmt == False">
+                            Module is not Present in Your Repository.
+                            <br/>
+                            <a href="https://www.odoo.com/apps/modules/17.0/hr_vacation_mngmt/" class="badge text-bg-primary oe_inline o_enterprise_label" target="_blank">
+                                    Get This App
+                            </a>
+                        </span>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+<!-- Sort Menu Alphabet Order Settings-->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">rec.config.settings.view.form.inherit.ohmrs.core</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='discuss']" position="after">
+                <h2>Menu Management</h2>
+                <div class="row mt16 o_settings_container" title="Menu Management">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="order_menu"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="order_menu"/>
+                            <div class="text-muted">
+                                Menu With Alphabetic Order
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

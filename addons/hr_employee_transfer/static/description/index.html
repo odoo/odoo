@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Open HRMS Branch Transfer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+    <style>
+        :root {
+          --primary-color: #00438B;
+          --bg-white: #fff;
+          --text-color: #121212;
+          --text-color-light: #64728f;
+        }
+
+        body {
+          font-family: "Montserrat", sans-serif;
+        }
+
+        .nav-tabs .nav-item.show .nav-link,
+        .nav-tabs .nav-link.active {
+          color: var(--text-color);
+          font-family: Montserrat;
+          font-size: 16px !important;
+          font-weight: 500 !important;
+          border-radius: 30px;
+          line-height: normal;
+          text-transform: capitalize;
+          background-color: #F5F5F5;
+          border: none;
+          margin-bottom: 0;
+          padding: 12px 24px;
+        }
+
+        .nav-tabs .nav-link:focus,
+        .nav-tabs .nav-link:hover {
+          border-color: transparent;
+          isolation: isolate;
+        }
+
+        .nav-tabs .nav-link:focus-visible {
+          border-color: transparent;
+          box-shadow: none;
+        }
+
+         /* owl-carosel */
+      .owl-carousel .owl-nav {
+        position: absolute;
+        top: 42%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-42%);
+      }
+
+      .owl-carousel .owl-nav button.owl-prev {
+        position: absolute;
+        right: -36px;
+        font-size: 28px;
+        background-color: #e4e4e4;
+        border-radius: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .owl-carousel .owl-nav button.owl-next {
+        position: absolute;
+        left: -36px;
+        font-size: 28px;
+        background-color: #e4e4e4;
+        border-radius: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+      }
+    </style>
+</head>
+<body>
+<!-- overview -->
+<div class="container">
+    <div class="my-5">
+
+        <div class="tab-content" id="myTabContent1">
+            <div class="text-center d-flex justify-content-end gap-2 my-3"><span
+                    class="px-3 py-1"
+                    style="background-color:#017E84;color: #fff; font-size: 0.8rem;font-weight:600;border: 1px solid #017E84;border-radius: 30px;">Community</span>
+            </div>
+            <div class="tab-pane fade show active" id="home" role="tabpanel"
+                 aria-labelledby="home-tab">
+                <div class="position-relative"
+                     style="border-radius: 16px; background: #f8f8f8; padding: 20px 0;">
+                    <div class="row " style="
+          padding: 2rem 0rem 0 !important;
+        ">
+                        <div class="col-lg-8 mx-auto gap-4 d-flex flex-column align-items-center">
+                            <h1 class="text-center text-uppercase my-0" style="
+              color: var(--text-color);
+              font-size: 46px;
+              font-weight: 700;
+              line-height: normal;
+            "><span>Open HRMS Branch Transfer</span>
+                            </h1>
+                            <p class="my-1 text-center text-uppercase" style="
+                letter-spacing: 4px !important;
+                color: var(--primary-color);
+                font-weight: bold;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 15.96px;
+                text-transform: uppercase;
+              ">
+                                Employee Transfer Between Branches.
+                            </p>
+                        </div>
+                        <div class="col-lg-12 d-flex justify-content-center gap-4 align-items-center"
+                             style="margin: 3rem 0;">
+                            <img src="./assets/icons/cybro-logo.png"
+                                 width="100%" height="auto" style="width: 20%"
+                                 class="img-responsive"/>
+                            <img src="./assets/icons/logo-openhrms.png"
+                                 width="100%" height="auto" style="width: 20%"
+                                 class="img-responsive"/>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <a href="mailto:odoo@cybrosys.com" target="_blank"
+                               style="
+              background-color: transparent;
+              border-radius: 35px;
+              font-family: Montserrat;
+              display: inline-block;
+              padding: 7px 33px;
+              border: 1px solid var(--primary-color);
+              color: var(--primary-color);
+              text-decoration: none;
+            " class="mx-1 mb-2 deep-1 deep_hover">
+                                <img class="img" style="width: 24px"
+                                     src="./assets/icons/email (2).svg"/>
+                                <span class="pl-2"
+                                      style=" font-size: 16px; vertical-align: middle">Email Us</span>
+                            </a>
+                            <a href="skype:cybroopenerp?chat" target="_blank"
+                               style="
+              background-color: #00438B;
+              font-family: Montserrat;
+              display: inline-block;
+              padding: 7px 33px;
+              border: 1px solid #00438B;
+              border-radius: 35px;
+              text-decoration: none;
+            " class="mx-1 mb-2 deep-1 deep_hover">
+                                <img class="img" style="width: 24px"
+                                     src="./assets/icons/skype.svg"/>
+                                <span class="pl-2"
+                                      style="color: #fff; font-size: 16px; vertical-align: middle">Skype Us</span>
+                            </a>
+                        </div>
+<!--                        <div class="d-flex justify-content-center mt-2">-->
+<!--                            <img src="assets/screenshots/hero.gif"-->
+<!--                                 class="w-100"-->
+<!--                                 style="z-index: 3; height: auto;">-->
+<!--                        </div>-->
+                    </div>
+                    <div class="position-absolute"
+                         style="bottom: 0; z-index: 1; width: 100%;">
+                        <img src="./assets/icons/banner-bg.svg"
+                             class="img-fluid w-100">
+                    </div>
+                    <div class="position-absolute"
+                         style="bottom: 0; right: 0; z-index: 2;">
+                        <img src="./assets/icons/patter.svg">
+                    </div>
+                </div>
+                <!-- key-highlight -->
+                <div class="my-5" style="border-radius: 16px;
+     padding: 60px 40px;
+     border: 1px solid #EBEEF2;
+     background-position: center;
+     object-fit: cover;
+     background-image: url('./assets/icons/blue-abstract-gradient-wave-wallpaper.jpg');
+     box-shadow: 0px 5px 20px -11px rgba(0, 0, 0, 0.25); ">
+                    <div class="row position-relative overflow-hidden">
+                        <div class="col-lg-12 d-flex flex-column justify-content-center align-items-center">
+                            <h2 style=" color: var(--text-color);
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            text-transform: uppercase; padding-bottom: 50px;">Key
+                                Highlights</h2>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 position-relative d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px;
+
+            background:  #FFF;padding:32px;z-index: 2; ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#00438B !important; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="22px"
+                                         width="22px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    Employee Branch Transfer
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:var(--text-color-light); font-size: 16px; font-weight: 400;">
+                                    Initiate the transfer of an employee from
+                                    one branch to another.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 position-relative d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px;
+
+            background:  #FFF;padding:32px;z-index: 2; ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#00438B !important; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="22px"
+                                         width="22px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    New Contract for the Employee
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:var(--text-color-light); font-size: 16px; font-weight: 400;">
+                                    Able to create a new contract for the
+                                    transferred employee.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 position-relative d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px;
+
+            background:  #FFF;padding:32px;z-index: 2; ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#00438B !important; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="22px"
+                                         width="22px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    Transfer Request Approval
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:var(--text-color-light); font-size: 16px; font-weight: 400;">
+                                    The employee will remain in the same branch
+                                    until the transferred branch receives the
+                                    employee.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--code  -->
+                <div class="my-5">
+                    <div
+                            style=" padding: 5rem 4rem 5rem 4rem; background-color: #00438B; border-radius: 12px; position: relative;">
+                        <div class="wrapper-info"
+                             style="display: flex; flex-direction: column; gap: 20px;">
+                <span class="wrapper-subtitle"
+                      style="font-size: 40px; font-weight: 700; color: #fff;line-height: 60px; text-transform: capitalize; width: 450px;">Open HRMS Branch Transfer</span>
+                            <h3 class="wrapper-details"
+                                style="font-size: 20px; font-weight: 400; color: #fff; line-height: 32px; ">
+                                Are you ready to make your business more
+                                organized?
+                                <br> Improve now!
+                            </h3>
+                            <div class="d-flex gap-3">
+                                <a href="mailto:odoo@cybrosys.com"
+                                   class="shop-btn" style="cursor: pointer; border-radius: 16px; display: flex; justify-content: center; align-items: center; gap: 7px;
+            border: 1px solid var(--DarkOverlayElement-DO20, rgba(255, 255, 255, 0.20));
+            background: linear-gradient(93deg, rgba(255, 255, 255, 0.08) 6.01%, rgba(255, 255, 255, 0.17) 90.83%);
+            backdrop-filter: blur(10px); color: #fff; padding: 12px 16px 12px 16px; text-decoration: none;">
+                    <span style="border-radius: 12px;
+             background: var(--DarkOverlayElement-DO10, rgba(255, 255, 255, 0.10));
+             backdrop-filter: blur(6px);padding: 12px;">
+                      <img src="./assets/icons/banner-mail.svg">
+                    </span>
+                                    <span style="font-weight: 500;">odoo@cybrosys.com</span>
+                                </a>
+                                <a href="https://wa.me/919074270811"
+                                   target="_blank" class="shop-btn" style="cursor: pointer; border-radius: 16px; display: flex; justify-content: center; align-items: center; gap: 7px;
+            border: 1px solid var(--DarkOverlayElement-DO20, rgba(255, 255, 255, 0.20));
+            background: linear-gradient(93deg, rgba(255, 255, 255, 0.08) 6.01%, rgba(255, 255, 255, 0.17) 90.83%);
+            backdrop-filter: blur(10px); color: #fff; padding: 12px 22px 12px 18px; text-decoration: none;">
+                    <span style="border-radius: 12px;
+             background: var(--DarkOverlayElement-DO10, rgba(255, 255, 255, 0.10));
+             backdrop-filter: blur(6px);padding: 12px;">
+                      <img src="./assets/icons/banner-call.svg">
+                    </span>
+                                    <span style="font-weight: 500;">+91 9074270811</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class=""
+                             style="position: absolute; bottom: 0; right: 0;">
+                            <img src="./assets/icons/banner-logo-pattern.svg"
+                                 style="width: 540px;">
+                        </div>
+                    </div>
+                </div>
+                <!-- end-code -->
+                <!--  -->
+                <!-- screenshot and other -->
+                <div class="mb-4 bg-white"
+                     style=" border: 1px solid #EBEEF2; border-radius: 6px; box-shadow: 0px 8px 20px -4px rgba(0, 0, 0, 0.10); border: 1px solid #EBEEF2;">
+                    <div>
+                        <ul class="nav nav-tabs justify-content-center bg-white py-2"
+                            id="myTab" role="tablist" style="border-radius: 6px 6px 0 0;
+        ">
+                            <li class="nav-item">
+                                <a aria-controls="overview"
+                                   class="nav-link active" data-bs-toggle="tab"
+                                   href="#overview" id="overview-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">
+                                    Screenshots</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="feature" class="nav-link py-2"
+                                   data-bs-toggle="tab"
+                                   href="#feature" id="feature-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="faq" class="nav-link"
+                                   data-bs-toggle="tab" href="#faq"
+                                   id="faq-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">
+                                    FAQs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="releases" class="nav-link"
+                                   data-bs-toggle="tab"
+                                   href="#releases" id="releases-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">Releases</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content p-md-5 p-2 py-3" id="myTabContent">
+                        <div aria-labelledby="overview-tab"
+                             class="tab-pane fade show active" id="overview"
+                             role="tabpanel">
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px">
+                                <img alt="acc_bg"
+                                     class="w-100 h-100 position-absolute img-fluid left_0"
+                                     loading="lazy"
+                                     src="//apps.odoocdn.com/apps/assets/17.0/ks_dashboard_ninja/ai-img/o3.png?007008f"
+                                     style="">
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Employee Transfer Form
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                In Transfers, users can initiate an employee transfer by selecting the
+                                                employee, choosing the destination branch, and clicking "Transfer."
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_1.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Receive Transferred Employee
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                The transferred branch can receive the Employee by clicking the
+                                                "Receive" button.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_2.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Employee Transferred to New Branch
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Receive button will redirect to the new employee form, from where a new
+                                                Contracts can be created.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_3.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_4.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="feature-tab"
+                             class="tab-pane fade show py-1" id="feature"
+                             role="tabpanel">
+                            <div class="row py-4">
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Able to transfer Employees between branches very easily.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                New Contract creation for transferred Employee.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Transferred Branch can Receive/un-receive the transferred Employee.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="faq-tab"
+                             class="tab-pane fade show" id="faq"
+                             role="tabpanel">
+                            <div class="row"
+                                 style=" background-color:#fff !important">
+                                <div class="col-lg-12 d-flex flex-column align-items-center">
+                                    <h1 class="text-center text-uppercase"
+                                        style="font-family:Montserrat, 'sans-serif' !important; font-size:40px !important; color:#791d97; font-weight:900 !important">
+                                        <span style="color:var(--primary-color)">FAQ </span>
+                                        <sup>
+                                        </sup>
+                                    </h1>
+                                </div>
+                                <div class="col-md-12" aria-labelledby="faq-tab"
+                                     id="faq1" role="tabpanel">
+                                    <div class="accordion mb-4" id="accordion6">
+                                        <div style="background-color:#fff">
+                                            <!-- accordian -->
+                                            <div class="accordion"
+                                                 id="accordion_faq">
+                                                <!-- Question 1 -->
+                                                <div class=""
+                                                     style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class=" card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         data-bs-target="#collapseFAQOne"
+                                                         aria-controls="collapseFAQOne"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:none; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px;">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            What is the purpose of the Open HRMS Branch Transfer module?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQOne"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQOne"
+                                                         style=" box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style=" padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            It allows employees to be transferred between branches
+                                                            within an organization.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 2 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQTwo"
+                                                         data-bs-target="#collapseFAQTwo"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            What happens after approval?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQTwo"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQTwo"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            The employee is officially transferred, and the destination
+                                                            branch can finalize the new contract.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 3 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQThree"
+                                                         data-bs-target="#collapseFAQThree"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            Can I create a new contract for the transferred employee?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQThree"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQThree"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            Yes, after the transfer is approved, the destination branch
+                                                            can create a new contract.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="releases-tab"
+                             class="tab-pane fade show" id="releases"
+                             role="tabpanel">
+                            <div class="row pt-5 m-0">
+                                <div class="col-md-3">
+                                    <h4 style="font-size:16px; font-weight:600; color:#514F4F; margin:0; line-height:26px;">
+                                        Release 18.0.1.0.0
+                                    </h4>
+                                    <span style="font-size:14px; color:#7A7979; display:block; margin-bottom:20px;">
+                      3rd October, 2024
+                    </span>
+                                </div>
+                                <div class="col-md-8">
+                                    <div style="padding:0 0 40px">
+                                        <div style="margin:0 0 10px">
+                                            <div
+                                                    style="display:inline-block; padding:0px 8px; color:#514F4F; background-color:#b5d9ff; border-radius:20px">
+                                                Add
+                                            </div>
+                                        </div>
+                                        <div class="d-flex m-0"
+                                             style="color:#7A7979;">
+                                            <ul class="pl-3 mb-0">
+                                                <li>
+                                                    Initial Commit
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div style="padding:0 0 0; border-bottom:1px solid #E3E3E3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- related post -->
+                <div class="" style="margin-top: 100px;">
+                    <div class="text-center mt-4">
+                        <h3 class="mb-0" style="color: #000;
+        text-align: center;
+        font-family: Montserrat;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        text-transform: uppercase;
+        padding-bottom: 50px;"
+                        >Related Modules</h3>
+                    </div>
+                    <div class="owl-carousel owl-theme">
+                        <div class="item"
+                             style="border:1px solid #CBCBCB !important; border-radius: 6px;">
+                            <div class="p-3">
+                                <a href="https://apps.odoo.com/apps/modules/17.0/ohrms_core/"
+                                   style="color:#000; text-decoration:none">
+                                    <div style=" border-radius:4px">
+                                        <div>
+                                            <img src="assets/modules/1.gif"
+                                                 alt="" width="100%"
+                                                 height="auto">
+                                        </div>
+                                        <p class="text-center mb-2 pb-0 text-black"
+                                           style="font-weight: 600; padding-top: 16px;">
+                                            Open HRMS Core</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item"
+                             style="border:1px solid #CBCBCB !important; border-radius: 6px;">
+                            <div class="p-3">
+                                <a href="https://apps.odoo.com/apps/modules/17.0/history_employee"
+                                   style="color:#000; text-decoration:none">
+                                    <div style=" border-radius:4px">
+                                        <div>
+                                            <img src="assets/modules/2.png"
+                                                 alt="" width="100%"
+                                                 height="auto">
+                                        </div>
+                                        <p class="text-center pb-0 mb-2 text-black"
+                                           style="font-weight: 600; padding-top: 16px;">
+                                            Open HRMS Employee History</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item"
+                             style="border:1px solid #CBCBCB !important; border-radius: 6px;">
+                            <div class="p-3">
+                                <a href="https://apps.odoo.com/apps/modules/17.0/oh_hr_zk_attendance"
+                                   style="color:#000; text-decoration:none">
+                                    <div style=" border-radius:4px">
+                                        <div>
+                                            <img src="assets/modules/3.png"
+                                                 alt="" width="100%"
+                                                 height="auto">
+                                        </div>
+                                        <p class="text-center pb-0 mb-2 text-black"
+                                           style="font-weight: 600; padding-top: 16px;">
+                                            Open HRMS Biometric Device
+                                            Integration</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item"
+                             style="border:1px solid #CBCBCB !important; border-radius: 6px;">
+                            <div class="p-3">
+                                <a href="https://apps.odoo.com/apps/modules/17.0/hrms_dashboard"
+                                   style="color:#000; text-decoration:none">
+                                    <div style=" border-radius:4px">
+                                        <div>
+                                            <img src="assets/modules/4.png"
+                                                 alt="" width="100%"
+                                                 height="auto">
+                                        </div>
+                                        <p class="text-center pb-0 mb-2 text-black"
+                                           style="font-weight: 600; padding-top: 16px;">
+                                            Open HRMS HR Dashboard</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item"
+                             style="border:1px solid #CBCBCB !important; border-radius: 6px;">
+                            <div class="p-3">
+                                <a href="https://apps.odoo.com/apps/modules/17.0/oh_appraisal"
+                                   style="color:#000; text-decoration:none">
+                                    <div style=" border-radius:4px">
+                                        <div>
+                                            <img src="assets/modules/5.png"
+                                                 alt="" width="100%"
+                                                 height="auto">
+                                        </div>
+                                        <p class="text-center pb-0 mb-2 text-black"
+                                           style="font-weight: 600; padding-top: 16px;">
+                                            Open HRMS Employee Appraisal</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item"
+                             style="border:1px solid #CBCBCB !important; border-radius: 6px;">
+                            <div class="p-3">
+                                <a href="https://apps.odoo.com/apps/modules/17.0/ohrms_overtime"
+                                   style="color:#000; text-decoration:none">
+                                    <div style=" border-radius:4px">
+                                        <div>
+                                            <img src="assets/modules/6.png"
+                                                 alt="" width="100%"
+                                                 height="auto">
+                                        </div>
+                                        <p class="text-center pb-0 mb-2 text-black"
+                                           style="font-weight: 600; padding-top: 16px;">
+                                            Open HRMS Overtime</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--  -->
+
+
+                <!-- service-section -->
+
+                <section id="services" class="mt-5" style="border-radius: 16px;
+    border: 1px solid #EBEEF2;
+    background: var(--Neutral-N0, #FFF);
+    padding: 60px 40px;
+    box-shadow: 0px 5px 20px -11px rgba(0, 0, 0, 0.25);">
+                    <div class="text-center mt-4">
+                        <h3 class="mb-0" style="color: #000;
+          text-align: center;
+          font-family: Montserrat;
+          font-size: 40px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          text-transform: uppercase;
+          padding-bottom: 50px;">Our Services</h3>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FFE2E5; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FA5A7D; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/gear.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                      color: var(--text-color);
+                      font-weight: 600;"> Odoo Customization</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FFF4DE; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FF947A; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/wrench-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                    color: var(--text-color);
+                    font-weight: 600;"> Odoo Implementation</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#DCFCE7; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#3CD856; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/life-ring-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                  color: var(--text-color);
+                  font-weight: 600;">Odoo Support</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F3E8FF; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#BF83FF; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/arrows-repeat.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                color: var(--text-color);
+                font-weight: 600;">Odoo Migration</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F1F9FF; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#01649C; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/puzzle-piece-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+              color: var(--text-color);
+              font-weight: 600;">Odoo integration</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#EDF8ED; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#69CC70; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/odoo-consultancy.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+            color: var(--text-color);
+            font-weight: 600;">Odoo Consultancy</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F1F6FF; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#2E4556; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/odoo-licencing.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+          color: var(--text-color);
+          font-weight: 600;">Odoo Licensing</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FAF6EA; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FCD12C; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/hire-odoo.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+          color: var(--text-color);
+          font-weight: 600;">Hire Odoo Developer</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!--  -->
+                </section>
+            </div>
+
+            <!-- licence -->
+            <div class="tab-pane fade" id="profile" role="tabpanel"
+                 aria-labelledby="profile-tab">
+                <div class="px-5">
+                    ....
+                </div>
+            </div>
+            <!--  -->
+        </div>
+        <!--  -->
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $('.owl-carousel').owlCarousel({
+     rtl:true,
+     loop:true,
+     margin:10,
+     nav:true,
+     responsive:{
+         0:{
+             items:1
+         },
+         600:{
+             items:3
+         },
+         1000:{
+             items:3
+         }
+     }
+   })
+</script>
+
+</html>

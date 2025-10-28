@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Template for Contribution Register Report-->
+    <template id="report_contributionregister">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>PaySlip Lines by Contribution Register</h2>
+                        <div class="row mt32 mb32">
+                            <div class="col-3">
+                                <strong>Register Name:</strong>
+                                <p t-field="o.name"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Date From:</strong>
+                                <p t-esc="data['form']['date_from']"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Date To:</strong>
+                                <p t-esc="data['form']['date_to']"/>
+                            </div>
+                        </div>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>PaySlip Name</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Quantity/Rate</th>
+                                    <th>Amount</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="lines_data.get(o.id, [])"
+                                    t-as="line">
+                                    <td>
+                                        <span t-esc="line.slip_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.code"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.quantity"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line.amount"
+                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line.total"
+                                              t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <table class="table table-sm">
+                                    <tr class="border-black">
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="lines_total.get(o.id)"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

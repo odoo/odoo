@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Template for new AppsMenu-->
+<templates id="template" xml:space="preserve">
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Dropdown" position="replace">
+            <li class="dropdown d-flex justify-content-center align-items-center">
+<!--                <a class="full" data-bs-toggle="dropdown" data-display="static"-->
+<!--                                   href="#">-->
+                <a class="full"
+                   href="#" t-on-click="_onMenuClick">
+                <i class="fa fa-th-large"
+                   style="font-size:18px;color:white;margin-top:14px;"/>
+                    </a>
+
+<!--                <div class="dropdown-menu">OKDA</div>-->
+
+
+                <div class="dropdown-menu fullscreen-menu" role="menu"
+                     style="background-color:white;">
+                            <div class="search-container form-row align-items-center m-auto col-12"
+                                 t-ref="search-container">
+                                <div class="search-input col-md-7 mx-auto mr-auto mb-5 "
+                                     t-on-input="_searchMenusSchedule">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-search"/>
+                                            </div>
+                                        </div>
+                                        <input type="search"
+                                               t-ref="search-input"
+                                               autocomplete="off"
+                                               placeholder="Search menus..."
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="search-results col-md-6 mx-auto bg-secondary">
+                                    <t t-if="this.state.results"
+                                       t-call="ohrms_core.SearchResults">
+                                            <t t-set="results"
+                                               t-value="this.state.results"/>
+                                        <t t-set="widget" t-value="this"/>
+                                    </t>
+                                </div>
+                            </div>
+                    <div class="nav-container">
+                                <div class="app-menu">
+                                    <t t-foreach="menuService.getApps()"
+                                       t-as="app"
+                                       t-key="app_index">
+                                        <t t-log="app.id"/>
+                                        <a role="menuitem"
+                                           t-attf-href="/odoo/action-{{app.actionID}}#menu_id={{app.id}}"
+                                           class="dropdown-item o_app mt0"
+                                           t-att-data-menu-id="app.menuID"
+                                           t-att-data-menu-xmlid="app.xmlID"
+                                           t-att-data-action-id="app.actionID"
+                                           t-on-click="_closeFullMenu">
+                                            <img t-if="app.webIconData"
+                                                 t-att-title="app.name"
+                                                 style="width: 70px !important; height: 70px !important; border-radius: 10px !important; margin: 5px 5px 5px 5px;"
+                                                 t-attf-src="{{app.webIconData}}"
+                                            />
+                                            <b class="a_app_menu_title"><t t-esc="app.name"/></b>
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </li>
+
+        </xpath>
+    </t>
+
+</templates>

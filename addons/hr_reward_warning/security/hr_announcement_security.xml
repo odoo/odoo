@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  HR Announcement Multi Company rule -->
+    <record id="hr_announcement_rule_company" model="ir.rule">
+        <field name="name">HR Announcement Multi Company</field>
+        <field name="model_id" ref="model_hr_announcement"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">
+            ['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--   Adding document details as smart button in employee.-->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.oh.employee.documents.expiry</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button class="oe_stat_button" name="action_document_view"
+                        type="object" icon="fa-list-ol">
+                    <field string="Documents" name="document_count"
+                           widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+    <!--    Form view of hr_employee_document model-->
+    <record id='hr_employee_document_view_form' model='ir.ui.view'>
+        <field name="name">hr.employee.document.view.form</field>
+        <field name="model">hr.employee.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="employee_ref_id" string="Employee"/>
+                            <field name="document_type_id"/>
+                            <field name="doc_attachment_ids"
+                                   widget="many2many_binary" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="notification_type"/>
+                            <field name="before_days"
+                                   invisible="notification_type == 'single' or notification_type == False"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Tree view of hr_employee_document model-->
+    <record id='hr_employee_document_view_tree' model='ir.ui.view'>
+        <field name="name">hr.employee.document.view.tree</field>
+        <field name="model">hr.employee.document</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="employee_ref_id" string="Employee"/>
+                <field name="document_type_id"/>
+                <field name="expiry_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!--    Configures an action window for HR Employee Documents.-->
+    <record id="hr_employee_document_action" model="ir.actions.act_window">
+        <field name="name">Employee Documents</field>
+        <field name="res_model">hr.employee.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="hr_employee_document_view_tree"/>
+    </record>
+    <!--    Creates a menu item for HR Employee Documents.-->
+    <menuitem id="hr_employee_menu"
+              name="Employees"
+              parent="hr.menu_hr_employee_payroll"
+              action="hr.open_view_employee_list_my"
+              groups="hr.group_hr_manager"/>
+
+    <menuitem id="hr_employee_document_menu"
+              name="Documents"
+              parent="hr.menu_hr_employee_payroll"
+              action="hr_employee_document_action"
+              groups="hr.group_hr_manager"/>
+
+</odoo>

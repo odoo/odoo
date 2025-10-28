@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Customizing the hr.payslip form view to include additional
+    fields after the 'paid' field. -->
+    <record model="ir.ui.view" id="hr_payslip_view_form">
+        <field name="name">hr.payslip.view.form.inherit.hr.payroll.account.community</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id"
+               ref="hr_payroll_community.hr_payslip_view_form"/>
+        <field name="arch" type="xml">
+            <field name="paid" position="after">
+                <field name="date" readonly="state != 'draft'"/>
+                <field name="journal_id" required="1" readonly="state != 'draft'"/>
+                <field name="move_id" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

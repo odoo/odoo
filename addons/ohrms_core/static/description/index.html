@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Open HRMS CORE Odoo 19</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+    <style>
+        :root {
+          --primary-color: #00438B;
+          --bg-white: #fff;
+          --text-color: #121212;
+          --text-color-light: #64728f;
+        }
+
+        body {
+          font-family: "Montserrat", sans-serif;
+        }
+
+        .nav-tabs .nav-item.show .nav-link,
+        .nav-tabs .nav-link.active {
+          color: var(--text-color);
+          font-family: Montserrat;
+          font-size: 16px !important;
+          font-weight: 500 !important;
+          border-radius: 30px;
+          line-height: normal;
+          text-transform: capitalize;
+          background-color: #F5F5F5;
+          border: none;
+          margin-bottom: 0;
+          padding: 12px 24px;
+        }
+
+        .nav-tabs .nav-link:focus,
+        .nav-tabs .nav-link:hover {
+          border-color: transparent;
+          isolation: isolate;
+        }
+
+        .nav-tabs .nav-link:focus-visible {
+          border-color: transparent;
+          box-shadow: none;
+        }
+
+         /* owl-carosel */
+      .owl-carousel .owl-nav {
+        position: absolute;
+        top: 42%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-42%);
+      }
+
+      .owl-carousel .owl-nav button.owl-prev {
+        position: absolute;
+        right: -36px;
+        font-size: 28px;
+        background-color: #e4e4e4;
+        border-radius: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .owl-carousel .owl-nav button.owl-next {
+        position: absolute;
+        left: -36px;
+        font-size: 28px;
+        background-color: #e4e4e4;
+        border-radius: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+      }
+    </style>
+</head>
+<body>
+<!-- overview -->
+<div class="container">
+    <div class="my-5">
+
+        <div class="tab-content" id="myTabContent1">
+            <div class="supports my-5 py-3">
+                <div class="row justify-content-between">
+                    <div class="col-4">
+                    </div>
+                    <div class="col-6">
+                        <div class="row" style="margin-top:10px">
+                            <div class="my-3 d-flex align-items-center justify-content-end">
+                                <span class="me-3"><b>Supports: </b></span>
+                                <div class="text-center"
+                                     style="background-color:#017E84 !important; font-size:0.8rem !important; color:#fff !important; font-weight:500 !important; padding:4px !important; margin:0 3px !important; border-radius:50px !important; min-width:120px !important">
+                                    Community
+                                </div>
+                                <!--                            <div class="text-center"-->
+                                <!--                                 style="background-color:#875A7B !important; color:#fff !important; font-size:0.8rem !important; font-weight:500 !important; padding:4px !important; margin:0 3px !important; border-radius:50px !important; min-width:120px !important">-->
+                                <!--                                Enterprise-->
+                                <!--                            </div>-->
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <span class="me-3"><b>Availability: </b></span>
+                                <div class="text-center col"
+                                     style="font-size:0.8rem !important; color:#5B899E !important; border:1px solid #5B899E; font-weight:500 !important; padding:4px !important; margin:0 3px !important; border-radius:20px !important; min-width:120px !important">
+                                    <i class="fa fa-check" style="color:green"></i> On Premise
+                                </div>
+                                <div class="text-center col"
+                                     style="border:1px solid #017E84; font-size:0.8rem !important; color:#017E84 !important; font-weight:500 !important; padding:4px !important; margin:0 3px !important; border-radius:20px !important; min-width:120px !important">
+                                    <i class="fa fa-times" style="color:red"></i> Odoo Online
+                                </div>
+                                <div class="text-center col"
+                                     style="font-size:0.8rem !important; border:1px solid #714b67; color:#714b67 !important; font-weight:500 !important; padding:4px !important; margin:0 3px !important; border-radius:20px !important; min-width:120px !important">
+                                    <i class="fa fa-times" style="color:red"></i> Odoo.sh
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show active" id="home" role="tabpanel"
+                 aria-labelledby="home-tab">
+                <div class="position-relative"
+                     style="border-radius: 16px; background: #f8f8f8; padding: 20px 0;">
+                    <div class="row " style="
+          padding: 2rem 0rem 0 !important;
+        ">
+                        <div class="col-lg-12 d-flex flex-column align-items-center">
+                            <h1 class="text-center text-uppercase"
+                                style="font-size: 67px !important; color: #5154a5; font-weight: 900 !important;">
+                                <span style="font-weight: bold;color:#5154a5;">Open HRMS Core Odoo 19</span>
+                            </h1>
+                            <p class="my-1 text-center text-uppercase"
+                               style="letter-spacing: 4px !important; color: #74788D !important;font-size: 21px;font-weight: bold;">
+                                The Complete HR Solution for Odoo19</p>
+                        </div>
+                        <div class="col-lg-12 d-flex justify-content-center gap-4 align-items-center"
+                             style="margin: 3rem 0;">
+                            <img src="./assets/icons/cybro-logo.png"
+                                 width="100%" height="auto" style="width: 20%"
+                                 class="img-responsive"/>
+                            <img src="./assets/icons/logo-openhrms.png"
+                                 width="100%" height="auto" style="width: 20%"
+                                 class="img-responsive"/>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <a href="mailto:odoo@cybrosys.com"
+                               target="_blank"
+                               style="background-color: transparent;border-radius: 35px;
+                  font-family: Montserrat;
+                  display: inline-block;
+                  padding: 7px 33px;
+                  border: 1px solid #00438B;
+                  color: #00438B;
+                  text-decoration: none;
+                  width: 231px;
+                "
+                               class="mx-1 mb-2 deep-1 deep_hover">
+                                <img class="img"
+                                     style="width: 24px"
+                                     src="./assets/icons/mail.svg"/>
+                                <span class="pl-2"
+                                      style=" font-size: 16px; vertical-align: middle"
+                                >Email Us</span>
+                            </a>
+                            <a href="skype:cybroopenerp?chat"
+                               target="_blank"
+                               style="
+                  background-color: #00438B;
+                  font-family: Montserrat;
+                  display: inline-block;
+                  padding: 7px 33px;
+                  border: 1px solid #00438B;
+                  border-radius: 35px;
+                  text-decoration: none;
+                  width: 231px;
+                "
+                               class="mx-1 mb-2 deep-1 deep_hover">
+                                <img
+                                        class="img"
+                                        style="width: 24px"
+                                        src="./assets/icons/skype-fill.svg"
+                                />
+                                <span
+                                        class="pl-2"
+                                        style="color: #fff; font-size: 16px; vertical-align: middle"
+                                >Skype Us</span>
+                            </a>
+                            <a href="https://wa.me/9074270811"
+                               target="_blank"
+                               style="
+                  background-color: #25D366;
+                  font-family: Montserrat;
+                  display: inline-block;
+                  color: #7f54b3;
+                  padding: 7px 33px;
+                  border: 1px solid #25D366;
+                  border-radius: 35px;
+                  text-decoration: none;
+                  width: 230px;
+                "
+                               class="mx-1 mb-2 deep-1 deep_hover">
+                                <img
+                                        class="img"
+                                        style="width: 24px"
+                                        src="./assets/icons/whatsapp.svg"
+                                />
+                                <span
+                                        class="pl-2"
+                                        style="color: #fff; font-size: 15px; vertical-align: middle"
+                                >+91 9074270811</span>
+                            </a>
+                        </div>
+<!--                        <div class="col-lg-12 d-flex justify-content-center align-items-center" style="margin:2rem 0">-->
+<!--                            <img src="./assets/screenshots/hero.gif" width="100%" height="auto" class="img-responsive">-->
+<!--                        </div>-->
+                    </div>
+                    <div class="position-absolute bottom-0"
+                         style="z-index: 1; width: 100%;padding-bottom: 0px;">
+                        <img src="./assets/icons/banner-bg.svg"
+                             class="img-fluid w-100">
+                    </div>
+                    <div class="position-absolute bottom-0 end-0"
+                         style=" z-index: 2;">
+                        <img src="./assets/icons/patter.svg">
+                    </div>
+                </div>
+
+                <!-- video blog link section  -->
+                <div style="background-color: #ffffff; border: 1px solid #e7e7e7; padding: 40px; border-radius: 12px; text-align: center; color: #000; margin-top: 34px;">
+                    <h1 style="font-size: 32px; font-weight: bold; margin-bottom: 0px;">
+                        Blog and Video Details
+                    </h1>
+                    <div style="margin-top: 30px;display: flex; gap: 20px; justify-content: center; align-items: center;">
+                        <div style="width: 100%;">
+                            <div style="background-color: #F7F3FF; min-height: 289px; border-radius: 12px; padding: 32px; text-align: left;">
+                                <div style="margin-bottom: 24px;">
+                                    <img src="./assets/icons/blog-icon.png"
+                                         style="padding: 10px; background-color: #E9E4F5;border-radius: 12px;">
+                                </div>
+                                <h3 style="color: #121212; font-size: 24px; font-weight: 700; margin-bottom: 12px;">Read
+                                    Blog</h3>
+                                <p style="color: #666666; font-size: 16px; margin-bottom: 24px;">Read Our Detailed
+                                    Blog</p>
+                                <div style="display: flex; align-items: center; gap: 12px; background-color: black; padding: 8px; border-radius: 8px;">
+                                    <div>
+                                        <img src="./assets/icons/copylink.svg">
+                                    </div>
+                                    <p style="padding-top: 7px; border: none; width: 368px; background: transparent; outline: none; color: #fff;text-overflow: ellipsis !important; margin: 0; overflow: hidden !important; white-space: nowrap;font-weight: bold;">
+                                        https://www.cybrosys.com/blog/how-to-manage-hr-tasks-using-odoo-18-open-hrms-core
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 100%;">
+                            <div style="background-color: #FFF5F5;  min-height: 289px; border-radius: 12px; padding: 32px; text-align: left;margin-left: 30px;">
+                                <div style="margin-bottom: 24px;">
+                                    <img src="./assets/icons/youtube-icon.png"
+                                         style="padding: 10px; background-color: #FFDCDC;border-radius: 12px;">
+                                </div>
+                                <h3 style="color: #121212; font-size: 24px; font-weight: 700; margin-bottom: 12px;">
+                                    Video Tutorial</h3>
+                                <p style="color: #666666; font-size: 16px; margin-bottom: 28px;">Watch Detailed Demo on
+                                    Youtube</p>
+                                <a href="https://www.youtube.com/watch?v=kBBlUFofCTs" target="_blank"
+                                   style="display: inline-block; text-decoration: none; background-color: #FF3636; color: white; width: 100%; text-align: center; padding: 13px 32px; border-radius: 8px; font-weight: bold;">Watch
+                                    Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--code  -->
+
+                <div class="my-5">
+                    <div class="position-relative"
+                         style=" padding: 5rem 4rem 5rem 4rem; background-color: #00438B; border-radius: 12px;">
+                        <div class="d-flex flex-column gap-4">
+                            <span class="wrapper-subtitle"
+                                  style="font-size: 40px; font-weight: 700; color: #fff;line-height: 60px; text-transform: capitalize; width: 450px;  font-family: Montserrat;"> Open HRMS Core Odoo 19</span>
+                            <h3 class="wrapper-details"
+                                style="font-size: 20px; font-weight: 400; color: #fff; line-height: 32px;  ">
+                                Are you ready to make your business more
+                                organized?
+                                <br> Improve now!
+                            </h3>
+                            <div class="d-flex gap-3">
+                                <a href="mailto:odoo@cybrosys.com"
+                                   class="shop-btn" style="cursor: pointer; border-radius: 16px; display: flex; justify-content: center; align-items: center; gap: 7px;
+            border: 1px solid  #ffffff33;
+            background-color: #ffffff14;
+            backdrop-filter: blur(10px); color: #fff; padding: 12px 16px 12px 16px; text-decoration: none;">
+                             <span style="border-radius: 12px;
+                             background-color: #ffffff1a;
+                             backdrop-filter: blur(6px);padding: 12px;  ">
+                              <img src="./assets/icons/banner-mail.svg">
+                           </span>
+                                    <span style="font-weight: 500;font-family: Montserrat;">odoo@cybrosys.com</span>
+                                </a>
+                                <a href="https://wa.me/9074270811" class="shop-btn" target="_blank"
+                                   style="cursor: pointer; border-radius: 16px; display: flex; justify-content: center; align-items: center; gap: 7px;
+             border: 1px solid  #ffffff33;
+             background-color: #ffffff14;
+            backdrop-filter: blur(10px); color: #fff; padding: 12px 22px 12px 18px; text-decoration: none;">
+                             <span style="border-radius: 12px;
+                             background-color: #ffffff1a;
+                             backdrop-filter: blur(6px);padding: 12px;">
+                              <img src="./assets/icons/banner-call.svg">
+                           </span>
+                                    <span style="font-weight: 500;font-family: Montserrat;">+91 9074270811</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="position-absolute bottom-0 end-0">
+                            <img src="./assets/icons/banner-logo-pattern.svg"
+                                 style="padding-bottom: 9px;padding-right: 9px;width: 540px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- end-code -->
+
+
+                <!-- key-highlight -->
+
+                <div class="mt64 mb64">
+                    <h2 class="text-center text-uppercase"
+                        style="font-family: Montserrat, 'sans-serif' !important; font-size: 50px !important; color:#5154a5; font-weight: 900 !important;">
+                        <span style="font-weight: bold;color:#5154a5;">KEY HIGHLIGHTS</span>
+                    </h2>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:115px;"
+                                         src="assets/icons/hr_dashboard.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        HR Dashboard </h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Provides all essential tools to deliver real-time information in a single
+                                        dashboard</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:109px;"
+                                         src="assets/icons/hr_theme.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Interactive Theme</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Interactive theme including Apps menu and search bar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:109px;"
+                                         src="assets/icons/hr_reminder.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Employee Reminders</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Ensure that important events are never forgotten
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/hr_employee_shift.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Shift Management</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Manage Employee Shifts Efficiently</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/employee_check_list.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Entry & Exit Checklist</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Keeps records of entry and exit checklist</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/hr_custody.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Custody/Property Management </h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Efficiently Manage Properties</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/ohrms_salary_advance.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Salary Advance</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Manage advance salary request of your employees. </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/hr_multi_company.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        HR Multi Company</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Enables multi company environment</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/ohrms_loan.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Loan Management</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Manage loan requests of your employee</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/hr_employee_transfer.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Employee Branch Transfer</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Allow you to transfer an employee from one branch to another branch</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/hr_reward_warning.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        HR Announcements</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Allow you to manage hr official announcements of your company</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/hr_vacation_mngmt.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Vacation Management </h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Allow you to manage the vacation of your employees</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:110px;"
+                                         src="assets/icons/oh_employee_documents_expiry.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        HR Documents Management </h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Allow you to manage different types of documents and their expiry</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 mt32">
+                            <div class="container shadow d-flex align-items-center justify-content-center"
+                                 style="border-radius: 5px;padding: 33px 0px;min-height: 180px; margin: 15px auto;">
+                                <div class="col-md-3 d-flex align-items-center justify-content-center"
+                                     style="float:left">
+                                    <img class="img img-responsive" style="width:115px;"
+                                         src="assets/icons/hr_leave_request_aliasing.png">
+                                </div>
+                                <div class="col-md-9" style="padding-left:0; float:left; width:70%">
+                                    <h3 class="mt16 mb0"
+                                        style="font-family:Roboto; font-weight:500; font-size:22px; color: #00438B;">
+                                        Automation on Leave Request Mails</h3>
+                                    <p class=" mt8 mb-0"
+                                       style="font-family:Roboto ; color: #280135; margin-bottom: 0px;">
+                                        Can automate leave request based on leave request mail.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--  -->
+                <!-- screenshot and other -->
+                <div class="mb-4 bg-white"
+                     style=" border: 1px solid #EBEEF2; border-radius: 6px; box-shadow: 0px 8px 20px -4px rgba(0, 0, 0, 0.10); border: 1px solid #EBEEF2;">
+                    <div>
+                        <ul class="nav nav-tabs justify-content-center bg-white py-2"
+                            id="myTab" role="tablist" style="border-radius: 6px 6px 0 0;
+        ">
+                            <li class="nav-item">
+                                <a aria-controls="overview"
+                                   class="nav-link active" data-bs-toggle="tab"
+                                   href="#overview" id="overview-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">
+                                    Screenshots</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="feature" class="nav-link py-2"
+                                   data-bs-toggle="tab"
+                                   href="#feature" id="feature-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="faq" class="nav-link"
+                                   data-bs-toggle="tab" href="#faq"
+                                   id="faq-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">
+                                    FAQs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="releases" class="nav-link"
+                                   data-bs-toggle="tab"
+                                   href="#releases" id="releases-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">Releases</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content p-md-5 p-2 py-3" id="myTabContent">
+                        <div aria-labelledby="overview-tab"
+                             class="tab-pane fade show active" id="overview"
+                             role="tabpanel">
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px">
+                                <img alt="acc_bg"
+                                     class="w-100 h-100 position-absolute img-fluid left_0"
+                                     loading="lazy"
+                                     src="//apps.odoocdn.com/apps/assets/17.0/ks_dashboard_ninja/ai-img/o3.png?007008f"
+                                     style="">
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Open HRMS Theme.
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Attractive Open HRMS theme makes
+                                                a bow.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/new_homepage.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Dashboard
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Keep your eyes on your whole
+                                                analysis.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/2.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Multi-Company
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Manage multiple branch employees
+                                                easily.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/3.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Loan Management.
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Configure different loan
+                                                policies, Assign approval
+                                                authority, Conduct verification
+                                                process and sanctioning of
+                                                employee loan.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/4.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Salary Advance
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Configure advance salary rules,
+                                                Set advance salary limits,
+                                                Minimum number of days, &
+                                                Provide advance salary to
+                                                employees.
+                                                /p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/5.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Records Related Reminders
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Reminder sets alarm to recall
+                                                every important dates. 'Bell'
+                                                symbol beside the chat icon will
+                                                bring your reminder pops up. You
+                                                can set reminders to any model
+                                                (eg: Sales,HR,Project etc..) and
+                                                also their corresponding date
+                                                fields to compare. Eases company
+                                                to memorize the special dates.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/6.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Employee Branch Transfer
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                You can transfer your employees
+                                                to another branches without any
+                                                pain.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/0.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Employee Documents Management
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Keep the employee related
+                                                documents with expiry
+                                                notification.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/8.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Resignation Process.
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Employees can draft their
+                                                resignation. Higher authorities
+                                                can timely do needful via
+                                                rejecting/ accepting the
+                                                resignation statement.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/9.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">HR Announcements
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Managing Official Announcements,
+                                                Greetings, Warnings, Rewards
+                                                etc.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/10.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                          <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Automation on Leaves Requests Mails
+                          </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p
+                                                    style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                Creates leave request
+                                                automatically from incoming
+                                                email.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/11.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="feature-tab"
+                             class="tab-pane fade show py-1" id="feature"
+                             role="tabpanel">
+                            <div class="row py-4">
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Open HRMS Theme.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Dashboard
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Multi-Company
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Loan Management
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Salary Advance
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Records Related Reminders
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Employee Branch Transfer
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Employee Documents Management
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Resignation Process
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                HR Announcements
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#00438b17">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#00438B; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Automation on Leaves Requests
+                                                Mails
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="faq-tab"
+                             class="tab-pane fade show" id="faq"
+                             role="tabpanel">
+                            <div class="row"
+                                 style=" background-color:#fff !important">
+                                <div class="col-lg-12 d-flex flex-column align-items-center">
+                                    <h1 class="text-center text-uppercase"
+                                        style="font-family:Montserrat, 'sans-serif' !important; font-size:40px !important; color:#791d97; font-weight:900 !important">
+                                        <span style="color:var(--primary-color)">FAQ </span>
+                                        <sup>
+                                        </sup>
+                                    </h1>
+                                </div>
+                                <div class="col-md-12" aria-labelledby="faq-tab"
+                                     id="faq1" role="tabpanel">
+                                    <div class="accordion mb-4" id="accordion6">
+                                        <div style="background-color:#fff">
+                                            <!-- accordian -->
+                                            <div class="accordion"
+                                                 id="accordion_faq">
+                                                <!-- Question 1 -->
+                                                <div class=""
+                                                     style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class=" card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         data-bs-target="#collapseFAQOne"
+                                                         aria-controls="collapseFAQOne"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:none; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px;">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            What is Open HRMS
+                                                            Core?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQOne"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQOne"
+                                                         style=" box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style=" padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            Open HRMS Core is an
+                                                            all-in-one human
+                                                            resource management
+                                                            solution designed to
+                                                            streamline HR
+                                                            operations in your
+                                                            company. It offers a
+                                                            suite of tools for
+                                                            managing employees,
+                                                            leaves, loans,
+                                                            shifts,
+                                                            announcements, and
+                                                            much more.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 2 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQTwo"
+                                                         data-bs-target="#collapseFAQTwo"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            Can I manage
+                                                            multiple companies
+                                                            with Open HRMS Core?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQTwo"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQTwo"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            Yes, Open HRMS Core
+                                                            supports a
+                                                            multi-company
+                                                            environment,
+                                                            allowing you to
+                                                            manage HR operations
+                                                            across different
+                                                            branches or
+                                                            companies under one
+                                                            platform.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 3 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQThree"
+                                                         data-bs-target="#collapseFAQThree"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            Can I keep track of
+                                                            property and assets
+                                                            assigned to
+                                                            employees?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQThree"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQThree"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            Yes, with the
+                                                            Custody/Property
+                                                            Management feature,
+                                                            you can maintain
+                                                            records of all the
+                                                            company property
+                                                            (laptops, phones,
+                                                            etc.) assigned to
+                                                            employees and track
+                                                            them until the items
+                                                            are returned.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 4-->
+                                                <div class=""
+                                                     style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class=" card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         data-bs-target="#collapseFAQFour"
+                                                         aria-controls="collapseFAQFour"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:none; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px;">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            How does the system
+                                                            handle employee
+                                                            transfers between
+                                                            branches?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQFour"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQFour"
+                                                         style=" box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style=" padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            The Employee Branch
+                                                            Transfer feature
+                                                            allows easy transfer
+                                                            of employees from
+                                                            one branch to
+                                                            another, while
+                                                            maintaining all
+                                                            necessary records
+                                                            and ensuring
+                                                            continuity in
+                                                            employment.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 5 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQFive"
+                                                         data-bs-target="#collapseFAQFive"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            How does the system
+                                                            manage employee
+                                                            vacations?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQTwo"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQFive"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            The Vacation
+                                                            Management feature
+                                                            tracks employee
+                                                            leaves and
+                                                            vacations. Managers
+                                                            can approve or
+                                                            reject leave
+                                                            requests directly
+                                                            from the system,
+                                                            making the process
+                                                            quick and
+                                                            transparent.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 6 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQSix"
+                                                         data-bs-target="#collapseFAQSix"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            Can leave requests
+                                                            be automated?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="./assets/icons/down (1).svg"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQThree"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQSix"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p
+                                                                style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            Yes, the Automation
+                                                            on Leave Request
+                                                            Mails feature
+                                                            automates the leave
+                                                            request process by
+                                                            generating requests
+                                                            directly from
+                                                            incoming emails.
+                                                            This reduces manual
+                                                            entry and speeds up
+                                                            processing. </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="releases-tab"
+                             class="tab-pane fade show" id="releases"
+                             role="tabpanel">
+                            <div class="row pt-5 m-0">
+                                <div class="col-md-3">
+                                    <h4 style="font-size:16px; font-weight:600; color:#514F4F; margin:0; line-height:26px;">
+                                        Release 19.0.1.0.0
+                                    </h4>
+                                    <span style="font-size:14px; color:#7A7979; display:block; margin-bottom:20px;">
+                      20th September, 2025
+                    </span>
+                                </div>
+                                <div class="col-md-8">
+                                    <div style="padding:0 0 40px">
+                                        <div style="margin:0 0 10px">
+                                            <div
+                                                    style="display:inline-block; padding:0px 8px; color:#514F4F; background-color:#b5d9ff; border-radius:20px">
+                                                Add
+                                            </div>
+                                        </div>
+                                        <div class="d-flex m-0"
+                                             style="color:#7A7979;">
+                                            <ul class="pl-3 mb-0">
+                                                <li>
+                                                    Initial Commit
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div style="padding:0 0 0; border-bottom:1px solid #E3E3E3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- related modules -->
+
+
+                <section class="oe_container mt32">
+                    <h2 style="color: #091E42;font-family: &quot;Montserrat&quot;;text-align: center;margin: 25px auto;text-transform: uppercase;"
+                        class="oe_slogan">
+                        <b>Related Modules</b>
+                    </h2>
+                    <div id="demo" class="row carousel slide mt64 mb32" data-bs-ride="carousel">
+                        <!-- The slideshow -->
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/hrms_dashboard"
+                                       target="_blank" style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block" style=" max-width: 100%;"
+                                                 src="./assets/modules/hrms_dashboard.jpg"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Open HRMS HR Dashboard</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/hr_resignation" target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block" style=" max-width: 100%;"
+                                                 src="./assets/modules/hr_resignation.jpg"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Open HRMS Resignation</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/ohrms_loan"
+                                       target="_blank" style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px;padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block" style=" max-width: 100%;"
+                                                 src="./assets/modules/ohrms_loan.png"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Open HRMS Loan Management </h4>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/oh_employee_documents_expiry"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block" style=" max-width: 100%;"
+                                                 src="./assets/modules/oh_employee_documents_expiry.jpg"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Open HRMS Employee Documents Expiry</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/hr_payroll_community"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block" style=" max-width: 100%;"
+                                                 src="./assets/modules/hr_payroll_community.png"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Odoo 18 HR Payroll</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/hr_reward_warning"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block" style=" max-width: 100%;"
+                                                 src="./assets/modules/hr_reward_warning.png"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Open HRMS Official Announcements</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Left and right controls -->
+                        <a class="carousel-control-prev" href="#demo" data-bs-slide="prev"
+                           style="margin-left: -30px;width: 35px;color: #000;">
+                        <span class="carousel-control-prev-icon">
+        <i class="fa fa-chevron-left" style="font-size:24px"></i>
+      </span>
+                        </a>
+                        <a class="carousel-control-next" href="#demo" data-bs-slide="next"
+                           style="margin-right: -30px;width: 35px;color: #000;">
+                        <span class="carousel-control-next-icon">
+        <i class="fa fa-chevron-right" style="font-size:24px"></i>
+      </span>
+                        </a>
+                    </div>
+                </section>
+
+                <!--  -->
+
+                <!-- service-section -->
+
+                <section id="services" class="mt-5" style="border-radius: 16px;
+                                                            border: 1px solid #EBEEF2;
+                                                            background: var(--Neutral-N0, #FFF);
+                                                            padding: 60px 40px;
+                                                            box-shadow: 0px 5px 20px -11px rgba(0, 0, 0, 0.25);">
+                    <div class="text-center mt-4"><h3 class="mb-0" style="color: #000;
+                                                                  text-align: center;
+                                                                  font-family: Montserrat;
+                                                                  font-size: 40px;
+                                                                  font-style: normal;
+                                                                  font-weight: 700;
+                                                                  line-height: normal;
+                                                                  text-transform: uppercase;
+                                                                  padding-bottom: 50px;">
+                        Our Services</h3></div>
+                    <div class="row mt-3">
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/odoo-customization-and-installation"
+                               style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FFE2E5; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FA5A7D; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/gear.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                                  color: var(--text-color);
+                                  font-weight: 600;"> Odoo Customization</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/odoo-erp-implementation" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FFF4DE; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FF947A; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/wrench-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                    color: var(--text-color);
+                    font-weight: 600;"> Odoo Implementation</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/odoo-erp-support" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#DCFCE7; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#3CD856; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/life-ring-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                  color: var(--text-color);
+                  font-weight: 600;">Odoo Support</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/odoo-migration-service" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F3E8FF; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#BF83FF; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/arrows-repeat.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                color: var(--text-color);
+                font-weight: 600;">Odoo Migration</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/odoo-erp-integration" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F1F9FF; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#01649C; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/puzzle-piece-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+              color: var(--text-color);
+              font-weight: 600;">Odoo Integration</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/odoo/odoo-consultant" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#EDF8ED; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#69CC70; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/odoo-consultancy.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+            color: var(--text-color);
+            font-weight: 600;">Odoo Consultancy</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/odoo/odoo-licensing-consultancy"
+                               style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F1F6FF; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#2E4556; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/odoo-licencing.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+          color: var(--text-color);
+          font-weight: 600;">Odoo Licensing</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="https://www.cybrosys.com/hire-odoo-developer" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FAF6EA; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FCD12C; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/hire-odoo.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+          color: var(--text-color);
+          font-weight: 600;">Hire Odoo Developer</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+
+            </div>
+
+            <!-- licence -->
+            <div class="tab-pane fade" id="profile" role="tabpanel"
+                 aria-labelledby="profile-tab">
+                <div class="px-5">
+                    ....
+                </div>
+            </div>
+            <!--  -->
+        </div>
+        <!--  -->
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $('.owl-carousel').owlCarousel({
+     rtl:true,
+     loop:true,
+     margin:10,
+     nav:true,
+     responsive:{
+         0:{
+             items:1
+         },
+         600:{
+             items:3
+         },
+         1000:{
+             items:3
+         }
+     }
+   })
+</script>
+
+</html>

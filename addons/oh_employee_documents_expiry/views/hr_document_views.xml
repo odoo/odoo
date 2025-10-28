@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form view of hr_document model.-->
+    <record id='hr_document_view_form' model='ir.ui.view'>
+        <field name="name">hr.document.view.form</field>
+        <field name="model">hr.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="attach_ids" widget="many2many_binary"
+                                   class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Tree view of hr_document model.-->
+    <record id='hr_document_view_tree' model='ir.ui.view'>
+        <field name="name">hr.document.view.tree</field>
+        <field name="model">hr.document</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="note" string="Note"/>
+            </list>
+        </field>
+    </record>
+    <!--An action window,that opens the list and form views of HR documents.-->
+    <record id="hr_document_action" model="ir.actions.act_window">
+        <field name="name">Document Templates</field>
+        <field name="res_model">hr.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref=""/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create First Document Template</p>
+        </field>
+    </record>
+    <!--    Menu item for documents.-->
+    <menuitem id="hr_document_menu"
+              name="Document Templates"
+              parent="hr.menu_hr_root"
+              sequence="4"
+              action="hr_document_action"
+              groups="hr.group_hr_manager"/>
+</odoo>

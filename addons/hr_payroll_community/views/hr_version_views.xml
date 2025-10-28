@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menus -->
+    <menuitem id="menu_hr_payroll_community_root" name="Payroll" sequence="5"
+              web_icon="hr_payroll_community,static/description/icon.png"/>
+
+    <menuitem id="menu_hr_payroll_community_configuration" name="Configuration"
+              parent="menu_hr_payroll_community_root"
+              sequence="100"
+              groups="hr_payroll_community.group_hr_payroll_community_manager"/>
+    <!-- Contract View -->
+    <record id="hr_contract_template_form_view" model="ir.ui.view">
+        <field name="name">hr.version.view.form.inherit</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="struct_id" required="1"/>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="before">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='resource_calendar_id']"
+                   position="after">
+                <field name="schedule_pay"/>
+            </xpath>
+            <xpath expr="//group[@name='contract']" position="after">
+                <group string="Monthly Advantages in Cash" name='allowances'>
+                    <label for="hra"/>
+                    <div class="o_row">
+                        <field name="hra" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="da"/>
+                    <div class="o_row">
+                        <field name="da" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="travel_allowance"/>
+                    <div class="o_row">
+
+                        <field name="travel_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="meal_allowance"/>
+                    <div class="o_row">
+
+                        <field name="meal_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="medical_allowance"/>
+                    <div class="o_row">
+
+                        <field name="medical_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="other_allowance"/>
+                    <div class="o_row">
+
+                        <field name="other_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

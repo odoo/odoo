@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--   Form View of hr_announcement model  -->
+    <record id="hr_announcement_view_form" model="ir.ui.view">
+        <field name="name">hr.announcement.view.form</field>
+        <field name="model">hr.announcement</field>
+        <field name="arch" type="xml">
+            <form string="Announcements">
+                <header>
+                    <button string="Send For Approval" class="btn-primary"
+                            type="object" name="action_sent_announcement"
+                            groups="hr.group_hr_user"
+                            invisible="state != 'draft'"/>
+                    <button string="Approve" class="btn-primary"
+                            groups="hr.group_hr_manager" type="object"
+                            name="action_approve_announcement"
+                            invisible="state != 'to_approve'"/>
+                    <button string="Refuse" groups="hr.group_hr_manager"
+                            type="object"
+                            name="action_reject_announcement" invisible="state != 'to_approve'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <div name="options_active">
+                            <div>
+                                <label for="is_announcement" class="oe_inline"
+                                       string="General Announcement "/>
+                                <field name="is_announcement"
+                                       class="oe_inline oe_input_align"
+                                       readonly="name != False"/>
+                            </div>
+                        </div>
+                    </div>
+                    <group>
+                        <label for="announcement_reason"/>
+                        <div>
+                            <field name="announcement_reason" readonly="state != 'draft'"/>
+                        </div>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="announcement_type"
+                                   invisible="is_announcement != False"/>
+                            <field name="attachment_id"
+                                   widget="many2many_binary" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="date_end"/>
+                            <field name="employee_ids" widget="many2many_tags"
+                                   invisible="is_announcement != False or announcement_type != 'employee'"/>
+                            <field name="department_ids" widget="many2many_tags"
+                                   invisible="is_announcement != False or announcement_type != 'department'"/>
+                            <field name="position_ids" widget="many2many_tags"
+                                   invisible="is_announcement != False or announcement_type != 'job_position'"/>
+                            <field name="requested_date" readonly="1"/>
+                            <field name="company_id"
+                                   options="{'no_create': True}"
+                                   groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="announcement" string="Letter">
+                            <field name="announcement" readonly="state != 'draft'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <!--  Tree View of hr_announcement model -->
+    <record id="hr_announcement_view_tree" model="ir.ui.view">
+        <field name="name">hr.announcement.view.tree</field>
+        <field name="model">hr.announcement</field>
+        <field name="arch" type="xml">
+            <list string="Announcements">
+                <field name="name"/>
+                <field name="announcement_reason"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <!--  Search View of hr_announcement model -->
+    <record id="hr_announcement_view_search" model="ir.ui.view">
+        <field name="name">hr.announcement.view.search</field>
+        <field name="model">hr.announcement</field>
+        <field name="arch" type="xml">
+            <search string="Announcements">
+                <field name="name" string="Name"/>
+                <field name="is_announcement"
+                       string="Is a General Announcement"/>
+                <field name="announcement_reason" string="Announcement Reason"/>
+                <field name="state" string="State"/>
+                <separator/>
+                <filter name="approved_rewards" string="Approved Letters"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter name="general_announcements"
+                        string="General Announcements"
+                        domain="[('is_announcement', '=',True)]"/>
+                <filter string="Status" name="Status" domain="[]"
+                        context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+    <!--  Action of hr_announcement model  -->
+    <record id="hr_announcement_action" model="ir.actions.act_window">
+        <field name="name">Announcements</field>
+        <field name="res_model">hr.announcement</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_announcement_view_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to Create a New Announcement.
+            </p>
+        </field>
+    </record>
+</odoo>

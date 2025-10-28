@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--   Sequence number for salary advance.-->
+    <record id="ir_seq_hr_advance" model="ir.sequence">
+        <field name="name">Salary Advance Request</field>
+        <field name="code">salary.advance.seq</field>
+        <field name="prefix">SAR</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="number_next_actual">1</field>
+        <field name="implementation">standard</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

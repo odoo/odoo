@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--  Salary Structure list view -->
+        <record id="hr_payroll_structure_view_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.view.list</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <list string="Employee Function">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="rule_ids"/>
+                    <field name="company_id" groups="base.group_multi_company"
+                           options="{'no_create': True}"/>
+
+                </list>
+            </field>
+        </record>
+    <!--  Salary Structure kanban view -->
+        <record id="hr_payroll_structure_view_kanban" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.view.kanban</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span>Code:
+                                            <field name="code"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    <!--  Salary Structure search option -->
+        <record id="hr_payroll_structure_view_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.view.list</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <list string="Salary Structure">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="company_id" groups="base.group_multi_company"
+                           options="{'no_create': True}"/>
+
+                </list>
+            </field>
+        </record>
+        <record id="hr_payroll_structure_search" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.select</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Structures">
+                    <field name="name" string="Payroll Structures"
+                           filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                </search>
+            </field>
+        </record>
+    <!--  Salary Structure form view -->
+        <record id="hr_payroll_structure_view_form" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.view.form</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="arch" type="xml">
+                <form string="Employee Function">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="parent_id"/>
+                        <field name="company_id"
+                               groups="base.group_multi_company"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Salary Rules">
+                            <field name="rule_ids"
+                                   domain="[('parent_rule_id','=',False)]">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="category_id"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="register_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+    <!-- Action for Salary Structure -->
+        <record id="hr_payroll_structure_action"
+                model="ir.actions.act_window">
+            <field name="name">Salary Structures</field>
+            <field name="res_model">hr.payroll.structure</field>
+            <field name="view_mode">list,kanban,form</field>
+        </record>
+    <!-- Menu action for Salary Structure -->
+        <menuitem
+                id="menu_hr_payroll_structure_view"
+                action="hr_payroll_structure_action"
+                parent="menu_hr_payroll_community_configuration"
+                sequence="2"
+        />
+</odoo>

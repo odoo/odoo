@@ -1,0 +1,129 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account_community
+# 
+# Translators:
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_payroll_account_community
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_community.hr_contract_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account_community.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "会計"
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip__move_id
+msgid "Accounting Entry"
+msgstr "会計入力"
+
+#. module: hr_payroll_account_community
+#: code:addons/hr_payroll_account_community/models/hr_payroll_account_community.py:114
+#: code:addons/hr_payroll_account_community/models/hr_payroll_account_community.py:129
+#, python-format
+msgid "Adjustment Entry"
+msgstr "調整項目"
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip_line__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_salary_rule__analytic_account_id
+msgid "Analytic Account"
+msgstr "分析勘定"
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip_line__account_credit
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_salary_rule__account_credit
+msgid "Credit Account"
+msgstr "貸方勘定"
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip__date
+msgid "Date Account"
+msgstr "日付 勘定"
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip_line__account_debit
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_salary_rule__account_debit
+msgid "Debit Account"
+msgstr "借方勘定"
+
+#. module: hr_payroll_account_community
+#: model:ir.model,name:hr_payroll_account_community.model_hr_contract
+msgid "Employee Contract"
+msgstr "従業員契約"
+
+#. module: hr_payroll_account_community
+#: model:ir.model,name:hr_payroll_account_community.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "選択した全ての従業員の給与明細書を作成する。"
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,help:hr_payroll_account_community.field_hr_payslip__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "給与明細書の発効日の期間を使うために、空白にしておいてください。"
+
+#. module: hr_payroll_account_community
+#: model:ir.model,name:hr_payroll_account_community.model_hr_payslip
+msgid "Pay Slip"
+msgstr "給与明細"
+
+#. module: hr_payroll_account_community
+#: model:ir.model,name:hr_payroll_account_community.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "給与明細書のバッチ"
+
+#. module: hr_payroll_account_community
+#: model:ir.model,name:hr_payroll_account_community.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "給与明細行"
+
+#. module: hr_payroll_account_community
+#: code:addons/hr_payroll_account_community/models/hr_payroll_account_community.py:65
+#, python-format
+msgid "Payslip of %s"
+msgstr "%s の給与明細書"
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_contract__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip_run__journal_id
+msgid "Salary Journal"
+msgstr "給与仕訳"
+
+#. module: hr_payroll_account_community
+#: model:ir.model,name:hr_payroll_account_community.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
+
+#. module: hr_payroll_account_community
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_payslip_line__account_tax_id
+#: model:ir.model.fields,field_description:hr_payroll_account_community.field_hr_salary_rule__account_tax_id
+msgid "Tax"
+msgstr "税"
+
+#. module: hr_payroll_account_community
+#: code:addons/hr_payroll_account_community/models/hr_payroll_account_community.py:112
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "経費仕訳 %s は与信アカウントを正しく設定してありません。"
+
+#. module: hr_payroll_account_community
+#: code:addons/hr_payroll_account_community/models/hr_payroll_account_community.py:127
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "経費仕訳 %s は、借方勘定科目を正しく設定していません。"
