@@ -26,7 +26,7 @@ class DisplayInterface(Interface):
             }
         }
 
-        if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
+        if float(helpers.get_version()[1:8]) >= MIN_IMAGE_VERSION_WAYLAND:
             randr_result = subprocess.run(['wlr-randr'], capture_output=True, text=True, check=False)
             if randr_result.returncode != 0:
                 return {}
