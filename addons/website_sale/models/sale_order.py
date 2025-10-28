@@ -14,8 +14,8 @@ from odoo.tools import float_is_zero
 
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
-    PRICELIST_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
+    PRICELIST_SESSION_CACHE_KEY,
 )
 
 
@@ -390,7 +390,12 @@ class SaleOrder(models.Model):
         if not filtered_sol:
             return self.env['sale.order.line']
 
-        if product.product_tmpl_id._has_no_variant_attributes():
+        has_configurable_no_variant_attributes = any(
+            len(line.value_ids) > 1 or line.attribute_id.display_type == 'multi'
+            for line in product.attribute_line_ids
+            if line.attribute_id.create_variant == 'no_variant'
+        )
+        if has_configurable_no_variant_attributes:
             filtered_sol = filtered_sol.filtered(
                 lambda sol:
                     sol.product_no_variant_attribute_value_ids.ids == no_variant_attribute_value_ids
