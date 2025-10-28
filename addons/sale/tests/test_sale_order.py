@@ -773,6 +773,55 @@ class TestSaleOrder(SaleCommon):
             msg="price_total should be equal to expected_total",
         )
 
+    def test_updating_combo_product_sol_qty_after_removing_a_combo_choice_from_product(self):
+        """Test that updating combo product SOL qty after removing one of the combo choice
+        from the combo product"""
+        test_product = self._create_product(name='test_product')
+        combo_a, combo_b = self.env['product.combo'].create([
+            {'name': "Combo A", 'combo_item_ids': [Command.create({'product_id': self.product.id})]},
+            {'name': "Combo B", 'combo_item_ids': [Command.create({'product_id': test_product.id})]},
+        ])
+        combo_product = self._create_product(
+            name="Combo product",
+            type='combo',
+            combo_ids=[
+                Command.link(combo_a.id),
+                Command.link(combo_b.id),
+            ],
+        )
+        sale_order = self.empty_order
+        combo_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': combo_product.product_variant_id.id,
+        })
+        self.env['sale.order.line'].create([
+            {
+                'order_id': sale_order.id,
+                'product_id': self.product.id,
+                'combo_item_id': combo_a.combo_item_ids.id,
+                'linked_line_id': combo_line.id,
+            },
+            {
+                'order_id': sale_order.id,
+                'product_id': test_product.id,
+                'combo_item_id': combo_b.combo_item_ids.id,
+                'linked_line_id': combo_line.id,
+            },
+        ])
+        self.assertEqual(len(sale_order.order_line), 3)
+        combo_product.write({'combo_ids': [Command.unlink(combo_b.id)]})
+        self.assertEqual(combo_product.combo_ids, combo_a)
+        so_form = Form(sale_order)
+        with so_form.order_line.edit(0) as line_form:
+            line_form.product_uom_qty = 2
+        so_form.save()
+        self.assertEqual(
+            sale_order.order_line.filtered(lambda l: l.combo_item_id.combo_id == combo_a).product_uom_qty, 2
+        )
+        self.assertEqual(
+            sale_order.order_line.filtered(lambda l: l.combo_item_id.combo_id == combo_b).product_uom_qty, 0
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
