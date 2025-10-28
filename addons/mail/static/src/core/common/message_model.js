@@ -643,7 +643,7 @@ export class Message extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return this.thread?.getPersonaName(persona) || persona.displayName || persona.name;
+        return this.thread?.getPersonaName(persona) || persona?.displayName || persona?.name;
     }
 
     async onClickToggleTranslation() {
