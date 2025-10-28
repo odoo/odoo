@@ -95,10 +95,26 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Takeaway',
             'attendance_ids': [(0, 0, {
+<<<<<<< 5fcd906e76e3a1f4de2db3af7f3e6eeaf0210a6b
                 'dayofweek': str(day),
+||||||| 9d514f96215bf5b88d8a044cf0aae46aba205bde
+                'name': 'Takeaway',
+                'dayofweek': str(day),
+=======
+                'name': 'Takeaway',
+                'dayofweek': '0',
+>>>>>>> 23b44411f19e16812c3e0e84a832f6f0e478ae7a
                 'hour_from': 0,
                 'hour_to': 24,
+<<<<<<< 5fcd906e76e3a1f4de2db3af7f3e6eeaf0210a6b
             }) for day in range(0, 6)],
+||||||| 9d514f96215bf5b88d8a044cf0aae46aba205bde
+                'day_period': 'morning',
+            }) for day in range(0, 6)],
+=======
+                'day_period': 'morning',
+            })],
+>>>>>>> 23b44411f19e16812c3e0e84a832f6f0e478ae7a
         })
         self.preset_takeaway.write({
             'use_timing': True,

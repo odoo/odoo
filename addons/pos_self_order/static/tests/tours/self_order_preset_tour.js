@@ -92,7 +92,14 @@ registry.category("web_tour.tours").add("test_slot_limit_orders", {
         ProductPage.clickProduct("Free"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
+<<<<<<< 5fcd906e76e3a1f4de2db3af7f3e6eeaf0210a6b
         ...CartPage.selectTimeSlot(),
+||||||| 9d514f96215bf5b88d8a044cf0aae46aba205bde
+        // Will always pick the first available: 00:00
+        CartPage.selectRandomValueInInput(".slot-select"),
+=======
+        CartPage.selectSpecificValueInInput(".slot-select", "18:00"),
+>>>>>>> 23b44411f19e16812c3e0e84a832f6f0e478ae7a
         CartPage.fillInput("Name", "Dr Dre"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
@@ -101,6 +108,7 @@ registry.category("web_tour.tours").add("test_slot_limit_orders", {
         ProductPage.clickProduct("Free"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
+<<<<<<< 5fcd906e76e3a1f4de2db3af7f3e6eeaf0210a6b
         {
             content: `Check that the 00:00 slot is not available`,
             trigger: `.self_order_pills_selection_popup`,
@@ -137,5 +145,10 @@ registry.category("web_tour.tours").add("test_preset_takeaway_email_tour", {
             },
         },
         Utils.clickBtn("Ok"),
+||||||| 9d514f96215bf5b88d8a044cf0aae46aba205bde
+        CartPage.checkSlotUnavailable("00:00"),
+=======
+        CartPage.checkSlotUnavailable("18:00"),
+>>>>>>> 23b44411f19e16812c3e0e84a832f6f0e478ae7a
     ],
 });
