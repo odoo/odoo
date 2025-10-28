@@ -89,11 +89,11 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
             'name': 'Takeaway',
             'attendance_ids': [(0, 0, {
                 'name': 'Takeaway',
-                'dayofweek': str(day),
+                'dayofweek': '0',
                 'hour_from': 0,
                 'hour_to': 24,
                 'day_period': 'morning',
-            }) for day in range(0, 6)],
+            })],
         })
         self.preset_takeaway.write({
             'use_timing': True,
