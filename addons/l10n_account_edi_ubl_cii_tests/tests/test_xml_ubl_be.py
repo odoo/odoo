@@ -381,6 +381,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'peppol_eas': '9938',
             'peppol_endpoint': '00005000041',
             'country_id': self.env.ref('base.lu').id,
+            'invoice_edi_format': 'ubl_bis3',  # set value again, field gets recomputed
         })
         invoice_vals = {
             'move_type': 'out_invoice',
@@ -391,10 +392,13 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'tax_ids': [(6, 0, self.tax_21.ids)],
             }],
         }
-        invoice1 = self._generate_move(self.partner_1, self.partner_2, **invoice_vals)
+        invoice1 = self._generate_move(self.partner_1, self.partner_2, send=False, **invoice_vals)
+        invoice1._generate_and_send(sending_methods=['manual'], invoice_edi_format='ubl_bis3')
         check_attachment(invoice1, "from_odoo/bis3_out_invoice_public_admin_1.xml")
         # Switch the partner's roles
-        invoice2 = self._generate_move(self.partner_2, self.partner_1, **invoice_vals)
+        self.partner_1.invoice_edi_format = 'ubl_bis3'  # set value again, field gets recomputed
+        invoice2 = self._generate_move(self.partner_2, self.partner_1, send=False, **invoice_vals)
+        invoice2._generate_and_send(sending_methods=['manual'], invoice_edi_format='ubl_bis3')
         check_attachment(invoice2, "from_odoo/bis3_out_invoice_public_admin_2.xml")
 
     def test_sending_to_public_admin_new(self):

@@ -115,6 +115,9 @@ class ResConfigSettings(models.TransientModel):
             self.account_peppol_edi_user._peppol_deregister_participant()
         return True
 
+    # Note: Deprecated; the button is permanently invisible.
+    # Disabling services can lead to complicance issues and is not necessary
+    # since all existing services should just work.
     def button_account_peppol_configure_services(self):
         wizard = self.env['account_peppol.service.wizard'].create({
             'edi_user_id': self.account_peppol_edi_user.id,

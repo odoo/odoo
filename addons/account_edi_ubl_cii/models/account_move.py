@@ -5,6 +5,7 @@ from contextlib import suppress
 from lxml import etree
 
 from odoo import _, api, fields, models, Command
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
 class AccountMove(models.Model):
@@ -56,12 +57,42 @@ class AccountMove(models.Model):
                 }
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
+    def _get_invoice_legal_documents_invoice_edi_format_generator(self, invoice_edi_format):
+        builder = self.partner_id._get_edi_builder(invoice_edi_format)
+        if builder is None:
+            return False
+
+        def _get_documents(invoice):
+            xml_content, errors = builder._export_invoice(invoice)
+            if errors:
+                # In case of errors we log them in the chatter (e.g. BIS 3.0 w/o invoice date)
+                invoice_edi_format_description = invoice.env['res.partner']._fields['invoice_edi_format'].get_description(invoice.env)
+                message = _("Error while generating the '%(invoice_edi_format_string)s' document:\n%(error_message)s",
+                            invoice_edi_format_string=dict(invoice_edi_format_description['selection'])[invoice_edi_format],
+                            error_message="\n".join(errors))
+                invoice.message_post(body=message)
+            return {
+                'filename': builder._export_invoice_filename(invoice) if invoice.name else f"{invoice_edi_format}.xml",
+                'filetype': 'xml',
+                'content': xml_content,
+            }
+
+        return _get_documents
+
+    def _get_invoice_edi_formats_for_print_items(self):
+        # EXTEND account
+        # Add 'ubl_bis3' for partners in "PEPPOL countries"
+        edi_formats = super()._get_invoice_edi_formats_for_print_items()
+        if set(PEPPOL_DEFAULT_COUNTRIES).intersection({p._deduce_country_code() for p in self.commercial_partner_id}):
+            edi_formats.add('ubl_bis3')
+        return edi_formats
+
     def get_extra_print_items(self):
         print_items = super().get_extra_print_items()
         if self.ubl_cii_xml_id:
             print_items.append({
                 'key': 'download_ubl',
-                'description': _('XML UBL'),
+                'description': _('XML Attachment (UBL/CII)'),
                 **self.action_invoice_download_ubl(),
             })
         return print_items

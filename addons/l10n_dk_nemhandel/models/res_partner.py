@@ -113,11 +113,11 @@ class ResPartner(models.Model):
         formats_info['oioubl_21'] = {'countries': ['DK'], 'on_peppol': False}
         return formats_info
 
-    def _get_suggested_invoice_edi_format(self):
+    def _get_local_invoice_edi_format(self):
         # EXTENDS 'account'
         if self.country_code == 'DK':
             return 'oioubl_21'
-        return super()._get_suggested_invoice_edi_format()
+        return super()._get_local_invoice_edi_format()
 
     @api.model
     def _get_nemhandel_participant_info(self, edi_identification):
