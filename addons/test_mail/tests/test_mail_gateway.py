@@ -1218,8 +1218,10 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
 
         notification = self.env['mail.notification'].create({
+            'notification_type': 'email',
             'mail_message_id': self.fake_email.id,
             'res_partner_id': self.partner_1.id,
+            'mail_email_address': self.partner_1.email_normalized,
         })
 
         bounce_email_to = f'{self.alias_bounce}@{self.alias_domain}'

@@ -363,6 +363,17 @@ class TestMailMessageAccess(MessageAccessCommon):
                 )
             self.assertEqual(new_msg.sudo().parent_id, message)
 
+            # even if the portal user can notify the partner, he cannot read his email
+            partner_1.invalidate_recordset()
+            with self.assertRaises(AccessError):
+                partner_1.with_user(self.user_portal).email
+
+            notification = self.env["mail.notification"].with_user(self.user_portal).search(
+                [('res_partner_id', '=', partner_1.id)])
+            self.assertEqual(len(notification), 1)
+            with self.assertRaises(AccessError):
+                notification.mail_email_address
+
         new_mail = self.env['mail.mail'].sudo().search([
             ('mail_message_id', '=', new_msg.id),
         ])
@@ -371,6 +382,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             'References should not include message parent message_id, even if internal note, to help thread formation')
         self.assertTrue(new_mail)
         self.assertEqual(new_msg.parent_id, message)
+        self.assertEqual(notification.sudo().mail_email_address, partner_1.email_normalized)
 
     # ------------------------------------------------------------
     # READ
