@@ -715,6 +715,57 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_res_partner__l10n_id_kode_transaksi
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_res_users__l10n_id_kode_transaksi
 msgid "Invoice Transaction Code"
+
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+#, python-format
+msgid "Invoice %s: can only have one STLG group."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+#, python-format
+msgid "Invoice %s: can only have one tax group (excluding STLG)."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: line '%(line)s' contains both Luxury-Goods and Non-Luxury-"
+"Goods taxes."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: line '%(line)s' contains both Non-Luxury-Goods and STLG "
+"taxes."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: line '%(line)s' has STLG tax but missing the required "
+"Luxury-Goods tax."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: transaction code %(kode)s does not allow 0%% (Zero-rated or"
+" Exempt) taxes."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
+msgid ""
+"Invoice %(inv)s: transaction code %(kode)s must always have tax amount 0%%."
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
@@ -887,6 +938,13 @@ msgid "Passport"
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
+#. odoo-python
+#: code:addons/l10n_id_efaktur_coretax/models/account_move_line.py:0
+#, python-format
+msgid "Price for line '%s' cannot be a negative amount. Please check again."
+msgstr ""
+
+#. module: l10n_id_efaktur_coretax
 #: model:ir.model,name:l10n_id_efaktur_coretax.model_product_template
 msgid "Product"
 msgstr ""
@@ -1016,7 +1074,8 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
 #: code:addons/l10n_id_efaktur_coretax/models/account_move.py:0
-msgid "Unable to download E-faktur fot he following reasons(s):"
+#, python-format
+msgid "Unable to download E-faktur for the following reason(s):"
 msgstr ""
 
 #. module: l10n_id_efaktur_coretax
