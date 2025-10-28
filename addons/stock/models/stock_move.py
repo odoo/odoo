@@ -175,6 +175,7 @@ class StockMove(models.Model):
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(compute='_compute_is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+    is_date_editable = fields.Boolean("Is Date Editable", compute="_compute_is_date_editable")
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
@@ -303,6 +304,13 @@ class StockMove(models.Model):
                 move.is_locked = move.picking_id.is_locked
             else:
                 move.is_locked = False
+
+    def _compute_is_date_editable(self):
+        for move in self:
+            if move.picking_id:
+                move.is_date_editable = move.picking_id.is_date_editable
+            else:
+                move.is_date_editable = True
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids')
     def _compute_show_details_visible(self):
