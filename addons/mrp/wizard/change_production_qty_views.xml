@@ -16,11 +16,16 @@
                             </div>
                         </group>
                     </group>
-                    <span class="text-muted">Modifying the quantity to produce will also modify the quantities of components to consume for this manufacturing order.</span>
+                    <span class="text-muted">
+                        Modifying the quantity to produce will also modify the quantities of components to consume for this manufacturing order.
+                        <br/>
+                        Split the MO if you plan to produce the remaining quantity later.
+                    </span>
                     <field name="mo_id" invisible="1"/>
                     <footer>
                         <button name="change_prod_qty" string="Set Quantity" data-hotkey="q"
                             colspan="1" type="object" class="btn-primary"/>
+                        <button name="action_split_mo" string="Split" type="object" class="btn-secondary"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                     </footer>
                 </form>
