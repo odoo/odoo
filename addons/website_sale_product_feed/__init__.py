@@ -11,4 +11,4 @@ def _post_init_hook(env):
     if enable_gmc:
         env.ref('base.group_user')._apply_group(env.ref('website_sale_product_feed.group_product_feed'))
         websites.enabled_gmc_src = enable_gmc
-    websites[:1]._populate_product_feeds()
+        websites[:1]._populate_product_feeds()

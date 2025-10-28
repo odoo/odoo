@@ -220,15 +220,20 @@ class ProductFeed(models.Model):
         }
 
     def _get_feed_product_domain(self):
-        product_domain = Domain.AND([
-            Domain('is_published', '=', True),
-            Domain('type', 'in', ('consu', 'combo')),
-            self.website_id.website_domain(),
-        ])
+        product_domain = self._get_website_product_domain(self.website_id)
+
         if self.product_category_ids:
             product_domain &= Domain('public_categ_ids', 'child_of', self.product_category_ids.ids)
 
         return product_domain
+
+    @api.model
+    def _get_website_product_domain(self, website):
+        return Domain.AND([
+            Domain('is_published', '=', True),
+            Domain('type', 'in', ('consu', 'combo')),
+            website.website_domain(),
+        ])
 
     def _get_feed_products(self):
         product_domain = self._get_feed_product_domain()
