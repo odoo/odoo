@@ -8,11 +8,12 @@ import { ThemeSelector } from "@mass_mailing/themes/theme_selector/theme_selecto
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
+import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
-import { Domain } from "@web/core/domain";
+import { batched } from "@web/core/utils/timing";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -29,6 +30,16 @@ export class MassMailingHtmlField extends HtmlField {
     };
 
     setup() {
+        // Keep track of the next props before other `onWillUpdateProps`
+        // callbacks in super can be executed, to be able to compute the next
+        // activeTheme and next themeSelector display status just before the
+        // Component is patched.
+        let props = this.props;
+        onWillUpdateProps((nextProps) => {
+            if (nextProps !== this.props) {
+                props = nextProps;
+            }
+        });
         super.setup();
         this.themeService = useService("mass_mailing.themes");
         this.ui = useService("ui");
@@ -68,9 +79,9 @@ export class MassMailingHtmlField extends HtmlField {
             }
         });
 
-        let currentKey;
+        let currentKey = this.state.key;
         effect(
-            (state) => {
+            batched((state) => {
                 if (status(this) === "destroyed") {
                     return;
                 }
@@ -78,34 +89,15 @@ export class MassMailingHtmlField extends HtmlField {
                     // html value may have been reset from the server:
                     // - await the new iframe
                     this.resetIframe();
-                    // - ensure that the activeTheme is up to date.
-                    this.updateActiveTheme();
+                    // - ensure that the activeTheme is up to date with the next
+                    //   record.
+                    this.updateActiveTheme(props.record);
+                    // - ensure that the themeSelector is displayed if necessary
+                    //   for the next props.
+                    this.updateThemeSelector(props);
                     currentKey = state.key;
                 }
-            },
-            [this.state]
-        );
-
-        // Evaluate if the themeSelector should be displayed
-        effect(
-            (state) => {
-                if (status(this) === "destroyed") {
-                    return;
-                }
-                const activeTheme = state.activeTheme;
-                const showThemeSelector = state.showThemeSelector;
-                if (!activeTheme && !showThemeSelector && !this.props.readonly) {
-                    // Show the ThemeSelector when the theme is unknown and the content can be
-                    // changed (invalid value).
-                    state.showThemeSelector = true;
-                } else if ((activeTheme && showThemeSelector) || this.props.readonly) {
-                    state.showThemeSelector = false;
-                }
-                if (showThemeSelector && toRaw(state.showCodeView)) {
-                    // Never show the CodeView with the ThemeSelector.
-                    state.showCodeView = false;
-                }
-            },
+            }),
             [this.state]
         );
 
@@ -139,9 +131,14 @@ export class MassMailingHtmlField extends HtmlField {
         this.iframeLoaded.resolve(iframeLoaded);
     }
 
-    updateActiveTheme() {
+    updateActiveTheme(record = this.props.record) {
+        // This function is called in an `effect` with a dependency on
+        // `state.key` which already guarantees that the Component will be
+        // re-rendered. All further reads on the state should not add
+        // dependencies to that effect, so it is used raw.
+        const state = toRaw(this.state);
         const getThemeName = () => {
-            const value = this.value;
+            const value = record.data[this.props.name];
             if (!value) {
                 return;
             }
@@ -153,8 +150,27 @@ export class MassMailingHtmlField extends HtmlField {
             return this.themeService.getThemeName(layout.classList);
         };
         const activeTheme = getThemeName();
-        if (toRaw(this.state).activeTheme !== activeTheme) {
-            this.state.activeTheme = activeTheme;
+        if (state.activeTheme !== activeTheme) {
+            state.activeTheme = activeTheme;
+        }
+    }
+
+    updateThemeSelector(props = this.props) {
+        // This function is called in an `effect` with a dependency on
+        // `state.key` which already guarantees that the Component will be
+        // re-rendered. All further reads on the state should not add
+        // dependencies to that effect, so it is used raw.
+        const state = toRaw(this.state);
+        if (!state.activeTheme && !state.showThemeSelector && !props.readonly) {
+            // Show the ThemeSelector when the theme is unknown and the content can be
+            // changed (invalid value).
+            state.showThemeSelector = true;
+        } else if ((state.activeTheme && state.showThemeSelector) || props.readonly) {
+            state.showThemeSelector = false;
+        }
+        if (state.showThemeSelector && state.showCodeView) {
+            // Never show the CodeView with the ThemeSelector.
+            state.showCodeView = false;
         }
     }
 
