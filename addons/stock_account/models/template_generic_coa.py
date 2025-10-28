@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _post_load_data(self, template_code, company, template_data):
         res = super()._post_load_data(template_code, company, template_data)
-        company.account_stock_valuation_id.account_stock_expense_id = company.expense_account_id
+        company.account_stock_valuation_id.account_stock_variation_id = company.expense_account_id
         return res
 
     @template('generic_coa', 'res.company')
