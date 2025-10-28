@@ -282,10 +282,13 @@ class StockMove(models.Model):
     def _get_value(self, forced_std_price=False, at_date=False, ignore_manual_update=False):
         return self._get_value_data(forced_std_price, at_date, ignore_manual_update)['value']
 
-    def _get_value_data(self,
+    def _get_value_data(
+        self,
         forced_std_price=False,
         at_date=False,
-        ignore_manual_update=False):
+        ignore_manual_update=False,
+        add_extra_value=True,
+    ):
         """Returns the value and the quantity valued on the move
         In priority order:
         - Take value from accounting documents (invoices, bills)
@@ -309,6 +312,9 @@ class StockMove(models.Model):
         if not ignore_manual_update:
             manual_data = self._get_manual_value(
                 remaining_qty, at_date)
+            # In case of manual update we will skip extra cost
+            if manual_data['quantity']:
+                add_extra_value = False
             value += manual_data['value']
             remaining_qty -= manual_data['quantity']
             if manual_data.get('description'):
@@ -321,6 +327,13 @@ class StockMove(models.Model):
             remaining_qty -= account_data['quantity']
             if account_data.get('description'):
                 descriptions.append(account_data['description'])
+
+        if remaining_qty:
+            production_data = self._get_value_from_production(remaining_qty, at_date)
+            value += production_data["value"]
+            remaining_qty -= production_data["quantity"]
+            if production_data.get("description"):
+                descriptions.append(production_data["description"])
 
         # 2. from SO/PO lines
         if remaining_qty:
@@ -343,6 +356,12 @@ class StockMove(models.Model):
             std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price, at_date)
             value += std_price_data['value']
             descriptions.append(std_price_data.get('description'))
+
+        if add_extra_value:
+            extra_data = self._get_value_from_extra(valued_qty, at_date)
+            value += extra_data['value']
+            if extra_data.get('description'):
+                descriptions.append(extra_data['description'])
 
         return {
             'value': value,
@@ -383,6 +402,9 @@ class StockMove(models.Model):
     def _get_value_from_account_move(self, quantity, at_date=None):
         return dict(VALUATION_DICT)
 
+    def _get_value_from_production(self, quantity, at_date=None):
+        return dict(VALUATION_DICT)
+
     def _get_value_from_quotation(self, quantity, at_date=None):
         return dict(VALUATION_DICT)
 
@@ -409,6 +431,9 @@ class StockMove(models.Model):
                 price=self.company_currency_id.format(std_price),
             ),
         }
+
+    def _get_value_from_extra(self, quantity, at_date=None):
+        return dict(VALUATION_DICT)
 
     def _get_move_directions(self):
         move_in_ids = set()
