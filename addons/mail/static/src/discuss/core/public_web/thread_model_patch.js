@@ -58,6 +58,9 @@ const threadPatch = {
         if (this.parent_channel_id) {
             return;
         }
+        if (this.channel?.discuss_category_id) {
+            return this.channel.discuss_category_id.appCategory;
+        }
         if (["group", "chat"].includes(this.channel?.channel_type)) {
             return this.store.discuss.chatCategory;
         }

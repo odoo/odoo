@@ -1,6 +1,7 @@
 declare module "mock_models" {
     import { Base as Base2 } from "@mail/../tests/mock_server/mock_models/base";
     import { DiscussChannel as DiscussChannel2 } from "@mail/../tests/mock_server/mock_models/discuss_channel";
+    import { DiscussCategory as DiscussCategory2 } from "addons/mail/static/tests/mock_server/mock_models/discuss_category";
     import { DiscussChannelMember as DiscussChannelMember2 } from "@mail/../tests/mock_server/mock_models/discuss_channel_member";
     import { DiscussChannelRtcSession as DiscussChannelRtcSession2 } from "@mail/../tests/mock_server/mock_models/discuss_channel_rtc_session";
     import { DiscussVoiceMetadata as DiscussVoiceMetadata2 } from "@mail/../tests/mock_server/mock_models/discuss_voice_metadata";
@@ -30,6 +31,7 @@ declare module "mock_models" {
 
     export interface Base extends Base2 {}
     export interface DiscussChannel extends DiscussChannel2 {}
+    export interface DiscussCategory extends DiscussCategory2 {}
     export interface DiscussChannelMember extends DiscussChannelMember2 {}
     export interface DiscussChannelRtcSession extends DiscussChannelRtcSession2 {}
     export interface DiscussVoiceMetadata extends DiscussVoiceMetadata2 {}
@@ -60,6 +62,7 @@ declare module "mock_models" {
     export interface Models {
         "base": Base,
         "discuss.channel": DiscussChannel,
+        "discuss.category": DiscussCategory,
         "discuss.channel.member": DiscussChannelMember,
         "discuss.channel.rtc.session": DiscussChannelRtcSession,
         "discuss.voice.metadata": DiscussVoiceMetadata,
