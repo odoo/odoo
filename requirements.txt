@@ -59,7 +59,8 @@ psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
 pyopenssl==21.0.0 ; python_version < '3.12'
 pyopenssl==24.1.0 ; python_version >= '3.12' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
 PyPDF2==1.26.0 ; python_version <= '3.10'
-PyPDF2==2.12.1 ; python_version > '3.10'
+PyPDF2==2.12.1 ; python_version > '3.10' and python_version < '3.13' # (Noble and below)
+PyPDF==5.4.0 ; python_version >= '3.13' # (Trixie)
 pypiwin32 ; sys_platform == 'win32'
 pyserial==3.5
 python-dateutil==2.8.1 ; python_version < '3.11'
