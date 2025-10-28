@@ -367,11 +367,8 @@ Content-Transfer-Encoding: quoted-printable
 
 --000000000000a47519057e029630--
 """
-        crm_lead0_id = self.env['mail.thread'].message_process('crm.lead', new_message0)
-        crm_lead1_id = self.env['mail.thread'].message_process('crm.lead', new_message1)
-
-        crm_lead0 = self.env['crm.lead'].browse(crm_lead0_id)
-        crm_lead1 = self.env['crm.lead'].browse(crm_lead1_id)
+        crm_lead0 = self.env['mail.thread'].message_process('crm.lead', new_message0)
+        crm_lead1 = self.env['mail.thread'].message_process('crm.lead', new_message1)
 
         self.assertEqual(crm_lead0.team_id, crm_team0)
         self.assertEqual(crm_lead1.team_id, crm_team1)

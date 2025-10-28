@@ -644,30 +644,24 @@ Content-Type: text/html;
 """
 
         with self.mock_mail_gateway():
-            gmail_task_id = self.env['mail.thread'].message_process(
+            gmail_task = self.env['mail.thread'].message_process(
                 model='project.task',
                 message=gmail_email_source,
                 custom_values={'project_id': self.project_followers.id}
             )
-            outlook_task_id = self.env['mail.thread'].message_process(
+            outlook_task = self.env['mail.thread'].message_process(
                 model='project.task',
                 message=outlook_email_source,
                 custom_values={'project_id': self.project_followers.id}
             )
 
         # Verify Gmail signature removal
-        self.assertTrue(gmail_task_id, "Gmail task creation should return a valid ID.")
-        gmail_task = self.env['project.task'].browse(gmail_task_id)
-
         self.assertIn("This is the main email content that should be kept", gmail_task.description)
         self.assertNotIn("--", gmail_task.description, "The Gmail signature separator should have been removed.")
         self.assertNotIn("John Doe", gmail_task.description, "The Gmail signature should have been removed.")
         self.assertNotIn("Software Engineer", gmail_task.description, "The Gmail signature should have been removed.")
 
         # Verify Outlook signature removal
-        self.assertTrue(outlook_task_id, "Outlook task creation should return a valid ID.")
-        outlook_task = self.env['project.task'].browse(outlook_task_id)
-
         self.assertIn("This is the main email content that should be kept", outlook_task.description)
         self.assertNotIn("John Smith", outlook_task.description, "The Outlook signature should have been removed.")
         self.assertNotIn("Software Developer", outlook_task.description, "The Outlook signature should have been removed.")
@@ -685,7 +679,7 @@ Content-Type: text/html;
             'user': 'test@example.com',
             'password': '',
         })
-        task_id = self.env["mail.thread"].with_context(
+        task = self.env["mail.thread"].with_context(
             default_fetchmail_server_id=server.id
         ).message_process(
             server.object_id.model,
@@ -699,6 +693,5 @@ Content-Type: text/html;
             save_original=server.original,
             strip_attachments=not server.attach,
         )
-        task = self.env['project.task'].browse(task_id)
         self.assertEqual(task.name, "In a cage")
         self.assertEqual(task.project_id, self.project_pigs)
