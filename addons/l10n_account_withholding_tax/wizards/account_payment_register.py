@@ -18,25 +18,37 @@ class AccountPaymentRegister(models.TransientModel):
         store=True,
         copy=False,
     )
-    withholding_line_ids = fields.One2many(
-        string="Withholding Lines",
-        comodel_name='account.payment.register.withholding.line',
-        inverse_name='payment_register_id',
-        compute='_compute_withholding_line_ids',
-        store=True,
-        readonly=False,
+    withhold_tax_id = fields.Many2one(
+        comodel_name='account.tax',
+        string='Withholding Tax',
+        domain="[('company_id', '=', company_id), ('is_withholding_tax_on_payment', '=', True)]",
     )
-    withholding_net_amount = fields.Monetary(
-        string='Net Amount',
-        help="Net amount after deducting the withholding lines",
-        compute='_compute_withholding_net_amount',
-        store=True,
-    )
-    # We need to define the outstanding account of the payment in order for it to have the proper journal entry.
-    # To that end, we'll have this field required if we have a withholding tax impacting the payment, and we don't have a payment account set on the payment method.
     withholding_default_account_id = fields.Many2one(
         related='journal_id.default_account_id',
     )
+    withhold_receiveble_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Receivable Account",
+        help="The account to use for the withholding tax base.",
+    )
+    withhold_base_amount = fields.Monetary(string="Base Amount")
+    withhold_tax_amount = fields.Monetary(string="Withholding Tax Amount", compute='_compute_withhold_tax_amount')
+    # withholding_line_ids = fields.One2many(
+    #     string="Withholding Lines",
+    #     comodel_name='account.payment.register.withholding.line',
+    #     inverse_name='payment_register_id',
+    #     compute='_compute_withholding_line_ids',
+    #     store=True,
+    #     readonly=False,
+    # )
+    # withholding_net_amount = fields.Monetary(
+    #     string='Net Amount',
+    #     help="Net amount after deducting the withholding lines",
+    #     compute='_compute_withholding_net_amount',
+    #     store=True,
+    # )
+    # We need to define the outstanding account of the payment in order for it to have the proper journal entry.
+    # To that end, we'll have this field required if we have a withholding tax impacting the payment, and we don't have a payment account set on the payment method.
     withholding_outstanding_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Outstanding Account",
@@ -54,17 +66,36 @@ class AccountPaymentRegister(models.TransientModel):
     # Compute, inverse, search methods
     # --------------------------------
 
-    @api.depends('withholding_line_ids.amount', 'amount')
-    def _compute_withholding_net_amount(self):
-        """
-        The net amount is the one that will actually be paid by the payer.
-        It is simply the payment amount - the sum of withholding taxes.
-        """
+    @api.depends('withhold_tax_id', 'withhold_base_amount')
+    def _compute_withhold_tax_amount(self):
+        """ Compute the withholding tax amount based on the selected withholding tax and base amount. """
         for wizard in self:
-            if wizard.can_edit_wizard:
-                wizard.withholding_net_amount = wizard.amount - sum(wizard.withholding_line_ids.mapped('amount'))
-            else:
-                wizard.withholding_net_amount = 0.0
+            tax_amount = 0.0
+            if wizard.withhold_tax_id:
+                taxes_res = wizard.withhold_tax_id._get_tax_details(
+                    wizard.withhold_base_amount,
+                    quantity=1.0,
+                    product=False,
+                )
+                print("Wizard Base:", wizard.withhold_base_amount)
+                print("Wizard Tax ID:", wizard.withhold_tax_id)
+                print("\n\n=====\n")
+                print(taxes_res)
+                print("\n=====\n\n")
+                tax_amount = taxes_res['total_included'] - taxes_res['total_excluded']
+            wizard.withhold_tax_amount = abs(tax_amount)
+
+    # @api.depends( 'amount')
+    # def _compute_withholding_net_amount(self):
+    #     """
+    #     The net amount is the one that will actually be paid by the payer.
+    #     It is simply the payment amount - the sum of withholding taxes.
+    #     """
+    #     for wizard in self:
+    #         if wizard.can_edit_wizard:
+    #             wizard.withholding_net_amount = wizard.amount - sum(wizard.withholding_line_ids.mapped('amount'))
+    #         else:
+    #             wizard.withholding_net_amount = 0.0
 
     @api.depends('withholding_payment_account_id', 'should_withhold_tax')
     def _compute_withholding_outstanding_account_id(self):
@@ -123,39 +154,40 @@ class AccountPaymentRegister(models.TransientModel):
                 will_create_multiple_entry = not wizard.can_edit_wizard or (wizard.can_group_payments and not wizard.group_payment)
                 wizard.display_withholding = bool(wizard_withholding_taxes) and not will_create_multiple_entry
 
-    @api.depends(
-        'can_edit_wizard',
-        'display_withholding',
-    )
-    def _compute_withholding_line_ids(self):
-        """
-        When opening the wizard, we want to compute the default withholding lines by looking at the invoice lines to see
-        if they have withholding taxes set on them.
-        """
-        for wizard in self:
-            # Disable the withholding lines.
-            if not wizard.display_withholding or not wizard.can_edit_wizard:
-                wizard.withholding_line_ids = [Command.clear()]
-                continue
+    # @api.depends(
+    #     'can_edit_wizard',
+    #     'display_withholding',
+    # )
+    # def _compute_withholding_line_ids(self):
+    #     """
+    #     When opening the wizard, we want to compute the default withholding lines by looking at the invoice lines to see
+    #     if they have withholding taxes set on them.
+    #     """
+    #     for wizard in self:
+    #         # Disable the withholding lines.
+    #         if not wizard.display_withholding or not wizard.can_edit_wizard:
+    #             wizard.withholding_line_ids = [Command.clear()]
+    #             continue
+    #
+    #         # Compute the lines themselves once; when opening the wizard.
+    #         if not wizard.withholding_line_ids:
+    #             batch = wizard.batches[0]
+    #             base_lines = []
+    #             for move in batch['lines'].move_id:
+    #                 move_base_lines, _move_tax_lines = move._get_rounded_base_and_tax_lines()
+    #                 base_lines += move_base_lines
+    #
+    #             wizard.withholding_line_ids = wizard.withholding_line_ids._prepare_withholding_lines_commands(
+    #                 base_lines=base_lines,
+    #                 company=wizard.company_id or self.env.company,
+    #             )
 
-            # Compute the lines themselves once; when opening the wizard.
-            if not wizard.withholding_line_ids:
-                batch = wizard.batches[0]
-                base_lines = []
-                for move in batch['lines'].move_id:
-                    move_base_lines, _move_tax_lines = move._get_rounded_base_and_tax_lines()
-                    base_lines += move_base_lines
-
-                wizard.withholding_line_ids = wizard.withholding_line_ids._prepare_withholding_lines_commands(
-                    base_lines=base_lines,
-                    company=wizard.company_id or self.env.company,
-                )
-
-    @api.depends('withholding_line_ids')
+    # @api.depends('withholding_line_ids')
     def _compute_should_withhold_tax(self):
         """ Ensures that we display the line table if any withholding line has been added to the payment. """
         for wizard in self:
-            wizard.should_withhold_tax = bool(wizard.withholding_line_ids)
+            # wizard.should_withhold_tax = bool(wizard.withholding_line_ids)
+            wizard.should_withhold_tax = True
 
     @api.depends('company_id')
     def _compute_withholding_hide_tax_base_account(self):
@@ -170,21 +202,21 @@ class AccountPaymentRegister(models.TransientModel):
     # Onchange, Constraint methods
     # ----------------------------
 
-    @api.onchange('withholding_line_ids')
-    def _onchange_withholding_line_ids(self):
-        """
-        Any time a line is edited, we want to check if we need to recompute the placeholders.
-        The idea is to try and display accurate placeholders on lines whose tax have a sequence set.
-        """
-        self.ensure_one()
-        if (
-            not self.display_withholding
-            or not self.can_edit_wizard
-            or not self.withholding_line_ids._need_update_withholding_lines_placeholder()
-        ):
-            return
-
-        self.withholding_line_ids._update_placeholders()
+    # @api.onchange('withholding_line_ids')
+    # def _onchange_withholding_line_ids(self):
+    #     """
+    #     Any time a line is edited, we want to check if we need to recompute the placeholders.
+    #     The idea is to try and display accurate placeholders on lines whose tax have a sequence set.
+    #     """
+    #     self.ensure_one()
+    #     if (
+    #         not self.display_withholding
+    #         or not self.can_edit_wizard
+    #         or not self.withholding_line_ids._need_update_withholding_lines_placeholder()
+    #     ):
+    #         return
+    #
+    #     self.withholding_line_ids._update_placeholders()
 
     # -----------------------
     # CRUD, inherited methods
@@ -198,11 +230,11 @@ class AccountPaymentRegister(models.TransientModel):
         # EXTEND 'account'
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
 
-        if not self.withholding_line_ids or not self.should_withhold_tax:
+        if not self.should_withhold_tax:
             return payment_vals
 
-        if self.withholding_net_amount < 0:
-            raise UserError(self.env._("The withholding net amount cannot be negative."))
+        # if self.withholding_net_amount < 0:
+        #     raise UserError(self.env._("The withholding net amount cannot be negative."))
 
         # Prepare the withholding lines.
         withholding_account = self.withholding_outstanding_account_id
@@ -210,12 +242,29 @@ class AccountPaymentRegister(models.TransientModel):
             payment_vals['outstanding_account_id'] = withholding_account.id
             if not withholding_account.reconcile and withholding_account.account_type not in ('asset_cash', 'liability_credit_card', 'off_balance'):
                 withholding_account.reconcile = True
-        payment_vals['should_withhold_tax'] = self.should_withhold_tax
-        payment_vals['withholding_line_ids'] = []
-        for withholding_line_values in self.withholding_line_ids.with_context(active_test=False).copy_data():
-            del withholding_line_values['payment_register_id']
-            del withholding_line_values['placeholder_value']
-            payment_vals['withholding_line_ids'].append(Command.create(withholding_line_values))
+        # payment_vals['should_withhold_tax'] = self.should_withhold_tax
+        # payment_vals['withholding_line_ids'] = []
+        # for withholding_line_values in self.withholding_line_ids.with_context(active_test=False).copy_data():
+        #     del withholding_line_values['payment_register_id']
+        #     del withholding_line_values['placeholder_value']
+        #     payment_vals['withholding_line_ids'].append(Command.create(withholding_line_values))
+        payment_vals['withholding_line_ids'] = [(Command.create({
+                'analytic_distribution': False,
+                'analytic_precision': 2,
+                'name': False,
+                'placeholder_type': 'given_by_sequence',
+                'previous_placeholder_type': False,
+                'tax_id': self.withhold_tax_id.id,
+                'source_base_amount_currency': self.withhold_base_amount,
+                'source_base_amount': self.withhold_base_amount,
+                'source_tax_amount_currency': self.withhold_tax_amount,
+                'source_tax_amount': self.withhold_tax_amount,
+                'source_currency_id': 1,
+                'source_tax_id': False,
+                'base_amount': self.withhold_base_amount,
+                'amount': self.withhold_tax_amount,
+                'account_id': withholding_account.id,
+        }))]
         return payment_vals
 
     # ----------------

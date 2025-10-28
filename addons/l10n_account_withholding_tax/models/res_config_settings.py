@@ -13,3 +13,11 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.withholding_tax_base_account_id',
         readonly=False,
     )
+    withholding_journal_id = fields.Many2one(
+        related='company_id.withholding_journal_id',
+        readonly=False,
+    )
+    withholding_tax_control_account_id = fields.Many2one(
+        related='company_id.withholding_tax_control_account_id',
+        readonly=False,
+    )

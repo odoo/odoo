@@ -294,12 +294,12 @@ class AccountWithholdingLine(models.AbstractModel):
             if line.comodel_currency_id.compare_amounts(line.base_amount, 0) <= 0:
                 raise UserError(line.env._("The base amount of a withholding tax line must be above 0."))
 
-    @api.constrains('account_id')
-    def _constrains_account_id(self):
-        """ The account on the line cannot be one deemed as liquidity account, otherwise it will cause issues with the final entry. """
-        for line in self:
-            if line.account_id in line._get_valid_liquidity_accounts() or line.account_id == line.company_id.transfer_account_id:
-                raise UserError(line.env._('The account "%(account_name)s" is not valid to use on withholding lines.', account_name=line.account_id.display_name))
+    # @api.constrains('account_id')
+    # def _constrains_account_id(self):
+    #     """ The account on the line cannot be one deemed as liquidity account, otherwise it will cause issues with the final entry. """
+    #     for line in self:
+    #         if line.account_id in line._get_valid_liquidity_accounts() or line.account_id == line.company_id.transfer_account_id:
+    #             raise UserError(line.env._('The account "%(account_name)s" is not valid to use on withholding lines.', account_name=line.account_id.display_name))
 
     # ----------------
     # Business methods

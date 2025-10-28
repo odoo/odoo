@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_account_withholding_entry_form_action" model="ir.actions.act_window">
+        <field name="name">Create TDS Entry</field>
+        <field name="res_model">l10n.account.withhold.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="tds_entry_view_form" model="ir.ui.view">
+        <field name="name">l10n.account.withhold.wizard.view.form</field>
+        <field name="model">l10n.account.withhold.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+<!--                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_withholding_warning">-->
+<!--                    <div>-->
+<!--                        <field name="l10n_in_withholding_warning" widget="actionable_errors"/>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <sheet>
+                    <group>
+                        <group id="header_left_group">
+                            <field name="base" widget="monetary" options="{'currency_field': 'currency_id'}" required="True"/>
+                            <field name="tax_id" string="Withhold Tax" domain="[('is_withholding_tax_on_payment', '=', True)]"
+                                   required="True" context="{'default_type_tax_use': 'withholding'}"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/> <!-- used to display the currency symbol -->
+                            <field name="related_move_id" invisible="1"/> <!-- used to compute the l10n_in_tds_tax_type -->
+                        </group>
+                        <group id="header_right_group">
+                            <field name="date" string="Date"/>
+                            <field name="journal_id" domain="[('type', '=', 'general')]"/>
+                            <field name="reference"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Apply Withhold" type="object" name="action_create_and_post_withhold" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

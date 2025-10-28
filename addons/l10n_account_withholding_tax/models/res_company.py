@@ -14,3 +14,13 @@ class ResCompany(models.Model):
         string="Withholding Tax Base",
         help="This account will be set on withholding tax base lines.",
     )
+    withholding_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="Withholding Journal",
+        help="This journal will be used to record withholding tax entries.",
+    )
+    withholding_tax_control_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Withholding Tax Control",
+        help="This account will be set on withholding tax lines.",
+    )
