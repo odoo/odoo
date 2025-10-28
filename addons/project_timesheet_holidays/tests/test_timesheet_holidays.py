@@ -205,11 +205,11 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
         # should not able to update timeoff timesheets
         with self.assertRaises(UserError):
-            timesheets.with_user(self.empl_employee).write({'task_id': 4})
+            timesheets.with_user(self.user_employee).write({'task_id': 4})
 
         # should not able to create timesheet in timeoff task
         with self.assertRaises(UserError):
-            self.env['account.analytic.line'].with_user(self.empl_employee).create({
+            self.env['account.analytic.line'].with_user(self.user_employee).create({
                 'name': "my timesheet",
                 'project_id': self.internal_project.id,
                 'task_id': self.internal_task_leaves.id,

@@ -4,7 +4,7 @@
         <field name="name">res.partner.form.account.peppol</field>
             <field name="model">res.partner</field>
             <field name="priority">20</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="account_edi_ubl_cii.view_partner_property_form"/>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='ubl_cii_format']" position="before">
@@ -43,7 +43,7 @@
     <record id="res_partner_view_tree" model="ir.ui.view">
         <field name="name">res.partner.tree.inherit</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="inherit_id" ref="account_edi_ubl_cii.res_partner_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='ubl_cii_format']" position="after">
                 <field name="peppol_eas" string="Peppol EAS" optional="hide"/>
