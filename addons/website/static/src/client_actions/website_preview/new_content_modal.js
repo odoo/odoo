@@ -24,7 +24,11 @@ export class NewContentModal extends Component {
         // Preload the new page templates so they are ready as soon as possible.
         // Do not cache here to avoid stale results when templates change
         // (e.g., toggling "Is a Template" in page properties during a session).
-        rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { silent: true });
+        rpc(
+            "/website/get_new_page_templates",
+            { context: { website_id: this.website.currentWebsiteId } },
+            { silent: true }
+        );
         this.action = useService("action");
         this.isSystem = user.isSystem;
         useActiveElement("modalRef");
@@ -109,11 +113,13 @@ export class NewContentModal extends Component {
                 .filter(({ status }) => status === MODULE_STATUS.NOT_INSTALLED)
                 .map(({ moduleName }) => moduleName);
             this.modulesInfo = {};
-            for (const record of await this.orm.cached().searchRead(
-                "ir.module.module",
-                [["name", "in", moduleNames]],
-                ["id", "name", "shortdesc"]
-            )) {
+            for (const record of await this.orm
+                .cached()
+                .searchRead(
+                    "ir.module.module",
+                    [["name", "in", moduleNames]],
+                    ["id", "name", "shortdesc"]
+                )) {
                 this.modulesInfo[record.name] = { id: record.id, name: record.shortdesc };
             }
         }
@@ -125,9 +131,13 @@ export class NewContentModal extends Component {
                 elementsToUpdate[element.model] = element;
             }
         }
-        const accesses = await rpc("/website/check_new_content_access_rights", {
-            models: modelsToCheck,
-        }, { cached: true });
+        const accesses = await rpc(
+            "/website/check_new_content_access_rights",
+            {
+                models: modelsToCheck,
+            },
+            { cached: true }
+        );
         for (const [model, access] of Object.entries(accesses)) {
             elementsToUpdate[model].isDisplayed = access;
         }
