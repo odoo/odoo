@@ -40,8 +40,7 @@ class Browser:
         """
         self.url = url
         # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
-        self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION else 'firefox'
-        self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
+        self.browser = 'chromium' if float(helpers.get_version()[1:8]) >= MIN_IMAGE_VERSION else 'firefox'
         self.state = BrowserState.NORMAL
         self._x_screen = _x_screen
         self._set_environment(env)
@@ -95,7 +94,7 @@ class Browser:
         """close the browser"""
         # Kill browser instance (can't `instance.pkill()` as we can't keep the instance after Odoo service restarts)
         # We need to terminate it because Odoo will create a new instance each time it is restarted.
-        subprocess.run(['pkill', self.browser_process_name], check=False)
+        subprocess.run(['pkill', self.browser], check=False)
 
     def xdotool_keystroke(self, keystroke):
         """
@@ -106,7 +105,7 @@ class Browser:
             'xdotool', 'search',
             '--sync', '--onlyvisible',
             '--screen', self._x_screen,
-            '--class', self.browser_process_name,
+            '--class', self.browser,
             'key', keystroke,
         ], check=False)
 
@@ -119,7 +118,7 @@ class Browser:
             'xdotool', 'search',
             '--sync', '--onlyvisible',
             '--screen', self._x_screen,
-            '--class', self.browser_process_name,
+            '--class', self.browser,
             'type', text,
         ], check=False)
 
