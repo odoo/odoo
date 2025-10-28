@@ -561,7 +561,7 @@ class StockQuant(models.Model):
             if record.env.context.get('formatted_display_name'):
                 name = f"{record.location_id.name}"
                 if record.package_id:
-                    name += f"\t--{record.package_id.name}--"
+                    name += f"\t--{record.package_id.display_name}--"
                 if record.lot_id:
                     name += (' ' if record.package_id else '\t') + f"--{record.lot_id.name}--"
                 record.display_name = name
@@ -570,7 +570,7 @@ class StockQuant(models.Model):
                 if record.lot_id:
                     name.append(record.lot_id.name)
                 if record.package_id:
-                    name.append(record.package_id.name)
+                    name.append(record.package_id.display_name)
                 if record.owner_id:
                     name.append(record.owner_id.name)
                 record.display_name = ' - '.join(name)
