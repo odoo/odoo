@@ -795,7 +795,6 @@ describe(`new urls`, () => {
         redirect("/odoo/action-3/2");
         logHistoryInteractions();
 
-        onRpc("unity_read", ({ kwargs }) => expect.step(`unity_read ${kwargs.method}`));
         stepAllNetworkCalls();
 
         await mountWebClient();
@@ -821,11 +820,12 @@ describe(`new urls`, () => {
         await contains(`.o_control_panel .breadcrumb a`).click();
         expect(`.o_list_view`).toHaveCount(1);
         expect(`.o_form_view`).toHaveCount(0);
-        expect.verifySteps(["web_search_read", "has_group"]);
-
-        await animationFrame(); // pushState is debounced
+        expect.verifySteps([
+            "web_search_read",
+            "has_group",
+            "pushState http://example.com/odoo/action-3",
+        ]);
         expect(browser.location.href).toBe("http://example.com/odoo/action-3");
-        expect.verifySteps(["pushState http://example.com/odoo/action-3"]);
     });
 
     test(`go back with breadcrumbs after doAction`, async () => {
@@ -1587,17 +1587,17 @@ describe(`new urls`, () => {
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
+            "pushState http://example.com/odoo/action-9001",
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             "set current_lang-en",
-            "pushState http://example.com/odoo/action-9001",
             "get menu_id-100", // F5 reload checks stored menu
             "get current_lang-en",
             'get current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
             'get current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
+            "Update the state without updating URL, nextState: actionStack,action",
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             "set current_lang-en",
-            "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
 
@@ -2105,9 +2105,6 @@ describe(`legacy urls`, () => {
     test(`lazy load multi record view if mono record one is requested`, async () => {
         redirect("/web#action=3&id=2&view_type=form");
         stepAllNetworkCalls();
-        onRpc("unity_read", ({ kwargs }) => {
-            expect.step(`unity_read ${kwargs.method}`);
-        });
 
         await mountWebClient();
         expect(`.o_list_view`).toHaveCount(0);

@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -708,7 +708,6 @@ test("A new form view can be reloaded after a failed one", async () => {
 
     await getService("action").doAction(3);
     expect(".o_list_view").toHaveCount(1, { message: "The list view should be displayed" });
-    await runAllTimers(); // wait for the update of the router
     expect(router.current).toEqual({
         action: 3,
         actionStack: [
@@ -724,7 +723,6 @@ test("A new form view can be reloaded after a failed one", async () => {
     await contains(".o_list_view .o_data_row .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1, { message: "The form view should be displayed" });
     expect(".o_last_breadcrumb_item").toHaveText("First record");
-    await runAllTimers(); // wait for the update of the router
     expect(browser.location.pathname).toBe("/odoo/action-3/1");
 
     // Delete the current record
@@ -734,16 +732,15 @@ test("A new form view can be reloaded after a failed one", async () => {
     await contains(".modal-footer button.btn-primary").click();
     // The form view is automatically switched to the next record
     expect(".o_last_breadcrumb_item").toHaveText("Second record");
-    await runAllTimers(); // wait for the update of the router
     expect(browser.location.pathname).toBe("/odoo/action-3/2");
 
     // Go back to the previous (now deleted) record
     browser.history.back();
-    await runAllTimers();
-    expect(browser.location.pathname).toBe("/odoo/action-3/1");
+    await animationFrame();
+    await animationFrame(); // double rendering as the form is on error (record has been deleted)
     // As the previous one is deleted, we go back to the list
-    await runAllTimers(); // wait for the update of the router
     expect(".o_list_view").toHaveCount(1, { message: "should still display the list view" });
+    expect(browser.location.pathname).toBe("/odoo/action-3");
     // Click on the first record
     await contains(".o_list_view .o_data_row .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1, {
@@ -1598,17 +1595,14 @@ test("form views restore the correct id in url when coming back in breadcrumbs",
 
     // open a record in form view
     await contains(".o_list_view .o_data_row .o_data_cell").click();
-    await runAllTimers(); // wait for the router to update its state
     expect(router.current.resId).toBe(1);
 
     // do some other action
     await getService("action").doAction(4);
-    await runAllTimers(); // wait for the router to update its state
     expect(router.current).not.toInclude("resId");
 
     // go back to form view
     await contains(".o_control_panel .breadcrumb a:eq(1)").click();
-    await runAllTimers(); // wait for the router to update its state
     expect(router.current.resId).toBe(1);
 });
 
@@ -2356,7 +2350,6 @@ test("do not pushState when target=new and dialog is opened", async () => {
 
     // Open Partner form in create mode
     await getService("action").doAction(3, { viewType: "form" });
-    await runAllTimers();
     const prevUrlState = Object.assign({}, router.current);
     // Edit another partner in a dialog
     await getService("action").doAction({
@@ -2368,7 +2361,6 @@ test("do not pushState when target=new and dialog is opened", async () => {
         target: "new",
         view_mode: "form",
     });
-    await runAllTimers();
     expect(router.current).toEqual(prevUrlState, {
         message: "push_state in dialog shouldn't change the hash",
     });
