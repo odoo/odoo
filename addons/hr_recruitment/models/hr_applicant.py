@@ -83,6 +83,7 @@ class HrApplicant(models.Model):
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
+    currency_id = fields.Many2one('res.currency', string='Currency', related='company_id.currency_id')
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
         'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
@@ -92,10 +93,18 @@ class HrApplicant(models.Model):
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
     job_id = fields.Many2one('hr.job', "Job Position", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True, copy=False)
+    salary_proposed = fields.Monetary("Proposed", aggregator="avg", currency_field='currency_id', help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    salary_expected = fields.Monetary("Expected", aggregator="avg", currency_field='currency_id', help="Salary Expected by Applicant", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
-    salary_proposed = fields.Float("Proposed", aggregator="avg", help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
-    salary_expected = fields.Float("Expected", aggregator="avg", help="Salary Expected by Applicant", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
+    schedule_pay = fields.Selection([
+        ('hourly', 'Hour'),
+        ('daily', 'Day'),
+        ('weekly', 'Week'),
+        ('biweekly', 'Bi-Week'),
+        ('monthly', 'Month'),
+        ('yearly', 'Year'),
+    ], string='Schedule Pay', default='monthly', required=True, groups="hr_recruitment.group_hr_recruitment_user")
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
@@ -640,6 +649,9 @@ class HrApplicant(models.Model):
                 vals['date_open'] = fields.Datetime.now()
             if vals.get('email_from'):
                 vals['email_from'] = vals['email_from'].strip()
+            if vals.get('job_id'):
+                job = self.env['hr.job'].browse(vals['job_id'])
+                vals['schedule_pay'] = job.payment_interval or 'monthly'
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
 

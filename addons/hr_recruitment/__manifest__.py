@@ -35,6 +35,7 @@
         'views/res_config_settings_views.xml',
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
+        'views/hr_job_tag_views.xml',
         'views/mail_activity_views.xml',
         'views/mail_activity_plan_views.xml',
         'views/digest_views.xml',

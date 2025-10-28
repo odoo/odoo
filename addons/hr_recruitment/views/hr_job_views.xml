@@ -108,6 +108,11 @@
                                         </div>
                                     </div>
                                     <div class="col align-content-center px-1">
+                                        <div class="d-flex justify-content-center">
+                                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="flex-shrink-0 flex-basis-100"/>
+                                        </div>
+                                    </div>
+                                    <div class="col align-content-center px-1">
                                         <div t-attf-class="d-flex justify-content-center #{record.no_of_recruitment.raw_value == 0  ? 'text-muted opacity-75' : ''}">
                                             <field name="no_of_recruitment" class="number flex-shrink-0 flex-basis-50 fw-semibold text-end"/>
                                             <div class="number_description flex-shrink-0 flex-basis-50 fs-6 lh-1 text-muted">
@@ -320,10 +325,18 @@
                             class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
                     </div>
                 </div>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
             </group>
 
             <group name="job" position="inside">
                 <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                <label for="salary_min" string="Salary Range" groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user"/>
+                <div class="d-flex gap-2 align-items-baseline" groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="salary_min" class="oe_inline" widget="monetary"/> -
+                    <field name="salary_max" class="oe_inline" widget="monetary"/> /
+                    <field name="payment_interval" class="oe_inline"/>
+                </div>
             </group>
 
             <group name="job" position="inside">
@@ -419,8 +432,9 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="department_id"/>
-                <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                <field name="no_of_recruitment"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer" optional="hide"/>
+                <field name="no_of_recruitment" optional="hide"/>
             </field>
             <field name="no_of_employee" position="after">
                 <field name="expected_employees" optional="hide"
@@ -428,12 +442,12 @@
                 <field name="no_of_hired_employee" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 <field name="message_needaction" column_invisible="True"/>
-                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="alias_name" column_invisible="True"/>
                 <field name="alias_id" invisible="not alias_name" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="hide"
+                <field name="user_id" widget="many2one_avatar_user" optional="show"
                     groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
             </field>
             <list position="attributes">

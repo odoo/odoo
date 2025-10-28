@@ -84,6 +84,19 @@ class HrJob(models.Model):
         store=True)
 
     job_source_ids = fields.One2many('hr.recruitment.source', 'job_id', groups="hr_recruitment.group_hr_recruitment_interviewer")
+    tag_ids = fields.Many2many('hr.job.tag', string='Tags')
+    currency_id = fields.Many2one(
+        'res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user")
+    salary_min = fields.Monetary('Minimum Salary', currency_field='currency_id', groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user")
+    salary_max = fields.Monetary('Maximum Salary', currency_field='currency_id', groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user")
+    payment_interval = fields.Selection([
+        ('hourly', 'Hour'),
+        ('daily', 'Day'),
+        ('weekly', 'Week'),
+        ('biweekly', 'Bi-Week'),
+        ('monthly', 'Month'),
+        ('yearly', 'Year'),
+    ], string='Scheduled Pay', default='monthly', required=True, groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user")
 
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
@@ -287,6 +300,11 @@ class HrJob(models.Model):
                 'user_id': self.user_id.id,
             })
         return values
+
+    @api.onchange('salary_min', 'salary_max')
+    def _onchange_salary(self):
+        if self.salary_min > self.salary_max:
+            self.salary_min, self.salary_max = self.salary_max, self.salary_min
 
     @api.model_create_multi
     def create(self, vals_list):
