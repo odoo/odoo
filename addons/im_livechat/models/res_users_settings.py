@@ -14,3 +14,4 @@ class ResUsersSettings(models.Model):
         string="Live Chat Expertise",
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
+    livechat_push = fields.Boolean(default=True)

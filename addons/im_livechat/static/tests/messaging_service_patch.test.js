@@ -30,6 +30,10 @@ test("push notifications are Odoo toaster on Android", async () => {
         },
     });
     const pyEnv = await startServer();
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        inbox_push: true,
+    });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "Livechat 1",

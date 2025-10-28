@@ -22,6 +22,12 @@ export class Settings extends Record {
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
         },
     });
+    /** @type {boolean} */
+    channel_push;
+    /** @type {boolean} */
+    chat_push;
+    /** @type {boolean} */
+    inbox_push;
     messageSound = fields.Attr(true, { localStorage: true });
     useCallAutoFocus = fields.Attr(true, { localStorage: true });
 
@@ -152,6 +158,26 @@ export class Settings extends Record {
         ];
     }
 
+    get PUSHNOTIFS() {
+        return [
+            {
+                label: "channel_push",
+                name: _t("Channels"),
+                value: this.channel_push,
+            },
+            {
+                label: "chat_push",
+                name: _t("Direct Messages"),
+                value: this.chat_push,
+            },
+            {
+                label: "inbox_push",
+                name: _t("Inbox"),
+                value: this.inbox_push,
+            },
+        ];
+    }
+
     getMuteUntilText(dt) {
         if (dt) {
             return dt.year <= luxon.DateTime.now().year + 2
@@ -181,6 +207,17 @@ export class Settings extends Record {
         return rpc("/discuss/settings/mute", {
             minutes,
             channel_id: thread?.id,
+        });
+    }
+
+    /**
+     * @param {string} channel_type
+     * @param {boolean} is_allowed
+     */
+    async setPushNotifications(channel_type, is_allowed) {
+        return rpc("/discuss/settings/push_notifications", {
+            channel_type,
+            is_allowed,
         });
     }
 

@@ -439,8 +439,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "odoobot": self.user_root.partner_id.id,
                 "self_user": self.users[0].id,
                 "settings": {
+                    "channel_push": True,
                     "channel_notifications": False,
+                    'chat_push': True,
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
+                    "inbox_push": True,
+                    "livechat_push": True,
                     "livechat_expertise_ids": [],
                     "livechat_lang_ids": [],
                     "livechat_username": False,

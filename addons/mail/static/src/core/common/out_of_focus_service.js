@@ -90,7 +90,11 @@ export class OutOfFocusService {
      * notification.
      */
     async sendNotification({ message, sound = true, title, type, icon }) {
-        if (!this.canSendNativeNotification || !(await this.multiTab.isOnMainTab())) {
+        if (
+            !this.canSendNativeNotification ||
+            !(await this.multiTab.isOnMainTab()) ||
+            (this.store.self_user?.share === false && !this.store.settings?.inbox_push)
+        ) {
             if (sound) {
                 this._playSound();
             }

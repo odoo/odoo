@@ -4150,6 +4150,7 @@ class MailThread(models.AbstractModel):
                 'lang': False,
                 'groups': [],
                 'notif': 'email',
+                'push_allowed': False,
                 'share': True,
                 'type': 'customer',
                 'uid': False,
@@ -4356,7 +4357,7 @@ class MailThread(models.AbstractModel):
         """ Never send to author and to people outside Odoo (email) except comments """
         notif_pids = []
         notif_pids_notinbox = []
-        for recipient in (r for r in recipients_data if r['active'] and r['id']):
+        for recipient in (r for r in recipients_data if r['active'] and r['id'] and r['push_allowed']):
             notif_pids.append(recipient['id'])
             if recipient['notif'] != 'inbox':
                 notif_pids_notinbox.append(recipient['id'])

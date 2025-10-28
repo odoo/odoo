@@ -18,6 +18,9 @@ class ResUsersSettings(models.Model):
         "Channel Notifications",
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
+    chat_push = fields.Boolean(default=True)
+    channel_push = fields.Boolean(default=True)
+    inbox_push = fields.Boolean(default=True)
 
     @api.model
     def _format_settings(self, fields_to_format):

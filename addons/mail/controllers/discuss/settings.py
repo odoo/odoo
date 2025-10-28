@@ -47,3 +47,22 @@ class DiscussSettingsController(Controller):
             if not user_settings:
                 raise request.not_found()
             user_settings.set_res_users_settings({"channel_notifications": custom_notifications})
+
+    @route("/discuss/settings/push_notifications", methods=["POST"], type="jsonrpc", auth="user")
+    def discuss_push_notifications(self, channel_type, is_allowed):
+        """Set the push notification preference for the given channel type.
+
+        :param str channel_type: type of channel to set the preference on.
+        :param boolean is_allowed: flag indicating the user's choice for push notifications.
+        """
+        if channel_type not in self._get_allowed_push_channel_types():
+            raise request.not_found()
+        user_settings = request.env["res.users.settings"]._find_or_create_for_user(
+            request.env.user,
+        )
+        if not user_settings:
+            raise request.not_found()
+        user_settings.set_res_users_settings({channel_type: is_allowed})
+
+    def _get_allowed_push_channel_types(self):
+        return ["channel_push", "chat_push", "inbox_push"]

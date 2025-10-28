@@ -8,7 +8,13 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { EventBus } from "@odoo/owl";
-import { Command, mockService, patchWithCleanup, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    mockService,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
@@ -51,6 +57,10 @@ test("notify message to user as non member", async () => {
     mockService("multi_tab", { isOnMainTab: () => true });
     const pyEnv = await startServer();
     const johnUser = pyEnv["res.users"].create({ name: "John" });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        inbox_push: true,
+    });
     const johnPartner = pyEnv["res.partner"].create({ name: "John", user_ids: [johnUser] });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",

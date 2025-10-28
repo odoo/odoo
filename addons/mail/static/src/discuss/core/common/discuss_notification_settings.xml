@@ -15,6 +15,25 @@
                     </button>
                 </t>
             </div>
+            <t t-if="canSendPushNotification or isIosApp or isAndroidApp">
+                <hr class="o-discuss-separator my-1"/>
+                <div class="d-flex flex-column my-1">
+                    <h5>Push Notifications</h5>
+                    <span class="mb-1 text-muted small">
+                        Select the type of messages you'd like to receive as push notifications,
+                        so you stay updated even when you're not using the app or website.
+                    </span>
+                    <t t-foreach="store.settings.PUSHNOTIFS" t-as="notif" t-key="notif.label">
+                        <label class="cursor-pointer d-flex align-items-center my-1">
+                            <h5 t-out="notif.name"></h5>
+                            <div class="flex-grow-1"/>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" t-att-checked="notif.value" t-on-click="()=> this.store.settings.setPushNotifications(notif.label, !notif.value)"/>
+                            </div>
+                        </label>
+                    </t>
+                </div>
+            </t>
             <hr class="o-discuss-separator my-1"/>
             <label class="cursor-pointer d-flex align-items-center my-1">
                 <h5>Message sound</h5>

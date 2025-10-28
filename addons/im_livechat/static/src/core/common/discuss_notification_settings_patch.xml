@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussNotificationSettings" t-inherit-mode="extension">
+        <xpath expr="//t[@t-foreach='store.settings.PUSHNOTIFS']" position="after">
+            <t t-if="this.isLiveChatUser">
+                <label class="cursor-pointer d-flex align-items-center my-1">
+                    <h5>Live Chat</h5>
+                    <div class="flex-grow-1"/>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings.livechat_push" t-on-click="()=> this.store.settings.setPushNotifications('livechat_push',!store.settings.livechat_push)"/>
+                    </div>
+                </label>
+            </t>
+        </xpath>
+    </t>
+</templates>
