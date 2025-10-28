@@ -32,15 +32,6 @@ from odoo.tools.misc import file_path
 lock = Lock()
 _logger = logging.getLogger(__name__)
 
-try:
-    import crypt
-except ImportError:
-    _logger.warning('Could not import library crypt')
-
-#----------------------------------------------------------
-# Helper
-#----------------------------------------------------------
-
 
 class CertificateStatus(Enum):
     OK = 1
@@ -223,16 +214,13 @@ def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
 
 
 def generate_password():
+    """Resets (pi) user password generating a new random one.
+
+    :return: The new generated password
     """
-    Generate an unique code to secure raspberry pi
-    """
-    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
-    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    password = secrets.token_urlsafe(16)
     try:
-        shadow_password = crypt.crypt(password, crypt.mksalt())
-        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
-        with writable():
-            subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        subprocess.run(['sudo', 'chpasswd'], input=f"pi:{password}", text=True, check=True)
         return password
     except subprocess.CalledProcessError as e:
         _logger.exception("Failed to generate password: %s", e.output)
@@ -443,7 +431,7 @@ def download_iot_handlers(auto=True):
     server = get_odoo_server_url()
     if server:
         urllib3.disable_warnings()
-        pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
+        pm = urllib3.PoolManager()
         server = server + '/iot/get_handlers'
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
