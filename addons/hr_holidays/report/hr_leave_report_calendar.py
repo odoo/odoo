@@ -33,6 +33,7 @@ class HrLeaveReportCalendar(models.Model):
     description = fields.Char("Description", readonly=True, groups='hr_holidays.group_hr_holidays_user')
     holiday_status_id = fields.Many2one('hr.leave.type', readonly=True, string="Time Off Type",
         groups='hr_holidays.group_hr_holidays_user')
+    color = fields.Integer("Color", related='holiday_status_id.color')
 
     is_hatched = fields.Boolean('Hatched', readonly=True)
     is_striked = fields.Boolean('Striked', readonly=True)
