@@ -78,7 +78,7 @@ class HrAttendanceOvertimeLine(models.Model):
                 has_manager_right or
                 (
                     has_officer_right
-                    and overtime.employee_id.attendance_maneger_id == self.env.user
+                    and overtime.employee_id.attendance_manager_id == self.env.user
                 )
             )
 
