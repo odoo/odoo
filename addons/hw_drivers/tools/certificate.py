@@ -51,7 +51,7 @@ def get_certificate_end_date():
         (name_attribute.value for name_attribute in cert.subject.get_attributes_for_oid(NameOID.COMMON_NAME)), ''
     )
 
-    cert_end_date = cert.not_valid_after
+    cert_end_date = cert.not_valid_after_utc
     if (
         common_name == 'OdooTempIoTBoxCertificate'
         or datetime.datetime.now() > cert_end_date - datetime.timedelta(days=10)
@@ -110,7 +110,7 @@ def download_odoo_certificate():
             Path('/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
             Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
         start_nginx_server()
-        return str(x509.load_pem_x509_certificate(certificate.encode()).not_valid_after)
+        return str(x509.load_pem_x509_certificate(certificate.encode()).not_valid_after_utc)
     else:
         Path(get_path_nginx(), 'conf', 'nginx-cert.crt').write_text(certificate, encoding='utf-8')
         Path(get_path_nginx(), 'conf', 'nginx-cert.key').write_text(private_key, encoding='utf-8')

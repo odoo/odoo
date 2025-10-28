@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from cryptography.x509 import Certificate
 from functools import wraps
+import platform
 import requests
 
 from . import server_logger
@@ -13,6 +15,7 @@ from . import exception_logger
 from . import http
 from . import interface
 from . import main
+from . import tools
 from . import websocket_client
 
 _get = requests.get
@@ -31,3 +34,7 @@ def set_user_agent(func):
 
 requests.get = set_user_agent(_get)
 requests.post = set_user_agent(_post)
+
+# Ensure cryptography compatibility with python < 3.13
+if platform.system() == 'Linux' and float(tools.helpers.get_version()[1:8]) < 2025.10:
+    Certificate.not_valid_after_utc = Certificate.not_valid_after
