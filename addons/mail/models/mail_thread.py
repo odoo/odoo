@@ -3480,6 +3480,7 @@ class MailThread(models.AbstractModel):
             )
             recipients_emails = recipients_group['recipients_emails']
             recipients_ids = recipients_group['recipients_ids']
+            recipients_to_emails = {r['id']: r['email_normalized'] for r in recipients_group['recipients_data']}
 
             # create MailMail for partners
             for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
@@ -3494,6 +3495,7 @@ class MailThread(models.AbstractModel):
                     notif_create_values += [{
                         'mail_mail_id': new_email.id,
                         'res_partner_id': recipient_id,
+                        'mail_email_address': recipients_to_emails.get(recipient_id),
                         **base_notification_values,
                     } for recipient_id in recipients_ids_chunk]
                 emails += new_email

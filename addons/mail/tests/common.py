@@ -1571,7 +1571,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
                 # find notification
                 notif = notifications.filtered(
                     lambda n: n.mail_message_id == message
-                    and ((partner and n.res_partner_id == partner) or n.mail_email_address in email_to_lst)
+                    and ((partner and n.res_partner_id == partner) or (not n.res_partner_id and n.mail_email_address in email_to_lst))
                     and n.notification_type == ntype
                 )
                 self.assertEqual(len(notif), 1,

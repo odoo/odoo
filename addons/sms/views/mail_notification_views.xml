@@ -16,7 +16,7 @@
         <field name="model">mail.notification</field>
         <field name="inherit_id" ref="mail.mail_notification_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='res_partner_id']" position="after">
+            <xpath expr="//field[@name='mail_email_address']" position="after">
                 <field name="sms_number"/>
             </xpath>
             <xpath expr="//field[@name='mail_mail_id']" position="after">

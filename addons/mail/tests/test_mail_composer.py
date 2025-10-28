@@ -263,6 +263,9 @@ class TestMailComposerRendering(TestMailComposer):
             'We must preserve (mso) comments in email html'
         )
 
+        notification = self.env["mail.notification"].search(
+            [('mail_email_address', '=', self.partner_employee.email)])
+        self.assertEqual(len(notification), 1)
 
 @tagged("mail_composer")
 class TestMailComposerUI(MailCommon, HttpCase):

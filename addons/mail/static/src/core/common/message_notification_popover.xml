@@ -6,12 +6,13 @@
             <t t-set="otherNotifications" t-value="this.props.message.notification_ids.filter((notif) => !notif._proxy.isFollowerNotification)"/>
             <t t-set="followerNotifications" t-value="this.props.message.notification_ids.filter((notif) => notif._proxy.isFollowerNotification)"/>
             <div t-foreach="otherNotifications" t-as="notification" t-key="notification.id">
+                <t t-set="email_to" t-value="notification.mail_email_address or notification.res_partner_id.email"/>
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.res_partner_id">
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>
-                    <t t-if="notification.res_partner_id.email and !notification.isFailure"> (<t t-out="notification.res_partner_id.email"/>)</t>
+                    <t t-if="email_to and !notification.isFailure"> (<t t-out="email_to"/>)</t>
                 </span>
-                <span t-elif="notification.mail_email_address" t-out="notification.mail_email_address"/>
+                <span t-elif="email_to" t-out="email_to"/>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
             <div t-if="props.message.incoming_email_cc or props.message.incoming_email_to" t-foreach="(props.message.incoming_email_cc || []).concat(props.message.incoming_email_to || [])" t-as="incomingEmail" t-key="incomingEmail_index">
@@ -20,12 +21,13 @@
                 <span t-if="incomingEmail[1]" t-out="incomingEmail[1]" class="ps-1"/>
             </div>
             <div t-foreach="followerNotifications" t-as="notification" t-key="notification.id">
+                <t t-set="email_to" t-value="notification.mail_email_address or notification.res_partner_id.email"/>
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.res_partner_id">
                     <t t-esc="props.message.getPersonaName(notification.res_partner_id)"/>
-                    <t t-if="notification.res_partner_id.email and !notification.isFailure"> (<t t-out="notification.res_partner_id.email"/>)</t>
+                    <t t-if="email_to and !notification.isFailure"> (<t t-out="email_to"/>)</t>
                 </span>
-                <span t-elif="notification.mail_email_address" t-out="notification.mail_email_address"/>
+                <span t-elif="email_to" t-out="email_to"/>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
         </div>

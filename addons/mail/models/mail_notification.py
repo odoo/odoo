@@ -20,11 +20,11 @@ class MailNotification(models.Model):
     author_id = fields.Many2one('res.partner', 'Author', ondelete='set null')
     mail_message_id = fields.Many2one('mail.message', 'Message', index=True, ondelete='cascade', required=True)
     mail_mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
-    # recipient
+    # recipient, can be empty when no matching partner exists (mass mail)
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
-    # set if no matching partner exists (mass mail)
+    # when the notification type is "email" (with or without a partner)
     # must be normalized except if notification is cancel/failure from invalid email
-    mail_email_address = fields.Char(help='Recipient email address')
+    mail_email_address = fields.Char(help='Recipient email address', groups='base.group_user')
     # status
     notification_type = fields.Selection([
         ('inbox', 'Inbox'), ('email', 'Email')
@@ -80,14 +80,14 @@ class MailNotification(models.Model):
         for vals in vals_list:
             if vals.get('is_read'):
                 vals['read_date'] = fields.Datetime.now()
-        return super(MailNotification, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, vals):
         if ('mail_message_id' in vals or 'res_partner_id' in vals) and not self.env.is_admin():
             raise AccessError(_("Can not update the message or recipient of a notification."))
         if vals.get('is_read'):
             vals['read_date'] = fields.Datetime.now()
-        return super(MailNotification, self).write(vals)
+        return super().write(vals)
 
     @api.model
     def _gc_notifications(self, max_age_days=180):
@@ -121,8 +121,9 @@ class MailNotification(models.Model):
     def _filtered_for_web_client(self):
         """Returns only the notifications to show on the web client."""
         def _filter_unimportant_notifications(notif):
-            if notif.notification_status in ['bounce', 'exception', 'canceled'] \
-                    or notif.res_partner_id.partner_share or notif.mail_email_address:
+            if (notif.notification_status in {'bounce', 'exception', 'canceled'}
+                or notif.res_partner_id.partner_share
+                or (not notif.res_partner_id and notif.mail_email_address)):
                 return True
             subtype = notif.mail_message_id.subtype_id
             return not subtype or subtype.track_recipients
@@ -130,6 +131,8 @@ class MailNotification(models.Model):
         return self.filtered(_filter_unimportant_notifications)
 
     def _store_notification_fields(self, res: Store.FieldList):
-        res.extend(["mail_email_address", "failure_type", "mail_message_id"])
+        res.extend(["failure_type", "mail_message_id"])
         res.extend(["notification_status", "notification_type"])
         res.one("res_partner_id", ["name", "email"])
+        if res.is_for_internal_users():
+            res.append("mail_email_address")

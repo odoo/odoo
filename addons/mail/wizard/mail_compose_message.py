@@ -868,7 +868,9 @@ class MailComposeMessage(models.TransientModel):
             if not mail.recipient_ids and not emails:
                 create_vals_all.append(notif_base_values)
             else:
-                create_vals_all.extend(notif_base_values | {'res_partner_id': partner.id} for partner in mail.recipient_ids)
+                create_vals_all.extend(notif_base_values
+                    | {'res_partner_id': partner.id, 'mail_email_address': partner.email}
+                    for partner in mail.recipient_ids)
                 create_vals_all.extend(notif_base_values | {'mail_email_address': email} for email in emails)
         return create_vals_all
 
