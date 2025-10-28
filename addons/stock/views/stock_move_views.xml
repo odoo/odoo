@@ -30,7 +30,9 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Moves" create="0" editable="bottom" default_order="date desc" duplicate="0">
-                    <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
+                    <field name="date" groups="base.group_no_one"
+                           decoration-danger="(state not in ('cancel','done')) and date > current_date"
+                            readonly="1"/>
                     <field name="reference"/>
                     <field name="picking_type_id" column_invisible="True" readonly="1"/>
                     <field name="location_usage" column_invisible="True" readonly="1"/>
