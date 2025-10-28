@@ -24,6 +24,12 @@ export class Settings extends Record {
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
         },
     });
+    /** @type {boolean} */
+    channel_push;
+    /** @type {boolean} */
+    chat_push;
+    /** @type {boolean} */
+    inbox_push;
     messageSound = fields.Attr(true, { localStorage: true });
     useCallAutoFocus = fields.Attr(true, { localStorage: true });
 
@@ -193,6 +199,17 @@ export class Settings extends Record {
         return rpc("/discuss/settings/mute", {
             minutes,
             channel_id: thread?.id,
+        });
+    }
+
+    /**
+     * @param {string} channel_type
+     * @param {boolean} is_allowed
+     */
+    async setPushNotifications(channel_type, is_allowed) {
+        return rpc("/discuss/settings/push_notifications", {
+            channel_type,
+            is_allowed,
         });
     }
 
