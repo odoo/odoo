@@ -13,8 +13,9 @@ patch(OrderPaymentValidation.prototype, {
         await super.finalizeValidation(...arguments);
 
         // note: isSACompany guarantees order.is_to_invoice()
+        // expect for cases like deposit and settlement
         if (
-            this.order.isSACompany() &&
+            this.order.isInvoiceMandatoryForSA() &&
             this.order.finalized &&
             this.order.l10n_sa_invoice_edi_state !== "sent"
         ) {

@@ -425,3 +425,12 @@ export function tipContainerIsShown(boolean = true) {
             : negate(".tip-container", ".payment-screen"),
     };
 }
+
+export function isInvoiceButtonUnchecked() {
+    return [
+        {
+            content: "check invoice button is not highlighted",
+            trigger: ".js_invoice:not(.highlight)",
+        },
+    ];
+}
