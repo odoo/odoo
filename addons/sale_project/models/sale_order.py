@@ -153,6 +153,104 @@ class SaleOrder(models.Model):
                         break
         return super()._action_confirm()
 
+<<<<<<< 10b9b144a8a38014f0d2434dc05f89d2e6179b34
+||||||| 007e7cdbb28bb8a8c73865c07069858acb4b83c8
+    def action_view_task(self):
+        self.ensure_one()
+        if not self.order_line:
+            return {'type': 'ir.actions.act_window_close'}
+
+        list_view_id = self.env.ref('project.view_task_tree2').id
+        form_view_id = self.env.ref('project.view_task_form2').id
+        kanban_view_id = self.env.ref('project.view_task_kanban_inherit_view_default_project').id
+
+        project_ids = self.tasks_ids.project_id
+        if len(project_ids) > 1:
+            action = self.env['ir.actions.actions']._for_xml_id('project.action_view_task')
+            action['domain'] = AND([ast.literal_eval(action['domain']), self._tasks_ids_domain()])
+            action['context'] = {}
+        else:
+            # Load top bar if all the tasks linked to the SO belong to the same project
+            action = self.env['ir.actions.actions'].with_context({'active_id': project_ids.id})._for_xml_id('project.act_project_project_2_project_task_all')
+            action['context'] = {
+                'active_id': project_ids.id,
+                'search_default_sale_order_id': self.id,
+            }
+
+        if self.tasks_count > 1:  # cross project kanban task
+            for idx, (view_id, view_type) in enumerate(action['views']):
+                if view_type == 'kanban':
+                    action['views'][idx] = (kanban_view_id, 'kanban')
+                elif view_type == 'list':
+                    action['views'][idx] = (list_view_id, 'list')
+                elif view_type == 'form':
+                    action['views'][idx] = (form_view_id, 'form')
+        else:  # 1 or 0 tasks -> form view
+            action['views'] = [(form_view_id, 'form')]
+            action['res_id'] = self.tasks_ids.id
+        # set default project
+        default_line = next((sol for sol in self.order_line if sol.product_id.type == 'service'), self.env['sale.order.line'])
+        default_project_id = default_line.project_id.id or self.project_ids[:1].id or self.tasks_ids.project_id[:1].id
+
+        action['context'].update({
+            'default_sale_order_id': self.id,
+            'default_sale_line_id': default_line.id,
+            'default_partner_id': self.partner_id.id,
+            'default_project_id': default_project_id,
+            'default_user_ids': [self.env.uid],
+        })
+        return action
+
+=======
+    def action_view_task(self):
+        self.ensure_one()
+        if not self.order_line:
+            return {'type': 'ir.actions.act_window_close'}
+
+        list_view_id = self.env.ref('project.view_task_tree2').id
+        form_view_id = self.env.ref('project.view_task_form2').id
+        kanban_view_id = self.env.ref('project.view_task_kanban_inherit_view_default_project').id
+
+        project_ids = self.tasks_ids.project_id
+        if len(project_ids) > 1:
+            action = self.env['ir.actions.actions']._for_xml_id('project.action_view_task')
+            action['domain'] = AND([ast.literal_eval(action['domain']), self._tasks_ids_domain()])
+            action['context'] = {}
+        else:
+            # Load top bar if all the tasks linked to the SO belong to the same project
+            action = self.env['ir.actions.actions'].with_context(
+                active_id=project_ids.id,
+            )._for_xml_id('project.act_project_project_2_project_task_all')
+            action['context'] = {
+                'active_id': project_ids.id,
+                'search_default_sale_order_id': self.id,
+            }
+
+        if self.tasks_count > 1:  # cross project kanban task
+            for idx, (view_id, view_type) in enumerate(action['views']):
+                if view_type == 'kanban':
+                    action['views'][idx] = (kanban_view_id, 'kanban')
+                elif view_type == 'list':
+                    action['views'][idx] = (list_view_id, 'list')
+                elif view_type == 'form':
+                    action['views'][idx] = (form_view_id, 'form')
+        else:  # 1 or 0 tasks -> form view
+            action['views'] = [(form_view_id, 'form')]
+            action['res_id'] = self.tasks_ids.id
+        # set default project
+        default_line = next((sol for sol in self.order_line if sol.product_id.type == 'service'), self.env['sale.order.line'])
+        default_project_id = default_line.project_id.id or self.project_ids[:1].id or self.tasks_ids.project_id[:1].id
+
+        action['context'].update({
+            'default_sale_order_id': self.id,
+            'default_sale_line_id': default_line.id,
+            'default_partner_id': self.partner_id.id,
+            'default_project_id': default_project_id,
+            'default_user_ids': [self.env.uid],
+        })
+        return action
+
+>>>>>>> d41c6b805b1569cc9bb39bb77a837406e2fa287b
     def _tasks_ids_domain(self):
         return ['&', ('is_template', '=', False), ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids), ('has_template_ancestor', '=', False)]
 
