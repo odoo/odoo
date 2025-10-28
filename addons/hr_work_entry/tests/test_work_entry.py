@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
+from odoo.fields import Command
 from odoo.tests.common import tagged
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 
@@ -40,6 +41,48 @@ class TestWorkEntry(TestWorkEntryBase):
             'resource_calendar_id': cls.resource_calendar_id.id,
             'wage': 1000,
             'date_generated_from': cls.end.date() + relativedelta(days=5),
+        })
+        cls.full_week_calendar = cls._get_full_week_calendar()
+
+    @classmethod
+    def _get_full_week_calendar(cls):
+        work_entry_types = cls.env['hr.work.entry.type'].create([
+            {
+                'name': 'Regular Work',
+                'category': 'working_time',
+                'code': 'WORK',
+            },
+            {
+                'name': 'Unpaid Leave',
+                'category': 'absence',
+                'code': 'UNPAID',
+            }
+        ])
+        work_entry_type_work = work_entry_types.filtered(lambda et: et.code == 'WORK')
+        work_entry_type_leave = work_entry_types - work_entry_type_work
+
+        def _get_attendance_records_for_weekday(day, work_entry_type_id):
+            return [
+                Command.create({
+                    'dayofweek': str(day),
+                    'hour_from': start,
+                    'hour_to': end,
+                    'work_entry_type_id': work_entry_type_id.id,
+                    'day_period': period,
+                }) for period, start, end in (('morning', 9, 12), ('afternoon', 13, 18))
+            ]
+
+        def _get_work_entry_type_for_day(day):
+            return cls.env['hr.work.entry.type'] if day < 3 else work_entry_type_work if day < 5 else work_entry_type_leave
+
+        attendance_line_create_vals = []
+        for day in range(7):
+            attendance_line_create_vals.extend(_get_attendance_records_for_weekday(day, _get_work_entry_type_for_day(day)))
+
+        return cls.env['resource.calendar'].create({
+            'name': 'Full Week Calendar',
+            'hours_per_day': 8,
+            'attendance_ids': attendance_line_create_vals
         })
 
     def test_no_duplicate(self):
@@ -509,3 +552,37 @@ class TestWorkEntry(TestWorkEntryBase):
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
         self.assertEqual(len(work_entries), 23, "23 attendance")
         self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+
+    def test_work_entry_generation_filters_leave_attendances(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+            'resource_calendar_id': self.full_week_calendar.id,
+            'date_version': date(2024, 9, 1),
+            'contract_date_start': date(2024, 9, 1),
+            'contract_date_end': date(2024, 9, 30),
+            'wage': 5000.0,
+        })
+
+        # Generate work entries for one week (Sep 2-8, 2025)
+        work_entries = employee.generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 8))
+
+        self.assertEqual(len(self.full_week_calendar.attendance_ids), 21)
+        self.assertEqual(len(work_entries), 5, "Should generate 1 work entries for each workday (Mon. through Fri.)")
+        self.assertEqual(sum(work_entries.mapped('duration')), 40, "Should only include 8 hours per working day (40 hours)")
+
+    def test_include_all_context_override(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee 2',
+            'resource_calendar_id': self.full_week_calendar.id,
+            'date_version': date(2024, 9, 1),
+            'contract_date_start': date(2024, 9, 1),
+            'contract_date_end': date(2024, 9, 30),
+            'wage': 5000.0,
+        })
+
+        # Generate work entries for one week (Sep 2-8, 2025)
+        work_entries = employee.with_context(include_all_attendances=True).generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 8))
+
+        self.assertEqual(len(self.full_week_calendar.attendance_ids), 21)
+        self.assertEqual(len(work_entries), 7, "Should generate 1 work entry for each day (Mon. through Sun.)")
+        self.assertEqual(sum(work_entries.mapped('duration')), 56, "Should include 8 hours per calendar day")

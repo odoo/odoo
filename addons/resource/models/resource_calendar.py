@@ -198,7 +198,7 @@ class ResourceCalendar(models.Model):
             Domain('display_type', '=', False),
         ])
 
-        attendances = self.env['resource.calendar.attendance'].search(domain)
+        attendances = self.env['resource.calendar.attendance'].sudo().search(domain)
         duration_based_attendances = attendances.filtered('duration_based')
         all_duration_based_attendances = attendances.calendar_id.attendance_ids.filtered('duration_based')
         # Resource specific attendances
@@ -397,7 +397,7 @@ class ResourceCalendar(models.Model):
         # retrieve leave intervals in (start_dt, end_dt)
         result = defaultdict(list)
         tz_dates = {}
-        all_leaves = self.env['resource.calendar.leaves'].search(domain)
+        all_leaves = self.env['resource.calendar.leaves'].sudo().search(domain)
         for leave in all_leaves:
             leave_resource = leave.resource_id
             leave_company = leave.company_id
