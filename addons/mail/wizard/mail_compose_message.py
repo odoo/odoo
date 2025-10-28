@@ -1407,6 +1407,7 @@ class MailComposeMessage(models.TransientModel):
                         'name': False,  # not used in this flow anyway
                         'groups': [],
                         'notif': 'email',
+                        'push_allowed': False,
                         'share': True,
                         'type': 'customer',
                         'uid': False,
