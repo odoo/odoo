@@ -25,27 +25,10 @@
             <div class="text-truncate base-fs fw-bolder mb-0 mx-2 px-1" t-esc="props.chatWindow.channel.displayName"/>
             <t t-set="message" t-value="channel.newestPersistentOfAllMessage" />
             <div t-if="previewText" class="text-truncate small mx-2 px-1 text-muted">
-                <t t-call="mail.message_preview_prefix">
-                    <t t-set="message" t-value="message"/>
-                </t>
                 <MessageSeenIndicator t-if="message.showSeenIndicator(channel.thread)" message="message" thread="channel.thread" />
-                <t t-if="message.hasOnlyAttachments">
-                    <i class="fa me-1" t-att-class="message.previewIcon"/>
-                    <t t-out="message.previewText" />
-                </t>
-                <t t-else="" t-out="previewText" />
+                <t t-out="message.previewText" />
             </div>
         </div>
-    </t>
-
-    <!-- @type {import("models").Message} message -->
-    <t t-name="mail.message_preview_prefix">
-        <t t-if="message.isSelfAuthored">
-            <i class="fa fa-mail-reply me-1 opacity-75"/>You:
-        </t>
-        <t t-elif="!message.author?.eq(channel?.correspondent?.persona)">
-            <t t-esc="message.authorName"/>:
-        </t>
     </t>
 
 </templates>
