@@ -805,10 +805,10 @@ test("should also invite to the call when inviting to the channel", async () => 
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
-    await click(".o-mail-DiscussContent-header button[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation");
+    await click("button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation:has(:text('Invite people'))");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
+    await click("button[title='Invite']:enabled");
     await contains(".o-discuss-CallParticipantCard.o-isInvitation");
 });
 

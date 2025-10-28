@@ -1,27 +1,17 @@
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
+import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
 import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_panel";
 
-import { Component, useChildSubEnv, xml } from "@odoo/owl";
+import { useChildSubEnv } from "@odoo/owl";
 
-import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-
-class ChannelActionDialog extends Component {
-    static props = ["title", "contentComponent", "contentProps", "close?"];
-    static components = { Dialog };
-    static template = xml`
-        <Dialog size="'md'" title="props.title" footer="false" contentClass="'o-bg-body'" bodyClass="'p-1'">
-            <t t-component="props.contentComponent" t-props="props.contentProps"/>
-        </Dialog>
-    `;
-}
 
 registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,
@@ -180,11 +170,13 @@ registerThreadAction("invite-people", {
             owner.props.chatWindow ? "bg-inherit" : ""
         } bg-100 border border-secondary`,
     condition: ({ channel, owner }) =>
-        channel && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
+        channel &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !(owner.isDiscussContent && channel?.hasMemberList),
     icon: "oi oi-fw oi-user-plus",
     name: _t("Invite People"),
-    sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 20 : 10),
-    sequenceGroup: 20,
+    sequence: 20,
+    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
     setup({ owner }) {
         if (!owner.props.chatWindow && !owner.env.inMeetingView) {
             this.popover = usePopover(ChannelInvitation, {
@@ -202,6 +194,7 @@ registerThreadAction("member-list", {
     },
     actionPanelComponent: ChannelMemberList,
     actionPanelComponentProps: ({ actions, channel }) => ({
+        /** @deprecated */
         openChannelInvitePanel({ keepPrevious } = {}) {
             actions.actions
                 .find(({ id }) => id === "invite-people")
