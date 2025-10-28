@@ -64,6 +64,9 @@ class ResLang(models.Model):
             ('%d-%m-%Y', '31-01-%s' % current_year),
             ('%m-%d-%Y', '01-31-%s' % current_year),
             ('%Y-%m-%d', '%s-01-31' % current_year),
+            ('%d.%m.%Y', '31.01.%s' % current_year),
+            ('%m.%d.%Y', '01.31.%s' % current_year),
+            ('%Y.%m.%d', '%s.01.31' % current_year),
         ]
 
     name = fields.Char(required=True)
