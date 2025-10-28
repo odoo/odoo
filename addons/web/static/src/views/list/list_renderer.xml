@@ -221,7 +221,7 @@
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                             <t t-if="!evalInvisible(button.invisible, group.record)">
                                 <t t-if="button.clickParams.type === 'edit'">
-                                    <button t-att-title="button.title" class="btn" t-on-click="() => this.editGroupRecord(group)" tabindex="-1">
+                                    <button t-att-title="button.title" class="btn" t-on-click.stop="() => this.editGroupRecord(group)" tabindex="-1">
                                         <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
                                     </button>
                                 </t>
