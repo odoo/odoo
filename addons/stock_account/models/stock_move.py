@@ -355,7 +355,7 @@ class StockMove(models.Model):
         return {
             'value': value,
             'quantity': valued_qty,
-            'description': ', '.join(descriptions),
+            'description': '\n'.join(descriptions),
         }
 
     def _get_valued_qty(self, lot=None):
