@@ -7885,6 +7885,40 @@ test(`groupby node with edit button`, async () => {
     expect.verifySteps(["doAction"]);
 });
 
+test(`edit button does not trigger fold group`, async () => {
+    mockService("action", {
+        doAction(action) {
+            expect.step("doAction");
+            expect(action).toEqual({
+                context: { create: false },
+                res_id: 1,
+                res_model: "res.currency",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            });
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <groupby name="currency_id">
+                    <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                </groupby>
+            </list>
+        `,
+        groupBy: ['currency_id']
+    });
+    expect(`.o_group_open`).toHaveCount(0);
+    await contains(`.o_group_header:eq(0)`).click();
+    expect(`.o_group_open`).toHaveCount(1);
+    await contains(`.o_group_header .o_group_buttons button:eq(0)`).click();
+    expect(`.o_group_open`).toHaveCount(1);
+    expect.verifySteps(["doAction"]);
+});
+
 test(`groupby node with subfields, and onchange`, async () => {
     Foo._onChanges = {
         foo() {},
