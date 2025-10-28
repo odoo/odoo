@@ -3,7 +3,7 @@ from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import new_test_user
+from odoo.tests import new_test_user, Form
 from odoo.tests.common import tagged, TransactionCase
 
 
@@ -155,3 +155,31 @@ class TestHrAttendanceOvertime(TransactionCase):
             ]
 
             self.assertAlmostEqual(self.employee.total_overtime, 12.0, 2, msg="3 days of 2 hours overtime at 200% should yield 12 hours total overtime")
+
+    def test_access_ruleset_on_employee(self):
+        """
+        Test the access rights of the ruleset on the employee
+        Only the employee admin should be able to see and change the ruleset on the employee
+        """
+        user = new_test_user(self.env, login='usr', groups='hr.group_hr_user', company_id=self.company.id).with_company(self.company)
+        employee = self.env['hr.employee'].with_company(self.company).create({'name': "Employee Test"})
+        with Form(employee.with_user(user)) as employee_form:
+            self.assertFalse("ruleset_id" in employee_form._view['fields'])
+
+        # HR Mangers should be able to see the ruleset on the employee
+        user.group_ids |= self.env.ref('hr.group_hr_manager')
+        # fix le truc chelou de pas pouvoir ecrire la surrement les access rule
+        with Form(employee.with_user(user)) as employee_form:
+            self.assertTrue("ruleset_id" in employee_form._view['fields'])
+            employee_form.record.ruleset_id = self.ruleset.id
+
+    def test_is_manager_with_overtime(self):
+        """ Test the computation of is_manager with overtime """
+        user = new_test_user(self.env, login='usr', groups='hr_attendance.group_hr_attendance_officer', company_id=self.company.id).with_company(self.company)
+        self.employee.attendance_manager_id = user.id
+        attendance = self.env['hr.attendance'].with_company(self.company).create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 20, 0)
+        })
+        self.assertTrue(attendance.with_user(user).linked_overtime_ids.is_manager)
