@@ -159,7 +159,9 @@ class SaleOrder(models.Model):
             action['context'] = {}
         else:
             # Load top bar if all the tasks linked to the SO belong to the same project
-            action = self.env['ir.actions.actions'].with_context({'active_id': project_ids.id})._for_xml_id('project.act_project_project_2_project_task_all')
+            action = self.env['ir.actions.actions'].with_context(
+                active_id=project_ids.id,
+            )._for_xml_id('project.act_project_project_2_project_task_all')
             action['context'] = {
                 'active_id': project_ids.id,
                 'search_default_sale_order_id': self.id,
