@@ -19,15 +19,16 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <list>
-                <field name="reference"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="reference" width="300px"/>
                 <field name="date"/>
                 <field name="quantity"/>
                 <field name="product_uom" groups="uom.group_uom"/>
                 <field name="lot_ids" widget="many2many_tags" column_invisible="context.get('tracking') == 'none'"/>
-                <field name="value" column_invisible="context.get('cost_method') != 'fifo'"/>
-                <field name="standard_price" string="Unit Cost" column_invisible="context.get('cost_method') == 'fifo'"/>
-                <field name="remaining_qty" sum="Total Remaining Qty"/>
-                <field name="remaining_value" sum="Total Remaining Value"/>
+                <field name="value" widget="monetary" options="{'currency_field': 'company_currency_id'}" column_invisible="context.get('cost_method') != 'fifo'"/>
+                <field name="standard_price" widget="monetary" options="{'currency_field': 'company_currency_id'}" string="Unit Cost" column_invisible="context.get('cost_method') == 'fifo'"/>
+                <field name="remaining_qty" sum="Total Remaining Qty" width="200px"/>
+                <field name="remaining_value" widget="monetary" options="{'currency_field': 'company_currency_id'}" sum="Total Remaining Value" width="200px"/>
             </list>
         </field>
     </record>
