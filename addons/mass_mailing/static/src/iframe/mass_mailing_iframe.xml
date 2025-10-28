@@ -9,7 +9,8 @@
                 <div class="flex-grow-1" t-att-class="{'align-self-center': this.state.isMobile}">
                     <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
                     <div t-att-class="{ 'o_is_mobile': this.state.isMobile, 'h-100': !this.state.isMobile }">
-                        <iframe sandbox="allow-same-origin" t-att-scrolling="this.state.isMobile ? '' : 'no'"
+                        <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+                            t-att-scrolling="this.state.isMobile ? '' : 'no'"
                             t-att-class="{ 'd-none': props.showThemeSelector or props.showCodeView }"
                             t-ref="iframeRef" t-on-blur="onBlur"/>
                     </div>
@@ -30,6 +31,7 @@
         </div>
     </t>
     <t t-name="mass_mailing.IframeHead">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
