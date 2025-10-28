@@ -100,7 +100,7 @@ class ConnectionManager(Thread):
         # Send already detected devices and IoT Box info to the database
         manager._send_all_devices()
         # Switch git branch before restarting, this avoids restarting twice
-        upgrade.check_git_branch()
+        upgrade.check_git_branch(force=True)
         # Restart to get a certificate, load the IoT handlers...
         helpers.odoo_restart(2)
 

@@ -40,7 +40,7 @@ def get_db_branch(server_url):
 
 @toggleable
 @require_db
-def check_git_branch(server_url=None):
+def check_git_branch(server_url=None, force=False):
     """Update the Odoo code using git to match the branch of the connected database.
     This method will also update the Python requirements and system packages, based
     on requirements.txt and packages.txt files.
@@ -48,21 +48,27 @@ def check_git_branch(server_url=None):
     If the database cannot be reached, we fetch the last changes from the current branch.
 
     :param server_url: The URL of the connected Odoo database (provided by decorator).
+    :param force: check out even if the db's branch matches the current one
     """
     if IS_TEST:
         return
 
     try:
-        branch = get_db_branch(server_url) or git('symbolic-ref', '-q', '--short', 'HEAD')
-        if not git('ls-remote', 'origin', branch):
-            _logger.warning("Branch '%s' doesn't exist on github.com/odoo/odoo.git, assuming 'master'", branch)
-            branch = 'master'
+        target_branch = get_db_branch(server_url)
+        current_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
+        if not git('ls-remote', 'origin', target_branch):
+            _logger.warning("Branch '%s' doesn't exist on github.com/odoo/odoo.git, assuming 'master'", target_branch)
+            target_branch = 'master'
+
+        if current_branch == target_branch and not force:
+            _logger.info("No branch change detected (%s)", current_branch)
+            return
 
         # Repository updates
         shallow_lock = path_file("odoo/.git/shallow.lock")
         if shallow_lock.exists():
             shallow_lock.unlink()  # In case of previous crash/power-off, clean old lockfile
-        checkout(branch)
+        checkout(target_branch)
         update_requirements()
 
         # System updates
