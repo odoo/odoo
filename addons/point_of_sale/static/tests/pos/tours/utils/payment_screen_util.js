@@ -380,3 +380,12 @@ export function syncCurrentOrder() {
         },
     ];
 }
+
+export function isInvoiceButtonUnchecked() {
+    return [
+        {
+            content: "check invoice button is not highlighted",
+            trigger: ".js_invoice:not(.highlight)",
+        },
+    ];
+}
