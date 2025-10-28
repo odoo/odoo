@@ -643,12 +643,16 @@
         <field name="binding_model_id" ref="product.model_product_product"/>
         <field name="state">code</field>
         <field name="code">
-action = {
-    'name': 'Pricelist Report',
-    'type': 'ir.actions.client',
-    'tag': 'generate_pricelist_report',
-    'context': env.context,
-}
+            pricelist = env['product.pricelist'].search([], limit=1)
+            if not pricelist:
+                raise UserError(_("Please configure at least one Pricelist before generating the report."))
+                
+            action = {
+                'name': 'Pricelist Report',
+                'type': 'ir.actions.client',
+                'tag': 'generate_pricelist_report',
+                'context': env.context,
+            }
         </field>
     </record>
 
