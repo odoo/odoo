@@ -567,7 +567,7 @@ test("should be able to apply color on icon along with text", async () => {
         contentAfterEdit:
             '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
         contentAfter:
-            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);"><span class="fa fa-glass"></span></font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc<span class="fa fa-glass"></span>de]</font>f</p>',
     });
 });
 
@@ -643,7 +643,7 @@ test("should be able to remove color applied by 'text-*' classes (1)", async () 
     });
 });
 
-test.todo("should be able to remove color applied by 'text-*' classes (2)", async () => {
+test("should be able to remove color applied by 'text-*' classes (2)", async () => {
     await testEditor({
         contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
         stepFunction: setColor("", "color"),
