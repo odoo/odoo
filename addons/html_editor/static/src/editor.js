@@ -1,10 +1,11 @@
-import { MAIN_PLUGINS } from "./plugin_sets";
+import { MAIN_PLUGINS, MOBILE_OS_EXCLUDED_PLUGINS } from "./plugin_sets";
 import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/base_container";
 import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 import { setElementContent } from "@web/core/utils/html";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /** @typedef {import("plugins").EditorResources} EditorResources */
 /** @typedef {import("plugins").GlobalResources} GlobalResources */
@@ -163,7 +164,11 @@ export class Editor {
     }
 
     preparePlugins() {
-        const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
+        const pluginList = this.config.Plugins || MAIN_PLUGINS;
+        const filteredPluginList = isMobileOS()
+            ? pluginList.filter((p) => !MOBILE_OS_EXCLUDED_PLUGINS.includes(p))
+            : pluginList;
+        const Plugins = sortPlugins(filteredPluginList);
         this.config = Object.assign({}, ...Plugins.map((P) => P.defaultConfig), this.config);
         this.pluginsMap = new Map();
         for (const P of Plugins) {

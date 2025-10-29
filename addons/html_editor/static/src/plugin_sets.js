@@ -176,3 +176,5 @@ export const EXTRA_PLUGINS = [
     EditorVersionPlugin,
     QWebPlugin,
 ];
+
+export const MOBILE_OS_EXCLUDED_PLUGINS = [MoveNodePlugin];
