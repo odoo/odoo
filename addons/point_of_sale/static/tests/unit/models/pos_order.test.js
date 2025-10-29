@@ -100,6 +100,7 @@ test("getTotalDiscount", async () => {
     const line2 = order.lines[1];
     line1.setDiscount(20);
     line2.setDiscount(50);
+
     expect(order.getTotalDiscount()).toBe(5.82);
     const taxTotalsWDiscount = order.prices.taxDetails;
     expect(taxTotalsWDiscount.base_amount).toBe(10.2);
