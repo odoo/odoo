@@ -281,6 +281,7 @@ class HrLeaveType(models.Model):
         if operator != 'in':
             value = float(value)
         leave_types = self.env['hr.leave.type'].search([])
+
         def is_valid(leave_type):
             return not leave_type.requires_allocation or op(leave_type.virtual_remaining_leaves)
         return [('id', 'in', leave_types.filtered(is_valid).ids)]
