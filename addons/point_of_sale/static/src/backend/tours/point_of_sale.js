@@ -21,10 +21,5 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
-        {
-            trigger: ".o_pos_kanban",
-            tooltipPosition: "bottom",
-            run: "click",
-        },
     ],
 });

@@ -133,19 +133,6 @@ export class PaymentScreen extends Component {
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
     async addNewPaymentLine(paymentMethod) {
-        if (
-            paymentMethod.type === "pay_later" &&
-            (!this.currentOrder.to_invoice ||
-                this.pos.models["ir.module.module"].find((m) => m.name === "pos_settle_due")
-                    ?.state !== "installed")
-        ) {
-            this.notification.add(
-                _t(
-                    "To ensure due balance follow-up, generate an invoice or download the accounting application. "
-                ),
-                { autocloseDelay: 7000 }
-            );
-        }
         if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
             this.dialog.add(AlertDialog, {
                 title: _t("Oh snap !"),

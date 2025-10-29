@@ -109,8 +109,9 @@
         <!-- To make Customer and Invoice button align on a single row -->
             <div class="d-flex gap-1 w-100">
                 <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or pos.config.iface_cashdrawer or pos.config.ship_later" />
-                <button class="button partner-button btn btn-secondary btn-lg w-100 w-md-50 lh-lg text-truncate"
+                <button class="button partner-button btn btn-lg w-100 w-md-50 lh-lg text-truncate"
                     t-att-class="{ 'highlight text-action': currentOrder.getPartner() }"
+                    t-attf-class="{{ currentOrder.isCustomerRequired ? 'btn-primary' : 'btn-secondary' }}"
                     t-on-click="() => this.pos.selectPartner()">
                     <i class="fa fa-user me-2" role="img" title="Customer" />
                     <span class="partner-name">
