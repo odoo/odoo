@@ -8,7 +8,7 @@ class TestFloatExport(common.TransactionCase):
         FloatField = self.env['ir.qweb.field.float']
 
         def converter(value, options=None):
-            record = self.env['decimal.precision.test'].new({name: value})
+            record = self.env['test_qweb_float.decimal_precision'].new({name: value})
             return FloatField.record_to_html(record, name, options or {})
         return converter
 
