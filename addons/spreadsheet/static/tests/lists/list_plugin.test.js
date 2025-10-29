@@ -1193,6 +1193,8 @@ test("An error is displayed if the list has invalid model", async function () {
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+    const listDataSource = model.getters.getListDataSource(listId);
+    expect(() => listDataSource.getFields()).toThrow(spreadsheet.EvaluationError);
 });
 
 test("Support field chaining in list", async function () {
