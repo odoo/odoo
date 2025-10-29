@@ -118,6 +118,10 @@
         <field name="name">Activity Overview</field>
         <field name="res_model">mail.activity</field>
         <field name="view_mode">list,form</field>
+        <!-- ensure pagination works even if _search removes records after fetching -->
+        <field name="context">{
+            'force_search_count': 1,
+        }</field>
     </record>
 
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
@@ -426,7 +430,9 @@
         <field name="res_model">mail.activity</field>
         <field name="view_mode">list,kanban,calendar</field>
         <field name="search_view_id" ref="mail.mail_activity_view_search"/>
+        <!-- ensure pagination works even if _search removes records after fetching -->
         <field name="context">{
+            'force_search_count': 1,
             'search_default_filter_user_id_uid': 1,
             'search_default_filter_date_deadline_past': 1,
             'search_default_filter_date_deadline_today': 1,
