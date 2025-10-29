@@ -6,32 +6,54 @@
         <field name="name">iap.account.form</field>
         <field name="model">iap.account</field>
         <field name="arch" type="xml">
-            <form string="IAP Account" duplicate="false">
+            <form string="In-App Purchase Account" duplicate="false">
+                <header>
+                    <button string="Buy Credits" name="action_buy_credits" type="object" class="btn btn-primary"/>
+                </header>
                 <sheet>
-                    <group name="account" string="Account Information">
-                        <group>
-                            <field name="name" />
-                            <field name="service_id" readonly="service_locked" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="description" />
-                            <field name="company_ids" widget="many2many_tags"
-                                domain="[('id', 'in', allowed_company_ids)]" />
-                            <field name="account_token" groups="base.group_no_one"/>
-                        </group>
-                        <group name="external">
-                            <label for="balance" class="oe_inline"/>
-                            <div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Account Name" class="oe_inline"/>
+                            <span class="text-bg-danger" style="padding: 5px 10px; border-radius: 5px; font-size: 0.4em; margin-left: 10px; vertical-align: middle;" invisible="not balance or not is_balance_below_warning_threshold">
                                 <field name="balance" class="oe_inline"/>
-                                <button type="object"
-                                    name="action_buy_credits" class="btn-link py-0">
-                                    <i class="oi oi-arrow-right"/>
-                                    Buy Credit
-                                </button>
-                            </div>
+                            </span>
+                            <span class="text-bg-success" style="padding: 5px 10px; border-radius: 5px; font-size: 0.4em; margin-left: 10px; vertical-align: middle;" invisible="not balance or is_balance_below_warning_threshold">
+                                <field name="balance" class="oe_inline"/>
+                            </span>
+                        </h1>
+                    </div>
+                    <div>
+                        <field name="service_price_description" class="text-muted"/>
+                    </div>
+                    <group>
+                        <group name="account" string="Account Information">
+                            <field name="service_id" readonly="service_locked" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="description"/>
+                            <field name="company_ids" widget="many2many_tags" domain="[('id', 'in', allowed_company_ids)]" />
+                            <field name="account_token" groups="base.group_no_one" readonly="1"/>
+                        </group>
+                        <group name="external" string="Email Alert">
                             <field name="warning_threshold"/>
                             <field name="warning_user_ids"
-                                   invisible="warning_threshold == 0"
+                                   readonly="warning_threshold == 0"
                                    required="warning_threshold > 0"
-                                   widget="many2many_tags" />
+                                   widget="many2many_avatar_user"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   domain="[('email', '!=', False)]"
+                                   context="{'list_view_ref': 'iap.view_iap_users_tree'}"
+                            />
+                        </group>
+                        <group/>
+                        <group name="autorefill" string="Auto-Refill">
+                            <field name="auto_refill_threshold"/>
+                            <field
+                                name="auto_refill_pack_id"
+                                string="Buy"
+                                readonly="auto_refill_threshold == 0"
+                                options="{'no_open': True, 'no_create': True}"
+                                domain="[('service_id', '=', service_id)]"
+                            />
+                            <button name="action_manage_payment_method" colspan="2" class="oe_link" type="object" string="Manage your auto-refill payment method" invisible="auto_refill_threshold == 0"/>
                         </group>
                     </group>
                 </sheet>
@@ -42,20 +64,32 @@
         <field name="name">iap.account.list</field>
         <field name="model">iap.account</field>
         <field name="arch" type="xml">
-            <list string="IAP Accounts" duplicate="false">
-                <field name="name" />
-                <field name="service_id" />
-                <field name="company_ids" widget="many2many_tags" />
-                <field name="account_token" groups="base.group_no_one"/>
-                <field name="balance" />
-                <field name="warning_threshold" optional="hidden" />
-                <field name="description" optional="hidden" />
+            <list string="In-App Purchase Accounts" duplicate="false">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="company_ids" widget="many2many_tags"/>
+                <field name="balance"/>
+                <field name="account_token" optional="hidden"/>
+                <button name="action_buy_credits" type="object" string="Buy Credits" icon="fa-shopping-cart"/>
+                <button name="action_open_iap_account" type="object" string="Set Alerts &amp; Auto-Refill" icon="fa-refresh"/>
+            </list>
+        </field>
+    </record>
+    <record id="iap_service_pack_view_tree" model="ir.ui.view">
+        <field name="name">iap.service.pack.list</field>
+        <field name="model">iap.service.pack</field>
+        <field name="arch" type="xml">
+            <list string="In-App Purchase Service Packs" duplicate="false">
+                <field name="name"/>
+                <field name="credit"/>
+                <field name="price"/>
+                <field name="service_id"/>
             </list>
         </field>
     </record>
     <!-- Actions -->
     <record id="iap_account_action" model="ir.actions.act_window">
-        <field name="name">IAP Account</field>
+        <field name="name">In-App Purchase Accounts</field>
         <field name="res_model">iap.account</field>
         <field name="path">iap-accounts</field>
         <field name='view_mode'>list,form</field>
@@ -70,7 +104,7 @@
 
     <menuitem
         id="iap_account_menu"
-        name="IAP Accounts"
+        name="In-App Purchase Accounts"
         parent="iap_root_menu"
         action="iap_account_action"
         sequence="10"/>

@@ -6,7 +6,7 @@
             <field name="model">iap.account</field>
             <field name="inherit_id" ref="iap.iap_account_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='account']" position="before">
+                <xpath expr="//sheet" position="before">
                     <div role="status" class="alert alert-danger mb-0" invisible="service_name != 'sms' or (state != 'unregistered' and state)">
                         <i class="fa fa-warning"/> You cannot send SMS while your account is not registered.
                         <button type="object"
