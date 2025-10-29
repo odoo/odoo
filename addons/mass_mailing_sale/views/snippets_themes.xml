@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <template id="email_designer_snippets" inherit_id="mass_mailing.email_designer_snippets">
+            <xpath expr="//t[@t-snippet='mass_mailing.s_call_to_action']" position="after">
+                <t t-snippet="mass_mailing_sale.s_product_columns" group="marketing" label="Auto-filled from Product" string="Products List"/>
+                <t t-snippet="mass_mailing_sale.s_product_card" group="marketing" label="Auto-filled from Product" string="Product Card"/>
+                <t t-snippet="mass_mailing_sale.s_product_aside" group="marketing" label="Auto-filled from Product" string="Product Aside"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

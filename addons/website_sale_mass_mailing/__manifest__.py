@@ -8,7 +8,12 @@
         process.
     """,
     'category': 'Website/Website',
-    'depends': ['website_sale', 'website_mass_mailing'],
+    'depends': ['website_sale', 'website_mass_mailing', 'mass_mailing_sale'],
+    'assets': {
+        'mass_mailing.assets_builder': [
+            'website_sale_mass_mailing/static/src/builder/**/*',
+        ],
+    },
     'data': [
         'views/res_config_settings_views.xml',
         'views/templates.xml',

@@ -1,0 +1,107 @@
+<templates>
+    <t t-name="mass_mailing_sale.s_product_snapshot_columns_fragment">
+        <div class="card rounded h-100" t-att-data-product-id="record.id">
+            <div class="o_not_editable">
+                <img class="img img-fluid o_editable_media rounded mx-auto" style="object-fit: cover; width: 100%;
+                    --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                    t-attf-data-name="{{record.display_name}} Image"
+                    t-attf-src="/web/image/product.template/{{record.id}}/image_1024" t-attf-alt="{{record.name}} Image"
+                    t-attf-data-original-src="/web/image/product.template/{{record.id}}/image_1024"/>
+            </div>
+            <div class="card-body" aria-label="Product information">
+                <h3 class="card-title text-break" t-out="record.name or 'Product Name'"/>
+                <p>
+                    <font style="color: rgb(108, 117, 125)" t-out="record.description_sale or 'Add a description...'"/>
+                </p>
+                <p>
+                    <h3 aria-label="Price information">
+                        <strong>
+                            <t t-out="listPrice"/>
+                        </strong>
+                        <span> </span>
+                        <s t-if="record.standard_price">
+                            <span class="h4-fs">
+                                <font style="color: rgb(108, 117, 125)">
+                                    <t t-out="standardPrice"/>
+                                </font>
+                            </span>
+                        </s>
+                    </h3>
+                </p>
+                <p>
+                    <a class="btn btn-primary" href="#" target="_blank" role="button"><i class="fa fa-cart"/> Buy Now</a>
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing_sale.s_product_snapshot_card_fragment">
+        <div>
+            <div class="o_not_editable">
+                <img class="img img-fluid o_editable_media rounded mx-auto" style="width: 100%;
+                    --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                    t-attf-data-name="{{record.display_name}} Image"
+                    t-attf-src="/web/image/product.template/{{record.id}}/image_1024" t-attf-alt="{{record.name}} Image"
+                    t-attf-data-original-src="/web/image/product.template/{{record.id}}/image_1024"/>
+            </div>
+            <div class="text-center pt8">
+                <h3 class="text-break" t-out="record.name or 'Product Name'"/>
+                <p>
+                    <font style="color: rgb(108, 117, 125)" t-out="record.description_sale or 'Add a description...'"/>
+                </p>
+                <h3 aria-label="Price information">
+                    <strong>
+                        <t t-out="listPrice"/>
+                    </strong>
+                    <span> </span>
+                    <s t-if="record.standard_price">
+                        <span class="h4-fs">
+                            <font style="color: rgb(108, 117, 125)">
+                                <t t-out="standardPrice"/>
+                            </font>
+                        </span>
+                    </s>
+                </h3>
+                <p>
+                    <a class="btn btn-primary" href="#" target="_blank" role="button"><i class="fa fa-cart"/> Buy Now</a>
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing_sale.s_product_snapshot_aside_fragment">
+        <div class="row align-items-center">
+            <div class="col-md-6 col-12">
+                <div class="o_not_editable">
+                    <img class="img img-fluid o_editable_media rounded mx-auto" style="object-fit: cover;  width: 100%;
+                        --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                        t-attf-data-name="{{record.display_name}} Image"
+                        t-attf-src="/web/image/product.template/{{record.id}}/image_1024" t-attf-alt="{{record.name}} Image"
+                        t-attf-data-original-src="/web/image/product.template/{{record.id}}/image_1024"/>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <h3 class="text-break" t-out="record.name or 'Product Name'"/>
+                <p>
+                    <font style="color: rgb(108, 117, 125)" t-out="record.description_sale or 'Add a description...'"/>
+                </p>
+                <h3 aria-label="Price information">
+                    <strong>
+                        <t t-out="listPrice"/>
+                    </strong>
+                    <span> </span>
+                    <s t-if="record.standard_price">
+                        <span class="h4-fs">
+                            <font style="color: rgb(108, 117, 125)">
+                                <t t-out="standardPrice"/>
+                            </font>
+                        </span>
+                    </s>
+                </h3>
+                <p>
+                    <a class="btn btn-primary" href="#" target="_blank" role="button"><i class="fa fa-cart"/> Buy Now</a>
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>
