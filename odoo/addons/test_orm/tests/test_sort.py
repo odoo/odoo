@@ -10,13 +10,13 @@ class TestSort(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.countries = cls.env['test_orm.country'].create([
+        cls.countries = cls.env['test_sort.country'].create([
             {'name': 'B'},
             {'name': 'A'},
             {'name': 'C'},
         ])
         b, a, c = cls.countries
-        cls.cities = cls.env['test_orm.city'].create([
+        cls.cities = cls.env['test_sort.city'].create([
             {'name': 'c2', 'country_id': c.id},
             {'name': 'b1', 'country_id': b.id},
             {'name': 'b2', 'country_id': b.id},
@@ -26,7 +26,7 @@ class TestSort(TransactionCase):
         ])
 
     def test_basic(self):
-        db_result = self.env['test_orm.country'].search([])
+        db_result = self.env['test_sort.country'].search([])
         with self.assertQueryCount(1):
             # 1 query to fetch the fields, in practice it is already prefetched
             self.assertEqual(db_result.ids, self.countries.sorted().ids)
@@ -44,7 +44,7 @@ class TestSort(TransactionCase):
         )
 
     def test_basic_m2o(self):
-        db_result = self.env['test_orm.city'].search([])
+        db_result = self.env['test_sort.city'].search([])
         with self.assertQueryCount(2):
             # 1 query to fetch the fields of both models,
             # in practice at least one is already prefetched or needs to be and the other is likely to be needed too
@@ -57,7 +57,7 @@ class TestSort(TransactionCase):
         )
 
     def test_basic_boolean(self):
-        records = self.env['test_orm.model_active_field'].create([{'name': v} for v in 'abc'])
+        records = self.env['test_sort.model_active_field'].create([{'name': v} for v in 'abc'])
         records[1].active = False
         t_records = records.filtered('active')
         f_records = records - t_records
@@ -68,7 +68,7 @@ class TestSort(TransactionCase):
 
     def test_custom_m2o(self):
         order = 'country_id DESC, id ASC'
-        db_result = self.env['test_orm.city'].search([], order=order)
+        db_result = self.env['test_sort.city'].search([], order=order)
         with self.assertQueryCount(2):
             # 1 query to fetch the fields of both models,
             # in practice at least one is already prefetched or needs to be and the other is likely to be needed too
@@ -81,7 +81,7 @@ class TestSort(TransactionCase):
         )
 
     def test_nulls(self):
-        cities = self.env['test_orm.city'].create([
+        cities = self.env['test_sort.city'].create([
             {'name': 'not null 2', 'country_id': self.countries[2].id},
             {'name': 'not null 0', 'country_id': self.countries[0].id},
             {'name': False, 'country_id': self.countries[1].id},
@@ -106,12 +106,12 @@ class TestSort(TransactionCase):
         ]:
             with self.subTest(order=order):
                 self.assertEqual(
-                    self.env['test_orm.city'].search([('id', 'in', cities.ids)], order=order).mapped('name'),
+                    self.env['test_sort.city'].search([('id', 'in', cities.ids)], order=order).mapped('name'),
                     cities.sorted(order).mapped('name')
                 )
 
     def test_collation(self):
-        countries = self.env['test_orm.country'].create([
+        countries = self.env['test_sort.country'].create([
             {'name': 'é'},
             {'name': 'e'},
             {'name': 'É'},
@@ -138,7 +138,7 @@ class TestSort(TransactionCase):
                 )
 
     def test_sorted_recursion(self):
-        categories = self.env['test_orm.category'].search([])
+        categories = self.env['test_sort.category'].search([])
         for order in [
             'parent ASC, id ASC',
             'parent ASC, id DESC',
@@ -160,8 +160,8 @@ class TestSort(TransactionCase):
         self.assertGreater(NewId(5), NewId(4))
 
     def test_sorted_new_id(self):
-        new_countries = self.env['test_orm.country'].concat(*[
-            self.env['test_orm.country'].new(vals)
+        new_countries = self.env['test_sort.country'].concat(*[
+            self.env['test_sort.country'].new(vals)
             for vals in [
                 {'name': 'B'},
                 {'name': 'A'},
