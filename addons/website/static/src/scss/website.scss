@@ -1819,6 +1819,7 @@ header {
         z-index: $o-mega-menu-zindex;
         max-width: $offcanvas-horizontal-width;
         opacity: 0;
+        pointer-events: none;
 
         section {
             @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
@@ -1830,6 +1831,7 @@ header {
         @include transition(opacity $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
         visibility: visible !important;
         opacity: 1;
+        pointer-events: auto;
 
         section {
             @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
