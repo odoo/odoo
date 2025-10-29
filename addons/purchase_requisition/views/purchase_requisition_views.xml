@@ -69,9 +69,9 @@
                         <label for="date_start" string="Agreement Validity" invisible="requisition_type == 'purchase_template'"/>
                         <div class="o_row" invisible="requisition_type == 'purchase_template'">
                             <span><strong>From</strong></span>
-                            <field name="date_start" widget="date" readonly="state not in ('draft', 'confirmed')"/>
+                            <field name="date_start" widget="date" options="{'numeric': True}" readonly="state not in ('draft', 'confirmed')"/>
                             <span><strong>to</strong></span>
-                            <field name="date_end" widget="date" readonly="state not in ('draft', 'confirmed')"/>
+                            <field name="date_end" widget="date" options="{'numeric': True}" readonly="state not in ('draft', 'confirmed')"/>
                         </div>
                         <field name="reference" placeholder="e.g. PO0025"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state != 'draft'"/>
@@ -127,7 +127,7 @@
                 <field name="requisition_type" optional="show"/>
                 <field name="user_id" optional="show" widget='many2one_avatar_user'/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
-                <field name="date_start" optional="show"/>
+                <field name="date_start" optional="show" widget="date" options="{'numeric': True}"/>
                 <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" invisible="state in ('done', 'cancel')"/>
                 <field name="reference" optional="show"/>
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
