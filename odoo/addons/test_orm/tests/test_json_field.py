@@ -7,7 +7,7 @@ class JsonFieldTest(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.discussion_1 = cls.env['test_orm.discussion'].create({
+        cls.discussion_1 = cls.env['test_json_field.discussion'].create({
             'name': 'Test Discussion JSON field',
         })
 
