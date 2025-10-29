@@ -406,6 +406,19 @@ class TestPointOfSaleFlow(CommonPosTest):
         invoice = self.env['account.move'].browse(res['res_id'])
         if invoice.state != 'posted':
             invoice.action_post()
+
+        # Making the invoice draft should send a warning notification to the user
+        with patch.object(self.env.registry['bus.bus'], '_sendone') as mock_send:
+            invoice.button_draft()
+            mock_send.assert_called_with(self.env.user.partner_id, 'simple_notification', {
+                'type': 'warning',
+                'title': "Warning: Invoice Reset Risk",
+                'message': "This invoice is linked to a POS Order, resetting it to draft prevents closing the session. You should rather refund the order or create a credit note.",
+                'sticky': True,
+            })
+
+        invoice.action_post()
+
         self.assertAlmostEqual(invoice.amount_total, order.amount_total, places=2)
 
         for iline in invoice.invoice_line_ids:
