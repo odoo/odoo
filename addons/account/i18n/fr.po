@@ -20,13 +20,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-28 15:18+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"PO-Revision-Date: 2025-10-29 13:33+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/account/"
 "fr/>\n"
 "Language: fr\n"
@@ -2161,7 +2162,6 @@ msgstr "@De : %(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
-#, fuzzy
 msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
 "                journals. This feature provides an easy way to follow up "
@@ -7551,7 +7551,7 @@ msgstr "Répartition pour les factures de remboursement"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Refunds"
-msgstr "Répartition pour remboursements"
+msgstr "Répartition pour les notes de crédit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
@@ -7674,7 +7674,6 @@ msgstr "Avoir brouillon"
 #: code:addons/account/models/company.py:0
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
-#, fuzzy
 msgid "Draft Entries"
 msgstr "Pièces comptables brouillon"
 
@@ -8151,7 +8150,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "Entries to Review"
 msgstr "Pièces comptables à vérifier"
 
@@ -8855,7 +8853,6 @@ msgstr "Piste d’audit forcée"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
-#, fuzzy
 msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
@@ -9252,13 +9249,11 @@ msgstr "Date de verrou définitif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
-#, fuzzy
 msgid "Has Accounting Entries"
 msgstr "Présente des pièces comptables"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
-#, fuzzy
 msgid "Has Entries"
 msgstr "A des pièces comptables"
 
@@ -9307,7 +9302,6 @@ msgstr "A un facteur négatif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
-#, fuzzy
 msgid "Has Posted Entries"
 msgstr "A des pièces comptabilisées"
 
@@ -9329,7 +9323,6 @@ msgstr "A des lignes de relevé"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__hash_date
-#, fuzzy
 msgid "Hash All Entries"
 msgstr "Hacher toutes les pièces comptables"
 
@@ -9691,7 +9684,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#, fuzzy
 msgid "If set, this account is used to automatically balance entries."
 msgstr ""
 "Si défini, ce compte est utilisé pour équilibrer automatiquement les pièces "
@@ -9735,7 +9727,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
-#, fuzzy
 msgid ""
 "If ticked, when an entry is posted, we retroactively hash all moves in the "
 "sequence from the entry back to the last hashed entry. The hash can also be "
@@ -10763,7 +10754,6 @@ msgstr "Est éditeur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
-#, fuzzy
 msgid "Is Entries"
 msgstr "Sont des pièces comptables"
 
@@ -12532,7 +12522,6 @@ msgstr "Aucun compte en suspens n'a pu être trouvé pour effectuer le paiement.
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#, fuzzy
 msgid "No payment journal entries"
 msgstr "Pas de pièce comptable de paiement"
 
@@ -13596,7 +13585,6 @@ msgstr "Partenaires sans compte bancaire"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-#, fuzzy
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
 "Les partenaires qui sont utilisés dans les pièces comptables hachées ne "
@@ -15602,7 +15590,6 @@ msgstr "Sections"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
-#, fuzzy
 msgid "Secure Entries"
 msgstr "Sécuriser les pièces comptables"
 
@@ -15638,7 +15625,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
-#, fuzzy
 msgid "Securing these entries will create at least one gap in the sequence."
 msgstr ""
 "La sécurisation de ces pièces comptables créera au moins une discontinuité "
@@ -16223,7 +16209,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-#, fuzzy
 msgid "Show draft entries"
 msgstr "Afficher les pièces comptables en brouillon"
 
@@ -17633,7 +17618,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-#, fuzzy
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
@@ -17864,7 +17848,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid ""
 "The following entries are unbalanced:\n"
 "\n"
@@ -18431,7 +18414,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
-#, fuzzy
 msgid "There are still draft entries before the selected date."
 msgstr ""
 "Il existe des pièces comptables en brouillon avant la date sélectionnée."
@@ -18449,7 +18431,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
-#, fuzzy
 msgid ""
 "There are still unreconciled bank statement lines before the selected date. "
 "The entries from journal prefixes containing them will not be secured: %"
@@ -20380,7 +20361,6 @@ msgstr "Vous ne pouvez pas bloquer une facture payée."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#, fuzzy
 msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
@@ -20423,7 +20403,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-#, fuzzy
 msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
@@ -20434,7 +20413,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-#, fuzzy
 msgid "You can't create payments for entries belonging to different companies."
 msgstr ""
 "Vous ne pouvez pas créer de paiements pour des pièces comptables appartenant "
@@ -20519,7 +20497,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
@@ -20540,7 +20517,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
 msgstr ""
@@ -20709,7 +20685,6 @@ msgstr "Vous ne pouvez pas dupliquer une exception de date de verrouillage."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#, fuzzy
 msgid ""
 "You cannot edit the following fields: %(fields)s.\n"
 "The following entries are already hashed:\n"
@@ -20795,7 +20770,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#, fuzzy
 msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
@@ -20841,7 +20815,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_currency.py:0
-#, fuzzy
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
@@ -20852,7 +20825,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "You cannot register payments for miscellaneous entries."
 msgstr ""
 "Vous ne pouvez pas enregistrer de paiements pour des opérations diverses."
@@ -20928,7 +20900,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#, fuzzy
 msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
@@ -20988,7 +20959,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, fuzzy
 msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
@@ -21058,7 +21028,6 @@ msgstr "Vous avez des"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#, fuzzy
 msgid ""
 "You have to configure the 'Exchange Gain or Loss Journal' in your company "
 "settings, to manage automatically the booking of accounting entries related "
