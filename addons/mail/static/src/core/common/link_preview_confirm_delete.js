@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useSubEnv } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -20,6 +20,7 @@ export class LinkPreviewConfirmDelete extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        useSubEnv({ inLinkPreviewConfirmDelete: true });
     }
 
     onClickOk() {
