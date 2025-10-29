@@ -405,6 +405,17 @@
     }
 }
 
+// TODO adapt in Master. Override Bootstrap's dark indicators without
+// out-prioritizing user overrides in stable versions.
+:where(.s_image_gallery[data-vcss="002"].s_image_gallery_indicators_squared,
+    .s_image_gallery[data-vcss="002"].s_image_gallery_indicators_rounded) {
+    &, .carousel-dark {
+        .carousel-indicators [data-bs-target] {
+            background-color: white;
+        }
+    }
+}
+
 .s_gallery_lightbox {
     .modal-dialog {
         height: 100%;
