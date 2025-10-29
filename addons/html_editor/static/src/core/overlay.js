@@ -25,7 +25,7 @@ export class EditorOverlay extends Component {
         props: { type: Object, optional: true },
         editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         bus: Object,
-        history: Object,
+        shared: Object,
         close: Function,
         isOverlayOpen: Function,
 
@@ -120,10 +120,11 @@ export class EditorOverlay extends Component {
     getSelectionTarget() {
         const doc = this.props.editable.ownerDocument;
         const selection = doc.getSelection();
+        const selectionData = this.props.shared.getSelectionData();
         if (!selection || !selection.rangeCount || !this.props.isOverlayOpen()) {
             return null;
         }
-        const inEditable = this.props.editable.contains(selection.anchorNode);
+        const inEditable = selectionData.currentSelectionIsInEditable;
         let range;
         if (inEditable) {
             range = selection.getRangeAt(0);
@@ -139,7 +140,7 @@ export class EditorOverlay extends Component {
             // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
             // because if another mutation uses the target that is not observed, that mutation can never be applied
             // again (when undo/redo and in collaboration).
-            this.props.history.ignoreDOMMutations(() => {
+            this.props.shared.ignoreDOMMutations(() => {
                 const clonedRange = range.cloneRange();
                 const shadowCaret = doc.createTextNode("|");
                 clonedRange.insertNode(shadowCaret);
