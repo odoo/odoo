@@ -54,16 +54,20 @@ export class NoteButton extends Component {
     }
 
     async openTextInput(selectedNote) {
+        const selectedLine = this.pos.getOrder().getSelectedOrderline();
         let buttons = [];
-        if (this.type === "internal" || this.pos.getOrder()?.getSelectedOrderline() === undefined) {
+        if (this.type === "internal" || !selectedLine) {
             buttons = this.pos.models["pos.note"].readAll().map((note) => ({
                 label: note.name,
                 class: note.color ? `o_colorlist_item_color_${note.color}` : "",
             }));
         }
 
+        const titlePrefix = selectedLine
+            ? selectedLine.product_id.name + _t(": Add ")
+            : _t("Add a ");
         return await makeAwaitable(this.dialog, TextInputPopup, {
-            title: _t("Add %s", this.props.label),
+            title: titlePrefix + this.props.label,
             buttons,
             rows: 4,
             startingValue: selectedNote,
