@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 08:56+0000\n"
+"PO-Revision-Date: 2025-10-29 05:46+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/crm/ru/>"
 "\n"
@@ -422,7 +422,7 @@ msgstr ""
 "                    <span style=\"font-size: 10px;\">Ваш "
 "лид/возможность</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;"
-"\" t-out=\"object.name or ''\">Interest in your products</span>\n"
+"\" t-out=\"object.name or ''\">Интерес к вашей продукции</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <img t-attf-src="
 "\"/logo.png?company={{ object.company_id.id }}\" style="
@@ -447,15 +447,15 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Здравствуйте, <t t-out="
-"\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><"
+"\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>!<br/><"
 "br/>\n"
 "                            Добро пожаловать в <t t-out="
 "\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            Рады познакомиться. Теперь, когда вы с нами, вы "
-"сможете узнать, что предлагает <t t-out=\"object.company_id.name or ''\">My "
-"Company (San Francisco)</t>. Меня зовут <t t-out="
-"\"object.user_id.name or ''\">Марк Демо</t>, и я помогу вам максимально "
-"эффективно использовать Odoo. Давайте запланируем короткое демо.<br/>\n"
+"                            Рады познакомиться! Теперь, вы сможете оценить "
+"все преимущества <t t-out=\"object.company_id.name or ''\">My Company (San "
+"Francisco)</t>. Меня зовут <t t-out=\"object.user_id.name or ''\">Марк Демо</"
+"t>, и я помогу вам максимально эффективно использовать Odoo. Давайте "
+"запланируем короткое демо.<br/>\n"
 "                            Не стесняйтесь обращаться в любое время!<br/><br/"
 ">\n"
 "                            С уважением,<br/>\n"
@@ -1022,9 +1022,9 @@ msgid ""
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
 msgstr ""
-"Изменение значения поля «Этап выигрыша» может вызвать большое количество "
-"операций, поскольку вероятности возможностей на этом этапе будут пересчитаны "
-"при сохранении."
+"Изменение значения поля «Этап выигрыша» может повлечь за собой большое "
+"количество операций, поскольку при сохранении будут пересчитаны вероятности "
+"всех возможностей, находящихся на этом этапе."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -2926,7 +2926,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "No closing estimate"
-msgstr "Нет оценки закрытия"
+msgstr "Прогноз не указан"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -4615,7 +4615,7 @@ msgstr "например, mycompany.com"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "email address"
-msgstr "адрес эл. почты"
+msgstr "e-mail адрес"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4712,7 +4712,7 @@ msgstr "неизвестно"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid email address"
-msgstr "действительный адрес эл. почты"
+msgstr "действительный e-mail адрес"
 
 #. module: crm
 #. odoo-javascript

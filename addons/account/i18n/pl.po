@@ -57,7 +57,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-28 16:59+0000\n"
+"PO-Revision-Date: 2025-10-29 11:40+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/account/"
 "pl/>\n"
@@ -2361,8 +2361,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Konto bankowe o numerze konta %(number)s już istnieje dla Partnera %"
-"(partner)s, ale jest zarchiwizowane. Odarchiwizuj je."
+"Konto bankowe o numerze %(number)s już istnieje dla Partnera %(partner)s, "
+"ale jest zarchiwizowane. Cofnij archiwizację."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2393,8 +2393,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr ""
-"W tym kraju już istnieje pozycja fiskalna z zagranicznym podatkiem VAT."
+msgstr "W tym kraju już istnieje obszar podatkowy z zagranicznym podatkiem VAT."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2403,7 +2402,7 @@ msgid ""
 "                which is either a debit or a credit transaction."
 msgstr ""
 "Zapis księgowy składa się z kilku pozycji dziennika, z których\n"
-"                każda jest transakcją debetową lub kredytową."
+"                każda jest transakcją po stronie Wn lub Ma."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -3071,7 +3070,7 @@ msgstr "Konta"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Mapowanie kont pozycji fiskalnej"
+msgstr "Mapowanie kont obszaru podatkowego"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payable
@@ -3805,7 +3804,7 @@ msgstr "Konto pozabilansowe nie może mieć podatków"
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
 msgstr ""
-"Pozycja fiskalna konta może być zdefiniowana tylko raz na tych samych "
+"Obszar podatkowy konta może być zdefiniowany tylko raz na tych samych "
 "kontach."
 
 #. module: account
@@ -4942,7 +4941,7 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "Kasując pole aktywne możesz ukryć obiekt bez jego usuwania."
+msgstr "Kasując pole aktywne możesz ukryć obszar podatkowy bez jego usuwania."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
@@ -6117,7 +6116,7 @@ msgstr "Utwórz nowego klienta w swojej książce adresowej"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "Utwórz nową pozycję podatkową"
+msgstr "Utwórz nowy obszar podatkowy"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -7009,7 +7008,7 @@ msgstr "Domyślny rachunek należności PoS"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_fiscal_position_id
 msgid "Default Purchase Receipt Fiscal Position"
-msgstr ""
+msgstr "Domyślny obszar podatkowy rachunku zakupowego"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -7704,7 +7703,7 @@ msgstr "Krajowy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__domestic_fiscal_position_id
 msgid "Domestic Fiscal Position"
-msgstr "Krajowa pozycja fiskalna"
+msgstr "Krajowy obszar podatkowy"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8774,7 +8773,7 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"Pozycje fiskalne służą do dostosowania podatków i rachunków dla "
+"Obszary podatkowe służą do dostosowania podatków i rachunków dla "
 "poszczególnych klientów lub zamówień/faktur sprzedaży. Wartość domyślna "
 "pochodzi od klienta."
 
@@ -9350,7 +9349,7 @@ msgstr "posiada wpisy"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
 #: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "Czy Pozycja Fiskalna została zmodyfikowana"
+msgstr "Czy obszar podatkowy został zmodyfikowany"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -11628,8 +11627,8 @@ msgid ""
 "List of taxes to replace when applying any of the stipulated fiscal "
 "positions."
 msgstr ""
-"Lista podatków do zastąpienia, podczas stosowania którejkolwiek z ustalonych "
-"pozycji fiskalnych."
+"Lista podatków do zastąpienia, podczas stosowania któregokolwiek z "
+"ustalonych obszarów podatkowych."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
@@ -14737,7 +14736,7 @@ msgstr "Data uznania"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
 msgstr ""
-"Przekalkuluj wszystkie podatki i konta na podstawie tej pozycji fiskalnej"
+"Przekalkuluj wszystkie podatki i konta na podstawie tego obszaru podatkowego"
 
 #. module: account
 #. odoo-python
@@ -15577,7 +15576,7 @@ msgstr "Pasek wyszukiwania"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "Wyszukaj stanowiska podatkowe"
+msgstr "Wyszukaj obszary podatkowe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -17170,7 +17169,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
 msgstr ""
-"Podatki, pozycje podatkowe, plan kont i oświadczenia prawne dla Twojego kraju"
+"Podatki, obszary podatkowe, plan kont i oświadczenia prawne dla Twojego kraju"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -17669,7 +17668,7 @@ msgid ""
 "country to the fiscal position."
 msgstr ""
 "Nie można było wykryć kodu kraju zagranicznego numeru VAT. Przypisz kraj do "
-"pozycji fiskalnej."
+"obszaru podatkowego."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -17783,7 +17782,7 @@ msgstr "Odliczenie musi być wartością pomiędzy 0 a 100."
 #: model:ir.model.fields,help:account.field_account_move__partner_shipping_id
 msgid ""
 "The delivery address will be used in the computation of the fiscal position."
-msgstr "Adres dostawy zostanie wykorzystany do obliczenia pozycji fiskalnej."
+msgstr "Adres dostawy zostanie wykorzystany do obliczenia obszaru podatkowego."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -17844,7 +17843,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "Pozycja fiskalna określa podatki/rachunki stosowane w tym kontakcie."
+msgstr "Obszar podatkowy określa podatki/rachunki stosowane w tym kontakcie."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -18351,8 +18350,8 @@ msgstr "Linia oświadczeń, która stworzyła ten wpis"
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
 msgstr ""
-"Identyfikator podatkowy Państwa firmy w regionie odwzorowanym poprzez tę "
-"pozycję fiskalną."
+"Identyfikator podatkowy twojej firmy w regionie odwzorowanym przez ten "
+"obszar podatkowy."
 
 #. module: account
 #. odoo-python
@@ -18658,7 +18657,8 @@ msgid ""
 "Check the country set in fiscal position and in your tax configuration."
 msgstr ""
 "Ten wpis zawiera podatki, które nie są zgodne z Twoją pozycją fiskalną. "
-"Sprawdź kraj ustawiony w pozycji fiskalnej oraz w konfiguracji podatkowej."
+"Sprawdź kraj skonfigurowany w obszarze podatkowym oraz w konfiguracji "
+"podatkowej."
 
 #. module: account
 #. odoo-python
@@ -18862,7 +18862,7 @@ msgid ""
 "fiscal position."
 msgstr ""
 "To działanie zaktualizuje wszystkie podatki i konta w oparciu o aktualnie "
-"wybraną pozycję fiskalną."
+"wybrany obszar podatkowy."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -20536,8 +20536,8 @@ msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
 msgstr ""
-"Nie można utworzyć pozycji fiskalnej z użyciem kraju, który nie znajduje się "
-"w wybranej grupie krajów."
+"Nie można utworzyć obszaru podatkowego z użyciem kraju, który nie znajduje "
+"się w wybranej grupie krajów."
 
 #. module: account
 #. odoo-python
@@ -20546,8 +20546,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Nie można utworzyć pozycji fiskalnej z zagranicznym VAT w ramach kraju "
-"fiskalnego bez przypisania jej stanu."
+"Nie można utworzyć obszaru podatkowego z zagranicznym VAT w ramach kraju "
+"podatkowego bez przypisania jego stanu."
 
 #. module: account
 #. odoo-python
@@ -20839,8 +20839,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
-"Nie można usunąć/dezaktywować kont \"%s\", które są ustawione na mapowaniu "
-"kont pozycji fiskalnej."
+"Nie można usunąć/dezaktywować kont \"%s\", które są ustawione w mapowaniu "
+"kont obszaru podatkowego."
 
 #. module: account
 #. odoo-python
@@ -21348,7 +21348,7 @@ msgstr "spada poza typowy zakres."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "fiscal position [%s]"
-msgstr "pozycja fiskalna [%s]"
+msgstr "obszar podatkowy [%s]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
