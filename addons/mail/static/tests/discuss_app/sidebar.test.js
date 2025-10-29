@@ -591,6 +591,76 @@ test("chat - counter: should have correct value of unread threads if category is
     });
 });
 
+test("favorite channels should be ordered case insensitive alphabetically", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        {
+            name: "Xyz",
+            channel_member_ids: [
+                Command.create({ is_favorite: true, partner_id: serverState.partnerId }),
+            ],
+        },
+        {
+            name: "abc",
+            channel_member_ids: [
+                Command.create({ is_favorite: true, partner_id: serverState.partnerId }),
+            ],
+        },
+        {
+            name: "Abc",
+            channel_member_ids: [
+                Command.create({ is_favorite: true, partner_id: serverState.partnerId }),
+            ],
+        },
+        {
+            name: "Est",
+            channel_member_ids: [
+                Command.create({ is_favorite: true, partner_id: serverState.partnerId }),
+            ],
+        },
+        {
+            name: "Xyz",
+            channel_member_ids: [
+                Command.create({ is_favorite: true, partner_id: serverState.partnerId }),
+            ],
+        },
+        {
+            name: "Équipe",
+            channel_member_ids: [
+                Command.create({ is_favorite: true, partner_id: serverState.partnerId }),
+            ],
+        },
+        {
+            name: "époque",
+            channel_member_ids: [
+                Command.create({ is_favorite: true, partner_id: serverState.partnerId }),
+            ],
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "abc",
+        before: [".o-mail-DiscussSidebarChannel", { text: "Abc" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "Abc",
+        before: [".o-mail-DiscussSidebarChannel", { text: "époque" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "époque",
+        before: [".o-mail-DiscussSidebarChannel", { text: "Équipe" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "Équipe",
+        before: [".o-mail-DiscussSidebarChannel", { text: "Est" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "Est",
+        before: [".o-mail-DiscussSidebarChannel", { text: "Xyz", count: 2 }],
+    });
+});
+
 test("sidebar channels should be ordered case insensitive alphabetically", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
@@ -1081,4 +1151,24 @@ test("Sidebar channels show correct notification counter based on settings", asy
     rpc("/discuss/settings/custom_notifications", { custom_notifications: "no_notif" });
     await contains(".o-mail-DiscussSidebarChannel:contains(Mentions) .badge", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel:contains(Regular) .badge", { count: 0 });
+});
+
+test("add and remove channel from favorites updates sidebar", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    const channelContainerSelector =
+        ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel-container";
+    const favoriteContainerSelector =
+        ".o-mail-DiscussSidebarCategory-favorite + .o-mail-DiscussSidebarChannel-container";
+    const generalChannelSelector = ".o-mail-DiscussSidebarChannel:has(:contains(/^General$/))";
+    await start();
+    await openDiscuss();
+    await click(`${channelContainerSelector} ${generalChannelSelector} button .oi-ellipsis-h`);
+    await click(".o-dropdown-item:contains('Set favorite')");
+    await click(`${favoriteContainerSelector} ${generalChannelSelector} button .oi-ellipsis-h`);
+    await click(".o-dropdown-item:contains('Unset favorite')");
+    await contains(`${channelContainerSelector} ${generalChannelSelector}`);
 });

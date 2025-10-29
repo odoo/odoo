@@ -35,6 +35,7 @@ class DiscussChannelMember(models.Model):
     # state
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched', index="btree_not_null")
+    is_favorite = fields.Boolean("Favorite")
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
     new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True)
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
@@ -276,6 +277,7 @@ class DiscussChannelMember(models.Model):
         return [
             "custom_channel_name",
             "custom_notifications",
+            "is_favorite",
             "last_interest_dt",
             "message_unread_counter",
             "mute_until_dt",

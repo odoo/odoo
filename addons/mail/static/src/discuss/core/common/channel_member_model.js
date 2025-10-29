@@ -23,6 +23,8 @@ export class ChannelMember extends Record {
     custom_notifications;
     /** @type {number} */
     id;
+    /** @type {boolean} */
+    is_favorite;
     is_pinned = fields.Attr(undefined, {
         compute() {
             return (
