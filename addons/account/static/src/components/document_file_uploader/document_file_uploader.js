@@ -4,19 +4,10 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 import { Component, markup } from "@odoo/owl";
 
-export class DocumentFileUploader extends Component {
-    static template = "account.DocumentFileUploader";
-    static components = {
-        FileUploader,
-    };
-    static props = {
-        ...standardWidgetProps,
-        record: { type: Object, optional: true },
-        slots: { type: Object, optional: true },
-        resModel: { type: String, optional: true },
-    };
+export const AbstractDocumentFileUploader = (T = Component)  => class AbstractDocumentFileUploader extends T {
 
     setup() {
+        super.setup();
         this.orm = useService("orm");
         this.action = useService("action");
         this.notification = useService("notification");
@@ -35,15 +26,21 @@ export class DocumentFileUploader extends Component {
             mimetype: file.type,
             datas: file.data,
         };
-        // clean the context to ensure the `create` call doesn't fail from unknown `default_*` context
-        const cleanContext = Object.fromEntries(Object.entries(this.env.searchModel.context).filter(([key]) => !key.startsWith('default_')));
-        const [att_id] = await this.orm.create("ir.attachment", [att_data], {context: cleanContext});
+        const [att_id] = await this.orm.create("ir.attachment", [att_data], {context: this.cleanContext});
         this.attachmentIdsToProcess.push(att_id);
     }
 
     // To define specific resModal from another model
     getResModel() {
-        return this.props.resModel;
+        throw new Error("You should implement this method !");
+    }
+
+    get onUploadCompleteContext() {
+        return {};
+    }
+
+    get cleanContext() {
+        return {};
     }
 
     async onUploadComplete() {
@@ -54,7 +51,7 @@ export class DocumentFileUploader extends Component {
                 resModal,
                 "create_document_from_attachment",
                 ["", this.attachmentIdsToProcess],
-                { context: { ...this.extraContext, ...this.env.searchModel.context } }
+                { context: this.onUploadCompleteContext  }
             );
         } finally {
             // ensures attachments are cleared on success as well as on error
@@ -74,5 +71,32 @@ export class DocumentFileUploader extends Component {
             action.help = markup(action.help);
         }
         this.action.doAction(action);
+    }
+}
+
+export class DocumentFileUploader extends AbstractDocumentFileUploader() {
+    static template = "account.DocumentFileUploader";
+    static components = {
+        FileUploader,
+    };
+    static props = {
+        ...standardWidgetProps,
+        record: {type: Object, optional: true},
+        slots: {type: Object, optional: true},
+        resModel: {type: String, optional: true},
+    };
+
+    // To define specific resModal from another model
+    getResModel() {
+        return this.props.resModel;
+    }
+
+    get cleanContext() {
+        // clean the context to ensure the `create` call doesn't fail from unknown `default_*` context
+        return Object.fromEntries(Object.entries(this.env.searchModel.context).filter(([key]) => !key.startsWith('default_')));
+    }
+
+    get onUploadCompleteContext() {
+        return {...this.extraContext, ...this.env.searchModel.context};
     }
 }
