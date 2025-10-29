@@ -44,7 +44,7 @@
         # 'security/test_related_translation/ir.model.access.csv',
         # 'security/test_schema/ir.model.access.csv',
         # 'security/test_sort/ir.model.access.csv',
-        # 'security/test_timeit/ir.model.access.csv',
+        'security/test_timeit/ir.model.access.csv',
         # 'security/test_views/ir.model.access.csv',
     ],
     'assets': {
