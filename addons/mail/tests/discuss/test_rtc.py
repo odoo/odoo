@@ -235,6 +235,9 @@ class TestChannelRTC(MailCommon):
     def test_11_start_call_in_group_should_invite_all_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="guest_id", identity_value=test_guest.id
+        )
         channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
@@ -398,6 +401,9 @@ class TestChannelRTC(MailCommon):
     def test_20_join_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="guest_id", identity_value=test_guest.id
+        )
         channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
@@ -588,6 +594,9 @@ class TestChannelRTC(MailCommon):
     def test_21_leave_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="guest_id", identity_value=test_guest.id
+        )
         channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
@@ -700,6 +709,9 @@ class TestChannelRTC(MailCommon):
     def test_25_lone_call_participant_leaving_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="guest_id", identity_value=test_guest.id
+        )
         channel = self.env['discuss.channel'].create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel.add_members(guest_ids=test_guest.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
@@ -812,6 +824,9 @@ class TestChannelRTC(MailCommon):
     def test_30_add_members_while_in_call_should_invite_new_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="guest_id", identity_value=test_guest.id
+        )
         channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda member: member.partner_id == self.user_employee.partner_id)
         now = fields.Datetime.now()

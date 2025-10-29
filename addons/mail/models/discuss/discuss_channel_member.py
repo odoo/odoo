@@ -436,10 +436,15 @@ class ChannelMember(models.Model):
         :param list member_ids: List of the partner ids to invite.
         """
         self.ensure_one()
+        recent_guest_ids = self.env["bus.presence"].sudo().search([
+            ("guest_id", "in", self.channel_id.channel_member_ids.guest_id.ids),
+            ("last_poll", ">", fields.Datetime.now() - timedelta(hours=12))
+        ]).guest_id
         domain = [
             ('channel_id', '=', self.channel_id.id),
             ('rtc_inviting_session_id', '=', False),
             ('rtc_session_ids', '=', False),
+            "|", ("guest_id", "=", False), ("guest_id", "in", recent_guest_ids.ids),
         ]
         if member_ids:
             domain = expression.AND([domain, [('id', 'in', member_ids)]])
