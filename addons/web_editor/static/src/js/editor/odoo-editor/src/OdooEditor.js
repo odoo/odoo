@@ -1562,10 +1562,10 @@ export class OdooEditor extends EventTarget {
                         }
                         this.idSet(nodeToRemove);
                     }
-                    if (mutation.nextId && this.idFind(mutation.nextId)?.isConnected) {
+                    if (mutation.nextId && this.idFind(mutation.nextId)?.parentElement) {
                         const node = this.idFind(mutation.nextId);
                         node && node.before(nodeToRemove);
-                    } else if (mutation.previousId && this.idFind(mutation.previousId)?.isConnected) {
+                    } else if (mutation.previousId && this.idFind(mutation.previousId)?.parentElement) {
                         const node = this.idFind(mutation.previousId);
                         node && node.after(nodeToRemove);
                     } else {
