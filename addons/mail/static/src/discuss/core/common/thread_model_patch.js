@@ -519,17 +519,13 @@ const threadPatch = {
             { description }
         );
     },
-    async leaveChannel({ force = false } = {}) {
-        if (
-            this.channel?.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self_user) &&
-            !force
-        ) {
+    async leaveChannel() {
+        if (this.channel?.channel_type !== "group" && this.create_uid?.eq(this.store.self_user)) {
             await this.askLeaveConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
         }
-        if (this.channel?.channel_type === "group" && !force) {
+        if (this.channel?.channel_type === "group") {
             await this.askLeaveConfirmation(
                 _t(
                     "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
@@ -537,9 +533,10 @@ const threadPatch = {
             );
         }
         await this.closeChatWindow();
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
+        this.leaveChannelRpc();
+    },
+    leaveChannelRpc() {
+        this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [this.id]);
     },
     /** @param {string} name */
     async rename(name) {

@@ -71,7 +71,7 @@ declare module "models" {
         lastInterestDt: import("luxon").DateTime;
         lastMessageSeenByAllId: undefined|number;
         lastSelfMessageSeenByEveryone: Message;
-        leaveChannel: (param0: { force: boolean }) => Promise<void>;
+        leaveChannel: () => Promise<void>;
         markAsFetched: () => Promise<void>;
         markedAsUnread: boolean;
         markingAsRead: boolean;
