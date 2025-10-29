@@ -488,7 +488,7 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable"><a href="http://test.test/">ab[]</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: `<div class="oe_unbreakable"><a href="http://test.test/">ab</a><br><br>[]</div>`,
+                contentAfter: `<div class="oe_unbreakable"><a href="http://test.test/">ab</a><br>[]<br></div>`,
             });
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable"><a href="http://test.test/">ab[]</a>cd</div>`,

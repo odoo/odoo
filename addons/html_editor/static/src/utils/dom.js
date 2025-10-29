@@ -1,5 +1,5 @@
 import { closestBlock, isBlock } from "./blocks";
-import { isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
+import { isEmptyTextNode, isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
@@ -253,11 +253,16 @@ export function cleanTextNode(node, char, cursors) {
         removedIndexes.push(offset);
         return "";
     });
-    cursors?.update((cursor) => {
-        if (cursor.node === node) {
-            cursor.offset -= removedIndexes.filter((index) => cursor.offset > index).length;
-        }
-    });
+    if (isEmptyTextNode(node)) {
+        cursors?.update(callbacksForCursorUpdate.remove(node));
+        node.remove();
+    } else {
+        cursors?.update((cursor) => {
+            if (cursor.node === node) {
+                cursor.offset -= removedIndexes.filter((index) => cursor.offset > index).length;
+            }
+        });
+    }
 }
 
 /**
