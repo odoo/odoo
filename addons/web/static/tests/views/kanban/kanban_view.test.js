@@ -88,6 +88,7 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
+import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { WebClient } from "@web/webclient/webclient";
 
 const { IrAttachment } = webModels;
@@ -8400,7 +8401,7 @@ test("selection can be enabled by long touch", async () => {
     });
     expect(".o_selection_box").toHaveCount(0);
     await drag(".o_kanban_record:nth-of-type(2)");
-    await advanceTime(400);
+    await advanceTime(TOUCH_SELECTION_THRESHOLD);
     expect(".o_selection_box").toHaveCount(1);
 });
 
@@ -8422,7 +8423,7 @@ test("selection can be enabled by long touch with drag & drop enabled", async ()
     });
     expect(".o_selection_box").toHaveCount(0);
     const { drop } = await drag(".o_kanban_record:nth-of-type(1)");
-    await advanceTime(400);
+    await advanceTime(TOUCH_SELECTION_THRESHOLD);
     expect(".o_selection_box").toHaveCount(0, {
         message: "touch delay is longer when drag & drop is enabled",
     });
