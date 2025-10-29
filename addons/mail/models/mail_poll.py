@@ -62,7 +62,10 @@ class MailPoll(models.Model):
 
     @api.model
     def _end_expired_polls(self):
-        self.env["mail.poll"].search_fetch([("poll_end_dt", "<=", "now")])._end_and_notify()
+        self.env["mail.poll"].search_fetch([
+            ("poll_end_dt", "<=", "now"),
+            ("end_message_id", "=", None),
+        ])._end_and_notify()
 
     @api.ondelete(at_uninstall=False)
     def _poll_on_delete(self):
