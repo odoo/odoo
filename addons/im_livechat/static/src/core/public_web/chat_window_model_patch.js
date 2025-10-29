@@ -5,16 +5,11 @@ patch(ChatWindow.prototype, {
     _onClose(options = {}) {
         if (
             this.channel.channel_type === "livechat" &&
-            this.channel.livechatVisitorMember?.persona?.notEq(this.store.self)
+            this.channel.livechatVisitorMember?.persona?.notEq(this.store.self) &&
+            options.notifyState
         ) {
-            const channel = this.channel; // save ref before delete
-            super._onClose(...arguments);
-            this.delete();
-            if (options.notifyState) {
-                channel.leaveChannel({ force: true });
-            }
-        } else {
-            super._onClose(...arguments);
+            this.channel.leaveChannelRpc();
         }
+        super._onClose(...arguments);
     },
 });
