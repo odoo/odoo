@@ -659,6 +659,12 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(orders[0].floating_order_name, False)
         self.assertIsNotNone(orders[0].table_id)
 
+    def test_cancel_order_from_ui(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_cancel_order_from_ui')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, "cancel", "The order should be in cancel state")
+
     def test_sync_lines_qty_update(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_sync_lines_qty_update')
