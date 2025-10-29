@@ -6,7 +6,7 @@ from odoo.tests import tagged, common
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAutovacuum(common.TransactionCase):
     def test_api_autovacuum(self):
-        Model = self.env['test_orm.autovacuumed']
+        Model = self.env['test_autovacuum.autovacuumed']
         instance = Model.create({'expire_at': datetime.now() - timedelta(days=15)})
         self.assertTrue(instance.exists())
 
