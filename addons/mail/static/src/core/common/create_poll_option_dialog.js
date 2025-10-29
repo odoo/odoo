@@ -33,7 +33,7 @@ export class CreatePollOptionDialog extends Component {
                 this.props.model.label = firstPart + str + secondPart;
                 this.selection.moveCursor((firstPart + str).length);
                 if (!this.ui.isSmall) {
-                    this.ref.el.focus();
+                    this.pickerRef.el.focus();
                 }
             },
         });
