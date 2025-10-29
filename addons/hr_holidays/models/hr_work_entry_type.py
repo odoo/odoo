@@ -279,7 +279,7 @@ class HrWorkEntryType(models.Model):
 
     def _search_virtual_remaining_leaves(self, operator, value):
         def is_valid(work_entry_type):
-            return not work_entry_type.requires_allocation or op(work_entry_type.virtual_remaining_leaves, value)
+            return not work_entry_type.requires_allocation or op(work_entry_type.virtual_remaining_leaves)
         op = PY_OPERATORS.get(operator)
         if not op:
             return NotImplemented
