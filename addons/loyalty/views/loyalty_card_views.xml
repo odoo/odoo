@@ -72,7 +72,7 @@
                     domain="[
                         '&amp;', ('active', '=', True),
                         '&amp;', ('program_id.active', '=', True),
-                        '|', ('expiration_date', '>=', 'today')
+                        '|', ('expiration_date', '>=', 'today'), ('expiration_date', '=', False)
                     ]"
                 />
                 <filter
