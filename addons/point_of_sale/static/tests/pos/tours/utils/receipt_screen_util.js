@@ -176,6 +176,14 @@ export function noDiscountAmount() {
     ];
 }
 
+export function discountAmountIs(amount) {
+    return [
+        {
+            trigger: `span.label-discount:contains("Discounts") + span.pos-receipt-right-align:contains("${amount}")`,
+        },
+    ];
+}
+
 export function shippingDateExists() {
     return [
         {

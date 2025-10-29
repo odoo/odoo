@@ -391,6 +391,338 @@ export class PosOrderline extends PosOrderlineAccounting {
         this.price_unit = ProductPrice.round(parsed_price || 0);
     }
 
+<<<<<<< 3cada7ae6f1f677fee1a1bbe16b89876b63709a2
+||||||| 3084c7fd9d363c9da9f93c30d104afe7786f4784
+    getUnitPrice() {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
+        return ProductPrice.round(this.price_unit || 0);
+    }
+
+    get unitDisplayPrice() {
+        const prices =
+            this.combo_line_ids.length > 0
+                ? this.combo_line_ids.reduce(
+                      (acc, cl) => ({
+                          priceWithTax: acc.priceWithTax + cl.allUnitPrices.priceWithTax,
+                          priceWithoutTax: acc.priceWithoutTax + cl.allUnitPrices.priceWithoutTax,
+                      }),
+                      { priceWithTax: 0, priceWithoutTax: 0 }
+                  )
+                : this.allUnitPrices;
+
+        return this.config.iface_tax_included === "total"
+            ? prices.priceWithTax
+            : prices.priceWithoutTax;
+    }
+
+    getUnitDisplayPriceBeforeDiscount() {
+        if (this.config.iface_tax_included === "total") {
+            return this.allUnitPrices.priceWithTaxBeforeDiscount;
+        } else {
+            return this.allUnitPrices.priceWithoutTaxBeforeDiscount;
+        }
+    }
+    getBasePrice() {
+        return this.currency.round(
+            this.getUnitPrice() * this.getQuantity() * (1 - this.getDiscount() / 100)
+        );
+    }
+
+    getDisplayPrice() {
+        if (this.config.iface_tax_included === "total") {
+            return this.getPriceWithTax();
+        } else {
+            return this.getPriceWithoutTax();
+        }
+    }
+
+    getTaxedlstUnitPrice() {
+        const company = this.company;
+        const product = this.getProduct();
+        const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            this,
+            this.prepareBaseLineForTaxesComputationExtraValues({
+                price_unit: this.getlstPrice(),
+                quantity: 1,
+                tax_ids: product.taxes_id,
+            })
+        );
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
+        const taxDetails = baseLine.tax_details;
+
+        if (this.config.iface_tax_included === "total") {
+            return taxDetails.total_included_currency;
+        } else {
+            return taxDetails.total_excluded_currency;
+        }
+    }
+
+    getPriceWithoutTax() {
+        return this.allPrices.priceWithoutTax;
+    }
+
+    getPriceWithTax() {
+        return this.allPrices.priceWithTax;
+    }
+
+    getTax() {
+        return this.allPrices.tax;
+    }
+
+    getTaxDetails() {
+        return this.allPrices.taxDetails;
+    }
+
+    /**
+     * Calculates the taxes for a product, and converts the taxes based on the fiscal position of the order.
+     *
+     * @returns {Object} The calculated product taxes after filtering and fiscal position conversion.
+     */
+    _getProductTaxesAfterFiscalPosition() {
+        const baseLineValues = this.prepareBaseLineForTaxesComputationExtraValues();
+        return baseLineValues.tax_ids;
+    }
+
+    getAllPrices(qty = this.getQuantity()) {
+        const company = this.company;
+        const product = this.getProduct();
+        const taxes = this.tax_ids || product.taxes_id;
+        const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            this,
+            this.prepareBaseLineForTaxesComputationExtraValues({
+                quantity: qty,
+                tax_ids: taxes,
+            })
+        );
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
+
+        const baseLineNoDiscount = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            this,
+            this.prepareBaseLineForTaxesComputationExtraValues({
+                quantity: qty,
+                tax_ids: taxes,
+                discount: 0.0,
+            })
+        );
+        accountTaxHelpers.add_tax_details_in_base_line(baseLineNoDiscount, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLineNoDiscount], company);
+
+        // Tax details.
+        const taxDetails = {};
+        for (const taxData of baseLine.tax_details.taxes_data) {
+            taxDetails[taxData.tax.id] = {
+                amount: taxData.tax_amount_currency,
+                base: taxData.base_amount_currency,
+            };
+        }
+
+        return {
+            priceWithTax: baseLine.tax_details.total_included_currency,
+            priceWithoutTax: baseLine.tax_details.total_excluded_currency,
+            priceWithTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_included_currency,
+            priceWithoutTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_excluded_currency,
+            tax:
+                baseLine.tax_details.total_included_currency -
+                baseLine.tax_details.total_excluded_currency,
+            taxDetails: taxDetails,
+            taxesData: baseLine.tax_details.taxes_data,
+        };
+    }
+
+    computePriceWithTaxBeforeDiscount() {
+        return this.combo_line_ids.length > 0
+            ? // total of all combo lines if it is combo parent
+              formatCurrency(
+                  this.combo_line_ids.reduce(
+                      (total, cl) => total + cl.allPrices.priceWithTaxBeforeDiscount,
+                      0
+                  ),
+                  this.currency
+              )
+            : formatCurrency(this.allPrices.priceWithTaxBeforeDiscount, this.currency);
+    }
+
+    get allPrices() {
+        return this.getAllPrices();
+    }
+
+    get allUnitPrices() {
+        return this.getAllPrices(1);
+    }
+
+=======
+    getUnitPrice() {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
+        return ProductPrice.round(this.price_unit || 0);
+    }
+
+    get unitDisplayPrice() {
+        const prices =
+            this.combo_line_ids.length > 0
+                ? this.combo_line_ids.reduce(
+                      (acc, cl) => ({
+                          priceWithTax: acc.priceWithTax + cl.allUnitPrices.priceWithTax,
+                          priceWithoutTax: acc.priceWithoutTax + cl.allUnitPrices.priceWithoutTax,
+                      }),
+                      { priceWithTax: 0, priceWithoutTax: 0 }
+                  )
+                : this.allUnitPrices;
+
+        return this.config.iface_tax_included === "total"
+            ? prices.priceWithTax
+            : prices.priceWithoutTax;
+    }
+
+    getUnitDisplayPriceBeforeDiscount() {
+        if (this.config.iface_tax_included === "total") {
+            return this.allUnitPrices.priceWithTaxBeforeDiscount;
+        } else {
+            return this.allUnitPrices.priceWithoutTaxBeforeDiscount;
+        }
+    }
+    getBasePrice() {
+        return this.currency.round(
+            this.getUnitPrice() * this.getQuantity() * (1 - this.getDiscount() / 100)
+        );
+    }
+
+    getDisplayPrice() {
+        if (this.config.iface_tax_included === "total") {
+            return this.getPriceWithTax();
+        } else {
+            return this.getPriceWithoutTax();
+        }
+    }
+
+    getTaxedlstUnitPrice() {
+        const company = this.company;
+        const product = this.getProduct();
+        const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            this,
+            this.prepareBaseLineForTaxesComputationExtraValues({
+                price_unit: this.product_id.getPrice(
+                    false,
+                    1,
+                    this.price_extra,
+                    false,
+                    this.product_id
+                ),
+                quantity: 1,
+                tax_ids: product.taxes_id,
+            })
+        );
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
+        const taxDetails = baseLine.tax_details;
+
+        if (this.config.iface_tax_included === "total") {
+            return taxDetails.total_included_currency;
+        } else {
+            return taxDetails.total_excluded_currency;
+        }
+    }
+
+    getPriceWithoutTax() {
+        return this.allPrices.priceWithoutTax;
+    }
+
+    getPriceWithTax() {
+        return this.allPrices.priceWithTax;
+    }
+
+    getTax() {
+        return this.allPrices.tax;
+    }
+
+    getTaxDetails() {
+        return this.allPrices.taxDetails;
+    }
+
+    /**
+     * Calculates the taxes for a product, and converts the taxes based on the fiscal position of the order.
+     *
+     * @returns {Object} The calculated product taxes after filtering and fiscal position conversion.
+     */
+    _getProductTaxesAfterFiscalPosition() {
+        const baseLineValues = this.prepareBaseLineForTaxesComputationExtraValues();
+        return baseLineValues.tax_ids;
+    }
+
+    getAllPrices(qty = this.getQuantity()) {
+        const company = this.company;
+        const product = this.getProduct();
+        const taxes = this.tax_ids || product.taxes_id;
+        const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            this,
+            this.prepareBaseLineForTaxesComputationExtraValues({
+                quantity: qty,
+                tax_ids: taxes,
+            })
+        );
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
+
+        const baseLineNoDiscount = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            this,
+            this.prepareBaseLineForTaxesComputationExtraValues({
+                quantity: qty,
+                tax_ids: taxes,
+                discount: 0.0,
+            })
+        );
+        accountTaxHelpers.add_tax_details_in_base_line(baseLineNoDiscount, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLineNoDiscount], company);
+
+        // Tax details.
+        const taxDetails = {};
+        for (const taxData of baseLine.tax_details.taxes_data) {
+            taxDetails[taxData.tax.id] = {
+                amount: taxData.tax_amount_currency,
+                base: taxData.base_amount_currency,
+            };
+        }
+
+        return {
+            priceWithTax: baseLine.tax_details.total_included_currency,
+            priceWithoutTax: baseLine.tax_details.total_excluded_currency,
+            priceWithTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_included_currency,
+            priceWithoutTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_excluded_currency,
+            tax:
+                baseLine.tax_details.total_included_currency -
+                baseLine.tax_details.total_excluded_currency,
+            taxDetails: taxDetails,
+            taxesData: baseLine.tax_details.taxes_data,
+        };
+    }
+
+    computePriceWithTaxBeforeDiscount() {
+        return this.combo_line_ids.length > 0
+            ? // total of all combo lines if it is combo parent
+              formatCurrency(
+                  this.combo_line_ids.reduce(
+                      (total, cl) => total + cl.allPrices.priceWithTaxBeforeDiscount,
+                      0
+                  ),
+                  this.currency
+              )
+            : formatCurrency(this.allPrices.priceWithTaxBeforeDiscount, this.currency);
+    }
+
+    get allPrices() {
+        return this.getAllPrices();
+    }
+
+    get allUnitPrices() {
+        return this.getAllPrices(1);
+    }
+
+>>>>>>> 19a3a74935b2b71cff5e947700a423e757a857fc
     displayDiscountPolicy() {
         // Sales dropped `discount_policy`, and we only show discount if applied pricelist rule
         // is a percentage discount. However we don't have that information in pos
