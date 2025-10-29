@@ -609,7 +609,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (ids.size > 0) {
-            await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
             return true;
         }
 
