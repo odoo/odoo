@@ -48,7 +48,7 @@ class AccountMoveLine(models.Model):
             ("purchase_out_of_scope", "Out of Scope"),
             ],
         string="GSTR Section",
-        index=True,
+        index="btree_not_null",
     )
 
     # withholding related fields
@@ -95,7 +95,7 @@ class AccountMoveLine(models.Model):
             'eco_9_5': get_tag_ids('l10n_in.tax_tag_eco_9_5'),
         }
 
-    def _set_l10n_in_gstr_section(self):
+    def _get_l10n_in_gstr_section(self, tax_tags_dict):
 
         def tags_have_categ(line_tax_tags, categories):
             return any(tag in line_tax_tags for category in categories for tag in tax_tags_dict.get(category, []))
@@ -115,7 +115,7 @@ class AccountMoveLine(models.Model):
         def is_lut_tax(line):
             return any(tax.l10n_in_is_lut for tax in line.tax_ids | line.tax_line_id)
 
-        def get_sales_section(line, tax_tags_dict):
+        def get_sales_section(line):
             move = line.move_id
             gst_treatment = move.l10n_in_gst_treatment
             transaction_type = get_transaction_type(move)
@@ -223,7 +223,7 @@ class AccountMoveLine(models.Model):
             # If none of the above match, default to out of scope
             return 'sale_out_of_scope'
 
-        def get_purchase_section(line, tax_tags_dict):
+        def get_purchase_section(line):
             move = line.move_id
             gst_treatment = move.l10n_in_gst_treatment
             line_tags = line.tax_tag_ids.ids
@@ -305,11 +305,17 @@ class AccountMoveLine(models.Model):
         )
         # No Indian sale or purchase lines to process
         if not indian_sale_moves_lines and not indian_moves_purchase_lines:
-            return
-        tax_tags_dict = self._get_l10n_in_tax_tag_ids()
+            return {}
 
-        for move_line in indian_sale_moves_lines:
-            move_line.l10n_in_gstr_section = get_sales_section(move_line, tax_tags_dict)
+        move_lines_by_gstr_section = {
+            **indian_sale_moves_lines.grouped(get_sales_section),
+            **indian_moves_purchase_lines.grouped(get_purchase_section),
+        }
 
-        for move_line in indian_moves_purchase_lines:
-            move_line.l10n_in_gstr_section = get_purchase_section(move_line, tax_tags_dict)
+        return move_lines_by_gstr_section
+
+    def _set_l10n_in_gstr_section(self, tax_tags_dict):
+        move_lines_by_gstr_section = self._get_l10n_in_gstr_section(tax_tags_dict)
+        if move_lines_by_gstr_section:
+            for gstr_section, move_lines in move_lines_by_gstr_section.items():
+                move_lines.l10n_in_gstr_section = gstr_section
