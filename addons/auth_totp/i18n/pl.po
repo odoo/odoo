@@ -3,13 +3,14 @@
 # * auth_totp
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-17 17:27+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-28 08:54+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/auth_totp/"
 "pl/>\n"
 "Language: pl\n"
@@ -29,7 +30,7 @@ msgstr "%(browser)s na %(platform)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr "Kreator ustawień uwierzytelniena 2FA"
+msgstr "Kreator ustawień uwierzytelniana 2FA"
 
 #. module: auth_totp
 #. odoo-python
@@ -46,6 +47,10 @@ msgid ""
 "                            Enabled\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-check text-success\"/>\n"
+"                        <span class=\"fw-bold ms-1 me-2\">\n"
+"                            Aktywowano\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -55,6 +60,10 @@ msgid ""
 "                            Disabled\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-remove text-danger\"/>\n"
+"                        <span class=\"fw-bold ms-1\">\n"
+"                            Dezaktywowano\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -64,16 +73,19 @@ msgid ""
 "                            Recommended for extra security.\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                            Zalecane w celu zwiększenia bezpieczeństwa.\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Add this key in your Authenticator app"
-msgstr ""
+msgstr "Dodaj ten klucz w swojej aplikacji do uwierzytelniania"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code"
-msgstr "Kod weryfikacyjny"
+msgstr "Kod uwierzytelniający"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
@@ -99,7 +111,7 @@ msgstr "Sprawdzanie kodu"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__create_uid
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
 msgid "Created by"
-msgstr "Utworzył(a)"
+msgstr "Utworzone przez"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__create_date
@@ -121,17 +133,17 @@ msgstr "Opis"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable"
-msgstr ""
+msgstr "Dezaktywuj"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "Wyłącz Uwierzytelnianie dwuetapowe"
+msgstr "Wyłącz uwierzytelnianie dwuskładnikowe"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Discard"
-msgstr ""
+msgstr "Odrzuć"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -179,7 +191,7 @@ msgstr "Nieprawidłowy format kodu uwierzytelniającego."
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__ip
 msgid "Ip"
-msgstr "Ip"
+msgstr "IP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__write_uid
@@ -216,7 +228,7 @@ msgstr "Kod QR"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode in your Authenticator app"
-msgstr ""
+msgstr "Zeskanuj ten kod kreskowy w swojej aplikacji uwierzytelniającej"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
@@ -226,7 +238,7 @@ msgstr "Zakres"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
 msgid "Secret"
-msgstr "Klucz"
+msgstr "Hasło"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__send_email
@@ -252,7 +264,7 @@ msgid ""
 "                        <br/>"
 msgstr ""
 "Aby się zalogować, wprowadź poniżej 6-cyfrowy kod uwierzytelniający "
-"dostarczony przez aplikację Authenticator.\n"
+"dostarczony przez aplikację Uwierzytelniającą.\n"
 "                        <br/>"
 
 #. module: auth_totp
@@ -263,7 +275,7 @@ msgstr "Ostatni licznik Totp"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr "Sekret Totp"
+msgstr "Hasło Totp"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
@@ -291,31 +303,31 @@ msgstr "Uwierzytelnianie dwuskładnikowe"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr "Uwierzytelnianie dwuskładnikowe wyłączone"
+msgstr "Uwierzytelnianie dwuskładnikowe zezaktywowane"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr "Uwierzytelnianie dwuskładnikowe włączone"
+msgstr "Uwierzytelnianie dwuskładnikowe aktywowane"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication already enabled"
-msgstr "Uwierzytelnianie dwuskładnikowe jest już włączone"
+msgstr "Uwierzytelnianie dwuskładnikowe jest już aktywowane"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr "Uwierzytelnianie dwuskładnikowe można włączyć tylko dla siebie"
+msgstr "Uwierzytelnianie dwuskładnikowe można aktywować tylko dla siebie"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication disabled for the following user(s): %s"
 msgstr ""
-"Uwierzytelnianie dwuskładnikowe zostało wyłączone dla następujących "
+"Uwierzytelnianie dwuskładnikowe zostało dezaktywowane dla następujących "
 "użytkownika(ów): %s"
 
 #. module: auth_totp
@@ -339,7 +351,7 @@ msgstr "Kod weryfikacyjny"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification code"
-msgstr ""
+msgstr "Kod weryfikacyjny"
 
 #. module: auth_totp
 #. odoo-python
@@ -357,7 +369,7 @@ msgstr "Weryfikacja się nie powiodła, użyj ostatniego 6-cyfrowego kodu"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Write the code given by your app"
-msgstr ""
+msgstr "Wpisz kod wygenerowany w Twojej aplikacji"
 
 #. module: auth_totp
 #. odoo-python
