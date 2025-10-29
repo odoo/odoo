@@ -35,7 +35,7 @@
         # 'security/test_json_field/ir.model.access.csv',
         # 'security/test_many2many/ir.model.access.csv',
         # 'security/test_one2many/ir.model.access.csv',
-        # 'security/test_performance/ir.model.access.csv',
+        'security/test_performance/ir.model.access.csv',
         # 'security/test_properties/ir.model.access.csv',
         'security/test_qweb_float/ir.model.access.csv',
         # 'security/test_read_group_override/ir.model.access.csv',
