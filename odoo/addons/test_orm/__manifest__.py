@@ -31,7 +31,7 @@
         'security/test_html_converter/ir.model.access.csv',
         'security/test_indexed_translation/ir.model.access.csv',
         # 'security/test_inherits/ir.model.access.csv',
-        # 'security/test_ir_rules/ir.model.access.csv',
+        'security/test_ir_rules/ir.model.access.csv',
         # 'security/test_json_field/ir.model.access.csv',
         # 'security/test_many2many/ir.model.access.csv',
         # 'security/test_one2many/ir.model.access.csv',
