@@ -258,7 +258,7 @@ describe("pos_store.js", () => {
         const order1 = await getFilledOrder(store);
         await store.syncAllOrders();
         await store.deleteOrders([order1]);
-        expect(store.models["pos.order"].getBy("uuid", order1.uuid).state).toBe("cancel");
+        expect(store.models["pos.order"].getBy("uuid", order1.uuid)).toBeEmpty();
     });
 
     test("deleteOrders multiple orders", async () => {
