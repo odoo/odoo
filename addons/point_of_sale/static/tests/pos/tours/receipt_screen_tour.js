@@ -12,6 +12,7 @@ import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { run, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
     steps: () =>
@@ -139,6 +140,7 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             Order.hasLine({ price: "6.30" }),
+            ReceiptScreen.discountAmountIs("3.70"),
 
             ReceiptScreen.clickNextOrder(),
             ProductScreen.addOrderline("Test Product", "1"),
@@ -147,7 +149,22 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
                 Numpad.click("Price"),
                 Numpad.isActive("Price"),
                 Numpad.click("9"),
+                ...ProductScreen.selectedOrderlineHasDirect("Test Product", "1", "9.0"),
             ]),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.noDiscountAmount(),
+
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("10.0"),
+            ProductScreen.clickPriceList("special_pricelist"),
+            ProductScreen.totalAmountIs("9.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),

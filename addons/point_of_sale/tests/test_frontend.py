@@ -1038,6 +1038,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'percent_price': 10,
         })
 
+        setup_product_combo_items(self)
+        self.office_combo.write({'list_price': 10})
+        self.office_combo.combo_ids.combo_item_ids.product_id.taxes_id = False
+
         self.main_pos_config.write({
             'pricelist_id': base_pricelist.id,
             'available_pricelist_ids': [(6, 0, [base_pricelist.id, special_pricelist.id])],

@@ -485,7 +485,13 @@ export class PosOrderline extends Base {
         const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
             this,
             this.prepareBaseLineForTaxesComputationExtraValues({
-                price_unit: this.getlstPrice(),
+                price_unit: this.product_id.getPrice(
+                    false,
+                    1,
+                    this.price_extra,
+                    false,
+                    this.product_id
+                ),
                 quantity: 1,
                 tax_ids: product.taxes_id,
             })
