@@ -749,3 +749,20 @@ class TestConfigManager(TransactionCase):
             _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
         self.assertIsNone(options['db_replica_host'])
         self.assertEqual(options['dev_mode'], ['replica'])
+
+    def test_14_locked_config(self):
+        self.config.lock()
+        with self.assertRaises(TypeError):
+            self.config['test_14_locked_config'] = 1
+        with self.assertRaises(TypeError):
+            self.config._cli_options['test_14_locked_config'] = 1
+
+        # can't use assertNotIn
+        self.assertIsNone(self.config.get('test_14_locked_config'))
+
+        with self.config.unlock():
+            self.config['test_14_locked_config'] = 1
+            self.assertEqual(self.config['test_14_locked_config'], 1)
+            with self.assertRaises(TypeError):
+                self.config._cli_options['test_14_locked_config'] = 2
+        self.assertEqual(self.config['test_14_locked_config'], 1)

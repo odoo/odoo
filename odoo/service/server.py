@@ -1520,7 +1520,12 @@ def preload_registries(dbnames):
                         cr.execute("SELECT 1 FROM ir_module_module WHERE state IN ('to remove', 'to upgrade', 'to install') FETCH FIRST 1 ROW ONLY")
                         update_module = bool(cr.rowcount)
 
-                registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+                registry = Registry.new(dbname, update_module=update_module,
+                    install_modules=config['init'],
+                    upgrade_modules=config['update'],
+                    reinit_modules=config['reinit'],
+                    load_language=config['load_language'],
+                )
 
                 # run post-install tests
                 if config['test_enable']:

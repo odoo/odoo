@@ -2,21 +2,24 @@
 
 import collections
 import configparser as ConfigParser
+import contextlib
 import errno
 import functools
+import glob
 import logging
 import optparse
-import glob
 import os
 import sys
 import tempfile
 import warnings
-from os.path import expandvars, expanduser, abspath, realpath, normcase
-from odoo import release
-from odoo.tools.func import classproperty
-from . import appdirs
+from os.path import abspath, expanduser, expandvars, normcase, realpath
 
 from passlib.context import CryptContext
+
+from odoo import release
+from odoo.tools.func import classproperty
+
+from . import appdirs
 
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
                              deprecated=['plaintext'],
@@ -545,6 +548,66 @@ class configmanager:
         cls._warn_entries.clear()
         cls._warn = warnings.warn
 
+    def lock(self):
+        """
+        Freeze the options that were loaded from the source code, the
+        .odoorc configuration file, the environment variables, the
+        command line interface to prevent accidental modifications.
+
+        The ``_runtime_options`` are locked as well, but can be unlocked
+        in a context manager via :meth:`unlock`. Those options are those
+        present on top of the ChainMap, i.e. they are the options being
+        modified when doing ``config[x] = y``. In tests please use the
+        :meth:`~odoo.tests.common.BaseCase.test_config` context manager.
+        """
+        from odoo.tools.misc import ReadonlyDict  # noqa: PLC0415
+
+        self._default_options = ReadonlyDict(self._default_options)
+        self._file_options = ReadonlyDict(self._file_options)
+        self._env_options = ReadonlyDict(self._env_options)
+        self._cli_options = ReadonlyDict(self._cli_options)
+        self._runtime_options = ReadonlyDict(self._runtime_options)
+        self.options = collections.ChainMap(
+            *self.options.maps[:-5],  # leave the other maps read-write
+            self._runtime_options,
+            self._cli_options,
+            self._env_options,
+            self._file_options,
+            self._default_options,
+        )
+
+    @contextlib.contextmanager
+    def unlock(self):
+        """
+        Unlock the ``_runtime_options`` in a context manager, re-locking
+        it upon exit. This makes it possible to temporary perform
+        ``config[x] = y`` on a locked config. The other maps: default,
+        odoorc, envvar and cli are still locked even inside the context
+        manager.
+
+        This method does nothing if the config was not locked in the
+        first place.
+        """
+        from odoo.tools.misc import ReadonlyDict  # noqa: PLC0415
+
+        # act as a no-op if it is not locked in the first place
+        if not isinstance(self._runtime_options, ReadonlyDict):
+            yield
+            return
+
+        # temporarily unlock the runtime options
+        maps = list(self.options.maps)
+        index = maps.index(self._runtime_options)
+        self._runtime_options = maps[index] = dict(self._runtime_options)
+        self.options = collections.ChainMap(*maps)
+        try:
+            yield
+        finally:
+            maps = list(self.options.maps)
+            index = maps.index(self._runtime_options)
+            self._runtime_options = maps[index] = ReadonlyDict(self._runtime_options)
+            self.options = collections.ChainMap(*maps)
+
     def parse_config(self, args: list[str] | None = None, *, setup_logging: bool | None = None) -> None:
         """ Parse the configuration file (if any) and the command-line
         arguments.
@@ -1019,7 +1082,8 @@ class configmanager:
         result, updated_hash = crypt_context.verify_and_update(password, stored_hash)
         if result:
             if updated_hash:
-                self.options['admin_passwd'] = updated_hash
+                with self.unlock():
+                    self.options['admin_passwd'] = updated_hash
             return True
         return False
 

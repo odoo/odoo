@@ -138,6 +138,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
+        load_language: bool | None = None,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
@@ -160,6 +161,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
           determined by the ``config['with_demo']``. Defaults to ``None``
+        :param load_language: If the value is not None, the corresponding language will be installed.
         """
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -192,6 +194,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     install_modules=install_modules,
                     reinit_modules=reinit_modules,
                     new_db_demo=new_db_demo,
+                    load_language=load_language,
                 )
             except Exception:
                 reset_modules_state(db_name)
