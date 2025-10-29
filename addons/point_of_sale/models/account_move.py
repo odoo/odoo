@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 
 
 class AccountMove(models.Model):
@@ -108,6 +108,16 @@ class AccountMove(models.Model):
         else:
             action['domain'] = [('id', 'in', self.pos_order_ids.ids)]
         return action
+
+    def button_draft(self):
+        if self.sudo().pos_order_ids.filtered(lambda o: o.session_id.state != 'closed'):
+            self.env.user._bus_send("simple_notification", {
+                'type': 'warning',
+                'title': _("Warning: Invoice Reset Risk"),
+                'message': _("This invoice is linked to a POS Order, resetting it to draft prevents closing the session. You should rather refund the order or create a credit note."),
+                'sticky': True,
+            })
+        return super().button_draft()
 
     @api.model
     def _load_pos_data_fields(self, config):
