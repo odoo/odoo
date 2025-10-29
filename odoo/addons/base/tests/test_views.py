@@ -13,7 +13,7 @@ from lxml.builder import E
 from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger, view_validation, safe_eval
@@ -2208,6 +2208,25 @@ class TestViews(ViewCase):
                 'arch': '<attribute></attribute>',
                 'inherit_id': False,
             })
+
+    def test_xml_editor_rejects_encoding_declaration(self):
+        """Must raise a UserError when encoding declaration is included."""
+        with self.assertRaises(UserError):
+            self.View.create({
+                'name': 'encoding_declaration_view',
+                'arch_base': "<?xml version='1.0' encoding='utf-8'?>",
+                'inherit_id': False,
+            })
+
+        view = self.assertValid("<form string='Test'></form>", name="test_xml_encoding_view")
+        for field in ("arch", "arch_base"):
+            with self.subTest(field=field):
+                original_value = view[field]
+
+                with self.assertRaises(UserError):
+                    view.write({field: "<?xml version='1.0' encoding='utf-8'?><form/>"})
+
+                self.assertXMLEqual(view[field], original_value)
 
     def test_context_in_view(self):
         arch = """
