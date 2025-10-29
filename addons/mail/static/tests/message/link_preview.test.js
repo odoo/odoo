@@ -179,6 +179,7 @@ test("Remove link preview Gif", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
+    await contains(".modal .o-mail-LinkPreviewImage button[aria-label='Remove']", { count: 0 });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
@@ -203,6 +204,7 @@ test("Remove link preview card", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
+    await contains(".modal .o-mail-LinkPreviewCard button[aria-label='Remove']", { count: 0 });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
 });
@@ -228,6 +230,7 @@ test("Remove link preview video", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
+    await contains(".modal .o-mail-LinkPreviewVideo button[aria-label='Remove']", { count: 0 });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewVideo", { count: 0 });
 });
@@ -251,6 +254,7 @@ test("Remove link preview image", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
+    await contains(".modal .o-mail-LinkPreviewImage button[aria-label='Remove']", { count: 0 });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
