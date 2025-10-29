@@ -24,6 +24,7 @@ class DiscussChannelWebclientController(WebclientController):
         channels = request.env.context["channels"]
         if channels:
             store.add(channels)
+            store.add(channels.self_member_id, ["is_favorite"])
         if request.env.context["add_channels_last_message"]:
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
@@ -46,6 +47,11 @@ class DiscussChannelWebclientController(WebclientController):
         if name == "discuss.channel":
             channels = request.env["discuss.channel"].search([("id", "in", params)])
             request.update_context(channels=request.env.context["channels"] | channels)
+        if name == "/discuss/channel/favorite":
+            if member := request.env["discuss.channel.member"].search(
+                [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
+            ):
+                member.is_favorite = params["is_favorite"]
         if name == "/discuss/get_or_create_chat":
             channel = request.env["discuss.channel"]._get_or_create_chat(
                 params["partners_to"], params.get("pin", True)

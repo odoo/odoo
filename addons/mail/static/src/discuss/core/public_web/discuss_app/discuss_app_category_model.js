@@ -30,12 +30,14 @@ export class DiscussAppCategory extends Record {
      * @param {import("models").Thread} t2
      */
     sortThreads(t1, t2) {
-        if (this.id === "channels") {
-            return String.prototype.localeCompare.call(t1.name, t2.name);
+        if (["channels", "favorites"].includes(this.id) || this.discussCategoryAsAppCategory) {
+            return (
+                (t1.displayName &&
+                    String.prototype.localeCompare.call(t1.displayName, t2.displayName)) ||
+                t2.id - t1.id
+            );
         }
-        if (this.id === "chats") {
-            return compareDatetime(t2.lastInterestDt, t1.lastInterestDt) || t2.id - t1.id;
-        }
+        return compareDatetime(t2.lastInterestDt, t1.lastInterestDt) || t2.id - t1.id;
     }
 
     get isVisible() {

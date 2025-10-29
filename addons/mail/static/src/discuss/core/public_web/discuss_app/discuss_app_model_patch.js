@@ -34,6 +34,18 @@ const discussAppPatch = {
             },
             eager: true,
         });
+        this.favoriteCategory = fields.One("DiscussAppCategory", {
+            compute() {
+                return {
+                    extraClass: "o-mail-DiscussSidebarCategory-favorite",
+                    hideWhenEmpty: true,
+                    icon: "fa fa-star",
+                    id: "favorites",
+                    name: _t("Favorites"),
+                    sequence: 5,
+                };
+            },
+        });
         this.unreadChannels = fields.Many("mail.thread", { inverse: "appAsUnreadChannels" });
     },
     computeChatCategory() {

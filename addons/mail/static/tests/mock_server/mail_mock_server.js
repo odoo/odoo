@@ -1082,6 +1082,20 @@ function _process_request_for_all(store, name, params, context = {}) {
             makeKwArgs({ for_current_user: true })
         );
         store.add(channels);
+        store.add(
+            DiscussChannelMember.browse(
+                channels
+                    .map(
+                        (channel) =>
+                            DiscussChannelMember._filter([
+                                ["channel_id", "=", channel.id],
+                                ["is_self", "=", true],
+                            ])[0]
+                    )
+                    .map((channelMember) => channelMember.id)
+            ),
+            ["is_favorite"]
+        );
     }
     if (name === "mail.thread") {
         store.add(
@@ -1097,6 +1111,15 @@ function _process_request_for_all(store, name, params, context = {}) {
             // limitation of mock server: cannot browse non-existing record
             channel.push({ id: channelId });
             store.add(channel, makeKwArgs({ delete: true }));
+        }
+    }
+    if (name === "/discuss/channel/favorite") {
+        const memberIds = DiscussChannelMember.search([
+            ["channel_id", "=", params.channel_id],
+            ["is_self", "=", true],
+        ]);
+        if (memberIds.length) {
+            DiscussChannelMember.write(memberIds, { is_favorite: params.is_favorite });
         }
     }
     if (name === "/discuss/get_or_create_chat") {

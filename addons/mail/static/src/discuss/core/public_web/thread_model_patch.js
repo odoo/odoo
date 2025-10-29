@@ -24,6 +24,16 @@ const threadPatch = {
         });
         this.discussAppCategory = fields.One("DiscussAppCategory", {
             compute() {
+                if (this.channel?.self_member_id?.is_favorite) {
+                    return this.store.discuss.favoriteCategory;
+                }
+                if (this.channel?.parent_channel_id) {
+                    return;
+                }
+                if (this.channel?.discuss_category_id) {
+                    return this.channel.discuss_category_id.appCategory;
+                }
+                // channel_type based categorization (including overrides) comes last
                 return this._computeDiscussAppCategory();
             },
         });
@@ -55,12 +65,6 @@ const threadPatch = {
         return !this.parent_channel_id && super.canLeave;
     },
     _computeDiscussAppCategory() {
-        if (this.parent_channel_id) {
-            return;
-        }
-        if (this.channel?.discuss_category_id) {
-            return this.channel.discuss_category_id.appCategory;
-        }
         if (["group", "chat"].includes(this.channel?.channel_type)) {
             return this.store.discuss.chatCategory;
         }

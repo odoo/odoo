@@ -22,6 +22,57 @@ class ChannelActionDialog extends Component {
     `;
 }
 
+registerThreadAction("set-favorite", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    condition: ({ channel, owner }) =>
+        channel &&
+        channel.self_member_id &&
+        !channel.self_member_id.is_favorite &&
+        !owner.isDiscussContent,
+    icon: "fa fa-fw fa-star",
+    name: _t("Set favorite"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     * @param {import("models").Store} param0.store
+     */
+    onSelected: async ({ channel, store }) => {
+        store.fetchStoreData(
+            "/discuss/channel/favorite",
+            { channel_id: channel.id, is_favorite: true },
+            { readonly: false, silent: false }
+        );
+    },
+    sequence: 5, // before notification-settings
+    sequenceGroup: 30,
+});
+registerThreadAction("unset-favorite", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    condition: ({ channel, owner }) =>
+        channel?.self_member_id?.is_favorite && !owner.isDiscussContent,
+    icon: "fa fa-fw fa-star-o",
+    name: _t("Unset favorite"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     * @param {import("models").Store} param0.store
+     */
+    onSelected: async ({ channel, store }) => {
+        store.fetchStoreData(
+            "/discuss/channel/favorite",
+            { channel_id: channel.id, is_favorite: false },
+            { readonly: false, silent: false }
+        );
+    },
+    sequence: 5, // before notification-settings
+    sequenceGroup: 30,
+});
 registerThreadAction("notification-settings", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: NotificationSettings,

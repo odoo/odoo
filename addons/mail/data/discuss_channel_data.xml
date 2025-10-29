@@ -11,7 +11,6 @@
             <field name="name">Administrators</field>
             <field name="description">General channel for administrators.</field>
             <field name="group_public_id" ref="base.group_system"/>
-            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
 
         <!-- notify all employees of module installation -->
@@ -29,11 +28,24 @@
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="mail.channel_all_employees"/>
             <field name="fetched_message_id" ref="mail.module_install_notification"/>
+            <field name="is_favorite" eval="True"/>
             <field name="seen_message_id" ref="mail.module_install_notification"/>
         </record>
 
+        <!-- link group after creating the members to avoid autosubscribe too early -->
         <record model="discuss.channel" id="mail.channel_all_employees">
             <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+
+        <record model="discuss.channel.member" id="channel_member_channel_admin_partner_admin">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.channel_admin"/>
+            <field name="is_favorite" eval="True"/>
+        </record>
+
+        <!-- link group after creating the members to avoid autosubscribe too early -->
+        <record model="discuss.channel" id="mail.channel_admin">
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
     </data>
 </odoo>
