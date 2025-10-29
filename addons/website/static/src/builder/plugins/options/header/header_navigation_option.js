@@ -49,4 +49,5 @@ export class HeaderNavigationOption extends BaseOptionComponent {
         return currentActiveViews;
     }
 }
+
 Object.assign(HeaderNavigationOption, basicHeaderOptionSettings);
