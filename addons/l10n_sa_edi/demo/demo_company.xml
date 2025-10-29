@@ -2,44 +2,38 @@
 <odoo>
 
     <record id="base.partner_demo_company_sa" model="res.partner">
-        <field name="vat">399999999900003</field>
-        <field name="state_id" ref="base.state_sa_70"/>
-        <field name="street2">Somewhere close to Mecca</field>
-        <field name="l10n_sa_edi_building_number">1234</field>
-        <field name="l10n_sa_edi_plot_identification">1234</field>
-        <field name="l10n_sa_edi_additional_identification_scheme">OTH</field>
-        <field name="l10n_sa_edi_additional_identification_number">3999999999</field>
+        <field name="l10n_sa_edi_building_number">7450</field>
+        <field name="l10n_sa_edi_plot_identification">3495</field>
+        <field name="l10n_sa_edi_additional_identification_scheme">CRN</field>
+        <field name="l10n_sa_edi_additional_identification_number">1008434875</field>
     </record>
 
-    <record id="partner_demo_simplified" model="res.partner">
-        <field name="name">Mohammed Maamour</field>
-        <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
-        <field name="city">المدينة المنورة</field>
-        <field name="country_id" ref="base.sa"/>
-        <field name="state_id" ref="base.state_sa_70"/>
-        <field name="zip">42318</field>
-        <field name="phone">+966 55 777 8888</field>
-        <field name="email">info@company.saexample.com</field>
-        <field name="website">www.saexample.com</field>
-        <field name="l10n_sa_edi_additional_identification_number">123456789</field>
+    <record id="l10n_sa.partner_demo_customer_company_1_sa" model="res.partner">
+        <field name="l10n_sa_edi_building_number">8421</field>
+        <field name="l10n_sa_edi_plot_identification">4519</field>
+        <field name="l10n_sa_edi_additional_identification_scheme">CRN</field>
+        <field name="l10n_sa_edi_additional_identification_number">1017654321</field>
     </record>
 
-    <record id="partner_demo_standard" model="res.partner">
-        <field name="name">ARAMCO Medinah Branch</field>
-        <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
-        <field name="street2">Ammi Saysi</field>
-        <field name="city">المدينة المنورة</field>
-        <field name="country_id" ref="base.sa"/>
-        <field name="state_id" ref="base.state_sa_70"/>
-        <field name="zip">42317</field>
-        <field name="vat">311112111111113</field>
-        <field name="company_type">company</field>
-        <field name="phone">+966 55 999 1010</field>
-        <field name="email">info@company.saexample.com</field>
-        <field name="website">www.saexample.com</field>
-        <field name="l10n_sa_edi_building_number">1234</field>
-        <field name="l10n_sa_edi_plot_identification">1234</field>
-        <field name="l10n_sa_edi_additional_identification_number">123456789</field>
+    <record id="l10n_sa.partner_demo_customer_company_2_sa" model="res.partner">
+        <field name="l10n_sa_edi_building_number">7734</field>
+        <field name="l10n_sa_edi_plot_identification">2893</field>
+        <field name="l10n_sa_edi_additional_identification_scheme">CRN</field>
+        <field name="l10n_sa_edi_additional_identification_number">1014567890</field>
+    </record>
+
+    <record id="l10n_sa.partner_demo_vendor_1_sa" model="res.partner">
+        <field name="l10n_sa_edi_building_number">3885</field>
+        <field name="l10n_sa_edi_plot_identification">1331</field>
+        <field name="l10n_sa_edi_additional_identification_scheme">CRN</field>
+        <field name="l10n_sa_edi_additional_identification_number">1003672815</field>
+    </record>
+
+    <record id="l10n_sa.partner_demo_vendor_2_sa" model="res.partner">
+        <field name="l10n_sa_edi_building_number">6529</field>
+        <field name="l10n_sa_edi_plot_identification">3478</field>
+        <field name="l10n_sa_edi_additional_identification_scheme">CRN</field>
+        <field name="l10n_sa_edi_additional_identification_number">1012349812</field>
     </record>
 
     <function model="account.journal" name="_l10n_sa_load_edi_demo_data">

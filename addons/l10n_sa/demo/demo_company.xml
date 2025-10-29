@@ -1,35 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="base.partner_demo_company_sa" model="res.partner" forcecreate="1">
-        <field name="name">SA Company</field>
-        <field name="vat"/>
-        <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
-        <field name="city">المدينة المنورة</field>
-        <field name="country_id" ref="base.sa"/>
-
-        <field name="zip">42317</field>
+        <field name="name">My Saudi Arabia Company</field>
+        <field name="email">info@yourcompany.com</field>
         <field name="phone">+966 51 234 5678</field>
-        <field name="email">info@company.saexample.com</field>
-        <field name="website">www.saexample.com</field>
+        <field name="street">Prince Mohammed Bin Abdulaziz St</field>
+        <field name="street2">Ar Rawdah</field>
+        <field name="city">Jeddah</field>
+        <field name="state_id" ref="base.state_sa_54"/>
+        <field name="zip">23432</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="vat">399999999900003</field>
+        <field name="is_company" eval="True"/>
+        <field name="website">https://www.MySaudiCompany.odoo.com</field>
         <field name="is_company" eval="True"/>
     </record>
 
     <record id="base.demo_company_sa" model="res.company" forcecreate="1">
-        <field name="name">SA Company</field>
-        <field name="vat">310175397400003</field>
+        <field name="name">My Saudi Arabia Company</field>
+        <field name="vat">399999999900003</field>
         <field name="partner_id" ref="base.partner_demo_company_sa"/>
         <field name="paperformat_id" ref="l10n_sa.paperformat_l10n_sa_a4"></field>
         <field name="company_details">
 <![CDATA[
-<p>SA Company<br>
-Al Amir Mohammed Bin Abdul Aziz Street Somewhere close to Mecca<br/>
-المدينة المنورة RUH 42317<br/>
+<p>My Saudi Company<br>
+Prince Mohammed Bin Abdulaziz St<br/>
+Ar Rawdah MAK 23432<br/>
 1234 1234<br/>
 Saudi Arabia<br/><br/>
-VAT Number: 310175397400003<br/>
+VAT Number: 399999999900003<br/>
 Other ID: 3999999999</p>
 ]]>
         </field>
+    </record>
+
+
+    <record id="partner_demo_customer_company_1_sa" model="res.partner">
+        <field name="name">Gulf Seals LLC</field>
+        <field name="email">info@gulfseals.example.sa</field>
+        <field name="phone">+966 12 345 6789</field>
+        <field name="street">King Fahd Road</field>
+        <field name="street2">Al Olaya District</field>
+        <field name="city">Riyadh</field>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="zip">12313</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="website">https://www.gulfseals-example.sa</field>
+        <field name="vat">301765432100003</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="partner_demo_customer_company_2_sa" model="res.partner">
+        <field name="name">Royal Tech Solutions Co.</field>
+        <field name="email">info@royaltechsolutions.example.sa</field>
+        <field name="phone">+966 11 456 7890</field>
+        <field name="street">KAFD Tower 9, Floor 15, King Fahd Road</field>
+        <field name="street2">King Abdullah Financial District</field>
+        <field name="city">Riyadh</field>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="zip">13511</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="website">https://www.royaltech-solutions-example.com</field>
+        <field name="vat">301456789000003</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="partner_demo_customer_individual_sa" model="res.partner">
+        <field name="name">Omar Elhout</field>
+        <field name="email">o.elhout@mail.example.sa</field>
+        <field name="phone">+966 50 352 8120</field>
+        <field name="street">1605, Elhout Tower</field>
+        <field name="street2">Al-Murabba</field>
+        <field name="city">Riyadh</field>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="zip">35267</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="is_company" eval="False"/>
+    </record>
+
+    <record id="partner_demo_vendor_1_sa" model="res.partner">
+        <field name="name">Aqua Steel</field>
+        <field name="email">info@aquasteel.example.sa</field>
+        <field name="phone">+966 11 123 4567</field>
+        <field name="street">Al Bandariyyah Street</field>
+        <field name="street2">Al Falah</field>
+        <field name="city">Al Arid</field>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="zip">12321</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="website">http://www.aquasteel-example.sa</field>
+        <field name="vat">310105071360003</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="partner_demo_vendor_2_sa" model="res.partner">
+        <field name="name">Horizon Industrial Services Co.</field>
+        <field name="email">info@horizon-industries.example.sa</field>
+        <field name="phone">+966 11 987 6543</field>
+        <field name="street">Building 6529, Office 210</field>
+        <field name="street2">Olaya Street</field>
+        <field name="city">Riyadh</field>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="zip">12283</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="website">https://www.horizon-industries-example.sa</field>
+        <field name="vat">301234981200003</field>
+        <field name="is_company" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

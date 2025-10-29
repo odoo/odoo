@@ -18,8 +18,8 @@ class ResPartner(models.Model):
         ('GCC', 'GCC ID'),
         ('IQA', 'Iqama Number'),
         ('PAS', 'Passport ID'),
-        ('OTH', 'Other ID')
-    ], default="OTH", string="Identification Scheme", help="Additional Identification Scheme for the Seller/Buyer")
+        ('OTH', 'Other ID'),
+    ], string="Identification Scheme", help="Additional Identification Scheme for the Seller/Buyer")
 
     l10n_sa_edi_additional_identification_number = fields.Char("Identification Number (SA)", help="Additional Identification Number for the Seller/Buyer")
 
