@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
-        <xpath expr="//t[@t-set='forced_vat']" position="after">
+        <t t-call="web.external_layout" position="before">
             <t t-set="din5008_document_information">
                 <div class="information_block" t-if="doc and doc._name=='sale.order'">
                     <table>
@@ -93,7 +93,12 @@
                     <t t-else="">Sales Order</t>
                 </span>
             </t>
-        </xpath>
+        </t>
+        <t t-call="web.external_layout" position="attributes">
+            <attribute name="din5008_document_information">din5008_document_information</attribute>
+            <attribute name="din5008_address_block">din5008_address_block</attribute>
+            <attribute name="din5008_document_title">din5008_document_title</attribute>
+        </t>
         <!-- Insert Position Column as the First Column in the Table Header -->
         <xpath expr="//th[@name='th_description']" position="before">
             <t t-if="doc.company_id.has_position_column">

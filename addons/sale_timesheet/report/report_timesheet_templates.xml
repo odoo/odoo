@@ -19,8 +19,7 @@
                                         <span>Timesheets for the <t t-out="doc_name">S0001</t> <t t-out="record_name">- Timesheet product</t>
                                         </span>
                                     </h2>
-                                    <t t-set='lines' t-value='doc.timesheet_ids'/>
-                                    <t t-call="hr_timesheet.timesheet_table"/>
+                                    <t t-call="hr_timesheet.timesheet_table" lines="doc.timesheet_ids"/>
                                 </t>
                             </div>
                         </div>

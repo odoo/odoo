@@ -229,17 +229,13 @@
             </p>
             <!-- End Arabic & English amount in words -->
             <!-- Call custom tax totals templates -->
-            <t t-set="tax_totals" position="after">
-                <t t-set="tax_totals_sec" t-value="o_sec.tax_totals"/>
-            </t>
             <t t-call="account.document_tax_totals" position="attributes">
+                <attribute name="tax_totals_sec">o_sec.tax_totals</attribute>
                 <attribute name="t-call">l10n_gcc_invoice.l10n_gcc_document_tax_totals</attribute>
             </t>
-            <xpath expr="(//t[@t-set='tax_totals'])[2]" position="after">
-                <t t-set="tax_totals_sec" t-value="o_sec.tax_totals"/>
-                <t t-set="show_exchange_rate" t-value="0"/>
-            </xpath>
             <t t-call="account.document_tax_totals_company_currency_template" position="attributes">
+                <attribute name="tax_totals_sec">o_sec.tax_totals</attribute>
+                <attribute name="show_exchange_rate">0</attribute>
                 <attribute name="t-call">l10n_gcc_invoice.l10n_gcc_document_tax_totals_company_currency_template</attribute>
             </t>
             <!-- End Call custom tax totals templates -->
