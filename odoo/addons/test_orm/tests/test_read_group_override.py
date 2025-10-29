@@ -7,7 +7,7 @@ from odoo.tests.common import tagged, TransactionCase
 @tagged('-at_install', 'post_install')
 class TestReadGroupOverride(TransactionCase):
     def test_order_for_groupby(self):
-        Order = self.env['test_read_group.order']
+        Order = self.env['test_read_group_override.order']
         many2one_field = Order._fields['many2one_id']
         self.addCleanup(setattr, many2one_field, 'comodel_name', many2one_field.comodel_name)
         BaseModel = models.BaseModel

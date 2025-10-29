@@ -40,7 +40,7 @@
         'security/test_performance/ir.model.access.csv',
         # 'security/test_properties/ir.model.access.csv',
         'security/test_qweb_float/ir.model.access.csv',
-        # 'security/test_read_group_override/ir.model.access.csv',
+        'security/test_read_group_override/ir.model.access.csv',
         # 'security/test_read_group_private/ir.model.access.csv',
         # 'security/test_read_grouping_sets/ir.model.access.csv',
         # 'security/test_related_translation/ir.model.access.csv',
