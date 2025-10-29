@@ -24,8 +24,8 @@
                 <field name="picking_partner_id" optional="hide"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" force_save="1"/>
                 <field name="quantity" string="Quantity" class="fw-bolder"
-                    decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
-                    decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
+                    decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit')) and quantity != 0"
+                    decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit')) and quantity != 0"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                 <field name="state" widget='badge' optional="show"
                        decoration-danger="state=='cancel'"
