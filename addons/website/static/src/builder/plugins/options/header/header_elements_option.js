@@ -1,11 +1,9 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { basicHeaderOptionSettings } from "./basicHeaderOptionSettings";
 
 export class HeaderElementsOption extends BaseOptionComponent {
     static template = "website.HeaderElementsOption";
     static dependencies = ["customizeWebsite"];
-    static selector = "#wrapwrap > header";
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
 
     setup() {
         super.setup();
@@ -24,3 +22,5 @@ export class HeaderElementsOption extends BaseOptionComponent {
         };
     }
 }
+
+Object.assign(HeaderElementsOption, basicHeaderOptionSettings);
