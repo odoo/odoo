@@ -11,6 +11,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { QuickCreateState } from "./kanban_record_quick_create";
+import { odoomark } from "@web/core/utils/html";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
@@ -42,6 +43,7 @@ export class KanbanHeader extends Component {
         this.rootRef = useRef("root");
         this.popover = usePopover(KanbanHeaderTooltip);
         this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
+        this.odoomark = odoomark;
     }
 
     async onTitleMouseEnter(ev) {
