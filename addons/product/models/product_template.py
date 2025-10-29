@@ -751,8 +751,10 @@ class ProductTemplate(models.Model):
                     # Do not add single value if the resulting combination would
                     # be invalid anyway.
                     if (
-                        len(combination) == len(lines_without_no_variants) and
-                        combination.attribute_line_id == lines_without_no_variants
+                        len(combination) == len(lines_without_no_variants)
+                        and combination.attribute_line_id == lines_without_no_variants
+                        # Update only if necessary to prevent a cache invalidation
+                        and variant.product_template_attribute_value_ids != combination
                     ):
                         variant.product_template_attribute_value_ids = combination
 
