@@ -136,3 +136,24 @@ class TestMailPoll(HttpCase):
             "mail_poll_tour.js",
             login=self.internal.login,
         )
+
+    def test_do_not_end_expired_polls_twice(self):
+        self.authenticate(self.internal.login, self.internal.login)
+        channel = self.env["discuss.channel"].create({"name": "General"})
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "duration": 0,
+                "option_labels": ["Burger", "Pizza", "Tacos"],
+                "question": "What is your favorite food?",
+                "thread_id": channel.id,
+                "thread_model": "discuss.channel",
+            },
+        )
+        poll = self.env["mail.poll"].browse(poll_id)
+        self.assertFalse(poll.end_message_id.exists())
+        self.env["mail.poll"]._end_expired_polls()
+        self.assertTrue(poll.end_message_id.exists())
+        end_message = poll.end_message_id
+        self.env["mail.poll"]._end_expired_polls()
+        self.assertEqual(end_message, poll.end_message_id)
