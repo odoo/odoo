@@ -14,11 +14,13 @@
         'data/test_domain.xml',
         'data/test_json_field.xml',
         'data/test_related_translation.xml',
+        'data/test_views.xml',
         'data/test_translated_field/test_model_data.xml',
         'security/ir.model.access.csv',
         'security/test_access_rights_security.xml',
         'security/test_orm_security.xml',
         'views/test_orm_views.xml',
+        'views/test_views.xml',
         'security/test_access_feedback/ir.model.access.csv',
         'security/test_access_monetary_related/ir.model.access.csv',
         'security/test_action_bindings/ir.model.access.csv',
@@ -48,7 +50,7 @@
         # 'security/test_schema/ir.model.access.csv',
         'security/test_sort/ir.model.access.csv',
         'security/test_timeit/ir.model.access.csv',
-        # 'security/test_views/ir.model.access.csv',
+        'security/test_views/ir.model.access.csv',
     ],
     'assets': {
         'web.assets_tests': [
