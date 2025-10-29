@@ -10,6 +10,7 @@
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="items" t-as="item" t-key="item_index">
                         <button
+                            t-att-title="item.description"
                             t-attf-class="btn btn-light fa fa-align-{{item.mode}}"
                             t-att-class="{ active: item.mode === state.displayName }"
                             t-on-click="() => this.onSelected(item)"

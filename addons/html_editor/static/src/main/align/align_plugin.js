@@ -8,10 +8,10 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
 const alignmentItems = [
-    { mode: "left" },
-    { mode: "center" },
-    { mode: "right" },
-    { mode: "justify" },
+    { mode: "left", description: _t("Left align") },
+    { mode: "center", description: _t("Center align") },
+    { mode: "right", description: _t("Right align") },
+    { mode: "justify", description: _t("Justify") },
 ];
 
 export class AlignPlugin extends Plugin {

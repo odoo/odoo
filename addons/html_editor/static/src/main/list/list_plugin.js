@@ -51,16 +51,19 @@ const listSelectorItems = [
         id: "bulleted_list",
         commandId: "toggleListUL",
         mode: "UL",
+        description: _t("Bulleted list (Ctrl + Shift + 8)"),
     },
     {
         id: "numbered_list",
         commandId: "toggleListOL",
         mode: "OL",
+        description: _t("Numbered list (Ctrl + Shift + 7)"),
     },
     {
         id: "checklist",
         commandId: "toggleListCL",
         mode: "CL",
+        description: _t("Checklist (Ctrl + Shift + 9)"),
     },
 ];
 
@@ -1282,7 +1285,7 @@ export class ListPlugin extends Plugin {
                 return {
                     ...pick(button, "id", "icon", "run", "mode"),
                     // We want short descriptions for these buttons.
-                    description: command.title,
+                    description: item.description,
                 };
             });
     }

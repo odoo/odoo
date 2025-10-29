@@ -136,6 +136,7 @@ export class FormatPlugin extends Plugin {
         toolbar_items: [
             {
                 id: "bold",
+                description: _t("Bold (Ctrl + B)"),
                 groupId: "decoration",
                 namespaces: ["compact", "expanded"],
                 commandId: "formatBold",
@@ -143,6 +144,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "italic",
+                description: _t("Italic (Ctrl + I)"),
                 groupId: "decoration",
                 namespaces: ["compact", "expanded"],
                 commandId: "formatItalic",
@@ -150,6 +152,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "underline",
+                description: _t("Underline (Ctrl + U)"),
                 groupId: "decoration",
                 namespaces: ["compact", "expanded"],
                 commandId: "formatUnderline",
@@ -157,6 +160,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "strikethrough",
+                description: _t("Strikethrough (Ctrl + 5)"),
                 groupId: "decoration",
                 commandId: "formatStrikethrough",
                 isActive: isFormatted(this, "strikeThrough"),
