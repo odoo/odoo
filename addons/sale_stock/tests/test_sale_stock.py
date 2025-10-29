@@ -2457,3 +2457,88 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'product_id': self.product_a.id, 'product_uom_qty': 1, 'qty_delivered': 2},
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3},
         ])
+
+    def test_sale_line_route_overrides_product_routes(self):
+        """
+        Test that a route defined on the sale order line takes precedence over
+        product-level routes when selecting the procurement rule.
+        """
+        warehouse = self.company_data['default_warehouse']
+        customer_location = self.env.ref('stock.stock_location_customers')
+        transit_location = self.env['stock.location'].create({
+            'name': 'Transit',
+            'usage': 'transit',
+            'location_id': warehouse.view_location_id.id,
+        })
+
+        route_product, route_so = self.env['stock.route'].create([
+            {
+                'name': 'Route set in the product',
+                'warehouse_ids': [Command.link(warehouse.id)],
+                'rule_ids': [
+                    Command.create({
+                        'name': 'Stock to transit',
+                        'action': 'pull',
+                        'location_src_id': warehouse.lot_stock_id.id,
+                        'location_dest_id': transit_location.id,
+                        'picking_type_id': warehouse.int_type_id.id,
+                        'procure_method': 'make_to_stock',
+                    }),
+                    Command.create({
+                        'name': 'Transit to Customer',
+                        'action': 'pull',
+                        'location_src_id': transit_location.id,
+                        'location_dest_id': customer_location.id,
+                        'picking_type_id': warehouse.out_type_id.id,
+                        'procure_method': 'make_to_order',
+                    }),
+                ],
+            },
+            {
+                'name': 'Route set in the SOL',
+                'warehouse_ids': [Command.link(warehouse.id)],
+                'sale_selectable': True,
+                'rule_ids': [
+                    Command.create({
+                        'name': 'Stock to transit',
+                        'action': 'pull',
+                        'location_src_id': warehouse.lot_stock_id.id,
+                        'location_dest_id': transit_location.id,
+                        'picking_type_id': warehouse.int_type_id.id,
+                        'procure_method': 'make_to_stock',
+                    }),
+                    Command.create({
+                        'name': 'Transit to Customer',
+                        'action': 'pull',
+                        'location_src_id': transit_location.id,
+                        'location_dest_id': customer_location.id,
+                        'picking_type_id': warehouse.out_type_id.id,
+                        'procure_method': 'make_to_order',
+                    }),
+                ],
+            },
+        ])
+
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'is_storable': True,
+            'route_ids': [route_product.id],
+        })
+
+        so = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create(
+                    {
+                        'name': product.name,
+                        'product_id': product.id,
+                        'product_uom_qty': 8.0,
+                        'price_unit': product.list_price,
+                        'route_ids': [route_so.id],
+                    }),
+                ],
+            },
+        ])
+        so.action_confirm()
+
+        self.assertRecordValues(so.picking_ids.move_ids.rule_id, [{'route_id': route_so.id}] * 2)
