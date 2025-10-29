@@ -247,6 +247,7 @@ actual arch.
 
     def _inverse_arch(self):
         for view in self:
+            self._validate_xml_encoding(view.arch)
             data = dict(arch_db=view.arch)
             if 'install_filename' in self._context:
                 # we store the relative path to the resource instead of the absolute path, if found
@@ -273,6 +274,7 @@ actual arch.
 
     def _inverse_arch_base(self):
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
+            self._validate_xml_encoding(view.arch_base)
             view_wo_lang.arch = view.arch_base
 
     def reset_arch(self, mode='soft'):
@@ -559,8 +561,6 @@ actual arch.
                 # delete empty arch_db to avoid triggering _check_xml before _inverse_arch_base is called
                 del values['arch_db']
 
-            if values.get('arch_base'):
-                self._validate_xml_encoding(values['arch_base'])
             if not values.get('type'):
                 if values.get('inherit_id'):
                     values['type'] = self.browse(values['inherit_id']).type
@@ -577,7 +577,7 @@ actual arch.
                                 "Allowed types are: %(valid_types)s",
                                 view_type=values['type'], valid_types=', '.join(valid_types)
                             ))
-                    except LxmlError:
+                    except (etree.ParseError, ValueError):
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.
                         pass
@@ -620,8 +620,6 @@ actual arch.
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
-        if vals.get('arch_base'):
-            self._validate_xml_encoding(vals['arch_base'])
         res = super().write(self._compute_defaults(vals))
 
         # Check the xml of the view if it gets re-activated or changed.
