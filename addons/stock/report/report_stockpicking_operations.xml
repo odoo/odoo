@@ -90,7 +90,7 @@
                                     <div t-field="o.picking_warning_text"/>
                                 </div>
                                 <div name="div_vendor" t-if="o.picking_type_id.code=='incoming' and o.partner_id">
-                                    <strong>Vendor:</strong>
+                                    <strong>From:</strong>
                                     <div t-field="o.partner_id.commercial_partner_id"
                                         t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True, "phone_icons": True}'>
                                     </div>

@@ -27,7 +27,7 @@
                         <div class="col-7" name="div_incoming_address">
                             <t t-set="show_partner" t-value="False" />
                             <div name="vendor_address" t-if="o.picking_type_id.code=='incoming' and partner">
-                                <strong>Vendor Address</strong>
+                                <strong>From</strong>
                                 <t t-set="show_partner" t-value="True" />
                             </div>
                             <div name="customer_address" t-if="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
