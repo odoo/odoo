@@ -33,9 +33,15 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                         # so that the channel is unpinned
                         "unpin_dt": fields.Datetime.now(),
                         "last_interest_dt": fields.Datetime.now() - timedelta(seconds=30),
-                    }
+                        "livechat_member_type": "bot",
+                    },
                 ),
-                Command.create({"partner_id": request.env.user.partner_id.id}),
+                Command.create(
+                    {
+                        "partner_id": request.env.user.partner_id.id,
+                        "livechat_member_type": "visitor",
+                    },
+                ),
             ],
             'livechat_active': True,
             'livechat_operator_id': chatbot_script.operator_partner_id.id,

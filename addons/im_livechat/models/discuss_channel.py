@@ -409,13 +409,13 @@ class DiscussChannel(models.Model):
         It's created only if the mail channel is linked to a chatbot step. We also need to save the
         user answer if the current step is a question selection.
         """
-        if self.chatbot_current_step_id:
+        if self.chatbot_current_step_id and not self.livechat_agent_history_ids:
             selected_answer = (
                 self.env["chatbot.script.answer"]
                 .browse(self.env.context.get("selected_answer_id"))
                 .exists()
             )
-            if selected_answer in self.chatbot_current_step_id.answer_ids:
+            if selected_answer and selected_answer in self.chatbot_current_step_id.answer_ids:
                 # sudo - chatbot.message: finding the question message to update the user answer is allowed.
                 question_msg = (
                     self.env["chatbot.message"]
