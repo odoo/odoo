@@ -448,10 +448,8 @@ class TestUsers2(UsersCommonCase):
     def test_user_writeable_fields(self):
         """ Check for writeable fields.
 
-        Check that a portal user:
-            - can write on fields in SELF_WRITEABLE_FIELDS on himself,
-            - cannot write on fields not in SELF_WRITEABLE_FIELDS on himself,
-            - and none of the above on another user than himself.
+        Check that a normal user: can write only on user_writeable fields.
+        Check that a portal user: cannot write on themselves.
         """
         self.assertIn(
             "post_install",
@@ -477,9 +475,14 @@ class TestUsers2(UsersCommonCase):
         me = self.env.user.with_env(self.env)
         other = self.user_portal_2.with_env(self.env)
 
-        # Allow to write a field in the user_writeable_fields
-        me.email = "foo@bar.com"
-        self.assertEqual(me.email, "foo@bar.com")
+        # Allow to write a field in the user_writeable_fields for internal users
+        # only
+        if self.env.user._has_group('base.group_user'):
+            me.email = "foo@bar.com"
+            self.assertEqual(me.email, "foo@bar.com")
+        else:
+            with self.assertRaises(AccessError):
+                me.email = "foo@bar.com"
         # Disallow to write a field not in the user_writeable_fields
         with self.assertRaises(AccessError):
             me.login = "foo"
