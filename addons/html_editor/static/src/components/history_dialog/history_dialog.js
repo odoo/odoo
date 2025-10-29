@@ -45,7 +45,7 @@ export class HistoryDialog extends Component {
         revisionContent: null,
         revisionComparison: null,
         revisionId: null,
-        revisionLoading: false,
+        revisionLoading: true,
         cssMaxHeight: 400,
     });
 
@@ -208,8 +208,9 @@ export class HistoryDialog extends Component {
         if (!revision || !revision["create_date"]) {
             return "--";
         }
+        const userTZ = user.tz || "local";
         return formatDateTime(
-            DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(user.tz),
+            DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(userTZ),
             { showSeconds: false }
         );
     }
