@@ -15,7 +15,7 @@
         'security/test_access_rights_security.xml',
         'security/test_orm_security.xml',
         'views/test_orm_views.xml',
-        # 'security/test_access_feedback/ir.model.access.csv',
+        'security/test_access_feedback/ir.model.access.csv',
         # 'security/test_access_monetary_related/ir.model.access.csv',
         # 'security/test_action_bindings/ir.model.access.csv',
         # 'security/test_attributes/ir.model.access.csv',
