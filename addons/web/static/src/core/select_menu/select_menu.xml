@@ -94,13 +94,14 @@
         </div>
         <DropdownItem
             t-if="!choice.isGroup"
-            onSelected="() => this.onItemSelected(choice.value)"
-            class="getItemClass(choice) + ' text-wrap'"
+            closingMode="choice.enabled ? 'all' : 'none'"
+            onSelected="() => choice.enabled and this.onItemSelected(choice.value)"
+            class="this.getItemClass(choice)"
             attrs="{ 'data-choice-index': choice_index }"
         >
             <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
             <t t-else="">
-                <div t-esc="choice.label || choice.value" />
+                <div t-out="choice.label" />
             </t>
         </DropdownItem>
     </t>
