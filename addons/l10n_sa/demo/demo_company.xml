@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="base.partner_demo_company_sa" model="res.partner" forcecreate="1">
-        <field name="name">SA Company</field>
-        <field name="vat"/>
-        <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
-        <field name="city">المدينة المنورة</field>
-        <field name="country_id" ref="base.sa"/>
-
-        <field name="zip">42317</field>
+        <field name="name">My Saudi Arabia Company</field>
+        <field name="email">info@yourcompany.com</field>
         <field name="phone">+966 51 234 5678</field>
-        <field name="email">info@company.saexample.com</field>
-        <field name="website">www.saexample.com</field>
+        <field name="street">Prince Mohammed Bin Abdulaziz St</field>
+        <field name="street2">Ar Rawdah</field>
+        <field name="city">Jeddah</field>
+        <field name="state_id" ref="base.state_sa_54"/>
+        <field name="zip">23432</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="vat">399999999900003</field>
+        <field name="is_company" eval="True"/>
+        <field name="website">https://www.MySaudiCompany.odoo.com</field>
+        <field name="is_company" eval="True"/>
     </record>
 
     <record id="base.demo_company_sa" model="res.company" forcecreate="1">
-        <field name="name">SA Company</field>
-        <field name="vat">310175397400003</field>
+        <field name="name">My Saudi Arabia Company</field>
+        <field name="vat">399999999900003</field>
         <field name="partner_id" ref="base.partner_demo_company_sa"/>
         <field name="paperformat_id" ref="l10n_sa.paperformat_l10n_sa_a4"></field>
         <field name="company_details">
 <![CDATA[
-<p>SA Company<br>
-Al Amir Mohammed Bin Abdul Aziz Street Somewhere close to Mecca<br/>
-المدينة المنورة RUH 42317<br/>
+<p>My Saudi Company<br>
+Prince Mohammed Bin Abdulaziz St<br/>
+Ar Rawdah MAK 23432<br/>
 1234 1234<br/>
 Saudi Arabia<br/><br/>
-VAT Number: 310175397400003<br/>
+VAT Number: 399999999900003<br/>
 Other ID: 3999999999</p>
 ]]>
         </field>

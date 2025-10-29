@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
-from . import models, wizard
+from . import demo
+from . import models
+from . import wizard
 
 
 def _l10n_sa_edi_post_init(env):
