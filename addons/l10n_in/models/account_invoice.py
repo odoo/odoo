@@ -725,6 +725,6 @@ class AccountMove(models.Model):
     @contextmanager
     def _sync_l10n_in_gstr_section(self, moves):
         yield
-        for move in moves:
-            # we set the section on the invoice lines
-            move.line_ids._set_l10n_in_gstr_section()
+        tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
+        # we set the section on the invoice lines
+        moves.line_ids._set_l10n_in_gstr_section(tax_tags_dict)
