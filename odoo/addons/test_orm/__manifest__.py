@@ -21,7 +21,7 @@
         'security/test_action_bindings/ir.model.access.csv',
         'security/test_attributes/ir.model.access.csv',
         'security/test_autovacuum/ir.model.access.csv',
-        # 'security/test_check_access/ir.model.access.csv',
+        'security/test_check_access/ir.model.access.csv',
         # 'security/test_company_checks/ir.model.access.csv',
         # 'security/test_config_settings/ir.model.access.csv',
         # 'security/test_convert/ir.model.access.csv',
