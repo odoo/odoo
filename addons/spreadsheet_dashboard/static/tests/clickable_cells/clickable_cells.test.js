@@ -166,3 +166,43 @@ test("list sort multiple fields", async () => {
     expect(model.getters.getListDefinition(1).orderBy).toEqual([]);
     await animationFrame();
 });
+
+test("Clickable ignores spill and empty cells for list sorting", async () => {
+    const data = {
+        sheets: [
+            {
+                cells: {
+                    A1: "foo",
+                    B1: "bar",
+                    // spill cells
+                    A2: "=ODOO.LIST.HEADER(1, A1:B1)",
+                    A3: '=ODOO.LIST(1, sequence(2), "foo")',
+                },
+            },
+        ],
+        lists: {
+            1: {
+                id: 1,
+                columns: [],
+                domain: [],
+                model: "partner",
+                orderBy: [],
+            },
+        },
+    };
+    const { model } = await createDashboardActionWithData(data);
+    expect(getCellIcons(model, "A2")).toHaveLength(0);
+    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+
+    expect(getCellIcons(model, "B2")).toHaveLength(0);
+    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+
+    expect(getCellIcons(model, "A3")).toHaveLength(0);
+    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+
+    expect(getCellIcons(model, "A4")).toHaveLength(0);
+    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+
+    expect(getCellIcons(model, "C10")).toHaveLength(0); // unrelated empty cell
+    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+});
