@@ -261,7 +261,7 @@ export function odoomark(text) {
                  * and the regex doesn't do anything crazy to unescape it.
                  */
                 tag = markup(tag);
-                return markup`<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">${tag}</span>`;
+                return markup`<span class="o_tag position-relative d-inline-flex align-items-center align-baseline mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">${tag}</span>`;
             },
         ],
     ];

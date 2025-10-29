@@ -1913,7 +1913,7 @@ export class Model extends Array {
                 if (relation && !Array.isArray(value)) {
                     const relatedRecord = this.env[relation].find(({ id }) => id === value);
                     if (relatedRecord) {
-                        group[groupbySpec] = [value, relatedRecord.display_name];
+                        group[groupbySpec] = [value, this._getFormattedDisplayName(relatedRecord)];
                         const _fold_name = this.env[relation]._fold_name;
                         if (_fold_name in this.env[relation]._fields) {
                             group.__fold = relatedRecord[_fold_name] || false;
@@ -1926,8 +1926,9 @@ export class Model extends Array {
                         group[groupbySpec] = false;
                     } else {
                         const relatedRecord = this.env[this._name].find(({ id }) => id === value);
-                        const displayName = relatedRecord?.display_name || "";
-                        group[groupbySpec] = [value, displayName];
+                        const formattedDisplayName =
+                            this._getFormattedDisplayName(relatedRecord) || "";
+                        group[groupbySpec] = [value, formattedDisplayName];
                     }
                 }
                 if (isDateField(type)) {
@@ -3134,6 +3135,10 @@ export class Model extends Array {
                 record.display_name = `${this._name},${record.id}`;
             }
         }
+    }
+
+    _getFormattedDisplayName(record) {
+        return record?.display_name;
     }
 
     /**

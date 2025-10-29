@@ -390,7 +390,7 @@ class Base(models.AbstractModel):
         # First level of grouping
         first_groupby = [groupby[0]]
         read_group_order = self._get_read_group_order(dict_order, first_groupby, aggregates)
-        groups, length = self._formatted_read_group_with_length(
+        groups, length = self.with_context(formatted_display_name=True)._formatted_read_group_with_length(
             domain, first_groupby, aggregates, offset=offset, limit=limit, order=read_group_order,
         )
 
