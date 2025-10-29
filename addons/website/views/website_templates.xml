@@ -532,7 +532,8 @@
 <!-- "Default" template -->
 <template id="template_header_default" inherit_id="website.layout" name="Template Header Default" active="True">
     <xpath expr="//header//nav" position="replace">
-        <t t-call="website.navbar" _navbar_classes.f="d-none d-lg-block shadow-sm">
+        <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
+        <t t-call="website.navbar" _navbar_classes="_navbar_classes">
 
             <div id="o_main_nav" t-attf-class="o_main_nav #{header_content_width}">
                 <!-- Brand -->

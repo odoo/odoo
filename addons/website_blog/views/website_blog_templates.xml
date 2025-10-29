@@ -165,9 +165,10 @@ list of filtered posts (by date or tag).
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
 <template id="website_blog.blog_post_complete" name="Blog Post" track="1">
-    <t t-call="website_blog.index"
-        opt_blog_post_regular_cover="is_view_active('website_blog.opt_blog_post_regular_cover')"
-        opt_blog_post_breadcrumb="is_view_active('website_blog.opt_blog_post_breadcrumb')">
+    <t t-call="website_blog.index" true="True">
+
+        <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
+        <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_post_readable" t-value="is_view_active('website_blog.opt_blog_post_readable')"/>
@@ -175,13 +176,14 @@ list of filtered posts (by date or tag).
 
         <section id="o_wblog_post_top">
             <div id="title" class="blog_header" t-ignore="True">
+                <t t-set="_record" t-value="blog_post"/>
                 <t t-call="website.record_cover"
+                    _record="_record"
                     snippet_autofocus="True"
                     use_filters="True"
                     use_size="True"
                     display_opt_name.translate="Blog Post Cover"
                     additionnal_classes.f="o_wblog_post_page_cover">
-                    <t t-set="_record" t-value="blog_post"/>
 
                     <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                         <div t-attf-class="o_wblog_post_title">
@@ -204,7 +206,9 @@ list of filtered posts (by date or tag).
             <div t-if="opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read_with_sidebar'}">
                 <div t-attf-class="d-flex flex-column flex-lg-row #{opt_blog_post_readable and 'justify-content-between'}">
                     <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
-                        <t t-call="website_blog.blog_post_content"/>
+                        <t t-call="website_blog.blog_post_content"
+                            opt_blog_post_regular_cover="opt_blog_post_regular_cover"
+                            opt_blog_post_breadcrumb="opt_blog_post_breadcrumb"/>
                     </div>
                     <div id="o_wblog_post_sidebar_col" t-attf-class="ps-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
                         <t t-call="website_blog.blog_post_sidebar"/>
@@ -216,7 +220,9 @@ list of filtered posts (by date or tag).
             <div t-if="not opt_blog_post_sidebar" t-attf-class="#{opt_blog_post_readable and 'o_container_small'}">
                 <div class="d-flex flex-column flex-lg-row">
                     <div id="o_wblog_post_content" t-attf-class=" #{opt_blog_post_readable and 'o_container_small w-100 flex-shrink-0'}">
-                        <t t-call="website_blog.blog_post_content"/>
+                        <t t-call="website_blog.blog_post_content"
+                            opt_blog_post_regular_cover="opt_blog_post_regular_cover"
+                            opt_blog_post_breadcrumb="opt_blog_post_breadcrumb"/>
                     </div>
                 </div>
             </div>

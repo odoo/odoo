@@ -3,7 +3,7 @@
 
 <!-- Revamped agenda : Will need to replace agenda_online from website_event_track in master -->
 <template id="agenda_online" name="Track Online: Agenda">
-    <t t-call="website_event.layout">
+    <t t-call="website_event.layout" true="True">
         <!-- No tracks -->
         <div t-if="not tracks_by_days" class="container">
             <div class="row">

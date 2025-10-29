@@ -2,10 +2,10 @@
 <odoo>
 
 <template id="tracks_session" name="Event Tracks">
-    <t t-call="website_event.layout"
-        option_track_wishlist="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')">
+    <t t-call="website_event.layout" true="True">
         <div class="o_wevent_online o_wesession_index container">
             <!-- Options -->
+            <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')"/>
             <!-- Topbar -->
             <t t-call="website_event_track.session_topbar"/>
             <!-- Drag/Drop Area -->

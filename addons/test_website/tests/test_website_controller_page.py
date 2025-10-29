@@ -24,7 +24,7 @@ class TestWebsiteControllerPage(HttpCase):
         cls.listing_view = cls.env["ir.ui.view"].create({
             "type": "qweb",
             "model": cls.model.model,
-            "arch": """<t t-call="website.layout">
+            "arch": """<t t-call="website.layout" true="True">
                 <t t-set="_activeClasses" t-translation="off">border-primary</t>
                 <div t-attf-class="listing_layout_switcher btn-group ms-3" t-att-data-active-classes="_activeClasses" t-att-data-view-id="view_id">
                     <input type="radio" class="btn-check" name="wstudio_layout" id="o_wstudio_apply_grid" value="grid" t-att-checked="'checked' if layout_mode != 'list' else None"/>
