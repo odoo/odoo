@@ -515,6 +515,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'limit_categories': True,
             'iface_available_categ_ids': [(6, 0, [pos_category.id])],
         })
+        self.whiteboard_pen.write({'pos_categ_ids': [(6, 0, [pos_category.id])]})
         self.main_pos_config.open_ui()
 
         self.pos_user.write({
@@ -539,7 +540,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Change the code to 044123456 so that we can use it in the next tour.
         # Make sure it starts with 044 because it's the prefix of the loyalty cards.
         gift_card_program.coupon_ids.code = '044123456'
-        self.whiteboard_pen.write({'pos_categ_ids': [(6, 0, [pos_category.id])]})
         # Run the tour to use the gift card
         self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used (Whiteboard Pen price is 1.20)
