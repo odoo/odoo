@@ -64,7 +64,7 @@ export class PosOrder extends Base {
             unmerge: {},
             lastPrints: [],
             lineToRefund: {},
-            displayed: true,
+            displayed: this.state !== "cancel",
             booked: false,
             screen_data: {},
             selected_orderline_uuid: undefined,
