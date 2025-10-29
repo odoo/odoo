@@ -15,7 +15,7 @@ import { closestScrollableY } from "@web/core/utils/scrolling";
  */
 export class OverlayPlugin extends Plugin {
     static id = "overlay";
-    static dependencies = ["history"];
+    static dependencies = ["history", "selection"];
     static shared = ["createOverlay"];
     resources = {
         step_added_handlers: this.getScrollContainer.bind(this),
@@ -108,8 +108,9 @@ export class Overlay {
                     getContainer: this.getContainer,
                     close: this.close.bind(this),
                     isOverlayOpen: this.isOverlayOpen.bind(this),
-                    history: {
+                    shared: {
                         ignoreDOMMutations: this.plugin.dependencies.history.ignoreDOMMutations,
+                        getSelectionData: this.plugin.dependencies.selection.getSelectionData,
                     },
                 }),
                 {
