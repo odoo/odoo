@@ -50,7 +50,28 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
+    def web_name_search(
+        self,
+        name: str,
+        specification: dict[str, dict],
+        domain: DomainType | None = None,
+        operator: str = 'ilike',
+        limit: int = 100
+    ):
+        """Search for records that have a display name matching the given
+        ``name`` pattern when compared with the given ``operator``, while also
+        matching the optional search domain (``domain``) and returns their ``ids``.
+        Additional fields can be returned following the ``specification``.
+
+        :param name: the name pattern to match
+        :param specification: fields to read for all matching records.
+        :param domain: search domain (see :meth:`~.search` for syntax),
+                       specifying further restrictions
+        :param operator: domain operator for matching ``name``,
+                         such as ``'like'`` or ``'='``.
+        :param limit: max number of records to return
+        :return: list of pairs ``(id, display_name)`` for all matching records.
+        """
         id_name_pairs = self.name_search(name, domain, operator, limit)
         if len(specification) == 1 and 'display_name' in specification:
             return [{'id': id, 'display_name': name, '__formatted_display_name': self.with_context(formatted_display_name=True).browse(id).display_name} for id, name in id_name_pairs]
@@ -650,7 +671,7 @@ class Base(models.AbstractModel):
         aggregates: Sequence[str] = (),
         *,
         order: str | None = None,
-    ):
+    ) -> list[dict]:
         """
         A method similar to :meth:`_read_grouping_set` but with all the
         formatting needed by the webclient.
@@ -1311,7 +1332,12 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def read_progress_bar(self, domain, group_by, progress_bar):
+    def read_progress_bar(
+        self,
+        domain: DomainType,
+        group_by: Sequence[str],
+        progress_bar: dict[str, dict]
+    ) -> dict[str, dict]:
         """
         Gets the data needed for all the kanban column progressbars.
         These are fetched alongside read_group operation.
@@ -1576,7 +1602,7 @@ class Base(models.AbstractModel):
 
 
     @api.model
-    def search_panel_select_range(self, field_name, **kwargs):
+    def search_panel_select_range(self, field_name: str, **kwargs) -> list[dict]:
         """
         Return possible values of the field field_name (case select="one"),
         possibly with counters, and the parent field (if any and required)
@@ -1717,7 +1743,7 @@ class Base(models.AbstractModel):
 
 
     @api.model
-    def search_panel_select_multi_range(self, field_name, **kwargs):
+    def search_panel_select_multi_range(self, field_name: str, **kwargs) -> list[dict]:
         """
         Return possible values of the field field_name (case select="multi"),
         possibly with counters and groups.
@@ -1905,6 +1931,7 @@ class Base(models.AbstractModel):
                 field_range.append(values)
 
             return { 'values': field_range, }
+        return None
 
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         """
