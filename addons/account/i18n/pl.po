@@ -57,7 +57,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-22 13:44+0000\n"
+"PO-Revision-Date: 2025-10-28 16:59+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/account/"
 "pl/>\n"
@@ -82,11 +82,11 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Wybierz „Sprzedaż” dla dzienników faktur klientów.\n"
-"        Wybierz 'Zakup' dla dzienników rachunków dostawców.\n"
-"        Wybierz 'Gotówka', 'Bank' lub 'Karta kredytowa' dla dzienników, "
-"które są używane w płatnościach klientów lub dostawców.\n"
-"        Wybierz 'Ogólne' dla różnych dzienników operacji.\n"
+"        Wybierz \"Sprzedaż\" dla dzienników faktur klientów.\n"
+"        Wybierz \"Zakup\" dla dzienników rachunków dostawców.\n"
+"        Wybierz \"Gotówka\", \"Bank\" lub \"Karta kredytowa\" dla "
+"dzienników, które są używane w płatnościach klientów lub dostawców.\n"
+"        Wybierz \"Ogólne\" dla różnych dzienników operacji.\n"
 "        "
 
 #. module: account
@@ -129,23 +129,23 @@ msgstr " ważne do %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Rozliczone rachunki"
+msgstr "l. uzgodnionych rachunków"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# Rozliczone faktury"
+msgstr "l. uzgodnionych faktur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr "# Uzgodnione pozycje wyciągu"
+msgstr "l. uzgodnionych pozycji wyciągu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "# Faktur zakupu"
+msgstr "l. faktur zakupu"
 
 #. module: account
 #. odoo-python
@@ -169,13 +169,13 @@ msgstr "%(amount)s Bez podatków"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr "%(amount)s Włączając podatki"
+msgstr "%(amount)s W tym podatki"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s należne %(date)s"
+msgstr "%(amount)s do spłaty %(date)s"
 
 #. module: account
 #. odoo-python
@@ -185,8 +185,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (odłączono przez %(user)s dnia %(date)s)%"
-"(attachment_extension)s"
+"%(attachment_name)s (odłączono przez %(user)s dnia "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -194,7 +194,7 @@ msgstr ""
 msgid ""
 "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
-"Aktywowano automatyczne księgowanie %(auto_post_name)s : Następna data "
+"Aktywowano automatyczne księgowanie %(auto_post_name)s. Następna data "
 "księgowania: %(move_date)s."
 
 #. module: account
@@ -229,8 +229,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Zaksięgowano, %"
-"(quantity_received)s Otrzymano za %(unit_price)s każdy"
+"%(order)s - %(order_line)s; %(quantity_billed)s Zaksięgowano, "
+"%(quantity_received)s otrzymano %(unit_price)s za każdy"
 
 #. module: account
 #. odoo-python
@@ -239,8 +239,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s Zafakturowano, %"
-"(quantity_delivered)s Dostarczono za %(unit_price)s każdy"
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Zafakturowano, "
+"%(quantity_delivered)s Dostarczono za %(unit_price)s każdy"
 
 #. module: account
 #. odoo-python
@@ -268,9 +268,9 @@ msgid ""
 "(receivable)s\" or \"%(payable)s\" with both options \"%"
 "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
-"%(tax_account)s (%(account_name)s) powinno być kontem typu \"%"
-"(receivable)s\" lub \"%(payable)s\" z aktywowanymi obiema możliwościami \"%"
-"(allow_reconciliation)s\" oraz \"%(non_trade)s\"."
+"%(tax_account)s (%(account_name)s) powinno być kontem typu \"%(receivable)s\""
+" lub \"%(payable)s\" z aktywowanymi obiema możliwościami "
+"\"%(allow_reconciliation)s\" oraz \"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -315,7 +315,7 @@ msgstr "%s - część prywatna (podatki)"
 #. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 msgid "%s is not a stored field"
-msgstr "%s pole nie jest przechowywane w bazie danych"
+msgstr "%s nie jest polem przechowywanym w bazie danych"
 
 #. module: account
 #. odoo-python
@@ -393,7 +393,7 @@ msgid ""
 "automating line creation with the right account &amp; tax."
 msgstr ""
 "- Nowe pole \"Suma (z VAT)\", które ma na celu przyspieszenie i kontrolę "
-"kodowania poprzez automatyzację tworzenia wierszy z właściwym kontem &amp; "
+"kodowania poprzez automatyzację tworzenia wierszy z właściwym kontem i "
 "podatkiem."
 
 #. module: account
@@ -459,7 +459,7 @@ msgstr "/ jeśli nie dotyczy"
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr "0% Eksport"
+msgstr "0% Eksportów"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
@@ -543,52 +543,52 @@ msgstr "20.00"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2021-09-19"
-msgstr "2021-09-19"
+msgstr "19-09-2021"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "2023-01-01"
-msgstr "2023-01-01"
+msgstr "01-01-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "2023-01-05"
-msgstr "2023-01-05"
+msgstr "05-01-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "2023-08-11"
-msgstr "2023-08-11"
+msgstr "11-08-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "2023-08-15"
-msgstr "2023-08-15"
+msgstr "15-08-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "2023-08-31"
-msgstr "2023-08-31"
+msgstr "31-08-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-12"
-msgstr "2023-09-12"
+msgstr "12-09-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-25"
-msgstr "2023-09-25"
+msgstr "25-09-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-10-31"
-msgstr "2023-10-31"
+msgstr "31-10-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2024-01-01"
-msgstr "2024-01-01"
+msgstr "01-01-2024"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -841,7 +841,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
 msgid "<br/> on this account:"
-msgstr "<br/> Numer konta bankowego:"
+msgstr "<br/> Na tym koncie:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_self_billing_credit_note
@@ -904,11 +904,11 @@ msgstr ""
 "                <br/><br/>\n"
 "                Oto Twoja\n"
 "                <t t-if=\"object.name\">\n"
-"                    samofakturowana nota kredytowa <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"                    nota kredytowa w systemie samofakturowania <span style"
+"=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    samofakturowana nota kredytowa\n"
+"                    nota kredytowa w systemie samofakturowania\n"
 "                </t>\n"
 "                <t t-if=\"object.invoice_origin\">\n"
 "                    (z numerem referencyjnym: <t t-out="
@@ -1235,8 +1235,8 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dzień dobry,\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
-"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> ("
+"<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -1244,28 +1244,27 @@ msgstr ""
 "        <br/><br/>\n"
 "        Oto Twoja\n"
 "        <t t-if=\"object.name\">\n"
-"            nota kredytowa <span style=\"font-weight:bold;\" t-"
-"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            nota kredytowa <span style=\"font-weight:bold;\" t-out=\""
+"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            nota kredytowa\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (z numerem referencyjnym: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (z numerem referencyjnym: <t t-out="
+"\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        na kwotę <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        na kwotę <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        W przypadku jakichkolwiek pytań, nie wahaj się z nami skontaktować.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
-"o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
+"data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
+">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1304,23 +1303,22 @@ msgstr ""
 "        Dzień dobry <t t-out=\"object.partner_id.name or ''\">Azure "
 "Interior</t><br/><br/>\n"
 "        Dziękujemy za dokonanie płatności.\n"
-"        Oto dowód wpłaty <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
-"w kwocie\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        Oto dowód wpłaty <span style=\"font-weight:bold;\" t-out=\"("
+"object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> w "
+"kwocie\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount, object.currency_id) or ''\">$ 10.00</span> od <t t-out=\""
+"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
-"        W przypadku jakichkolwiek pytań, prosimy nie wahać się z nami "
-"skontaktować.\n"
+"        Jeśli masz jakiekolwiek pytania, nie wahaj się z nami skontaktować.\n"
 "        <br/><br/>\n"
 "        Z pozdrowieniami,\n"
 "        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
 "container=\"1\">\n"
 "            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1374,8 +1372,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Processing Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
-"title=\"Przetwarzanie płatności\" role=\"img\"/>\n"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title="
+"\"Przetwarzanie płatności\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Przetwarzanie płatności</span>"
 
@@ -1389,7 +1387,7 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Otwarte\" title=\"Otwarte\" "
 "role=\"img\"/>\n"
-"<span class=\"d-none d-md-inline\">Oczekujące na płatność</span>"
+"<span class=\"d-none d-md-inline\">Oczekuje na płatność</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1402,7 +1400,7 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
 "                        Nie martw się, zawsze możesz zmienić to ustawienie "
-"później w formularzu sprzedawcy.\n"
+"później w formularzu dostawcy.\n"
 "                        Masz również możliwość wyłączenia tej funkcji dla "
 "wszystkich sprzedawców w ustawieniach księgowych."
 
@@ -1436,8 +1434,8 @@ msgid ""
 "                    </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                        Możesz wybrać jak chcesz wysyłać swoje faktury i z "
-"jakim elektronicznym formatem.\n"
+"                        Możesz wybrać jak chcesz wysyłać swoje faktury i w "
+"jakim formacie elektronicznym.\n"
 "                    </small>"
 
 #. module: account
@@ -1464,7 +1462,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"badge text-bg-info\">\n"
-"                                        Do zweryfikowania\n"
+"                                        Do sprawdzenia\n"
 "                                    </span>"
 
 #. module: account
@@ -1478,10 +1476,10 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" "
-"class=\"text-muted\">Niezaufane</span>\n"
-"                            <span invisible=\"not allow_out_payment\" "
-"class=\"text-success\">Zaufane</span>\n"
+"                            <span invisible=\"allow_out_payment\" class"
+"=\"text-muted\">Niezaufane</span>\n"
+"                            <span invisible=\"not allow_out_payment\" class"
+"=\"text-success\">Zaufane</span>\n"
 "                        </span>"
 
 #. module: account
@@ -1499,8 +1497,9 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
-"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
-"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">lub</span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style="
+"\"width: 6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\""
+">lub</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -1508,8 +1507,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\""
+">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1522,7 +1521,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "<span class=\"o_form_label\">Changed Lock Date:</span>"
-msgstr "<span class=\"o_form_label\">Zmieniono datę blokady:</span>"
+msgstr "<span class=\"o_form_label\">Zmieniono datę zamknięcia:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1636,8 +1635,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
-"span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">11.750,00</"
+"span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1645,8 +1644,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
-"span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">19.250,00</"
+"span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1654,8 +1653,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
-"span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">7.500,00</"
+"span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1670,7 +1669,7 @@ msgstr "<span class=\"text-nowrap\">2,350.00</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
-msgstr "<span class=\"text-warning\">Średnie ryzyko</span>: Iban"
+msgstr "<span class=\"text-warning\">Średnie ryzyko</span>: IBAN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1705,8 +1704,8 @@ msgid ""
 "invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Faktura</span>\n"
-"                                        <span "
-"invisible=\"reconciled_invoices_type == 'invoice'\"> Nota Kredytowa</span>"
+"                                        <span invisible="
+"\"reconciled_invoices_type == 'invoice'\"> Nota Kredytowa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1772,11 +1771,10 @@ msgstr "<span> na </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid ""
 "<span>1.00</span>\n"
 "                                                        <span "
@@ -1800,8 +1798,8 @@ msgstr "<span>5.00</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego samouczka."
-"</span>"
+"<span><b>Dobra robota!</b> Przeszedłeś przez wszystkie kroki tego "
+"samouczka.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1823,7 +1821,7 @@ msgstr "<span>Kwota</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Balance</span>"
-msgstr "<span>Bilans</span>"
+msgstr "<span>Saldo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1863,7 +1861,7 @@ msgid ""
 "</span>"
 msgstr ""
 "<span>Jedno lub więcej kont bankowych skonfigurowanych u tego partnera jest "
-"również używanych przez innych:</span>"
+"również używane przez innych:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1879,7 +1877,7 @@ msgstr "<span>Ilość</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr "<span>Odniesienie</span>"
+msgstr "<span>Referencja</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1914,8 +1912,8 @@ msgid ""
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
 "<span>Ten wpis został wygenerowany w aplikacji Fakturowanie, przed "
-"zainstalowaniem Księgowości. Jego saldo zostało zaimportowane oddzielnie</"
-"span>"
+"zainstalowaniem Księgowości. Jego saldo zostało zaimportowane "
+"oddzielnie.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1926,8 +1924,7 @@ msgstr "<span>To jest podgląd twoich Warunków.</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<span>This payment has the same partner, amount and date as </span>"
-msgstr ""
-"<span>Ta płatność zawiera tego samego partnera, kwotę i datę co </span>"
+msgstr "<span>Ta płatność zawiera tego samego partnera, kwotę i datę co </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1938,7 +1935,7 @@ msgstr "<span>Cena jednostkowa</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
-msgstr "<span>Podgląd</span>"
+msgstr "<span>Widok</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2003,7 +2000,7 @@ msgstr "<strong>Data otrzymania</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference</strong>"
-msgstr "<strong>Odnośnik</strong>"
+msgstr "<strong>Referencja</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2018,7 +2015,7 @@ msgstr "<strong>Saldo początkowe</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Wartość</strong>"
+msgstr "<strong>Suma częściowa</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2288,14 +2285,14 @@ msgstr ""
 "}}\" target=\"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; "
 "font-weight: bold; color: #FFFFFF; text-decoration: none !important; "
 "background-color: #008384; border-radius:3px; display: inline-block;\">\n"
-"                                               Konsultuj faktury\n"
+"                                               Skonsultuj faktury\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
 "odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" target=\""
 "_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; font-weight: "
 "bold; color: #FFFFFF; text-decoration: none !important; background-color: "
 "#008384; border-radius:3px; display: inline-block;\">\n"
-"                                               Konsultuj fakturę\n"
+"                                               Skonsultuj fakturę\n"
 "                                            </a>\n"
 "                                            <p style=\"font-size: 11px; "
 "margin-top: 8px; color: #777;\">Pora podsumować liczby</p>\n"
@@ -2348,8 +2345,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Słownik (dictionary) python, który będzie wyliczony i zastosowany jako "
-"wartości domyślne do tworzenia nowego zapisu w tym aliasie."
+"Słownik Python, który będzie wyliczony i zastosowany jako wartości domyślne "
+"do tworzenia nowego zapisu w tym aliasie."
 
 #. module: account
 #. odoo-python
@@ -6455,7 +6452,7 @@ msgstr "Karta kredytowa"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Pozycje Ma dziennika są połączone z pozycją tego dziennika."
+msgstr "Pozycje \"Ma\" dziennika są połączone z tą pozycją dziennika."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
@@ -10532,7 +10529,7 @@ msgstr "Płatność za fakturę online"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
-msgstr "Widget Zaległe faktury kredyty debety"
+msgstr "Widżet Zaległe faktury kredyty debety"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
@@ -15084,7 +15081,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reset to Draft"
-msgstr "Przywróć do projektu"
+msgstr "Przywróć do wersji roboczej"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -15262,7 +15259,7 @@ msgstr "Odwrócony na"
 #. module: account
 #: model:ir.ui.menu,name:account.account_audit_menu
 msgid "Review"
-msgstr "Recenzja"
+msgstr "Przegląd"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
@@ -19049,7 +19046,7 @@ msgstr "Łączna kwota bazowa"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Credit"
-msgstr "Suma Ma"
+msgstr "Suma \"Ma\""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -21503,7 +21500,7 @@ msgstr "out_invoice"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "zaległe kredyty"
+msgstr "nierozliczone noty kredytowe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
