@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-30 18:37+0000\n"
-"PO-Revision-Date: 2025-10-22 12:48+0000\n"
+"PO-Revision-Date: 2025-10-24 22:20+0000\n"
 "Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-18/"
 "loyalty/az/>\n"
@@ -212,6 +212,18 @@ msgid ""
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible="
+"\"program_type not in ('coupons', 'next_order_coupons')\">Kuponlar</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'loyalty'\">Loyallıq Kartları</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type not in ('promotion', 'buy_x_get_y')\">Promosyonlar</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'promo_code'\">Endirimlər</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'gift_card'\">Hədiyyə Kartları</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'ewallet'\">e-Pul kisəsi</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -802,7 +814,7 @@ msgstr "Endirim"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "Endirim və Loyallıq"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -1035,7 +1047,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate Gift Cards"
-msgstr ""
+msgstr "Hədiyyə Kartları Yaradın"
 
 #. module: loyalty
 #. odoo-python
@@ -1090,7 +1102,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,name:loyalty.gift_card_program
 msgid "Gift Cards"
-msgstr ""
+msgstr "Hədiyyə Kartları"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1109,7 +1121,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "Hədiyyə kartları və e-Pul kisəsi"
 
 #. module: loyalty
 #. odoo-python
@@ -1702,7 +1714,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
+msgstr "Məhsullar almağa imkan verən Hədiyyə Kartları satın"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree

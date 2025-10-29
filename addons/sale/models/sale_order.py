@@ -1463,7 +1463,7 @@ class SaleOrder(models.Model):
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'currency_id']
+        return ['company_id', 'partner_id', 'currency_id', 'fiscal_position_id']
 
     def _nothing_to_invoice_error_message(self):
         return _(
@@ -2222,7 +2222,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-        return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
+        return sol._get_discounted_price()
 
     #=== TOOLING ===#
 

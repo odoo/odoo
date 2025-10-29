@@ -217,13 +217,14 @@
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.cookies_warning.xml',
             'website/static/src/js/text_processing.js',
-            'website/static/src/snippets/observing_cookie_mixin.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
             'website/static/src/js/content/adapt_content.js',
+            'website/static/src/snippets/observing_cookie_mixin.js',
+            'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
@@ -231,6 +232,8 @@
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
+            ('remove', 'website/static/src/snippets/observing_cookie_mixin.js'),
+            ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',

@@ -4,11 +4,12 @@ from unittest.mock import patch
 
 import odoo
 from odoo import fields
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleMail(HttpCase):
+class TestWebsiteSaleMail(HttpCaseWithUserPortal):
 
     def test_01_shop_mail_tour(self):
         """The goal of this test is to make sure sending SO by email works."""
@@ -45,3 +46,30 @@ class TestWebsiteSaleMail(HttpCase):
             self.assertTrue(new_mail)
             self.assertIn('Your', new_mail.body_html)
             self.assertIn('order', new_mail.body_html)
+
+    def test_shop_product_mail_action_redirection(self):
+        product_template = self.env['product.template'].create({
+            'name': "test product template",
+            'sale_ok': True,
+            'website_published': True,
+        })
+        url = f'/mail/view?model=product.template&res_id={product_template.id}'
+        shop_url = f'/shop/test-product-template-{product_template.id}'
+
+        with self.subTest(user='admin'):
+            self.authenticate('admin', 'admin')
+            res = self.url_open(url)
+            self.assertEqual(res.status_code, 200)
+            self.assertTrue(res.request.path_url.startswith('/odoo/product.template'))
+
+        with self.subTest(user='portal'):
+            self.authenticate('portal', 'portal')
+            res = self.url_open(url)
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.request.path_url, shop_url)
+
+        with self.subTest(user=None):
+            self.authenticate(None, None)
+            res = self.url_open(url)
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.request.path_url, shop_url)

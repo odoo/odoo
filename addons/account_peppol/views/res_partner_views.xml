@@ -4,7 +4,7 @@
         <field name="name">res.partner.form.account.peppol</field>
             <field name="model">res.partner</field>
             <field name="priority">20</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="account_edi_ubl_cii.view_partner_property_form"/>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='invoice_sending_method']" position="before">

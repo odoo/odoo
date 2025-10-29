@@ -141,9 +141,9 @@ class Employee(models.Model):
         for contract in contracts:
             contracts_by_employee[contract.employee_id] += contract
         for employee in self:
-            employee_contracts = contracts_by_employee[employee.id]
+            employee_contracts = contracts_by_employee[employee]
             if employee_contracts:
-                res[employee.id] = contracts[0].resource_calendar_id.sudo(False)
+                res[employee.id] = employee_contracts[0].resource_calendar_id.sudo(False)
         return res
 
     def _get_calendar_periods(self, start, stop):

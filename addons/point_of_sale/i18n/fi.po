@@ -43,7 +43,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-16 18:38+0000\n"
+"POT-Creation-Date: 2025-10-24 18:36+0000\n"
 "PO-Revision-Date: 2025-08-29 13:49+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
@@ -7934,6 +7934,12 @@ msgid ""
 msgstr "Haettu palautettava määrä on suurempi kuin palautettava määrä."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "The search on Order Number only supports up to 3 digits."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
@@ -9146,6 +9152,14 @@ msgstr "Et voi muokata lähetetyn tilauksen maksua."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "Et voi laskuttaa eri yrityksille kuuluvia tilauksia."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"You cannot reset to draft an invoice linked to a POS order. You must refund "
+"the order or create a credit note instead."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

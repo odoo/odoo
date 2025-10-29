@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-# 
+#
 # Translators:
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Egon Raamat <egon@avalah.ee>, 2024
@@ -14,26 +14,25 @@
 # Anna, 2024
 # Stevin Lilla, 2024
 # Algo Kärp <algokarp@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-10-24 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Algo Kärp <algokarp@gmail.com>, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_multi_employee_sales_report
 msgid "A collection of single session reports. One for each employee"
-msgstr ""
-"Kollektsioon ühekordsetest sessiooni aruannetest. Üks igale töötajale."
+msgstr "Kollektsioon ühekordsetest sessiooni aruannetest. Üks igale töötajale."
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -174,6 +173,14 @@ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
 msgstr "Töötaja: %(employee)s - PoS seadistus: %(config_list)s\n"
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid ""
+"Employees linked to users with the PoS Manager role are automatically added "
+"to this list"
+msgstr ""
+
+#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
@@ -197,14 +204,6 @@ msgstr "Sisesta oma PIN"
 msgid "If left empty, all employees can log in to PoS"
 msgstr ""
 "Kui tühjaks jäetud, siis kõik töötajad saavad sisse logida kassa seanssi"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "If left empty, only Odoo users have extended rights in PoS"
-msgstr ""
-"Kui tühjaks jäetud, siis ainult Odoo kasutajatel on täiendavad õigused kassa"
-" moodulis"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -367,3 +366,8 @@ msgid ""
 msgstr ""
 "Te ei saa kustutada töötajat, keda võib olla kasutatakse aktiivses "
 "kassaseansis, sulge esmalt seanss:\n"
+
+#~ msgid "If left empty, only Odoo users have extended rights in PoS"
+#~ msgstr ""
+#~ "Kui tühjaks jäetud, siis ainult Odoo kasutajatel on täiendavad õigused "
+#~ "kassa moodulis"

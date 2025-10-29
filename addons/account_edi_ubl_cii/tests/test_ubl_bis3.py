@@ -482,3 +482,35 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_dispatch_base_lines_delta')
+
+    def test_unit_price_precision(self):
+        """ Check that with large quantities, the precision of the rounding on the unit price
+            is adapted in order to pass the Peppol schematron's requirement that the line's
+            subtotal must be equal to unit price * quantity, to a tolerance of less than 0.02.
+
+            In this case, the line's tax-excluded subtotal is 85.62, there are 8 units, so the raw unit
+            price is 85.62 / 8 = 10.7025.
+            If we round the unit price to 2 decimals, we get 10.70, but 10.70 * 8 = 85.60 which has
+            a difference of 0.02 with the subtotal, so this would not pass the schematron.
+            So we need to round the unit price to 3 decimals, which gives 10.703.
+        """
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 8,
+                    'price_unit': 12.95,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_unit_price_precision')
