@@ -46,6 +46,7 @@ import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_
 import { ActionHelper } from "@web/views/action_helper";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
+import { odoomark } from "@web/core/utils/html";
 
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
@@ -146,6 +147,7 @@ export class ListRenderer extends Component {
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
         this.tableRef = useRef("table");
+        this.odoomark = odoomark;
 
         this.longTouchTimer = null;
         this.touchStartMs = 0;

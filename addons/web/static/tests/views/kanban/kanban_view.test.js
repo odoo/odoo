@@ -9588,3 +9588,30 @@ test("limit is reset when restoring a view after ungrouping", async () => {
     await switchView("kanban");
     expect.verifySteps(["limit=40"]);
 });
+
+test(`groupby use odoomark`, async () => {
+    patchWithCleanup(Partner.prototype, {
+        _getFormattedDisplayName(record) {
+            return `**${record.name}** \`tag\``;
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban sample="1">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                        <field name="product_id"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(`.o_kanban_group`).toHaveCount(2);
+    expect(`.o_kanban_group b`).toHaveCount(2);
+    expect(`.o_kanban_group span.o_badge`).toHaveCount(2);
+});
