@@ -12,9 +12,11 @@ from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
+from odoo.tools import SQL
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 import typing
+
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
     from .res_bank import ResPartnerBank
@@ -29,6 +31,20 @@ EU_EXTRA_VAT_CODES = {
     'GR': 'EL',
     'GB': 'XI',
 }
+
+
+def _res_partner_name_search_index(registry):
+    if not registry.has_trigram:
+        return ''  # Skip index creation
+    index_part = []
+    ResPartner = registry['res.partner']
+    for fname_searched in ResPartner._rec_names_search:
+        field_identifier = SQL.identifier(fname_searched)
+        if registry.has_unaccent:
+            index_part.append(SQL("unaccent(%s) gin_trgm_ops", field_identifier))
+        else:
+            index_part.append(SQL("%s gin_trgm_ops", field_identifier))
+    return SQL("USING GIN (%s)", SQL(", ").join(index_part))
 
 
 @api.model
@@ -239,7 +255,6 @@ class ResPartner(models.Model):
     category_id: ResPartnerCategory = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     active = fields.Boolean(default=True)
-    employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
@@ -317,6 +332,7 @@ class ResPartner(models.Model):
         "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )",
         "Contacts require a name",
     )
+    _name_search = models.Index(_res_partner_name_search_index)
 
     def _get_street_split(self):
         self.ensure_one()
@@ -387,15 +403,14 @@ class ResPartner(models.Model):
     @api.depends('parent_id')
     def _compute_lang(self):
         """ While creating / updating child contact, take the parent lang by
-        default if any. 0therwise, fallback to default context / DB lang """
+        default if any. Otherwise, fallback to default context / DB lang """
         for partner in self.filtered('parent_id'):
             partner.lang = partner.parent_id.lang or self.default_get(['lang']).get('lang') or self.env.lang
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
         lang_count = len(self.env['res.lang'].get_installed())
-        for partner in self:
-            partner.active_lang_count = lang_count
+        self.active_lang_count = lang_count
 
     @api.depends('tz')
     def _compute_tz_offset(self):

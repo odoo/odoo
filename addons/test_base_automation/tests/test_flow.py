@@ -262,29 +262,29 @@ if env.context.get('old_values', None): # on write only
         Test case: automation is applied whenever a field is recomputed
                    after a change on another model.
         - trigger: on_create_or_write
-        - apply when: employee is True
+        - apply when: is_company is True
         """
         partner = self.res_partner_1
-        partner.write({'employee': False})
+        partner.write({'is_company': False})
 
         create_automation(
             self,
             model_id=self.lead_model.id,
             trigger='on_create_or_write',
-            filter_domain="[('employee', '=', True)]",
+            filter_domain="[('is_company', '=', True)]",
             _actions={'state': 'code', 'code': "record.write({'user_id': %s})" % (self.user_demo.id)},
         )
 
         lead = self.create_lead(partner_id=partner.id)
         self.assertEqual(lead.partner_id, partner)
-        self.assertEqual(lead.employee, False)
+        self.assertEqual(lead.is_company, False)
         self.assertEqual(lead.user_id, self.user_root)
 
         # change partner, recompute on lead should trigger the rule
-        partner.write({'employee': True})
+        partner.write({'is_company': True})
         self.env.flush_all()  # ensures the recomputation is done
         self.assertEqual(lead.partner_id, partner)
-        self.assertEqual(lead.employee, True)
+        self.assertEqual(lead.is_company, True)
         self.assertEqual(lead.user_id, self.user_demo)
 
     def test_011_recompute(self):
@@ -1249,13 +1249,13 @@ class TestCompute(common.TransactionCase):
         self.assertEqual(automation.on_change_field_ids.ids, [])
 
         # Change the domain will append each used field to the trigger fields
-        automation_form.filter_domain = repr([('priority', '=', True), ('employee', '=', False)])
+        automation_form.filter_domain = repr([('priority', '=', True), ('is_company', '=', False)])
         automation = automation_form.save()
         self.assertEqual(automation.filter_pre_domain, False)
-        self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('employee', '=', False)]))
+        self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('is_company', '=', False)]))
         self.assertSetEqual(set(automation.trigger_field_ids.ids), {
             self.env.ref('test_base_automation.field_base_automation_lead_test__priority').id,
-            self.env.ref('test_base_automation.field_base_automation_lead_test__employee').id,
+            self.env.ref('test_base_automation.field_base_automation_lead_test__is_company').id,
         })
         self.assertEqual(automation.on_change_field_ids.ids, [])
 
@@ -1265,10 +1265,10 @@ class TestCompute(common.TransactionCase):
         )
         automation = automation_form.save()
         self.assertEqual(automation.filter_pre_domain, False)
-        self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('employee', '=', False)]))
+        self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('is_company', '=', False)]))
         self.assertItemsEqual(automation.trigger_field_ids.ids, [
             self.env.ref('test_base_automation.field_base_automation_lead_test__priority').id,
-            self.env.ref('test_base_automation.field_base_automation_lead_test__employee').id,
+            self.env.ref('test_base_automation.field_base_automation_lead_test__is_company').id,
             self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
         ])
         self.assertEqual(automation.on_change_field_ids.ids, [])
@@ -1289,16 +1289,16 @@ class TestCompute(common.TransactionCase):
             'name': 'Test Automation',
             'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
             'trigger': 'on_create_or_write',
-            'filter_domain': repr([('employee', '=', False)]),
-            'trigger_field_ids': self.env.ref('test_base_automation.field_base_automation_lead_test__employee')
+            'filter_domain': repr([('is_company', '=', False)]),
+            'trigger_field_ids': self.env.ref('test_base_automation.field_base_automation_lead_test__is_company')
         })
 
         automation = on_save_automation.copy()
         self.assertEqual(automation.filter_pre_domain, False)
-        self.assertEqual(automation.filter_domain, repr([('employee', '=', False)]))
+        self.assertEqual(automation.filter_domain, repr([('is_company', '=', False)]))
         self.assertEqual(automation.trg_date_id.id, False)
         self.assertEqual(automation.trigger_field_ids.ids, [
-            self.env.ref('test_base_automation.field_base_automation_lead_test__employee').id
+            self.env.ref('test_base_automation.field_base_automation_lead_test__is_company').id
         ])
 
         # Changing to a time trigger must erase domains and trigger fields

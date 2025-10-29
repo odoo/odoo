@@ -18,7 +18,7 @@ class BaseAutomationLeadTest(models.Model):
     tag_ids = fields.Many2many('test_base_automation.tag')
     partner_id = fields.Many2one('res.partner', string='Partner')
     date_automation_last = fields.Datetime(string='Last Automation', readonly=True)
-    employee = fields.Boolean(compute='_compute_employee_deadline', store=True)
+    is_company = fields.Boolean(compute='_compute_employee_deadline', store=True)
     line_ids = fields.One2many('base.automation.line.test', 'lead_id')
 
     priority = fields.Boolean()
@@ -39,11 +39,11 @@ class BaseAutomationLeadTest(models.Model):
                     or Test_Base_AutomationStage.create({'name': 'New'})
                 )
 
-    @api.depends('partner_id.employee', 'priority')
+    @api.depends('partner_id.is_company', 'priority')
     def _compute_employee_deadline(self):
         # this method computes two fields on purpose; don't split it
         for record in self:
-            record.employee = record.partner_id.employee
+            record.is_company = record.partner_id.is_company
             if not record.priority or not record.create_date:
                 record.deadline = False
             else:
@@ -51,9 +51,9 @@ class BaseAutomationLeadTest(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
-        # force recomputation of field 'deadline' via 'employee': the action
+        # force recomputation of field 'deadline' via 'is_company': the action
         # based on 'deadline' must be triggered
-        self.mapped('employee')
+        self.mapped('is_company')
         return result
 
 
