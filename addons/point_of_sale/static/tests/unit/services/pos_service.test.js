@@ -4,6 +4,7 @@ import { definePosModels } from "../data/generate_model_definitions";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { imageUrl } from "@web/core/utils/urls";
+import { prepareRoundingVals } from "../accounting/utils";
 
 definePosModels();
 
@@ -400,6 +401,25 @@ describe("pos_store.js", () => {
         store.clearPendingOrder();
         ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
         expect(orderToDelete).toHaveLength(0);
+    });
+
+    test("getPaymentMethodFmtAmount", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const cashPm = store.models["pos.payment.method"].find((pm) => pm.is_cash_count);
+
+        // Case 1: No rounding enabled
+        expect(store.getPaymentMethodFmtAmount(cashPm, order)).toBeEmpty();
+
+        // Case 2: Rounding enabled, not limited to cash
+        const { cashPm: cash1, cardPm: card1 } = prepareRoundingVals(store, 0.05, "HALF-UP", false);
+        expect(store.getPaymentMethodFmtAmount(cash1, order)).toBe("$ 17.85");
+        expect(store.getPaymentMethodFmtAmount(card1, order)).toBe("$ 17.85");
+
+        // Case 3: Rounding enabled, only for cash
+        const { cashPm: cash2, cardPm: card2 } = prepareRoundingVals(store, 0.05, "HALF-UP", true);
+        expect(store.getPaymentMethodFmtAmount(cash2, order)).toBe("$ 17.85");
+        expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
     });
 
     describe("cacheReceiptLogo", () => {

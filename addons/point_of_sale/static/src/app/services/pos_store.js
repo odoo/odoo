@@ -2660,7 +2660,14 @@ export class PosStore extends WithLazyGetterTrap {
     }
     getPaymentMethodFmtAmount(pm, order) {
         const amount = order.getDefaultAmountDueToPayIn(pm);
-        return this.env.utils.formatCurrency(amount, true);
+        const fmtAmount = this.env.utils.formatCurrency(amount, true);
+
+        if (!this.currency.isPositive(amount) || !this.config.cash_rounding) {
+            return;
+        }
+        if (!this.config.only_round_cash_method || pm.type === "cash") {
+            return fmtAmount;
+        }
     }
     getDate(date) {
         const todayTs = DateTime.now().startOf("day").ts;
