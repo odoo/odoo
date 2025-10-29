@@ -178,21 +178,21 @@
         </record>
 
         <!-- Structure Type -->
-        <record id="structure_type_employee" model="hr.payroll.structure.type">
+        <record id="structure_employee" model="hr.payroll.structure">
             <field name="name">Employee</field>
             <field name="country_id" eval="False"/>
         </record>
-        <record id="structure_type_worker" model="hr.payroll.structure.type">
+        <record id="structure_worker" model="hr.payroll.structure">
             <field name="name">Worker</field>
             <field name="country_id" eval="False"/>
         </record>
 
-        <record id="structure_type_employee_cp200_pfi" model="hr.payroll.structure.type">
+        <record id="structure_employee_cp200_pfi" model="hr.payroll.structure">
             <field name="name">CP200 PFI BE</field>
             <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="country_id" ref="base.be"/>
         </record>
-        <record id="structure_type_employee_cp200" model="hr.payroll.structure.type">
+        <record id="structure_employee_cp200" model="hr.payroll.structure">
             <field name="name">CP200 BE</field>
             <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
             <field name="country_id" ref="base.be"/>
@@ -224,7 +224,7 @@
 
         <!-- Add default Structure to employee admin -->
         <record id="employee_admin" model="hr.employee">
-            <field name="structure_type_id" ref="hr.structure_type_employee"/>
+            <field name="structure_id" ref="hr.structure_employee"/>
         </record>
     </data>
 </odoo>

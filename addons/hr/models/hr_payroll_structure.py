@@ -1,9 +1,9 @@
 from odoo import fields, models
 
 
-class HrPayrollStructureType(models.Model):
-    _name = 'hr.payroll.structure.type'
-    _description = 'Salary Structure Type'
+class HrPayrollStructure(models.Model):
+    _name = 'hr.payroll.structure'
+    _description = 'Salary Structure'
 
     name = fields.Char('Salary Structure Type')
     default_resource_calendar_id = fields.Many2one(
