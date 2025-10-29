@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record id="r_translation_category_0" model="r_translation.category">
+            <field name="name">Chat</field>
+        </record>
+        <record id="r_translation_category_0_0" model="r_translation.category">
+            <field name="name">Foolish</field>
+            <field name="parent" ref="r_translation_category_0"/>
+        </record>
+
+        <record id="r_translation_discussion_0" model="r_translation.discussion">
+            <field name="name">Stuff</field>
+            <field name="participants" eval="[Command.link(ref('base.user_root'))]"/>
+        </record>
+
+        <record id="r_translation_message_0_0" model="r_translation.message">
+            <field name="discussion" ref="r_translation_discussion_0"/>
+            <field name="body">Hey dude!</field>
+            <field name="label">hello</field>
+        </record>
+        <record id="r_translation_message_0_1" model="r_translation.message">
+            <field name="discussion" ref="r_translation_discussion_0"/>
+            <field name="body">What's up?</field>
+        </record>
+        <record id="r_translation_message_0_2" model="r_translation.message">
+            <field name="discussion" ref="r_translation_discussion_0"/>
+            <field name="body">This is a much longer message</field>
+        </record>
+
+        <record id="r_translation_emailmessage_0_0" model="r_translation.emailmessage">
+            <field name="message" ref="r_translation_message_0_0"/>
+            <field name="email_to">first@example.localhost</field>
+        </record>
+    </data>
+</odoo>
