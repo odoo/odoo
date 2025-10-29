@@ -11,7 +11,7 @@ class TestGenericSAEdi(TestGenericLocalization):
     @AccountTestInvoicingCommon.setup_country('sa')
     def setUpClass(cls):
         super().setUpClass()
-        cls.main_pos_config.journal_id._l10n_sa_load_edi_demo_data()
+        cls.main_pos_config.journal_id._l10n_sa_load_edi_test_data()
         cls.company.write({
             'name': 'Generic SA EDI',
             'email': 'info@company.saexample.com',

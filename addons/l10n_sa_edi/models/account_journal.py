@@ -601,7 +601,14 @@ class AccountJournal(models.Model):
         auth_str = "%s:%s" % (auth_data['binarySecurityToken'], auth_data['secret'])
         return 'Basic ' + b64encode(auth_str.encode()).decode()
 
-    def _l10n_sa_load_edi_demo_data(self):
+    def _l10n_sa_load_edi_test_data(self):
+        """
+            Populate the journal and company with test EDI data for Saudi Arabia compliance.
+            This method is intended for use in tests and development environments where
+            external HTTP requests to ZATCA or other validation services are not allowed.
+            It generates a private key, sets a dummy CSR, and populates CSID JSON fields
+            with example data.
+        """
         self.ensure_one()
         self.company_id.l10n_sa_private_key_id = self.env['certificate.key']._generate_ec_private_key(self.company_id)
         self.write({

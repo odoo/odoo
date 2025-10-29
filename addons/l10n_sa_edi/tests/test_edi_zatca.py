@@ -371,7 +371,7 @@ class TestEdiZatca(TestSaEdiCommon):
             ('company_id', '=', new_company.id),
             ('type', '=', 'sale'),
         ], limit=1)
-        new_company_customer_invoice_journal._l10n_sa_load_edi_demo_data()
+        new_company_customer_invoice_journal._l10n_sa_load_edi_test_data()
 
         new_company.country_id = False
 

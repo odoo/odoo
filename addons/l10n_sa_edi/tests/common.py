@@ -146,7 +146,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         ], limit=1)
 
         # Load ZATCA demo data (certificates, etc.)
-        cls.customer_invoice_journal._l10n_sa_load_edi_demo_data()
+        cls.customer_invoice_journal._l10n_sa_load_edi_test_data()
         PCSID_Data = json.loads(cls.customer_invoice_journal.l10n_sa_production_csid_json)
         pcsid_certificate = cls.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',
