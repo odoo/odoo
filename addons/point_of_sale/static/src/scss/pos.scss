@@ -171,10 +171,12 @@ select > option {
 @for $size from 2 through length($o-colors) {
     .o_colorlist_item_color_transparent_#{$size - 1} {
         $-border-color: adjust-color(nth($o-colors, $size), $lightness: 15%, $saturation: 5%);
-        $-background-color: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 5%);
+        $-background-color: mix(nth($o-colors, $size), $white, 15%);
         --bg: #{$-background-color};
         --hover-bg: #{darken($-background-color, 5%)};
+        --btn-active-bg: #{darken($-background-color, 10%)};
         --border-color: #{$-border-color};
+        --btn-active-border-color: #{$-border-color};
     }
 
     .o_colorlist_item_numpad_color_#{$size - 1} {
