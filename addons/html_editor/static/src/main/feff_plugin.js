@@ -41,6 +41,7 @@ export class FeffPlugin extends Plugin {
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         clipboard_text_processors: (text) => text.replace(/\ufeff/g, ""),
+        before_split_around_until_handlers: (root) => this.cleanForSave({ root, preserveSelection: true }),
     };
 
     cleanForSave({ root, preserveSelection = false }) {
