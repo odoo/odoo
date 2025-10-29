@@ -1186,3 +1186,50 @@ class TestLoyalty(TestSaleCouponCommon):
 
         self.assertEqual(len(order.order_line.ids), 2)
         self.assertEqual(order.order_line[1].name, updated_description)
+
+    def test_archiving_loyalty_card_unlinks_draft_points_from_sale_order(self):
+        """
+        When a loyalty card has points accrued from a draft sale order, archiving the
+        card should unlink those draft points so they are no longer claimable on that order
+        """
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [
+                Command.create({
+                    'reward_point_mode': 'unit',
+                    'reward_point_amount': 100,
+                    'product_ids': [self.product_a.id],
+                }),
+            ],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'discount',
+                    'discount': 50,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'order',
+                    'required_points': 10,
+                }),
+            ],
+        })
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner.id,
+            'points': 0,
+        })
+        sale_order = self.empty_order
+        sale_order.write({
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                }),
+            ]
+        })
+        sale_order._update_programs_and_rewards()
+        claimable_rewards = sale_order._get_claimable_rewards()
+        self.assertTrue(claimable_rewards[loyalty_card])
+        loyalty_card.action_archive()
+        claimable_rewards = sale_order._get_claimable_rewards()
+        self.assertFalse(claimable_rewards.get(loyalty_card))
