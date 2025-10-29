@@ -7,39 +7,39 @@ from odoo.tests.common import TransactionCase, new_test_user, tagged
 class Many2manyCase(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.ship = self.env['test_orm.ship'].create({'name': 'Colombus'})
+        self.ship = self.env['test_many2many.ship'].create({'name': 'Colombus'})
         # the ship contains one prisoner
-        self.env['test_orm.prisoner'].create({
+        self.env['test_many2many.prisoner'].create({
             'name': 'Brian',
             'ship_ids': self.ship.ids,
         })
         # the ship contains one pirate
-        self.blackbeard = self.env['test_orm.pirate'].create({
+        self.blackbeard = self.env['test_many2many.pirate'].create({
             'name': 'Black Beard',
             'ship_ids': self.ship.ids,
         })
-        self.redbeard = self.env['test_orm.pirate'].create({'name': 'Red Beard'})
+        self.redbeard = self.env['test_many2many.pirate'].create({'name': 'Red Beard'})
 
     def test_not_in_relation(self):
-        pirates = self.env['test_orm.pirate'].search([('ship_ids', 'not in', self.ship.ids)])
+        pirates = self.env['test_many2many.pirate'].search([('ship_ids', 'not in', self.ship.ids)])
         self.assertEqual(len(pirates), 1)
         self.assertEqual(pirates, self.redbeard)
 
     def test_not_in_relation_as_query(self):
         # ship_ids is a Query object
-        ship_ids = self.env['test_orm.ship']._search([('name', '=', 'Colombus')])
-        pirates = self.env['test_orm.pirate'].search([('ship_ids', 'not in', ship_ids)])
+        ship_ids = self.env['test_many2many.ship']._search([('name', '=', 'Colombus')])
+        pirates = self.env['test_many2many.pirate'].search([('ship_ids', 'not in', ship_ids)])
         self.assertEqual(len(pirates), 1)
         self.assertEqual(pirates, self.redbeard)
 
     def test_bypass_search_access(self):
         user = new_test_user(self.env, 'foo', groups='base.group_system')
 
-        attachment = self.env['test_orm.attachment'].create({
+        attachment = self.env['test_many2many.attachment'].create({
             'res_model': self.ship._name,
             'res_id': self.ship.id,
         }).with_user(user)
-        record = self.env['test_orm.attachment.host'].create({
+        record = self.env['test_many2many.attachment.host'].create({
             'm2m_attachment_ids': [Command.link(attachment.id)],
         }).with_user(user)
 
