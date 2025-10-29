@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- List view of 'department.history' model. -->
+    <record id="department_history_view_tree" model="ir.ui.view">
+        <field name="name">department.history.view.list</field>
+        <field name="model">department.history</field>
+        <field name="arch" type="xml">
+            <list string="Department History">
+                <field name="employee" column_invisible="True"/>
+                <field name="employee_name" column_invisible="True"/>
+                <field name="changed_field"/>
+                <field name="updated_date"/>
+                <field name="current_value"/>
+            </list>
+        </field>
+    </record>
+</odoo>

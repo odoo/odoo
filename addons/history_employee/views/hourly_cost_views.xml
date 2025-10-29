@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- List View of hourly.cost model-->
+    <record id="hourly_cost_view_tree" model="ir.ui.view">
+        <field name="name">hourly.cost.view.list</field>
+        <field name="model">hourly.cost</field>
+        <field name="arch" type="xml">
+            <list string="Hourly Cost">
+                <field name="employee" column_invisible="True"/>
+                <field name="employee_name" column_invisible="True"/>
+                <field name="updated_date"/>
+                <field name="current_value"/>
+            </list>
+        </field>
+    </record>
+</odoo>

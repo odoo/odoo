@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Extended Employee form view to add Job / Department History, Salary History, Contract History and  Hourly Cost  History buttons. -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.history.employee</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hr_settings']" position="after">
+                <page name="history" string="Employee History">
+                    <group>
+                        <group>
+                            <button type="object" name="action_job_history" class="oe_highlight"
+                                    string="Job / Department History"/>
+                            <button type="object" name="action_salary_history" class="oe_highlight"
+                                    string="Salary History"/>
+                            <button type="object" name="action_contract_history" class="oe_highlight"
+                                    string="Contract History"/>
+                            <button type="object" name="action_hourly_cost" class="oe_highlight"
+                                    string="Hourly Cost History"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

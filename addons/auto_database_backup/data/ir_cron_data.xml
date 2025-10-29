@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Schedule action for generating automatic database backup-->
+        <record id="ir_cron_auto_db_backup_daily" model="ir.cron">
+            <field name="name">Backup : Daily Database Backup</field>
+            <field name="model_id" ref="model_db_backup_configure"/>
+            <field name="state">code</field>
+            <field name="code">model._schedule_auto_backup('daily')</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="ir_cron_auto_db_backup_weekly" model="ir.cron">
+            <field name="name">Backup : Weekly Database Backup</field>
+            <field name="model_id" ref="model_db_backup_configure"/>
+            <field name="state">code</field>
+            <field name="code">model._schedule_auto_backup('weekly')</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+        </record>
+
+        <record id="ir_cron_auto_db_backup_monthly" model="ir.cron">
+            <field name="name">Backup : Monthly Database Backup</field>
+            <field name="model_id" ref="model_db_backup_configure"/>
+            <field name="state">code</field>
+            <field name="code">model._schedule_auto_backup('monthly')</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+        </record>
+
+    </data>
+</odoo>
