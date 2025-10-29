@@ -42,7 +42,7 @@
                 <!-- Total -->
                 <div class="pos-receipt-amount receipt-total fw-bolder">
                     <span class="label-total">Total</span>
-                    <span t-out="order.currencyDisplayPrice" class="pos-receipt-right-align font-monospace"/>
+                    <span t-out="order.currencyDisplayPriceIncl" class="pos-receipt-right-align font-monospace"/>
                 </div>
                 <t t-if="order.appliedRounding">
                     <div class="pos-receipt-amount receipt-rounding">

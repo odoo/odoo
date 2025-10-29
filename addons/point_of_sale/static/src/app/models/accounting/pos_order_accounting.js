@@ -6,12 +6,34 @@ import { formatCurrency } from "@web/core/currency";
 const CONSOLE_COLOR = "#4EFF4D";
 
 export class PosOrderAccounting extends Base {
+    static accountingFields = new Set(["pricelist_id", "fiscal_position_id"]);
+
+    setup() {
+        super.setup();
+
+        this._prices = {};
+        this.triggerRecomputeAllPrices();
+    }
+
+    triggerRecomputeAllPrices() {
+        this._prices.original = this._constructPriceData();
+        this._prices.unit = this._constructPriceData({ baseLineOpts: { quantity: 1 } });
+    }
+
     /**
      * Currency formatted prices, these getters already handle included/excluded tax configuration.
      * They must be used each time a price is displayed to the user.
      */
     get currencyDisplayPrice() {
         return formatCurrency(this.displayPrice, this.currency.id);
+    }
+
+    get currencyDisplayPriceIncl() {
+        return formatCurrency(this.priceIncl, this.currency.id);
+    }
+
+    get currencyDisplayPriceExcl() {
+        return formatCurrency(this.priceExcl, this.currency.id);
     }
 
     get currencyAmountTaxes() {
@@ -67,7 +89,7 @@ export class PosOrderAccounting extends Base {
         }
 
         const total =
-            Math.abs(this.displayPrice) -
+            Math.abs(this.priceIncl) -
             Math.abs(this.amountPaid) +
             (isNegative ? -roundingSanatizer : roundingSanatizer);
 
@@ -94,7 +116,10 @@ export class PosOrderAccounting extends Base {
      * Do not try to make your own price computation outside these getters.
      */
     get prices() {
-        return this._constructPriceData();
+        return this._prices.original;
+    }
+    get unitPrices() {
+        return this._prices.unit;
     }
     get priceIncl() {
         return this.prices.taxDetails.total_amount_no_rounding;

@@ -648,6 +648,9 @@ export function searchProduct(string) {
         },
     ];
 }
+export function subtotalAmountIs(amount) {
+    return inLeftSide(...Order.hasSubtotal(amount));
+}
 export function totalAmountIs(amount) {
     return inLeftSide(...Order.hasTotal(amount));
 }
