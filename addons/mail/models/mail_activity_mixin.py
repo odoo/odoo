@@ -8,7 +8,7 @@ import pytz
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import SQL
+from odoo.tools import SQL, groupby
 
 _logger = logging.getLogger(__name__)
 
@@ -252,13 +252,15 @@ class MailActivityMixin(models.AbstractModel):
             """
             display_name_by_model = self.env.cr.precommit.data.pop('mail_activity_mixin_write_original_display_names', {})
             to_recompute_activities_sudo = self.env['mail.activity'].sudo()
-            for model, display_name_by_res_id in display_name_by_model.items():
-                records_sudo = self.env[model].browse(list(display_name_by_res_id.keys())).sudo().exists()
-                modified_records = self.browse([
-                    res_id for res_id, new_display_name in zip(records_sudo.ids, records_sudo.mapped('display_name'))
-                    if display_name_by_res_id[res_id] != new_display_name
-                ])
-                to_recompute_activities_sudo |= modified_records.sudo().activity_ids
+            for model, display_name_by_record in display_name_by_model.items():
+                # group by env to only use sudo if it was originally used etc...
+                for env, records in groupby(display_name_by_record.keys(), lambda record: record.env):
+                    records = env[model].concat(*records).exists()
+                    modified_records = env[model].concat(*[
+                        record for record, new_display_name in zip(records, records.mapped('display_name'))
+                        if display_name_by_record[record] != new_display_name
+                    ])
+                    to_recompute_activities_sudo |= modified_records.sudo().activity_ids
             to_recompute_activities_sudo._compute_res_name()
 
         # add the original display_name when the records were first encountered to be checked later.
@@ -268,7 +270,7 @@ class MailActivityMixin(models.AbstractModel):
         ]) if self._rec_name else []
         if any(field_name for field_name in observed_field_names if field_name in vals):
             precommit_data = self.env.cr.precommit.data.setdefault('mail_activity_mixin_write_original_display_names', {})
-            precommit_data[self._name] = dict(zip(self.ids, self.mapped(self._rec_name))) | precommit_data.setdefault(self._name, {})
+            precommit_data[self._name] = dict(zip(self, self.mapped(self._rec_name))) | precommit_data.setdefault(self._name, {})
             self.env.cr.precommit.add(update_activity_res_name)
 
         return super().write(vals)
