@@ -344,8 +344,8 @@
                    t-value="not request.env.user._is_public() and
                             (post_id.can_close or post_id.can_edit or post_id.can_unlink or post_id.can_moderate or post_id.can_flag)"/>
                 <div class="btn-toolbar align-items-center mt-3" role="toolbar">
-                    <t t-if="post_id.state == 'active' and post_id.active != False" t-call="website_forum.vote">
-                        <t t-set="post" t-value="post_id"/>
+                    <t t-if="post_id.state == 'active' and post_id.active != False" t-call="website_forum.vote"
+                        post="post_id">
                         <t t-if="post_id == answer">
                             <t t-set="helper_accept">Mark as Best Answer</t>
                             <t t-set="helper_own_post">You can't vote for your own post</t>

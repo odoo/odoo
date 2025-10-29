@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_payment_receipt_document">
-        <t t-call="web.external_layout">
-            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+        <t t-set="o" t-value="o.with_context(lang=lang)"/>
+        <t t-call="web.external_layout" o="o">
             <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
             <div class="page">
                 <h3><strong><span t-field="o.payment_receipt_title">Payment Receipt</span>: <span t-field="o.name">INV0001</span></strong></h3>

@@ -72,8 +72,8 @@
             </td>
         </xpath>
         <!-- End Invoice table -->
-        <t t-set="show_exchange_rate" position="attributes">
-            <attribute name="t-value">1</attribute>
+        <t t-call="l10n_gcc_invoice.l10n_gcc_document_tax_totals_company_currency_template" position="attributes">
+            <attribute name="show_exchange_rate">1</attribute>
         </t>
     </template>
     <!-- Workaround for Studio reports, see odoo/odoo#60660 -->

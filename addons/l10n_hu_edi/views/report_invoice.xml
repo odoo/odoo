@@ -8,7 +8,9 @@
     </template>
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
-        <xpath expr="//t[@t-set='forced_vat']" position="replace"/>
+        <t t-call="web.external_layout" position="attributes">
+            <attribute name="forced_vat"/>
+        </t>
         <xpath expr="//t[@t-set='o']" position="after">
             <t t-set="sign" t-value="-1 if 'refund' in o.move_type else 1"/>
             <t t-set="custom_header" t-value="'l10n_hu_edi.custom_header'"/>
@@ -91,9 +93,7 @@
         </xpath>
         <xpath expr="//div[hasclass('clearfix')]//t[@t-call='account.document_tax_totals']" position="attributes">
             <attribute name="t-call">l10n_hu_edi.document_tax_totals</attribute>
-        </xpath>
-        <xpath expr="//div[hasclass('clearfix')]//t[@t-set='tax_totals']" position="attributes">
-            <attribute name="t-value">o._l10n_hu_get_invoice_totals_for_report()</attribute>
+            <attribute name="tax_totals">o._l10n_hu_get_invoice_totals_for_report()</attribute>
         </xpath>
         <xpath expr="//td[@name='account_invoice_line_name']/span" position="after">
             <div t-if="line.product_id.l10n_hu_product_code_type and line.product_id.l10n_hu_product_code">

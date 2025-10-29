@@ -197,11 +197,11 @@
 </template>
 
 <template id="header" name="Forum Index">
-    <t t-call="website_forum.layout">
+    <t t-set="head" t-if="forum and not forum.active">
+        <meta name="robots" content="noindex, nofollow" />
+    </t>
+    <t t-call="website_forum.layout" head="head">
         <t t-if="forum and not forum.active">
-            <t t-set="head">
-                <meta name="robots" content="noindex, nofollow" />
-            </t>
             <div class="text-center text-muted">
                 <p class="css_editable_hidden"><h1 class="h2-fs">This forum has been archived.</h1></p>
             </div>

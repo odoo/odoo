@@ -184,7 +184,7 @@
         </template>
 
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
-            <xpath expr="//t[@t-set='forced_vat']" position="after">
+            <t t-call="web.external_layout" position="before">
                 <t t-set="din5008_document_information">
                     <div class="information_block" t-if="o and o._name=='account.move'">
                         <table>
@@ -270,7 +270,12 @@
                         <t t-if="o.move_type == 'in_invoice'">Vendor Bill</t>
                     </span>
                 </t>
-            </xpath>
+            </t>
+            <t t-call="web.external_layout" position="attributes">
+                <attribute name="din5008_document_information">din5008_document_information</attribute>
+                <attribute name="din5008_address_block">din5008_address_block</attribute>
+                <attribute name="din5008_document_title">din5008_document_title</attribute>
+            </t>
             <!-- Insert Position Column as the First Column in the Table Header -->
             <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="before">
                 <t t-if="o.company_id.has_position_column">

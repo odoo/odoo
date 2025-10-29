@@ -5,14 +5,16 @@
     <t t-call="website_event.layout"
         navbar_back_url="'/event/%s/track' % (slug(event))"
         navbar_back_title.translate="Back to All Talks"
-        navbar_back_text.translate="All Talks"
-        option_track_wishlist="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')">
+        navbar_back_text.translate="All Talks">
         <!-- Set aside block only if there are filtered tracks -->
         <t t-set="has_ongoing_or_upcoming" t-value="any(track.is_track_live or track.track_start_remaining for track in tracks_other)"/>
         <t t-set="filtered_tracks_other" t-value="tracks_other.filtered(lambda track: not (has_ongoing_or_upcoming and track.is_track_done))"/>
 
         <div class="o_wevent_online o_wesession_index">
             <!-- Options -->
+            <t t-set="has_ongoing_or_upcoming" t-value="any(track.is_track_live or track.track_start_remaining for track in tracks_other)"/>
+            <t t-set="filtered_tracks_other" t-value="tracks_other.filtered(lambda track: not (has_ongoing_or_upcoming and track.is_track_done))"/>
+            <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')"/>
             <t t-set="option_widescreen" t-value="option_widescreen or False"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
