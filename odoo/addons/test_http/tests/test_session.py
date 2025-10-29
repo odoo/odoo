@@ -343,8 +343,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
         reset_cached_properties(odoo.http.root)
         self.addCleanup(reset_cached_properties, odoo.http.root)
-        patcher = patch.dict(config.options, {'data_dir': self.tmpdir.name})
-        self.startPatcher(patcher)
+        self.patch(config, 'options', config.options.new_child({'data_dir': self.tmpdir.name}))
 
     @mute_logger('odoo.http')
     def test01_session_nan(self):

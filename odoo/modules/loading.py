@@ -332,6 +332,7 @@ def load_modules(
     install_modules: Collection[str] = (),
     reinit_modules: Collection[str] = (),
     new_db_demo: bool = False,
+    load_language: bool | None = None,
 ) -> None:
     """ Load the modules for a registry object that has just been created.  This
         function is part of Registry.new() and should not be used anywhere else.
@@ -342,6 +343,7 @@ def load_modules(
         :param install_modules: A collection of module names to install.
         :param reinit_modules: A collection of module names to reinitialize.
         :param new_db_demo: Whether to install demo data for new database. Defaults to ``False``
+        :param load_language: If the value is not None, the corresponding language will be installed.
     """
     initialize_sys_path()
 
@@ -396,13 +398,12 @@ def load_modules(
             install_demo=new_db_demo,
         )
 
-        load_lang = tools.config._cli_options.pop('load_language', None)
-        if load_lang or update_module:
+        if load_language or update_module:
             # some base models are used below, so make sure they are set up
             registry._setup_models__(cr, [])  # incremental setup
 
-        if load_lang:
-            for lang in load_lang.split(','):
+        if load_language:
+            for lang in load_language.split(','):
                 tools.translate.load_language(cr, lang)
 
         # STEP 2: Mark other modules to be loaded/updated

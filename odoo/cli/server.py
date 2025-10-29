@@ -95,6 +95,7 @@ def setup_pid_file():
 def main(args):
     check_root_user()
     config.parse_config(args, setup_logging=True)
+    config.lock()
     check_postgres_user()
     report_configuration()
 

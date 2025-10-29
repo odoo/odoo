@@ -107,7 +107,7 @@ class TestIrMailServer(MailCommon):
             self.env['ir.mail_server']._get_default_from_address(),
             self.default_from_address)
 
-    @patch.dict(config.options, {"email_from": "settings@example.com"})
+    @MailCommon.test_config(email_from='settings@example.com')
     def test_default_email_from(self, *args):
         """ Check that default_from parameter of alias domain respected. """
         for (default_from, domain_name), expected_from in zip(
@@ -135,7 +135,7 @@ class TestIrMailServer(MailCommon):
                 self.assertEqual(message["From"], expected_from)
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict(config.options, {
+    @MailCommon.test_config({
         "from_filter": "dummy@example.com, test.mycompany.com, dummy2@example.com",
         "smtp_server": "example.com",
     })
@@ -436,7 +436,7 @@ class TestPersonalServer(MailCommon):
             self.assertEqual(set(to_check), {send_datetime.replace(second=0) + timedelta(minutes=i)})
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
-    @patch.dict(config.options, {
+    @MailCommon.test_config({
         "from_filter": "cli@example.com",
         "smtp_server": "example.com",
     })

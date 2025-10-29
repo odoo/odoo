@@ -250,7 +250,9 @@ class TestTestCursor(common.TransactionCase):
             # must match
             # `cr._cnx.dsn`
             # 'port=5432 sslmode=prefer dbname=14.0'
-            config['db_port'] = self.env.cr._cnx.info.port
+            self.patch(config, 'options', config.options.new_child({
+                'db_port': self.env.cr._cnx.info.port,
+            }))
 
         cursors = []
         try:
@@ -281,7 +283,6 @@ class TestTestCursor(common.TransactionCase):
             for cursor in cursors:
                 if not cursor.closed:
                     cursor.close()
-            config['db_port'] = origin_db_port
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

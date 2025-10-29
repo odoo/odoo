@@ -38,7 +38,7 @@ class _FakeSMTP:
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class EmailConfigCase(TransactionCase):
 
-    @patch.dict(config.options, {"email_from": "settings@example.com"})
+    @TransactionCase.test_config(email_from="settings@example.com")
     def test_default_email_from(self):
         """ Email from setting is respected and comes from configuration. """
         message = self.env["ir.mail_server"]._build_email__(
@@ -361,7 +361,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
-    @patch.dict(config.options, {
+    @TransactionCase.test_config({
         "from_filter": "dummy@example.com, test.mycompany.com, dummy2@example.com",
         "smtp_server": "example.com",
     })
@@ -435,6 +435,10 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     @mute_logger('odoo.models.unlink')
     @patch.dict(config.options, {'from_filter': 'fake.com', 'smtp_server': 'cli_example.com'})
+    @TransactionCase.test_config({
+        "from_filter": "fake.com",
+        "smtp_server": "cli_example.com",
+    })
     def test_mail_server_config_cli(self):
         """ Test the mail server configuration when the "smtp_authentication" is
         "cli". It should take the configuration from the odoo-bin argument. The
