@@ -35,14 +35,12 @@ class ProductProduct(models.Model):
             ])
             for expense_sudo in expenses_sudo:
                 expense_product_sudo = expense_sudo.product_id
-                tax_domain = self.env['account.tax']._check_company_domain(expense_sudo.company_id)
                 product_has_cost = (
                         expense_product_sudo
                         and not expense_sudo.company_currency_id.is_zero(expense_product_sudo.standard_price)
                 )
                 expense_vals = {
                     'product_has_cost': product_has_cost,
-                    'product_has_tax': bool(expense_product_sudo.supplier_taxes_id.filtered_domain(tax_domain)),
                 }
                 if product_has_cost:
                     expense_vals.update({

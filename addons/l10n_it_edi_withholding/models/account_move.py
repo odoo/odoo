@@ -183,7 +183,7 @@ class AccountMove(models.Model):
     def _l10n_it_edi_export_taxes_check(self):
         # EXTENDS l10n_it_edi
         errors = super()._l10n_it_edi_export_taxes_check()
-        for kind_code, kind_desc in (('withholding', _('Withholding')), ('pension_fund', _('Pension Fund'))):
+        for kind_code, kind_desc in (('withholding_no_enasarco', _('Withholding')), ('pension_fund', _('Pension Fund'))):
             errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len=0))
         return errors
 
