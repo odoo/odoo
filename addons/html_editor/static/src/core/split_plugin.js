@@ -243,6 +243,7 @@ export class SplitPlugin extends Plugin {
      * @returns { Node }
      */
     splitAroundUntil(elements, limitAncestor) {
+        this.dispatchTo("before_split_around_until_handlers", limitAncestor);
         elements = Array.isArray(elements) ? elements : [elements];
         const firstNode = elements[0];
         const lastNode = elements[elements.length - 1];
