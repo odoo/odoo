@@ -1,7 +1,17 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { basicHeaderOptionSettings } from "./basicHeaderOptionSettings";
 
 export class HeaderElementsOption extends BaseOptionComponent {
     static template = "website.HeaderElementsOption";
+<<<<<<< 189f0506f09249c5a7c2f7b7a5b02d9bd996014d
+||||||| 4a1299e5439fa44eb73d613fec843f06dabaf895
+    static dependencies = ["customizeWebsite"];
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+=======
+    static dependencies = ["customizeWebsite"];
+>>>>>>> 2bf23d432e9f7e85c8be1c9b1630f6a133c956c8
 
     setup() {
         super.setup();
@@ -20,3 +30,5 @@ export class HeaderElementsOption extends BaseOptionComponent {
         };
     }
 }
+
+Object.assign(HeaderElementsOption, basicHeaderOptionSettings);

@@ -23,3 +23,10 @@ export class HeaderNavigationOption extends BaseOptionComponent {
         return false;
     }
 }
+<<<<<<< 189f0506f09249c5a7c2f7b7a5b02d9bd996014d
+||||||| 4a1299e5439fa44eb73d613fec843f06dabaf895
+Object.assign(HeaderNavigationOption, basicHeaderOptionSettings);
+=======
+
+Object.assign(HeaderNavigationOption, basicHeaderOptionSettings);
+>>>>>>> 2bf23d432e9f7e85c8be1c9b1630f6a133c956c8

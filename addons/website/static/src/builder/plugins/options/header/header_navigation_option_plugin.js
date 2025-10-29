@@ -1,14 +1,21 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { HeaderNavigationOption } from "./header_navigation_option";
+<<<<<<< 189f0506f09249c5a7c2f7b7a5b02d9bd996014d
 import { HEADER_NAVIGATION, basicHeaderOptionSettings } from "./header_option_plugin";
 import { withSequence } from "@html_editor/utils/resource";
+||||||| 4a1299e5439fa44eb73d613fec843f06dabaf895
+=======
+import { withSequence } from "@html_editor/utils/resource";
+import { HEADER_NAVIGATION } from "./header_option_plugin";
+>>>>>>> 2bf23d432e9f7e85c8be1c9b1630f6a133c956c8
 
 class HeaderNavigationOptionPlugin extends Plugin {
     static id = "HeaderNavigationOptionPlugin";
     static dependencies = ["customizeWebsite"];
 
     resources = {
+<<<<<<< 189f0506f09249c5a7c2f7b7a5b02d9bd996014d
         builder_options: [
             withSequence(HEADER_NAVIGATION, {
                 ...basicHeaderOptionSettings,
@@ -19,6 +26,11 @@ class HeaderNavigationOptionPlugin extends Plugin {
                 reloadTarget: true,
             }),
         ],
+||||||| 4a1299e5439fa44eb73d613fec843f06dabaf895
+        builder_options: [HeaderNavigationOption],
+=======
+        builder_options: [withSequence(HEADER_NAVIGATION, HeaderNavigationOption)],
+>>>>>>> 2bf23d432e9f7e85c8be1c9b1630f6a133c956c8
     };
 
     setup() {

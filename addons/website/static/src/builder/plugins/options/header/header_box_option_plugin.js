@@ -10,7 +10,49 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { HeaderBoxOption } from "./header_box_option";
+<<<<<<< 189f0506f09249c5a7c2f7b7a5b02d9bd996014d
 import { HEADER_BOX, basicHeaderOptionSettings } from "./header_option_plugin";
+||||||| 4a1299e5439fa44eb73d613fec843f06dabaf895
+import { HEADER_BOX } from "./header_option_plugin";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class HeaderTemplateOption extends BaseOptionComponent {
+    static template = "website.headerTemplateOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderContentWidthOption extends BaseOptionComponent {
+    static template = "website.headerContentWidthOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderSidebarWidthOption extends BaseOptionComponent {
+    static template = "website.headerSidebarWidthOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderBackgroundOption extends BaseOptionComponent {
+    static template = "website.headerBackgroundOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class HeaderScrollEffectOption extends BaseOptionComponent {
+    static template = "website.headerScrollEffectOption";
+    static selector = "#wrapwrap > header";
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+=======
+import { HEADER_BOX } from "./header_option_plugin";
+>>>>>>> 2bf23d432e9f7e85c8be1c9b1630f6a133c956c8
 
 class HeaderBoxOptionPlugin extends Plugin {
     static id = "HeaderBoxOptionPlugin";
