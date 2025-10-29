@@ -2750,21 +2750,82 @@ export class PosStore extends WithLazyGetterTrap {
         await validation.validateOrder(false);
     }
 
-    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
+    /**
+     * Handle the preparation history when merging or moving orderlines.
+     * @param {*} srcPrep last_preparation_change source
+     * @param {*} destPrep last_preparation_change target
+     * @param {*} srcLine ordeline that's being merge/moved
+     * @param {*} destLine orderline to which srcLine is being merge/moved
+     * @param {*} qty quantity to move
+     * @param {*} formerUuid former uuid of the destLine in case of unmerge
+     */
+    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty, formerDestUuid) {
         const srcKey = srcLine.preparationKey;
         const destKey = destLine.preparationKey;
-        const srcQty = srcPrep[srcKey]?.quantity;
+        const srcQty = srcLine.qty || 0;
+        const srcHistory = srcPrep[srcKey]?.historyUuids || {};
+        const destHistory = destPrep[destKey]?.historyUuids || {};
+        const historyUuids = { ...srcHistory, ...destHistory };
+        historyUuids[destLine.uuid] = [
+            ...(srcHistory[destLine.uuid] || []),
+            ...(destHistory[destLine.uuid] || []),
+            srcLine.uuid,
+        ];
 
-        if (srcQty) {
-            if (srcQty <= qty) {
-                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
-                destPrep[destKey] = newPrep;
-                delete srcPrep[srcKey];
-            } else {
+        // Wants to move all the quantity from the source line or more
+        if (srcQty <= qty) {
+            const newPrep = {
+                ...(srcPrep[srcKey] || destPrep[destKey] || {}),
+                uuid: destLine.uuid,
+                quantity: (destPrep[destKey]?.quantity || 0) + (srcPrep[srcKey]?.quantity || 0),
+                historyUuids: historyUuids,
+            };
+            destPrep[destKey] = newPrep;
+            delete srcPrep[srcKey];
+        }
+        // Wants to move only part of the quantity from the source line
+        else {
+            if (srcPrep[srcKey]) {
                 srcPrep[srcKey].quantity = srcQty - qty;
-                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
+            }
+            destPrep[destKey] = {
+                ...(srcPrep[srcKey] || []),
+                uuid: destLine.uuid,
+                quantity: (destPrep[destKey]?.quantity || 0) + qty,
+                historyUuids: historyUuids,
+            };
+        }
+
+        // Restore history from former dest line in case of unmerge
+        if (formerDestUuid) {
+            if (srcHistory[srcKey]) {
+                srcHistory[srcKey] = [...srcHistory[srcKey].filter((u) => u !== formerDestUuid)];
+                if (srcHistory[srcKey].length === 0) {
+                    delete srcHistory[srcKey];
+                }
+            }
+
+            destPrep[destKey].historyUuids = this.cleanHistoryUuids(srcHistory, formerDestUuid);
+        }
+    }
+
+    cleanHistoryUuids(historyUuids, lineUuid) {
+        if (!historyUuids[lineUuid]) {
+            return {};
+        }
+        const removed = {};
+        const stack = [lineUuid];
+        while (stack.length) {
+            const current = stack.pop();
+            removed[current] = [...(historyUuids[current] || [])];
+            delete historyUuids[current];
+            for (const child of removed[current]) {
+                if (historyUuids[child]) {
+                    stack.push(child);
+                }
             }
         }
+        return removed;
     }
 
     get isSelectedLineCombo() {
@@ -2989,6 +3050,7 @@ export class PosStore extends WithLazyGetterTrap {
                     if (linkOldNewLines[link.uuid] >= link.qty) {
                         continue;
                     }
+
                     if (link.qty >= concernedLinesQty[oldLine.uuid]) {
                         this.handlePreparationHistory(
                             this.selectedOrder.last_order_preparation_change.lines,
@@ -3034,9 +3096,7 @@ export class PosStore extends WithLazyGetterTrap {
                 line.order_id.removeOrderline(line);
             }
         }
-        if (comboLine) {
-            this.selectedOrder.selectOrderline(comboLine);
-        }
+        this.selectedOrder.selectOrderline(comboLine);
         return;
     }
     findComboLinesByOldLine(oldLine, comboProduct) {

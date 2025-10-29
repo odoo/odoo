@@ -186,10 +186,14 @@ patch(PosStore.prototype, {
             }
 
             if (sourceOrder.table_id) {
-                destOrder.uiState.unmerge[uuid] = {
-                    table_id: sourceOrder.table_id.id,
-                    quantity: orphanLine.qty,
-                };
+                destOrder.uiState.unmerge[uuid] = [
+                    ...(destOrder.uiState.unmerge[uuid] || []),
+                    {
+                        table_id: sourceOrder.table_id.id,
+                        quantity: orphanLine.qty,
+                        formerUuid: orphanLine.uuid,
+                    },
+                ];
             }
 
             orphanLine.delete();
@@ -270,11 +274,14 @@ patch(PosStore.prototype, {
 
         const beforeMergeDetails = Object.entries(order.uiState.unmerge).reduce(
             (acc, [uuid, details]) => {
-                if (details.table_id === unmergeTable.id) {
-                    acc.push({
-                        quantity: details.quantity,
-                        uuid: uuid,
-                    });
+                for (const detail of details) {
+                    if (detail.table_id === unmergeTable.id) {
+                        acc.push({
+                            uuid: uuid,
+                            quantity: detail.quantity,
+                            formerUuid: detail.formerUuid,
+                        });
+                    }
                 }
                 return acc;
             },
@@ -332,20 +339,26 @@ patch(PosStore.prototype, {
                 if (course) {
                     newLine.course_id = course;
                 }
-                if (parseFloat(line.qty - detail.quantity) === 0) {
-                    line.delete();
-                } else {
-                    line.setQuantity(line.qty - newLine.qty);
-                }
                 this.handlePreparationHistory(
                     order.last_order_preparation_change.lines,
                     newOrder.last_order_preparation_change.lines,
                     line,
                     newLine,
-                    detail.quantity
+                    detail.quantity,
+                    detail.formerUuid
                 );
+                if (parseFloat(line.qty - detail.quantity) === 0) {
+                    line.delete();
+                } else {
+                    line.setQuantity(line.qty - newLine.qty);
+                }
 
-                delete order.uiState.unmerge[line.uuid];
+                order.uiState.unmerge[detail.uuid] = order.uiState.unmerge[detail.uuid].filter(
+                    (d) => d.formerUuid !== detail.formerUuid
+                );
+                if (order.uiState.unmerge[detail.uuid].length === 0) {
+                    delete order.uiState.unmerge[line.uuid];
+                }
             }
 
             await this.syncAllOrders({ orders: [order, newOrder] });
@@ -820,7 +833,7 @@ patch(PosStore.prototype, {
             return false;
         }
 
-        if (!this.tableHasOrders(destinationTable)) {
+        if (!this.tableHasOrders(destinationTable.rootTable)) {
             order.table_id = destinationTable;
             this.setOrder(order);
             return false;
@@ -837,7 +850,7 @@ patch(PosStore.prototype, {
 
         if (destinationTable) {
             if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-                await this.syncAllOrders({ orders: [sourceOrder] });
+                await this.handleFailToPrepareOrderTransfer([sourceOrder]);
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
@@ -851,13 +864,16 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-            await this.syncAllOrders({ orders: [sourceOrder] });
+            await this.handleFailToPrepareOrderTransfer([sourceOrder]);
             return;
         }
 
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
+    },
+    async handleFailToPrepareOrderTransfer(orders) {
+        await this.syncAllOrders({ orders });
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);

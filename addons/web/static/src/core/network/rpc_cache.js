@@ -27,7 +27,7 @@ function validateSettings({ type, update }) {
 
 const CRYPTO_ALGO = "AES-GCM";
 const ONE_YEAR = luxon.Duration.fromObject({ years: 1 }).toMillis();
-const MAX_STORAGE_SIZE = 2 * 1024 * 1024 * 1024; // 2Gb
+const MAX_STORAGE_SIZE = 12 * 1024 * 1024 * 1024; // 2Gb
 
 class Crypto {
     constructor(secret) {

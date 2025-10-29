@@ -12,6 +12,14 @@ export function clickOrderButton() {
         },
     ];
 }
+export function noOrderButton() {
+    return [
+        {
+            content: "check no order button",
+            trigger: ".actionpad:has(:not(.submit-order))",
+        },
+    ];
+}
 export function orderlinesHaveNoChange() {
     return Order.doesNotHaveLine({ withClass: ".has-change" });
 }
@@ -40,6 +48,14 @@ export function OrderButtonNotContain(data) {
         },
     ];
     return steps;
+}
+export function orderButtonContains(category, count) {
+    return [
+        {
+            content: "click order button",
+            trigger: `.actionpad .submit-order .product-category-label:contains('${category}') + label:contains('${count}')`,
+        },
+    ];
 }
 export function clickCourseButton() {
     return [
