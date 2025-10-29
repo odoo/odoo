@@ -90,7 +90,8 @@ test("[get prices()] with multiple taxes settings", async () => {
     // Test with "include_base_amount" and "include_base_amount" to true for both taxes
     models["account.tax"].get(1).include_base_amount = true;
     models["account.tax"].get(2).include_base_amount = true;
-    const updatedLineTax = data["pos.order.line"][0].prices;
+    orderLine.order_id.triggerRecomputeAllPrices(); // Force the recompute because updating taxes do not trigger it
+    const updatedLineTax = orderLine.prices;
     expect(updatedLineTax.total_excluded).toBe(100.0);
     expect(updatedLineTax.total_included).toBe(143.75);
     expect(updatedLineTax.taxes_data[0].tax_amount).toBe(15.0);
@@ -98,7 +99,7 @@ test("[get prices()] with multiple taxes settings", async () => {
 
     // Test without any taxes
     product.taxes_id = [];
-    data["pos.order.line"][0].tax_ids = [];
+    orderLine.tax_ids = []; // Do not need to force the recompute here, changing line taxes does it for us
     const noTaxLine = data["pos.order.line"][0].prices;
     expect(noTaxLine.total_excluded).toBe(100.0);
     expect(noTaxLine.total_included).toBe(100.0);
