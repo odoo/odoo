@@ -307,6 +307,7 @@ export class TicketScreen extends Component {
         const destinationOrder = this._getEmptyOrder(partner);
 
         destinationOrder.is_refund = true;
+        destinationOrder.pricelist_id = order.pricelist_id;
         // Add orderline for each toRefundDetail to the destinationOrder.
         const lines = [];
         for (const refundDetail of this._getRefundableDetails(partner, order)) {

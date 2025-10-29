@@ -378,6 +378,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
                 ProductScreen.addOrderline("Desk Pad", "2", "4"),
+                ProductScreen.clickPriceList("Percentage Pricelist"),
                 ProductScreen.clickPayButton(),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
