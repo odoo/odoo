@@ -49,7 +49,7 @@
                     disabledPeriods="filter.disabledPeriods"
                     onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)"/>
             </div>
-            <i t-if="getters.isGlobalFilterActive(filter.id)"
+            <i t-if="isValid and getters.isGlobalFilterActive(filter.id)"
                 class="fa fa-times btn btn-link text-muted o_side_panel_filter_icon ms-1 mt-1"
                 title="Clear"
                 t-on-click="() => this.clear(filter.id)"/>
