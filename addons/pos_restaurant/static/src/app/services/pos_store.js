@@ -226,6 +226,7 @@ patch(PosStore.prototype, {
                 destOrder.uiState.unmerge[uuid] = {
                     table_id: sourceOrder.table_id.id,
                     quantity: orphanLine.qty,
+                    formerUuid: orphanLine.uuid,
                 };
             }
 
@@ -311,6 +312,7 @@ patch(PosStore.prototype, {
                     acc.push({
                         quantity: details.quantity,
                         uuid: uuid,
+                        formerUuid: details.formerUuid,
                     });
                 }
                 return acc;
@@ -382,6 +384,9 @@ patch(PosStore.prototype, {
                 );
 
                 delete order.uiState.unmerge[line.uuid];
+                if (this.config.module_pos_restaurant) {
+                    newOrder.uiState.mappingOrderlinesUuid[detail.formerUuid] = newLine.uuid;
+                }
             }
 
             await this.syncAllOrders({ orders: [order, newOrder] });
@@ -853,7 +858,7 @@ patch(PosStore.prototype, {
 
         if (destinationTable) {
             if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-                await this.syncAllOrders({ orders: [sourceOrder] });
+                await this.handleFailToPrepareOrderTransfer([sourceOrder]);
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
@@ -867,13 +872,16 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-            await this.syncAllOrders({ orders: [sourceOrder] });
+            await this.handleFailToPrepareOrderTransfer([sourceOrder]);
             return;
         }
 
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
+    },
+    async handleFailToPrepareOrderTransfer(orders) {
+        await this.syncAllOrders({ orders });
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [
