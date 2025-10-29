@@ -46,7 +46,12 @@ registerWebsitePreviewTour(
             trigger: FIRST_PARAGRAPH,
             run: "editor Paragraph", // Make sure the selection is set in the paragraph
         },
-        ...clickToolbarButton("Paragraph", "#wrap .s_text_image p", "Add a link", false),
+        ...clickToolbarButton(
+            "Paragraph",
+            "#wrap .s_text_image p",
+            "Insert link (Ctrl + K)",
+            false
+        ),
         ...editLinkAndApply("/contactus"),
         ...openLinkPopup(`${FIRST_PARAGRAPH} a`, "/contactus", 1, true),
         {
