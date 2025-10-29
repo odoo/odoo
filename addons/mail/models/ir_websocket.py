@@ -63,19 +63,26 @@ class IrWebsocket(models.AbstractModel):
             .search([("id", "in", partner_ids)])
             .sudo(False)
         )
-        allowed_partners = partners.filtered(
-            lambda p: verify_limited_field_access_token(
-                p, "im_status", model_ids_to_token["res.partner"][p.id], scope="mail.presence"
+        user, guest = self.env["res.users"]._get_current_persona()
+        allowed_partners = (
+            partners.filtered(
+                lambda p: verify_limited_field_access_token(
+                    p, "im_status", model_ids_to_token["res.partner"][p.id], scope="mail.presence"
+                )
+                or p.has_access("read")
             )
-            or p.has_access("read")
+            | user.partner_id
         )
         guest_ids = model_ids_to_token["mail.guest"].keys()
         guests = self.env["mail.guest"].sudo().search([("id", "in", guest_ids)]).sudo(False)
-        allowed_guests = guests.filtered(
-            lambda g: verify_limited_field_access_token(
-                g, "im_status", model_ids_to_token["mail.guest"][g.id], scope="mail.presence"
+        allowed_guests = (
+            guests.filtered(
+                lambda g: verify_limited_field_access_token(
+                    g, "im_status", model_ids_to_token["mail.guest"][g.id], scope="mail.presence"
+                )
+                or g.has_access("read")
             )
-            or g.has_access("read")
+            | guest
         )
         data["channels"].update((partner, "presence") for partner in allowed_partners)
         data["channels"].update((guest, "presence") for guest in allowed_guests)
