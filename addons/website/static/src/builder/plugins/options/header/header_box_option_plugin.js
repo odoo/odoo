@@ -11,42 +11,6 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { HeaderBoxOption } from "./header_box_option";
 import { HEADER_BOX } from "./header_option_plugin";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-
-export class HeaderTemplateOption extends BaseOptionComponent {
-    static template = "website.headerTemplateOption";
-    static selector = "#wrapwrap > header";
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
-
-export class HeaderContentWidthOption extends BaseOptionComponent {
-    static template = "website.headerContentWidthOption";
-    static selector = "#wrapwrap > header";
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
-
-export class HeaderSidebarWidthOption extends BaseOptionComponent {
-    static template = "website.headerSidebarWidthOption";
-    static selector = "#wrapwrap > header";
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
-
-export class HeaderBackgroundOption extends BaseOptionComponent {
-    static template = "website.headerBackgroundOption";
-    static selector = "#wrapwrap > header";
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
-
-export class HeaderScrollEffectOption extends BaseOptionComponent {
-    static template = "website.headerScrollEffectOption";
-    static selector = "#wrapwrap > header";
-    static groups = ["website.group_website_designer"];
-    static editableOnly = false;
-}
 
 class HeaderBoxOptionPlugin extends Plugin {
     static id = "HeaderBoxOptionPlugin";
