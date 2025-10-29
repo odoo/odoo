@@ -205,6 +205,7 @@ export class LinkPlugin extends Plugin {
         toolbar_items: [
             {
                 id: "link",
+                description: _t("Insert link (Ctrl + K)"),
                 groupId: "link",
                 commandId: "openLinkTools",
                 isActive: isLinkActive,

@@ -266,7 +266,7 @@ registerWebsitePreviewTour(
         ...clickToolbarButton(
             "h4 of first menu link of the first column",
             ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4",
-            "Toggle bold"
+            "Bold (Ctrl + B)"
         ),
         ...clickOnSave(),
         clickOnExtraMenuItem({}, true),
