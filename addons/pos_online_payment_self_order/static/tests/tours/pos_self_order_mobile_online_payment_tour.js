@@ -41,6 +41,6 @@ registry
                 CartPage.checkProduct("Fanta", "2.53", "1"),
                 CartPage.checkProduct("Coca-Cola", "2.53", "1"),
                 Utils.clickBtn("Pay"),
-                CartPage.selectTable("3"),
+                ...CartPage.selectTable("303"),
             ].flat(),
     });
