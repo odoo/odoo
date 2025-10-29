@@ -14,6 +14,7 @@ import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relationa
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import {
+    TOUCH_SELECTION_THRESHOLD,
     computeAggregatedValue,
     getClassNameFromDecoration,
     getFormattedValue,
@@ -104,7 +105,6 @@ export class ListRenderer extends Component {
     static recordRowTemplate = "web.ListRenderer.RecordRow";
     static groupRowTemplate = "web.ListRenderer.GroupRow";
     static useMagicColumnWidths = true;
-    static LONG_TOUCH_THRESHOLD = 400;
     static components = {
         DropdownItem,
         Field,
@@ -2204,7 +2204,7 @@ export class ListRenderer extends Component {
             this.longTouchTimer = browser.setTimeout(() => {
                 this.toggleRecordSelection(record);
                 this.resetLongTouchTimer();
-            }, this.constructor.LONG_TOUCH_THRESHOLD);
+            }, TOUCH_SELECTION_THRESHOLD);
         }
     }
 
@@ -2213,7 +2213,7 @@ export class ListRenderer extends Component {
      */
     onRowTouchEnd(_record) {
         const elapsedTime = Date.now() - this.touchStartMs;
-        if (elapsedTime < this.constructor.LONG_TOUCH_THRESHOLD) {
+        if (elapsedTime < TOUCH_SELECTION_THRESHOLD) {
             this.resetLongTouchTimer();
         }
     }
