@@ -7,6 +7,7 @@ import {
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -412,12 +413,7 @@ test("changing shape's background color doesn't hide the shape itself", async ()
 });
 
 test("remove background image removes color filter", async () => {
-    const backgroundImageUrl = "url('/web/image/123/transparent.png')";
-    await setupWebsiteBuilder(`
-        <section>
-            <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
-            <div class="o_we_bg_filter bg-black-50 o-paragraph"><br></div>
-        </section>`);
+    await setupWebsiteBuilderWithSnippet("s_cover");
     await contains(":iframe section").click();
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();

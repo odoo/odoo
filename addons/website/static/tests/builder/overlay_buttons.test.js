@@ -11,6 +11,7 @@ import {
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -179,17 +180,7 @@ test("Use the 'remove' overlay buttons: removing the last element will remove th
 });
 
 test("Use the 'clone' overlay buttons", async () => {
-    await setupWebsiteBuilder(`
-        <section class="s_text_image" data-snippet="s_text_image" data-name="Text - Image">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-5">
-                        <p>TEST</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    `);
+    await setupWebsiteBuilderWithSnippet("s_text_image");
 
     await contains(":iframe .col-lg-5").click();
     expect(".overlay .o_snippet_clone").toHaveCount(1);

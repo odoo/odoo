@@ -1,24 +1,15 @@
 import { expect, test } from "@odoo/hoot";
 import {
     defineWebsiteModels,
-    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
-import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { animationFrame, click, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
-const simpleCardHtml = `
-    <div class="s_card" data-snippet="s_card" data-name="Card">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Card text</p>
-        </div>
-    </div>`;
-
 test("set card width", async () => {
-    await setupWebsiteBuilder(simpleCardHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='setCardWidth']");
     expect("[data-action-id='setCardWidth']").toHaveCount(1);
@@ -32,47 +23,38 @@ test("set card width", async () => {
 });
 
 test("set card alignment", async () => {
-    await setupWebsiteBuilder(simpleCardHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='setCardWidth'] input");
     expect("[data-action-id='setCardWidth'] input").toHaveValue(100);
     // Alignment option not available when card width is 100%
-    expect("[data-label='Alignment']").toHaveCount(0);
+    expect("[data-label='Card Width'] + [data-label='Alignment']").toHaveCount(0);
 
     await setInputRange("[data-action-id='setCardWidth'] input", 50);
-    await waitFor("[data-label='Alignment']");
-    expect("[data-label='Alignment']").toHaveCount(1);
+    await waitFor("[data-label='Card Width'] + [data-label='Alignment']");
+    expect("[data-label='Card Width'] + [data-label='Alignment']").toHaveCount(1);
 
     expect(":iframe .s_card").not.toHaveClass(["me-auto", "mx-auto", "ms-auto"]);
     // Left alignment button is active by default
-    expect("[data-label='Alignment'] button[title='Left']").toHaveClass("active");
+    expect("[data-label='Card Width'] + [data-label='Alignment'] button[title='Left']").toHaveClass(
+        "active"
+    );
 
-    await click("[data-label='Alignment'] button[title='Center']");
+    await click("[data-label='Card Width'] + [data-label='Alignment'] button[title='Center']");
     await animationFrame();
     expect(":iframe .s_card").toHaveClass("mx-auto");
 
-    await click("[data-label='Alignment'] button[title='Right']");
+    await click("[data-label='Card Width'] + [data-label='Alignment'] button[title='Right']");
     await animationFrame();
     expect(":iframe .s_card").toHaveClass("ms-auto");
 
-    await click("[data-label='Alignment'] button[title='Left']");
+    await click("[data-label='Card Width'] + [data-label='Alignment'] button[title='Left']");
     await animationFrame();
     expect(":iframe .s_card").toHaveClass("me-auto");
 });
 
-const cardWithImageHtml = `
-    <div class="s_card o_card_img_top card o_cc o_cc1" data-vxml="001" data-snippet="s_card" data-name="Card">
-        <figure class="o_card_img_wrapper ratio ratio-16x9 mb-0">
-            <img class="o_card_img card-img-top" src="${dummyBase64Img}" alt="" loading="lazy">
-        </figure>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Card content</p>
-        </div>
-    </div>`;
-
 test("remove/add cover image", async () => {
-    await setupWebsiteBuilder(cardWithImageHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='removeCoverImage']");
     // Button to remove cover image is available
@@ -94,7 +76,7 @@ test("remove/add cover image", async () => {
 });
 
 test("set cover image position", async () => {
-    await setupWebsiteBuilder(cardWithImageHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='setCoverImagePosition']");
     // As per html content: image is on top
@@ -134,7 +116,7 @@ async function openRatioDropdownMenu() {
 }
 
 test("set cover image ratio", async () => {
-    await setupWebsiteBuilder(cardWithImageHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
 
     // As per html content: image has a 16x9 ratio
@@ -167,7 +149,7 @@ test("set cover image ratio", async () => {
 });
 
 test("ratios only supported for top image", async () => {
-    await setupWebsiteBuilder(cardWithImageHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-label='Ratio'] ");
     await openRatioDropdownMenu();
@@ -197,7 +179,7 @@ test("ratios only supported for top image", async () => {
 });
 
 test("set cover image width", async () => {
-    await setupWebsiteBuilder(cardWithImageHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
 
     // Width option not available when image is on top
@@ -216,7 +198,7 @@ test("set cover image width", async () => {
 });
 
 test("cover image set to wide aspect ratio can be vertically aligned", async () => {
-    await setupWebsiteBuilder(cardWithImageHtml);
+    await setupWebsiteBuilderWithSnippet("s_card");
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='alignCoverImage']");
     expect("[data-label='Alignment'] [data-action-id='alignCoverImage'").toHaveCount(1);
