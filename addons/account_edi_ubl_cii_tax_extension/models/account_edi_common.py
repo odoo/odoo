@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import models, _
 
 TAX_EXEMPTION_MAPPING = {
     'VATEX-EU-79-C': 'Exempt based on article 79, point c of Council Directive 2006/112/EC',
@@ -75,6 +75,6 @@ class AccountEdiCommon(models.AbstractModel):
         if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
             return {
                 'tax_exemption_reason_code': code,
-                'tax_exemption_reason': TAX_EXEMPTION_MAPPING.get(code),
+                'tax_exemption_reason': TAX_EXEMPTION_MAPPING.get(code, _("Exempt from tax") if tax.ubl_cii_requires_exemption_reason else None),
             }
         return super()._get_tax_exemption_reason(customer, supplier, tax)
