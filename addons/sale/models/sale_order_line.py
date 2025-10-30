@@ -1652,9 +1652,6 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
 
-    def has_valued_move_ids(self):
-        return self.move_ids
-
     def _get_linked_line(self):
         """ Return the linked line of this line, if any.
 
