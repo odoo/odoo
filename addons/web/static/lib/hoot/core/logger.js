@@ -190,7 +190,7 @@ class Logger {
                 `(${withArgs.shift()}`,
                 ...withArgs,
                 "time:",
-                suite.jobs.reduce((acc, job) => acc + (job.duration || 0), 0),
+                suite.reporting.duration,
                 "ms)"
             );
         }
