@@ -2,6 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
+import { redirect } from '@web/core/utils/urls';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class CartLine extends Interaction {
@@ -64,7 +65,7 @@ export class CartLine extends Interaction {
         if (!data.cart_quantity) {
             // Ensure the last cart removal is recorded.
             browser.sessionStorage.setItem('website_sale_cart_quantity', 0);
-            return window.location = '/shop/cart';
+            return redirect('/shop/cart');
         }
         input.value = data.quantity;
         this.el.querySelectorAll(`.js_quantity[data-line-id="${lineId}"]`).forEach(input =>
