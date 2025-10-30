@@ -8,7 +8,7 @@
                 <BuilderSelectItem actionValue="'cover'">Cover</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'repeat-pattern'" id="'background_repeat_opt'">Repeat pattern</BuilderSelectItem>
             </BuilderSelect>
-            <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'backgroundPositionOverlay'"/>
+            <BuilderButton icon="'fa-arrows-alt'" title.translate="Background Position" preview="false" action="'backgroundPositionOverlay'"/>
         </BuilderRow>
         <BuilderContext t-if="isActiveItem('background_repeat_opt')" action="'setBackgroundSize'">
             <BuilderRow label.translate="Width" level="3">
