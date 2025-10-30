@@ -414,6 +414,15 @@ export class Rtc extends Record {
         this.dialog = services.dialog;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
+        this.store.env.services["bus_service"].subscribe(
+            "discuss.channel/transcription_state",
+            ({ id, is_transcribing }) => {
+                const channel = this.store["mail.thread"].get({ id, model: "discuss.channel" });
+                if (channel) {
+                    channel.is_transcribing = is_transcribing;
+                }
+            }
+        );
         if (this._broadcastChannel) {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
@@ -1119,6 +1128,7 @@ export class Rtc extends Record {
                     }
                     promises.push(this.raiseHand(value));
                     break;
+
                 case "pip":
                     if (value === this.state.isPipMode) {
                         break;
@@ -1479,7 +1489,8 @@ export class Rtc extends Record {
                             "is_camera_on",
                             "is_deaf",
                             "is_muted",
-                            "is_screen_sharing_on"
+                            "is_screen_sharing_on",
+                            "is_transcribing"
                         ),
                     },
                     { silent: true }
@@ -1878,6 +1889,7 @@ export class Rtc extends Record {
      * @param {boolean} [data.is_screen_sharing_on]
      * @param {boolean} [data.is_muted]
      * @param {boolean} [data.is_deaf]
+     * @param {boolean} [data.is_transcribing]
      */
     updateAndBroadcast(data) {
         this._updateRemoteTabs({ [this.localSession.id]: data });
@@ -2407,6 +2419,15 @@ export const rtcService = {
                  */
                 if (channelId !== rtc.channel?.id) {
                     rtc.store.insert(data);
+                }
+            }
+        );
+        services["bus_service"].subscribe(
+            "discuss.channel/transcription_state",
+            ({ id, is_transcribing }) => {
+                const channel = rtc.store["mail.thread"].get({ id, model: "discuss.channel" });
+                if (channel) {
+                    channel.is_transcribing = is_transcribing;
                 }
             }
         );

@@ -7,6 +7,7 @@ import { Deferred } from "@web/core/utils/concurrency";
  * @property {boolean} [is_screen_sharing_on]
  * @property {boolean} [is_muted]
  * @property {boolean} [is_deaf]
+ * @property {boolean} [is_transcribing]
  */
 
 /**
