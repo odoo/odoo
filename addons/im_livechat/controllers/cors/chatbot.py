@@ -21,7 +21,7 @@ class CorsLivechatChatbotScriptController(LivechatChatbotScriptController):
         force_guest_env(guest_token)
         return self.chatbot_trigger_step(channel_id, chatbot_script_id, data_id)
 
-    @route("/chatbot/cors/step/validate_email", type="jsonrpc", auth="public", cors="*")
-    def cors_chatbot_validate_email(self, guest_token, channel_id):
+    @route("/chatbot/cors/step/validate_contact_info", type="jsonrpc", auth="public", cors="*")
+    def cors_chatbot_validate_contact_info(self, guest_token, channel_id):
         force_guest_env(guest_token)
-        return self.chatbot_validate_email(channel_id)
+        return self.chatbot_validate_contact_info(channel_id)

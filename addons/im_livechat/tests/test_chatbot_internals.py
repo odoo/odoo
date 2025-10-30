@@ -37,7 +37,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_is_forward_operator_child(self):
         self.assertEqual([step.is_forward_operator_child for step in self.chatbot_script.script_step_ids],
-                         [False, False, False, False, False, False, False, True, True, False, True, False, False, False, False],
+                         [False, False, False, False, False, False, False, False, False, True, True, False, True, False, False, False, False],
                          "Steps 'step_no_one_available', 'step_no_operator_dispatch', 'step_just_leaving'"
                          "should be flagged as forward operator child.")
 
@@ -45,7 +45,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.chatbot_script.script_step_ids.invalidate_recordset(['is_forward_operator_child'])
 
         self.assertEqual([step.is_forward_operator_child for step in self.chatbot_script.script_step_ids],
-                         [False, False, False, False, False, False, False, True, False, False, False, False, False, False, False],
+                         [False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False],
                          "Only step 'step_no_one_available' should be flagged as forward operator child.")
 
     def test_chatbot_steps(self):
@@ -67,6 +67,13 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
         self._post_answer_and_trigger_next_step(discuss_channel, email="test@example.com")
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_email_validated)
+
+        self.make_jsonrpc_request("/chatbot/step/trigger", {"channel_id": discuss_channel.id})
+        self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_phone)
+        with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"), mute_logger("odoo.http"):
+            self._post_answer_and_trigger_next_step(discuss_channel, phone="123")
+        self._post_answer_and_trigger_next_step(discuss_channel, phone="+919876543210")
+        self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_phone_validated)
 
     def test_chatbot_steps_sequence(self):
         """ Ensure sequence is correct when creating chatbots and adding steps to an existing one.

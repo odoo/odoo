@@ -103,9 +103,9 @@ class LivechatChatbotScriptController(http.Controller):
         )
         store.bus_send()
 
-    @http.route("/chatbot/step/validate_email", type="jsonrpc", auth="public")
+    @http.route("/chatbot/step/validate_contact_info", type="jsonrpc", auth="public")
     @add_guest_to_context
-    def chatbot_validate_email(self, channel_id):
+    def chatbot_validate_contact_info(self, channel_id):
         discuss_channel = (
             request.env["discuss.channel"]
             .search([("id", "=", channel_id)])
@@ -121,11 +121,15 @@ class LivechatChatbotScriptController(http.Controller):
             ("model", "=", "discuss.channel"),
             ("res_id", "=", channel_id),
         ]
-        # sudo: mail.message - accessing last message to validate email is allowed
+        # sudo: mail.message - accessing last message to validate phone or email is allowed
         last_user_message = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
+        step_type = discuss_channel.chatbot_current_step_id.step_type
         result = {}
         if last_user_message:
-            result = chatbot._validate_email(last_user_message.body, discuss_channel)
+            if step_type == "question_email":
+                result = chatbot._validate_email(last_user_message.body, discuss_channel)
+            elif step_type == "question_phone":
+                result = chatbot._validate_phone(last_user_message.body, discuss_channel)
             if posted_message := result.pop("posted_message"):
                 store = Store().add(
                     discuss_channel,
