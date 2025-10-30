@@ -25,11 +25,17 @@
                         <field name="name">1 - TAX BASE - Intra-Community supplies of goods, exempt under Article 294(2)(a) and (d) of the Tax Code</field>
                         <field name="name@ro">1 - BAZĂ FISCALĂ - Furnizori într-o comunitate de produse, excluzi din Art. 294(2)(a) și (d) al Codului Fiscal</field>
                         <field name="code">tax_ro_baza_rd1</field>
+                        <field name="aggregation_formula">tax_ro_baza_rd1.balance_01 + tax_ro_baza_rd1.balance_01T</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_ro_baza_rd1_tag" model="account.report.expression">
-                                <field name="label">balance</field>
+                                <field name="label">balance_01</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-01 - TAX BASE</field>
+                            </record>
+                            <record id="account_tax_report_ro_baza_rd1T_tag" model="account.report.expression">
+                                <field name="label">balance_01T</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-01T - TAX BASE</field>
                             </record>
                         </field>
                     </record>
