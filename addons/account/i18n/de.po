@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 00:21+0000\n"
+"PO-Revision-Date: 2025-10-30 00:26+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/de/>\n"
@@ -1014,6 +1014,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Sie können auswählen, wie Sie uns unsere Rechnungen "
+"und in welchem Format Sie sie senden möchten.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -6536,7 +6540,7 @@ msgstr "Standardsteuer für den Verkauf eines Produktes."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "Der Standardwert für „company_id“ für %(record)s ist keine Ganzzahl"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -8600,7 +8604,7 @@ msgstr "Hat IBAN-Warnung"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
 #: model:ir.model.fields,field_description:account.field_account_journal__has_invalid_statements
 msgid "Has Invalid Statements"
-msgstr ""
+msgstr "Hat ungültige Kontoauszüge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -9495,7 +9499,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invalid Statement(s)"
-msgstr ""
+msgstr "Ungültige/r Kontoauszug/-auszüge"
 
 #. module: account
 #. odoo-python
@@ -12903,7 +12907,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Zahlungen, die mit dieser Rechnung abgestimmt wurden."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13604,7 +13608,7 @@ msgstr "Abgestimmte Zeilen ausschließlich der Wechselkursdifferenz"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Abgestimmte Zahlungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -18761,6 +18765,10 @@ msgid ""
 "You can not delete a transaction from a valid statement.\n"
 "If you want to delete it, please remove the statement first."
 msgstr ""
+"Es ist nicht möglich, eine Transaktion aus einem gültigen Kontoauszug zu "
+"löschen.\n"
+"Wenn Sie diese Transaktion entfernen möchten, löschen Sie zunächst den "
+"gesamten Kontoauszug."
 
 #. module: account
 #. odoo-python
