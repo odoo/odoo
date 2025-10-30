@@ -992,6 +992,7 @@
             <t t-call="#{sale_order._get_name_tax_totals_view()}">
                 <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
                 <t t-set="currency" t-value="sale_order.currency_id"/>
+                <t t-set="doc" t-value="sale_order"/>
             </t>
         </table>
     </template>
