@@ -119,62 +119,92 @@
     </template>
     <template id="s_dynamic_snippet_blog_posts_horizontal_preview_data" name="Blogs Preview Data">
         <div class="s_dialog_preview">
-            <div t-attf-class="pb-4 border-bottom">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="rounded overflow-hidden ratio ratio-16x9">
-                            <img class="img img-fluid object-fit-cover" src="/website_blog/static/src/img/blog_previews/blog_1.jpg"/>
-                        </div>
-                    </div>
-                    <div class="col-9 d-flex flex-column justify-content-between">
-                        <div>
-                            <h4 class="mb-2 mt-0">Sierra Tarahumara</h4>
-                            <span class="text-muted">Mar 13, 2025</span>
-                            <p class="mt-1 mb-0 lead">An exciting mix of relaxation, culture, history, wildlife and hiking.</p>
-                        </div>
-                        <div class="d-flex justify-content-between small">
-                            <span><i class="fa fa-user-circle-o me-2" role="presentation"/> Marc Demo</span>
-                            <span class="text-muted">In <a href="#">Travel</a></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div t-attf-class="py-4 border-bottom">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="rounded overflow-hidden ratio ratio-16x9">
-                            <img class="img img-fluid object-fit-cover" src="/website_blog/static/src/img/blog_previews/blog_2.jpg"/>
-                        </div>
-                    </div>
-                    <div class="col-9 d-flex flex-column justify-content-between">
-                        <div>
-                            <h4 class="mb-2 mt-0">How to choose the right hotel</h4>
-                            <span class="text-muted">Mar 13, 2025</span>
-                            <p class="mt-1 mb-0 lead">Facts you should bear in mind.</p>
-                        </div>
-                        <div class="d-flex justify-content-between small">
-                            <span><i class="fa fa-user-circle-o me-2" role="presentation"/> Marc Demo</span>
-                            <span class="text-muted">In <a href="#">Travel</a></span>
+            <div class="row mb-4">
+                <div class="d-flex flex-grow-0 flex-shrink-0 col-12">
+                    <div class="s_blog_posts_post w-100">
+                        <div class="pb-4 border-bottom">
+                            <div class="row flex-md-nowrap">
+                                <div class="s_blog_posts_post_cover_col col mb-2 mb-md-0">
+                                    <div class="s_blog_posts_post_cover h-100">
+                                        <div class="o_record_cover_container d-flex flex-column h-100 rounded-3 overflow-hidden">
+                                            <div class="o_record_cover_component o_record_cover_image " style="background-image: url('/website_blog/static/src/img/cover_1.jpg');"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md d-flex flex-column justify-content-between">
+                                    <div class="mb-2 mb-md-5 text-decoration-none text-reset">
+                                        <h4 class="mb-2 mt-0">Sierra Tarahumara</h4>
+                                            <span class="s_blog_posts_post_date text-muted small">Nov 3, 2025</span>
+                                        <p class="s_blog_posts_post_subtitle o_line_clamp mt-1 mb-0 lead">An exciting mix of relaxation, culture, history, wildlife and hiking.</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <div class="s_blog_posts_post_author d-inline-flex align-items-center">
+                                            <span>Mitchell Admin</span>
+                                        </div>
+                                        <span class="text-muted">In Travel</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div t-attf-class="pt-4">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="rounded overflow-hidden ratio ratio-16x9">
-                            <img class="img img-fluid object-fit-cover" src="/website_blog/static/src/img/blog_previews/blog_3.jpg"/>
+            <div class="row mb-4">
+                <div class="d-flex flex-grow-0 flex-shrink-0 col-12">
+                    <div class="s_blog_posts_post w-100">
+                        <div class="pb-4 border-bottom">
+                            <div class="row flex-md-nowrap">
+                                <div class="s_blog_posts_post_cover_col col mb-2 mb-md-0">
+                                    <div class="s_blog_posts_post_cover h-100">
+                                        <div class="o_record_cover_container d-flex flex-column h-100 o_colored_level rounded-3 overflow-hidden">
+                                            <div class="o_record_cover_component o_record_cover_image " style="background-image: url('/website_blog/static/src/img/cover_2.jpg');"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="col-12 col-md d-flex flex-column justify-content-between">
+                                <div class="mb-2 mb-md-5 text-decoration-none text-reset">
+                                    <h4 class="mb-2 mt-0">How to choose the right hotel</h4>
+                                        <span class="s_blog_posts_post_date text-muted small">Nov 2, 2025</span>
+                                    <p class="s_blog_posts_post_subtitle o_line_clamp mt-1 mb-0 lead">Facts you should bear in mind.</p>
+                                </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <div class="s_blog_posts_post_author d-inline-flex align-items-center">
+                                            <span>Marc demo</span>
+                                        </div>
+                                        <span class="text-muted">In Travel</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-9 d-flex flex-column justify-content-between">
-                        <div>
-                            <h4 class="mb-2 mt-0">Maui helicopter tours</h4>
-                            <span class="text-muted">Mar 13, 2025</span>
-                            <p class="mt-1 mb-0 lead">A great way to discover hidden places</p>
-                        </div>
-                        <div class="d-flex justify-content-between small">
-                            <span><i class="fa fa-user-circle-o me-2" role="presentation"/> Marc Demo</span>
-                            <span class="text-muted">In <a href="#">Travel</a></span>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="d-flex flex-grow-0 flex-shrink-0 col-12">
+                    <div class="s_blog_posts_post w-100">
+                        <div class="pb-4 border-bottom">
+                            <div class="row flex-md-nowrap">
+                                <div class="s_blog_posts_post_cover_col col mb-2 mb-md-0">
+                                    <div class="s_blog_posts_post_cover h-100">
+                                        <div class="o_record_cover_container d-flex flex-column h-100 rounded-3 overflow-hidden">
+                                            <div class="o_record_cover_component o_record_cover_image " style="background-image: url('/website_blog/static/src/img/cover_3.jpg');"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md d-flex flex-column justify-content-between">
+                                    <div class="mb-2 mb-md-5 text-decoration-none text-reset">
+                                        <h4 class="mb-2 mt-0">Maui helicopter tours</h4>
+                                            <span class="s_blog_posts_post_date text-muted small">Nov 1, 2025</span>
+                                        <p class="s_blog_posts_post_subtitle o_line_clamp mt-1 mb-0 lead">A great way to discover hidden places</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <div class="s_blog_posts_post_author d-inline-flex align-items-center">
+                                            <span>Mitchell Admin</span>
+                                        </div>
+                                        <span class="text-muted">In Travel</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -236,51 +266,90 @@
 
     <!-- Single record preview -->
     <template id="s_dynamic_snippet_blog_posts_single_full_preview_data" name="Single Blog Preview Data">
-        <div class="s_dialog_preview">
-            <h2 class="display-3-fs">How to choose the right hotel</h2>
-            <span class="d-block my-3 text-muted"><i class="fa fa-user-circle-o me-2" role="presentation"/><span>Marc Demo</span> • <span>Mar 13, 2025</span> • <a href="#">Travel</a></span>
-            <p class="lead h4-fs">So you're going abroad, you've chosen your destination and now you have to choose a hotel. Ten years ago, you'd have probably visited your local travel agent and trusted the face-to-face advice you we...</p>
+        <div>
+            <span class="display-4-fs text-reset">Beyond The Eye</span>
+            <div class="d-flex flex-wrap my-3">
+                <span class="w-100 w-sm-auto">
+                    <div class="s_blog_posts_post_author d-inline-flex align-items-center">
+                        <span>Mitchell Admin</span>
+                    </div>
+                </span>
+                <span class="d-none d-sm-inline text-muted mx-0 mx-sm-2">•</span>
+                <span class="s_blog_posts_post_date text-muted ">Nov 21, 2025</span>
+                <span class="text-muted mx-2">• Astronomy</span>
+            </div>
+            <span class="text-reset">
+                <p class="s_blog_posts_post_teaser o_line_clamp lead h4-fs">For many of us, our very first experience of learning about the celestial bodies begins when we saw our first full moon in the sky. It is truly a magnificent view even to the naked eye. If the night i...</p>
+            </span>
+            <button class="btn btn-primary d-lg-none w-100 w-sm-auto mt-4">Read Now <i class="fa fa-long-arrow-right"></i></button>
         </div>
     </template>
     <template id="s_dynamic_snippet_blog_posts_single_aside_preview_data" name="Single Blog Preview Data">
-        <div class="s_dialog_preview row my-4">
-            <div class="col-lg-7 pe-5 align-content-center">
-                <h2>Sierra Tarahumara</h2>
-                <span class="d-block my-2 text-muted"><i class="fa fa-user-circle-o me-2" role="presentation"/><span>Marc Demo</span> • <span>Mar 13, 2025</span> • <a href="#">Travel</a></span>
-                <p class="lead">Sierra Tarahumara, popularly known as Copper Canyon is situated in Mexico. The area is a favorite destination among those seeking an adventurous vacation. Copper Canyon is one of the six gorges in the...</p>
-                <a class="btn btn-primary" href="#">Read Now <i class="fa fa-long-arrow-right ms-2" role="presentation"/></a>
-            </div>
-            <div class="col-lg-5">
-                <div class="ratio ratio-16x9">
-                    <div class="rounded" style="background-image: url('/website_blog/static/src/img/blog_previews/blog_1.jpg'); background-size: cover;"></div>
+        <div class="col-lg-12">
+            <div class="s_dynamic_snippet_content_position row">
+                <div class="col-lg-7 order-2 order-lg-1 align-content-center">
+                    <h2>Beyond The Eye</h2>
+                        <div class="d-flex flex-wrap mb-2">
+                            <span class="w-100 w-sm-auto">
+                                <div class="s_blog_posts_post_author d-inline-flex align-items-center">
+                                    <span>Mitchell Admin</span>
+                                </div>
+                            </span>
+                            <span class="d-none d-sm-inline text-muted mx-0 mx-sm-2">•</span>
+                            <span class="s_blog_posts_post_date text-muted ">Nov 21, 2025</span>
+                            <span class="text-muted mx-2">• Astronomy</span>
+                        </div>
+                        <p class="s_blog_posts_post_teaser o_line_clamp lead">For many of us, our very first experience of learning about the celestial bodies begins when we saw our first full moon in the sky. It is truly a magnificent view even to the naked eye. If the night i...</p>
+                        <button class="btn btn-primary">Read Now <i class="fa fa-long-arrow-right"></i></button>
+                </div>
+                <div class="col-lg-5 order-1 order-lg-2 h-auto mb-4 mb-lg-0">
+                    <div data-name="Cover" class="o_record_cover_container d-flex flex-column h-100 ratio ratio-16x9 rounded overflow-hidden">
+                        <div class="o_record_cover_component o_record_cover_image " style="background-image: url('/website_blog/static/src/img/cover_7.jpg');"/>
+                    </div>
                 </div>
             </div>
         </div>
     </template>
     <template id="s_dynamic_snippet_blog_posts_single_circle_preview_data" name="Single Blog Preview Data">
-        <div class="s_dialog_preview row my-4">
-            <div class="col-4">
-                <div class="rounded-circle overflow-hidden ratio ratio-1x1" style="background-image: url('/website_blog/static/src/img/blog_previews/blog_2.jpg'); background-size: cover;"/>
-            </div>
-            <div class="col-8">
-                <h2>How to choose the right hotel</h2>
-                <div class="mb-2">
-                    <span class="text-muted"><i class="fa fa-user-circle-o me-2" role="presentation"/><span>Marc Demo</span> • <span>Mar 13, 2025</span> • <a href="#">Travel</a></span>
+        <div class="col-lg-12">
+            <div class="row single_blog_data">
+                <div class="single_blog_image col-12 col-sm-5 mb-3 mb-lg-0">
+                    <div data-name="Cover" class="o_record_cover_container d-block flex-column h-100 o_colored_level h-auto mx-auto me-sm-0 rounded-circle overflow-hidden ratio ratio-1x1">
+                        <div class="o_record_cover_component o_record_cover_image " style="background-image: url('/website_blog/static/src/img/cover_7.jpg');"></div>
+                    </div>
                 </div>
-                <p class="lead">Facts you should bear in mind.</p>
-                <a class="btn btn-primary" href="#">Read Now <i class="fa fa-long-arrow-right" role="presentation"/></a>
+                <div class="single_blog_content col-12 col-sm-7 align-content-center">
+                    <h2>Beyond The Eye</h2>
+                    <div class="d-flex flex-wrap mb-2">
+                        <span class="w-100 w-sm-auto">
+                            <div class="s_blog_posts_post_author d-inline-flex align-items-center">
+                                <span>Mitchell Admin</span>
+                            </div>
+                        </span>
+                        <span class="d-none d-sm-inline text-muted mx-0 mx-sm-2">•</span>
+                        <span class="s_blog_posts_post_date text-muted ">Nov 20, 2025</span>
+                        <span class="text-muted mx-2">• Astronomy</span>
+                    </div>
+                    <p class="lead">Becoming part of the society of devoted amateur astronomers.</p>
+                    <button class="single_row_btn btn btn-primary w-100 w-sm-auto">Read Now <i class="fa fa-long-arrow-right"></i></button>
+                </div>
             </div>
         </div>
     </template>
     <template id="s_dynamic_snippet_blog_posts_single_badge_preview_data" name="Single Blog Preview Data">
         <div class="s_dialog_preview my-4">
-            <div class="text-center">
-                <span class="o_cc o_cc1 d-inline-flex align-items-center justify-content-center gap-3 border rounded py-2 px-3 rounded-pill">
-                    <span class="badge text-bg-primary">NEW</span>
-                    <strong>Sierra Tarahumara</strong>
-                    <span class="text-muted">Marc Demo in Travel</span>
-                    <span class="text-primary">Read Now <i class="fa fa-long-arrow-right" role="presentation"/></span>
-                </span>
+            <div class="col-lg-12 text-center">
+                <div class="text-center">
+                    <span class="o_cc o_cc1 d-inline-flex align-items-center justify-content-center flex-wrap gap-3 my-3 border rounded py-2 px-3 text-break" style="border-radius: 32px !important;">
+                        <span class="badge text-bg-primary">NEW</span>
+                            <strong class="text-nowrap">Beyond The Eye</strong>
+                            <span>
+                                <span class="text-muted">Mitchell Admin</span>
+                                <span class="text-muted">in Astronomy</span>
+                            </span>
+                        <span class="text-primary">Read Now <i class="fa fa-long-arrow-right"></i></span>
+                    </span>
+                </div>
             </div>
         </div>
     </template>

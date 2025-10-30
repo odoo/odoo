@@ -34,6 +34,7 @@ export class AddSnippetDialog extends Component {
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,
             hasNoSearchResults: false,
+            isMobilePreviewSnippet: false,
         });
         this.snippetViewerProps = {
             state: this.state,
@@ -128,6 +129,17 @@ export class AddSnippetDialog extends Component {
         return this.props.snippetModel.snippetGroups.filter(
             (snippetGroup) => !snippetGroup.moduleId
         );
+    }
+
+    toggleMobilePreviewSnippet() {
+        this.state.isMobilePreviewSnippet = !this.state.isMobilePreviewSnippet;
+        const iframeContent = this.iframeRef.el;
+        const htmlContent = iframeContent.contentDocument.querySelector("html");
+        htmlContent.classList.toggle("o_is_mobile_preview");
+        iframeContent.width = this.state.isMobilePreviewSnippet ? "100%" : "333%";
+        const body = iframeContent.contentDocument.body;
+        body.style.width = this.state.isMobilePreviewSnippet ? "50%" : "30%";
+        body.style.height = this.state.isMobilePreviewSnippet ? "15%" : "100%";
     }
 
     selectGroup(snippetGroup) {
