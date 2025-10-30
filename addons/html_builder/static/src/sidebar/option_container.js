@@ -128,4 +128,8 @@ export class OptionsContainer extends BaseOptionComponent {
             });
         });
     }
+
+    isLegacyOption(option) {
+        return typeof option === "object";
+    }
 }
