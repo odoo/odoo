@@ -2683,11 +2683,11 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         wizard = Form(self.env[action['res_model']].with_context(action['context']))
         wizard.max_batch_size = 1
         wizard.save().action_split()
-        self.assertEqual(len(mo.backorder_ids), 2)
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
 
-        mo.backorder_ids[0].button_mark_done()
+        mo.procurement_group_id.mrp_production_ids[0].button_mark_done()
         self.assertEqual(sale_picking.move_ids.quantity, 1)
-        mo.backorder_ids[1].button_mark_done()
+        mo.procurement_group_id.mrp_production_ids[1].button_mark_done()
         self.assertEqual(sale_picking.move_ids.quantity, 2)
         sale_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 2.0)
