@@ -9,17 +9,17 @@ import { ShortCutPlugin } from "@html_editor/core/shortcut_plugin";
 import { TabulationPlugin } from "@html_editor/main/tabulation_plugin";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 
-import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
+import { DiscussComposerPlugin } from "@mail/core/common/plugin/discuss_composer_plugin";
 
 export const MAIL_CORE_PLUGINS = [
     ...CORE_PLUGINS,
     ChatGPTTranslatePlugin,
     ColorPlugin,
+    DiscussComposerPlugin,
     FeffPlugin,
     HintPlugin,
     InlineCodePlugin,
     LinkPlugin,
-    MailComposerPlugin,
     ShortCutPlugin,
     TabulationPlugin,
 ];

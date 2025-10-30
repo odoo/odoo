@@ -4,8 +4,8 @@ import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
-export class MailComposerPlugin extends Plugin {
-    static id = "mail.composer";
+export class DiscussComposerPlugin extends Plugin {
+    static id = "discuss_composer";
     static dependencies = ["clipboard", "hint", "input", "selection"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
