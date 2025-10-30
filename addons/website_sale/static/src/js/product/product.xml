@@ -17,8 +17,8 @@
         >
             <attribute name="class" remove="oi oi-plus" add="fa fa-shopping-cart" separator=" "/>
         </xpath>
-        <span name="add_button" position="attributes">
-            <attribute name="t-out">'Add to Cart'</attribute>
+        <span name="add_button" position="replace">
+            <span name="add_button" class="ms-2 d-none d-md-inline">Add to Cart</span>
         </span>
 
         <button name="sale_product_configurator_add_button" position="after">
