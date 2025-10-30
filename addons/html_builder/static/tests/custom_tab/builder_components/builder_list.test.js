@@ -2,7 +2,7 @@ import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpe
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test, describe } from "@odoo/hoot";
-import { Component, onError, xml } from "@odoo/owl";
+import { onError, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -150,7 +150,7 @@ test("reorder items", async () => {
 });
 
 async function testBuilderListFaultyProps(template) {
-    class Test extends Component {
+    class Test extends BaseOptionComponent {
         static template = xml`${template}`;
         static components = { BuilderList };
         static props = ["*"];
@@ -262,7 +262,7 @@ test("hides hiddenProperties from options", async () => {
 });
 
 test("do not lose id when adjusting 'selected'", async () => {
-    class Test extends Component {
+    class Test extends BaseOptionComponent {
         static template = xml`
             <BuilderList
                 dataAttributeAction="'list'"
