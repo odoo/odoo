@@ -965,3 +965,26 @@ class TestExpenses(TestExpenseCommon):
 
         vendor_bill_view = self.analytic_account_1.action_view_vendor_bill()
         self.assertTrue(expense.account_move_id.id in vendor_bill_view['domain'][0][2])
+
+    def test_expense_paid_company_no_autobalancing_line(self):
+        """
+        Test that when creating the move associated with an expense paid by company, no autobalancing line
+        appears when an analytic is added to a move line.
+        """
+        expense = self.create_expenses({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'total_amount_currency': 100.0,
+            'product_id': self.product_c.id,
+            'payment_mode': 'company_account',
+            'company_id': self.company_data['company'].id,
+            'tax_ids': [self.tax_sale_a.id],
+            })
+
+        expense.action_submit()
+        expense.action_approve()
+        expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense.action_post()
+
+        # Check that there is no fourth autobalancing line on the account move
+        self.assertEqual(expense.account_move_id.line_ids.mapped('balance'), [86.96, 13.04, -100.0])
