@@ -1161,6 +1161,17 @@ export class Runner {
 
         await this._callbacks.call("after-all", this, logger.error);
 
+        if (this.headless) {
+            // Log root suite results in headless
+            const restoreLogLevel = logger.setLogLevel("suites");
+            for (const suite of this.suites.values()) {
+                if (!suite.parent) {
+                    logger.logSuite(suite);
+                }
+            }
+            restoreLogLevel();
+        }
+
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
             const errorMessage = ["Some tests failed: see above for details"];
