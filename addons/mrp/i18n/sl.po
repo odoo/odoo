@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-11 02:15+0000\n"
-"PO-Revision-Date: 2025-10-29 21:06+0000\n"
+"PO-Revision-Date: 2025-10-30 18:01+0000\n"
 "Last-Translator: Tadej Vengust <tadej.vengust@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/mrp/sl/"
 ">\n"
@@ -38,6 +38,13 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Osnutek: PN še ni potrjen.\n"
+" * Potrjeno: PN je potrjen, pravila in zaloge in preureditev komponent sta "
+"bila sprožena.\n"
+" * V teku: Proizvodnja se je začela (na PN ali DN).\n"
+" * Za uskladitev: Proizvodnja je končana, PN more biti usklajen.\n"
+" * Opravljeno: PN je usklajen, premiki zaloge so knjiženi. \n"
+" * Preklicano: PN je bil preklican in ne mora biti več potrjen."
 
 #. module: mrp
 #. odoo-python
@@ -433,7 +440,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span>&amp;nbsp;(minutes)</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;(minute)</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -478,12 +485,12 @@ msgstr "<span>DELOVNI NALOGI</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span>minutes</span>"
-msgstr ""
+msgstr "<span>minut</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
-msgstr ""
+msgstr "<strong class=\"mr8 oe_inline\">do</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -826,7 +833,7 @@ msgstr "Arhivirano"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Are you sure you want to cancel this manufacturing order?"
-msgstr ""
+msgstr "Ste prepričani, da želite preklicati ta proizvodni nalog?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1113,6 +1120,8 @@ msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components "
 "and work order instructions."
 msgstr ""
+"Kosovnice, tudi imenovane recepti, se uporabljajo za samodejno "
+"izpolnjevanjekomponent in navodil za delovne naloge."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1199,7 +1208,7 @@ msgstr "Stroški kosovnice"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "BoM Costs"
-msgstr ""
+msgstr "Stroški kosovnic"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -1484,7 +1493,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Components Available"
-msgstr ""
+msgstr "Komponente na voljo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
@@ -1582,7 +1591,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_consumption_warning
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
-msgstr ""
+msgstr "Opozorilo o porabi"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
@@ -1867,12 +1876,15 @@ msgstr ""
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
+"Datum načrtovanega konca proizvodnje ali datum dejanskega konca proizvodnje."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
+"Datum načrtovanega začetka proizvodnje ali datum, ko ko je dejansko bila "
+"proizvodnja začeta."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1968,7 +1980,7 @@ msgstr "Datum opozorila za zamudo"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Delayed Productions"
-msgstr ""
+msgstr "Zamaknjene proizvodnje"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2178,7 +2190,7 @@ msgstr "Zagotovite sledljivost skladiščenega izdelka v vašem skladišču."
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
-msgstr ""
+msgstr "Napaka na opremi"
 
 #. module: mrp
 #. odoo-python
@@ -2190,7 +2202,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
-msgstr ""
+msgstr "Izjeme so se pojavila na sledečih proizvodih nalogih:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2213,7 +2225,7 @@ msgstr "Pričakovano"
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 msgid "Expected %s"
-msgstr ""
+msgstr "Pričakovano %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
@@ -2225,7 +2237,7 @@ msgstr "Pričakovano trajanje"
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 msgid "Expected Duration (minutes)"
-msgstr ""
+msgstr "Pričakovano trajanje (minute)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text_help
@@ -2395,7 +2407,7 @@ msgstr ""
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Free to use / On Hand"
-msgstr ""
+msgstr "Prosto za uporabo / Na zalogi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2410,7 +2422,7 @@ msgstr ""
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason7
 msgid "Fully Productive Time"
-msgstr ""
+msgstr "Polno produktiven čas"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2734,6 +2746,8 @@ msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
 msgstr ""
+"Informativen datum, ki dovoljuje definiranje kdaj je proizvodni nalog "
+"lahkonajkasneje izveden, da izpolnjuje pravočasno dostavo."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
@@ -2922,7 +2936,7 @@ msgstr "Aktivnosti z zamudo"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Availability"
-msgstr ""
+msgstr "Zapoznela razpoložljivost"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2935,6 +2949,8 @@ msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
 msgstr ""
+"Status razpoložljivosti najkasnejših komponent za ta PN. Zeleno pomeni, da "
+"ima PN status pripravljenosti pripravljeno, glede na konfiguracijo kosovnice."
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
@@ -3067,32 +3083,32 @@ msgstr "Loti/Serijske številke"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr ""
+msgstr "Zaostalo naročilo za PN"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_cancelled
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_cancelled
 msgid "MO Cancelled"
-msgstr ""
+msgstr "PN preklican"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_confirmed
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_confirmed
 msgid "MO Confirmed"
-msgstr ""
+msgstr "PN potrjen"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "MO Cost"
-msgstr ""
+msgstr "Strošek PN"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "MO Costs"
-msgstr ""
+msgstr "Stroški PN"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_done
@@ -3110,12 +3126,12 @@ msgstr ""
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
 msgid "MO Overview"
-msgstr ""
+msgstr "Pregled PN"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Poročilo s pregledom PN"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3366,6 +3382,9 @@ msgid ""
 "            * Waiting: The material is not available to start the "
 "production.\n"
 msgstr ""
+"Pripravljenost proizvodnje za ta PN glede na konfiguracijo kosovnice:\n"
+"            * Pripravljeno: Material za začetek proizvodnje je na voljo.\n"
+"            * V čakanju: Material za začetek proizvodnje ni na voljo.\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation
@@ -3398,7 +3417,7 @@ msgstr "Glavni proizvodni načrt"
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason0
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Material Availability"
-msgstr ""
+msgstr "Razpoližljivost materiala"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_merge
@@ -4219,7 +4238,7 @@ msgstr "Prioriteta"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason5
 msgid "Process Defect"
-msgstr ""
+msgstr "Napaka v procesu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4668,13 +4687,13 @@ msgstr ""
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Real Cost"
-msgstr ""
+msgstr "Dejanski strošek"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "Real Costs"
-msgstr ""
+msgstr "Dejanski stroški"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
@@ -4704,12 +4723,12 @@ msgstr ""
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason4
 msgid "Reduced Speed"
-msgstr ""
+msgstr "Zmanjšana hitrost"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason6
 msgid "Reduced Yield"
-msgstr ""
+msgstr "Zmanjšan iztržek"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__code
@@ -4763,7 +4782,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "Replenishments"
-msgstr ""
+msgstr "Obnovitve količin"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -4886,7 +4905,7 @@ msgstr "Premakni odpis"
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Odpiši izdelke"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
@@ -4960,7 +4979,7 @@ msgstr "Zaporedje"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "Nastavi količine & Potrdi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -4999,7 +5018,7 @@ msgstr "Trajanje nastavitve (minute)"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
 msgid "Setup and Adjustments"
-msgstr ""
+msgstr "Postavitev in nastavitve"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_allocation
@@ -5461,6 +5480,8 @@ msgid ""
 "The percentage of the final production cost for this by-product. The total "
 "of all by-products' cost share must be smaller or equal to 100."
 msgstr ""
+"Odstotek končnih stroškov proizvodnje za ta stranski izdelek. Vsota deležev "
+"vseh stranskih izdelkov mora biti manjša ali enaka 100."
 
 #. module: mrp
 #. odoo-python
@@ -5664,7 +5685,7 @@ msgstr "Sledenje časa"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Time Tracking: %(user)s"
-msgstr ""
+msgstr "Beleženje časa: %(user)s"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
@@ -5827,22 +5848,22 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total expected duration"
-msgstr ""
+msgstr "Skupaj pričakovano trajanje"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__duration_expected
 msgid "Total expected duration (in minutes)"
-msgstr ""
+msgstr "Skupaj pričakovano trajanje (v minutah)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total real duration"
-msgstr ""
+msgstr "Skupaj dejansko trajanje"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__duration
 msgid "Total real duration (in minutes)"
-msgstr ""
+msgstr "Skupaj dejansko trajanje (v minutah)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5940,7 +5961,7 @@ msgstr "Nekončano"
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.js:0
 msgid "Unfold"
-msgstr ""
+msgstr "Razvij"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -6667,6 +6688,19 @@ msgid ""
 "1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Porabili ste različno količino od pričakovane za sledeče izdelke.\n"
+"                        <b invisible=\"consumption == 'strict'\">\n"
+"                            Prosimo potrdite, da je bilo to storjeno "
+"namenoma.\n"
+"                        </b>\n"
+"                        <b invisible=\"consumption != 'strict'\">\n"
+"                            Prosimo preglejte porabo komponent ali prosite "
+"vodjo za potrditev\n"
+"                            <span invisible=\"mrp_production_count != 1\""
+">tega proizvodnega naloga</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\""
+">teh proizvodnih nalogov</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #. odoo-python
