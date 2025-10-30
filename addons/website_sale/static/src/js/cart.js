@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -98,7 +99,7 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
             if (!data.cart_quantity) {
                 // Ensures last cart removal is recorded
                 browser.sessionStorage.setItem('website_sale_cart_quantity', 0);
-                return window.location = '/shop/cart';
+                return redirect('/shop/cart');
             }
             $input.val(data.quantity);
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
