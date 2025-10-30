@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 13:23+0000\n"
-"PO-Revision-Date: 2025-08-15 13:23+0000\n"
+"POT-Creation-Date: 2025-10-28 10:17+0000\n"
+"PO-Revision-Date: 2025-10-28 10:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
 #: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
 #, python-format
 msgid "Check data on Invoice(s)"
@@ -179,6 +180,16 @@ msgid "Nilvera document has been received successfully"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_edi_xml_ubl_tr.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"Nilvera portal cannot process negative quantity nor negative price on "
+"invoice lines"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_invoice_status_ir_actions_server
 msgid "Nilvera: retrieve invoice status"
 msgstr ""
@@ -280,7 +291,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The Contact Tag(s) cannot be deleted because it is used in Türkiye "
-"electronic integrations"
+"electronic integrations."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -381,13 +392,13 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
 #, python-format
 msgid "View Company(s)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
 #: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
 #, python-format
 msgid "View Invoice(s)"
@@ -411,13 +422,4 @@ msgstr ""
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an entry that has been sent to Nilvera."
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
-#. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
-#, python-format
-msgid ""
-"Nilvera portal cannot process negative quantity nor negative price on "
-"invoice lines"
 msgstr ""
