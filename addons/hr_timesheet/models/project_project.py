@@ -230,8 +230,8 @@ class ProjectProject(models.Model):
         encode_uom = self.env.company.timesheet_encode_uom_id
         uom_ratio = self.env.ref('uom.product_uom_hour').factor / encode_uom.factor
 
-        allocated = self.allocated_hours / uom_ratio
-        effective = self.total_timesheet_time / uom_ratio
+        allocated = self.allocated_hours * uom_ratio
+        effective = self.total_timesheet_time
         color = ""
         if allocated:
             number = f"{round(effective)} / {round(allocated)} {encode_uom.name}"
