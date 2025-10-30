@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-inherit="delivery.locationSelector.location" t-inherit-mode="extension">
+    <t t-inherit="website.locationSelector.location" t-inherit-mode="extension">
         <small name="location_opening_hours" position="before">
             <t t-if="props.additionalData and !!props.additionalData.in_store_stock_data">
                 <t t-if="!!props.additionalData.in_store_stock_data.in_stock">

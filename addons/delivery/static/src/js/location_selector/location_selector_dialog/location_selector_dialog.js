@@ -1,5 +1,5 @@
-import { LocationList } from '@delivery/js/location_selector/location_list/location_list';
-import { MapContainer } from '@delivery/js/location_selector/map_container/map_container';
+import { LocationList } from '@website/components/location_selector/location_list/location_list';
+import { MapContainer } from '@website/components/location_selector/map_container/map_container';
 import { Component, onMounted, onWillUnmount, useEffect, useState } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
