@@ -1,7 +1,14 @@
 import { BaseWebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BASE_ONLY_BG_IMAGE_SELECTOR, CARD_PARENT_HANDLERS } from "./utils";
+import {
+    BOTH_BG_COLOR_IMAGE_EXCLUDE,
+    BOTH_BG_COLOR_IMAGE_SELECTOR,
+    ONLY_BG_COLOR_EXCLUDE,
+    ONLY_BG_COLOR_SELECTOR,
+    ONLY_BG_IMAGE_EXCLUDE,
+    ONLY_BG_IMAGE_SELECTOR,
+} from "./utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC_BEFORE } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
@@ -19,9 +26,8 @@ export class WebsiteBackgroundCarouselOption extends BaseWebsiteBackgroundOption
 }
 
 export class WebsiteBackgroundBGColorImageOption extends BaseWebsiteBackgroundOption {
-    static selector =
-        "section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_website_form_cover .row > .o_not_editable, .s_split_intro .row > .o_not_editable, .s_bento_grid .row > div";
-    static exclude = `${BASE_ONLY_BG_IMAGE_SELECTOR}, .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_item`;
+    static selector = BOTH_BG_COLOR_IMAGE_SELECTOR;
+    static exclude = BOTH_BG_COLOR_IMAGE_EXCLUDE;
     static defaultProps = {
         withColors: true,
         withImages: true,
@@ -31,9 +37,8 @@ export class WebsiteBackgroundBGColorImageOption extends BaseWebsiteBackgroundOp
     };
 }
 export class WebsiteBackgroundBGColorOption extends BaseWebsiteBackgroundOption {
-    static selector =
-        "section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge";
-    static exclude = `.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr, ${CARD_PARENT_HANDLERS}, .s_website_form_cover .row > .o_not_editable, .s_bento_grid .row > div`;
+    static selector = ONLY_BG_COLOR_SELECTOR;
+    static exclude = ONLY_BG_COLOR_EXCLUDE;
     static defaultProps = {
         withColors: true,
         withImages: false,
@@ -41,7 +46,8 @@ export class WebsiteBackgroundBGColorOption extends BaseWebsiteBackgroundOption 
     };
 }
 export class WebsiteBackgroundOnlyBGImageOption extends BaseWebsiteBackgroundOption {
-    static selector = BASE_ONLY_BG_IMAGE_SELECTOR;
+    static selector = ONLY_BG_IMAGE_SELECTOR;
+    static exclude = ONLY_BG_IMAGE_EXCLUDE;
     static defaultProps = {
         withColors: false,
         withImages: true,
