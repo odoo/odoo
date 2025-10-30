@@ -2,6 +2,7 @@ import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
+    addLegacyBuilderOption,
 } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -44,6 +45,21 @@ test("apply is called if clean is not defined", async () => {
             static template = xml`<BuilderButton action="'testAction'">Click</BuilderButton>`;
         }
     );
+    await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+    await contains(":iframe .s_test").click();
+    await contains("[data-action-id='testAction']").click();
+    expect("[data-action-id='testAction']").toHaveClass("active");
+    expect.verifySteps(["apply", "apply"]); // preview, apply
+    await contains("[data-action-id='testAction']").click();
+    expect("[data-action-id='testAction']").not.toHaveClass("active");
+    expect.verifySteps(["apply"]); // clean
+});
+
+test("check Legacy Builder Option is supported", async () => {
+    addLegacyBuilderOption({
+        selector: ".s_test",
+        template: xml`<BuilderButton action="'testAction'">Click</BuilderButton>`,
+    });
     await setupHTMLBuilder(`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
     await contains("[data-action-id='testAction']").click();
