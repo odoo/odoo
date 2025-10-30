@@ -47,7 +47,7 @@ test("Cloning a block with a grid preview should not make the preview appear on 
     expect(":iframe .s_banner").toHaveCount(1);
     await contains("[data-label='Spacing (Y, X)'] input").click();
     await edit(20);
-    await contains("[data-container-title='Block'] .oe_snippet_clone").click();
+    await contains("[data-container-title='Banner'] .oe_snippet_clone").click();
     expect(":iframe .s_banner").toHaveCount(2);
     expect(":iframe .s_banner:nth-child(1) .o_we_grid_preview").toHaveCount(1);
     expect(":iframe .s_banner:nth-child(2) .o_we_grid_preview").toHaveCount(0);
