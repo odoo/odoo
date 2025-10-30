@@ -4,8 +4,12 @@ import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * This plugin works with the composer used in Discuss, ChatWindow and Chatter.
+ * For the full composer, it is using HtmlComposerMessageField.
+ */
 export class MailComposerPlugin extends Plugin {
-    static id = "mail.composer";
+    static id = "mail_composer";
     static dependencies = ["clipboard", "hint", "input", "selection"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
