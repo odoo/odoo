@@ -265,16 +265,16 @@ class TestSchema(common.TransactionCase):
 
     def test_00_table(self):
         """ check the database schema of a model """
-        model = self.env['test_orm.foo']
-        self.assertEqual(model._table, 'test_orm_foo')
+        model = self.env['test_schema.foo']
+        self.assertEqual(model._table, 'test_schema_foo')
 
         # retrieve schema data about that table
-        table_data = self.get_table_data('test_orm_foo')
+        table_data = self.get_table_data('test_schema_foo')
         self.assertEqual(table_data, {
             'is_insertable_into': 'YES',
             'is_typed': 'NO',
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_foo',
+            'table_name': 'test_schema_foo',
             'table_schema': 'public',
             'table_type': 'BASE TABLE',
             'user_defined_type_catalog': None,
@@ -297,7 +297,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_boolean(self):
         """ check the database representation of a boolean field """
-        model = self.env['test_orm.message']
+        model = self.env['test_schema.message']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['important'], {
             'character_maximum_length': None,
@@ -311,7 +311,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_message',
+            'table_name': 'test_schema_message',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'bool',
@@ -320,7 +320,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_integer(self):
         """ check the database representation of an integer field """
-        model = self.env['test_orm.category']
+        model = self.env['test_schema.category']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['color'], {
             'character_maximum_length': None,
@@ -334,7 +334,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': 2,
             'numeric_scale': 0,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_category',
+            'table_name': 'test_schema_category',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'int4',
@@ -343,7 +343,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_float(self):
         """ check the database representation of a float field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['number'], {
             'character_maximum_length': None,
@@ -357,7 +357,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': 10,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'numeric',
@@ -366,7 +366,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_monetary(self):
         """ check the database representation of a monetary field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['amount'], {
             'character_maximum_length': None,
@@ -380,7 +380,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': 10,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'numeric',
@@ -412,7 +412,7 @@ class TestSchema(common.TransactionCase):
             'udt_schema': 'pg_catalog',
         })
 
-        model = self.env['test_orm.message']
+        model = self.env['test_schema.message']
         self.assertFalse(type(model).name.required)
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['name'], {
@@ -427,14 +427,14 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_message',
+            'table_name': 'test_schema_message',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'varchar',
             'udt_schema': 'pg_catalog',
         })
 
-        model = self.env['test_orm.category']
+        model = self.env['test_schema.category']
         self.assertTrue(type(model).name.required)
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['name'], {
@@ -449,7 +449,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_category',
+            'table_name': 'test_schema_category',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'varchar',
@@ -458,7 +458,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_text(self):
         """ check the database representation of a text field """
-        model = self.env['test_orm.message']
+        model = self.env['test_schema.message']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['body'], {
             'character_maximum_length': None,
@@ -472,7 +472,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_message',
+            'table_name': 'test_schema_message',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'text',
@@ -481,7 +481,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_html(self):
         """ check the database representation of an html field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['comment1'], {
             'character_maximum_length': None,
@@ -495,7 +495,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'text',
@@ -504,7 +504,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_date(self):
         """ check the database representation of a date field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['date'], {
             'character_maximum_length': None,
@@ -518,7 +518,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'date',
@@ -527,7 +527,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_datetime(self):
         """ check the database representation of a datetime field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['create_date'], {
             'character_maximum_length': None,
@@ -541,7 +541,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'timestamp',
@@ -550,7 +550,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_selection(self):
         """ check the database representation of a selection field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['lang'], {
             'character_maximum_length': None,
@@ -564,7 +564,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'varchar',
@@ -573,7 +573,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_reference(self):
         """ check the database representation of a reference field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['reference'], {
             'character_maximum_length': None,
@@ -587,7 +587,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': None,
             'numeric_scale': None,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'varchar',
@@ -596,7 +596,7 @@ class TestSchema(common.TransactionCase):
 
     def test_10_many2one(self):
         """ check the database representation of a many2one field """
-        model = self.env['test_orm.mixed']
+        model = self.env['test_schema.mixed']
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['currency_id'], {
             'character_maximum_length': None,
@@ -610,7 +610,7 @@ class TestSchema(common.TransactionCase):
             'numeric_precision_radix': 2,
             'numeric_scale': 0,
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_mixed',
+            'table_name': 'test_schema_mixed',
             'table_schema': 'public',
             'udt_catalog': self.cr.dbname,
             'udt_name': 'int4',
@@ -618,13 +618,13 @@ class TestSchema(common.TransactionCase):
         })
         foreign_keys = self.get_foreign_keys(model._table)
         self.assertIn(
-            ('test_orm_mixed', 'currency_id', 'res_currency', 'id', 'SET NULL'),
+            ('test_schema_mixed', 'currency_id', 'res_currency', 'id', 'SET NULL'),
             foreign_keys,
         )
 
     def test_10_many2many(self):
         """ check the database representation of a many2many field """
-        model = self.env['test_orm.discussion']
+        model = self.env['test_schema.discussion']
         field = type(model).categories
         comodel = self.env[field.comodel_name]
         self.assertTrue(field.relation)
@@ -639,7 +639,7 @@ class TestSchema(common.TransactionCase):
             'is_insertable_into': 'YES',
             'is_typed': 'NO',
             'table_catalog': self.cr.dbname,
-            'table_name': 'test_orm_discussion_category',
+            'table_name': 'test_schema_discussion_category',
             'table_schema': 'public',
             'table_type': 'BASE TABLE',
             'user_defined_type_catalog': None,
@@ -661,7 +661,7 @@ class TestSchema(common.TransactionCase):
                 'numeric_precision_radix': 2,
                 'numeric_scale': 0,
                 'table_catalog': self.cr.dbname,
-                'table_name': 'test_orm_discussion_category',
+                'table_name': 'test_schema_discussion_category',
                 'table_schema': 'public',
                 'udt_catalog': self.cr.dbname,
                 'udt_name': 'int4',
@@ -679,7 +679,7 @@ class TestSchema(common.TransactionCase):
                 'numeric_precision_radix': 2,
                 'numeric_scale': 0,
                 'table_catalog': self.cr.dbname,
-                'table_name': 'test_orm_discussion_category',
+                'table_name': 'test_schema_discussion_category',
                 'table_schema': 'public',
                 'udt_catalog': self.cr.dbname,
                 'udt_name': 'int4',
@@ -731,7 +731,7 @@ class TestSchema(common.TransactionCase):
         self.assertEqual(nb_field_index, 2)
 
     def test_one2many_domain(self):
-        model = self.env['test_orm.inverse_m2o_ref']
+        model = self.env['test_schema.inverse_m2o_ref']
         field = model._fields['model_ids']
         self.assertEqual(
             field.get_comodel_domain(model),
@@ -739,6 +739,6 @@ class TestSchema(common.TransactionCase):
         )
         self.assertEqual(
             field.get_description(self.env, ['domain'])['domain'],
-            "([('const', '=', True)]) + ([('res_model', '=', 'test_orm.inverse_m2o_ref')])",
+            "([('const', '=', True)]) + ([('res_model', '=', 'test_schema.inverse_m2o_ref')])",
             "res_model should appear in the descripton of the domain",
         )
