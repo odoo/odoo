@@ -4,7 +4,8 @@
         <!-- Credentials configured: show 'Google' button concatenated with the 'Synchronize with' label. -->
         <xpath expr="//div[@id='header_synchronization_settings']//h5[@id='synchronize_with']" position="after">
             <div t-if="model.googleCredentialsSet and !model.googleIsSync and !model.googleIsPaused" id="google_calendar_sync" class="mx-1 d-inline-flex">
-                <button type="button" id="google_sync_pending" class="btn btn-primary text-nowrap" t-on-click="onGoogleSyncCalendar">
+                <button type="button" id="google_sync_pending" class="btn btn-sm text-nowrap border-info d-flex align-items-center" t-on-click="onGoogleSyncCalendar">
+                    <img src="/google_calendar/static/src/img/google-calendar.svg"/>
                     <b>Google</b>
                 </button>
             </div>
