@@ -162,6 +162,7 @@ class ProjectProject(models.Model):
         tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
     stage_id_color = fields.Integer(string='Stage Color', related="stage_id.color", export_string_translation=False)
     duration_tracking = fields.Json(groups="project.group_project_stages")
+    date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
 
     update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)
     update_count = fields.Integer(compute='_compute_total_update_ids', export_string_translation=False)
@@ -580,6 +581,15 @@ class ProjectProject(models.Model):
         # sudo is needed to update the user settings for all users using the projects to duplicate
         self.env['res.users.settings.embedded.action'].sudo().create(new_embedded_actions_config_vals_list)
 
+    def _get_rotting_depends_fields(self):
+        return super()._get_rotting_depends_fields() + ['is_template', 'stage_id.fold']
+
+    def _get_rotting_domain(self):
+        return super()._get_rotting_domain() & Domain([
+            ('is_template', '=', False),
+            ('stage_id.fold', '=', False),
+        ])
+
     @api.model
     def name_create(self, name):
         res = super().name_create(name)
@@ -675,6 +685,9 @@ class ProjectProject(models.Model):
                 del vals['date_start']
             elif (date_end_update and no_current_date_begin and not date_start_update):
                 del vals['date']
+
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.Datetime.now()
 
         res = super().write(vals) if vals else True
 
