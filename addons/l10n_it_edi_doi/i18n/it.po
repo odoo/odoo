@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-11 09:25+0000\n"
+"POT-Creation-Date: 2025-10-28 10:14+0000\n"
 "PO-Revision-Date: 2024-06-11 09:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -242,6 +243,11 @@ msgid "Draft"
 msgstr "Bozza"
 
 #. module: l10n_it_edi_doi
+#: model:ir.model,name:l10n_it_edi_doi.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__end_date
 msgid "End Date"
 msgstr "Data fine"
@@ -287,8 +293,8 @@ msgid ""
 "Given the tax %s is applied, there should be a Declaration of Intent "
 "selected."
 msgstr ""
-"Data l'applicazione dell'imposta %s, dovrebbe esserci una Dichiarazione di Intento "
-"selezionata."
+"Data l'applicazione dell'imposta %s, dovrebbe esserci una Dichiarazione di "
+"Intento selezionata."
 
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__has_message
@@ -399,6 +405,11 @@ msgid "My Activity Deadline"
 msgstr "Scadenza mie attività"
 
 #. module: l10n_it_edi_doi
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Scadenza prossima attività"
@@ -458,10 +469,12 @@ msgstr "Partner"
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
 #, python-format
 msgid ""
-"Pay attention, the threshold of your Declaration of Intent %s of %s is exceeded by %s, this document included.\n"
+"Pay attention, the threshold of your Declaration of Intent %s of %s is "
+"exceeded by %s, this document included.\n"
 "Invoiced: %s; Not Yet Invoiced: %s"
 msgstr ""
-"Attenzione, la soglia della tua Dichiarazione di Intento %s di %s è superata da %s, questo documento incluso.\n"
+"Attenzione, la soglia della tua Dichiarazione di Intento %s di %s è superata "
+"da %s, questo documento incluso.\n"
 "Fatturato: %s; Non ancora fatturato: %s"
 
 #. module: l10n_it_edi_doi
@@ -480,6 +493,11 @@ msgid "Protocol Number"
 msgstr "Numero di Protocollo"
 
 #. module: l10n_it_edi_doi
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_l10n_it_edi_doi_form
 msgid "Reactivate"
 msgstr "Riattivare"
@@ -490,13 +508,13 @@ msgid "Remaining"
 msgstr "Rimanente"
 
 #. module: l10n_it_edi_doi
-#: model:ir.model.fields,help:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__remaining_amount
+#: model:ir.model.fields,help:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__remaining
 msgid ""
 "Remaining amount after deduction of the Invoiced and Not Yet Invoiced "
 "amounts."
 msgstr ""
-"Importo rimanente dopo la deduzione degli importi Fatturati e Non ancora fatturati "
-"importi."
+"Importo rimanente dopo la deduzione degli importi Fatturati e Non ancora "
+"fatturati importi."
 
 #. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_l10n_it_edi_doi_form
@@ -589,11 +607,6 @@ msgstr ""
 "Pianificato: attività future."
 
 #. module: l10n_it_edi_doi
-#: model:ir.model,name:l10n_it_edi_doi.model_account_tax
-msgid "Tax"
-msgstr "Imposta"
-
-#. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_move_tree
 msgid "Tax excluded"
 msgstr "Imposta esclusa"
@@ -658,10 +671,11 @@ msgstr "La Dichiarazione di Intento utilizza la valuta %s, non %s."
 #. module: l10n_it_edi_doi
 #: model:ir.model.constraint,message:l10n_it_edi_doi.constraint_l10n_it_edi_doi_declaration_of_intent_protocol_number_unique
 msgid ""
-"The Protocol Number of a Declaration of Intent must be unique! Please choose"
-" another one."
-msgstr "Il numero di protocollo di una Dichiarazione di Intento deve essere univoco! Per favore scegline"
-" un altro."
+"The Protocol Number of a Declaration of Intent must be unique! Please choose "
+"another one."
+msgstr ""
+"Il numero di protocollo di una Dichiarazione di Intento deve essere univoco! "
+"Per favore scegline un altro."
 
 #. module: l10n_it_edi_doi
 #: model:ir.model.constraint,message:l10n_it_edi_doi.constraint_l10n_it_edi_doi_declaration_of_intent_threshold_positive
@@ -672,16 +686,23 @@ msgstr "La Soglia di una Dichiarazione di Intento deve essere positiva."
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__state
 msgid ""
 "The state of this Declaration of Intent. \n"
-"- 'Draft' means that the Declaration of Intent still needs to be confirmed before being usable. \n"
+"- 'Draft' means that the Declaration of Intent still needs to be confirmed "
+"before being usable. \n"
 "- 'Active' means that the Declaration of Intent is usable. \n"
-"- 'Terminated' designates that the Declaration of Intent has been marked as not to use anymore without invalidating usages of it. \n"
-"- 'Revoked' means the Declaration of Intent should not have been used. You will probably need to revert previous usages of it, if any.\n"
+"- 'Terminated' designates that the Declaration of Intent has been marked as "
+"not to use anymore without invalidating usages of it. \n"
+"- 'Revoked' means the Declaration of Intent should not have been used. You "
+"will probably need to revert previous usages of it, if any.\n"
 msgstr ""
 "Lo stato della presente Dichiarazione di Intento. \n"
-"- 'Bozza' significa che la Dichiarazione di Intento deve ancora essere confermata prima di essere utilizzabile. \n"
+"- 'Bozza' significa che la Dichiarazione di Intento deve ancora essere "
+"confermata prima di essere utilizzabile. \n"
 "- 'Attiva' significa che la Dichiarazione di Intento è utilizzabile. \n"
-"- 'Terminata' indica che la Dichiarazione di Intento è stata contrassegnata come non più utilizzabile senza invalidarne gli usi. \n"
-"- 'Revocata' significa che la Dichiarazione di Intento non deve essere utilizzata. Probabilmente sarà necessario ripristinare gli usi precedenti, se presenti.\n"
+"- 'Terminata' indica che la Dichiarazione di Intento è stata contrassegnata "
+"come non più utilizzabile senza invalidarne gli usi. \n"
+"- 'Revocata' significa che la Dichiarazione di Intento non deve essere "
+"utilizzata. Probabilmente sarà necessario ripristinare gli usi precedenti, "
+"se presenti.\n"
 
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__threshold
@@ -699,16 +720,18 @@ msgstr "Totale"
 msgid ""
 "Total amount of allowed sales without VAT under this Declaration of Intent"
 msgstr ""
-"Importo totale delle vendite consentite senza IVA ai sensi della presente Dichiarazione di Intento"
+"Importo totale delle vendite consentite senza IVA ai sensi della presente "
+"Dichiarazione di Intento"
 
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__not_yet_invoiced
 msgid ""
-"Total amount of planned sales under this Declaration of Intent (i.e. current"
-" quotation and sales orders) that can still be invoiced"
+"Total amount of planned sales under this Declaration of Intent (i.e. current "
+"quotation and sales orders) that can still be invoiced"
 msgstr ""
-"Importo totale delle vendite pianificate nell'ambito della presente Dichiarazione di "
-"Intento (cioè l'offerta e gli ordini di vendita attuali) che possono ancora essere fatturati"
+"Importo totale delle vendite pianificate nell'ambito della presente "
+"Dichiarazione di Intento (cioè l'offerta e gli ordini di vendita attuali) "
+"che possono ancora essere fatturati"
 
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_account_bank_statement_line__l10n_it_edi_doi_amount
@@ -716,12 +739,12 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_account_payment__l10n_it_edi_doi_amount
 msgid "Total amount of sales under the Declaration of Intent of this document"
 msgstr ""
-"Importo totale delle vendite ai sensi della Dichiarazione di Intento del presente documento"
+"Importo totale delle vendite ai sensi della Dichiarazione di Intento del "
+"presente documento"
 
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__invoiced
-msgid ""
-"Total amount of sales under this Declaration of Intent"
+msgid "Total amount of sales under this Declaration of Intent"
 msgstr ""
 "Importo totale delle vendite ai sensi della presente Dichiarazione di Intento"
 
@@ -731,8 +754,8 @@ msgid ""
 "Total under the Declaration of Intent of this document that can still be "
 "invoiced"
 msgstr ""
-"Totale ai sensi della Dichiarazione di Intento del presente documento che può ancora essere "
-"fatturati"
+"Totale ai sensi della Dichiarazione di Intento del presente documento che "
+"può ancora essere fatturati"
 
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__activity_exception_decoration
@@ -780,14 +803,16 @@ msgstr ""
 msgid ""
 "You cannot delete the special fiscal position for Declarations of Intent."
 msgstr ""
-"Non è possibile eliminare la posizione fiscale speciale per le dichiarazioni di intento."
+"Non è possibile eliminare la posizione fiscale speciale per le dichiarazioni "
+"di intento."
 
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/account_tax.py:0
 #, python-format
 msgid "You cannot delete the special tax for Declarations of Intent."
-msgstr "Non è possibile eliminare la tassa speciale per le dichiarazioni di intento."
+msgstr ""
+"Non è possibile eliminare la tassa speciale per le dichiarazioni di intento."
 
 #. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.report_invoice_document
