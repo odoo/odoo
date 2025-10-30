@@ -17,6 +17,6 @@ patch(ChatWindow.prototype, {
             // ensure messaging menu is opened before chat window is closed
             await Promise.resolve();
         }
-        await super._onClose(options);
+        await super._onClose(...arguments);
     },
 });
