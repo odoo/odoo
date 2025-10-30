@@ -10,6 +10,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -32,23 +33,9 @@ test("Add image in gallery", async () => {
         return dataURItoBlob(base64Image);
     });
 
-    await setupWebsiteBuilder(
-        `
-        <section class="s_image_gallery o_masonry" data-columns="2">
-            <div class="container">
-                <div class="o_masonry_col col-lg-6">
-                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="2" src='${dummyBase64Img}'>
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="3" src='${dummyBase64Img}'>
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="4" src='${dummyBase64Img}'>
-                </div>
-                <div class="o_masonry_col col-lg-6">
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
-                </div>
-            </div>
-        </section>
-        `
-    );
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_images_wall");
+    queryAll(":iframe img").forEach((imgEl) => (imgEl.src = dummyBase64Img));
+    getEditor().shared.history.addStep();
     onRpc("/html_editor/get_image_info", () => {
         expect.step("get_image_info");
         return {
@@ -62,7 +49,7 @@ test("Add image in gallery", async () => {
             },
         };
     });
-    await contains(":iframe .first_img").click();
+    await contains(":iframe .o_masonry_col img[data-index='1']").click();
     await waitFor("[data-action-id='addImage']");
     expect("[data-action-id='addImage']").toHaveCount(1);
     await contains("[data-action-id='addImage']").click();
@@ -77,7 +64,7 @@ test("Add image in gallery", async () => {
         [...column.children].map((img) => img.dataset.index)
     );
 
-    expect(columnImgs).toEqual([["1", "3", "4", "5", "6"], ["2"]]);
+    expect(columnImgs).toEqual([["0", "3", "4", "5", "6"], ["1"], ["2"]]);
     expect.verifySteps(["get_image_info", "get_image_info"]);
     expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
         "data-mimetype",
@@ -116,21 +103,11 @@ test.skip("Remove all images in gallery", async () => {
 });
 
 test("Change gallery layout", async () => {
-    await setupWebsiteBuilder(
-        `
-        <section class="s_image_gallery o_masonry" data-columns="2">
-            <div class="container">
-                <div class="o_masonry_col col-lg-6">
-                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
-                </div>
-                <div class="o_masonry_col col-lg-6">
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
-                </div>
-            </div>
-        </section>
-        `
-    );
-    await contains(":iframe .first_img").click();
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_images_wall");
+    queryAll(":iframe img").forEach((imgEl) => (imgEl.src = dummyBase64Img));
+    getEditor().shared.history.addStep();
+
+    await contains(":iframe img").click();
     await waitFor("[data-label='Mode']");
     expect("[data-label='Mode']").toHaveCount(1);
     expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Masonry");
@@ -144,20 +121,10 @@ test("Change gallery layout", async () => {
 });
 
 test("Change gallery restore the container to the cloned equivalent image", async () => {
-    const { getEditor } = await setupWebsiteBuilder(
-        `
-        <section class="s_image_gallery o_masonry" data-columns="2">
-            <div class="container">
-                <div class="o_masonry_col col-lg-6">
-                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
-                </div>
-                <div class="o_masonry_col col-lg-6">
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
-                </div>
-            </div>
-        </section>
-        `
-    );
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_images_wall");
+    queryAll(":iframe img").forEach((imgEl) => (imgEl.src = dummyBase64Img));
+    getEditor().shared.history.addStep();
+
     const editor = getEditor();
     const builderOptions = editor.shared.builderOptions;
     const expectOptionContainerToInclude = (elem) => {
@@ -166,44 +133,34 @@ test("Change gallery restore the container to the cloned equivalent image", asyn
         );
     };
 
-    await contains(":iframe .first_img").click();
+    await contains(":iframe img[data-index='1']").click();
     await contains("[data-label='Mode'] button").click();
 
     await contains("[data-action-param='grid']").click();
     await waitFor(":iframe .o_grid");
 
     // The container include the new image equivalent to the old selected image
-    expectOptionContainerToInclude(queryOne(":iframe .first_img"));
+    expectOptionContainerToInclude(queryOne(":iframe img[data-index='1']"));
 
     await contains(".o-snippets-top-actions .fa-undo").click();
-    expectOptionContainerToInclude(queryOne(":iframe .first_img"));
+    expectOptionContainerToInclude(queryOne(":iframe img[data-index='1']"));
     await contains(".o-snippets-top-actions .fa-repeat").click();
-    expectOptionContainerToInclude(queryOne(":iframe .first_img"));
+    expectOptionContainerToInclude(queryOne(":iframe img[data-index='1']"));
 });
 
 test("Change gallery layout when images have a link", async () => {
-    await setupWebsiteBuilder(
-        `
-        <section class="s_image_gallery o_masonry" data-columns="2">
-            <div class="container">
-                <div class="o_masonry_col col-lg-6">
-                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
-                </div>
-                <div class="o_masonry_col col-lg-6">
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
-                </div>
-            </div>
-        </section>
-        `
-    );
-    await contains(":iframe .first_img").click();
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_images_wall");
+    queryAll(":iframe img").forEach((imgEl) => (imgEl.src = dummyBase64Img));
+    getEditor().shared.history.addStep();
+
+    await contains(":iframe img[data-index='1']").click();
     await waitFor("[data-label='Mode']");
     await contains("[data-label='Media'] button[data-action-id='setLink']").click();
 
     await contains("[data-label='Your URL'] [data-action-id='setUrl'] > input").fill(
         "http://odoo.com"
     );
-    expect(":iframe section a[href='http://odoo.com'] > img.first_img").toHaveCount(1);
+    expect(":iframe section a[href='http://odoo.com'] > img[data-index='1']").toHaveCount(1);
 
     await contains("[data-label='Mode'] .dropdown-toggle").click();
     await contains("[data-action-param='grid']").click();

@@ -416,7 +416,9 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
 export async function getStructureSnippet(snippetName) {
     const html = await getWebsiteSnippets();
     const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-    return snippetsDocument.querySelector(`[data-snippet=${snippetName}]`).cloneNode(true);
+    return snippetsDocument
+        .querySelector(`[data-snippet=${snippetName}]:not([data-snippet] [data-snippet])`)
+        .cloneNode(true);
 }
 
 export async function insertStructureSnippet(editor, snippetName) {
