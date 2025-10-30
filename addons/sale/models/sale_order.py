@@ -957,8 +957,16 @@ class SaleOrder(models.Model):
                 # come first.
                 update_commands = [Command.update(
                     order_line.id,
+<<<<<<< 84d85a556abee2a30b7e8e3048a28e21858ed72d
                     {'sequence': order_line.sequence + len(selected_combo_items)},
                 ) for order_line in self.order_line if order_line.sequence > line.sequence]
+||||||| 17d3fdbc9c0d9514cbe9658995fbf0e2afec75b9
+                    {'sequence': line.sequence + len(selected_combo_items) + line_index - index},
+                ) for line_index, order_line in enumerate(self.order_line) if line_index > index]
+=======
+                    {'sequence': line.sequence + len(selected_combo_items) + line_index - index},
+                ) for line_index, order_line in enumerate(self.order_line.filtered(lambda l: not l.combo_item_id)) if line_index > index]
+>>>>>>> a3264a4251d895888dd4aa8d7033fa72a2c62e76
 
                 # Clear `selected_combo_items` to avoid applying the same changes multiple times.
                 line.selected_combo_items = False
