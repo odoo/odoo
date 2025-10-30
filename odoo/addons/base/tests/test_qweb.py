@@ -1883,9 +1883,7 @@ class TestQWebBasic(TransactionCase):
                     <div>
                         <t t-set="a">1</t>
                         <t t-set="b">1</t>
-                        <t t-call="base.dummy">
-                            <t t-set="b">2</t>
-                        </t>
+                        <t t-call="base.dummy" b="2"/>
                         <span t-out="a"/>
                         <span t-out="b"/>
                     </div>
