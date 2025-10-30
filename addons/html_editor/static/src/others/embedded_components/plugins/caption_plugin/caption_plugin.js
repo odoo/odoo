@@ -52,6 +52,9 @@ export class CaptionPlugin extends Plugin {
         ],
         image_name_predicates: [this.getImageName.bind(this)],
         link_compatible_selection_predicates: [this.isLinkAllowedOnSelection.bind(this)],
+
+        /** Processors */
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
 
     setup() {
@@ -308,5 +311,16 @@ export class CaptionPlugin extends Plugin {
                 { normalize: false }
             );
         }
+    }
+
+    /**
+     * @param {DocumentFragment} clonedContents
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    processContentForClipboard(clonedContents, selection) {
+        if (clonedContents.firstChild.nodeName === "IMG") {
+            clonedContents = selection.commonAncestorContainer.cloneNode(true);
+        }
+        return clonedContents;
     }
 }
