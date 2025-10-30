@@ -98,6 +98,7 @@ export class FormFieldOption extends BaseOptionComponent {
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await loadFieldOptionData(el);
+            this.state.fields = fieldOptionData.fields;
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
@@ -106,6 +107,7 @@ export class FormFieldOption extends BaseOptionComponent {
         onWillUpdateProps(async (props) => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await loadFieldOptionData(el);
+            this.state.fields = fieldOptionData.fields;
             this.state.availableFields.length = 0;
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.length = 0;
@@ -177,7 +179,15 @@ export class FormFieldOption extends BaseOptionComponent {
     }
     get isExistingFieldSelectType() {
         const el = this.env.getEditingElement();
-        return !isFieldCustom(el) && ["selection", "many2one"].includes(el.dataset.type);
+        return (
+            !isFieldCustom(el) &&
+            ["selection", "many2one", "many2many"].includes(el.dataset.type) &&
+            !el.querySelector("input[type='file']")
+        );
+    }
+    get isExistingFieldSelectTypeMultiple() {
+        const el = this.env.getEditingElement();
+        return !isFieldCustom(el) && this.state.fields[getFieldName(el)].type === "many2many";
     }
     get isMultipleInputs() {
         const el = this.env.getEditingElement();
