@@ -30,6 +30,8 @@ const notificationPatch = {
                 return _t("Not Delivered");
             case "sms_rejected":
                 return _t("Rejected");
+            case "sms_to_moderate":
+                return _t("Moderation");
             default:
                 return super.failureMessage;
         }

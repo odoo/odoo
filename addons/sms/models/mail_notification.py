@@ -29,6 +29,7 @@ class MailNotification(models.Model):
         ('sms_not_allowed', 'Not Allowed'),
         ('sms_not_delivered', 'Not Delivered'),
         ('sms_rejected', 'Rejected'),
+        ('sms_to_moderate', 'Moderation'),
     ])
 
     @api.depends('sms_id_int', 'notification_type')

@@ -34,6 +34,7 @@ class MailingTrace(models.Model):
         ('sms_registration_needed', 'Country-specific Registration Required'),
         ('sms_server', 'Server Error'),
         ('sms_acc', 'Unregistered Account'),
+        ('sms_to_moderate', 'Moderation'),
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),

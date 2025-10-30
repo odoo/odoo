@@ -46,6 +46,7 @@ class SmsSms(models.Model):
         ('process', 'Processing'),
         ('pending', 'Sent'),
         ('sent', 'Delivered'),  # As for notifications and traces
+        ('to_moderate', 'Moderation'),
         ('error', 'Error'),
         ('canceled', 'Cancelled')
     ], 'SMS Status', readonly=True, copy=False, default='outgoing', required=True)
@@ -58,10 +59,12 @@ class SmsSms(models.Model):
         ('sms_credit', 'Insufficient Credit'),
         ('sms_server', 'Server Error'),
         ('sms_acc', 'Unregistered Account'),
+        ('sms_existing_account', 'Account already exist'),
         # mass mode specific codes, generated internally, not returned by IAP.
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
         ('sms_optout', 'Opted Out'),
+        ('sms_to_moderate', 'Moderation'),
     ], copy=False)
     sms_tracker_id = fields.Many2one('sms.tracker', string='SMS trackers', compute='_compute_sms_tracker_id')
     to_delete = fields.Boolean(
@@ -219,7 +222,7 @@ class SmsSms(models.Model):
                 else:
                     sms_sudo.sms_tracker_id.with_context(sms_known_failure_reason=failure_reason)._action_update_from_provider_error(iap_state)
                 to_delete = {'to_delete': True} if unlink_failed else {}
-                sms_sudo.write({'state': 'error', 'failure_type': failure_type, **to_delete})
+                sms_sudo.write({'state': failure_type != 'sms_to_moderate' and 'error' or 'to_moderate', 'failure_type': failure_type, **to_delete})
 
         all_sms_sudo._handle_call_result_hook(results)
         all_sms_sudo.mail_message_id._notify_message_notification_update()
