@@ -44,6 +44,7 @@ declare module "models" {
 
     export type SocketIoCallbacks = {
         onConnect: () => void;
+        onClose: () => void;
         onEvent: (eventBody: any[]) => void;
         onBinaryEvent: (eventBody: Blob) => void;
     };

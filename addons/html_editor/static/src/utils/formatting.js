@@ -148,6 +148,7 @@ export const formatsSpecs = {
             node.classList.add(props.className);
         },
         removeStyle: (node) => {
+            removeStyle(node, "font-size");
             removeClass(node, ...FONT_SIZE_CLASSES);
             // Typography classes should be preserved on block elements since
             // they act as semantic equivalents of <h1>, <h2>, etc., not just

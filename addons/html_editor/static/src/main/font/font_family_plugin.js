@@ -8,7 +8,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export const defaultFontFamily = {
     name: "Default system font",
-    nameShort: "Default",
+    nameShort: "Default font",
     fontFamily: false,
 };
 export const fontFamilyItems = [
@@ -18,12 +18,12 @@ export const fontFamilyItems = [
     { name: "Tahoma (sans-serif)", nameShort: "Tahoma", fontFamily: "Tahoma, sans-serif" },
     {
         name: "Trebuchet MS (sans-serif)",
-        nameShort: "Trebuchet",
+        nameShort: "Trebuchet MS",
         fontFamily: '"Trebuchet MS", sans-serif',
     },
     {
         name: "Courier New (monospace)",
-        nameShort: "Courier",
+        nameShort: "Courier New",
         fontFamily: '"Courier New", monospace',
     },
 ];

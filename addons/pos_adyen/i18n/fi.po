@@ -3,13 +3,14 @@
 # * pos_adyen
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 15:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-29 11:40+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "pos_adyen/fi/>\n"
 "Language: fi\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr "Lisää juomaraha maksupäätteen kautta (Adyen)"
+msgstr "Lisää tippi maksupäätteen kautta (Adyen)"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
@@ -43,7 +44,7 @@ msgstr "Adyen Viimeisin vastaus"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr "Adyen päätteen tunnus"
+msgstr "Adyen päätteen tunniste"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
@@ -59,13 +60,13 @@ msgstr "Tapahtui odottamaton virhe. Viesti Adyenilta: %s"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr "Pyydä asiakkailta juomarahaa"
+msgstr "Pyydä asiakkailta tippiä"
 
 #. module: pos_adyen
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/utils/payment/payment_adyen.js:0
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr "Tunnistautuminen epäonnistui. Tarkista Adyen-tunnuksesi."
+msgstr "Todentaminen epäonnistui. Tarkista Adyen-tunnuksesi."
 
 #. module: pos_adyen
 #. odoo-javascript
@@ -74,14 +75,13 @@ msgid ""
 "Cancelling the payment failed. Please cancel it manually on the payment "
 "terminal."
 msgstr ""
-"Maksun peruuttaminen epäonnistui. Peruuta maksu manuaalisesti "
-"maksupäätteellä."
+"Maksun peruuttaminen epäonnistui. Peruuta se manuaalisesti maksupäätteellä."
 
 #. module: pos_adyen
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/utils/payment/payment_adyen.js:0
 msgid "Cannot process transactions with negative amount."
-msgstr "Negatiivisen summan sisältäviä tapahtumia ei voida käsitellä."
+msgstr "Negatiivisen summan maksutapahtumia ei voida käsitellä."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_res_config_settings
@@ -108,14 +108,14 @@ msgstr "Näyttönimi"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_event_url
 msgid "Event URL"
-msgstr "Tapahtuman URL-osoite"
+msgstr "Tapahtuman URL"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: pos_adyen
 #. odoo-python
@@ -141,22 +141,22 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Kassan asetukset"
+msgstr "Kassajärjestelmän asetukset"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Kassan maksutavat"
+msgstr "Kassajärjestelmän maksutavat"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
 msgid "Pos Adyen Ask Customer For Tip"
-msgstr "Adyen-kassa pyydä asiakkaalta juomarahaa"
+msgstr "Adyen-kassajärjestelmä pyytää asiakkaalta tippiä"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr "Suorita tapahtumia testiympäristössä."
+msgstr "Suorita maksutapahtumia testiympäristössä."
 
 #. module: pos_adyen
 #. odoo-python
@@ -165,21 +165,20 @@ msgid ""
 "Terminal %(terminal)s is already used in company %(company)s on payment "
 "method %(payment_method)s."
 msgstr ""
-"Päätelaite %(terminal)s on jo käytössä yrityksessä %(company)s maksutapaan %"
-"(payment_method)s."
+"Pääte %(terminal)s on jo käytössä yrityksessä %(company)s maksutavalla "
+"%(payment_method)s."
 
 #. module: pos_adyen
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 msgid ""
 "Terminal %(terminal)s is already used on payment method %(payment_method)s."
-msgstr ""
-"Päätelaite %(terminal)s on jo käytössä maksutavassa %(payment_method)s."
+msgstr "Pääte %(terminal)s on jo käytössä maksutavalla %(payment_method)s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_event_url
 msgid "This URL needs to be pasted on Adyen's portal terminal settings."
-msgstr "Tämä URL-osoite on lisättävä Adyen-portaalin pääteasetuksiin."
+msgstr "Tämä URL-osoite tulee liittää Adyen-portaalin pääteasetuksiin."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
@@ -193,4 +192,4 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr "[Päätelaitteen malli]-[Sarjanumero], esimerkiksi: P400Plus-123456789"
+msgstr "[Päätteen malli]-[Sarjanumero], esimerkiksi: P400Plus-123456789"

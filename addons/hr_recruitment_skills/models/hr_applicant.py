@@ -69,7 +69,7 @@ class HrApplicant(models.Model):
 
             matching_skill_ids = matching_applicant_skills.mapped("skill_id")
             missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
-            matching_score = round(applicant_total / job_total * 100)
+            matching_score = round(applicant_total / job_total * 100) if job_total else 100
 
             applicant.matching_skill_ids = matching_skill_ids
             applicant.missing_skill_ids = missing_skill_ids
@@ -149,8 +149,7 @@ class HrApplicant(models.Model):
             # This is required for the talent pool mechanism to work. Duplicating an hr.applicant record without this
             # check will cause the skills to not be duplicated or disappear randomly.
             for vals in vals_list:
-                skills = vals.pop("current_applicant_skill_ids", []) + vals.get("applicant_skill_ids", [])
-                vals["applicant_skill_ids"] = self.env["hr.applicant.skill"]._get_transformed_commands(skills, self)
+                vals["applicant_skill_ids"] = vals.pop("current_applicant_skill_ids", []) + vals.get("applicant_skill_ids", [])
         return super().create(vals_list)
 
     def write(self, vals):

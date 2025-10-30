@@ -25,7 +25,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
             ReplaceBgImageAction,
             DynamicColorAction,
         },
-        force_not_editable_selector: ".o_we_bg_filter",
+        content_not_editable_selectors: ".o_we_bg_filter",
         get_target_element_providers: withSequence(5, (el) => el),
     };
     /**

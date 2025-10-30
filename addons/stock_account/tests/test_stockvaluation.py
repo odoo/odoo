@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.fields import Datetime
+from odoo.fields import Datetime, Date
 from odoo.tests import Form
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
@@ -2862,3 +2862,21 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(self.product1.total_value, 80)
         self._make_out_move(self.product1, 1, uom_id=uom_pack_6.id)
         self.assertEqual(self.product1.total_value, 32)
+
+    def test_journal_entry_created_with_given_accounting_date(self):
+        """
+        Test that the journal entry is created with the specified
+        accounting date from the inventory adjustment.
+        """
+        past_accounting_date = Date.today() - timedelta(days=7)
+        inventory_quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'inventory_quantity': 10,
+            'accounting_date': past_accounting_date,
+        })
+        inventory_quant.action_apply_inventory()
+        self.assertEqual(
+            self._get_stock_valuation_move_lines().move_id.date,
+            past_accounting_date
+        )

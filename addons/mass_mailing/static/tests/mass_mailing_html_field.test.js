@@ -9,10 +9,12 @@ import {
     patchWithCleanup,
     contains,
 } from "@web/../tests/web_test_helpers";
-import { click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, queryAny, queryOne, waitFor } from "@odoo/hoot-dom";
+import { runAllTimers } from "@odoo/hoot-mock";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
+import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
 
 class Mailing extends models.Model {
     _name = "mailing.mailing";
@@ -22,7 +24,19 @@ class Mailing extends models.Model {
     body_arch = fields.Html();
     body_html = fields.Html();
     mailing_model_id = fields.Many2one({ relation: "ir.model", string: "Recipients" });
+    mailing_model_real = fields.Char({
+        string: "Recipients Model Name (real)",
+        compute: "compute_model_real",
+    });
     mailing_model_name = fields.Char({ string: "Recipients Model Name" });
+
+    compute_model_real() {
+        for (const record of this) {
+            record.mailing_model_real = this.env["ir.model"].browse([
+                record.mailing_model_id,
+            ])[0].model;
+        }
+    }
 
     action_fetch_favorites() {
         return [];
@@ -92,7 +106,8 @@ const mailViewArch = `
 <form>
     <field name="mailing_model_name" invisible="1"/>
     <field name="mailing_model_id" invisible="1"/>
-    <field name="body_html" invisible="1"/>
+    <field name="mailing_model_real" invisible="1"/>
+    <field name="body_html" class="o_mail_body_inline"/>
     <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
         options="{ 'inline_field': 'body_html' }"/>
 </form>
@@ -111,12 +126,30 @@ const readonlyMailViewArch = `
 </form>
 `;
 
+/**
+ * @type {MassMailingHtmlField}
+ */
+let htmlField;
 describe.current.tags("desktop");
+beforeEach(() => {
+    patchWithCleanup(MassMailingHtmlField.prototype, {
+        setup() {
+            super.setup();
+            htmlField = this;
+        },
+    });
+});
 describe("field HTML", () => {
     beforeEach(() => {
         patchWithCleanup(MassMailingIframe.prototype, {
             // Css assets are not needed for these tests.
-            loadIframeAssets() {},
+            loadIframeAssets() {
+                return {
+                    "mass_mailing.assets_inside_builder_iframe": {
+                        toggle: () => {},
+                    },
+                };
+            },
         });
     });
     test("save arch and html", async () => {
@@ -161,6 +194,12 @@ describe("field HTML", () => {
         // When those popovers are killed, OWL tries to reconcile its element List
         // in OverlayContainer, displaces the node that contains the iframe
         // and the editor subsequently crashes
+        const base64Img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        onRpc("/html_editor/get_image_info", () => {
+            return {
+                original: { image_src: base64Img },
+            };
+        });
         class SomeModel extends models.Model {
             _name = "some.model"
             mailing_ids = fields.One2many({relation: "mailing.mailing"});
@@ -190,5 +229,64 @@ describe("field HTML", () => {
         await waitFor(overlayOptionsSelect + ":has(button[title='Move up'])");
         await contains(".o_dialog :iframe img").click();
         await waitFor(overlayOptionsSelect + ":not(:has(button[title='Move up']))");
+    });
+    test("preprocess some domain", async () => {
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 1,
+            arch: mailViewArch,
+        });
+        await click(waitFor(".o_mailing_template_preview_wrapper a[data-name='default']"));
+        await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
+        expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
+            "o_default_theme"
+        );
+        await runAllTimers();
+        const section = queryAny(":iframe section");
+        section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
+        htmlField.editor.shared["history"].addStep();
+        await click(section);
+        await waitFor(".hb-row .hb-row-label span:contains(Domain)");
+        expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe("id = 1");
+        await clickSave();
+        await waitFor("table[t-if]");
+        expect(queryOne("table[t-if]")).toHaveAttribute(
+            "t-if",
+            'object.filtered_domain([("id", "=", 1)])'
+        );
+    });
+});
+describe("field HTML: with loaded assets", () => {
+    test("Ensure style bundles loaded in the `MassMailingIframe` can be toggled On or Off", async () => {
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 1,
+            arch: mailViewArch,
+        });
+        await click(waitFor(".o_mailing_template_preview_wrapper a[data-name='default']"));
+        await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
+        const { bundleControls } = await htmlField.ensureIframeLoaded();
+
+        expect(
+            htmlField.iframeRef.el.contentDocument.head.querySelectorAll(
+                '[href*="mass_mailing.assets_inside_builder_iframe"]'
+            )
+        ).toHaveLength(1);
+
+        bundleControls["mass_mailing.assets_inside_builder_iframe"].toggle(false);
+        expect(
+            htmlField.iframeRef.el.contentDocument.head.querySelectorAll(
+                '[href*="mass_mailing.assets_inside_builder_iframe"]'
+            )
+        ).toHaveLength(0);
+
+        bundleControls["mass_mailing.assets_inside_builder_iframe"].toggle(true);
+        expect(
+            htmlField.iframeRef.el.contentDocument.head.querySelectorAll(
+                '[href*="mass_mailing.assets_inside_builder_iframe"]'
+            )
+        ).toHaveLength(1);
     });
 });

@@ -4,8 +4,7 @@ import { products_sort_mapping } from "@website_sale/website_builder/shared";
 
 export class ProductsListPageOption extends BaseOptionComponent {
     static template = "website_sale.ProductsListPageOption";
-    static selector = "#o_wsale_container";
-    static applyTo = "#o_wsale_container";
+    static selector = "main:has(#o_wsale_container)";
     static title = _t("Products Page");
     static groups = ["website.group_website_designer"];
     static editableOnly = false;

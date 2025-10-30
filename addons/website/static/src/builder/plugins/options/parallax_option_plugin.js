@@ -14,7 +14,7 @@ class WebsiteParallaxPlugin extends Plugin {
             SetParallaxTypeAction,
         },
         on_bg_image_hide_handlers: this.onBgImageHide.bind(this),
-        force_not_editable_selector: ".s_parallax_bg, section.s_parallax > .oe_structure",
+        content_not_editable_selectors: ".s_parallax_bg, section.s_parallax > .oe_structure",
         get_target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {

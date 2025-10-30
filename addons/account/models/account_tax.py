@@ -1371,14 +1371,15 @@ class AccountTax(models.Model):
             results['computation_key'] = extra_tax_data['computation_key']
 
         manual_tax_amounts = extra_tax_data.get('manual_tax_amounts') or {} if extra_tax_data else None
+        sorted_taxes = base_line['tax_ids']._flatten_taxes_and_sort_them()[0]
         if (
             extra_tax_data
-            and extra_tax_data.get('currency_id')
+            and extra_tax_data.get('manual_tax_amounts')
             and base_line['currency_id'].id == extra_tax_data['currency_id']
             and base_line['currency_id'].compare_amounts(base_line['price_unit'], extra_tax_data['price_unit']) == 0
             and base_line['currency_id'].compare_amounts(base_line['discount'], extra_tax_data['discount']) == 0
             and base_line['currency_id'].compare_amounts(base_line['quantity'], extra_tax_data['quantity']) == 0
-            and all(str(tax.id) in manual_tax_amounts for tax in base_line['tax_ids'])
+            and all(str(tax.id) in extra_tax_data['manual_tax_amounts'] for tax in sorted_taxes)
         ):
             results['price_unit'] = extra_tax_data['price_unit']
 
@@ -1528,8 +1529,8 @@ class AccountTax(models.Model):
         :param kwargs:  The extra values to override some values that will be taken from the record.
         :return:        A dictionary representing a base line.
         """
-        def load(field, fallback, from_base_line=False):
-            return self._get_base_line_field_value_from_record(record, field, kwargs, fallback, from_base_line=from_base_line)
+        def load(field, fallback):
+            return self._get_base_line_field_value_from_record(record, field, kwargs, fallback)
 
         currency = (
             load('currency_id', None)
@@ -1556,14 +1557,14 @@ class AccountTax(models.Model):
             # - False for the normal behavior.
             # - total_included to force all taxes to be price included.
             # - total_excluded to force all taxes to be price excluded.
-            'special_mode': load('special_mode', False, from_base_line=True),
+            'special_mode': kwargs.get('special_mode') or False,
 
             # A special typing of base line for some custom behavior:
             # - False for the normal behavior.
             # - early_payment if the base line represent an early payment in mixed mode.
             # - cash_rounding if the base line is a delta to round the business object for the cash rounding feature.
             # - non_deductible if the base line is used to compute non deductible amounts in bills.
-            'special_type': load('special_type', False, from_base_line=True),
+            'special_type': kwargs.get('special_type') or False,
 
             # All computation are managing the foreign currency and the local one.
             # This is the rate to be applied when generating the tax details (see '_add_tax_details_in_base_line').
@@ -1571,7 +1572,7 @@ class AccountTax(models.Model):
 
             # Add a function allowing to filter out some taxes during the evaluation. Those taxes can't be removed from the base_line
             # when dealing with group of taxes to maintain a correct link between the child tax and its parent.
-            'filter_tax_function': load('filter_tax_function', None, from_base_line=True),
+            'filter_tax_function': kwargs.get('filter_tax_function') or None,
 
             # ===== Accounting stuff =====
 
@@ -1593,21 +1594,13 @@ class AccountTax(models.Model):
             # the last invoice will have an amount of 1000 - 300 = 700. However, the taxes should be computed in 2 subsets of lines:
             # - the original lines for a total of 1000.0
             # - the previous down payment lines for a total of -300.0
-            'computation_key': load('computation_key', extra_tax_data.get('computation_key'), from_base_line=True),
+            'computation_key': kwargs.get('computation_key') or extra_tax_data.get('computation_key'),
 
             # For all computation that are inferring a base amount in order to reach a total you know in advance, you have to force some
             # base/tax amounts for the computation (E.g. down payment, combo products, global discounts etc).
-            'manual_total_excluded_currency': load(
-                field='manual_total_excluded_currency',
-                fallback=extra_tax_data.get('manual_total_excluded_currency'),
-                from_base_line=True,
-            ),
-            'manual_total_excluded': load(
-                field='manual_total_excluded',
-                fallback=extra_tax_data.get('manual_total_excluded'),
-                from_base_line=True,
-            ),
-            'manual_tax_amounts': load('manual_tax_amounts', extra_tax_data.get('manual_tax_amounts'), from_base_line=True),
+            'manual_total_excluded_currency': kwargs.get('manual_total_excluded_currency') or extra_tax_data.get('manual_total_excluded_currency'),
+            'manual_total_excluded': kwargs.get('manual_total_excluded') or extra_tax_data.get('manual_total_excluded'),
+            'manual_tax_amounts': kwargs.get('manual_tax_amounts') or extra_tax_data.get('manual_tax_amounts'),
         })
         if 'price_unit' in extra_tax_data:
             base_line['price_unit'] = extra_tax_data['price_unit']
@@ -2725,8 +2718,8 @@ class AccountTax(models.Model):
 
             # Compute the display base amounts.
             if set(involved_taxes.mapped('amount_type')) == {'fixed'}:
-                display_base_amount = None
-                display_base_amount_currency = None
+                display_base_amount = False
+                display_base_amount_currency = False
             elif set(involved_taxes.mapped('amount_type')) == {'division'} and all(involved_taxes.mapped('price_include')):
                 display_base_amount = 0.0
                 display_base_amount_currency = 0.0
@@ -2748,7 +2741,7 @@ class AccountTax(models.Model):
                 display_base_amount = values['base_amount']
                 display_base_amount_currency = values['base_amount_currency']
 
-            if display_base_amount_currency is not None:
+            if display_base_amount_currency is not False:
                 encountered_base_amounts.add(float_repr(display_base_amount_currency, currency.decimal_places))
 
             # Order of the subtotals.
@@ -3102,7 +3095,8 @@ class AccountTax(models.Model):
 
         :param base_lines:      A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
         :param company:         The company owning the base lines.
-        :param filter_function: An optional function taking <base_line, tax_data> as parameter and telling which tax will be considered.
+        :param filter_function: An optional function taking <base_line, tax_data> as parameter and telling which tax will have
+                                its amounts stored.
         """
         for base_line in base_lines:
             tax_details = base_line['tax_details']
@@ -3120,10 +3114,13 @@ class AccountTax(models.Model):
             )
             base_line['manual_tax_amounts'] = {}
             for tax_data in taxes_data:
+                tax = tax_data['tax']
+                tax_id_str = str(tax.id)
+                base_line['manual_tax_amounts'][tax_id_str] = {}
                 if filter_function and not filter_function(base_line, tax_data):
                     continue
-                tax = tax_data['tax']
-                base_line['manual_tax_amounts'][str(tax.id)] = {
+
+                base_line['manual_tax_amounts'][tax_id_str] = {
                     'tax_amount_currency': tax_data['tax_amount_currency'],
                     'tax_amount': tax_data['tax_amount'],
                     'base_amount_currency': tax_data['base_amount_currency'],
@@ -3244,7 +3241,6 @@ class AccountTax(models.Model):
                 'extra_tax_data': None,
                 'price_unit': (
                     sub_tax_details['raw_total_excluded_currency']
-                    + sub_tax_details['delta_total_excluded_currency']
                     + sum(
                         sub_tax_data['raw_tax_amount_currency']
                         for sub_tax_data in sub_tax_details['taxes_data']
@@ -3322,7 +3318,7 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None, computation_key=None):
+    def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None, aggregate_function=None, computation_key=None):
         """ Create the new base lines that will get the discount.
         Since they no longer contain fixed taxes, we can remove the quantity and aggregate them depending on
         the grouping_function passed as parameter.
@@ -3334,6 +3330,7 @@ class AccountTax(models.Model):
         :param grouping_function:   An optional function taking a base line as parameter and returning a grouping key
                                     being the way the base lines will be aggregated all together.
                                     By default, the base lines will be aggregated by taxes.
+        :param aggregate_function:  An optional function taking the 2 base lines as parameter to be aggregated together.
         :param computation_key:     The computation_key to be set on the aggregated base_lines.
         :return:                    The base lines aggregated.
         """
@@ -3346,9 +3343,6 @@ class AccountTax(models.Model):
                 price_unit=base_line['quantity'] * price_unit_after_discount,
                 quantity=1.0,
                 discount=0.0,
-                manual_total_excluded_currency=None,
-                manual_total_excluded=None,
-                manual_tax_amounts=None,
             )
             grouping_key = {'tax_ids': new_base_line['tax_ids']}
             if grouping_function:
@@ -3366,6 +3360,8 @@ class AccountTax(models.Model):
                     tax_details_1=target_base_line['tax_details'],
                     tax_details_2=base_line['tax_details'],
                 )
+                if aggregate_function:
+                    aggregate_function(target_base_line, base_line)
             else:
                 base_line_map[grouping_key] = self._prepare_base_line_for_taxes_computation(
                     new_base_line,
@@ -3521,6 +3517,7 @@ class AccountTax(models.Model):
         amount,
         computation_key=None,
         grouping_function=None,
+        aggregate_function=None,
     ):
         """
 
@@ -3532,6 +3529,7 @@ class AccountTax(models.Model):
         :param grouping_function:   An optional function taking a base line as parameter and returning a grouping key
                                     being the way the base lines will be aggregated all together.
                                     By default, the base lines will be aggregated by taxes.
+        :param aggregate_function:  An optional function taking the 2 base lines as parameter to be aggregated together.
         :return:                    A new list of base lines having total amounts exactly matching the expected 'amount'/'amount_type'.
         """
         if not base_lines:
@@ -3608,6 +3606,7 @@ class AccountTax(models.Model):
         reduced_base_lines = self._reduce_base_lines_with_grouping_function(
             base_lines=base_lines,
             grouping_function=grouping_function,
+            aggregate_function=aggregate_function,
             computation_key=computation_key,
         )
 
@@ -3786,15 +3785,22 @@ class AccountTax(models.Model):
             tax = tax_data['tax']
             return tax._can_be_discounted() and (not exclude_function or not exclude_function(base_line, tax_data))
 
-        base_lines_partition_taxes, has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
-        if not has_taxes_to_exclude:
-            return base_lines
-
         # Exclude non-discountable taxes.
+        base_lines_partition_taxes, _has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
         discountable_base_lines = []
         for base_line, taxes_to_keep, taxes_to_exclude in base_lines_partition_taxes:
             tax_details = base_line['tax_details']
             taxes_data = tax_details['taxes_data']
+
+            if not taxes_to_exclude:
+                discountable_base_lines.append(self._prepare_base_line_for_taxes_computation(
+                    base_line,
+                    price_unit=base_line['price_unit'] * base_line['quantity'] * (1 - (base_line['discount'] / 100.0)),
+                    quantity=1.0,
+                    discount=0.0,
+                    manual_tax_amounts=base_line['manual_tax_amounts'],
+                ))
+                continue
 
             if any(
                 tax_data['tax'] in taxes_to_exclude
@@ -3905,14 +3911,21 @@ class AccountTax(models.Model):
             tax = tax_data['tax']
             return tax._can_be_discounted() and (not exclude_function or not exclude_function(base_line, tax_data))
 
-        base_lines_partition_taxes, has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
-        if not has_taxes_to_exclude:
-            return base_lines
-
+        base_lines_partition_taxes, _has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
         base_lines_for_dp = []
         for base_line, taxes_to_keep, taxes_to_exclude in base_lines_partition_taxes:
             tax_details = base_line['tax_details']
             taxes_data = tax_details['taxes_data']
+
+            if not taxes_to_exclude:
+                base_lines_for_dp.append(self._prepare_base_line_for_taxes_computation(
+                    base_line,
+                    price_unit=base_line['price_unit'] * base_line['quantity'] * (1 - (base_line['discount'] / 100.0)),
+                    quantity=1.0,
+                    discount=0.0,
+                    manual_tax_amounts=base_line['manual_tax_amounts'],
+                ))
+                continue
 
             # Split the taxes in multiple batch of taxes, one per sub base line.
             new_taxes = self.env['account.tax']
