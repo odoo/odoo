@@ -2127,6 +2127,7 @@ def _find_executable():
 
     raise unittest.SkipTest("Chrome executable not found")
 
+
 class Opener(requests.Session):
     """
     Flushes and clears the current transaction when starting a request.
@@ -2145,7 +2146,30 @@ class Opener(requests.Session):
         self.cr.flush()
         self.cr.clear()
         with self.test_case.allow_requests():
-            return super().request(*args, **kwargs)
+            res = super().request(*args, **kwargs)
+            res.__class__ = Response
+            return res
+
+
+class Response(requests.Response):
+    def raise_for_status(self) -> Response:
+        try:
+            super().raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            is_html = self.headers.get('content-type', '').startswith('text/html')
+            is_website = is_html and b'<meta name="generator" content="Odoo"/>' in self.content
+            if is_website:
+                # The second container in <main> contains the error message
+                main = self.text.partition('<main>')[2].partition('</main>')[0]
+                c = '<div class="container">'
+                error = main[main.find(c) + len(c):].partition(c)[2].partition('</div>')[0]
+                exc.add_note(shorten(error, 150))
+            elif is_html:
+                exc.add_note(shorten(self.text.partition('</h1>')[2], 150))
+            else:
+                exc.add_note(shorten(self.text, 150))
+            raise
+        return self
 
 
 class Transport(xmlrpclib.Transport):
