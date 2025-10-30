@@ -4,7 +4,6 @@
     'countries': ['in'],
     'category': "Accounting/Localizations/EDI",
     'depends': [
-        "account_edi",
         "l10n_in",
     ],
     'description': """
