@@ -109,6 +109,14 @@ class AccountMove(models.Model):
             action['domain'] = [('id', 'in', self.pos_order_ids.ids)]
         return action
 
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        # EXTENDS 'account'
+        # If the price was manually changed for pos_order_line, treat the price as tax-included
+        results = super()._prepare_product_base_line_for_taxes_computation(product_line)
+        if product_line.extra_tax_data and product_line.extra_tax_data.get("special_mode") == "total_included":
+            results['special_mode'] = 'total_included'
+        return results
+
     @api.model
     def _load_pos_data_fields(self, config):
         result = super()._load_pos_data_fields(config)
