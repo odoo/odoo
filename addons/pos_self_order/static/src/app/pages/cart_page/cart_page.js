@@ -23,6 +23,8 @@ export class CartPage extends Component {
             selectTable: false,
             fillInformations: false,
             cancelConfirmation: false,
+            showOrderNote: this.orderNote,
+            orderNoteValue: "",
         });
 
         this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
@@ -36,6 +38,10 @@ export class CartPage extends Component {
             this.selfOrder.config.self_ordering_pay_after === "each" &&
             this.selfOrder.currentOrder.isSynced
         );
+    }
+
+    get orderNote() {
+        return this.selfOrder?.currentOrder?.general_customer_note || this.state?.orderNoteValue;
     }
 
     get lines() {
@@ -106,7 +112,10 @@ export class CartPage extends Component {
         } else if (this.selfOrder.currentTable) {
             this.selectTableDependingOnMode(this.selfOrder.currentTable);
         }
-
+        const noteText = this.state.orderNoteValue.trim();
+        if (noteText) {
+            this.selfOrder.currentOrder.general_customer_note = noteText;
+        }
         this.selfOrder.rpcLoading = true;
         await this.selfOrder.confirmOrder();
         this.selfOrder.rpcLoading = false;

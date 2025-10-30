@@ -27,6 +27,27 @@ export function checkBtn(buttonName) {
     };
 }
 
+export function clickOrderNoteBtn() {
+    return {
+        trigger: ".order-note",
+        run: "click",
+    };
+}
+
+export function clickTextArea() {
+    return {
+        trigger: ".order-note-textarea",
+        run: "click",
+    };
+}
+
+export function textInput(inputValue) {
+    return {
+        trigger: ".order-note-textarea",
+        run: `edit ${inputValue}`,
+    };
+}
+
 export function checkIsNoBtn(buttonName) {
     return {
         content: `Check that '${buttonName}' do not exist`,
