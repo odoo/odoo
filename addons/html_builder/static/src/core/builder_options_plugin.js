@@ -61,6 +61,10 @@ export class BuilderOptionsPlugin extends Plugin {
         this.builderOptionsDependencies = new Map();
         const options = this.builderOptions.concat([OptionsContainer]);
         for (const Option of options) {
+            if (isLegacyOption(Option)) {
+                // Support legacy option definition.
+                continue;
+            }
             this.getBuilderDependencies(Option);
             this.getBuilderOptionContext(Option);
         }
@@ -315,7 +319,10 @@ export class BuilderOptionsPlugin extends Plugin {
                 continue;
             }
             for (const el of getElementsWithOption(root, selector, exclude)) {
-                cleanForSave(el, this.getBuilderOptionContext(Option));
+                const context = isLegacyOption(Option)
+                    ? undefined
+                    : this.getBuilderOptionContext(Option);
+                cleanForSave(el, context);
             }
         }
     }
@@ -537,4 +544,8 @@ export function checkElement(el, { editableOnly = true, exclude = "" }) {
 
 function withIds(arr) {
     return arr.map((el) => ({ ...el, id: uniqueId() }));
+}
+
+export function isLegacyOption(option) {
+    return typeof option === "object";
 }
