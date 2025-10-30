@@ -8,11 +8,11 @@
         </xpath>
         <!-- Add header div to be filled with synchronization buttons in synchronization modules. -->
         <xpath expr="//Layout//div[hasclass('o_calendar_container')]//h5[hasclass('d-inline-flex')]" position="after">
-            <div id="header_synchronization_settings" class="mx-2 ms-lg-auto">
+            <div id="header_synchronization_settings" class="mx-2 ms-lg-auto d-flex flex-wrap align-items-center">
                 <t t-if="(model.credentialStatus.google_calendar or model.credentialStatus.microsoft_calendar)
                 and (!model.syncStatus.google_calendar or ['sync_stopped', 'missing_credentials'].includes(model.syncStatus.google_calendar))
                 and (!model.syncStatus.microsoft_calendar or ['sync_stopped', 'missing_credentials'].includes(model.syncStatus.microsoft_calendar))">
-                    <h5 id="synchronize_with" class="d-inline-flex" >Synchronize with</h5>
+                    <h5 id="synchronize_with" class="d-inline-flex my-auto">Synchronize with</h5>
                 </t>
                 <t t-elif="(model.googleCredentialsSet and model.syncStatus.google_calendar == 'sync_active')
                 or (model.microsoftCredentialsSet and model.syncStatus.microsoft_calendar == 'sync_active')">
