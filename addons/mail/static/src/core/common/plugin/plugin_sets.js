@@ -10,6 +10,7 @@ import { TabulationPlugin } from "@html_editor/main/tabulation_plugin";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 
 import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
+import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
 
 export const MAIL_CORE_PLUGINS = [
     ...CORE_PLUGINS,
@@ -20,6 +21,7 @@ export const MAIL_CORE_PLUGINS = [
     InlineCodePlugin,
     LinkPlugin,
     MailComposerPlugin,
+    MentionPlugin,
     ShortCutPlugin,
     TabulationPlugin,
 ];
