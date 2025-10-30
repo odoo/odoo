@@ -20,5 +20,12 @@
         <field name="internal" eval="True"/>
         <field name="sequence" eval="90"/>
     </record>
+    <record id="mt_transcription_notification" model="mail.message.subtype">
+        <field name="name">Transcription Notification</field>
+        <field name="default" eval="False"/>
+        <field name="sequence" eval="95"/>
+        <field name="internal" eval="True"/>
+        <field name="description">Call transcribed call recording is ready</field>
+    </record>
 
 </data></odoo>

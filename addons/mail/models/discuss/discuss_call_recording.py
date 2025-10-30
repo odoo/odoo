@@ -63,3 +63,13 @@ class DiscussCallRecording(models.Model):
 
         record.transcript = text
         record.transcription_status = 'done'
+
+        if record.call_history_id and record.call_history_id.channel_id:
+            rendered_body = self.env['ir.ui.view']._render_template(
+                'mail.mail_message_transcription_notification',
+                {'object': record}
+            )
+            record.call_history_id.channel_id.message_post(
+                body=rendered_body,
+                subtype_xmlid='mail.mt_transcription_notification',
+            )
