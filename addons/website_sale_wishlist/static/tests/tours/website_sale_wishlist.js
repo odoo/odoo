@@ -26,6 +26,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
+            trigger: ":not(:has(.my_wish_quantity:visible))",
+        },
+        {
             content: "go back to the store",
             trigger: "a[href='/shop']",
             run: "click",
