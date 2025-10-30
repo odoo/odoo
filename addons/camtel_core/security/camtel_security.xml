@@ -74,6 +74,24 @@
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
+        <!-- ========== PICKING TYPE ACCESS (Operation Types) ========== -->
+
+        <!-- Users: See only operation types in assigned warehouses -->
+        <record id="picking_type_user_rule" model="ir.rule">
+            <field name="name">CAMTEL: User Picking Type Access</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_user'))]"/>
+            <field name="domain_force">[('warehouse_id', 'in', user.warehouse_ids.ids)]</field>
+        </record>
+
+        <!-- Managers: See all operation types -->
+        <record id="picking_type_manager_rule" model="ir.rule">
+            <field name="name">CAMTEL: Manager Picking Type Access</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="groups" eval="[(4, ref('group_warehouse_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
         <!-- ========== PICKING ACCESS ========== -->
 
         <!-- Users: See only pickings in assigned warehouses -->
