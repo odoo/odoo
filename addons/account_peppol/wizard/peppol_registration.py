@@ -97,7 +97,7 @@ class PeppolRegistration(models.TransientModel):
                     'message': _("The endpoint number might not be correct. "
                                 "Please check if you entered the right identification number."),
                 }
-            if not wizard.smp_registration:
+            if wizard.peppol_endpoint and not wizard.smp_registration:
                 peppol_warnings['company_already_on_smp'] = {
                     'message': _("Your company is already registered on an Access Point (%s) for receiving invoices. "
                                  "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
