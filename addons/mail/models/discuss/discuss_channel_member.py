@@ -416,6 +416,9 @@ class DiscussChannelMember(models.Model):
             ('channel_id', '=', self.channel_id.id),
             ('rtc_inviting_session_id', '=', False),
             ('rtc_session_ids', '=', False),
+            "|",
+            ("guest_id", "=", False),
+            ("guest_id.presence_ids.last_poll", ">", fields.Datetime.now() - timedelta(hours=12)),
         ]
         if member_ids:
             domain = expression.AND([domain, [('id', 'in', member_ids)]])
