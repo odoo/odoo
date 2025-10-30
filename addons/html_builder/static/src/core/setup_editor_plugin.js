@@ -43,7 +43,7 @@ export class SetupEditorPlugin extends Plugin {
         editableEls.forEach((el) => {
             if (!el.hasAttribute("data-editor-message")) {
                 el.setAttribute("data-editor-message-default", true);
-                el.setAttribute("data-editor-message", _t("DRAG BUILDING BLOCKS HERE"));
+                el.setAttribute("data-editor-message", _t("DROP BUILDING BLOCKS HERE"));
             }
         });
     }

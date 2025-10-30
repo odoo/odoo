@@ -10,12 +10,12 @@ describe.current.tags("desktop");
 
 const dropzone = (hovered = false) => {
     const highlightClass = hovered ? " o_dropzone_highlighted" : "";
-    return `<div class="oe_drop_zone oe_insert${highlightClass}" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE"></div>`;
+    return `<div class="oe_drop_zone oe_insert${highlightClass}" data-editor-message-default="true" data-editor-message="DROP BUILDING BLOCKS HERE"></div>`;
 };
 
-test("wrapper element has the 'DRAG BUILDING BLOCKS HERE' message", async () => {
+test("wrapper element has the 'DROP BUILDING BLOCKS HERE' message", async () => {
     const { contentEl } = await setupHTMLBuilder("");
-    expect(contentEl).toHaveAttribute("data-editor-message", "DRAG BUILDING BLOCKS HERE");
+    expect(contentEl).toHaveAttribute("data-editor-message", "DROP BUILDING BLOCKS HERE");
 });
 
 test("drop beside dropzone inserts the snippet", async () => {

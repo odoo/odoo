@@ -12,7 +12,7 @@ registerWebsitePreviewTour("website_snippets_menu_tabs", {
         trigger: "div[data-container-title='Colors'] div.we-bg-options-container",
     },
     {
-        content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",
+        content: "Click on the empty 'DROP BUILDING BLOCKS HERE' area.",
         trigger: ":iframe main > .oe_structure.oe_empty",
         run: 'click',
     },
