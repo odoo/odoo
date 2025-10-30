@@ -850,8 +850,8 @@ class Cache:
 
             # select the column for the given ids
             query = Query(model)
-            sql_id = SQL.identifier(model._table, 'id')
-            sql_field = model._field_to_sql(model._table, field.name, query)
+            sql_id = query.table.id
+            sql_field = query.table[field.name]
             if field.type == 'binary' and (
                 model.env.context.get('bin_size') or model.env.context.get('bin_size_' + field.name)
             ):
