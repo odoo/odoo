@@ -492,7 +492,7 @@ class TestSaleOrder(SaleManagementCommon):
         sale_order._onchange_sale_order_template_id()
         self.assertEqual(
             sale_order.order_line[0].name,
-            quotation_template_with_description.sale_order_template_line_ids[0].name,
+            f"{self.product_1.name}\n{quotation_template_with_description.sale_order_template_line_ids[0].name}",
             "The sale order line should use the quotation template's description when both \
             product and the quotation template descriptions are set."
         )

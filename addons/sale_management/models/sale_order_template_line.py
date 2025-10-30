@@ -102,5 +102,5 @@ class SaleOrderTemplateLine(models.Model):
             'sequence': self.sequence,
         }
         if self.name:
-            vals['name'] = self.name
+            vals['name'] = (self.product_id.display_name + "\n" + self.name) if self.product_id.display_name else self.name
         return vals
