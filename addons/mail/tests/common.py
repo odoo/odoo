@@ -135,9 +135,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     def format_and_process(self, template, email_from, to, subject='Frogs', cc='',
                            return_path='', extra='',  msg_id=False,
-                           model=None, target_model='mail.test.gateway', target_field='name',
+                           model=None, target_model=None,
                            **kwargs):
-        self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         if not msg_id:
             msg_id = "<%.7f-test@iron.sky>" % (time.time())
 
@@ -150,8 +149,11 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                            return_path=return_path, extra=extra,
                            email_from=email_from, msg_id=msg_id,
                            **kwargs)
-        self.env['mail.thread'].message_process(model, mail)
-        return self.env[target_model].search([(target_field, '=', subject)])
+        thread_id = self.env['mail.thread'].message_process(model, mail)
+        if target_model:
+            thread = self.env[target_model].browse(thread_id)
+            return thread
+        return None
 
     def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):
         """ Deprecated, remove in 14.4 """
@@ -179,8 +181,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
         return capture_messages
 
-    def gateway_mail_reply_wrecord(self, template, record, use_in_reply_to=True,
-                                   target_model=None, target_field=None):
+    def gateway_mail_reply_wrecord(self, template, record, use_in_reply_to=True, target_model=None):
         """ Simulate a reply through the mail gateway. Usage: giving a record,
         find an email sent to them and use its message-ID to simulate a reply.
 
@@ -201,11 +202,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             extra=extra,
             msg_id='<123456.%s.%d@test.example.com>' % (record._name, record.id),
             target_model=target_model or record._name,
-            target_field=target_field or record._rec_name,
         )
 
-    def gateway_mail_reply_wemail(self, template, email_to, use_in_reply_to=True,
-                                  target_model=None, target_field=None):
+    def gateway_mail_reply_wemail(self, template, email_to, use_in_reply_to=True, target_model=None):
         """ Simulate a reply through the mail gateway. Usage: giving a record,
         find an email sent to them and use its message-ID to simulate a reply.
 
@@ -225,7 +224,6 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             subject='Re: %s' % sent_mail['subject'],
             extra=extra,
             target_model=target_model,
-            target_field=target_field or 'name',
         )
 
     def from_string(self, text):

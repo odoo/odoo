@@ -3,7 +3,7 @@
 
 from odoo.addons.test_mass_mailing.data.mail_test_data import MAIL_TEMPLATE
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
-from odoo.tests import tagged
+from odoo.tests import RecordCapturer, tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger, email_normalize
 
@@ -320,8 +320,10 @@ class TestMassMailing(TestMassMailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=True):
             mailing.action_send_mail()
 
-        answer_rec = self.gateway_mail_reply_wemail(MAIL_TEMPLATE, recipients[0].email_normalized, target_model=self.test_alias.alias_model_id.model)
-        self.assertFalse(bool(answer_rec))
+        with RecordCapturer(self.env[self.test_alias.alias_model_id.model], []) as alias_model_capturer:
+            answer_rec = self.gateway_mail_reply_wemail(MAIL_TEMPLATE, recipients[0].email_normalized, target_model=recipients._name)
+        self.assertFalse(alias_model_capturer.records)
+        self.assertEqual(answer_rec, recipients[0])
         self.assertEqual(
             recipients[0].message_ids[1].subject, mailing.subject,
             'Should have keep a log (to enable thread-based answer)')
