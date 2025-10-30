@@ -8,13 +8,13 @@ patch(ChatWindow.prototype, {
             this.thread.livechatVisitorMember?.persona?.notEq(this.store.self)
         ) {
             const thread = this.thread; // save ref before delete
-            super._onClose();
+            super._onClose(...arguments);
             this.delete();
             if (options.notifyState) {
                 thread.leaveChannel({ force: true });
             }
         } else {
-            super._onClose();
+            super._onClose(...arguments);
         }
     },
 });
