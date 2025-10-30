@@ -12,6 +12,7 @@ import {
     getEvaluatedGrid,
 } from "@spreadsheet/../tests/helpers/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 let model;
 
@@ -262,6 +263,56 @@ test("PIVOT(row_count=0, include_total=TRUE, include_column_titles=FALSE)", asyn
     expect(getEvaluatedGrid(model, "A1:D1", "42")).toEqual([
             ["Partner Pivot",      null, null, null],
         ]);
+});
+
+test("Pivot in tabular form", async function () {
+    const [pivotId] = model.getters.getPivotIds();
+    updatePivot(model, pivotId, {
+        rows: [
+            { fieldName: "product_id", order: "asc" },
+            { fieldName: "bar", order: "asc" },
+        ],
+        columns: [],
+        style: { tabularForm: true },
+    });
+    await waitForDataLoaded(model);
+
+    setCellContent(model, "A1", `=PIVOT(1)`, "42");
+    // prettier-ignore
+    expect(getEvaluatedGrid(model, "A1:D7", "42")).toEqual([
+            ["Partner Pivot",     "",        "Total",          null],
+            ["Product",           "Bar",     "Probability",    null],
+            ["xphone",            "Yes",      10,              null],
+            ["xpad",              "No",       15,              null],
+            ["xpad",              "Yes",      106,             null],
+            ["Total",             "",         131,             null],
+            [null,                null,       null,            null],
+        ]);
+});
+
+test("Pivot collapsed headers are ignored in tabular form", async function () {
+    const [pivotId] = model.getters.getPivotIds();
+    updatePivot(model, pivotId, {
+        rows: [
+            { fieldName: "date", order: "asc", granularity: "year" },
+            { fieldName: "product_id", order: "asc" },
+        ],
+        columns: [],
+        style: { tabularForm: true },
+    });
+    await waitForDataLoaded(model);
+
+    setCellContent(model, "A1", `=PIVOT(1)`, "42");
+
+    const nonCollapsedGrid = getEvaluatedGrid(model, "A1:B7", "42");
+    updatePivot(model, pivotId, {
+        collapsedDomains: {
+            ROW: [[{ field: "date:year", value: 2016, type: "date" }]],
+            COL: [],
+        },
+    });
+
+    expect(getEvaluatedGrid(model, "A1:B7", "42")).toEqual(nonCollapsedGrid);
 });
 
 test("PIVOT with multiple row groups", async function () {

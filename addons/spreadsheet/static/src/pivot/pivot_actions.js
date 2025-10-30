@@ -56,6 +56,7 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
         evaluatedCell.type !== "error" &&
         evaluatedCell.value !== "" &&
         pivotCell.type !== "EMPTY" &&
+        pivotCell.type !== "ROW_GROUP_NAME" &&
         cell &&
         cell.isFormula &&
         getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&

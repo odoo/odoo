@@ -355,6 +355,9 @@ export class OdooPivot {
 
     getCollapsedTableStructure() {
         this.assertIsValid();
+        if (this.coreDefinition.style?.tabularForm) {
+            return this.model.getExpandedTableStructure();
+        }
         return this.model.getCollapsedTableStructure();
     }
 
