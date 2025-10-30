@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from pytz import timezone, utc
 
 from odoo import api, fields, models
+from odoo.addons.website.structured_data import StructuredData
+from odoo.addons.website.tools import text_from_html
 from odoo.tools import is_html_empty
 from odoo.tools.date_utils import float_to_time
 from odoo.tools.translate import html_translate
@@ -172,6 +174,71 @@ class EventSponsor(models.Model):
     @api.depends('event_id.website_id.domain')
     def _compute_website_absolute_url(self):
         super()._compute_website_absolute_url()
+
+    def _to_structured_data(self, website=None):
+        self.ensure_one()
+        website = website or self.env['website'].get_current_website()
+        name = self.name or self.partner_name
+        if not name:
+            return False
+
+        base_url = website.get_base_url()
+        url = self.url or self.partner_id.website or self.website_url or ''
+        if url and not url.startswith(('http://', 'https://')):
+            url = url if url.startswith('/') else f"/{url}"
+            url = f"{base_url}{url}"
+
+        logo = False
+        if self.website_image_url:
+            logo = self.website_image_url if self.website_image_url.startswith(('http://', 'https://')) else f"{base_url}{self.website_image_url}"
+
+        structured_data = StructuredData(
+            "Organization",
+            name=name,
+            url=url or None,
+            logo=logo
+        )
+
+        description_source = self.website_description or self.partner_id.website_description
+        description = text_from_html(description_source, True) if description_source else None
+        if description:
+            structured_data.add('description', description)
+
+        email = self.email or self.partner_email
+        if email:
+            structured_data.add('email', email)
+
+        phone = self.phone or self.partner_phone
+        if phone:
+            structured_data.add('telephone', phone)
+
+        if self.partner_id and self.partner_id.website:
+            structured_data.add('sameAs', self.partner_id.website)
+
+        partner = self.partner_id
+        if partner:
+            street = ' '.join(filter(None, [partner.street, partner.street2])) or None
+            city = partner.city or None
+            state_name = partner.state_id.display_name if partner.state_id else None
+            zip_code = partner.zip or None
+            country_name = partner.country_id.display_name if partner.country_id else None
+            address = StructuredData(
+                "PostalAddress",
+                street_address=street,
+                locality=city,
+                region=state_name,
+                postal_code=zip_code,
+                country=country_name,
+            )
+            if address:
+                structured_data.add('address', address)
+
+        if self.event_id and hasattr(self.event_id, '_to_structured_data'):
+            parent_event = self.event_id._get_md_payload(website)
+            if parent_event:
+                structured_data.add('memberOf', parent_event)
+
+        return structured_data
 
     @api.model
     def _search_get_detail(self, website, order, options):

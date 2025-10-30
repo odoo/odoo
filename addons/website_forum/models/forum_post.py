@@ -804,18 +804,18 @@ class ForumPost(models.Model):
         structured_data = {
             "@context": "https://schema.org",
             "@type": "QAPage",
-            "mainEntity": self._get_structured_data(post_type="question"),
+            "mainEntity": self._to_structured_data(post_type="question"),
         }
         if correct_posts:
-            structured_data["mainEntity"]["acceptedAnswer"] = correct_posts[0]._get_structured_data()
+            structured_data["mainEntity"]["acceptedAnswer"] = correct_posts[0]._to_structured_data()
         if suggested_posts:
             structured_data["mainEntity"]["suggestedAnswer"] = [
-                suggested_post._get_structured_data()
+                suggested_post._to_structured_data()
                 for suggested_post in suggested_posts
             ]
         return json_safe.dumps(structured_data, indent=2)
 
-    def _get_structured_data(self, post_type="answer"):
+    def _to_structured_data(self, post_type="answer"):
         """
         Generate structured data (microdata) for an answer or a question.
 

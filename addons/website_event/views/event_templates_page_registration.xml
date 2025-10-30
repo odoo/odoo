@@ -4,9 +4,10 @@
 
 <template id="event_details" name="Event Header">
     <t t-call="website_event.layout">
-        <div class="h-100" name="event" itemscope="itemscope" itemtype="http://schema.org/Event">
-            <meta itemprop="startDate" t-attf-content="{{event.date_begin}}Z"/>
-            <meta itemprop="endDate" t-attf-content="{{event.date_end}}Z"/>
+        <t t-set="head">
+            <script t-if="event_ld_json" type="application/ld+json" t-out="event_ld_json"/>
+        </t>
+        <div class="h-100" name="event">
             <t t-out="0"/>
         </div>
     </t>

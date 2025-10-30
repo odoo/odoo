@@ -9,6 +9,8 @@ from markupsafe import Markup
 from pytz import utc, timezone
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.website.structured_data import StructuredData
+from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import get_lang, format_date
@@ -647,3 +649,93 @@ class EventEvent(models.Model):
                     if begin != end else begin
                 )
         return results_data
+
+    def _to_structured_data(self, website=None):
+        self.ensure_one()
+        website = website or self.env['website'].get_current_website()
+        name = self.name
+        if not name:
+            return False
+        base_url = website.get_base_url()
+        event_url = self.website_url or ''
+        if event_url:
+            event_url = f'{base_url}{event_url}'
+        else:
+            event_url = f'{base_url}/event/{self.id}'
+
+        image_url = website.image_url(self, 'image_1920')
+        if image_url:
+            image_url = f'{base_url}{image_url}'
+
+        description = self.subtitle or ''
+        if not description and self.description:
+            description = text_from_html(self.description, True)
+
+        start_date = StructuredData.datetime(self.date_begin)
+        end_date = StructuredData.datetime(self.date_end)
+
+        location = False
+        if self.address_id:
+            address_sudo = self.address_id.sudo()
+            street = address_sudo.street.strip() if address_sudo.street else None
+            city = address_sudo.city.strip() if address_sudo.city else None
+            state_name = address_sudo.state_id.name if address_sudo.state_id else None
+            zip_code = address_sudo.zip.strip() if address_sudo.zip else None
+            country_name = address_sudo.country_id.name if address_sudo.country_id else None
+            address = StructuredData(
+                "PostalAddress",
+                street_address=street,
+                locality=city,
+                region=state_name,
+                postal_code=zip_code,
+                country=country_name,
+            )
+            location = StructuredData("Place", name=address_sudo.display_name or None, address=address)
+
+        organizer = False
+        if self.organizer_id:
+            organizer_partner_sudo = self.organizer_id.sudo()
+            organizer_name = organizer_partner_sudo.display_name or None
+            organizer_url = organizer_partner_sudo.website or None
+            organizer = StructuredData(
+                "Organization",
+                name=organizer_name,
+                url=organizer_url
+            )
+
+        offers = self._to_structured_offers_data()
+
+        event_status = 'https://schema.org/EventScheduled'
+        attendance_mode = 'https://schema.org/OnlineEventAttendanceMode'
+        if self.address_id:
+            attendance_mode = 'https://schema.org/OfflineEventAttendanceMode'
+
+        return StructuredData(
+            "Event",
+            name=name,
+            url=event_url,
+            description=description or None,
+            image=image_url,
+            start_date=start_date,
+            end_date=end_date,
+            location=location,
+            organizer=organizer,
+            offers=offers,
+            event_status=event_status,
+            attendance_mode=attendance_mode,
+        )
+
+    def _to_structured_offers_data(self):
+        return False
+
+    def _to_breadcrumb_structured_data(self, website=None):
+        self.ensure_one()
+        website = website or self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        if not self.name:
+            return False
+        items = [
+            (_('All Events'), f'{base_url}/events'),
+            (self.name or '', None),
+        ]
+        return StructuredData.breadcrumb_list(items)

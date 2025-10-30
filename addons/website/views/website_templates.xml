@@ -173,6 +173,8 @@
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
+        <t t-set="structured_data" t-value="website._to_structured_data()"/>
+        <script t-if="structured_data" type="application/ld+json" t-out="structured_data.dumps()"/>
     </xpath>
 
     <xpath expr="//head/script" position="before">

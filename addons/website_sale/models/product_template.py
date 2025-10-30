@@ -13,6 +13,7 @@ from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
+from odoo.addons.website.structured_data import StructuredData
 from odoo.addons.website.tools import text_from_html
 from odoo.addons.website_sale.const import SHOP_PATH
 
@@ -1004,7 +1005,7 @@ class ProductTemplate(models.Model):
                 ), pricelist_rule_id
         return price, pricelist_rule_id
 
-    def _to_markup_data(self, website):
+    def _to_structured_data(self, website):
         """ Generate JSON-LD markup data for the current product template.
 
         If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
@@ -1021,17 +1022,18 @@ class ProductTemplate(models.Model):
             return self.product_variant_id._to_markup_data(website)
 
         base_url = website.get_base_url()
-        markup_data = {
-            '@context': 'https://schema.org/',
-            '@type': 'ProductGroup',
-            'name': self.name,
-            'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'url': f'{base_url}{self.website_url}',
-            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
-        }
+        structured_data = StructuredData(
+            "ProductGroup",
+            name=self.name,
+            image=f'{base_url}{website.image_url(self, "image_1920")}',
+            url=f'{base_url}{self.website_url}',
+            has_variant=[
+                product._to_structured_data(website) for product in self.product_variant_ids
+            ]
+        )
         if self.description_ecommerce:
-            markup_data['description'] = text_from_html(self.description_ecommerce)
-        return markup_data
+            structured_data.add('description', text_from_html(self.description_ecommerce))
+        return structured_data
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
         """Return the ribbon to display for the current template.
