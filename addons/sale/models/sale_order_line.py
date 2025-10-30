@@ -1629,7 +1629,7 @@ class SaleOrderLine(models.Model):
         and its linked lines are saved in the DB, which we can't ensure.
         """
         self.ensure_one()
-        return (
+        linked_lines = (
             self._origin and self.order_id.order_line.filtered(
                 lambda line: line.linked_line_id._origin == self._origin
             )
@@ -1638,6 +1638,15 @@ class SaleOrderLine(models.Model):
                 lambda line: line.linked_virtual_id == self.virtual_id
             )
         ) or self.env['sale.order.line']
+
+        if not linked_lines:
+            return self.env['sale.order.line']
+
+        all_linked_lines = linked_lines
+        for line in linked_lines:
+            all_linked_lines |= line._get_linked_lines()
+
+        return all_linked_lines
 
     def _sellable_lines_domain(self):
         discount_products_ids = self.env.companies.sale_discount_product_id.ids
