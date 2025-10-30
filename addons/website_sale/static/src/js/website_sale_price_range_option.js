@@ -1,3 +1,4 @@
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
@@ -28,6 +29,6 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (product_list_div) {
             product_list_div.classList.add('opacity-50');
         }
-        window.location.href = `${url.pathname}?${searchParams.toString()}`;
+        redirect(`${url.pathname}?${searchParams.toString()}`);
     },
 });

@@ -1,5 +1,6 @@
 import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
@@ -472,7 +473,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             if (tags.size) {
                 searchParams.set('tags', [...tags].join(','));
             }
-            window.location.href = `${url.pathname}?${searchParams.toString()}`;
+            redirect(`${url.pathname}?${searchParams.toString()}`);
         }
     },
     /**
@@ -492,7 +493,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 oldurl += '&noFuzzy=true';
             }
             var search = $this.find('input.search-query');
-            window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
+            redirect(oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val()));
         }
     },
     /**

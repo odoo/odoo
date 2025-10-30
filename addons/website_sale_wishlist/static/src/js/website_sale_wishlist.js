@@ -1,4 +1,5 @@
 import { rpc, RPCError } from "@web/core/network/rpc";
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -202,7 +203,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _redirectNoWish: function () {
-        window.location.href = '/shop/cart';
+        redirect('/shop/cart');
     },
 
 
@@ -219,7 +220,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             this._redirectNoWish();
             return;
         }
-        window.location = '/shop/wishlist';
+        redirect('/shop/wishlist');
     },
     /**
      * @private
