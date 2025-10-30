@@ -1178,6 +1178,45 @@ test("should cut an image and its caption as a single embedded figure", async ()
     );
 });
 
+test("should copy an image along with its caption", async () => {
+    const captionId = 1;
+    const caption = "Hello";
+    const { el, editor } = await setupEditorWithEmbeddedCaption(
+        unformat(`
+            <p>a</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}">
+                <figcaption>${caption}</figcaption>
+            </figure>
+            <p>[]<br></p>
+        `)
+    );
+    const imgElement = el.querySelector("img");
+    const parent = imgElement.parentElement;
+    const index = childNodeIndex(imgElement);
+    setSelection({
+        anchorNode: parent,
+        anchorOffset: index,
+        focusNode: parent,
+        focusOffset: index + 1,
+    });
+
+    const clipboardData = new DataTransfer();
+    await press(["ctrl", "c"], { dataTransfer: clipboardData });
+    const copiedContent = clipboardData.getData("application/vnd.odoo.odoo-editor");
+    const fragment = parseHTML(editor.document, copiedContent);
+    expect(getContent(fragment)).toBe(
+        unformat(`
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
+                <figcaption ${getFigcaptionAttributes(captionId, caption)}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+        `)
+    );
+});
+
 test("should properly parse figure without fig caption", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
