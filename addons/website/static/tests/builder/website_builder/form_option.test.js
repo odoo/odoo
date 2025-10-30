@@ -62,15 +62,7 @@ test("change action of form changes available options", async () => {
             formFields: [{ type: "char", name: "name", fillWith: "name", string: "Your Name" }],
         });
 
-    await setupWebsiteBuilder(
-        `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div class="s_website_form_field"><label class="s_website_form_label" for="contact1">Name</label><input id="contact1" class="s_website_form_input"/></div>
-            <div class="s_website_form_submit">
-                <div class="s_website_form_label"/>
-                <a>Submit</a>
-            </div>
-        </form></section>`
-    );
+    await setupWebsiteBuilderWithSnippet("s_website_form");
 
     await contains(":iframe section").click();
     await contains("div:has(>span:contains('Action')) + div button").click();
