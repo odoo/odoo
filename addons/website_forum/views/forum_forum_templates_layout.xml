@@ -195,7 +195,10 @@
             </div>
         </t>
         <t t-else="">
-            <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
+            <t t-set="editor_message">Drag blocks here to add them on all forum</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_forum_header_1" t-att-data-editor-message="editor_message"/>
+            <div id="website_forum_welcome_header"/>
+            <div class="oe_structure oe_empty" id="oe_structure_website_forum_header_2" t-att-data-editor-message="editor_message"/>
             <div id="wrap" t-attf-class="o_wforum_wrapper position-relative container row mx-auto px-0 #{ 'h-100' if forum_welcome_message else ''} #{website_forum_action}">
                 <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
                 <t t-set="_forum_path" t-value="url_for('/forum') + '/' + _forum_slug"/>
@@ -212,6 +215,7 @@
                     </div>
                 </div>
             </div>
+            <div class="oe_structure oe_empty" id="oe_structure_website_forum_footer_1" t-att-data-editor-message="editor_message"/>
         </t>
     </t>
 </template>
@@ -336,9 +340,9 @@
     </div>
 </template>
 
-<template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message (oe_structure_forum_top)">
-    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_website_forum_header_1']" position="replace">
-        <div t-if="forum" class="oe_structure oe_empty" id="oe_structure_website_forum_header_1">
+<template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message">
+    <xpath expr="//div[@id='website_forum_welcome_header']" position="inside">
+        <div t-if="forum">
             <section t-if="editable or translatable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'css_non_editable_mode_hidden' if editable or translatable else 'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
                 <t t-if="forum.image_1920">
                     <span class="s_parallax_bg_wrap">
