@@ -5,7 +5,8 @@ from odoo import api, Command, models, fields
 from odoo.http import request
 from odoo.tools import email_normalize, get_lang, html2plaintext, is_html_empty, plaintext2html
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import ValidationError
+from odoo.addons.phone_validation.tools import phone_validation
+from odoo.exceptions import UserError, ValidationError
 
 
 class ChatbotScript(models.Model):
@@ -206,7 +207,6 @@ class ChatbotScript(models.Model):
         email_normalized = email_normalize(email_address)
 
         posted_message = False
-        error_message = False
         if not email_normalized:
             error_message = self.env._(
                 "'%(input_email)s' does not look like a valid email. Can you please try again?",
@@ -214,11 +214,21 @@ class ChatbotScript(models.Model):
             )
             posted_message = discuss_channel._chatbot_post_message(self, plaintext2html(error_message))
 
-        return {
-            'success': bool(email_normalized),
-            'posted_message': posted_message,
-            'error_message': error_message,
-        }
+        return {"success": bool(email_normalized), "posted_message": posted_message}
+
+    def _validate_phone(self, phone_number, discuss_channel):
+        phone_number = html2plaintext(phone_number)
+        error_message = False
+        try:
+            # Validate the phone number using phone_parse, which raises on invalid input.
+            phone_validation.phone_parse(phone_number, discuss_channel.country_id.code)
+        except UserError:
+            error_text = self.env._(
+                "'%(input_phone)s' does not look like a valid phone number. Can you please try again?",
+                input_phone=phone_number,
+            )
+            error_message = discuss_channel._chatbot_post_message(self, plaintext2html(error_text))
+        return {"success": not bool(error_message), "posted_message": error_message}
 
     def _get_chatbot_language(self):
         return get_lang(

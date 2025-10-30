@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models, fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, email_normalize
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.phone_validation.tools import phone_validation
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -315,6 +316,11 @@ class ChatbotScriptStep(models.Model):
         if self.step_type == 'question_email' and not email_normalize(user_text_answer):
             # if this error is raised, display an error message but do not go to next step
             raise ValidationError(_('"%s" is not a valid email.', user_text_answer))
+        if self.step_type == "question_phone":
+            try:
+                phone_validation.phone_parse(user_text_answer, discuss_channel.country_id.code)
+            except UserError:
+                raise ValidationError(self.env._("'%s' is not a valid phone number.", user_text_answer))
 
         if self.step_type in [
             "question_email",

@@ -41,4 +41,4 @@ livechatRoutingMap
     .add("/chatbot/restart", "/chatbot/cors/restart")
     .add("/chatbot/answer/save", "/chatbot/cors/answer/save")
     .add("/chatbot/step/trigger", "/chatbot/cors/step/trigger")
-    .add("/chatbot/step/validate_email", "/chatbot/cors/step/validate_email");
+    .add("/chatbot/step/validate_contact_info", "/chatbot/cors/step/validate_contact_info");

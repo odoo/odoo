@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
+from odoo.tools import email_split, html2plaintext
 from odoo.tools.mimetypes import get_extension
 from odoo.tools.translate import LazyTranslate
 
@@ -733,25 +733,6 @@ class DiscussChannel(models.Model):
             message_type='comment',
             subtype_xmlid='mail.mt_comment',
         )
-
-    def _chatbot_validate_email(self, email_address, chatbot_script):
-        email_address = html2plaintext(email_address)
-        email_normalized = email_normalize(email_address)
-
-        posted_message = False
-        error_message = False
-        if not email_normalized:
-            error_message = _(
-                "'%(input_email)s' does not look like a valid email. Can you please try again?",
-                input_email=email_address
-            )
-            posted_message = self._chatbot_post_message(chatbot_script, plaintext2html(error_message))
-
-        return {
-            'success': bool(email_normalized),
-            'posted_message': posted_message,
-            'error_message': error_message,
-        }
 
     def _add_members(
         self,

@@ -12,7 +12,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
         self.assertEqual(created_lead.name, "Testing Bot's New Lead")
         self.assertEqual(created_lead.email_from, 'test2@example.com')
-        self.assertEqual(created_lead.phone, '123456')
+        self.assertEqual(created_lead.phone, "+919876543210")
 
         self.assertEqual(created_lead.team_id, self.sale_team)
         self.assertEqual(created_lead.type, 'opportunity')
@@ -25,7 +25,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
         self.assertEqual(created_lead.name, "Testing Bot's New Lead")
         self.assertNotEqual(created_lead.email_from, 'test2@example.com', "User's email should'nt have been overridden")
-        self.assertEqual(created_lead.phone, '123456', "User's phone should have been updated")
+        self.assertEqual(created_lead.phone, "+919876543210", "User's phone should have been updated")
 
         self.assertEqual(created_lead.team_id, self.sale_team_with_lead)
         self.assertEqual(created_lead.type, 'lead')
@@ -79,7 +79,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_create_lead_email)
         self._post_answer_and_trigger_next_step(discuss_channel, email="test2@example.com")
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_create_lead_phone)
-        self._post_answer_and_trigger_next_step(discuss_channel, '123456')
+        self._post_answer_and_trigger_next_step(discuss_channel, "+919876543210")
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_create_lead)
         return discuss_channel
 
