@@ -178,6 +178,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.start_tour(self_route, "self_order_mobile_0_price_order")
 
         order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.general_customer_note, "test")
         self.assertEqual(order.picking_count, 1)
 
     def test_order_sequence_in_self(self):
