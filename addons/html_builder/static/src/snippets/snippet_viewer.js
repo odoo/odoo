@@ -17,6 +17,7 @@ export class SnippetViewer extends Component {
         snippetModel: { type: Object },
         installSnippetModule: { type: Function },
         frontendDirection: { type: String },
+        mobileColumnIndex: { type: Number, optional: true },
     };
 
     setup() {
@@ -51,20 +52,19 @@ export class SnippetViewer extends Component {
 
     getSnippetColumns() {
         const snippets = this.getSelectedSnippets();
-
-        const columns = [[], []];
-        for (const index in snippets) {
-            if (index % 2 === 0) {
-                columns[0].push(snippets[index]);
-            } else {
-                columns[1].push(snippets[index]);
+        const isMobile = this.props.state.isMobilePreviewSnippet;
+        const totalColumns = isMobile ? 3 : 2;
+        const columns = Array.from({ length: isMobile ? 1 : totalColumns }, () => []);
+        if (isMobile) {
+            for (let i = this.props.mobileColumnIndex; i < snippets.length; i += totalColumns) {
+                columns[0].push(snippets[i]);
+            }
+        } else {
+            for (let i = 0; i < snippets.length; i++) {
+                columns[i % totalColumns].push(snippets[i]);
             }
         }
-        let numResults = 0;
-        for (const column of columns) {
-            numResults += column.length;
-        }
-        this.props.hasSearchResults(numResults > 0);
+        this.props.hasSearchResults(snippets.length > 0);
         return columns;
     }
 

@@ -1,5 +1,5 @@
 import { onWillRender, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onWillUnmount, useEffect } from "@odoo/owl";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -28,13 +28,17 @@ export class AddSnippetDialog extends Component {
     };
 
     setup() {
-        this.iframeRef = useRef("iframe");
+        this.pcIframeRef = useRef("pcIframe");
+        this.mobIframe0Ref = useRef("mobIframe0");
+        this.mobIframe1Ref = useRef("mobIframe1");
+        this.mobIframe2Ref = useRef("mobIframe2");
         this.modalRef = useChildRef();
         this.state = useState({
             search: "",
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,
             hasNoSearchResults: false,
+            isMobilePreviewSnippet: false,
         });
         this.snippetViewerProps = {
             state: this.state,
@@ -52,38 +56,21 @@ export class AddSnippetDialog extends Component {
                 : "ltr",
         };
 
-        let root;
-        onMounted(async () => {
-            const isFirefox = isBrowserFirefox();
-            if (isFirefox && !(this.iframeRef.el?.contentDocument.readyState === "complete")) {
-                // Make sure empty preview iframe is loaded. This was necessary
-                // in Firefox < 148 as it created and parsed a new document.
-                // This event is never triggered on Chrome.
-                await new Promise((resolve) => {
-                    this.iframeRef.el.addEventListener("load", resolve, { once: true });
+        this.roots = [];
+
+        useEffect(
+            (isMobile) => {
+                this.state.showIframe = false;
+
+                const iframes = isMobile
+                    ? [this.mobIframe0Ref.el, this.mobIframe1Ref.el, this.mobIframe2Ref.el]
+                    : [this.pcIframeRef.el];
+                this.initIframes(iframes, isMobile).then(() => {
+                    this.state.showIframe = true;
                 });
-            }
-
-            // Ensure preview styles are applied before mounting the snippets.
-            // Otherwise layout-dependent measurements (e.g., carousel height in
-            // preview) can be wrong.
-            await this.insertStyle();
-
-            this.renderIframeHead();
-            const iframeDocument = this.iframeRef.el.contentDocument;
-            iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
-            iframeDocument.body.style.setProperty("direction", localization.direction);
-            iframeDocument.body.tabIndex = "-1";
-            iframeDocument.addEventListener("keydown", this.onIframeDocumentKeydown.bind(this));
-
-            root = this.__owl__.app.createRoot(SnippetViewer, {
-                props: this.snippetViewerProps,
-            });
-            root.mount(iframeDocument.body);
-
-            this.insertColorScheme();
-            this.state.showIframe = true;
-        });
+            },
+            () => [this.state.isMobilePreviewSnippet]
+        );
 
         onWillRender(() => {
             if (!this.props.snippetModel.hasCustomGroup && this.state.groupSelected === "custom") {
@@ -92,8 +79,52 @@ export class AddSnippetDialog extends Component {
         });
 
         onWillUnmount(() => {
-            root.destroy();
+            this.destroyRoots();
         });
+    }
+
+    destroyRoots() {
+        if (this.roots) {
+            for (const root of this.roots) {
+                root.destroy();
+            }
+        }
+    }
+
+    async initIframes(iframes, isMobile) {
+        const isFirefox = isBrowserFirefox();
+        if (isFirefox && !(this.iframeRef.el?.contentDocument.readyState === "complete")) {
+            // Make sure empty preview iframe is loaded.This was necessary
+            // in Firefox < 148 as it created and parsed a new document.
+            // This event is never triggered on Chrome.
+            await new Promise((resolve) => {
+                this.iframeRef.el.addEventListener("load", resolve, { once: true });
+            });
+        }
+        for (let i = 0; i < iframes.length; i++) {
+            const iframe = iframes[i];
+            const iframeDocument = iframe.contentDocument;
+            iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
+            iframeDocument.body.style.setProperty("direction", localization.direction);
+            iframeDocument.body.tabIndex = "-1";
+            iframeDocument.addEventListener("keydown", this.onIframeDocumentKeydown.bind(this));
+            const props = { ...this.snippetViewerProps };
+            if (isMobile) {
+                props.mobileColumnIndex = i;
+                iframeDocument.querySelector("html").classList.add("o_is_mobile_preview");
+                iframeDocument.body.style.width = "100%";
+                iframeDocument.body.style.height = "100%";
+            }
+            const root = this.__owl__.app.createRoot(SnippetViewer, {
+                props: props,
+            });
+            this.roots.push(root);
+            root.mount(iframeDocument.body);
+        }
+        await Promise.all(iframes.map((iframe) => this.insertStyle(iframe)));
+        for (const iframe of iframes) {
+            this.insertColorScheme(iframe);
+        }
     }
 
     /**
@@ -106,7 +137,7 @@ export class AddSnippetDialog extends Component {
      * The URL for web.assets_frontend CSS bundle is retrieved from the editor
      * document to ensure consistency, especially when using the RTL version.
      */
-    async insertStyle() {
+    async insertStyle(iframe) {
         const loadCSSBundleFromEditor = (bundleName, loadOptions) => {
             const cssLinkEl = this.props.editor.document.head.querySelector(
                 `link[type="text/css"][href*="/${bundleName}."]`
@@ -117,12 +148,12 @@ export class AddSnippetDialog extends Component {
             return loadBundle(bundleName, loadOptions);
         };
         this.props.editor.processThrough("snippet_preview_dialog_stylesheets_processors", {
-            iframe: this.iframeRef.el,
+            iframe: iframe,
         });
         const editorPreviewAssetsBundles = this.props.editor.getResource(
             "snippet_preview_dialog_bundles"
         );
-        const loadOptions = { targetDoc: this.iframeRef.el.contentDocument, js: false };
+        const loadOptions = { targetDoc: iframe.contentDocument, js: false };
         await Promise.all([
             ...editorPreviewAssetsBundles.map((assetsBundle) =>
                 loadCSSBundleFromEditor(assetsBundle, loadOptions)
@@ -141,10 +172,18 @@ export class AddSnippetDialog extends Component {
         );
     }
 
+    toggleMobilePreviewSnippet() {
+        this.state.isMobilePreviewSnippet = !this.state.isMobilePreviewSnippet;
+    }
+
     selectGroup(snippetGroup) {
         this.state.groupSelected = snippetGroup.groupName;
-        const iframeDocument = this.iframeRef.el.contentDocument;
-        iframeDocument.body.scrollTop = 0;
+        const iframes = this.state.isMobilePreviewSnippet
+            ? [this.mobIframe0Ref.el, this.mobIframe1Ref.el, this.mobIframe2Ref.el]
+            : [this.pcIframeRef.el];
+        for (const iframe of iframes) {
+            iframe.contentDocument.body.scrollTop = 0;
+        }
     }
 
     /**
@@ -152,10 +191,10 @@ export class AddSnippetDialog extends Component {
      * <head> and add a custom class. This is necessary to allow the dark mode
      * to be handled correctly across browsers.
      */
-    insertColorScheme() {
+    insertColorScheme(iframe) {
         const colorScheme = cookie.get("color_scheme") || "light";
         const metaElement = document.createElement("meta");
-        const iframeDocument = this.iframeRef.el.contentDocument;
+        const iframeDocument = iframe.contentDocument;
         metaElement.setAttribute("name", "color-scheme");
         metaElement.content = colorScheme;
         iframeDocument.head.appendChild(metaElement);
