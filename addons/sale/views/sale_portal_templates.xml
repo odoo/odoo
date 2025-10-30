@@ -658,6 +658,11 @@
             <t t-call="#{sale_order._get_name_tax_totals_view()}">
                 <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
                 <t t-set="currency" t-value="sale_order.currency_id"/>
+                <!--
+                NOTE: This variable should not be used in templates before version 19.1, as it might
+                not be available in earlier versions if customer does not upgrade the `sale` module.
+                -->
+                <t t-set="doc" t-value="sale_order"/>
             </t>
         </table>
     </template>
