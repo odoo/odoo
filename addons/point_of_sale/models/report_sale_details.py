@@ -318,10 +318,18 @@ class ReportSaleDetails(models.AbstractModel):
             })
             invoiceTotal += session._get_total_invoice()
             totalPaymentsAmount += session.total_payments_amount
-
+        payments_per_method = {}
         for payment in payments:
             if payment.get('id'):
-                payment['name'] = self.env['pos.payment.method'].browse(payment['id']).name + ' ' + self.env['pos.session'].browse(payment['session']).name
+                method_name = self.env['pos.payment.method'].browse(payment['id']).name
+                payment['name'] = method_name + ' ' + self.env['pos.session'].browse(payment['session']).name
+                if payments_per_method.get(payment['id']):
+                    payments_per_method[payment['id']]['total'] += payment['total']
+                else:
+                    payments_per_method[payment['id']] = {
+                        'name': method_name,
+                        'total': payment['total'],
+                    }
 
         return {
             'opening_note': sessions[0].opening_notes if len(sessions) == 1 else False,
@@ -348,6 +356,8 @@ class ReportSaleDetails(models.AbstractModel):
             'invoiceList': invoiceList,
             'invoiceTotal': invoiceTotal,
             'total_paid': totalPaymentsAmount,
+            'payments_per_method': payments_per_method.values(),
+            'show_payment_per_method': not session_ids,
         }
 
     def _get_product_total_amount(self, line):
