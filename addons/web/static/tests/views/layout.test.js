@@ -289,7 +289,7 @@ test(`Simple rendering: with dynamically displayed search`, async () => {
                 ...this.props.display,
                 controlPanel: {
                     ...this.props.display.controlPanel,
-                    controlPanelActions: this.state.displayControlPanelActions,
+                    actions: this.state.displayControlPanelActions,
                 },
             };
         }

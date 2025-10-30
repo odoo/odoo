@@ -103,6 +103,12 @@ export class ControlPanel extends Component {
         display: { type: Object, optional: true },
         slots: { type: Object, optional: true },
     };
+    static defaultProps = {
+        display: {
+            actions: true,
+            buttons: true,
+        },
+    };
 
     setup() {
         this.actionService = useService("action");
@@ -303,7 +309,7 @@ export class ControlPanel extends Component {
      */
     get display() {
         return {
-            controlPanelActions: true,
+            ...this.constructor.defaultProps.display,
             ...this.props.display,
         };
     }

@@ -4,7 +4,7 @@
     <t t-name="web.ListView">
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                <t t-if="props.showButtons" t-set-slot="control-panel-buttons">
+                <t t-set-slot="control-panel-buttons">
                     <t t-call="{{ props.buttonTemplate }}"/>
                     <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
                         <MultiRecordViewButton

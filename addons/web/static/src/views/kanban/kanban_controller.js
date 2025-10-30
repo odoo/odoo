@@ -56,7 +56,6 @@ export class KanbanController extends Component {
         forceGlobalClick: { type: Boolean, optional: true },
         onSelectionChanged: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
-        showButtons: { type: Boolean, optional: true },
         Compiler: Function,
         Model: Function,
         Renderer: Function,
@@ -68,7 +67,6 @@ export class KanbanController extends Component {
         createRecord: () => {},
         forceGlobalClick: false,
         selectRecord: () => {},
-        showButtons: true,
     };
 
     setup() {
@@ -267,7 +265,7 @@ export class KanbanController extends Component {
             ...this.props.display,
             controlPanel: {
                 ...controlPanel,
-                controlPanelActions: !this.hasSelectedRecords,
+                actions: !this.hasSelectedRecords,
             },
         };
     }
