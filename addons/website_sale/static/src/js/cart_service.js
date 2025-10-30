@@ -11,6 +11,7 @@ import { serializeDateTime } from '@web/core/l10n/dates';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
+import { redirect } from '@web/core/utils/urls';
 import { session } from '@web/session';
 
 const { DateTime } = luxon;
@@ -448,7 +449,7 @@ export class CartService {
         });
         // TODO should not redirect if errors in data.
         if (shouldRedirectToCart || session.add_to_cart_action === 'go_to_cart') {
-            window.location = '/shop/cart';
+            redirect('/shop/cart');
             return data.quantity;
         }
         if (data.cart_quantity && (

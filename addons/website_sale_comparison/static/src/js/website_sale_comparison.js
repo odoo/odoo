@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { Mutex } from "@web/core/utils/concurrency";
 import { renderToString } from "@web/core/utils/render";
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import website_sale_utils from "@website_sale/js/website_sale_utils";
@@ -65,7 +66,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             self._removeFromComparelist(ev);
             self.guard.exec(function() {
                 const newLink = '/shop/compare?products=' + encodeURIComponent(self.comparelist_product_ids);
-                window.location.href = Object.keys(self.comparelist_product_ids || {}).length === 0 ? '/shop' : newLink;
+                redirect(Object.keys(self.comparelist_product_ids || {}).length === 0 ? '/shop' : newLink);
             });
         });
 
