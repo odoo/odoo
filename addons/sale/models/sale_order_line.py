@@ -1316,7 +1316,7 @@ class SaleOrderLine(models.Model):
         return amount
 
     def has_valued_move_ids(self):
-        return self.move_ids
+        return None  # TODO: remove in master
 
     def _sellable_lines_domain(self):
         discount_products_ids = self.env.companies.sale_discount_product_id.ids
