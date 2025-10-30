@@ -1645,7 +1645,7 @@ class Base_ImportImport(models.TransientModel):
                             for idx in indexes if record[idx]
                         )
                     )
-                elif field_type == 'text':
+                elif field_type == 'text' or field_type == 'boolean' or field_type == 'one2many':
                     new_record.append(
                         '\n'.join(
                             self._stringify_date_like_objects(record[idx], import_options)

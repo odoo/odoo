@@ -91,6 +91,8 @@ class ImportPreview(models.Model):
     othervalue = fields.Integer(string='Other Variable')
     date = fields.Date(string='Date')
     datetime = fields.Datetime(string='Datetime')
+    is_company = fields.Boolean(string='Is Company')
+    some_ids = fields.One2many('import.o2m.child', 'parent_id', string='Some IDs')
 
 
 class ImportFloat(models.Model):

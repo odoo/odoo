@@ -967,25 +967,60 @@ foo3,US,0,persons\n""",
                 self.assertFalse(response.get('messages'))
 
     @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
-    def test_xlsx_datetime_values_assigned_to_char_field(self):
-        """Test that importing datetime values to char field is converted"""
-
-        file_content = generate_xlsx({
-            'Some Value': [1, 3, 5],
-            'Name': ['foo', datetime.datetime(2020, 1, 6, 8, 10), datetime.date(2025, 7, 1)]   # Invalid Date like object in a char field
-        })
+    def test_xlsx_datetime_values_assigned_to_bool_char_o2M_fields(self):
+        """Test that mapping datetime values to {char,bool,one2Many} field is converted"""
 
         file_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-        import_wizard = self.env['base_import.import'].create({
+        bool_test_file = generate_xlsx({
+            'Some Value': [1],
+            'Is Company': [datetime.datetime(2020, 1, 6, 8, 10)]
+        })
+        char_test_file = generate_xlsx({
+            'Some Value': [1, 3, 5],
+            'Name': ['foo', datetime.datetime(2020, 1, 6, 8, 10), datetime.date(2025, 7, 1)]   # Invalid Date like object in a char field
+        })
+        o2M_test_file = generate_xlsx({
+            'Some Value': [1],
+            'Some IDs': [datetime.datetime(2020, 1, 6, 8, 10)]
+        })
+
+        bool_import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': file_content,
+            'file': bool_test_file,
+            'file_type': file_type,
+        })
+        char_import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': char_test_file,
+            'file_type': file_type,
+        })
+        o2M_import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': o2M_test_file,
             'file_type': file_type,
         })
 
-        import_wizard.parse_preview({'has_headers': True})
+        bool_import_wizard.parse_preview({'has_headers': True})
+        char_import_wizard.parse_preview({'has_headers': True})
+        o2M_import_wizard.parse_preview({'has_headers': True})
 
-        response = import_wizard.execute_import(
+        response_bool = bool_import_wizard.execute_import(
+            ['somevalue', 'is_company'],
+            ['Some Value', 'Is Company'],
+            {
+                'has_headers': True,
+                'quoting': '"',
+                'separator': ',',
+                'datetime_format': '%H:%M:%S %d/%m/%Y',
+                'date_format': '%d/%m/%Y',
+            }
+        )
+        self.assertTrue(response_bool.get('messages'))
+        self.assertEqual(response_bool['messages'][0]['message'],
+                        "Unknown value '08:10:00 06/01/2020' for boolean field 'Is Company'")
+
+        response_char = char_import_wizard.execute_import(
             ['somevalue', 'name'],
             ['Some Value', 'Name'],
             {
@@ -996,8 +1031,23 @@ foo3,US,0,persons\n""",
                 'date_format': '%d/%m/%Y',
             }
         )
-        self.assertFalse(response.get('messages'))
-        self.assertEqual(response['name'], ['foo', '08:10:00 06/01/2020', '01/07/2025', '', '', ''])
+        self.assertFalse(response_char.get('messages'))
+        self.assertEqual(response_char['name'], ['foo', '08:10:00 06/01/2020', '01/07/2025', '', '', ''])
+
+        response_o2M = o2M_import_wizard.execute_import(
+            ['somevalue', 'some_ids'],
+            ['Some Value', 'Some IDs'],
+            {
+                'has_headers': True,
+                'quoting': '"',
+                'separator': ',',
+                'datetime_format': '%H:%M:%S %d/%m/%Y',
+                'date_format': '%d/%m/%Y',
+            }
+        )
+        self.assertTrue(response_o2M.get('messages'))
+        self.assertEqual(response_o2M['messages'][0]['message'],
+                        "No matching record found for name '08:10:00 06/01/2020' in field 'Some IDs'")
 
     @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_related_char_field(self):
