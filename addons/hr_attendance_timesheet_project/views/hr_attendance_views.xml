@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend hr.attendance form view -->
+    <record id="view_hr_attendance_form_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.form.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add project field after employee -->
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="project_id"
+                       options="{'no_create': True, 'no_create_edit': True}"
+                       readonly="check_out"/>
+            </xpath>
+
+            <!-- Add change project button in header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_change_project"
+                        string="Change Project"
+                        type="object"
+                        class="btn-primary"
+                        invisible="check_out"/>
+            </xpath>
+
+            <!-- Add timesheets section after all groups -->
+            <xpath expr="//group[@name='check_out_group']" position="after">
+                <separator string="Timesheets" colspan="2"/>
+                <group colspan="2">
+                    <field name="timesheet_ids" nolabel="1" readonly="1"
+                           context="{'tree_view_ref': 'hr_timesheet.hr_timesheet_line_tree'}"/>
+                </group>
+                <group>
+                    <field name="active_timesheet_id" readonly="1"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Extend hr.attendance list view -->
+    <record id="view_hr_attendance_list_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.list.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="project_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kiosk mode view extension - commented out for now, will be added later with proper template structure -->
+    <!-- TODO: Add kiosk mode support for project selection using QWeb templates -->
+    <!--
+    <record id="view_hr_attendance_kiosk_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.kiosk.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_kiosk_confirm"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_hr_attendance_employee')]" position="after">
+                <div class="o_hr_attendance_project mt-3">
+                    <h5>Current Project</h5>
+                    <div>Project info and change button will be added here</div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    -->
+
+</odoo>

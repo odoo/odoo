@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Change Project Wizard Form -->
+    <record id="view_attendance_change_project_wizard_form" model="ir.ui.view">
+        <field name="name">attendance.change.project.wizard.form</field>
+        <field name="model">attendance.change.project.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Change Project or Check Out">
+                <sheet>
+                    <group>
+                        <field name="attendance_id" invisible="1"/>
+                        <field name="employee_id" readonly="1"/>
+                        <field name="current_project_id" readonly="1"/>
+                        <field name="new_project_id"
+                               options="{'no_create': True, 'no_create_edit': True}"
+                               placeholder="Select new project..."/>
+                    </group>
+
+                    <div class="alert alert-info" role="alert">
+                        <strong>Change Project:</strong> Select a new project above and click "Change Project" to continue working on a different project.
+                        Current timesheet will be closed and a new one will be started.
+                        <hr/>
+                        <strong>Check Out:</strong> Click "Check Out" to end your work day. All timesheets will be closed.
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_change_project"
+                            string="Change Project"
+                            type="object"
+                            class="btn-primary"
+                            invisible="new_project_id == False"/>
+                    <button name="action_checkout"
+                            string="Check Out"
+                            type="object"
+                            class="btn-danger"
+                            confirm="Are you sure you want to check out and end your work day?"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for the wizard -->
+    <record id="action_attendance_change_project_wizard" model="ir.actions.act_window">
+        <field name="name">Change Project</field>
+        <field name="res_model">attendance.change.project.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

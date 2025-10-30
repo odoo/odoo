@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend hr.employee form view -->
+    <record id="view_hr_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add project fields in Attendance tab/page -->
+            <xpath expr="//page[@name='hr_settings']" position="inside">
+                <group string="Project Settings" name="project_settings">
+                    <field name="last_project_id"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="default_project_id"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
