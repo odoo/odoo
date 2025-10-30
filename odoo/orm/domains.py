@@ -989,7 +989,11 @@ class DomainCondition(Domain):
 
     def _optimize_field_search_method(self, model: BaseModel) -> Domain:
         field = self._field(model)
-        model._check_field_access(field, 'read')
+        if not model.env.su:
+            model._check_field_access(field, 'read')
+            if field.compute_sudo:
+                # run search in sudo because the compute is done in sudo as well
+                model = model.sudo()
         operator, value = self.operator, self.value
         # use the `Field.search` function
         original_exception = None
