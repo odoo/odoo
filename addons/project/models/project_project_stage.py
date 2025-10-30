@@ -19,6 +19,7 @@ class ProjectProjectStage(models.Model):
         help="If enabled, this stage will be displayed as folded in the Kanban and List views of your projects. Projects in a folded stage are considered as closed.")
     company_id = fields.Many2one('res.company', string="Company")
     color = fields.Integer(string='Color', export_string_translation=False)
+    rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Day count before projects in this stage become stale. Set to 0 to disable.')
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

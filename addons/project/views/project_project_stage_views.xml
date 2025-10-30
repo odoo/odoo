@@ -8,6 +8,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name" placeholder="e.g. To Do"/>
                 <field name="mail_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
+                <field name="rotting_threshold_days" optional="hide"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" options="{'no_create': True}"/>
                 <field name="color" optional="hide" widget="color_picker"/>
                 <field name="fold" optional="show"/>
@@ -44,6 +45,11 @@
                     <group>
                         <group>
                             <field name="mail_template_id" placeholder="No email" context="{'default_model': 'project.project'}"/>
+                            <label for="rotting_threshold_days" string="Rotting in"/>
+                            <div>
+                                <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
+                                <span>days</span>
+                            </div>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company"
