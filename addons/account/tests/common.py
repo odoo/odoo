@@ -526,6 +526,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
 
     @classmethod
+<<<<<<< e7aa67125734a07d07b235da9f3fe683eee6c10c
     def init_invoice(cls, move_type, partner=None, invoice_date='2019-01-01', post=False, products=None, amounts=None, taxes=None, company=None, currency=None, journal=None):
         """ This method is deprecated. Please call ``_create_invoice`` instead. """
         if isinstance(taxes, list):
@@ -541,6 +542,50 @@ class AccountTestInvoicingCommon(ProductCommon):
             cls._prepare_invoice_line(name='test line', price_unit=amount, tax_ids=taxes)
             for amount in (amounts or [])
         ]
+||||||| 3b0bf9dfdd5d0f2688068156a8b27b94b84b714c
+    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False, currency=None, journal=None):
+        products = [] if products is None else products
+        amounts = [] if amounts is None else amounts
+        move_form = Form(cls.env['account.move'] \
+                    .with_company(company or cls.env.company) \
+                    .with_context(default_move_type=move_type))
+        move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
+        # According to the state or type of the invoice, the date field is sometimes visible or not
+        # Besides, the date field can be put multiple times in the view
+        # "invisible": "['|', ('state', '!=', 'draft'), ('auto_post', '!=', 'at_date')]"
+        # "invisible": ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', 'no'), ('auto_post', '=', 'at_date')]
+        # "invisible": "['&', ('move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('quick_edit_mode', '=', False)]"
+        # :TestAccountMoveOutInvoiceOnchanges, :TestAccountMoveOutRefundOnchanges, .test_00_debit_note_out_invoice, :TestAccountEdi
+        if not move_form._get_modifier('date', 'invisible'):
+            move_form.date = move_form.invoice_date
+        move_form.partner_id = partner or cls.partner_a
+        if journal:
+            move_form.journal_id = journal
+        if currency:
+            move_form.currency_id = currency
+=======
+    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False, currency=None, journal=None):
+        """ This method is deprecated. Please call ``_create_invoice`` instead. """
+        products = [] if products is None else products
+        amounts = [] if amounts is None else amounts
+        move_form = Form(cls.env['account.move'] \
+                    .with_company(company or cls.env.company) \
+                    .with_context(default_move_type=move_type))
+        move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
+        # According to the state or type of the invoice, the date field is sometimes visible or not
+        # Besides, the date field can be put multiple times in the view
+        # "invisible": "['|', ('state', '!=', 'draft'), ('auto_post', '!=', 'at_date')]"
+        # "invisible": ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', 'no'), ('auto_post', '=', 'at_date')]
+        # "invisible": "['&', ('move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']), ('quick_edit_mode', '=', False)]"
+        # :TestAccountMoveOutInvoiceOnchanges, :TestAccountMoveOutRefundOnchanges, .test_00_debit_note_out_invoice, :TestAccountEdi
+        if not move_form._get_modifier('date', 'invisible'):
+            move_form.date = move_form.invoice_date
+        move_form.partner_id = partner or cls.partner_a
+        if journal:
+            move_form.journal_id = journal
+        if currency:
+            move_form.currency_id = currency
+>>>>>>> e04980c012dc9e665286baffe83b1675df89fe69
 
         return cls._create_invoice(
             move_type=move_type,
