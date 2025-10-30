@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance_timesheet_project.KioskActionChoice">
+        <div class="kiosk-action-choice-dialog">
+            <div class="kiosk-dialog-header">
+                <h2>What would you like to do?</h2>
+                <p t-if="props.currentProjectName" class="current-project-info">
+                    Currently working on: <strong t-esc="props.currentProjectName"/>
+                </p>
+            </div>
+
+            <div class="kiosk-dialog-content">
+                <!-- Error message display -->
+                <t t-if="state.error">
+                    <div class="alert alert-danger kiosk-error-message" role="alert">
+                        <i class="fa fa-exclamation-triangle"/> <t t-esc="state.error"/>
+                    </div>
+                </t>
+
+                <t t-if="!state.showProjectList">
+                    <!-- Initial choice: Check Out or Change Project -->
+                    <div class="kiosk-action-buttons">
+                        <button
+                            class="btn btn-danger btn-lg kiosk-btn kiosk-btn-checkout"
+                            t-on-click="onClickCheckOut"
+                            t-att-disabled="state.loading">
+                            <i class="fa fa-sign-out fa-3x"/>
+                            <span>Check Out</span>
+                            <small>End work for today</small>
+                        </button>
+
+                        <button
+                            class="btn btn-primary btn-lg kiosk-btn kiosk-btn-change-project"
+                            t-on-click="onClickChangeProject"
+                            t-att-disabled="state.loading">
+                            <i class="fa fa-exchange fa-3x"/>
+                            <span>Change Project</span>
+                            <small>Continue working on different project</small>
+                        </button>
+                    </div>
+
+                    <div class="kiosk-cancel-section" t-if="props.onCancel">
+                        <button
+                            class="btn btn-link kiosk-btn-cancel"
+                            t-on-click="onClickCancel"
+                            t-att-disabled="state.loading">
+                            Cancel
+                        </button>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <!-- Project list view -->
+                    <div class="kiosk-project-list">
+                        <h3>Select a project:</h3>
+
+                        <t t-if="state.loading">
+                            <div class="text-center">
+                                <i class="fa fa-spinner fa-spin fa-3x"/>
+                                <p>Loading projects...</p>
+                            </div>
+                        </t>
+
+                        <t t-else="">
+                            <div class="kiosk-projects-grid">
+                                <t t-foreach="state.projects" t-as="project" t-key="project.id">
+                                    <button
+                                        class="btn btn-light btn-lg kiosk-project-btn"
+                                        t-att-class="{ 'selected': state.selectedProjectId === project.id }"
+                                        t-on-click="() => this.onSelectProject(project.id)"
+                                        t-att-disabled="state.loading">
+                                        <i class="fa fa-folder-o fa-2x"/>
+                                        <span t-esc="project.name"/>
+                                    </button>
+                                </t>
+                            </div>
+
+                            <div class="kiosk-back-section">
+                                <button
+                                    class="btn btn-secondary kiosk-btn-back"
+                                    t-on-click="onClickBack"
+                                    t-att-disabled="state.loading">
+                                    <i class="fa fa-arrow-left"/> Back
+                                </button>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

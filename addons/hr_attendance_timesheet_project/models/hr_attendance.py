@@ -7,12 +7,6 @@ from odoo.exceptions import UserError
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
-    project_id = fields.Many2one(
-        'project.project',
-        string='Project',
-        domain="[('allow_timesheets', '=', True)]",
-        help="Project being worked on during this attendance period"
-    )
     timesheet_ids = fields.One2many(
         'account.analytic.line',
         'attendance_id',
@@ -24,6 +18,19 @@ class HrAttendance(models.Model):
         string='Active Timesheet',
         help="Currently active timesheet entry (not yet closed)"
     )
+    current_project_id = fields.Many2one(
+        'project.project',
+        string='Current Project',
+        compute='_compute_current_project',
+        store=False,
+        help="Project from the active timesheet"
+    )
+
+    @api.depends('active_timesheet_id', 'active_timesheet_id.project_id')
+    def _compute_current_project(self):
+        """Get current project from active timesheet"""
+        for attendance in self:
+            attendance.current_project_id = attendance.active_timesheet_id.project_id if attendance.active_timesheet_id else False
 
     @api.model
     def create(self, vals):
@@ -55,17 +62,13 @@ class HrAttendance(models.Model):
         if not self.employee_id:
             return
 
-        # Get project: from attendance, or last project, or default project
-        project = self.project_id or self.employee_id.last_project_id or self._get_default_project()
+        # Get project: last project, or default project
+        project = self.employee_id.last_project_id or self._get_default_project()
 
         if not project:
             raise UserError(_("No default project found. Please configure a default project in Settings."))
 
-        # Update attendance with selected project
-        if not self.project_id:
-            self.project_id = project
-
-        # Create timesheet entry
+        # Create timesheet entry (project is stored on timesheet, not attendance)
         timesheet = self.env['account.analytic.line'].create({
             'employee_id': self.employee_id.id,
             'user_id': self.employee_id.user_id.id if self.employee_id.user_id else self.env.user.id,
@@ -130,6 +133,9 @@ class HrAttendance(models.Model):
         if self.check_out:
             raise UserError(_("Cannot change project after check-out."))
 
+        # Get current project from active timesheet
+        current_project_id = self.active_timesheet_id.project_id.id if self.active_timesheet_id and self.active_timesheet_id.project_id else False
+
         return {
             'name': _('Change Project'),
             'type': 'ir.actions.act_window',
@@ -138,7 +144,7 @@ class HrAttendance(models.Model):
             'target': 'new',
             'context': {
                 'default_attendance_id': self.id,
-                'default_current_project_id': self.project_id.id,
+                'default_current_project_id': current_project_id,
             },
         }
 
@@ -158,10 +164,7 @@ class HrAttendance(models.Model):
         if self.active_timesheet_id:
             self._close_active_timesheet()
 
-        # Update attendance project
-        self.project_id = new_project
-
-        # Create new timesheet for new project
+        # Create new timesheet for new project (project stored on timesheet, not attendance)
         timesheet = self.env['account.analytic.line'].create({
             'employee_id': self.employee_id.id,
             'user_id': self.employee_id.user_id.id if self.employee_id.user_id else self.env.user.id,

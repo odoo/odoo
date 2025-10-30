@@ -8,11 +8,9 @@
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
 
-            <!-- Add project field after employee -->
+            <!-- Add current project field after employee (computed from active timesheet) -->
             <xpath expr="//field[@name='employee_id']" position="after">
-                <field name="project_id"
-                       options="{'no_create': True, 'no_create_edit': True}"
-                       readonly="check_out"/>
+                <field name="current_project_id" readonly="1"/>
             </xpath>
 
             <!-- Add change project button in header -->
@@ -46,7 +44,7 @@
         <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_id']" position="after">
-                <field name="project_id"/>
+                <field name="current_project_id"/>
             </xpath>
         </field>
     </record>
