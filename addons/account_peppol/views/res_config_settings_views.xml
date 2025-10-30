@@ -40,14 +40,6 @@
                             </div>
                         </div>
 
-                        <!-- Optional: field related to registering as a receiver -->
-                        <div invisible="account_peppol_proxy_state != 'sender'" groups="base.group_no_one">
-                            <p colspan="2" class="mt-4 mb-2">
-                                I want to migrate my existing Peppol connection to Odoo (optional):
-                            </p>
-                            <field name="account_peppol_migration_key"/>
-                        </div>
-
                         <div class="mt-4"
                              invisible="account_peppol_proxy_state != 'receiver'"
                              groups="base.group_no_one">
