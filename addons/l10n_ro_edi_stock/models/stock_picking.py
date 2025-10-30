@@ -665,13 +665,7 @@ class Picking(models.Model):
     # Send Logic
     ################################################################################
 
-    def _l10n_ro_edi_stock_send_etransport_document(self, send_type: str):
-        """
-        Send the eTransport document to anaf
-        :param send_type: 'send' (initial sending of document) | 'amend' (correct the already sent document)
-        """
-        self.ensure_one()
-
+    def _l10n_ro_edi_stock_prepare_data_etransport_document(self, send_type: str):
         data = {
             'partner_id': self.partner_id,
             'transport_partner_id': self.carrier_id.l10n_ro_edi_stock_partner_id,
@@ -695,6 +689,16 @@ class Picking(models.Model):
             'l10n_ro_edi_stock_end_customs_office': self.l10n_ro_edi_stock_end_customs_office,
             'l10n_ro_edi_stock_document_uit': self.l10n_ro_edi_stock_document_uit,
         }
+        return data
+
+    def _l10n_ro_edi_stock_send_etransport_document(self, send_type: str):
+        """
+        Send the eTransport document to anaf
+        :param send_type: 'send' (initial sending of document) | 'amend' (correct the already sent document)
+        """
+        self.ensure_one()
+
+        data = self._l10n_ro_edi_stock_get_all_documents(send_type)
 
         if errors := self._l10n_ro_edi_stock_validate_data(data=data):
             document_values = {'message': '\n'.join(errors)}
