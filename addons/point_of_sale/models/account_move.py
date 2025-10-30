@@ -84,8 +84,13 @@ class AccountMove(models.Model):
         return super(AccountMove, self.with_context(linked_to_pos=bool(self.sudo().pos_order_ids)))._compute_tax_totals()
 
     def button_draft(self):
-        if self.sudo().pos_order_ids:
-            raise UserError(_("You cannot reset to draft an invoice linked to a POS order. You must refund the order or create a credit note instead."))
+        if self.sudo().pos_order_ids.filtered(lambda o: o.session_id.state != 'closed'):
+            self.env.user._bus_send("simple_notification", {
+                'type': 'warning',
+                'title': _("Warning: Invoice Reset Risk"),
+                'message': _("This invoice is linked to a POS Order, resetting it to draft prevents closing the session. You should rather refund the order or create a credit note."),
+                'sticky': True,
+            })
         return super().button_draft()
 
 

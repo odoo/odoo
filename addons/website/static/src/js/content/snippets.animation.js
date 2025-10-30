@@ -1632,8 +1632,8 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
                 // case specifically instead of a generic solution using
                 // elementFromPoint as it is a rare case and the implementation
                 // would have been too complicated for such a small use case.
-                const actualScroll = wrapEl.scrollTop + this.windowsHeight;
-                const totalScrollHeight = wrapEl.scrollHeight;
+                const actualScroll = document.scrollingElement.scrollTop + this.windowsHeight;
+                const totalScrollHeight = document.scrollingElement.scrollHeight;
                 const heightFromFooter = this._getElementOffsetTop(el, footerEl);
                 visible = actualScroll >=
                     totalScrollHeight - heightFromFooter - elHeight + elOffset;

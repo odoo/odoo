@@ -841,9 +841,17 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertAlmostEqual(
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
 
-        # It should no be possible to make the invoice draft
-        with self.assertRaises(UserError):
+        # Making the invoice draft should send a warning notification to the user
+        with patch.object(self.env.registry['bus.bus'], '_sendone') as mock_send:
             invoice.button_draft()
+            mock_send.assert_called_with(self.env.user.partner_id, 'simple_notification', {
+                'type': 'warning',
+                'title': "Warning: Invoice Reset Risk",
+                'message': "This invoice is linked to a POS Order, resetting it to draft prevents closing the session. You should rather refund the order or create a credit note.",
+                'sticky': True,
+            })
+
+        invoice.action_post()
 
         # I close the session to generate the journal entries
         current_session.action_pos_session_closing_control()
