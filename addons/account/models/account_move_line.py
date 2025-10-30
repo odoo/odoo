@@ -1226,6 +1226,7 @@ class AccountMoveLine(models.Model):
                 line.display_type == 'product' and line.move_id.is_invoice(True)
             ))
 
+    # TODO: delete in master
     @api.onchange('amount_currency', 'currency_id')
     def _inverse_amount_currency(self):
         for line in self:
