@@ -1,7 +1,7 @@
 import { BaseWebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BASE_ONLY_BG_IMAGE_SELECTOR, CARD_PARENT_HANDLERS } from "./utils";
+import { CARD_PARENT_HANDLERS, BASE_ONLY_BG_IMAGE_SELECTOR } from "./utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC_BEFORE } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
@@ -20,8 +20,8 @@ export class WebsiteBackgroundCarouselOption extends BaseWebsiteBackgroundOption
 
 export class WebsiteBackgroundBGColorImageOption extends BaseWebsiteBackgroundOption {
     static selector =
-        "section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_website_form_cover .row > .o_not_editable, .s_split_intro .row > .o_not_editable, .s_bento_grid .row > div";
-    static exclude = `${BASE_ONLY_BG_IMAGE_SELECTOR}, .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_item`;
+        "section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_website_form_cover .row > .o_not_editable, .s_split_intro .row > .o_not_editable, .s_bento_grid .row > div, .s_banner_categories .row > div, .s_ecomm_categories_showcase_block";
+    static exclude = `${BASE_ONLY_BG_IMAGE_SELECTOR}, .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_item, .s_dynamic_snippet_category .s_dynamic_snippet_title`;
     static defaultProps = {
         withColors: true,
         withImages: true,
@@ -40,8 +40,10 @@ export class WebsiteBackgroundBGColorOption extends BaseWebsiteBackgroundOption 
         withColorCombinations: true,
     };
 }
+
 export class WebsiteBackgroundOnlyBGImageOption extends BaseWebsiteBackgroundOption {
     static selector = BASE_ONLY_BG_IMAGE_SELECTOR;
+    static exclude = "";
     static defaultProps = {
         withColors: false,
         withImages: true,
