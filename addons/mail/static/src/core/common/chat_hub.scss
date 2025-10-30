@@ -10,11 +10,7 @@
     &.o-mobile {
         margin-right: $o-mail-ChatHub-bubblesMargin + 5px;
         --mail-ChatHub-bubbles-bottomLift: 35px;
-
-        body:has(.o-mail-Discuss):not(:has(.o-mail-ChatWindow)) &, body:has(.o-mail-MessagingMenu):not(:has(.o-mail-ChatWindow)) &  {
-            --mail-ChatHub-bubbles-bottomLift: 65px;
-            z-index: $zindex-modal + 5;
-        }
+        z-index: $o-mail-NavigableList-zIndex - 1;
     }
 }
 

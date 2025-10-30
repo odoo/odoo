@@ -6,6 +6,9 @@
         --border-opacity: .15;
         height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
     }
+    &.o-mobile {
+        z-index: $zindex-sticky - 2 !important;
+    }
     outline: none;
 }
 
