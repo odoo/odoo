@@ -655,6 +655,9 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
         self.assertEqual(project.total_timesheet_time, 1, "Total timesheet time should be 1 day")
+        project.allocated_hours = 0.0
+        panel_data = project.get_panel_data()
+        self.assertEqual(panel_data['buttons'][1]['number'], "1 Days", "Should display '1 Days'")
         self.assertEqual(project.timesheet_encode_uom_id, self.env.company.timesheet_encode_uom_id, "Timesheet encode uom should be the one from the company of the env, since the project has no company.")
 
     def test_unlink_task_with_timesheet(self):
