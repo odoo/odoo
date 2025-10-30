@@ -350,7 +350,7 @@ class AccountEdiCommon(models.AbstractModel):
         if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
             return {
                 'tax_exemption_reason_code': code,
-                'tax_exemption_reason': TAX_EXEMPTION_MAPPING.get(code),
+                'tax_exemption_reason': TAX_EXEMPTION_MAPPING.get(code, _("Exempt from tax") if tax.ubl_cii_requires_exemption_reason else None),
             }
 
         tax_category_code = self._get_tax_category_code(customer, supplier, tax)
