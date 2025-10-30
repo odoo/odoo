@@ -104,6 +104,20 @@ test("can undo a shape", async () => {
     expect("img").not.toHaveClass("rounded");
 });
 
+test("focus description input by default when image description popover opens", async () => {
+    await setupEditor(`
+        <img src="${base64Img}">
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+
+    await click(".o-we-toolbar .btn-group[name='image_description'] button");
+    await animationFrame();
+
+    expect(".o-we-image-description-popover").toHaveCount(1);
+    expect("input[name='description']").toBeFocused();
+});
+
 test("can add an image description & tooltip", async () => {
     await setupEditor(`
         <img src="${base64Img}">
