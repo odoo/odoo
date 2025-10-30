@@ -517,6 +517,19 @@ export class SelfOrder extends Reactive {
                 });
                 await printer.printReceipt(receipt);
             }
+            if (orderData.general_customer_note) {
+                const printingChanges = {
+                    ...orderData,
+                    changes: {
+                        title: "",
+                        data: [],
+                    },
+                };
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    data: printingChanges,
+                });
+                await printer.printReceipt(receipt);
+            }
         }
     }
     async initKioskData() {
