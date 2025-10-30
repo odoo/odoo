@@ -441,3 +441,6 @@ class SaleOrderLine(models.Model):
             )
         )
         return res
+
+    def has_valued_move_ids(self):
+        return any(move.state not in ('cancel', 'draft') for move in self.move_ids)
