@@ -1860,3 +1860,28 @@ class TestExpenses(TestExpenseCommon):
             expense_sheet.employee_journal_id,
             "The journal_id should be set back to the employee journal when using the 'Own Account' payment method",
         )
+
+    def test_expense_paid_company_no_autobalancing_line(self):
+        """
+        Test that when creating the move associated with an expense paid by company, no autobalancing line
+        appears when an analytic is added to a move line.
+        """
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'name': 'Test expense line',
+                'employee_id': self.expense_employee.id,
+                'total_amount_currency': 100.0,
+                'product_id': self.product_c.id,
+                'payment_mode': 'company_account',
+                'company_id': self.company_data['company'].id,
+                'tax_ids': [self.tax_sale_a.id],
+            })],
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.account_move_ids.line_ids[0].analytic_distribution = {'1': 100.0}
+
+        # Check that there is no fourth autobalancing line on the account move
+        self.assertEqual(expense_sheet.account_move_ids.line_ids.mapped('balance'), [86.96, -100.0, 13.04])
