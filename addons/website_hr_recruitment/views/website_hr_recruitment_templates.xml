@@ -109,6 +109,8 @@
 <template id="detail" name="Job Detail">
     <t t-call="website.layout">
         <!-- Topbar -->
+        <t t-set="editor_message">Drag blocks here to add them on all jobs</t>
+        <div class="oe_structure oe_empty" id="oe_structure_hr_recruitment_index_0" t-att-data-editor-message="editor_message"/>
         <nav class="navbar navbar-light border-top shadow-sm d-print-none">
             <div class="container">
                 <div class="d-flex flex-column flex-md-row flex-md-wrap flex-lg-nowrap justify-content-between w-100">
@@ -121,6 +123,7 @@
                 </div>
             </div>
         </nav>
+        <div class="oe_structure oe_empty" id="oe_structure_hr_recruitment_index_1" t-att-data-editor-message="editor_message"/>
         <!-- Content -->
         <div id="wrap" class="js_hr_recruitment">
             <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
@@ -189,6 +192,7 @@
                 </div>
             </div>
         </div>
+        <div class="oe_structure oe_empty" id="oe_structure_hr_recruitment_index_2" t-att-data-editor-message="editor_message"/>
     </t>
 </template>
 
