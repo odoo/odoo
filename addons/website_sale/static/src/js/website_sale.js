@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -239,7 +240,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             if (!data.cart_quantity) {
                 // Ensures last cart removal is recorded
                 browser.sessionStorage.setItem('website_sale_cart_quantity', 0);
-                return window.location = '/shop/cart';
+                return redirect('/shop/cart');
             }
             $input.val(data.quantity);
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
@@ -635,7 +636,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 oldurl += '&noFuzzy=true';
             }
             var search = $this.find('input.search-query');
-            window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
+            redirect(oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val()));
         }
     },
     /**
