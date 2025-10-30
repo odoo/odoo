@@ -197,6 +197,22 @@
         <field name="work_entry_type_id" ref="hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid"/>
     </record>
 
+    <record id="hr_holidays.l10n_jo_leave_type_maternity" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave"/>
+    </record>
+
+    <record id="hr_holidays.l10n_jo_leave_type_pilgrimage" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave"/>
+    </record>
+
+    <record id="hr_holidays.l10n_jo_leave_type_paternity" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave"/>
+    </record>
+
+    <record id="hr_holidays.l10n_jo_leave_type_study" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave"/>
+    </record>
+
 <!-- LU : Luxembourg -->
     <record id="hr_holidays.l10n_lu_leave_type_situational_unemployment" model="hr.leave.type">
         <field name="work_entry_type_id" ref="hr_work_entry.l10n_lu_work_entry_type_situational_unemployment"/>
