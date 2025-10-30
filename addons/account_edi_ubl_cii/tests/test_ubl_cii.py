@@ -603,6 +603,26 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
                 self.assertEqual(node.findtext('.//{*}ID') or False, tax.ubl_cii_tax_category_code)
                 self.assertEqual(node.findtext('.//{*}TaxExemptionReasonCode') or False, tax.ubl_cii_tax_exemption_reason_code)
 
+    def test_custom_tax_exemption_reason(self):
+        taxes = self.company_data['default_tax_sale'].copy({
+            'name': 'Custom Exemtion Reason Tax',
+            'ubl_cii_tax_category_code': 'AE',
+            'ubl_cii_tax_exemption_reason': 'Just because',
+            'ubl_cii_tax_exemption_reason_code': 'VATEX-EU-AE',
+        })
+        invoice = self.env["account.move"].create({
+            "partner_id": self.partner_a.id,
+            "move_type": "out_invoice",
+            "invoice_line_ids": [Command.create({"name": "Test product", "price_unit": 10, "tax_ids": [Command.set(taxes.ids)]})],
+        })
+        invoice.action_post()
+        xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        root = etree.fromstring(xml)
+        for tax, node in zip(taxes, root.findall('.//{*}TaxTotal/{*}TaxSubtotal/{*}TaxCategory')):
+            self.assertEqual(node.findtext('.//{*}ID') or False, tax.ubl_cii_tax_category_code)
+            self.assertEqual(node.findtext('.//{*}TaxExemptionReason') or False, tax.ubl_cii_tax_exemption_reason)
+            self.assertEqual(node.findtext('.//{*}TaxExemptionReasonCode') or False, tax.ubl_cii_tax_exemption_reason_code)
+
     def test_bank_details_import(self):
         acc_number = '1234567890'
         partner_bank = self.env['res.partner.bank'].create({

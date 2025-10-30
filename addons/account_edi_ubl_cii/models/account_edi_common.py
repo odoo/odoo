@@ -296,6 +296,13 @@ class AccountEdiCommon(models.AbstractModel):
             exemption reason, see https://docs.peppol.eu/poacc/billing/3.0/bis/#_calculation_of_vat
         """
 
+        # shortcut if the exemption reason is set on the tax
+        if tax and tax.ubl_cii_tax_exemption_reason_code and tax.ubl_cii_tax_exemption_reason:
+            return {
+                'tax_exemption_reason_code': tax.ubl_cii_tax_exemption_reason_code,
+                'tax_exemption_reason': tax.ubl_cii_tax_exemption_reason,
+            }
+
         if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
             return {
                 'tax_exemption_reason_code': code,

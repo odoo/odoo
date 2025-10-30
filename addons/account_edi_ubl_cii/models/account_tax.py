@@ -20,6 +20,7 @@ class AccountTax(models.Model):
             ('B', 'B - Transferred (VAT), In Italy')
         ]
     )
+    ubl_cii_tax_exemption_reason = fields.Char(string="Tax Exemption Reason")
     ubl_cii_tax_exemption_reason_code = fields.Selection(
         help="The reason why the amount is exempted from VAT or why no VAT is being charged, used for electronic invoicing purposes.",
         string="Tax Exemption Reason Code",
@@ -96,4 +97,5 @@ class AccountTax(models.Model):
     def _onchange_ubl_cii_tax_category_code(self):
         for tax in self:
             if not tax.ubl_cii_requires_exemption_reason:
+                tax.ubl_cii_tax_exemption_reason = False
                 tax.ubl_cii_tax_exemption_reason_code = False
