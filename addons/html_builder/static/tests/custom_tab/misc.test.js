@@ -11,7 +11,7 @@ import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { withSequence } from "@html_editor/utils/resource";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -477,7 +477,7 @@ test("no need to define 'isApplied' method for custom action if the widget alrea
 test("useDomState callback shouldn't be called when the editingElement is removed", async () => {
     let editor;
     let count = 0;
-    class TestOption extends Component {
+    class TestOption extends BaseOptionComponent {
         static template = xml`<div class="test_option">test</div>`;
         static selector = ".s_test";
         static editableOnly = false;
