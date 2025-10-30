@@ -2845,3 +2845,20 @@ class TestStockValuation(TestStockValuationCommon):
             self._get_stock_valuation_move_lines().move_id.date,
             past_accounting_date
         )
+
+    def test_journal_entry_with_packaging_uom_cogs(self):
+        """Test that journal entries for COGS and stock valuation are correctly computed
+        when selling a product using a different UoM (e.g., pack of 6).
+        The COGS amount should reflect the total quantity converted to the product's base UoM.
+        """
+        invoice = self._create_invoice(self.product_avco_auto, quantity=10, price_unit=100, product_uom=self.env.ref('uom.product_uom_pack_6'))
+        self.assertEqual(self.product_avco_auto.standard_price, 10)
+        self.assertRecordValues(
+            invoice.journal_line_ids,
+            [
+                {'account_id': self.category_avco_auto.property_account_income_categ_id.id, 'credit': 1000.0, 'debit': 0.0},
+                {'account_id': self.account_receivable.id, 'credit': 0.0, 'debit': 1000.0},
+                {'account_id': self.account_stock_valuation.id, 'credit': 600.0, 'debit': 0.0},
+                {'account_id': self.account_expense.id, 'credit': 0.0, 'debit': 600.0},
+            ]
+        )
