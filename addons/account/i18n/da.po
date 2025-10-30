@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 12:02+0000\n"
-"PO-Revision-Date: 2025-10-29 14:59+0000\n"
+"PO-Revision-Date: 2025-10-30 16:00+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/da/>\n"
@@ -35,11 +35,11 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Vælg 'Salg' for kundefaktura journaler.\n"
-"        Vælg 'Indkøb' for leverandørfaktura journaler.\n"
-"        Vælg 'Kontant', 'Bank', eller 'Kreditkort' for journaler, der "
-"anvendes i kunde- eller leverandør betalinger.\n"
-"        Vælg 'Generel' for diverse operationer jounaler.\n"
+"        Vælg 'Salg' for journaler til kundefakturaer.\n"
+"        Vælg 'Indkøb' for journaler til leverandørfakturaer.\n"
+"        Vælg 'Kontant', 'Bank' eller 'Kreditkort' for journaler, der bruges "
+"til kunde- eller leverandørbetalinger.\n"
+"        Vælg 'Generel' for journaler til diverse posteringer.\n"
 "        "
 
 #. module: account
@@ -59,13 +59,13 @@ msgstr ""
 "\n"
 "    - Momsgruppe: Momsen består af en række delmomser.\n"
 "    - Fast: Momsbeløbet er det samme, uanset prisen.\n"
-"    - Procent: Momsbeløbet er en procentdel af prisen:\n"
-"        f.eks. 100 * (1 + 10%) = 110 (med moms)\n"
-"        f.eks. 110 / (1 + 10%) = 100 (uden moms)\n"
+"    - Procent: Momsbeløbet udgør en procentdel af prisen:\n"
+"        f.eks. 100 * (1 + 10 %) = 110 (med moms)\n"
+"        f.eks. 110 / (1 + 10 %) = 100 (uden moms)\n"
 "    - Procent med moms inkluderet: Momsen beregnes som en division af "
 "prisen::\n"
-"        f.eks. 180 / (1 - 10%) = 200 (med moms)\n"
-"        f.eks. 200 * (1 - 10%) = 180 (uden moms)\n"
+"        f.eks. 180 / (1 - 10 %) = 200 (med moms)\n"
+"        f.eks. 200 * (1 - 10 %) = 180 (uden moms)\n"
 "        "
 
 #. module: account
@@ -139,8 +139,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (fritstillet af %(user)s den %(date)s)%"
-"(attachment_extension)s"
+"%(attachment_name)s (fritstillet af %(user)s den "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -156,9 +156,9 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s er nået en ugyldig tilstand i forhold til den tilknyttede "
+"%(move)s er nået i en ugyldig tilstand i forhold til den tilknyttede "
 "posteringslinje.\n"
-"For at sikre konsistent, skal journalposten altid have præcis én "
+"For at sikre konsistens skal journalposten altid have præcis én "
 "afstemningslinje."
 
 #. module: account
@@ -174,8 +174,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s faktureret, %"
-"(quantity_received)s modtaget til %(unit_price)s hver"
+"%(order)s - %(order_line)s; %(quantity_billed)s faktureret, "
+"%(quantity_received)s modtaget til %(unit_price)s hver"
 
 #. module: account
 #. odoo-python
@@ -184,8 +184,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s faktureret, %"
-"(quantity_delivered)s leveret til %(unit_price)s hver"
+"%(order)s - %(order_line)s; %(quantity_invoiced)s faktureret, "
+"%(quantity_delivered)s leveret til %(unit_price)s hver"
 
 #. module: account
 #. odoo-python
@@ -213,6 +213,9 @@ msgid ""
 "(receivable)s\" or \"%(payable)s\" with both options \"%"
 "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) bør være en konto af typen "
+"\"%(receivable)s\" eller \"%(payable)s\" med begge muligheder "
+"\"%(allow_reconciliation)s\" og \"%(non_trade)s\" aktiveret."
 
 #. module: account
 #. odoo-python
@@ -250,13 +253,13 @@ msgstr "%s (kopi)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part"
-msgstr ""
+msgstr "%s - privat del"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part (taxes)"
-msgstr ""
+msgstr "%s - privat del (skatter)"
 
 #. module: account
 #. odoo-python
@@ -268,36 +271,36 @@ msgstr "%s er ikke et gemt felt"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s taxes"
-msgstr ""
+msgstr "%s skatter"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "%s, or / if not applicable"
-msgstr "%s, eller / hvis ikke relevant"
+msgstr "%s, eller/hvis ikke relevant"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s, or not applicable"
-msgstr ""
+msgstr "%s, eller ikke relevant"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (uddraget fra '%(root_filename)s', type=%(type)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (type=%(type)s)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
 msgid "(Un)Block Payment"
-msgstr "(Af)blokér betaling"
+msgstr "Blokér/fjern blokering fra betaling"
 
 #. module: account
 #. odoo-python
@@ -338,9 +341,9 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- Et nyt felt «Total (inkl. moms)» for at fremskynde og kontrollere "
-"kodningen ved at automatisere linjeoprettelse med den rigtige konto &amp; "
-"moms."
+"- Et nyt felt \"Total (inkl. moms)\", der gør det hurtigere at kode og "
+"kontrollerer posteringer ved automatisk at oprette linjer med korrekt konto "
+"og moms."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -350,12 +353,12 @@ msgstr "- installering af"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr "- Dokumentets sekvens bliver redigerbar på alle dokumenter."
+msgstr "- Dokumentets sekvens kan nu redigeres på alle dokumenter."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Vis delvis udlignet poster"
+msgstr "-> Vis delvis afstemte posteringer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -376,13 +379,13 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Journalbilag skal være udregnet af Odoo før den posteres i din virksomheds "
+". Journalbilaget skal beregnes af Odoo, før det posteres i virksomhedens "
 "valuta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ". Det kan være du vil angive et større tal her."
+msgstr ". Det kan være, at du vil angive et større tal her."
 
 #. module: account
 #. odoo-python
@@ -400,47 +403,47 @@ msgstr "... (Vis alle)"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "/ if not applicable"
-msgstr "/ hvis ikke anvendelig"
+msgstr "/ hvis ikke relevant"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr ""
+msgstr "0 % eksporter"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
 msgid "0% Imports"
-msgstr ""
+msgstr "0 % importer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "1.05"
-msgstr "1.05"
+msgstr "1,05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "10 Days after End of Next Month"
-msgstr "10 dage efter slutningen af næste måned"
+msgstr "10 dage efter udgangen af næste måned"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "100.0"
-msgstr "100.0"
+msgstr "100,00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "100.00 USD"
-msgstr "100.00 USD"
+msgstr "100,00 USD"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "1000.0"
-msgstr "1000.0"
+msgstr "1000,00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "11.05"
-msgstr "11.05"
+msgstr "11,05"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -456,72 +459,72 @@ msgstr "15 dage"
 #: model:account.tax,name:account.1_purchase_tax_template
 #: model:account.tax,name:account.1_sale_tax_template
 msgid "15%"
-msgstr "15%"
+msgstr "15 %"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "1500.0"
-msgstr "1500.0"
+msgstr "1500,00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
-msgstr "2/7 Net 30"
+msgstr "2/7 netto 30"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "20.00"
-msgstr "20.00"
+msgstr "20,00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2021-09-19"
-msgstr "2021-09-19"
+msgstr "19-09-2021"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "2023-01-01"
-msgstr "2023-01-01"
+msgstr "01-01-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "2023-01-05"
-msgstr "2023-01-05"
+msgstr "05-01-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "2023-08-11"
-msgstr "2023-08-11"
+msgstr "11-08-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "2023-08-15"
-msgstr "2023-08-15"
+msgstr "15-08-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "2023-08-31"
-msgstr "2023-08-31"
+msgstr "31-08-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-12"
-msgstr "2023-09-12"
+msgstr "12-09-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-09-25"
-msgstr "2023-09-25"
+msgstr "25-09-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2023-10-31"
-msgstr "2023-10-31"
+msgstr "31-10-2023"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "2024-01-01"
-msgstr "2024-01-01"
+msgstr "01-01-2024"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -531,24 +534,24 @@ msgstr "21 dage"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "25.0 USD"
-msgstr "25.0 USD"
+msgstr "25,00 USD"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "25.00 USD"
-msgstr "25.00 USD"
+msgstr "25,00 USD"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "27.00"
-msgstr "27.00"
+msgstr "27,00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "3.00"
-msgstr "3.00"
+msgstr "3,00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -558,30 +561,30 @@ msgstr "30 dage"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "30% forud den sidste dag i næste måned"
+msgstr "30 % forskud ved udgangen af den følgende måned"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr "30% nu, resten om 60 dage"
+msgstr "30 % nu, resten om 60 dage"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "30.00"
-msgstr "30.00"
+msgstr "30,00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "31.05"
-msgstr "31.05"
+msgstr "31,05"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "4.05"
-msgstr "4.05"
+msgstr "4,05"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -596,7 +599,7 @@ msgstr "50 USD"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "50.00 EUR"
-msgstr "50.00 EUR"
+msgstr "50,00 EUR"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -606,7 +609,7 @@ msgstr "534677881234"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "9.00"
-msgstr "9.00"
+msgstr "9,00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
@@ -630,6 +633,9 @@ msgid ""
 "                        <span>Please make sure that this is a wanted "
 "behavior.</span>"
 msgstr ""
+"<br/>\n"
+"                        <span>Sikr dig, at dette er den ønskede "
+"adfærd.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -681,6 +687,44 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kære\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> ("
+"<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Her er din\n"
+"        <t t-if=\"object.name\">\n"
+"            kreditnota <span style=\"font-weight:bold;\" t-out=\"object.name "
+"or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            kreditnota\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (med nummeret: <t t-out=\"object.invoice_origin or ''\""
+">SUB003</t>)\n"
+"        </t>\n"
+"        på <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
+"        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
+"        <br/><br/>\n"
+"        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
+"data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
+">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -748,6 +792,67 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kære\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> ("
+"<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Her er din\n"
+"        <t t-if=\"object.name\">\n"
+"            faktura <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            faktura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (med nummeret: <t t-out=\"object.invoice_origin or ''\""
+">SUB003</t>)\n"
+"        </t>\n"
+"        på <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
+"        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Denne faktura er allerede betalt.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Betal venligst så hurtigt som muligt.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Angiv venligst følgende referencenummer ved din betaling: "
+"<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    på kontoen <strong t-out="
+"\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if="
+"\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: Du kan se dine tidsregistreringer <a t-att-href="
+"\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">i "
+"portalen.</a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
+"data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\""
+">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -777,6 +882,30 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kære <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
+"        Tak for din betaling.\n"
+"        Her er din betalingskvittering <span style=\"font-weight:bold;"
+"\" t-out=\"(object.name or '').replace('/','-') or ''\""
+">BNK1-2021-05-0002</span>\n"
+"        på <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount, object.currency_id) or ''\">10,00 $</span> fra <t t-out=\""
+"object.company_id.name or ''\">DinVirksomhed</t>.\n"
+"        <br/><br/>\n"
+"        Du er velkommen til at kontakte os, hvis du har spørgsmål.\n"
+"        <br/><br/>\n"
+"        Med venlig hilsen\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -788,7 +917,7 @@ msgstr "<em>Fakturakladde</em>"
 msgid ""
 "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+"<i class=\"fa fa-clock-o\" aria-label=\"Dato\" role=\"img\" title=\"Dato\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -803,8 +932,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Paid</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
-"role=\"img\"/>\n"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" role="
+"\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Betalt</span>"
 
@@ -829,10 +958,10 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Processing Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
-"title=\"Behandler Betaling\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-"
-"inline\">Behandler betaling </span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title="
+"\"Behandler betaling\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\""
+">Behandler betaling </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -842,8 +971,8 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Waiting for Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
-"role=\"img\"/>\n"
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role="
+"\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Afventer betaling</span>"
 
@@ -857,10 +986,10 @@ msgid ""
 "all vendors in the accounting settings."
 msgstr ""
 "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
-"                        Frygt ej, du kan altid ændre denne instilling senere "
-"på leverandørens formular.\n"
-"                        Du har også mulighed for at slå funktionen fra for "
-"alle leverandøre i regnskabsindstillingerne."
+"                        Bare rolig, du kan altid ændre denne instilling "
+"senere på leverandørformularen.\n"
+"                        Du kan også slå funktionen fra for alle leverandøre "
+"i regnskabsindstillingerne."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -881,7 +1010,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Alias Domain"
 msgstr ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Konfigurer alias-domæne"
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Konfigurér alias-domæne"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -891,6 +1020,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Du kan vælge, om du ønsker at sende dine fakturaer "
+"og i hvilket elektronisk format.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -916,6 +1049,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge text-bg-info\">\n"
+"                                        Skal gennemses\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -928,10 +1064,10 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" "
-"class=\"text-muted\">Ikke betroet</span>\n"
-"                            <span invisible=\"not allow_out_payment\" "
-"class=\"text-success\">Betroet</span>\n"
+"                            <span invisible=\"allow_out_payment\" class"
+"=\"text-muted\">Ikke pålidelig</span>\n"
+"                            <span invisible=\"not allow_out_payment\" class"
+"=\"text-success\">Pålidelig</span>\n"
 "                        </span>"
 
 #. module: account
@@ -949,6 +1085,9 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style="
+"\"width: 6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\""
+">eller</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -956,8 +1095,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\""
+">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -965,8 +1104,8 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">and</"
 "span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">og</"
-"span>"
+"<span class=\"o_form_label\" invisible=\"match_amount != 'between'\""
+">og</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1013,6 +1152,9 @@ msgid ""
 "                                    Taxes\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Moms\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1032,12 +1174,12 @@ msgstr "<span class=\"o_stat_text\">Faktureret</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Journalbilag</span>"
+msgstr "<span class=\"o_stat_text\">Journalposteringer</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">Journalbilag</span>"
+msgstr "<span class=\"o_stat_text\">Journalpostering</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1752,7 +1894,7 @@ msgid ""
 "journal entry."
 msgstr ""
 "En betaling med en konto til forfaldne beløb kan ikke bekræftes uden en "
-"journalpost."
+"journalpostering."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -2231,8 +2373,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Den konto, der bruges i journalposteringer ved faktisk beskatning, og som "
-"registrerer det beløb, skatten beregnes ud fra."
+"Kontoen angives på de linjer, der oprettes i kassebogen, og anvendes til at "
+"spore grundbeløbet for afgifter."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -3176,9 +3318,9 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
-"Enhver postering til og med den dato vil blive udsat til et senere "
-"tidspunkt, i overensstemmelse med journalens sekvens. Denne låsedato er "
-"irreversibel, og tillader ingen undtagelser."
+"Alle journalposteringer frem til og med denne dato vil blive udsat til et "
+"senere tidspunkt i overensstemmelse med journalens sekvens. Denne låsedato "
+"er endelig og kan ikke ændres eller tilsidesættes."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -3186,8 +3328,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
-"Enhver postering til og med den dato vil blive udsat til et senere "
-"tidspunkt, i overensstemmelse med journalens sekvens."
+"Alle journalposteringer frem til og med denne dato vil blive udsat til et "
+"senere tidspunkt i overensstemmelse med journalens sekvens."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3196,9 +3338,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
-"Enhver postering med moms til og med den dato vil blive udsat til et senere "
-"tidspunkt, i overensstemmelse med journalens sekvens. Moms låsedatoen "
-"indstilles automatisk når momsafslutningsposteringen er bogført."
+"Alle journalposteringer frem til og med denne dato vil blive udsat til et "
+"senere tidspunkt i overensstemmelse med journalens sekvens. Momslåsedatoen "
+"indstilles automatisk, når momsafslutningsposteringen er bogført."
 
 #. module: account
 #. odoo-python
@@ -3229,8 +3371,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
-"Enhver købspostering op til og med denne dato vil blive udsat til en senere "
-"dato, i overensstemmelse med journalens sekvens."
+"Alle købsposteringer frem til og med denne dato vil blive udsat til et "
+"senere tidspunkt i overensstemmelse med journalens sekvens."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -3238,8 +3380,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
-"Enhver salgspostering op til og med denne dato vil blive udsat til en senere "
-"dato, i overensstemmelse journalens sekvens."
+"Alle salgsposteringer frem til og med denne dato vil blive udsat til et "
+"senere tidspunkt i overensstemmelse med journalens sekvens."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3486,7 +3628,7 @@ msgstr "Automatiske valutakurser"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
 msgid "Automatic Entry Default Journal"
-msgstr "Automatisk Postering Standard Journal"
+msgstr "Standardjournal til automatiske posteringer"
 
 #. module: account
 #: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
@@ -5007,7 +5149,7 @@ msgstr "Fedt, det ser ud til at du ikke noget beløb at afregne."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr "Korrumperet data på journalpostering med id %(id)s (%(name)s)."
+msgstr "Journalposteringen med ID %(id)s (%(name)s) indeholder korrupte data."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5166,7 +5308,7 @@ msgstr "Opret en kundefaktura"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Opret en journalpost"
+msgstr "Opret en journalpostering"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_supplier_accounts
@@ -8563,8 +8705,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
-"Hvis det er tomt, bruges journalen til journalposten til at blive kørt "
-"tilbage."
+"Hvis feltet er tomt, bruges journalen for den journalpost, der skal "
+"tilbageføres."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -8684,8 +8826,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
-"Hvis du vil bruge \"ikke-balanceret\" konti, skal alle konti i journalen "
-"være af denne type"
+"Hvis du vil bruge konti uden for balancen, skal alle konti i "
+"journalposteringen være af denne type"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
@@ -9790,14 +9932,14 @@ msgstr "Journalposteringer til hashing"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Entry"
-msgstr "Journalbilag"
+msgstr "Journalpostering"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment_field.js:0
 msgid "Journal Entry Info"
-msgstr "Journalbilag Info"
+msgstr "Journalposteringsoplysninger"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -9886,25 +10028,27 @@ msgstr "Journalposter hvor kontoen tillader afstemning uanset restbeløbet"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Journal should be the same type as the reversed entry."
-msgstr "Journal bør være den samme type som den tilbageførte postering."
+msgstr "Journalen bør være den samme type, som den tilbageførte postering."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
-msgstr "Journal bruges per standard til flytning af perioden for en postering"
+msgstr ""
+"Journal, der bruges som standard til at flytte en postering til en anden "
+"periode"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
 msgid ""
 "Journal where the opening entry of this company's accounting has been posted."
 msgstr ""
-"Journal hvor den første postering for denne virksomheds bogføring er blevet "
-"posteret."
+"Journal, hvor den første postering for denne virksomheds bogføring er "
+"bogført."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
-msgstr "Journal hvor posteringen skal oprettes."
+msgstr "Journal, hvor posteringen skal oprettes."
 
 #. module: account
 #. odoo-javascript
@@ -11691,7 +11835,7 @@ msgstr "Åbningsjournal"
 #: code:addons/account/models/company.py:0
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 msgid "Opening Journal Entry"
-msgstr "Åbnings journalbilag"
+msgstr "Åbningsjournalpostering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
@@ -13591,7 +13735,7 @@ msgstr "Tilbagefør postering"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Tilbageførsels journalbilag"
+msgstr "Tilbagefør journalpostering"
 
 #. module: account
 #. odoo-python
@@ -13618,7 +13762,7 @@ msgstr "Tilbageført"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
-msgstr ""
+msgstr "Tilbageført den"
 
 #. module: account
 #. odoo-python
@@ -15438,6 +15582,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
+"Journalposteringssekvensen stemmer ikke overens med det nuværende format. "
+"Kun bogholderen kan ændre det."
 
 #. module: account
 #. odoo-python
@@ -15484,8 +15630,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"Kontoen valgt i din journalpostering gennemtvinger angivelsen af en sekundær "
-"valuta. Du bør fjerne den sekundære valuta fra kontoen."
+"Den valgte konto i journalposteringen kræver en sekundær valuta. Fjern "
+"venligst den sekundære valuta fra kontoen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -15688,6 +15834,8 @@ msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"Datoen er sat til før %(lock_date_info)s. Journalposteringen bogføres den "
+"%(invoice_date)s."
 
 #. module: account
 #. odoo-python
@@ -15913,8 +16061,8 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"Journalopførelsen indeholder den oprindelige saldo på alle denne virksomheds "
-"konti."
+"Journalposteringen indeholder den oprindelige saldo for alle konti i denne "
+"virksomhed."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
@@ -15923,8 +16071,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
-"Den oprindelige journalpost, hvorfra denne post med faktisk beskatning "
-"stammer."
+"Den oprindelige journalpostering, som denne post med faktisk beskatning "
+"stammer fra."
 
 #. module: account
 #. odoo-python
@@ -15966,6 +16114,9 @@ msgid ""
 "Please change the journal entry date or the following lock dates to proceed: "
 "%(lock_date_info)s."
 msgstr ""
+"Handlingen afvises, da den vil påvirke en allerede udstedt skatteopgørelse. "
+"Du skal ændre journalposteringsdatoen eller de følgende låsedatoer for at "
+"fortsætte: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -16090,8 +16241,8 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
-"Guiden til betalingsregistrering bør kun anvendes for dataposter af typen "
-"account.move eller account.move.line."
+"Assistenten til betalingsregistrering bør kun anvendes for dataposter af "
+"typen account.move eller account.move.line."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
@@ -16387,6 +16538,7 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
+"Der er endnu ingen journalpostering markeret som uforanderlig for regnskabet."
 
 #. module: account
 #. odoo-python
@@ -16592,7 +16744,7 @@ msgstr "Denne post er blevet duplikeret fra %s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Denne post er blevet tilbageført fra %s"
+msgstr "Denne postering er blevet tilbageført fra %s"
 
 #. module: account
 #. odoo-python
@@ -16653,7 +16805,7 @@ msgstr "Dette er det forfaldne beløb."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr ""
+msgstr "Denne journalpostering er blevet låst."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -16835,6 +16987,9 @@ msgid ""
 "they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"For at bevare et restriktivt revisionsspor kan journalposteringer ikke "
+"slettes, når de er bogført.\n"
+"I stedet kan journalposteringen annulleres."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -16863,7 +17018,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "To reverse a journal entry, it has to be posted first."
-msgstr ""
+msgstr "For at tilbageføre en journalpostering, skal den først bogføres."
 
 #. module: account
 #. odoo-javascript
@@ -18188,6 +18343,9 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
+"Du kan ikke slette en bogført journalpost. For at beskytte dine "
+"regnskabsdata skal journalposteringen først nulstilles til kladde, før den "
+"kan slettes."
 
 #. module: account
 #. odoo-python
@@ -18341,6 +18499,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
+"Du kan ikke slette journalposter, som hører til en låst journalpostering."
 
 #. module: account
 #. odoo-python
@@ -18400,9 +18559,10 @@ msgid ""
 "change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
-"Du kan ikke gennemføre denne modifikation på en afstemt journal postering. "
-"Du kan ændre visse ikke lovlige felter, ellers skal du afstemme først.\n"
-"Journal Postering (id): %(entry)s (%(id)s)"
+"Du kan ikke ændre denne journalpostering, da den allerede er afstemt. Du kan "
+"kun redigere visse felter; for andre ændringer skal journalposteringen først "
+"afstemmes.\n"
+"Journalpostering (ID): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -18502,8 +18662,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"Du kan ikke redigere skatten relateret til en posteret journal genstand, du "
-"bør nulstille journal posteringen til kladde for at gøre dette."
+"Du kan ikke ændre momsen på en bogført journalpostering. Du bør nulstille "
+"journalposteringen til kladde for at kunne gøre dette."
 
 #. module: account
 #. odoo-python
@@ -18517,7 +18677,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr "Du kan ikke postere en postering i en arkiveret journal (%(journal)s)"
+msgstr "Du kan ikke bogføre en postering i en arkiveret journal (%(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -18571,22 +18731,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr ""
+msgstr "Du kan ikke nulstille en låst journalpostering til kladde."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr ""
-"Det er ikke muligt at nulstille udkastet til en journalpost med faktisk "
-"beskatning."
+"Du kan ikke nulstille en journalpostering med faktisk beskatning til kladde."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr ""
-"Du kan ikke nulstille en vekslings difference journalpostering til kladde"
+"Du kan ikke nulstille en valutakursdifferencejournalpostering til kladde."
 
 #. module: account
 #. odoo-python
@@ -19249,7 +19408,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "reversed"
-msgstr ""
+msgstr "tilbageført"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain

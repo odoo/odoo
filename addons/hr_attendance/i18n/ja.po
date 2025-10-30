@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-10-21 17:46+0000\n"
+"PO-Revision-Date: 2025-10-30 10:20+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_attendance/ja/>\n"
@@ -256,7 +256,7 @@ msgstr "添付数"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
-msgstr "出勤"
+msgstr "勤怠"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
@@ -305,7 +305,7 @@ msgstr "勤怠残業"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr "出勤ステータス"
+msgstr "勤怠ステータス"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -331,19 +331,19 @@ msgstr "勤怠:  従業員の欠勤を検出する"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
-msgstr "出勤記録"
+msgstr "勤怠"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #: code:addons/hr_attendance/models/res_users.py:0
 msgid "Attendances This Month"
-msgstr "今月の出勤記録"
+msgstr "今月の勤怠"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances from Backend"
-msgstr "バックエンドからの出勤記録"
+msgstr "バックエンドからの勤怠"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
@@ -453,7 +453,8 @@ msgstr "休暇として変換可能　(休暇設定参照)"
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
-msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s以降にチェックアウトしていません"
+msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s以降、退勤"
+"していません"
 
 #. module: hr_attendance
 #. odoo-python
@@ -461,7 +462,8 @@ msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業�
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
-msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s にすでに出勤しています。"
+msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s "
+"にすでに出勤しています"
 
 #. module: hr_attendance
 #. odoo-python
@@ -546,7 +548,7 @@ msgstr "挨拶メッセージの表示時間を選択"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Choose how to record attendances"
-msgstr "出退勤の記録方法を選択"
+msgstr "勤怠の記録方法を選択"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -719,7 +721,7 @@ msgstr "従業員PIN認証"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Employee attendances"
-msgstr "従業員の出退勤"
+msgstr "従業員の勤怠"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
@@ -914,7 +916,8 @@ msgstr "手動で選択"
 msgid ""
 "If checked, days not covered by an attendance will be visible in the Report."
 " Does not apply to employees with a flexible working schedule."
-msgstr "チェックした場合、出勤日数以外の日数がレポートに表示されます。フレックスタイム制の社員には適用されません。"
+msgstr "チェックした場合、勤怠以外の日数がレポートに表示されます。フレックスタイム制"
+"の社員には適用されません。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1001,7 +1004,7 @@ msgstr "最終出勤"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_worked_hours
 msgid "Last Attendance Worked Hours"
-msgstr "最終出勤実勤務時間"
+msgstr "最終出勤勤務時間"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
@@ -1136,7 +1139,7 @@ msgstr "モード"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr "自分の出退勤"
+msgstr "自分の勤怠"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
@@ -1209,7 +1212,7 @@ msgstr "Odooロゴ"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
 msgid "Officer: Manage attendances"
-msgstr "役員: 勤怠管理"
+msgstr "担当者: 勤怠管理"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1326,7 +1329,7 @@ msgstr "評価"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "Ready to track attendances ?"
-msgstr "出退勤を追跡しますか？"
+msgstr "勤怠を追跡しますか？"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -1465,7 +1468,8 @@ msgstr "ユーザは、勤怠管理者として設定された従業員の勤怠
 msgid ""
 "This attendance was automatically checked out because the employee exceeded "
 "the allowed time for their scheduled work hours."
-msgstr "この出退勤記録は、従業員が予定された勤務時間の許容範囲を超えたため、自動的に退勤処理されました。"
+msgstr "この勤怠記録は、従業員が予定された勤務時間の許容範囲を超えたため、自動的に退"
+"勤処理されました。"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1473,7 +1477,7 @@ msgstr "この出退勤記録は、従業員が予定された勤務時間の許
 msgid ""
 "This attendance was automatically created to cover an unjustified absence on"
 " that day."
-msgstr "この勤務は、その日の無断欠席を補うために自動的に作成されました。"
+msgstr "この勤怠は、その日の無断欠席を補うために自動的に作成されました。"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__to_approve
@@ -1567,7 +1571,7 @@ msgstr "ユーザ"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_own_reader
 msgid "User: Read his own attendances"
-msgstr "ユーザ: 自分の出勤記録を見る"
+msgstr "ユーザ: 自分の勤怠を見る"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
