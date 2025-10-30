@@ -143,7 +143,7 @@ export class AggregatedUpdates {
             if (!silentModels.includes(record.model.name)) {
                 record.model.triggerEvents("update", { id: record.id, fields: [...fields] });
             }
-            record._markDirty();
+            record.markDirty();
         }
     }
 

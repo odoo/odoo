@@ -4,7 +4,13 @@ import { X2MANY_TYPES, DATE_TIME_TYPE } from "./utils";
 const deepSerialization = (
     record,
     opts,
-    { serialized = {}, uuidMapping = {}, parentRelInverseName = null, stack = [] }
+    {
+        serialized = {},
+        uuidMapping = {},
+        parentRelInverseName = null,
+        stack = [],
+        recordDependencies = {},
+    }
 ) => {
     const result = {};
     const { fields, name: currentModel } = record.model;
@@ -15,6 +21,7 @@ const deepSerialization = (
             uuidMapping,
             parentRelInverseName,
             stack,
+            recordDependencies,
         });
 
     // We only care about the fields present in python model
@@ -44,6 +51,17 @@ const deepSerialization = (
             uuidMapping[targetModel] = {};
         }
         if (X2MANY_TYPES.has(field.type) && record[fieldName]) {
+            if (opts.disableRecursive) {
+                if (opts.dynamicModels.includes(field.relation)) {
+                    uuidMapping[targetModel][record.uuid] ??= {};
+                    uuidMapping[targetModel][record.uuid][fieldName] = record[fieldName].map(
+                        (childRecord) => childRecord.uuid
+                    );
+                }
+
+                continue;
+            }
+
             if (DYNAMIC_MODELS.includes(relatedModel)) {
                 const toUpdate = [];
                 const toCreate = [];
@@ -57,7 +75,7 @@ const deepSerialization = (
                         toUpdate.push(childRecord);
 
                         if (!opts.keepCommands) {
-                            childRecord._dirty = false;
+                            childRecord.unmarkDirty();
                         }
                     } else if (typeof childRecord.id !== "number") {
                         toCreate.push(childRecord);
@@ -71,10 +89,13 @@ const deepSerialization = (
                     fieldName,
                     () => [
                         ...(result[fieldName] || []),
-                        ...toUpdate.map((childRecord) => [
-                            1,
-                            childRecord.id,
-                            recursiveSerialize(childRecord, field.inverse_name),
+                        ...toUpdate.flatMap((childRecord) => [
+                            [
+                                1,
+                                childRecord.id,
+                                recursiveSerialize(childRecord, field.inverse_name),
+                            ],
+                            [4, childRecord.id], // Ensure relationship after editing a record, this can be usefull when splitting orders
                         ]),
                         ...toCreate.map((childRecord) => [
                             0,
@@ -139,11 +160,30 @@ const deepSerialization = (
             if (DYNAMIC_MODELS.includes(relatedModel) && record[fieldName]) {
                 if (
                     fieldName !== parentRelInverseName && //mapping not needed for direct child
-                    record.uuid &&
-                    serialized[relatedModel][record[fieldName].uuid]
+                    record.uuid
                 ) {
-                    if (typeof recordId !== "number") {
+                    if (
+                        typeof recordId !== "number" &&
+                        !recordDependencies[field.relation]?.[record[fieldName].uuid]
+                    ) {
                         //  mapping is only needed for newly created records
+                        if (!recordDependencies[field.relation]) {
+                            recordDependencies[field.relation] = {};
+                        }
+
+                        if (!serialized[relatedModel][record[fieldName].uuid]) {
+                            recordDependencies[field.relation][record[fieldName].uuid] = () =>
+                                deepSerialization(
+                                    record[fieldName],
+                                    {
+                                        ...opts,
+                                        disableRecursive: true,
+                                    },
+                                    { uuidMapping, serialized }
+                                );
+                            record[fieldName].unmarkDirty();
+                        }
+
                         uuidMapping[targetModel][record.uuid] ??= {};
                         uuidMapping[targetModel][record.uuid][fieldName] = record[fieldName].uuid;
                     }
@@ -179,7 +219,7 @@ const deepSerialization = (
     }
 
     if (!opts.keepCommands) {
-        record._dirty = false;
+        record.unmarkDirty();
     }
 
     // Cleanup: remove empty entries from uuidMapping.
@@ -197,12 +237,64 @@ const deepSerialization = (
 };
 
 export const ormSerialization = (record, opts) => {
+    const serialized = {};
     const uuidMapping = {};
+    const recordDependencies = {};
     const result = deepSerialization(record, opts, {
+        serialized,
         uuidMapping,
+        recordDependencies,
     });
+
     if (Object.keys(uuidMapping).length !== 0) {
         result.relations_uuid_mapping = uuidMapping;
     }
+
+    if (Object.keys(recordDependencies).length !== 0) {
+        for (const key in recordDependencies) {
+            recordDependencies[key]["create"] = Object.values(recordDependencies[key])
+                .map((fn) => fn())
+                .filter(Boolean);
+        }
+        result.record_dependencies = recordDependencies;
+    }
+
+    /**
+     * Serialization of records is based on order of dependency discovery.
+     * However, some dirty records might not have been serialized if they were not
+     * reachable from the root record. We need to serialize them here to ensure
+     * they are sent to the backend.
+     *
+     * Only update of existing records is handled here, as new records are
+     * already managed during the main serialization pass.
+     */
+    for (const [model, dirtyUUIDSet] of Object.entries(record.models._dirtyRecords)) {
+        for (const uuid of Array.from(dirtyUUIDSet)) {
+            const rec = record.models[model].getBy("uuid", uuid);
+            if (!rec || serialized[model]?.[uuid]) {
+                continue;
+            }
+
+            result.record_dependencies = result.record_dependencies || {};
+            result.record_dependencies[model] = result.record_dependencies[model] || {};
+            result.record_dependencies[model]["update"] =
+                result.record_dependencies[model]["update"] || [];
+
+            const serializedRecords = deepSerialization(
+                rec,
+                {
+                    ...opts,
+                    disableRecursive: true,
+                },
+                { uuidMapping, serialized }
+            );
+
+            if (serializedRecords && typeof serializedRecords.id === "number") {
+                result.record_dependencies[model]["update"].push(serializedRecords);
+                rec.unmarkDirty();
+            }
+        }
+    }
+
     return result;
 };

@@ -5,7 +5,7 @@ import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
-import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 import { getStrNotes } from "./utils/order_change";
 
 const { DateTime } = luxon;
@@ -31,21 +31,6 @@ export class PosOrder extends Base {
         this.setShippingDate(vals.shipping_date);
         this.state = vals.state || "draft";
 
-        if (!vals.last_order_preparation_change) {
-            this.last_order_preparation_change = {
-                lines: {},
-                metadata: {},
-                general_customer_note: "",
-                internal_note: "",
-                sittingMode: 0,
-            };
-        } else {
-            this.last_order_preparation_change =
-                typeof vals.last_order_preparation_change === "object"
-                    ? vals.last_order_preparation_change
-                    : JSON.parse(vals.last_order_preparation_change);
-        }
-
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
 
@@ -55,6 +40,12 @@ export class PosOrder extends Base {
         if (!this.user_id && this.models["res.users"]) {
             this.user_id = this.user;
         }
+
+        if (!this.prep_order_group_id) {
+            this.prep_order_group_id = this.models["pos.prep.order.group"].create({
+                pos_order_ids: [this],
+            });
+        }
     }
 
     initState() {
@@ -62,7 +53,6 @@ export class PosOrder extends Base {
         // !!Keep all uiState in one object!!
         this.uiState = {
             unmerge: {},
-            lastPrints: [],
             lineToRefund: {},
             displayed: this.state !== "cancel",
             booked: false,
@@ -74,6 +64,8 @@ export class PosOrder extends Base {
                 inputTipAmount: "",
             },
             requiredPartnerDetails: {},
+            last_general_customer_note: this.general_customer_note || "",
+            last_internal_note: this.internal_note || "",
         };
     }
 
@@ -323,59 +315,17 @@ export class PosOrder extends Base {
     get hasChange() {
         return this.lines.some((l) => l.uiState.hasChange);
     }
-    /**
-     * This function is called after the order has been successfully sent to the preparation tool(s).
-     * In the future, this status should be separated between the different preparation tools,
-     * so that if one of them returns an error, it is possible to send the information back to it
-     * without impacting the other tools.
-     */
-    updateLastOrderChange() {
-        const orderlineIdx = [];
-        this.lines.forEach((line) => {
-            orderlineIdx.push(line.preparationKey);
 
-            if (this.last_order_preparation_change.lines[line.preparationKey]) {
-                this.last_order_preparation_change.lines[line.preparationKey] = {
-                    ...this.last_order_preparation_change.lines[line.preparationKey],
-                    quantity: line.getQuantity(),
-                    note: line.getNote(),
-                    customer_note: line.getCustomerNote(),
-                };
-            } else {
-                this.last_order_preparation_change.lines[line.preparationKey] = {
-                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
-                    uuid: line.uuid,
-                    isCombo: Boolean(line?.combo_line_ids?.length),
-                    combo_parent_uuid: line?.combo_parent_id?.uuid,
-                    product_id: line.getProduct().id,
-                    name: line.getFullProductName(),
-                    basic_name: line.getProduct().name,
-                    display_name: line.getProduct().display_name,
-                    note: line.getNote(),
-                    quantity: line.getQuantity(),
-                    customer_note: line.getCustomerNote(),
-                };
-            }
-            line.setHasChange(false);
-            line.uiState.savedQuantity = line.getQuantity();
-        });
-        // Checks whether an orderline has been deleted from the order since it
-        // was last sent to the preparation tools or updated. If so we delete older changes.
-        for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
-            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
-            const lineNote = orderline?.note;
-            const changeNote = change?.note;
-            if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
-                delete this.last_order_preparation_change.lines[key];
-            }
-        }
-        this.last_order_preparation_change.general_customer_note = this.general_customer_note;
-        this.last_order_preparation_change.internal_note = this.internal_note;
-        this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
-        this.last_order_preparation_change.metadata = {
-            serverDate: serializeDateTime(DateTime.now()),
-        };
-        this._markDirty();
+    get preparationChanges() {
+        return this.prep_order_group_id.getChanges({ order: this });
+    }
+
+    updateLastOrderChange(opts = {}) {
+        return this.prep_order_group_id.updateLastOrderChange(opts, this);
+    }
+
+    async generatePrinterData(opts = { categoryIdsSet: new Set() }) {
+        return this.prep_order_group_id.generatePrinterData(this, opts);
     }
 
     isEmpty() {
@@ -913,17 +863,6 @@ export class PosOrder extends Base {
         return this.lines;
     }
 
-    serializeForORM(opts = {}) {
-        const data = super.serializeForORM(opts);
-        if (
-            data.last_order_preparation_change &&
-            typeof data.last_order_preparation_change === "object"
-        ) {
-            data.last_order_preparation_change = JSON.stringify(data.last_order_preparation_change);
-        }
-        return data;
-    }
-
     get floatingOrderName() {
         return this.floating_order_name || this.tracking_number.toString() || "";
     }
@@ -966,9 +905,9 @@ export class PosOrder extends Base {
         return !this.currency.isZero(this.orderChange) && this.finalized;
     }
 
-    getOrderData(reprint = false) {
+    getOrderData() {
         return {
-            reprint: reprint,
+            reprint: false,
             pos_reference: this.getName(),
             config_name: this.config_id?.name || this.config.name,
             time: luxon.DateTime.now().toFormat("HH:mm"),

@@ -1,16 +1,15 @@
 import { renderToElement } from "@web/core/utils/render";
-import { changesToOrder } from "@point_of_sale/app/models/utils/order_change";
 
 export function generateKioskPreparationReceipt(store) {
     const order = store.currentOrder;
     const orderData = order.getOrderData();
-    const changes = changesToOrder(order, store.config.preparationCategories).new;
+    const changes = order.preparationChanges;
 
     const printingChanges = {
         ...orderData,
         changes: {
             title: "NEW",
-            data: changes,
+            data: changes.printerData.addedQuantity,
         },
     };
 

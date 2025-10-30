@@ -9,7 +9,7 @@ definePosModels();
 test("getNewLine", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
-    const orderSummary = await mountWithCleanup(OrderSummary, {});
+    const orderSummary = await mountWithCleanup(OrderSummary, { props: { order } });
     order.getSelectedOrderline().uiState.savedQuantity = 5;
     const newLine = orderSummary.getNewLine();
     expect(newLine.order_id.id).toBe(order.id);

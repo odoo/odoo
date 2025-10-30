@@ -125,7 +125,7 @@ class PosOrder(models.Model):
                         records = self.env[params.comodel_name].search([('uuid', 'in', uuids)])
                         owner_records.filtered(lambda r: r.uuid == uuid).write({name: [Command.link(r.id) for r in records]})
                     else:
-                        record = self.env[params.comodel_name].search([('uuid', '=', uuids)])
+                        record = self.env[params.comodel_name].search([('uuid', '=', uuids)], limit=1)
                         owner_records.filtered(lambda r: r.uuid == uuid).write({name: record.id})
 
         self = self.with_company(pos_order.company_id)
@@ -281,7 +281,6 @@ class PosOrder(models.Model):
         return moves._get_price_unit()
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='Employee',
@@ -362,36 +361,12 @@ class PosOrder(models.Model):
         help="List of account moves created when this POS order was reversed and invoiced after session close."
     )
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
-
+    prep_order_group_id = fields.Many2one('pos.prep.order.group', string='Preparation Order Group')
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
-    def get_preparation_change(self):
+    def get_last_order_change_date(self):
         self.ensure_one()
-        return {
-            'last_order_preparation_change': self.last_order_preparation_change,
-        }
-
-    def _ensure_to_keep_last_preparation_change(self, vals):
-        for record in self:
-            if record.last_order_preparation_change:
-                change = json.loads(record.last_order_preparation_change)
-                if not change.get('metadata'):
-                    return
-
-                local_change = json.loads(vals.get('last_order_preparation_change', '{}'))
-                if not local_change.get('metadata'):
-                    vals['last_order_preparation_change'] = record.last_order_preparation_change
-                    return
-
-                server_date = fields.Datetime.from_string(change['metadata'].get('serverDate'))
-                local_date = fields.Datetime.from_string(local_change['metadata'].get('serverDate'))
-
-                if server_date > local_date:
-                    _logger.warning("Preparation changes were outdated, probably linked to a synching issue.")
-                    vals['last_order_preparation_change'] = record.last_order_preparation_change
-                else:
-                    local_change['metadata']['serverDate'] = fields.Datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    vals['last_order_preparation_change'] = json.dumps(local_change)
+        return self.write_date
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -1173,6 +1148,18 @@ class PosOrder(models.Model):
             order_log_name = self._get_order_log_representation(order)
             _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
 
+            if order.get('record_dependencies'):
+                record_dependencies = order['record_dependencies']
+                del order['record_dependencies']
+
+                for model_name, records in record_dependencies.items():
+                    if records.get('create'):
+                        self.env[model_name].create(records['create'])
+
+                    if records.get('update'):
+                        for record in records['update']:
+                            self.env[model_name].browse(record['id']).write(record)
+
             refunded_orders = self._get_refunded_orders(order)
             if len(refunded_orders) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
@@ -1181,7 +1168,6 @@ class PosOrder(models.Model):
 
             existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
-                existing_order._ensure_to_keep_last_preparation_change(order)
                 order_ids.append(self._process_order(order, existing_order))
                 _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
             elif not existing_order:
@@ -1190,7 +1176,6 @@ class PosOrder(models.Model):
             else:
                 # In theory, this situation is unintended
                 # In practice it can happen when "Tip later" option is used
-                existing_order._ensure_to_keep_last_preparation_change(order)
                 order_ids.append(existing_order.id)
                 _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
@@ -1227,6 +1212,9 @@ class PosOrder(models.Model):
             'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],
             'account.move': self.env['account.move'].sudo()._load_pos_data_read(account_moves, config) if config else [],
+            'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(self.prep_order_group_id.prep_order_ids, config) if config else [],
+            'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(self.prep_order_group_id.prep_order_ids.prep_line_ids, config) if config else [],
+            'pos.prep.order.group': self.env['pos.prep.order.group']._load_pos_data_read(self.prep_order_group_id, config) if config else [],
         }
 
     @api.model
@@ -1497,6 +1485,7 @@ class PosOrderLine(models.Model):
 
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent', index='btree_not_null') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
+    prep_line_ids = fields.One2many('pos.prep.line', 'pos_order_line_id', string='Preparation lines')
 
     combo_item_id = fields.Many2one('product.combo.item', string='Combo Item')
     is_edited = fields.Boolean('Edited', default=False)
@@ -1517,7 +1506,7 @@ class PosOrderLine(models.Model):
             'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note',
             'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id',
             'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids',
-            'extra_tax_data', 'write_date',
+            'extra_tax_data', 'write_date', 'prep_line_ids',
         ]
 
     @api.model
@@ -1861,6 +1850,7 @@ class PosPackOperationLot(models.Model):
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
+    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -1868,7 +1858,7 @@ class PosPackOperationLot(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['lot_name', 'pos_order_line_id', 'write_date']
+        return ['lot_name', 'pos_order_line_id', 'write_date', 'uuid']
 
 
 class AccountCashRounding(models.Model):

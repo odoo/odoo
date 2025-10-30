@@ -23,13 +23,13 @@ patch(ProductScreen.prototype, {
         });
     },
     get nbrOfChanges() {
-        return this.pos.getOrderChanges().nbrOfChanges;
+        return this.pos.getOrder().preparationChanges.quantity;
     },
     get swapButton() {
         return this.pos.config.module_pos_restaurant && this.pos.config.preparationCategories.size;
     },
     get displayCategoryCount() {
-        return this.pos.categoryCount.slice(0, 3);
+        return this.pos.getOrder().preparationChanges.categoryCount.slice(0, 3);
     },
     get primaryReviewButton() {
         return (
@@ -40,7 +40,8 @@ patch(ProductScreen.prototype, {
     },
     get primaryOrderButton() {
         return (
-            this.pos.getOrderChanges().nbrOfChanges !== 0 && this.pos.config.module_pos_restaurant
+            this.pos.getOrder().preparationChanges.quantity !== 0 &&
+            this.pos.config.module_pos_restaurant
         );
     },
     getNumpadButtons() {

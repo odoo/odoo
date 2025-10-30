@@ -193,7 +193,8 @@
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
                                         <ActionpadWidget
-                                            partner="getSelectedOrder()?.getPartner()"
+                                            t-if="this.pos.cashier._role !== 'minimal'"
+                                            order="_selectedSyncedOrder"
                                             actionName.translate="Refund"
                                             actionToTrigger.bind="onDoRefund"
                                         />
@@ -203,7 +204,7 @@
                                 <BackButton t-if="ui.isSmall" onClick="() => pos.onClickBackButton()"/>
                                 <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
-                                    t-if="this.pos.unwatched.printers.length and _selectedSyncedOrder.uiState.lastPrints.length">
+                                    t-if="this.pos.unwatched.printers.length">
                                     <i class="fa fa-cutlery" aria-hidden="true"/>
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"

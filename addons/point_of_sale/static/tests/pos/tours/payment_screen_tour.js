@@ -9,10 +9,11 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { inLeftSide } from "./utils/common";
 
-registry.category("web_tour.tours").add("PaymentScreenTour", {
+registry.category("web_tour.tours").add("test_payment_screen_tour", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.clickPayButton(),

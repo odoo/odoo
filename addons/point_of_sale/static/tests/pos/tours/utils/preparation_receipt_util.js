@@ -4,18 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 
 export async function generateReceiptsToPrint(order, orderChange) {
-    const { orderData, changes } = posmodel.generateOrderChange(
-        order,
-        orderChange,
-        Array.from(posmodel.config.printerCategories),
-        false
-    );
-    const receiptsData = await posmodel.generateReceiptsDataToPrint(
-        orderData,
-        changes,
-        orderChange
-    );
-    const groupedReceiptsData = await posmodel.prepareReceiptGroupedData(receiptsData);
+    const groupedReceiptsData = await order.generatePrinterData({
+        categoryIdsSet: posmodel.config.printerCategories,
+    });
     return groupedReceiptsData.map((data) =>
         renderToElement("point_of_sale.OrderChangeReceipt", {
             data: data,
@@ -26,7 +17,7 @@ export async function generateReceiptsToPrint(order, orderChange) {
 // Return rendered order change receipts that will be printed when clicking "Order" button
 export async function generatePreparationReceipts() {
     const order = posmodel.getOrder();
-    const orderChange = posmodel.changesToOrder(order, posmodel.config.printerCategories, false);
+    const orderChange = order.preparationChanges;
     return await generateReceiptsToPrint(order, orderChange);
 }
 

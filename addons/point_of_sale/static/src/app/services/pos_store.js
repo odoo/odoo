@@ -28,11 +28,6 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import {
-    changesToOrder,
-    getOrderChanges,
-    filterChangeByCategories,
-} from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
@@ -555,7 +550,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (
                     !ignoreChange &&
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    (order.prep_order_group_id?.prep_order_ids || []).length > 0
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");
@@ -1446,7 +1441,7 @@ export class PosStore extends WithLazyGetterTrap {
             });
             const missingRecords = await this.data.missingRecursive(data);
             const newData = this.models.loadConnectedData(missingRecords);
-
+            console.log("david", newData);
             logPosMessage(
                 "Store",
                 "syncAllOrders",
@@ -1781,24 +1776,47 @@ export class PosStore extends WithLazyGetterTrap {
     get printOptions() {
         return { webPrintFallback: true };
     }
-    getOrderChanges(order = this.getOrder()) {
-        return getOrderChanges(order, this.config.preparationCategories);
+
+    // Now the printer should work in PoS without restaurant
+    async sendOrderInPreparation(order, opts = {}) {
+        let isPrinted = false;
+
+        if (this.config.printerCategories.size && !opts.byPassPrint) {
+            try {
+                isPrinted = await this.printChanges(order);
+            } catch (e) {
+                logPosMessage(
+                    "Store",
+                    "sendOrderInPreparation",
+                    "Failed in printing the changes in the order",
+                    CONSOLE_COLOR,
+                    [e]
+                );
+            }
+        }
+        order.updateLastOrderChange(opts);
+        // Ensure that other devices are aware of the changes
+        // Otherwise several devices can print the same changes
+        // We need to check if a preparation display is configured to avoid unnecessary sync
+        if (isPrinted && !this.models["pos.prep.display"]?.length) {
+            await this.syncAllOrders({ orders: [order], force: true });
+        }
     }
-    changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
-        return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
-    }
-    async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
+    async sendOrderInPreparationUpdateLastChange(order, opts = {}) {
+        if (this.data.network.offline) {
+            this.data.network.warningTriggered = false;
+            throw new ConnectionLostError();
+        }
+
         if (typeof order.id !== "number") {
             return this.sendOrderInPreparation(order, opts);
         }
 
-        const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
-        const rawchange = data.last_order_preparation_change || "{}";
-        const lastChanges = JSON.parse(rawchange);
-        const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
-        const lastLocalDate = DateTime.fromSQL(
-            order.last_order_preparation_change?.metadata?.serverDate
-        ).toUTC();
+        const lastChangeDate = await this.data.call("pos.order", "get_last_order_change_date", [
+            order.id,
+        ]);
+        const lastServerDate = DateTime.fromSQL(lastChangeDate).toUTC();
+        const lastLocalDate = DateTime.fromSQL(order.raw.write_date).toUTC();
 
         if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
             this.dialog.add(AlertDialog, {
@@ -1811,165 +1829,37 @@ export class PosStore extends WithLazyGetterTrap {
             });
 
             // Update before syncing otherwise it will overwrite the last change
-            order.last_order_preparation_change = lastChanges;
             await this.syncAllOrders({ orders: [order] });
             return;
         }
 
         return this.sendOrderInPreparation(order, opts);
     }
-    // Now the printer should work in PoS without restaurant
-    async sendOrderInPreparation(order, opts = {}) {
-        let isPrinted = false;
 
-        if (this.config.printerCategories.size && !opts.byPassPrint) {
-            try {
-                let reprint = false;
-                let orderChange = changesToOrder(
-                    order,
-                    this.config.printerCategories,
-                    opts.cancelled
-                );
-
-                if (
-                    !orderChange.new.length &&
-                    !orderChange.cancelled.length &&
-                    !orderChange.noteUpdate.length &&
-                    !orderChange.internal_note &&
-                    !orderChange.general_customer_note &&
-                    order.uiState.lastPrints
-                ) {
-                    orderChange = [order.uiState.lastPrints.at(-1)];
-                    reprint = true;
-                } else {
-                    order.uiState.lastPrints.push(orderChange);
-                    orderChange = [orderChange];
-                }
-
-                if (reprint && opts.orderDone) {
-                    return;
-                }
-                isPrinted = await this.printChanges(order, orderChange, reprint);
-            } catch (e) {
-                logPosMessage(
-                    "Store",
-                    "sendOrderInPreparation",
-                    "Failed in printing the changes in the order",
-                    CONSOLE_COLOR,
-                    [e]
-                );
-            }
-        }
-        order.updateLastOrderChange();
-        // Ensure that other devices are aware of the changes
-        // Otherwise several devices can print the same changes
-        // We need to check if a preparation display is configured to avoid unnecessary sync
-        if (isPrinted && !this.models["pos.prep.display"]?.length) {
-            await this.syncAllOrders({ orders: [order], force: true });
-        }
-    }
-    async sendOrderInPreparationUpdateLastChange(o, opts) {
-        if (this.data.network.offline) {
-            this.data.network.warningTriggered = false;
-            throw new ConnectionLostError();
-        }
-        await this.checkPreparationStateAndSentOrderInPreparation(o, opts);
-    }
-
-    generateOrderChange(order, orderChange, categories, reprint = false) {
-        const isPartOfCombo = (line) =>
-            line.isCombo ||
-            line.combo_parent_uuid ||
-            this.models["product.product"].get(line.product_id).type == "combo";
-        const comboChanges = orderChange.new.filter(isPartOfCombo);
-        const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
-        normalChanges.sort((a, b) => {
-            const sequenceA = a.pos_categ_sequence;
-            const sequenceB = b.pos_categ_sequence;
-            if (sequenceA === 0 && sequenceB === 0) {
-                return a.pos_categ_id - b.pos_categ_id;
-            }
-
-            return sequenceA - sequenceB;
-        });
-        orderChange.new = [...comboChanges, ...normalChanges];
-
-        const orderData = order.getOrderData(reprint);
-
-        const changes = filterChangeByCategories(categories, orderChange, this.models);
-        return { orderData, changes };
-    }
-
-    async generateReceiptsDataToPrint(orderData, changes, orderChange) {
-        const receiptsData = [];
-        if (changes.new.length) {
-            const orderDataNew = { ...orderData };
-            orderDataNew.changes = {
-                title: _t("NEW"),
-                data: changes.new,
-            };
-            receiptsData.push(await this.prepareReceiptGroupedData(orderDataNew));
-        }
-
-        if (changes.cancelled.length) {
-            const orderDataCancelled = { ...orderData };
-            orderDataCancelled.changes = {
-                title: _t("CANCELLED"),
-                data: changes.cancelled,
-            };
-            receiptsData.push(await this.prepareReceiptGroupedData(orderDataCancelled));
-        }
-
-        if (changes.noteUpdate.length) {
-            const orderDataNoteUpdate = { ...orderData };
-            const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
-            orderDataNoteUpdate.changes = {
-                title: noteUpdateTitle || _t("NOTE UPDATE"),
-                data: printNoteUpdateData ? changes.noteUpdate : [],
-            };
-            receiptsData.push(await this.prepareReceiptGroupedData(orderDataNoteUpdate));
-            orderData.changes.noteUpdate = [];
-        }
-
-        if (orderChange.internal_note || orderChange.general_customer_note) {
-            const orderDataNote = { ...orderData };
-            orderDataNote.changes = { title: "", data: [] };
-            receiptsData.push(await this.prepareReceiptGroupedData(orderDataNote));
-        }
-        return receiptsData;
-    }
-
-    async printChanges(order, orderChange, reprint = false, printers = this.unwatched.printers) {
+    async printChanges(order, orderChange = false, printers = this.unwatched.printers) {
         let isPrinted = false;
         const unsuccessfulPrints = [];
         const retryPrinters = new Set();
 
         for (const printer of printers) {
-            for (const change of orderChange) {
-                const { orderData, changes } = this.generateOrderChange(
-                    order,
-                    change,
-                    printer.config.product_categories_ids,
-                    reprint
-                );
-                const receiptsData = await this.generateReceiptsDataToPrint(
-                    orderData,
-                    changes,
-                    change
-                );
-                let result = {};
-                for (const data of receiptsData) {
-                    result = await this.printOrderChanges(data, printer);
-                    if (result.successful) {
-                        isPrinted = true;
-                    }
+            const categoryIds = printer.config.product_categories_ids;
+            const categoryIdsSet = new Set(categoryIds);
+            const receiptData = await order.generatePrinterData({ categoryIdsSet });
 
-                    if (!result.successful) {
-                        retryPrinters.add(printer);
-                        unsuccessfulPrints.push(printer.config.name + ": " + result.message.body);
-                    } else if (result.warningCode) {
-                        this.displayPrinterWarning(result, printer.config.name);
-                    }
+            for (const data of receiptData) {
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    data: data,
+                });
+                const result = await printer.printReceipt(receipt);
+                if (result.successful) {
+                    isPrinted = true;
+                }
+
+                if (!result.successful) {
+                    retryPrinters.add(printer);
+                    unsuccessfulPrints.push(printer.config.name + ": " + result.message.body);
+                } else if (result.warningCode) {
+                    this.displayPrinterWarning(result, printer.config.name);
                 }
             }
         }
@@ -1981,35 +1871,12 @@ export class PosStore extends WithLazyGetterTrap {
                 message: failedReceipts,
                 canRetry: true,
                 retry: () => {
-                    this.printChanges(order, orderChange, reprint, retryPrinters);
+                    this.printChanges(order, orderChange, retryPrinters);
                 },
             });
         }
 
         return isPrinted;
-    }
-
-    async prepareReceiptGroupedData(data) {
-        const dataChanges = data.changes?.data;
-        if (dataChanges && dataChanges.some((c) => c.group)) {
-            const groupedData = dataChanges.reduce((acc, c) => {
-                const { name = "", index = -1 } = c.group || {};
-                if (!acc[name]) {
-                    acc[name] = { name, index, data: [] };
-                }
-                acc[name].data.push(c);
-                return acc;
-            }, {});
-            data.changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
-        }
-        return data;
-    }
-
-    async printOrderChanges(data, printer) {
-        const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-            data: data,
-        });
-        return await printer.printReceipt(receipt);
     }
 
     connectToProxy() {

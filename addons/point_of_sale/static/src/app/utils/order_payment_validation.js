@@ -205,7 +205,7 @@ export default class OrderPaymentValidation {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+            this.pos.sendOrderInPreparationUpdateLastChange(this.order, {
                 orderDone: true,
             });
         }

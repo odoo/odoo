@@ -1,5 +1,10 @@
 import { uuidv4 } from "@point_of_sale/utils";
-import { getService, makeDialogMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    getService,
+    makeDialogMockEnv,
+    mountWithCleanup,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { tick, waitUntil } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -20,6 +25,7 @@ export const setupPosEnv = async () => {
     };
 
     await makeDialogMockEnv();
+    onRpc("/css", () => "");
     const store = getService("pos");
     store.setCashier(store.user);
     return store;

@@ -112,8 +112,9 @@ export class SplitBillScreen extends Component {
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         const originalOrderName = this._getOrderName(originalOrder);
         const newOrderName = this._getSplitOrderName(originalOrderName);
-
-        const newOrder = this.pos.createNewOrder();
+        const newOrder = this.pos.createNewOrder({
+            prep_order_group_id: originalOrder.prep_order_group_id,
+        });
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         originalOrder.uiState.splittedOrderUuid = newOrder.uuid;
@@ -169,19 +170,12 @@ export class SplitBillScreen extends Component {
                 }
 
                 if (line.getQuantity() === this.qtyTracker[line.uuid]) {
+                    line.prep_line_ids.forEach((p) => (p.pos_order_line_id = newLine));
                     lineToDel.push(line);
                 } else {
                     const newQty = line.getQuantity() - this.qtyTracker[line.uuid];
                     line.update({ qty: newQty });
                 }
-
-                this.pos.handlePreparationHistory(
-                    originalOrder.last_order_preparation_change.lines,
-                    newOrder.last_order_preparation_change.lines,
-                    line,
-                    newLine,
-                    this.qtyTracker[line.uuid]
-                );
             }
         }
 
@@ -195,6 +189,7 @@ export class SplitBillScreen extends Component {
         this.pos.selectedOrderUuid = null;
         this.pos.setOrder(newOrder);
         this.back();
+        return newOrder;
     }
 
     setLineQtyStr(line) {

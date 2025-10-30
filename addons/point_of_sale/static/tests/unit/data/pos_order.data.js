@@ -1,14 +1,13 @@
 import { models } from "@web/../tests/web_test_helpers";
 
+const { DateTime } = luxon;
+
 export class PosOrder extends models.ServerModel {
     _name = "pos.order";
 
-    get_preparation_change(id) {
+    get_last_order_change_date(id) {
         const read = this.read([id]);
-        const changes = read[0]?.last_order_preparation_change || "{}";
-        return {
-            last_order_preparation_change: changes,
-        };
+        return read[0]?.write_date;
     }
 
     read_pos_orders(domain) {
@@ -43,7 +42,37 @@ export class PosOrder extends models.ServerModel {
 
     sync_from_ui(data) {
         const orderIds = [];
+        const date = DateTime.now().toUTC().toFormat("yyyy-MM-dd HH:mm:ss", {
+            numberingSystem: "latn",
+        });
+
         for (const record of data) {
+            try {
+                if (record.record_dependencies) {
+                    for (const [model, records] of Object.entries(record.record_dependencies)) {
+                        if (records.create) {
+                            for (const rec of records.create) {
+                                rec.write_date = date;
+                                rec.create_date = date;
+                                this.env[model].create(rec);
+                            }
+                        }
+
+                        if (records.update) {
+                            for (const rec of records.update) {
+                                rec.write_date = date;
+                                this.env[model].write([rec.id], rec);
+                            }
+                        }
+                    }
+                    delete record.record_dependencies;
+                }
+            } catch (error) {
+                console.error("Error in record_dependencies sync:", error);
+            }
+
+            const uuidMapping = record.relations_uuid_mapping;
+            delete record.relations_uuid_mapping;
             if (record.id) {
                 this.write([record.id], record);
                 orderIds.push(record.id);
@@ -51,9 +80,45 @@ export class PosOrder extends models.ServerModel {
                 const id = this.create(record);
                 orderIds.push(id);
             }
+
+            if (uuidMapping) {
+                try {
+                    this.record_uuid_mapping(uuidMapping);
+                } catch (error) {
+                    console.error("Error in relations_uuid_mapping sync:", error);
+                }
+            }
         }
 
         return this.read_pos_data(orderIds, data, this.config_id);
+    }
+
+    record_uuid_mapping(uuidMapping) {
+        for (const [model, data] of Object.entries(uuidMapping)) {
+            for (const [uuid, fields] of Object.entries(data)) {
+                const record = this.env[model].search_read([["uuid", "=", uuid]], []);
+                if (record.length === 0) {
+                    continue;
+                }
+
+                for (const [fieldName, vals] of Object.entries(fields)) {
+                    const relation = this.env[model]._fields[fieldName].relation;
+                    if (!relation) {
+                        continue;
+                    }
+
+                    const rels = this.env[relation].search_read([["uuid", "in", vals]], ["id"]);
+                    const ids = rels.map((r) => r.id);
+                    if (ids.length === 0) {
+                        continue;
+                    }
+
+                    const value = Array.isArray(vals) ? [...ids, ...record[fieldName]] : ids[0];
+                    console.log("David ", value);
+                    this.env[model].write([record[0].id], { [fieldName]: value });
+                }
+            }
+        }
     }
 
     read_pos_data(orderIds, data, config_id) {
@@ -63,6 +128,9 @@ export class PosOrder extends models.ServerModel {
         const posOrderLine = [];
         const posPackOperationLot = [];
         const posCustomAttributeValue = [];
+        const posPrepOrder = [];
+        const posPrepLine = [];
+        const posPrepOrderGroup = [];
         const readOrder = this.read(orderIds, this._load_pos_data_fields(config_id), false);
 
         for (const order of readOrder) {
@@ -93,6 +161,37 @@ export class PosOrder extends models.ServerModel {
                 false
             );
 
+            let prepOrders = [];
+            let prepLines = [];
+            let prepOrderGroup = [];
+
+            if (order.prep_order_group_id) {
+                prepOrderGroup = this.env["pos.prep.order.group"].read(
+                    [order.prep_order_group_id],
+                    this.env["pos.prep.order.group"]._load_pos_data_fields(config_id),
+                    false
+                );
+            }
+
+            if (prepOrderGroup.length > 0) {
+                prepOrders = this.env["pos.prep.order"].read(
+                    prepOrderGroup.flatMap((pog) => pog.prep_order_ids),
+                    this.env["pos.prep.order"]._load_pos_data_fields(config_id),
+                    false
+                );
+            }
+
+            if (prepOrders.length > 0) {
+                prepLines = this.env["pos.prep.line"].read(
+                    prepOrders.flatMap((po) => po.prep_line_ids),
+                    this.env["pos.prep.line"]._load_pos_data_fields(config_id),
+                    false
+                );
+            }
+
+            posPrepOrder.push(...prepOrders);
+            posPrepLine.push(...prepLines);
+            posPrepOrderGroup.push(...prepOrderGroup);
             posOrderLine.push(...lines);
             posPayment.push(...payments);
             posPackOperationLot.push(...packLotLines);
@@ -106,6 +205,9 @@ export class PosOrder extends models.ServerModel {
             "pos.order.line": posOrderLine,
             "pos.pack.operation.lot": posPackOperationLot,
             "product.attribute.custom.value": posCustomAttributeValue,
+            "pos.prep.order": posPrepOrder,
+            "pos.prep.line": posPrepLine,
+            "pos.prep.order.group": posPrepOrderGroup,
         };
     }
 }

@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from uuid import uuid4
 from odoo import fields, models, api
 from odoo.tools import float_is_zero
 
@@ -9,6 +10,7 @@ class EventRegistration(models.Model):
 
     pos_order_id = fields.Many2one(related='pos_order_line_id.order_id', string='PoS Order')
     pos_order_line_id = fields.Many2one('pos.order.line', string='PoS Order Line', ondelete='cascade', copy=False, index='btree_not_null')
+    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     def _has_order(self):
         return super()._has_order() or self.pos_order_id
@@ -34,7 +36,7 @@ class EventRegistration(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'event_id', 'event_ticket_id', 'event_slot_id', 'pos_order_line_id', 'pos_order_id', 'phone',
+        return ['id', 'event_id', 'event_ticket_id', 'event_slot_id', 'pos_order_line_id', 'pos_order_id', 'phone', 'uuid',
                 'company_name', 'email', 'name', 'registration_answer_ids', 'registration_answer_choice_ids', 'write_date']
 
     @api.model_create_multi

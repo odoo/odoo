@@ -25,8 +25,21 @@ patch(ActionpadWidget.prototype, {
             this.pos.router.state.current !== "TicketScreen"
         );
     },
-    get hasChangesToPrint() {
-        return Boolean(this.displayCategoryCount.length);
+    get displayOrderButton() {
+        const changes = this.currentOrder.preparationChanges;
+        const noteChange = changes.noteChange;
+        const categoryCount = changes.categoryCount.length > 0;
+        return noteChange || categoryCount;
+    },
+    get categoryChanges() {
+        const changes = this.currentOrder.preparationChanges;
+        const categoryCount = [...changes.categoryCount];
+
+        if (changes.noteChange) {
+            categoryCount.unshift({ name: _t("Notes"), count: 1 });
+        }
+
+        return categoryCount;
     },
     hasQuantity(order) {
         if (!order) {
@@ -38,19 +51,10 @@ patch(ActionpadWidget.prototype, {
     get highlightPay() {
         return (
             this.currentOrder?.lines?.length &&
-            !this.hasChangesToPrint &&
+            !this.displayOrderButton &&
             this.hasQuantity(this.currentOrder) &&
             !this.getCourseToFire()
         );
-    },
-    get displayCategoryCount() {
-        return this.pos.categoryCount.slice(0, 4);
-    },
-    get isCategoryCountOverflow() {
-        if (this.pos.categoryCount.length > 4) {
-            return true;
-        }
-        return false;
     },
     get displayFireCourseBtn() {
         const order = this.currentOrder;
