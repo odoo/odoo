@@ -722,14 +722,15 @@ actual arch.
             return self.browse()
         domain = self._get_inheriting_views_domain()
         query = self._search(domain)
-        where_clause = query.where_clause
-        assert query.from_clause == SQL.identifier('ir_ui_view'), f"Unexpected from clause: {query.from_clause}"
 
         field_names = [f.name for f in self._fields.values() if f.prefetch is True and not f.groups]
         aliased_names = SQL(', ').join(
-            SQL("%s AS %s", self._field_to_sql('ir_ui_view', name), SQL.identifier(name))
+            SQL("%s AS %s", query.table[name], SQL.identifier(name))
             for name in field_names
         )
+
+        assert query.from_clause == SQL.identifier('ir_ui_view'), f"Unexpected from clause: {query.from_clause}"
+        where_clause = query.where_clause
 
         query = SQL("""
             WITH RECURSIVE ir_ui_view_inherits AS (
