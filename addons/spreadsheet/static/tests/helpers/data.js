@@ -166,11 +166,20 @@ export function defineSpreadsheetActions() {
 
 export class IrModel extends webModels.IrModel {
     display_name_for(models) {
-        const records = this.env["ir.model"].search_read([["model", "in", models]]);
-        return records.map((record) => ({
-            model: record.model,
-            display_name: record.name,
-        }));
+        const records = this.env["ir.model"].search_read(
+            [["model", "in", models]],
+            ["name", "model"]
+        );
+        const result = [];
+        for (const model of models) {
+            const record = records.find((record) => record.model === model);
+            if (record) {
+                result.push({ model: model, display_name: record.name });
+            } else {
+                result.push({ model: model, display_name: model });
+            }
+        }
+        return result;
     }
 
     _records = [
