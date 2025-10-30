@@ -83,6 +83,33 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 trigger: messagesContain("Your email is validated, thank you!"),
             },
             {
+                trigger: messagesContain("Can you give us your phone number please?"),
+            },
+            {
+                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+                run: "edit 123456",
+            },
+            {
+                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+                run: "press Enter",
+            },
+            {
+                trigger: messagesContain(
+                    "'123456' does not look like a valid phone number. Can you please try again?"
+                ),
+            },
+            {
+                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+                run: "edit +919876543210",
+            },
+            {
+                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+                run: "press Enter",
+            },
+            {
+                trigger: messagesContain("Your phone number is validated. thank you!"),
+            },
+            {
                 // should ask for website now
                 trigger: messagesContain("Would you mind providing your website address?"),
             },

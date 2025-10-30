@@ -57,6 +57,8 @@ class ChatbotCase(common.HttpCase):
             cls.step_pricing_contact_us,
             cls.step_email,
             cls.step_email_validated,
+            cls.step_phone,
+            cls.step_phone_validated,
             cls.step_forward_operator,
             cls.step_no_one_available,
             cls.step_no_operator_dispatch,
@@ -76,6 +78,16 @@ class ChatbotCase(common.HttpCase):
             'message': 'Your email is validated, thank you!',
             'triggering_answer_ids': [(4, cls.step_dispatch_buy_software.id)],
             'chatbot_script_id': cls.chatbot_script.id,
+        }, {
+            "step_type": "question_phone",
+            "message": "Can you give us your phone number please?",
+            "triggering_answer_ids": [(4, cls.step_dispatch_buy_software.id)],
+            "chatbot_script_id": cls.chatbot_script.id,
+        }, {
+            "step_type": "text",
+            "message": "Your phone number is validated. thank you!",
+            "triggering_answer_ids": [(4, cls.step_dispatch_buy_software.id)],
+            "chatbot_script_id": cls.chatbot_script.id,
         }, {
             'step_type': 'forward_operator',
             'message': 'I will transfer you to a human.',
@@ -144,7 +156,7 @@ class ChatbotCase(common.HttpCase):
         })
 
     def _post_answer_and_trigger_next_step(
-        self, discuss_channel, body=None, email=None, chatbot_script_answer=None
+        self, discuss_channel, body=None, email=None, phone=None, chatbot_script_answer=None
     ):
         data = self.make_jsonrpc_request(
             "/mail/message/post",
@@ -152,15 +164,15 @@ class ChatbotCase(common.HttpCase):
                 "thread_model": "discuss.channel",
                 "thread_id": discuss_channel.id,
                 "post_data": {
-                    "body": body or email or chatbot_script_answer.name,
+                    "body": body or email or phone or chatbot_script_answer.name,
                     "message_type": "comment",
                     "subtype_xmlid": "mail.mt_comment",
                 },
             },
         )
-        if email:
+        if email or phone:
             self.make_jsonrpc_request(
-                "/chatbot/step/validate_email", {"channel_id": discuss_channel.id}
+                "/chatbot/step/validate_contact_info", {"channel_id": discuss_channel.id},
             )
         if chatbot_script_answer:
             message = self.env["mail.message"].browse(data["message_id"])

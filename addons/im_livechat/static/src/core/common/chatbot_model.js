@@ -213,8 +213,8 @@ export class Chatbot extends Record {
         }
         this.tmpAnswer = "";
         let stepCompleted = true;
-        if (this.currentStep.step_type === "question_email") {
-            stepCompleted = await this._processAnswerQuestionEmail();
+        if (["question_email", "question_phone"].includes(this.currentStep.step_type)) {
+            stepCompleted = await this._processAnswerContactInfo();
         } else if (this.currentStep.step_type === "question_selection") {
             stepCompleted = await this._processAnswerQuestionSelection(message);
         }
@@ -270,12 +270,12 @@ export class Chatbot extends Record {
     }
 
     /**
-     * Process the user answer for a question email step.
+     * Process the user answer for a question email and question phone step.
      *
      * @returns {Promise<boolean>} Whether the script is ready to go to the next step.
      */
-    async _processAnswerQuestionEmail() {
-        const { success, data } = await rpc("/chatbot/step/validate_email", {
+    async _processAnswerContactInfo() {
+        const { success, data } = await rpc("/chatbot/step/validate_contact_info", {
             channel_id: this.channel_id.id,
         });
         this.store.insert(data);
