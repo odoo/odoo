@@ -143,7 +143,7 @@
                 <td width="15%" align="center"><span style="font-weight:bold;">Quantity</span></td>
                 <td width="20%" align="right">
                     <span style="font-weight:bold;">
-                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
+                        <t t-if="hasattr(object, 'website_id') and object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
                             Tax Excl.
                         </t>
                         <t t-else="">
@@ -159,7 +159,7 @@
                 t-set="line_subtotal"
                 t-value="
                     line.price_subtotal
-                    if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
+                    if hasattr(object, 'website_id') and object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
                     else line.price_total
                 "
             />
@@ -195,14 +195,14 @@
                         <td style="width: 150px;">
                             <img
                                 t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128"
-                                t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;"
+                                t-attf-style="width: 64px; height: {{hasattr(object, 'website_id') and object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;"
                                 alt="Product image"
                             />
                         </td>
                         <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
                         <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>
                         <td width="20%" align="right"><span style="font-weight:bold; white-space: nowrap;">
-                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
+                        <t t-if="hasattr(object, 'website_id') and object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
                             <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
                         </t>
                         <t t-else="">
@@ -300,7 +300,7 @@
             </tr>
         </table>
     </div>
-    <div t-if="object.partner_shipping_id and not object.only_services" style="margin: 0px; padding: 0px;">
+    <div t-if="hasattr(object, 'only_services') and object.partner_shipping_id and not object.only_services" style="margin: 0px; padding: 0px;">
         <table width="100%" style="color: #454748; font-size: 12px;">
             <tr>
                 <td>
