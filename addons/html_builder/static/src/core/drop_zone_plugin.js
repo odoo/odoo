@@ -52,7 +52,10 @@ export class DropZonePlugin extends Plugin {
             return true;
         },
         selection_placeholder_container_predicates: (container) => {
-            if (container.classList.contains("oe_structure")) {
+            if (
+                container.classList.contains("oe_structure") ||
+                container.id === "o_snippet_above_header" // Specific case for dropzone above header
+            ) {
                 return false;
             }
         },
@@ -471,12 +474,13 @@ export class DropZonePlugin extends Plugin {
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
-        const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
+        const isIgnored = (el) =>
+            el.matches(".o_we_no_overlay, .oe_no_drop_above") || !isVisible(el);
         let hookEls = [];
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
             hookEls.push(...validChildrenEls);
-            parentEl.prepend(this.createDropzone(parentEl));
+            parentEl.append(this.createDropzone(parentEl));
         }
         hookEls.push(...selectorSiblings);
         const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
