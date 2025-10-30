@@ -256,7 +256,7 @@
                                                 </t>
                                                 <t t-else="">
                                                     <span style="white-space: nowrap;">
-                                                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
+                                                        <t t-if="hasattr(object, 'website_id') and object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
                                                             <t t-out="format_amount(line.price_subtotal, object.currency_id) or ''">$ 10.00</t>
                                                         </t>
                                                         <t t-else="">
