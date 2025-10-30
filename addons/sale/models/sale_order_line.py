@@ -1719,7 +1719,7 @@ class SaleOrderLine(models.Model):
         return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
 
     def has_valued_move_ids(self):
-        return self.move_ids
+        return None  # TODO: remove in master
 
     def _get_linked_line(self):
         """ Return the linked line of this line, if any.
