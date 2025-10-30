@@ -896,6 +896,10 @@
                         color: <t t-esc='primary'/>;
                     }
 
+                    .o_total td {
+                        color: <t t-esc='primary'/>;
+                    }
+
                     .o_company_tagline {
                         color: <t t-esc='primary'/>
                     }
@@ -903,9 +907,10 @@
                 &amp;.o_report_layout_boxed {
                     #total .o_total td {
                         background-color: <t t-esc='primary'/>;
+                        color: preview-color-contrast(<t t-esc='primary'/>);
 
                         strong {
-                            color: preview-color-contrast(<t t-esc='primary'/>);
+                            color: inherit;
                         }
                     }
                 }
