@@ -40,14 +40,11 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
     expect(snippetSelector).toHaveCount(1);
     await click(`${snippetSelector} i:first-child`);
     await animationFrame();
-    if (snippetName === "s_share") {
-        await click(
-            `[data-container-title='${containerTitle}'] [data-label='Color'] input[type='checkbox']`
-        );
-        await animationFrame();
-        // Here, .s_share selector can be removed but kept for specificity.
-        expect(":iframe .s_share.no_icon_color").toHaveCount(1);
-    }
+    await click(
+        `[data-container-title='${containerTitle}'] [data-label='Color'] input[type='checkbox']`
+    );
+    await animationFrame();
+    expect(":iframe .no_icon_color").toHaveCount(1);
     const textColor = "rgb(255, 0, 0)";
     core.getEditableContent().style.color = textColor;
     const icon = await queryOne(`${snippetSelector} a .fa-${iconName}`);
@@ -112,5 +109,5 @@ test("Social Media snippet options are correct", async () => {
 });
 
 test("Share snippet options are correct", async () => {
-    await testSocialSnippetOptions("s_share", "Block", "facebook");
+    await testSocialSnippetOptions("s_share", "Share", "facebook");
 });
