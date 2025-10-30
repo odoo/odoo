@@ -8,6 +8,7 @@
     <t t-name="html_editor.ImageDescriptionPopover">
         <div class="o-we-image-description-popover p-3">
             <input
+                t-ref="description"
                 type="text"
                 t-model="this.state.description"
                 placeholder="Description"
