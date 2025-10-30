@@ -418,4 +418,15 @@ export const saleOrderLineProductField = {
     },
 };
 
+export const saleOrderLineProductBarcodeField = {
+    ...saleOrderLineProductField,
+    extractProps() {
+        return {
+            ...saleOrderLineProductField.extractProps(...arguments),
+            canScanBarcode: true,
+        };
+    },
+};
+
 registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);
+registry.category("fields").add("sol_product_many2one_barcode", saleOrderLineProductBarcodeField);
