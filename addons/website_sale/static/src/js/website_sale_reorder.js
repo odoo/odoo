@@ -3,6 +3,7 @@ import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { debounce as debounceFn } from "@web/core/utils/timing";
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 // Widget responsible for openingn the modal (giving out the sale order id)
@@ -142,7 +143,7 @@ export class ReorderDialog extends Component {
         this.confirmed = true;
         const onConfirm = async () => {
             await this.addProductsToCart();
-            window.location = "/shop/cart";
+            redirect('/shop/cart');
         };
         if (this.cartQty) {
             // Open confirmation modal
