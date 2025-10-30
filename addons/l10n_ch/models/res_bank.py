@@ -113,7 +113,7 @@ class ResPartnerBank(models.Model):
 
         currency = currency or self.currency_id or self.company_id.currency_id
 
-        return [
+        result = [
             'SPC',                                                # QR Type
             '0200',                                               # Version
             '1',                                                  # Coding Type
@@ -146,6 +146,9 @@ class ResPartnerBank(models.Model):
             comment,                                              # Unstructured Message
             'EPD',                                                # Mandatory trailer part
         ]
+
+        # newlines shift field content to a different line, causing the QR code to be rejected
+        return [line.replace('\n', ' ') for line in result]
 
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'ch_qr':
