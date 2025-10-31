@@ -199,6 +199,18 @@ export function presetTimingSlotHourNotExists(hour) {
 export function presetTimingSlotHourExists(hour) {
     return { trigger: `.modal button:contains('${hour}')` };
 }
+export function selectSlotDays(d) {
+    return {
+        trigger: `.modal .d-flex.w-100.flex-wrap.gap-2.mt-2 button:nth-of-type(${d})`,
+        run: "click",
+    };
+}
+export function selectPresetTimingSlotIndex(index) {
+    return {
+        trigger: `.modal .row div:not(.d-none) .d-flex.flex-wrap.gap-1 button:nth-of-type(${index})`,
+        run: "click",
+    };
+}
 export function clickRegister() {
     return { trigger: ".pos-leftheader .register-label", run: "click" };
 }
