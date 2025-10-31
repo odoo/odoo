@@ -300,6 +300,10 @@ export class ProductScreen extends Component {
         ) {
             vals.qty = qty.value;
         }
+        const packaging = this.pos.models["product.packaging"].getAllBy("barcode");
+        if (packaging[productBarcode.code]) {
+            vals.qty = (vals.qty || 1) * packaging[productBarcode.code].qty;
+        }
 
         await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode });
         this.numberBuffer.reset();
