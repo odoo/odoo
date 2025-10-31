@@ -679,7 +679,7 @@ export class UseForwardRefsToParent {
         useEffect(
             (map, key) => {
                 this.registerRef(map, key);
-                () => this.removeRef(map, key);
+                return () => this.removeRef(map, key);
             },
             () => [component.props[propName], getRefIdFn(component.props)]
         );
