@@ -841,7 +841,7 @@ class PosConfig(models.Model):
         id_to_index = {pid: index for index, pid in enumerate(product_ids)}
         products = products.sorted(key=lambda p: id_to_index[p.id])
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
-        product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
+        product_in_combo = product_combo.combo_ids.combo_item_ids.product_id.filtered(lambda p: p.active)
         products_available = products | product_in_combo
         return products_available.read(fields, load=False)
 
