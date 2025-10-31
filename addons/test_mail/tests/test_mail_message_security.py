@@ -158,6 +158,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.env["mail.test.access"], {}, False, 'Private message like is ok'),
             # document based
             (self.record_internal, {}, False, 'W Access on record'),
+            (self.record_internal, {'message_type': 'notification'}, False, 'W Access on record, notification does not change anything'),
             (self.record_internal_ro, {}, True, 'No W Access on record'),
             (self.record_admin, {}, True, 'No access on record (and not notified on first message)'),
             (record_admin_fol, {
@@ -169,26 +170,30 @@ class TestMailMessageAccess(MessageAccessCommon):
             }, False, 'No access on record but reply to notified parent'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
+                final_vals = dict(
+                    {
+                        'body': 'Test',
+                        'message_type': 'comment',
+                        'subtype_id': self.env.ref('mail.mt_comment').id,
+                    }, **msg_vals
+                )
                 if should_crash:
                     with self.assertRaises(AccessError):
                         self.env['mail.message'].with_user(self.user_employee).create({
                             'model': record._name if record else False,
                             'res_id': record.id if record else False,
-                            'body': 'Test',
-                            **msg_vals,
+                            **final_vals,
                         })
                     if record:
                         with self.assertRaises(AccessError):
                             record.with_user(self.user_employee).message_post(
-                                body='Test',
-                                subtype_id=self.env.ref('mail.mt_comment').id,
+                                **final_vals,
                             )
                 else:
                     _message = self.env['mail.message'].with_user(self.user_employee).create({
                         'model': record._name if record else False,
                         'res_id': record.id if record else False,
-                        'body': 'Test',
-                        **msg_vals,
+                        **final_vals,
                     })
                     if record:
                         # TDE note: due to parent_id flattening, doing message_post
@@ -198,24 +203,38 @@ class TestMailMessageAccess(MessageAccessCommon):
                         if record == self.record_admin and 'parent_id' in msg_vals:
                             continue
                         record.with_user(self.user_employee).message_post(
-                            body='Test',
-                            subtype_id=self.env.ref('mail.mt_comment').id,
-                            **msg_vals,
+                            **final_vals,
                         )
 
     def test_access_create_customized(self):
         """ Test '_get_mail_message_access' support """
         record = self.env['mail.test.access.custo'].with_user(self.user_employee).create({'name': 'Open'})
         for user in self.user_employee + self.user_portal:
-            _message = record.message_post(
-                body='A message',
-                subtype_id=self.env.ref('mail.mt_comment').id,
-            )
+            with self.subTest(user_name=user.name):
+                _message = record.with_user(user).message_post(
+                    body='A message',
+                    subtype_id=self.env.ref('mail.mt_comment').id,
+                )
         # lock -> see '_get_mail_message_access'
         record.write({'is_locked': True})
+        record.invalidate_model()
         for user in self.user_employee + self.user_portal:
-            with self.assertRaises(AccessError):
-                _message_portal = record.with_user(self.user_portal).message_post(
+            with self.subTest(user_name=user.name):
+                with self.assertRaises(AccessError):
+                    _message = record.with_user(user).message_post(
+                        body='Another portal message',
+                        subtype_id=self.env.ref('mail.mt_comment').id,
+                    )
+        # readonly -> "read" access sufficient on unlocked records, see '_get_mail_message_access'
+        record.sudo().write({'is_locked': False, 'is_readonly': True})
+        record.invalidate_model()
+        for user in self.user_employee + self.user_portal:
+            with self.subTest(user_name=user.name):
+                # cannot write
+                with self.assertRaises(AccessError):
+                    record.with_user(user).write({'name': 'Can Update'})
+                # can post
+                _message = record.with_user(user).message_post(
                     body='Another portal message',
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
@@ -426,6 +445,35 @@ class TestMailMessageAccess(MessageAccessCommon):
                     msg.with_user(self.user_employee).read(['body'])
                 if msg_vals:
                     msg.write(original_vals)
+
+    def test_access_read_customized(self):
+        """ Test '_get_mail_message_access' support """
+        records = self.env['mail.test.access.custo'].with_user(self.user_admin).create([
+            {'name': 'Open'},
+            {'name': 'Open RO', 'is_readonly': True},
+            {'is_locked': True, 'name': 'Locked'},
+        ])
+        messages_all = self.env['mail.message']
+        for record in records:
+            messages_all += record.with_user(self.user_admin).message_post(
+                body=f'AnchorForTest / A message from {self.user_admin.name} on {record.name}',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        # lock -> see '_get_mail_message_access', cannot read locked message
+        # without write access, with is not granted for employees
+        with self.assertRaises(AccessError):  # write access not granted on locked -> cannot read message
+            messages_all[2].with_user(self.user_employee).read(['subject'])
+        with self.assertRaises(AccessError):  # also working in case of batch ok / not ok
+            messages_all.with_user(self.user_employee).read(['subject'])
+        messages_all[0].with_user(self.user_employee).read(['subject'])
+        messages_all[1].with_user(self.user_employee).read(['subject'])  # can read message of readonly
+
+        with self.assertRaises(AccessError):  # fetch should be symmetric to read
+            _message = messages_all[2].with_user(self.user_employee).copy_data()
+
+        with self.assertRaises(AccessError):  # no write access at all
+            messages_all.with_user(self.user_portal).read(['subject'])
+        messages_all.with_user(self.user_admin).read(['subject'])
 
     def test_access_read_portal(self):
         """ Read access check for portal users """
