@@ -58,7 +58,7 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
         # Sub-test: Export (Outside India)
         with self.subTest(scenario="Export"):
             self._assert_order_fiscal_position(
-                fpos_ref='fiscal_position_in_export_sez_in',
+                fpos_ref='fiscal_position_in_export',
                 partner=self.partner_foreign.id,
             )
 
@@ -79,7 +79,7 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
 
             self.assertEqual(
                 sale_order.fiscal_position_id,
-                template.ref('fiscal_position_in_export_sez_in')
+                template.ref('fiscal_position_in_export')
             )
 
         # Sub-test: Manual Partner Fiscal Check
@@ -87,10 +87,10 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
             # Here fpos should Inter-State. But due to `property_account_position_id` it will be Export/SEZ
             self.partner_a.write({
                 'state_id': company_state.id,  # Company State
-                'property_account_position_id': template.ref('fiscal_position_in_export_sez_in').id
+                'property_account_position_id': template.ref('fiscal_position_in_export').id
             })
             self._assert_order_fiscal_position(
-                fpos_ref='fiscal_position_in_export_sez_in',
+                fpos_ref='fiscal_position_in_export',
                 partner=self.partner_a.id,
             )
 
@@ -99,6 +99,6 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
         self.env = self.env['base'].with_company(self.default_company).env
 
         self._assert_order_fiscal_position(
-            fpos_ref='fiscal_position_in_export_sez_in',
+            fpos_ref='fiscal_position_in_export',
             partner=self.partner_foreign_no_state.id,
         )

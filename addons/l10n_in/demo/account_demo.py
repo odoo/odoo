@@ -418,7 +418,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'product_id': 'product.product_product_4',
                             'quantity': 30,
                             'price_unit': 8000.0,
-                            'tax_ids': [Command.set(['igst_sale_18_sez_exp'])],
+                            'tax_ids': [Command.set(['igst_sale_18_exp'])],
                         }),
                     ]
                 },

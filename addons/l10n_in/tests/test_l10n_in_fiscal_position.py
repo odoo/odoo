@@ -75,7 +75,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
         )
         # Outside India
         self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_export_sez_in',
+            fiscal_position_ref='fiscal_position_in_export',
             partner=self.partner_foreign,
             taxes=self.igst_sale_18,
         )
@@ -112,7 +112,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
                 taxes=self.igst_sale_18,
             )
             self._assert_invoice_fiscal_position(
-                fiscal_position_ref='fiscal_position_in_export_sez_in',
+                fiscal_position_ref='fiscal_position_in_export',
                 partner=self.partner_foreign,
                 taxes=self.igst_sale_18,
             )
@@ -140,7 +140,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
             })
             self.assertEqual(
                 out_invoice.fiscal_position_id,
-                self.env['account.chart.template'].ref('fiscal_position_in_export_sez_in')
+                self.env['account.chart.template'].ref('fiscal_position_in_export')
             )
 
     def test_l10n_in_fiscal_in_vendor_bills(self):
@@ -191,7 +191,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
             # Sub-test: Export/SEZ (Outside India)
             with self.subTest(scenario="Export/SEZ"):
                 vendor_bill = self._assert_invoice_fiscal_position(
-                    fiscal_position_ref='fiscal_position_in_export_sez_in',
+                    fiscal_position_ref='fiscal_position_in_export',
                     partner=self.partner_foreign,
                     move_type='in_invoice',
                     post=False,
@@ -199,7 +199,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
                 vendor_bill.write({'l10n_in_state_id': self.env.ref('l10n_in.state_in_oc').id})  # Other Country State
                 self.assertEqual(
                     vendor_bill.fiscal_position_id,
-                    template.ref('fiscal_position_in_export_sez_in')
+                    template.ref('fiscal_position_in_export')
                 )
                 # Here fpos should Inter-State. But due to `l10n_in_gst_treatment` it will be Export/SEZ
                 self.partner_a.write({'state_id': other_state.id})
@@ -218,10 +218,10 @@ class TestFiscal(L10nInTestInvoicingCommon):
                 # Here fpos should be Intra-State. But due to `property_account_position_id` it will be Export/SEZ
                 self.partner_a.write({
                     'state_id': company_state.id,  # Intra-State Partner
-                    'property_account_position_id': template.ref('fiscal_position_in_export_sez_in').id
+                    'property_account_position_id': template.ref('fiscal_position_in_export').id
                 })
                 self._assert_invoice_fiscal_position(
-                    fiscal_position_ref='fiscal_position_in_export_sez_in',
+                    fiscal_position_ref='fiscal_position_in_export',
                     partner=self.partner_a,
                     move_type='in_invoice',
                 )

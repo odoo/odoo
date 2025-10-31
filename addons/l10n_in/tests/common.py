@@ -102,9 +102,9 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         cls.sgst_sale_18 = AccountChartTemplate.ref('sgst_sale_18')
         cls.igst_sale_18_rcm = AccountChartTemplate.ref('igst_sale_18_rc')
         cls.igst_sale_18_sez_lut = AccountChartTemplate.ref('igst_sale_18_sez_lut')
-        cls.igst_sale_18_sez_exp_lut = AccountChartTemplate.ref('igst_sale_18_sez_exp_lut')
-        cls.igst_sale_18_sez_exp = AccountChartTemplate.ref('igst_sale_18_sez_exp')
-        cls.igst_sale_18_sez_exp_inc = cls.igst_sale_18_sez_exp.copy({'price_include_override': 'tax_included'})
+        cls.igst_sale_18_exp_lut = AccountChartTemplate.ref('igst_sale_18_exp_lut')
+        cls.igst_sale_18_exp = AccountChartTemplate.ref('igst_sale_18_exp')
+        cls.igst_sale_18_exp_inc = cls.igst_sale_18_exp.copy({'price_include_override': 'tax_included'})
         cls.gst_with_cess = (
             AccountChartTemplate.ref("sgst_sale_12")
             + AccountChartTemplate.ref("cess_5_plus_1591_sale")
@@ -140,7 +140,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         # === Fiscal Positions === #
         cls.fp_in_intra_state = cls.env["account.chart.template"].ref('fiscal_position_in_intra_state')
         cls.fp_in_inter_state = cls.env["account.chart.template"].ref('fiscal_position_in_inter_state')
-        cls.fp_in_export = cls.env["account.chart.template"].ref('fiscal_position_in_export_sez_in')
+        cls.fp_in_export = cls.env["account.chart.template"].ref('fiscal_position_in_export')
 
         # === Invoices === #
         cls.invoice_a = cls.init_invoice(
@@ -196,20 +196,20 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             "out_invoice",
             partner=cls.partner_foreign,
             products=cls.product_a,
-            taxes=cls.igst_sale_18_sez_exp_lut,
+            taxes=cls.igst_sale_18_exp_lut,
         )
 
         cls.invoice_with_export_without_lut = cls.init_invoice(
             "out_invoice",
             partner=cls.partner_foreign,
             products=cls.product_a,
-            taxes=cls.igst_sale_18_sez_exp,
+            taxes=cls.igst_sale_18_exp,
         )
         cls.invoice_with_export_without_lut_inc = cls.init_invoice(
             "out_invoice",
             partner=cls.partner_foreign,
             products=cls.product_a,
-            taxes=cls.igst_sale_18_sez_exp_inc,
+            taxes=cls.igst_sale_18_exp_inc,
         )
 
     @classmethod

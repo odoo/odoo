@@ -55,13 +55,12 @@ class AccountChartTemplate(models.AbstractModel):
         state_ids = [Command.set(company.state_id.ids)] if company.state_id else False
         intra_state_name = company.state_id and _("Within %s", company.state_id.name) or _("Intra State")
         country_in_id = self.env.ref('base.in').id
-        state_specific = {
+        fiscals_data = {
             'fiscal_position_in_intra_state': {
                 'name': intra_state_name,
                 'sequence': 1,
                 'auto_apply': True,
                 'state_ids': state_ids,
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_intra_state'),
                 'country_id': country_in_id,
             },
             'fiscal_position_in_inter_state': {
@@ -69,59 +68,56 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 2,
                 'auto_apply': True,
                 'country_group_id': 'l10n_in.inter_state_group',
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_inter_state'),
             },
         }
-        if company.parent_id:
-            return state_specific
-        return {
-            **state_specific,
-            'fiscal_position_in_sez': {
-                'name': _("Special Economic Zone (SEZ)"),
-                'sequence': 3,
-                'auto_apply': True,
-                'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
-                'country_id': country_in_id,
-                'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_inter_state'),
-            },
-            'fiscal_position_in_export_sez_in': {
-                'name': _("Export"),
-                'sequence': 4,
-                'auto_apply': True,
-                'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_export_sez_in'),
-            },
-            'fiscal_position_in_lut_sez_1': {
-                'name': _("SEZ - LUT (WOP)"),
-                'sequence': 5,
-                'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
-                'country_id': country_in_id,
-                'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."),
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_lut_sez_1'),
-            },
-            'fiscal_position_in_lut_sez': {
-                'name': _("Export - LUT (WOP)"),
-                'sequence': 6,
-                'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX.'),
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_lut_sez'),
-            },
-        }
+        if not company.parent_id:
+            fiscals_data.update({
+                'fiscal_position_in_sez': {
+                    'name': _("Special Economic Zone (SEZ)"),
+                    'sequence': 3,
+                    'auto_apply': True,
+                    'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
+                    'country_id': country_in_id,
+                    'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
+                },
+                'fiscal_position_in_export': {
+                    'name': _("Export"),
+                    'sequence': 4,
+                    'auto_apply': True,
+                    'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
+                },
+                'fiscal_position_in_lut_sez': {
+                    'name': _("SEZ - LUT (WOP)"),
+                    'sequence': 5,
+                    'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
+                    'country_id': country_in_id,
+                    'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."),
+                },
+                'fiscal_position_in_lut_export': {
+                    'name': _("Export - LUT (WOP)"),
+                    'sequence': 6,
+                    'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX.'),
+                },
+            })
+        # Assign tax_ids based on fiscal position
+        for xml_id, data in fiscals_data.items():
+            data['tax_ids'] = self._get_l10n_in_fiscal_tax_vals(xml_id)
+        return fiscals_data
 
-    def _get_l10n_in_fiscal_tax_vals(self, fiscal_position_xml_ids):
+    def _get_l10n_in_fiscal_tax_vals(self, fiscal_position_xml_id):
         rates = [1, 2, 5, 12, 18, 28, 40]
         taxes_xml_ids = []
-
-        if fiscal_position_xml_ids == 'fiscal_position_in_intra_state':
-            taxes_xml_ids = [f"sgst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
-        elif fiscal_position_xml_ids == 'fiscal_position_in_inter_state':
-            taxes_xml_ids = [f"igst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
-        elif fiscal_position_xml_ids == 'fiscal_position_in_export_sez_in':
-            taxes_xml_ids = [f"igst_sale_{rate}_sez_exp" for rate in rates] + [f"igst_purchase_{rate}" for rate in rates] + ['igst_sale_0_sez_exp']
-        elif fiscal_position_xml_ids == 'fiscal_position_in_lut_sez':
-            taxes_xml_ids = [f"igst_sale_{rate}_sez_exp_lut" for rate in rates] + ['igst_sale_0_sez_exp_lut']
-        elif fiscal_position_xml_ids == 'fiscal_position_in_lut_sez_1':
-            taxes_xml_ids = [f"igst_sale_{rate}_sez_lut" for rate in rates] + ['igst_sale_0_sez_lut']
+        match fiscal_position_xml_id:
+            case 'fiscal_position_in_intra_state':
+                taxes_xml_ids = [f"sgst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
+            case 'fiscal_position_in_inter_state' | 'fiscal_position_in_sez':
+                taxes_xml_ids = [f"igst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
+            case 'fiscal_position_in_export':
+                taxes_xml_ids = [f"igst_sale_{rate}_exp" for rate in rates + [0]] + [f"igst_purchase_{rate}" for rate in rates]
+            case 'fiscal_position_in_lut_export':
+                taxes_xml_ids = [f"igst_sale_{rate}_exp_lut" for rate in rates + [0]]
+            case 'fiscal_position_in_lut_sez':
+                taxes_xml_ids = [f"igst_sale_{rate}_sez_lut" for rate in rates + [0]]
         return [Command.set(taxes_xml_ids)]
 
     def _post_load_data(self, template_code, company, template_data):
