@@ -1871,6 +1871,80 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_untaxed': self.move_vals['amount_untaxed'],
         })
 
+    def test_in_invoice_switch_type_storno(self):
+        # Test creating an account_move with an in_invoice_type and switch it in an in_refund,
+        # then switching it back to an in_invoice. When storno accounting is enabled.
+        self.env.company.account_storno = True
+
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 800.0,
+                    'quantity': 1,
+                }),
+                Command.create({
+                    'price_unit': 160.0,
+                    'quantity': 1,
+                }),
+            ],
+        })
+        move.action_switch_move_type()  # Switch to refund.
+
+        self.assertRecordValues(move, [{'move_type': 'in_refund'}])
+        self.assertInvoiceValues(move, [
+            {
+                'amount_currency': -800.0,
+                'credit': 0.0,
+                'debit': -800.0,
+            },
+            {
+                'amount_currency': -160.0,
+                'credit': 0.0,
+                'debit': -160.0,
+            },
+            {
+                'amount_currency': 960.0,
+                'debit': 0.0,
+                'credit': -960.0,
+            },
+        ], {
+            'partner_id': self.partner_a.id,
+            'amount_untaxed': 960.0,
+            'amount_tax': 0.0,
+            'amount_total': 960.0,
+            'date': fields.Date.from_string('2019-01-31'),
+        })
+
+        move.action_switch_move_type()  # Switch back to invoice.
+
+        self.assertRecordValues(move, [{'move_type': 'in_invoice'}])
+        self.assertInvoiceValues(move, [
+            {
+                'amount_currency': 160.0,
+                'credit': 0.0,
+                'debit': 160.0,
+            },
+            {
+                'amount_currency': 800.0,
+                'credit': 0.0,
+                'debit': 800.0,
+            },
+            {
+                'amount_currency': -960.0,
+                'debit': 0.0,
+                'credit': 960,
+            },
+        ], {
+            'partner_id': self.partner_a.id,
+            'amount_untaxed': 960.0,
+            'amount_tax': 0.0,
+            'amount_total': 960.0,
+            'date': fields.Date.from_string('2019-01-31'),
+        })
+
     def test_in_invoice_change_period_accrual_1(self):
         move = self.env['account.move'].create({
             'move_type': 'in_invoice',
