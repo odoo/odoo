@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SearchBar.Toggler">
-        <button t-if="props.isSmall" t-attf-class="btn btn-secondary {{ props.showSearchBar ? 'active' : '' }}" t-on-click="props.toggleSearchBar">
+        <button t-if="props.isSmall" t-attf-class="btn btn-secondary {{ props.showSearchBar ? 'active' : '' }}" t-on-click="props.toggleSearchBar" data-available-offline="">
             <i class="fa fa-fw fa-search"/>
         </button>
     </t>
