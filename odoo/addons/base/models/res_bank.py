@@ -123,7 +123,7 @@ class ResPartnerBank(models.Model):
         for bank in self:
             bank.acc_type = self.retrieve_acc_type(bank.acc_number)
 
-    @api.depends('partner_id.name')
+    @api.depends('partner_id')
     def _compute_account_holder_name(self):
         for bank in self:
             bank.acc_holder_name = bank.partner_id.name
