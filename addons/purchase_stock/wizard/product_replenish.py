@@ -23,8 +23,8 @@ class ProductReplenish(models.TransientModel):
             orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', 'in', [product_tmpl_id.product_variant_id.id, product_id.id]), ("warehouse_id", "=", res['warehouse_id'])], limit=1)
             if orderpoint.route_id:
                 res['route_id'] = orderpoint.route_id.id
-            if orderpoint.supplier_id:
-                res['partner_id'] = orderpoint.supplier_id.partner_id.id
+            if orderpoint.partner_id:
+                res['partner_id'] = orderpoint.partner_id.id
         return res
 
     @api.onchange('route_id')
@@ -46,22 +46,6 @@ class ProductReplenish(models.TransientModel):
         if self.partner_id:
             res['procurement_partner'] = self.partner_id
         return res
-
-    def action_stock_replenishment_info(self):
-        self.ensure_one()
-        orderpoint = self.env["stock.warehouse.orderpoint"].search([("product_id", "=", self.product_id.id), ("warehouse_id", "=", self.warehouse_id.id)], limit=1)
-        if not orderpoint:
-            orderpoint = self.env["stock.warehouse.orderpoint"].create({
-                "product_id": self.product_id.id,
-                "warehouse_id": self.warehouse_id.id,
-            })
-        action = orderpoint.action_stock_replenishment_info()
-
-        action["context"] = {
-            'default_orderpoint_id': orderpoint.id,
-            'replenish_id': self.id,
-        }
-        return action
 
     def _get_record_to_notify(self, date):
         order_line = self.env['purchase.order.line'].search([('write_date', '>=', date)], limit=1)
