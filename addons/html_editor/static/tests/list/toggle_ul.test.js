@@ -204,6 +204,23 @@ describe("Range collapsed", () => {
                     '<ul><li style="font-size: 18px; list-style-position: inside;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></li></ul>',
             });
         });
+
+        test("should convert an ordered list to an unordered list without removing inline styles", async () => {
+            await testEditor({
+                contentBefore: '<ol><li style="color: rgb(0, 128, 0);">a</li></ol>',
+                stepFunction: toggleUnorderedList,
+                contentAfter: '<ul><li style="color: rgb(0, 128, 0);">a</li></ul>',
+            });
+        });
+
+        test("should convert a checklist to an unordered list without removing inline styles", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul class="o_checklist"><li style="color: rgb(0, 128, 0);">a</li></ul>',
+                stepFunction: toggleUnorderedList,
+                contentAfter: '<ul><li style="color: rgb(0, 128, 0);">a</li></ul>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn an empty list into a paragraph", async () => {

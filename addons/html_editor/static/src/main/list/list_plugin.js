@@ -422,14 +422,12 @@ export class ListPlugin extends Plugin {
         }
         const newTag = newMode === "CL" ? "UL" : newMode;
         const newList = this.dependencies.dom.setTagName(list, newTag);
-        // Clear list style (@todo @phoenix - why??)
+        // Remove any previously set list-style so that when changing the list
+        // type, the new list can show its correct default marker style.
         newList.style.removeProperty("list-style");
         for (const li of newList.children) {
             if (li.style.listStyle !== "none") {
                 li.style.listStyle = null;
-                if (!li.style.all) {
-                    li.removeAttribute("style");
-                }
             }
         }
         removeClass(newList, "o_checklist");
