@@ -19174,7 +19174,7 @@ test(`cache web_search_read (onUpdate called after another load)`, async () => {
     expect(`.o_data_row`).toHaveCount(4);
     expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
 
-    // create a record and go back to the form => will display data from the cache
+    // create a record and go back to the list => will display data from the cache
     await contains(`.o_list_button_add`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("new record");
     await contains(`.breadcrumb-item a, .o_back_button`).click();
@@ -19199,6 +19199,49 @@ test(`cache web_search_read (onUpdate called after another load)`, async () => {
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip", "gnap", "new record", "yop"]);
+});
+
+test(`cache web_search_read (pager next)`, async () => {
+    const searchReadDefs = [null, null, new Deferred(), new Deferred()];
+    let webSearchReadCount = 0;
+    onRpc("web_search_read", () => {
+        expect.step("web_search_read");
+        return searchReadDefs[webSearchReadCount++];
+    });
+
+    Foo._views = {
+        "list,false": `<list limit="2"><field name="foo"/></list>`,
+        "search,false": `<search/>`,
+    };
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2"><field name="foo"/></list>`,
+    });
+
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip"]); // page 1
+    await contains(".o_pager_next").click();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // page 2
+    expect.verifySteps(["web_search_read", "web_search_read"]);
+
+    // web_search_read is blocked
+    await contains(".o_pager_next").click();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip"]); // page 1 directly available
+    expect.verifySteps(["web_search_read"]);
+
+    await contains(".o_pager_next").click();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // page 2 directly available
+    expect.verifySteps(["web_search_read"]);
+
+    // unblock web_search_read rpcs
+    searchReadDefs[2].resolve();
+    await animationFrame();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // still page 2
+
+    searchReadDefs[3].resolve();
+    await animationFrame();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // still page 2
 });
 
 test(`cache web_read_group (no change)`, async () => {
