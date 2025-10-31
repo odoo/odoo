@@ -353,9 +353,26 @@ class MailMessage(models.Model):
 
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):
-        doc_ids = list(doc_dict)
-        allowed_doc_ids = self.env[doc_model].with_context(active_test=False).search([('id', 'in', doc_ids)]).ids
-        return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+        # filter for each operation
+        documents_all = self.env[doc_model].with_context(active_test=False).browse(list(doc_dict))
+        documents_per_operation = defaultdict(self.env[doc_model].browse)
+        for document in documents_all:
+            if hasattr(document, '_get_mail_message_access'):
+                doc_operation = document._get_mail_message_access(document.ids, 'read')  # why not giving model here?
+            else:
+                doc_operation = self.env['mail.thread']._get_mail_message_access(document.ids, 'read', model_name=document._name)
+            documents_per_operation[doc_operation] |= document
+
+        allowed = self.env[doc_model]
+        for record_operation, records in documents_per_operation.items():
+            operation_allowed = records.check_access_rights(record_operation, raise_exception=False)
+            if operation_allowed:
+                allowed += records._filter_access_rules(record_operation)
+        allowed_ids = {
+            msg_id for document_id in allowed.ids for msg_id in doc_dict[document_id]
+        }
+
+        return allowed_ids
 
     @api.model
     def _find_allowed_doc_ids(self, model_ids):
