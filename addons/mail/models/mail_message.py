@@ -513,15 +513,20 @@ class Message(models.Model):
             if (message.get('model') and message.get('res_id') and
                     message.get('message_type') != 'user_notification'):
                 model_docid_msgids[message['model']][message['res_id']].append(mid)
-
         for model, docid_msgids in model_docid_msgids.items():
             documents = self.env[model].browse(docid_msgids)
-            if hasattr(documents, '_get_mail_message_access'):
-                doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
-            else:
-                doc_operation = self.env['mail.thread']._get_mail_message_access(docid_msgids, operation, model_name=model)
-            doc_result = documents._check_access(doc_operation)
-            forbidden_doc_ids = set(doc_result[0]._ids) if doc_result else set()
+            documents_per_operation = defaultdict(self.env[model].browse)
+
+            for document in documents:
+                if hasattr(document, '_get_mail_message_access'):
+                    doc_operation = self.env[document._name]._get_mail_message_access(document.ids, operation)  # why not giving model here?
+                else:
+                    doc_operation = self.env['mail.thread']._get_mail_message_access(document.ids, operation, model_name=model)
+                documents_per_operation[doc_operation] |= document
+            forbidden_doc_ids = set()
+            for record_operation, records in documents_per_operation.items():
+                operation_result = records._check_access(record_operation)
+                forbidden_doc_ids |= set(operation_result[0]._ids) if operation_result else set()
             for doc_id, msg_ids in docid_msgids.items():
                 if doc_id not in forbidden_doc_ids:
                     for mid in msg_ids:
@@ -715,6 +720,12 @@ class Message(models.Model):
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access('read')
         return super(Message, self).read(fields=fields, load=load)
+
+    def copy_data(self, default=None):
+        """ Make is symmetric to read, to avoid spurious issues with recordsets
+        differences. """
+        self.check_access('read')
+        return super().copy_data(default=default)
 
     def fetch(self, field_names):
         # This freaky hack is aimed at reading data without the overhead of
