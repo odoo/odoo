@@ -57,6 +57,21 @@ export class HandlerDialog extends Component {
         }
     }
 
+    async enableCustomHandlers(value) {
+        this.state.waitRestart = !value;
+        try {
+            await this.store.rpc({
+                url: "/iot_drivers/enable_custom_handlers",
+                method: "POST",
+                params: {
+                    enable: value,
+                },
+            });
+        } catch {
+            console.warn("Error while enabling custom handlers");
+        }
+    }
+
     static template = xml`
     <t t-translation="off">
         <LoadingFullScreen t-if="this.state.waitRestart">
@@ -65,9 +80,9 @@ export class HandlerDialog extends Component {
             </t>
         </LoadingFullScreen>
 
-        <BootstrapDialog identifier="'handler-configuration'" btnName="'Log level'" onOpen.bind="getHandlerData" onClose.bind="onClose">
+        <BootstrapDialog identifier="'handler-configuration'" btnName="'Handlers Configuration'" onOpen.bind="getHandlerData" onClose.bind="onClose">
             <t t-set-slot="header">
-                Handler logging
+                Handlers Configuration
             </t>
             <t t-set-slot="body">
                 <div t-if="this.state.initialization" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top handler-loading">
@@ -77,6 +92,18 @@ export class HandlerDialog extends Component {
                     <p>Currently scanning for initialized drivers and interfaces...</p>
                 </div>
                 <t t-else="">
+                    <div class="mb-3">
+                        <h5>Custom Handlers</h5>
+                        <div class="form-check mb-3">
+                            <input name="custom-handler"
+                                id="custom-handlers"
+                                class="form-check-input cursor-pointer"
+                                type="checkbox"
+                                t-att-checked="this.state.handlerData.is_custom_handlers_enabled"
+                                t-on-change="(ev) => this.enableCustomHandlers(ev.target.checked)" />
+                            <label class="form-check-label cursor-pointer" for="custom-handlers">Download custom handlers from the database</label>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <h5>Global logs level</h5>
                         <div class="form-check mb-3">

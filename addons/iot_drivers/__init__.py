@@ -1,13 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from functools import wraps
 import requests
-import logging
 
 from . import server_logger
 from . import connection_manager
 from . import controllers
-from . import driver
 from . import event_manager
 from . import exception_logger
 from . import http
@@ -16,9 +13,10 @@ from . import main
 from . import tools
 from . import websocket_client
 from . import webrtc_client
+from . import iot_handlers
 
-_logger = logging.getLogger(__name__)
-_logger.info("==== Starting Odoo IoT Box service ====")
+for interface_thread in main.interfaces.values():
+    interface_thread().start()
 
 _get = requests.get
 _post = requests.post

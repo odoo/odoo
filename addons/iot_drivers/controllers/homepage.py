@@ -240,6 +240,7 @@ class IotBoxOwlHomePage(http.Controller):
             'available_log_levels': AVAILABLE_LOG_LEVELS,
             'drivers_logger_info': self._get_iot_handlers_logger(drivers_list, 'drivers'),
             'interfaces_logger_info': self._get_iot_handlers_logger(interfaces_list, 'interfaces'),
+            'is_custom_handlers_enabled': system.get_conf('custom_handlers'),
         })
 
     @route.iot_route('/iot_drivers/load_iot_handlers', type="http", cors='*')
@@ -386,6 +387,18 @@ class IotBoxOwlHomePage(http.Controller):
             'status': 'success',
             'message': 'Successfully updated the IoT Box',
         }
+
+    @route.iot_route('/iot_drivers/enable_custom_handlers', type="jsonrpc", methods=['POST'], cors='*')
+    def enable_custom_handlers(self, enable):
+        if enable:
+            system.update_conf({'custom_handlers': True})
+            helpers.download_iot_handlers(False)
+        else:
+            system.update_conf({'custom_handlers': False})
+            # Reset to the default handlers and restart
+            system.git("clean", "-dfx")
+            helpers.odoo_restart()
+        return {'status': 'success'}
 
     # ---------------------------------------------------------- #
     # Utils                                                      #
