@@ -420,8 +420,8 @@ class Message(models.Model):
                 - uid has write or create access on the related document
                 - otherwise: raise
 
-        Specific case: non employee users see only messages with subtype (aka do
-        not see internal logs).
+        Specific case: non employee users cannot see internal messages (aka logs):
+        'is_internal' flag on message, 'internal' flag on subtype.
         """
         def _generate_model_record_ids(msg_val, msg_ids):
             """ :param model_record_ids: {'model': {'res_id': (msg_id, msg_id)}, ... }
@@ -442,13 +442,20 @@ class Message(models.Model):
 
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env['res.users'].has_group('base.group_user'):
-            self._cr.execute('''SELECT DISTINCT message.id, message.subtype_id, subtype.internal
-                                FROM "%s" AS message
-                                LEFT JOIN "mail_message_subtype" as subtype
-                                ON message.subtype_id = subtype.id
-                                WHERE message.message_type = %%s AND
-                                    (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE) AND
-                                    message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
+            message_type_condition = ''
+            if operation in ('create', 'read'):
+                message_type_condition = "message.message_type = 'comment' AND"
+            self._cr.execute('''
+                SELECT DISTINCT message.id, message.subtype_id, subtype.internal
+                        FROM "%s" AS message
+                    LEFT JOIN "mail_message_subtype" as subtype
+                            ON message.subtype_id = subtype.id
+                        WHERE %s message.id = ANY (%%s) AND (
+                                    message.is_internal IS TRUE
+                                    OR message.subtype_id IS NULL
+                                    OR subtype.internal IS TRUE
+                                )
+            ''' % (self._table, message_type_condition), (self.ids,))
             if self._cr.fetchall():
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)', self._description, operation)
