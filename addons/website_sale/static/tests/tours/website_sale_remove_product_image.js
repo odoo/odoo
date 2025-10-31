@@ -36,11 +36,13 @@ const removeImg = [
         trigger: ".o_customize_tab [data-container-title='Image'] button[data-action-id='removeMedia']",
         run: "click",
     },
-    // If the snippet editor is not visible, the remove process is considered as
-    // finished.
     {
         content: "Check that the snippet editor is not visible",
         trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+    },
+    {
+        content: "Wait until the the image removal is saved",
+        trigger: ':iframe #o-carousel-product div:not(.o_dirty) > img',
     },
 ];
 
@@ -55,7 +57,7 @@ registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
     },
     {
         content: "Click on the new image",
-        trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
+        trigger: ".o_select_media_dialog img[title='green.jpg']",
         run: "click",
     },
     {
