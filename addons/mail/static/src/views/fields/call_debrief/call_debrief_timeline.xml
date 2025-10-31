@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.CallDebriefTimeline">
+        <div class="o-CallDebriefTimeline-container">
+            <div class="o-CallDebriefTimeline-labels">
+                <span>00:00</span>
+                <span t-out="this.formattedTotalDuration"/>
+            </div>
+            <div class="o-CallDebriefTimeline" t-ref="this.timeline" t-on-mousedown="this.onDragStart">
+                <div class="o-CallDebriefTimeline-track">
+                    <t t-if="this.props.mediaSegments">
+                        <t t-foreach="this.props.mediaSegments" t-as="segment" t-key="segment.id">
+                            <div class="o-CallDebriefTimeline-media-segment"
+                                 t-att-style="this._stylePositionMediaSegment(segment)"/>
+                        </t>
+                    </t>
+                </div>
+
+                <!-- Playhead (rendered on top of everything) -->
+                <div t-if="this.props.currentTime !== undefined" class="o-CallDebriefTimeline-playhead"
+                     t-att-style="this._stylePositionPlayhead()">
+                    <span class="o-CallDebriefTimeline-playhead-timestamp" t-out="this.formatDuration(this.props.currentTime)"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

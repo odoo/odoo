@@ -10,6 +10,7 @@ class DiscussCallHistory(models.Model):
     _explanation = "Stores the history of internal discuss calls (audio/video), tracking the start time, end time, duration, and the associated channel."
 
     channel_id = fields.Many2one("discuss.channel", index=True, required=True, ondelete="cascade")
+    artifact_ids = fields.One2many("mail.call.artifact", "discuss_call_history_id", string="Artifacts")
     duration_hour = fields.Float(compute="_compute_duration_hour")
     start_dt = fields.Datetime(index=True, required=True)
     end_dt = fields.Datetime()
@@ -25,6 +26,10 @@ class DiscussCallHistory(models.Model):
         "UNIQUE (start_call_message_id)", "Messages can only be linked to one call history"
     )
     _channel_id_end_dt_idx = models.Index("(channel_id, end_dt) WHERE end_dt IS NULL")
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_cleanup_artifacts_attachments(self):
+        self.artifact_ids.unlink()
 
     @api.depends("start_dt", "end_dt")
     def _compute_duration_hour(self):

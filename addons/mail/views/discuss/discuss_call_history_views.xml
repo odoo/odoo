@@ -23,6 +23,11 @@
                         <field name="end_dt"/>
                         <field name="duration_hour" widget="float_time" options="{'show_seconds': true}"/>
                     </group>
+                    <field name="artifact_ids"
+                        widget="call_debrief"
+                        options="{'callStartDateField': 'start_dt', 'callEndDateField': 'end_dt'}"
+                        invisible="not artifact_ids"
+                    />
                 </form>
             </field>
         </record>
