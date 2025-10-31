@@ -1239,7 +1239,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'fallback_nomenclature_id': default_nomenclature_id
         })
-        self.env['product.product'].create({
+        product_1 = self.env['product.product'].create({
             'name': 'Product 1',
             'available_in_pos': True,
             'list_price': 10,
@@ -1262,6 +1262,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'list_price': 10,
             'taxes_id': False,
             'barcode': '3760171283370',
+        })
+
+        self.env['product.packaging'].create({
+            'name': 'Product Packaging 10 Products',
+            'qty': 10,
+            'product_id': product_1.id,
+            'barcode': '08431673020132',
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
