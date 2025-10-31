@@ -58,14 +58,13 @@ class MailPoll(models.Model):
             poll.end_message_id = thread.message_post(
                 body="", message_type="mail_poll", subtype_xmlid="mail.mt_comment"
             )
-            Store(**thread._get_store_target()).add(poll).bus_send()
+            Store(**thread._get_store_target()).add(poll, extra_fields=[Store.One("start_message_id")]).bus_send()
 
     @api.model
     def _end_expired_polls(self):
-        self.env["mail.poll"].search_fetch([
-            ("poll_end_dt", "<=", "now"),
-            ("end_message_id", "=", None),
-        ])._end_and_notify()
+        self.env["mail.poll"].search_fetch(
+            [("poll_end_dt", "<=", "now"), ("end_message_id", "=", None)],
+        )._end_and_notify()
 
     @api.ondelete(at_uninstall=False)
     def _poll_on_delete(self):

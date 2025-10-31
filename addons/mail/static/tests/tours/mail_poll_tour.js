@@ -1,5 +1,7 @@
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
+const pollId = new URL(window.location.href).searchParams.get("test_poll_id");
 registry.category("web_tour.tours").add("mail_poll_tour.js", {
     steps: () => [
         { trigger: ".o-mail-Composer [title='More Actions']", run: "click" },
@@ -44,12 +46,25 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: "button:contains('End Poll')", run: "click" },
         { trigger: ".o-mail-PollResult:contains(Blue)" },
         { trigger: ".o-mail-PollResult:contains('Winning Answer∙100%')" },
-        { trigger: ".o-mail-Message:has(.o-mail-Poll)", run: "hover && click [title='Expand']" },
+        {
+            trigger: ".o-mail-Message:has(.o-mail-Poll)",
+            run: "hover && click .o-mail-Message:has(.o-mail-Poll) [title='Expand']",
+        },
         { trigger: "button:contains('Delete')", run: "click" },
         { trigger: ".modal .btn:contains(Delete)", run: "click" },
         {
             trigger:
                 ".o-mail-Message:contains('This message has been removed'):not(:has(.o-mail-Poll))",
+        },
+        // End a poll that was not loaded to ensure all the information required by the end poll UI
+        // is provided by the `_end_and_notify` method.
+        {
+            trigger: "body",
+            run: () => rpc("/mail/poll/end", { poll_id: pollId }),
+        },
+        {
+            trigger:
+                '.o-mail-PollResult:contains(internal user (base.group_user)\'s poll "???" has ended.)',
         },
     ],
 });
