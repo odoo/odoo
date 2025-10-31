@@ -104,7 +104,7 @@ class DisplayDriver(Driver):
         if type(orientation) is not Orientation:
             raise TypeError("orientation must be of type Orientation")
 
-        if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
+        if float(helpers.get_version()[1:8]) >= MIN_IMAGE_VERSION_WAYLAND:
             subprocess.run(['wlr-randr', '--output', self.device_identifier, '--transform', orientation.value], check=True)
             # Update touchscreen mapping to this display
             with helpers.writable():
