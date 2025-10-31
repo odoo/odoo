@@ -3333,9 +3333,9 @@ describe("images", () => {
             // select xxx in "<p>ab[xxx]cd</p>""
             const p = editor.editable.querySelector("p");
             const selection = {
-                anchorNode: p.childNodes[1],
+                anchorNode: p.childNodes[0],
                 anchorOffset: 2,
-                focusNode: p.childNodes[1],
+                focusNode: p.childNodes[0],
                 focusOffset: 5,
             };
             setSelection(selection);
@@ -3529,9 +3529,9 @@ describe("youtube video", () => {
             // select xxx in "<p>ab[xxx]cd</p>"
             const p = editor.editable.querySelector("p");
             const selection = {
-                anchorNode: p.childNodes[1],
+                anchorNode: p.childNodes[0],
                 anchorOffset: 2,
-                focusNode: p.childNodes[1],
+                focusNode: p.childNodes[0],
                 focusOffset: 5,
             };
             setSelection(selection);
