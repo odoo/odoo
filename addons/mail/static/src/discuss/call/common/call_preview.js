@@ -28,6 +28,7 @@ export class CallPreview extends Component {
 
     setup() {
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.state = useState({ audioStream: null, blurManager: null, videoStream: null });
