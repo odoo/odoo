@@ -194,7 +194,11 @@ class HrEmployee(models.Model):
     structure_type_id = fields.Many2one(readonly=False, related='version_id.structure_type_id', inherited=True, groups="hr.group_hr_manager")
     contract_type_id = fields.Many2one(readonly=False, related='version_id.contract_type_id', inherited=True, groups="hr.group_hr_manager")
     hourly_cost = fields.Monetary('Hourly Cost', groups="hr.group_hr_user", tracking=True)
-
+    nationality_country_code = fields.Char(
+        string='Nationality',
+        related='version_id.country_id.code',
+        groups="hr.group_hr_user"
+    )
     # Direct subordinates
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
                                 domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
