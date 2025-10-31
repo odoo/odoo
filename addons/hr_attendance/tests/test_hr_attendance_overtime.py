@@ -1018,3 +1018,17 @@ class TestHrAttendanceOvertime(TransactionCase):
     def test_overtime_rule_combined(self):
         # TODO
         pass
+
+    def test_overtime_rule_timing_type_not_set(self):
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Test Timing Ruleset',
+            'rule_ids': [
+                Command.create({
+                    'name': "Company Schedule",
+                    'base_off': 'timing',
+                }),
+            ],
+        })
+
+        self.assertEqual(ruleset.rule_ids.timing_type, 'work_days',
+                 "Employee work Timing type should default to 'work_days' when not set.")
