@@ -874,7 +874,7 @@ export class PivotModel extends Model {
      */
     _getCellCurrency(groupId, measure, config) {
         var key = JSON.stringify(groupId);
-        if (!config.data.currencyIds[key]) {
+        if (!config.data.currencyIds[key] || !Object.keys(!config.data.currencyIds[key]).length) {
             return;
         }
         return config.data.currencyIds[key][measure];
