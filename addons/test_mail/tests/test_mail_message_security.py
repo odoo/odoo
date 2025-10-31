@@ -777,7 +777,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Test '_mail_get_operation_for_mail_message_operation' support in search """
         records = self.env['mail.test.access.custo'].with_user(self.user_admin).create([
             {'name': 'Open'},
-            {'name': 'Open (other)'},
+            {'name': 'Open RO', 'is_readonly': True},  # internal can read thus search
             {'name': 'Soonish Locked'},
         ])
         messages_all = self.env['mail.message'].sudo()
@@ -798,18 +798,19 @@ class TestMailMessageAccess(MessageAccessCommon):
         ])
         self.assertEqual(found_por, messages_all)
 
-        # lock -> see '_mail_get_operation_for_mail_message_operation', which is not supported currently
-        # in the search, making it inconsistent with 'read'
+        # lock -> locked records need 'write' access, as defined in '_mail_get_operation_for_mail_message_operation'
+        # hence messages are out of search, symmetrical to reading therm
         records[2].write({'is_locked': True, 'name': 'Locked !'})
+        records[2].flush_recordset()
         found_emp = self.env['mail.message'].with_user(self.user_employee).search([
             ('body', 'ilike', 'AnchorForSearch')
         ])
-        self.assertEqual(found_emp, messages_all.filtered(lambda m: m.res_id != records[2].id), 'FIXME: should filter like read')
+        self.assertEqual(found_emp, messages_all.filtered(lambda m: m.res_id != records[2].id), 'Should filter like read')
         found_emp.read(['subject'])
         found_por = self.env['mail.message'].with_user(self.user_portal).search([
             ('body', 'ilike', 'AnchorForSearch')
         ])
-        self.assertEqual(found_por, messages_all.filtered(lambda m: m.res_id != records[2].id), 'FIXME: should filter like read')
+        self.assertEqual(found_por, messages_all.filtered(lambda m: m.res_id != records[2].id), 'Should filter like read')
         found_por.read(['subject'])
 
 
