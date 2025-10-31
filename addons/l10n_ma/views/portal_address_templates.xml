@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_vat" position="after">
+            <t t-set="company_registry_warning" t-value="current_partner.company_registry and not current_partner.can_edit_vat()"/>
+            <div id="div_company_registry" class="col-xl-6 mb-2"
+                t-att-class="(not country or country.code != 'MA') and 'display:none;'">
+                <label class="col-form-label label-optional" for="company_registry">
+                ICE
+                </label>
+                <input
+                    type="text"
+                    name="company_registry"
+                    t-att-value="current_partner.company_registry"
+                    t-att-readonly="'1' if company_registry_warning else None"
+                    class="form-control"
+                />
+                <div t-if="company_registry_warning" class="col-12 d-none d-lg-block mb-1">
+                    <small class="form-text text-muted">
+                        Modifying the ICE number is not allowed once documents have
+                        been issued for your account. Please contact us directly if that's what you intend to do.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

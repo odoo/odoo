@@ -15,3 +15,8 @@ class ResPartner(models.Model):
         labels = super()._get_company_registry_labels()
         labels['MA'] = _("ICE")
         return labels
+
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update({'company_registry'})
+        return frontend_writable_fields
