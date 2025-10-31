@@ -44,3 +44,10 @@ export function checkImgAndSelect(productName, checkImg = false) {
         run: "click",
     };
 }
+
+export function isNotPresent(productName) {
+    return {
+        content: `Check that ${productName} is not present in the combo options`,
+        trigger: negate(productTrigger(productName), ".modal"),
+    };
+}

@@ -1050,6 +1050,11 @@ class TestUi(TestPointOfSaleHttpCommon):
             'lst_price': 50,
             'barcode': 'SuperCombo',
         })
+        # Archive a product to test that combo lines with archived products do not appear
+        self.office_combo.combo_ids.combo_item_ids.product_id.filtered(lambda p: p.name == 'Combo Product 1').write({
+            'active': False,
+            'name': 'Combo Product 1 (archived)',
+        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductComboPriceTaxIncludedTour')
         order = self.env['pos.order'].search([])
