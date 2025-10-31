@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-17 12:02+0000\n"
-"PO-Revision-Date: 2025-10-30 16:00+0000\n"
+"PO-Revision-Date: 2025-10-31 19:40+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/da/>\n"
@@ -1184,7 +1184,7 @@ msgstr "<span class=\"o_stat_text\">Journalpostering</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Reconciled Items</span>"
-msgstr "<span class=\"o_stat_text\">Afstemte posteringer</span>"
+msgstr "<span class=\"o_stat_text\">Afstemte poster</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1204,8 +1204,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted ms-2\">\n"
-"                                <i>inklusiv, for at gøre dem uforanderlige</"
-"i>\n"
+"                                <i>inklusiv, for at gøre dem "
+"uforanderlige</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1225,8 +1225,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">DKK <span class=\"oe_currency_value\">1,750.00</"
-"span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">11.750,00</"
+"span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1234,8 +1234,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">DKK <span class=\"oe_currency_value\">19,250.00</"
-"span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">19.250,00</"
+"span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1243,30 +1243,30 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
-"span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">7.500,00</"
+"span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span class=\"text-nowrap\">1,500.00</span>"
-msgstr "<span class=\"text-nowrap\">1,500.00</span>"
+msgstr "<span class=\"text-nowrap\">1.500,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
-msgstr "<span class=\"text-nowrap\">2,350.00</span>"
+msgstr "<span class=\"text-nowrap\">2.350,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
-msgstr "<span class=\"text-warning\">Medium risiko</span>: Iban"
+msgstr "<span class=\"text-warning\">Moderat risiko</span>: Iban"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
-"<span invisible=\"name or name_placeholder or quick_edit_mode\">Udkast</span>"
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Kladde</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1292,8 +1292,8 @@ msgid ""
 "invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Faktura</span>\n"
-"                                        <span "
-"invisible=\"reconciled_invoices_type == 'invoice'\"> Kreditnota</span>"
+"                                        <span invisible="
+"\"reconciled_invoices_type == 'invoice'\"> Kreditnota</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1308,7 +1308,7 @@ msgstr "<span role=\"separator\">Ny</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">Udligning</span>"
+msgstr "<span role=\"separator\">Afstemning</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1323,7 +1323,7 @@ msgstr "<span title=\"Latest Statement\">Seneste kontoudtog</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
-msgstr "<span> (CR)</span>"
+msgstr "<span> (KR)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1348,7 +1348,7 @@ msgstr "<span> Til </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span> due on </span>"
-msgstr "<span> Forfalden den </span>"
+msgstr "<span> forfalden den </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -1359,12 +1359,12 @@ msgstr "<span> på </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span>DKK <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> $</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>1</span>"
-msgstr ""
+msgstr "<span>1</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1375,13 +1375,12 @@ msgstr "<span>5,00</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Godt arbejde!</b> Du gennemgik samtlige trin for denne rundvisning."
-"</span>"
+"<span><b>Godt klaret!</b> Du har gennemført alle trin i rundvisningen.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>=</span>"
-msgstr ""
+msgstr "<span>=</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1437,6 +1436,7 @@ msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
 msgstr ""
+"<span>En eller flere af denne partners bankkonti bruges også af andre:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1447,7 +1447,7 @@ msgstr "<span>Handlinger</span>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr "<span>Antal</span>"
+msgstr "<span>Mængde</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1473,7 +1473,7 @@ msgstr "<span>Moms</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span>The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Bankkonto kan være en dublet af</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1481,25 +1481,25 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Denne postering er blevet genereret via Fakturering applikationen, før "
-"installering af Regnskab. Dens saldo er blevet importeret separat.</span>"
+"<span>Denne postering blev oprettet i Faktureringsappen, før Bogføringsappen "
+"blev installeret. Dens saldo er blevet importeret separat.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr "<span>Dette er en forhåndsvisning af dine handelsbetingelser.</span>"
+msgstr "<span>Dette er en forhåndsvisning af dine vilkår og betingelser.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<span>This payment has the same partner, amount and date as </span>"
-msgstr "<span>Denne betaling har samme partner, beløb, og dato som </span>"
+msgstr "<span>Denne betaling har samme partner, beløb og dato som </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr "<span>Stk. pris</span>"
+msgstr "<span>Stykpris</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1509,7 +1509,7 @@ msgstr "<span>Visning</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>Warning: this document might be a duplicate of</span>"
-msgstr "<span>Advarsel: Dette dokument kan muligvis være en dublet af</span>"
+msgstr "<span>Advarsel: Dette dokument kan være en dublet af</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1524,7 +1524,7 @@ msgstr "<strong class=\"mr16\">Subtotal</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date</strong>"
-msgstr "<strong>Kreditnota dato</strong>"
+msgstr "<strong>Kreditnotadato</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1574,7 +1574,7 @@ msgstr "<strong>Fakturadato</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Receipt Date</strong>"
-msgstr "<strong>Kvitteringsdato</strong>"
+msgstr "<strong>Modtagelsesdato</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3348,8 +3348,7 @@ msgstr ""
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
 msgstr ""
-"Enhver journalpost på en betalingskonto skal have en forfaldsdato, og "
-"omvendt."
+"Alle posteringer på en leverandørkonto skal have en forfaldsdato, og omvendt."
 
 #. module: account
 #. odoo-python
@@ -3357,8 +3356,8 @@ msgstr ""
 msgid ""
 "Any journal item on a receivable account must have a due date and vice versa."
 msgstr ""
-"Enhver posteringslinje på en tilgodehavendekonto skal have en forfaldsdato "
-"og omvendt."
+"Alle posteringer på en tilgodehavendekonto skal have en forfaldsdato, og "
+"omvendt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4699,7 +4698,7 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Afkryds dette felt, hvis denne konto tillader fakturaer og betalinger, der "
+"Markér dette felt, hvis denne konto tillader fakturaer og betalinger, der "
 "matcher journalposter."
 
 #. module: account
@@ -4878,8 +4877,9 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
-"Komma-separeret liste af felter fra account.move.line (Journalpost). Når "
-"angivet, vil denne linje generere underlinjer grupperet efter disse nøgler."
+"Komma-separeret liste over felter fra account.move.line (journalpost). Når "
+"disse felter angives, vil linjen generere underlinjer grupperet efter disse "
+"nøgler."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -5663,7 +5663,7 @@ msgstr "Kreditkort"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Krediter journalposter, der matcher med denne journal."
+msgstr "Kreditér journalposter, der matcher denne journalpost."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
@@ -5751,12 +5751,12 @@ msgstr "Valuta skal altid være angivet for at kunne generere en QR-kode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr "Valuta for kredit journalartiklen"
+msgstr "Valuta for kreditposteringen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
 msgid "Currency of the debit journal item."
-msgstr "Valuta for debet journalartiklen"
+msgstr "Valuta for debetposteringen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_currency_rate
@@ -6125,7 +6125,7 @@ msgstr "Debitering"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Debiter journalposter der matcher med denne journal."
+msgstr "Debetposteringer, der matcher med denne journal."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -7281,6 +7281,8 @@ msgstr "Aktiver brug af kreditgrænse på partnere."
 #: model:ir.model.fields,help:account.field_res_config_settings__restrictive_audit_trail
 msgid "Enable this option to prevent deletion of journal item related logs"
 msgstr ""
+"Aktivér denne indstilling for at forhindre, at logfiler knyttet til "
+"journalposter slettes"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7986,9 +7988,9 @@ msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"Tvinger alle journalposter på denne konto til at have en bestemt valuta "
-"(dvs. bankjournaler). Hvis der ikke er angivet nogen valuta, kan poster "
-"bruge enhver valuta."
+"Tvinger alle journalposter på denne konto til at have en bestemt valuta ("
+"f.eks. bankjournaler). Hvis der ikke er angivet nogen valuta, kan "
+"posteringer bruge en hvilken som helst valuta."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
@@ -8649,8 +8651,8 @@ msgid ""
 "If activated, user-defined filters on journal items can be selected on this "
 "report"
 msgstr ""
-"Hvis aktiveret, kan brugerdefinerede filtre på journalposter vælges på denne "
-"rapport"
+"Hvis denne indstilling er aktiveret, kan brugerdefinerede filtre på "
+"journalposter vælges i denne rapport"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -8876,7 +8878,7 @@ msgstr "Import skabelon for kontoplan"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Import Template for Journal Items"
-msgstr "Importer skabelon til journalposter"
+msgstr "Importskabelon til journalposter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9067,7 +9069,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr "Indikerer, at denne posteringslinje er en momslinje"
+msgstr "Angiver, at denne posteringslinje er en momslinje"
 
 #. module: account
 #. odoo-javascript
@@ -9621,7 +9623,7 @@ msgstr "Fakturaer til godkendelse"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr "Faktura hvis journalposter er blevet afstemt med disse betalinger."
+msgstr "Faktura, hvis journalposter er blevet afstemt med disse betalinger."
 
 #. module: account
 #: model:res.groups,comment:account.group_account_invoice
@@ -10010,19 +10012,19 @@ msgstr "Jorunalkoder skal være unikt per virksomhed."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr "Posteringslinjer"
+msgstr "Journalposter"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Journalposter, hvor matchende nummer ikke er angivet"
+msgstr "Journalposter uden afstemmingsnummer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid ""
 "Journal items where the account allows reconciliation no matter the residual "
 "amount"
-msgstr "Journalposter hvor kontoen tillader afstemning uanset restbeløbet"
+msgstr "Journalposter, hvor kontoen tillader afstemning uanset restbeløbet"
 
 #. module: account
 #. odoo-python
@@ -10758,7 +10760,7 @@ msgstr "Matchet debit"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Matchede posteringslinjer"
+msgstr "Matchede journalposter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__matched_payment_ids
@@ -15014,8 +15016,7 @@ msgstr ""
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
 msgstr ""
-"Tags, der skal anvendes på momsposteringslinjer, er blevet oprettet for "
-"dette produkt."
+"Tags, der skal bruges på momsposteringslinjer, er oprettet for dette produkt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
@@ -15336,8 +15337,8 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal "
 "item if they share some tag."
 msgstr ""
-"Afgifter, der pålægges ved betaling samt på faktura, kan ikke blandes på "
-"samme journalpost, hvis de deler et eller andet tag."
+"Afgifter, der pålægges både ved betaling og på faktura, kan ikke kombineres "
+"på samme journalpost, hvis de har samme tag."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -16053,7 +16054,7 @@ msgstr ""
 "Journalposteringen %s er nået til en ugyldig tilstand i forhold til den "
 "tilknyttede kontoudtogslinje.\n"
 "For at sikre konsistens skal journalposteringen altid indeholde præcis én "
-"posteringslinje, der involverer bank- eller kontantkontoen."
+"journalpost, der involverer bank- eller kontantkontoen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -16084,7 +16085,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_analytic_line.py:0
 msgid "The journal item is not linked to the correct financial account"
-msgstr ""
+msgstr "Journalposten er ikke knyttet til den aktuelle finansielle konto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -16261,14 +16262,14 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
-"Restbeløbet på en journalpost udtrykt i sin valuta (muligvis ikke selskabets "
-"valuta)."
+"Restbeløbet på journalposten, angivet i den valuta, som journalposten er "
+"oprettet i (kan være forskellig fra selskabets valuta)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
-msgstr "Restbeløbet på en journalpost udtrykt i selskabets valuta."
+msgstr "Restbeløbet på journalposten, angivet i den virksomhedens valuta."
 
 #. module: account
 #. odoo-python
@@ -16482,7 +16483,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "There are no journal items in the draft state to post."
-msgstr "Der er ingen posteringslinjer i kladdetilstand, som kan posteres."
+msgstr "Der er ingen journalposter i kladdetilstand, som kan bogføres."
 
 #. module: account
 #. odoo-python
@@ -16583,6 +16584,9 @@ msgid ""
 "registration is necessary. You've got your finances under control like a "
 "boss!"
 msgstr ""
+"Der er ikke noget tilbage at betale for de valgte journalposter, så det er "
+"ikke nødvendigt at registrere nogen betaling. Du har styr på dine finanser "
+"som en professionel!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -16686,7 +16690,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "This can only be used on journal items"
-msgstr "Dette kan kun bruges på posteringslinjer"
+msgstr "Dette kan kun bruges på journalposter"
 
 #. module: account
 #. odoo-python
@@ -16917,7 +16921,7 @@ msgid ""
 "                a bank statement or an account."
 msgstr ""
 "De kan bruges til hurtigt at oprette en journalpost, når man afstemmer \n"
-"kontoudskrift eller en konto."
+"                et kontoudtog eller en konto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_country_group__exclude_state_ids
@@ -17247,7 +17251,7 @@ msgstr "Overførsel dato"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Transfer Journal Items"
-msgstr "Overfør posteringslinjer"
+msgstr "Overfør journalposter"
 
 #. module: account
 #. odoo-python
@@ -17448,7 +17452,7 @@ msgstr "Ikke bogførte journalbilag"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Posteringslinjer, der ikke er bogførte"
+msgstr "Journalposter, der ikke er bogførte"
 
 #. module: account
 #. odoo-javascript
@@ -17688,9 +17692,9 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Anvendes i rapporter for at bestemme, om posteringslinjer skal inkluderes "
-"fra begyndelsen eller kun fra finansårets start. Kontotyper, der nulstilles "
-"årligt (som udgifter og indtægter), bør undtages."
+"Anvendes i rapporter til at afgøre, om journalposter skal medtages fra "
+"starten eller kun fra begyndelsen af finansåret. Kontotyper, der nulstilles "
+"årligt (f.eks. udgifter og indtægter), bør udelades."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -17769,7 +17773,7 @@ msgstr "Værktøjsfelt til at vise valutabeløbet"
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr ""
+msgstr "Felt til angivelse af, om journalposten indgår i storno-regnskab"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -18420,6 +18424,8 @@ msgid ""
 "You can't unlink this company from this account since there are some journal "
 "items linked to it."
 msgstr ""
+"Du kan ikke fjerne denne virksomheds tilknytning til kontoen, fordi nogle "
+"journalposter stadig er knyttet til den."
 
 #. module: account
 #. odoo-python
@@ -18436,7 +18442,7 @@ msgid ""
 "already exist"
 msgstr ""
 "Du kan ikke ændre virksomhedens valuta, da visse journalposter allerede er "
-"oprettet."
+"oprettet"
 
 #. module: account
 #. odoo-python
@@ -18671,7 +18677,7 @@ msgstr ""
 msgid ""
 "You cannot perform this action on an account that contains journal items."
 msgstr ""
-"Du kan ikke udføre denne handling på en konto der indeholder journalposter."
+"Du kan ikke udføre denne handling på en konto, der indeholder journalposter."
 
 #. module: account
 #. odoo-python
@@ -18744,8 +18750,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr ""
-"Du kan ikke nulstille en valutakursdifferencejournalpostering til kladde."
+msgstr "En valutakursdifferencepostering kan ikke nulstilles til kladde."
 
 #. module: account
 #. odoo-python
