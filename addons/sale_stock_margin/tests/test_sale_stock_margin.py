@@ -410,3 +410,40 @@ class TestSaleStockMargin(TestStockValuationCommon):
         delivery.move_ids.quantity = 10
         delivery.button_validate()
         self.assertEqual(sale_order.order_line.filtered(lambda sol: sol.product_id == product2).purchase_price, 10)
+
+    def test_purchase_price_recompute_after_cancel_pricelist_change(self):
+        """Test that purchase_price is recomputed when pricelist changes after order cancellation."""
+        currency_usd = self.env.ref('base.USD')
+        currency_eur = self.env.ref('base.EUR')
+        date = fields.Date.context_today(self.env.user)
+        self.env['res.currency.rate'].create([
+            {'currency_id': currency_usd.id, 'rate': 1.0, 'name': date, 'company_id': False},
+            {'currency_id': currency_eur.id, 'rate': 0.5, 'name': date, 'company_id': False},
+        ])
+        pricelist_usd, pricelist_eur = self.env['product.pricelist'].create([
+            {
+                'name': 'USD Pricelist',
+                'currency_id': currency_usd.id,
+            },
+            {
+                'name': 'EUR Pricelist',
+                'currency_id': currency_eur.id,
+            },
+        ])
+        product = self._create_product()
+        product.categ_id.property_cost_method = 'standard'
+        product.standard_price = 100.0
+        product.list_price = 200.0
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.partner_admin').id,
+            'pricelist_id': pricelist_usd.id,
+        })
+        order_line = self._create_sale_order_line(sale_order, product, 1, 200)
+        initial_purchase_price = order_line.purchase_price
+        self.assertAlmostEqual(initial_purchase_price, 100.0, places=2)
+        sale_order.action_confirm()
+        self.assertTrue(order_line.move_ids)
+        sale_order._action_cancel()
+        sale_order.write({'state': 'draft'})
+        sale_order.pricelist_id = pricelist_eur
+        self.assertAlmostEqual(order_line.purchase_price, 50.0, places=2)
