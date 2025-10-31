@@ -111,6 +111,9 @@ class ProductTemplate(models.Model):
         'Weight', compute='_compute_weight', digits='Stock Weight',
         inverse='_set_weight', store=True)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
+    net_weight = fields.Float(
+        'Weight (net)', compute='_compute_net_weight',
+        inverse='_set_net_weight', digits='Stock Weight', store=True)
 
     sale_ok = fields.Boolean('Sales', default=True)
     purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
@@ -327,6 +330,13 @@ class ProductTemplate(models.Model):
     def _set_weight(self):
         self._set_product_variant_field('weight')
 
+    @api.depends('product_variant_ids.net_weight')
+    def _compute_net_weight(self):
+        self._compute_template_field_from_variant_field('net_weight')
+
+    def _set_net_weight(self):
+        self._set_product_variant_field('net_weight')
+
     def _compute_is_product_variant(self):
         self.is_product_variant = False
 
@@ -501,7 +511,7 @@ class ProductTemplate(models.Model):
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
-        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties']
+        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'net_weight', 'product_properties']
 
     @api.model_create_multi
     def create(self, vals_list):
