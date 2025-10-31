@@ -6,17 +6,13 @@ import { registry } from "@web/core/registry";
 
 export class MassMailingAddProductOption extends BaseAddProductOption {
     static selector = ".s_pricelist_boxed_section:has(> .container)";
-    static defaultProps = {
-        productSelector: ".container",
-    };
+    productSelector = ".container";
 }
 
 export class PricelistBoxedOptionPlugin extends Plugin {
     static id = "mass_mailing.PricelistBoxedOptionPlugin";
     resources = {
-        builder_options: [
-            withSequence(BEGIN, MassMailingAddProductOption),
-        ],
+        builder_options: [withSequence(BEGIN, MassMailingAddProductOption)],
     };
 }
 
