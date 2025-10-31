@@ -131,7 +131,7 @@ export class Popover extends Component {
         this.position = usePosition("ref", () => this.props.target, this.positioningOptions);
 
         const resizeObserver = new ResizeObserver(() => {
-            if (!this.props.fixedPosition && this.animationDone) {
+            if (!this.props.fixedPosition && (!this.props.animation || this.animationDone)) {
                 this.position.unlock();
             }
         });
