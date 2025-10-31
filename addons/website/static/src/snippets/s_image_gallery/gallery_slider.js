@@ -3,8 +3,14 @@ import { registry } from "@web/core/registry";
 
 import { isVisible } from "@html_editor/utils/dom_info";
 
+/**
+ * This interaction is kept for compatibility with snippets dropped before 18.0.
+ * If you have to update or extend the GallerySlider, you are probably looking
+ * for GallerySlider001.
+ * @deprecated
+ **/
 export class GallerySlider extends Interaction {
-    static selector = ".o_slideshow";
+    static selector = ".o_slideshow:not([data-vjs])";
     dynamicContent = {
         ".carousel": {
             "t-on-slide.bs.carousel": this.onSlideCarousel,
@@ -16,6 +22,12 @@ export class GallerySlider extends Interaction {
     };
 
     setup() {
+        // Stable fix to set `data-vjs` on snippets dropped between 18 and 19.1.
+        if (!this.el.matches(".o_slideshow:not([data-vcss]), .o_slideshow[data-vcss='001']")) {
+            this.el.dataset.vjs = "001";
+            this.stopOnStart = true;
+            return;
+        }
         this.hideOnClickIndicator = true;
         this.carouselEl = this.el.classList.contains("carousel")
             ? this.el
@@ -59,6 +71,15 @@ export class GallerySlider extends Interaction {
             this.nbPages = Math.ceil(this.liEls.length / this.realNbPerPage);
         }
         this.onSlidCarousel();
+    }
+
+    start() {
+        // Stable fix after setting `data-vjs`. Restarting can't be done in the
+        // setup.
+        if (this.stopOnStart) {
+            this.services["public.interactions"].stopInteractions(this.el);
+            this.services["public.interactions"].startInteractions(this.el);
+        }
     }
 
     destroy() {
@@ -110,7 +131,7 @@ export class GallerySlider extends Interaction {
     }
 
     hide() {
-        for (let i = 0; i < this.liEls?.length; i++) {
+        for (let i = 0; i < this.liEls.length; i++) {
             this.liEls[i].classList.toggle(
                 "d-none",
                 i < this.page * this.nbPerPage || i >= (this.page + 1) * this.nbPerPage
@@ -121,7 +142,7 @@ export class GallerySlider extends Interaction {
                 this.prevEl.remove();
             } else {
                 this.prevEl.classList.remove("d-none");
-                this.indicatorEl.insertAdjacentElement("afterbegin", this.prevEl);
+                this.insert(this.prevEl, this.indicatorEl, "afterbegin");
             }
         }
         if (this.nextEl) {

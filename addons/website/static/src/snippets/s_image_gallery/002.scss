@@ -130,8 +130,30 @@
         }
 
         .carousel-indicators {
+            $-mask-margin: 3rem;
+            $-left-mask-gradient: transparent, #000 $-mask-margin;
+            $-right-mask-gradient: #000 calc(100% - #{$-mask-margin}), transparent;
+
             align-items: center;
             min-width: 0;
+            overflow: auto hidden; // Force hidden on Y for mobile.
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            scrollbar-width: none;
+
+            & > button {
+                flex-shrink: 0;
+            }
+
+            &.o_faded_left {
+                mask: linear-gradient(to right, $-left-mask-gradient);
+            }
+            &.o_faded_right {
+                mask: linear-gradient(to right, $-right-mask-gradient);
+            }
+            &.o_faded_left.o_faded_right {
+                mask: linear-gradient(to right, $-left-mask-gradient, $-right-mask-gradient);
+            }
         }
 
         .carousel-control-prev, .carousel-control-next {

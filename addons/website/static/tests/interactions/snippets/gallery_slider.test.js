@@ -6,7 +6,12 @@ import { advanceTime } from "@odoo/hoot-mock";
 
 import { onceAllImagesLoaded } from "@website/utils/images";
 
-setupInteractionWhiteList(["website.gallery_slider", "website.gallery", "website.base_lightbox"]);
+setupInteractionWhiteList([
+    "website.gallery_slider",
+    "website.gallery_slider_001",
+    "website.gallery",
+    "website.base_lightbox",
+]);
 
 describe.current.tags("interaction_dev");
 
