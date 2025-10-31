@@ -9,7 +9,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 
 import { onceAllImagesLoaded } from "@website/utils/images";
 
-setupInteractionWhiteList("website.gallery_slider");
+setupInteractionWhiteList(["website.gallery_slider", "website.gallery_slider_001"]);
 
 describe.current.tags("interaction_dev");
 
