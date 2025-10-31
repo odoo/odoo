@@ -1,4 +1,4 @@
-import { useRef } from "@odoo/owl";
+import { onWillDestroy, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -28,5 +28,9 @@ export function useDateTimePicker(params) {
         useOwlHooks: true,
     });
 
-    return useService("datetime_picker").create(serviceParams);
+    const picker = useService("datetime_picker").create(serviceParams);
+    onWillDestroy(() => {
+        picker.disable();
+    });
+    return picker;
 }
