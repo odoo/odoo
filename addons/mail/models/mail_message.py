@@ -786,6 +786,12 @@ class MailMessage(models.Model):
         self.check_access('read')
         return super().read(fields=fields, load=load)
 
+    def copy_data(self, default=None):
+        """ Make is symmetric to read, to avoid spurious issues with recordsets
+        differences. """
+        self.check_access('read')
+        return super().copy_data(default=default)
+
     def fetch(self, field_names=None):
         # This freaky hack is aimed at reading data without the overhead of
         # checking that "self" is accessible, which is already done above in
