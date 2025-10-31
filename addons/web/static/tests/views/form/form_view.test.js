@@ -13311,3 +13311,24 @@ test(`cached onchange - don't loose changes`, async () => {
     expect(`.o_last_breadcrumb_item`).toHaveText("New");
     expect.verifySteps(["onchange", "onchange"]);
 });
+
+test("value of label_field option should be set as label", async () => {
+    Partner._views = {
+        form: /*xml*/ `
+            <form>
+                <sheet>
+                    <label for="name"/>
+                    <field name="name" options="{'label_field': 'foo'}"/>
+                    <field name="foo"/>
+                </sheet>
+            </form>
+        `,
+    };
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+    });
+    expect(`.o_form_label`).toHaveText("yop");
+});

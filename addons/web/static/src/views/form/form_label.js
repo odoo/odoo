@@ -16,6 +16,10 @@ export class FormLabel extends Component {
         notMuttedLabel: { type: Boolean, optional: true },
     };
 
+    get label() {
+        return this.props.record.data[this.props.fieldInfo.options.label_field] || this.props.string;
+    }
+
     get className() {
         const { invalid, empty, readonly } = fieldVisualFeedback(
             this.props.fieldInfo.field,
