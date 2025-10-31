@@ -25,6 +25,7 @@ export class CharField extends Component {
     static defaultProps = { dynamicPlaceholder: false };
 
     setup() {
+        debugger;
         this.input = useRef("input");
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
@@ -36,11 +37,11 @@ export class CharField extends Component {
             );
         }
         useInputField({
-            getValue: () => this.props.record.orecord[this.props.name] || "",
+            getValue: () => this.props.record.data[this.props.name] || "",
             parse: (v) => this.parse(v),
         });
 
-        this.selectionStart = this.props.record.orecord[this.props.name]?.length || 0;
+        this.selectionStart = this.props.record.data[this.props.name]?.length || 0;
     }
 
     get shouldTrim() {
@@ -53,7 +54,7 @@ export class CharField extends Component {
         return this.props.record.fields[this.props.name].translate;
     }
     get formattedValue() {
-        return formatChar(this.props.record.orecord[this.props.name], {
+        return formatChar(this.props.record.data[this.props.name], {
             isPassword: this.props.isPassword,
         });
     }

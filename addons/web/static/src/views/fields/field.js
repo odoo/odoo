@@ -355,6 +355,7 @@ export class Field extends Component {
     };
 
     setup() {
+        debugger;
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {

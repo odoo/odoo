@@ -1,4 +1,12 @@
-import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
+import {
+    markup,
+    onWillDestroy,
+    onWillStart,
+    onWillUpdateProps,
+    useComponent,
+    effect,
+    withoutReactivity,
+} from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import {
@@ -11,7 +19,6 @@ import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
@@ -773,8 +780,9 @@ export function useRecordObserver(callback) {
         const def = new Deferred();
         const effectId = currentId;
         let firstCall = true;
-        effect(
-            (record) => {
+        effect(() => {
+            const record = props.record; // track
+            withoutReactivity(() => {
                 if (firstCall) {
                     firstCall = false;
                     return Promise.resolve(callback(record, props))
@@ -795,9 +803,8 @@ export function useRecordObserver(callback) {
                         () => new Promise((resolve) => window.requestAnimationFrame(resolve))
                     )(record);
                 }
-            },
-            [props.record]
-        );
+            });
+        });
         return def;
     };
     onWillDestroy(() => {

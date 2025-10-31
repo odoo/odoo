@@ -232,12 +232,12 @@ function handleConsoleIssues(test, shouldSuppress) {
         return logger.setIssueLevel("suppressed");
     } else {
         const cleanups = [];
-        if (isInstanceOf(globalThis.console, EventTarget)) {
-            cleanups.push(
-                on(globalThis.console, "error", () => test.logs.error++),
-                on(globalThis.console, "warn", () => test.logs.warn++)
-            );
-        }
+        // if (isInstanceOf(globalThis.console, EventTarget)) {
+        //     // cleanups.push(
+        //     //     on(globalThis.console, "error", () => test.logs.error++),
+        //     //     on(globalThis.console, "warn", () => test.logs.warn++)
+        //     // );
+        // }
 
         return function offConsoleEvents() {
             while (cleanups.length) {

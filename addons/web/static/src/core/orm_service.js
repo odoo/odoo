@@ -318,7 +318,6 @@ export class ORM {
                 }
             },
         });
-        console.warn(`result:`, result);
         this._updateStore(model, result);
         return result;
     }
