@@ -271,6 +271,60 @@ describe("Range collapsed", () => {
                 contentAfter: '<ul class="o_checklist text-uppercase" dir="rtl"><li>a[]b</li></ul>',
             });
         });
+
+        test("should apply both color and size styles on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ul>',
+            });
+            await testEditor({
+                contentBefore:
+                    '<p><b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></i></b></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;"><b><i>[abc]</i></b></li></ul>',
+            });
+        });
+
+        test("should not apply color and size styles on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span>b</p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span>b</li></ul>',
+            });
+            await testEditor({
+                contentBefore:
+                    '<p><b><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></i></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li><b><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></i></li></ul>',
+            });
+        });
+
+        test("should only apply color style on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><font style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></font></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></li></ul>',
+            });
+        });
+
+        test("should only apply size style on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></span></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="font-size: 18px;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></li></ul>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn an empty list into a paragraph", async () => {
