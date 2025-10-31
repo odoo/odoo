@@ -1,0 +1,31 @@
+$o-CallDebrief-content-max-width: 1000px;
+$o-CallDebrief-video-margin: 0.1em;
+
+/*
+    Form renderer wraps field widgets in a container `display: inline-block`, 
+    which causes the container to shrink to the width of its content.
+*/
+.o_field_widget.o_field_call_debrief {
+    width: 100%;
+    display: block;
+}
+
+.o-CallDebrief {
+    display: flex;
+    flex-direction: column;
+    max-height: 45vh;
+    contain: paint; // render performance
+}
+
+.o-CallDebrief-media-container {
+    display: flex;
+    gap: map-get($spacers, 2);
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.o-CallDebrief-video {
+    flex: 1 1 100%;
+    min-width: 0;
+    margin: $o-CallDebrief-video-margin;
+}

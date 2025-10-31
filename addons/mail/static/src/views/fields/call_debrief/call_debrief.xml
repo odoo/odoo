@@ -1,0 +1,67 @@
+<templates>
+    <t t-name="mail.CallDebrief">
+        <t t-if="this.state.error">
+            <div class="text-danger">
+                <t t-out="this.state.error"/>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o-CallDebrief">
+                <t t-if="this.hasTimeline">
+                    <CallDebriefTimeline
+                        totalDuration="this.callDurationSeconds"
+                        mediaSegments="this.state.mediaSegments"
+                        onSeek="(options) => this.setPlaybackTime(options)"
+                        currentTime="this.state.currentTime"
+                    />
+                </t>
+                <t t-if="this.hasMedia">
+                    <CallDebriefMediaControls
+                        isPlaying="this.state.isPlaying"
+                        volume="this.state.volume"
+                        isMuted="this.state.isMuted"
+                        playbackRate="this.state.playbackRate"
+                        playbackRates="this.playbackRates"
+                        currentTime="this.state.currentTime"
+                        totalDuration="this.callDurationSeconds"
+                        media="this.state.currentSegment"
+                        feedback="this.state.feedback"
+                        onTogglePlay="() => this.togglePlay()"
+                        onSeek="(delta) => this.seekRelative(delta)"
+                        onSetPlaybackRate="(ev) => this.setPlaybackRate(ev)"
+                        onSetVolume="(ev) => this.setVolume(ev)"
+                        onToggleMute="() => this.toggleMute()"
+                    />
+                </t>
+                <div class="o-CallDebrief-media-container" t-att-class="{ 'o-CallDebrief-media-container--no-video': !this.hasVideo }">
+                    <div t-if="this.hasVideo" class="o-CallDebrief-video">
+                        <video t-if="this.state.currentSegment and this.state.currentSegment.type === 'video'"
+                            t-key="this.state.currentSegment.id"
+                            t-ref="this.mediaPlayer"
+                            t-att-src="this.state.currentSegment.mediaUrl"
+                            style="width: 100%; height: 100%; object-fit: contain;"
+                            t-on-loadeddata="this._onMediaLoaded"
+                            t-on-timeupdate="this.onTimeUpdate"
+                            t-on-play="() => this.state.isPlaying = true"
+                            t-on-pause="() => this.state.isPlaying = false"
+                            t-on-ended="this.onMediaEnded"
+                            t-on-error="this.onMediaError"
+                        />
+                    </div>
+                    <audio t-if="this.state.currentSegment and this.state.currentSegment.type === 'audio'"
+                        t-key="this.state.currentSegment.id"
+                        t-ref="this.mediaPlayer"
+                        t-att-src="this.state.currentSegment.mediaUrl"
+                        class="d-none"
+                        t-on-loadeddata="this._onMediaLoaded"
+                        t-on-timeupdate="this.onTimeUpdate"
+                        t-on-play="() => this.state.isPlaying = true"
+                        t-on-pause="() => this.state.isPlaying = false"
+                        t-on-ended="this.onMediaEnded"
+                        t-on-error="this.onMediaError"
+                    />
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

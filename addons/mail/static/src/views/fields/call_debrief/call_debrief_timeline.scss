@@ -1,0 +1,72 @@
+.o-CallDebriefTimeline-container {
+    text-align: center;
+    margin: 0.2em;
+}
+.o-CallDebriefTimeline-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    color: $text-muted;
+    font-size: 0.9rem;
+}
+.o-CallDebriefTimeline {
+    position: relative;
+    height: 1.25rem;
+    padding-top: 15px;
+}
+.o-CallDebriefTimeline-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $gray-200;
+    border-radius: $border-radius-pill;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.o-CallDebriefTimeline-media-segment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: $gray-500;
+    opacity: 0.6;
+    z-index: 3;
+}
+
+.o-CallDebriefTimeline-playhead {
+    position: absolute;
+    top: -1.625rem;
+    left: var(--progress, 50%);
+    transform: translateX(-50%);
+    width: 3.125rem;
+    height: 1.5rem;
+    background: $primary;
+    border-radius: $border-radius-pill;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 0 6px rgba($primary, 0.6);
+    user-select: none;
+    cursor: grab;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: -1.875rem;
+        width: 1px;
+        height: 1.875rem;
+        background: rgba($primary, 0.76);
+        z-index: -1;
+    }
+}
+
+.o-CallDebriefTimeline-playhead-timestamp {
+    font-size: 0.7rem;
+    color: white;
+    white-space: nowrap;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
