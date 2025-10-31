@@ -884,7 +884,7 @@ class AccountMove(models.Model):
         return ['general']
 
     def _search_default_journal(self):
-        if self.statement_line_ids.statement_id.journal_id:
+        if self.statement_line_ids.statement_id._origin.journal_id:
             return self.statement_line_ids.statement_id.journal_id[:1]
 
         journal_types = self._get_valid_journal_types()
