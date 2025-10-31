@@ -55,7 +55,27 @@ patch(SaleOrderLineProductField.prototype, {
                         }
                     } else {
                         const eventConfiguration = closeInfo.eventConfiguration;
-                        this.props.record.update(eventConfiguration);
+                        const eventTicketInfo = closeInfo.eventTicketInfo;
+                        const soLineVirtualId = this.props.record._virtualId;
+                        this.props.record.update({
+                            ...eventConfiguration,
+                            virtual_id: soLineVirtualId,
+                        });
+                        if (eventTicketInfo?.additional_product_ids) {
+                            const quantity = this.props.record.data.product_uom_qty;
+                            await eventTicketInfo.additional_product_ids.currentIds.map(async productId => {
+                                const line = await this.props.record.model.root.data.order_line.addNewRecord({
+                                    position: 'bottom'
+                                });
+                                await line.update({
+                                    product_id: { id: productId },
+                                    product_uom_qty: quantity,
+                                    linked_virtual_id: soLineVirtualId,
+                                });
+                                this.props.record.model.root.data.order_line.leaveEditMode();
+                            });
+                            this.props.record.model.root.data.order_line.leaveEditMode();
+                        }
                     }
                 }
             }

@@ -63,6 +63,8 @@
             <field name="description" position="after">
                 <field name="currency_id" column_invisible="True"/> <!-- Used to get the currency symbol on the ticket price. -->
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="additional_product_ids" widget="many2many_tags" optional="hide"/>
+                <field name="total_price" optional="hide"/>
             </field>
         </field>
     </record>

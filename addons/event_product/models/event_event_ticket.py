@@ -6,12 +6,12 @@ class EventEventTicket(models.Model):
     _inherit = 'event.event.ticket'
     _order = "event_id, sequence, price, name, id"
 
-    price_reduce_taxinc = fields.Float(
-        string='Price Reduce Tax inc', compute='_compute_price_reduce_taxinc',
-        compute_sudo=True)
-    price_incl = fields.Float(
-        string='Price include', compute='_compute_price_incl',
-        digits='Product Price', readonly=False, compute_sudo=True)
+    total_price_reduce_taxinc = fields.Float(
+        string='Total Price Reduce Tax inc', compute='_compute_total_price_reduce_taxinc',
+        digits='Product Price', compute_sudo=True)
+    total_price_incl = fields.Float(
+        string='Total Price include', compute='_compute_total_price_incl',
+        digits='Product Price', compute_sudo=True)
 
     @api.depends('product_id.active')
     def _compute_sale_available(self):
@@ -20,19 +20,31 @@ class EventEventTicket(models.Model):
             ticket.sale_available = False
         super(EventEventTicket, self - inactive_product_tickets)._compute_sale_available()
 
-    def _compute_price_reduce_taxinc(self):
-        for event in self:
-            # sudo necessary here since the field is most probably accessed through the website
-            tax_ids = event.product_id.taxes_id.filtered(lambda r: r.company_id == event.event_id.company_id)
-            taxes = tax_ids.compute_all(event.price_reduce, event.event_id.company_id.currency_id, 1.0, product=event.product_id)
-            event.price_reduce_taxinc = taxes['total_included']
+    def _compute_total_price_reduce_taxinc(self):
+        for ticket in self:
+            ticket_tax_ids = ticket.product_id.taxes_id.filtered(lambda r: r.company_id == ticket.event_id.company_id)
+            ticket_prices = ticket_tax_ids.compute_all(ticket.price_reduce, ticket.company_id.currency_id, 1.0, product=ticket.product_id)
+            ticket_price_reduce_taxinc = ticket_prices['total_included']
+            linked_products_price_taxinc = 0
+            for product in ticket.additional_product_ids:
+                tax_ids = product.taxes_id.filtered(lambda r: r.company_id == ticket.event_id.company_id)
+                contextual_discount = product._get_contextual_discount()
+                product_price_reduce = (1.0 - contextual_discount) * product.lst_price
+                prices = tax_ids.compute_all(product_price_reduce, ticket.company_id.currency_id or product.currency_id, 1.0, product=product)
+                linked_products_price_taxinc += prices['total_included']
+            ticket.total_price_reduce_taxinc = ticket_price_reduce_taxinc + linked_products_price_taxinc
 
-    @api.depends('product_id', 'product_id.taxes_id', 'price')
-    def _compute_price_incl(self):
-        for event in self:
-            if event.product_id and event.price:
-                tax_ids = event.product_id.taxes_id.filtered(lambda r: r.company_id == event.event_id.company_id)
-                taxes = tax_ids.compute_all(event.price, event.currency_id, 1.0, product=event.product_id)
-                event.price_incl = taxes['total_included']
-            else:
-                event.price_incl = 0
+    @api.depends('additional_product_ids', 'price', 'product_id', 'product_id.taxes_id')
+    def _compute_total_price_incl(self):
+        for ticket in self:
+            ticket_price_incl = 0
+            if ticket.product_id and ticket.price:
+                ticket_tax_ids = ticket.product_id.taxes_id.filtered(lambda r: r.company_id == ticket.event_id.company_id)
+                ticket_prices = ticket_tax_ids.compute_all(ticket.price, ticket.company_id.currency_id, 1.0, product=ticket.product_id)
+                ticket_price_incl = ticket_prices['total_included']
+            linked_products_price_taxinc = 0
+            for product in ticket.additional_product_ids:
+                tax_ids = product.taxes_id.filtered(lambda r: r.company_id == ticket.event_id.company_id)
+                prices = tax_ids.compute_all(product.lst_price, ticket.company_id.currency_id or product.currency_id, 1.0, product=product)
+                linked_products_price_taxinc += prices['total_included']
+            ticket.total_price_incl = ticket_price_incl + linked_products_price_taxinc

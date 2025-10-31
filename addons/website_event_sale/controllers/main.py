@@ -28,7 +28,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             for event_ticket in request.env['event.event.ticket'].sudo().browse(event_ticket_ids)
         }
 
-        if all(event_ticket.price == 0 for event_ticket in event_ticket_by_id.values()) and not request.cart.id:
+        if all(event_ticket.total_price == 0 for event_ticket in event_ticket_by_id.values()) and not request.cart.id:
             # all chosen tickets are free AND no existing SO -> skip SO and payment process
             return super()._create_attendees_from_registration_post(event, registration_data)
 
@@ -49,6 +49,12 @@ class WebsiteEventSaleController(WebsiteEventController):
                 event_ticket_id=ticket_id,
                 event_slot_id=slot_id,
             )
+            for product in ticket_sudo.additional_product_ids:
+                order_sudo._cart_add(
+                    product_id=product.id,
+                    quantity=count,
+                    linked_line_id=cart_values['line_id'],
+                )
             cart_data[slot_id, ticket_id] = cart_values['line_id']
 
         for data in registration_data:
