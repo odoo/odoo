@@ -8,6 +8,7 @@ import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@o
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 import { omit } from "@web/core/utils/objects";
 import { OdooPivotLoader } from "./odoo_pivot_loader";
+import { PivotDataProvider } from "./pivot_data_provider";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
 const {
@@ -194,22 +195,8 @@ export class OdooPivot {
     async createModelAndDefinition() {
         await this.loadMetadata();
         const definition = new OdooPivotRuntimeDefinition(this.coreDefinition, this.getFields());
-        const model = new OdooPivotModel(
-            { _t },
-            {
-                fields: this.getFields(),
-                definition,
-                searchParams: {
-                    context: this.context,
-                    domain: this.coreDefinition.domain,
-                },
-            },
-            {
-                orm: this.odooDataProvider.orm,
-                serverData: this.odooDataProvider.serverData,
-                getters: this.getters,
-            }
-        );
+        const pivotDataProvider = new PivotDataProvider(this.odooDataProvider, definition);
+        const model = new OdooPivotModel(definition, pivotDataProvider, this.getters);
         return { model, definition };
     }
 
@@ -589,6 +576,12 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
                 dimension.nameWithGranularity = `${dimension.fieldName}:month`;
             }
         }
+        /** @type {OdooFields} */
+        this._fields = fields;
+    }
+
+    get fields() {
+        return this._fields;
     }
 
     get domain() {
@@ -601,32 +594,6 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
 
     get model() {
         return this._model;
-    }
-
-    /**
-     * Only for Web pivot model compatibility
-     * @param {OdooFields} [fields]
-     *
-     * @returns {WebPivotModelParams}
-     */
-
-    getDefinitionForPivotModel(fields) {
-        return {
-            searchParams: {
-                domain: this.domain,
-                context: this.context,
-                groupBy: [],
-                orderBy: [],
-            },
-            metaData: {
-                activeMeasures: this.measures.filter((m) => !m.computedBy).map((m) => m.fieldName),
-                resModel: this.model,
-                colGroupBys: this.columns.map((c) => c.nameWithGranularity),
-                rowGroupBys: this.rows.map((r) => r.nameWithGranularity),
-                fieldAttrs: {},
-                fields,
-            },
-        };
     }
 
     get invalidAggregatorsForCustomField() {

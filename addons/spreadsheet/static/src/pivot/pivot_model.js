@@ -1,179 +1,72 @@
-//@ts-check
-
+// @ts-check
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
-import { PivotModel } from "@web/views/pivot/pivot_model";
-
-import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 import { parseGroupField } from "./pivot_helpers";
+import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 
-const { toNormalizedPivotValue, toNumber, isDateOrDatetimeField, pivotTimeAdapter, deepEquals } =
-    helpers;
+const { toNormalizedPivotValue, toNumber, isDateOrDatetimeField, pivotTimeAdapter } = helpers;
 const { DEFAULT_LOCALE } = constants;
-
-/**
- * @typedef {import("@odoo/o-spreadsheet").PivotTableColumn} PivotTableColumn
- * @typedef {import("@odoo/o-spreadsheet").PivotTableRow} PivotTableRow
- * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
- * @typedef {import("@odoo/o-spreadsheet").PivotMeasure} PivotMeasure
- */
 
 export const NO_RECORD_AT_THIS_POSITION = "__NO_RECORD_AT_THIS_POSITION__";
 
 /**
- * # On custom groups:
- *
- * In spreadsheet, we have a feature allowing for the user to define custom groups in pivots, ie. they can select two
- * values of a groupBy and decide to group them together. This will create a new custom field that will contains the
- * custom groups.
- *
- * The server is unaware of these custom fields, so we have to do the aggregation client side. This section will detail
- * how it is achieved. Let's take this pivot as an example:
- *
- *  _______________________________________________________________________________________________________
- * |                                |                                                                       |
- * |                                |                     Pipeline Analysis by Stage                        |
- * |                                |_______________________________________________________________________|
- * |                                |                Start               |               End                |
- * |                                |____________________________________|__________________________________|________________
- * |                                |   New            |  Qualified      |  Proposition    |  Won           |  Total         |
- * |________________________________|__________________|_________________|_________________|________________|________________|
- * |                                |    Exp. Rev.     |    Exp. Rev.    |    Exp. Rev.    |   Exp. Rev.    |   Exp. Rev.    |
- * |________________________________|__________________|_________________|_________________|________________|________________|
- * | Total                          |  $104,000.00     |  $87,300.00     |  $105,100.00    |  $23,800.00    |  $320,200.00   |
- * |________________________________|__________________|_________________|_________________|________________|________________|
- *
- * Here we have two levels of groupBy:
- * - the first one is stage_id (New, Qualified, Proposition, Won)
- * - the second one is a custom field that groups the stages into two groups: Start (New, Qualified) and
- *      End (Proposition, Won). We'll call this custom field custom_stage.
- *
- *
- * ############### RPC
- *
- * The groupBys of the pivot are then ["stage_id", "custom_stage"]. But since the server is unaware of custom_stage, we'll
- * first need to change the RPC to something the server can give us results for.
- *
- * This is done in `_getGroupsSubdivision`. The rest of the pivot model is also unaware of the custom groups, so it will
- * give the RPC parameters as if the custom group was a standard group.
- *
- * In our pivot, the `groupingSets` of the RPC will be:
- *          `[[], ["custom_stage"], ["custom_stage", "stage_id"]]`
- *
- * Simply replacing the custom_stage with it's parent groupBy, will give us:
- *          `[[], ["stage_id"], ["stage_id", "stage_id"]]`
- *
- * The server doesn't support duplicate groupBys (and they are useless), so we need a bit of processing to remove the
- * duplicates and get the grouping sets that will be used in the RPC:
- *          `[[], ["stage_id"]]`
- *
- * The server result will look something like this:
- * [
- *   {
- *     rowGroupBy: [],
- *     colGroupBy: [],
- *     subGroups: [{ "expected_revenue:sum": 320200 }],
- *   },
- *   {
- *     rowGroupBy: [],
- *     colGroupBy: ["stage_id"],
- *     subGroups: [
- *       { stage_id: [1, "New"],         "expected_revenue:sum": 104000 },
- *       { stage_id: [2, "Qualified"],   "expected_revenue:sum": 87300 },
- *       { stage_id: [3, "Proposition"], "expected_revenue:sum": 105100 },
- *       { stage_id: [4, "Won"],         "expected_revenue:sum": 23800 },
- *     ],
- *   },
- * ]
- *
- * Note that this is not included for brevity sake, but the subGroups also contain the domains and _count for each group.
- *
- *
- * ############### Aggregating subGroups
- *
- * Now that we have the subgroups, we need to aggregate them to have the value of the custom groups. This'll be done in
- * `_addCustomGroupsToGroup`, for each groupBys of our original grouping sets. Let's focus on our original grouping
- *  set of `["custom_stage"]`.
- *
- * The first step is to add the value of the custom field to all the subgroups. We'll have something like this:
- *    subGroups: [
- *       { stage_id: [1, "New"],         custom_stage: "start", "expected_revenue:sum": 104000 },
- *       { stage_id: [2, "Qualified"],   custom_stage: "start", "expected_revenue:sum": 87300 },
- *       { stage_id: [3, "Proposition"], custom_stage: "end",   "expected_revenue:sum": 105100 },
- *       { stage_id: [4, "Won"],         custom_stage: "end",   "expected_revenue:sum": 23800 },
- *     ]
- *
- *  We can now use `Object.groupBy` to group the subGroups with the same groupBy values. We'll end up with something like this:
- *  Object.groupBy result: {
- *    '["Start"]': [
- *        { stage_id: [1, "New"], "expected_revenue:sum": 104000, Stage2: "Start" },
- *        { stage_id: [2, "Qualified"], "expected_revenue:sum": 87300, Stage2: "Start" },
- *    ],
- *    '["End"]': [
- *        { stage_id: [3, "Proposition"], "expected_revenue:sum": 105100, Stage2: "End" },
- *        { stage_id: [4, "Won"], "expected_revenue:sum": 23800, Stage2: "End" },
- *    ],
- * }
- *
- * It is now simple to aggregate this (`_aggregateSubGroups`) to get our final subgroups. In our example, we just need to sum the
- * "expected_revenue:sum" for each group. The domains of each subGroups will also be aggregated with `OR` operators.
- * final subgroups: [
- *    { stage_id: [1, "New"], "expected_revenue:sum": 191300, Stage2: "Start" },
- *    { stage_id: [3, "Proposition"], "expected_revenue:sum": 128900, Stage2: "End" },
- * ]
- *
- * Note: Client side aggregation works with every aggregator but `count_distinct` where it's impossible to aggregate client-side.
- * This is why custom groups are disabled when a measure with `count_distinct` is used.
- *
- * The last step is to sort the subGroups if needed (`_sortCustomFieldsInSubGroups`), and voilà ! We have done the client-side
- * grouping of the custom fields.
+ * @typedef {import("@web/core/orm_service").ORM} ORM
+ * @typedef {import("@spreadsheet/data_sources/server_data").ServerData} ServerData
+ * @typedef {import("@spreadsheet").OdooGetters} OdooGetters
+ * @typedef {import("@spreadsheet/pivot/odoo_pivot").OdooPivotRuntimeDefinition} OdooPivotRuntimeDefinition
+ * @typedef {import("@spreadsheet/pivot/pivot_data_provider").PivotDataProvider} PivotDataProvider
+ * @typedef {import("@odoo/o-spreadsheet").PivotMeasure} PivotMeasure
+ * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
+ * @typedef {import("@odoo/o-spreadsheet").PivotDimension} PivotDimension
  */
 
-/**
- * This class is an extension of PivotModel with some additional information
- * that we need in spreadsheet (display_name, isUsedInSheet, ...)
- */
-export class OdooPivotModel extends PivotModel {
+export class OdooPivotModel {
     /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("@spreadsheet").OdooPivotModelParams} params
-     * @param {import("@spreadsheet").PivotModelServices} services
+     * @param {OdooPivotRuntimeDefinition} definition
+     * @param {PivotDataProvider} pivotDataProvider
+     * @param {OdooGetters} getters
      */
-    constructor(env, params, services) {
-        super(env, params, services);
-        /**
-         * @private
-         */
-        this._displayNames = {};
-        /**
-         * @private
-         */
-        this._displayLabels = {};
-        /**
-         * @private
-         * @type {import("@spreadsheet/data_sources/server_data").ServerData}
-         */
-        this.serverData = services.serverData;
+    constructor(definition, pivotDataProvider, getters) {
+        this.definition = definition;
+        this.getters = getters;
+        this.pivotDataProvider = pivotDataProvider;
 
-        /**
-         * @type {import("@spreadsheet").OdooGetters}
-         */
-        this.getters = services.getters;
+        this._displayNames = {};
+        this._displayLabels = {};
+
+        this.data = {};
+        this.domain = [];
+        this.context = {};
+        this.colGroupBys = this.definition.columns.map((c) => c.nameWithGranularity);
+        this.rowGroupBys = this.definition.rows.map((r) => r.nameWithGranularity);
+        this.parseGroupField = parseGroupField.bind(null, this.definition.fields);
     }
 
-    /**
-     * @param {import("@spreadsheet").OdooPivotModelParams} params
-     * @param {import("@spreadsheet").PivotModelServices} services
-     */
-    setup(params, services) {
-        /** This is necessary to ensure the compatibility with the PivotModel from web */
-        const p = params.definition.getDefinitionForPivotModel(params.fields);
-        p.searchParams = {
-            ...p.searchParams,
-            ...params.searchParams,
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    async load({ context, domain }) {
+        this.domain = domain;
+        this.context = context;
+        this.data = {
+            rowGroupTree: { root: { labels: [], values: [] }, directSubTrees: new Map() },
+            colGroupTree: { root: { labels: [], values: [] }, directSubTrees: new Map() },
+            measurements: {},
+            counts: {},
+            groupDomains: {
+                [JSON.stringify([[], []])]: this.domain,
+            },
+            numbering: {},
         };
-        super.setup(p);
-        this.definition = params.definition;
+        const groupSubdivisions = await this.pivotDataProvider.load({ context, domain });
+        if (groupSubdivisions.length) {
+            const group = { rowValues: [], colValues: [] };
+            this._prepareData(group, groupSubdivisions);
+        }
+
+        this._registerLabels(this.data.colGroupTree, this.colGroupBys);
+        this._registerLabels(this.data.rowGroupTree, this.rowGroupBys);
     }
 
     /**
@@ -200,7 +93,6 @@ export class OdooPivotModel extends PivotModel {
 
     updateSortColumn(sortedColumn) {
         this.definition.sortedColumn = sortedColumn;
-        this.resetTableStructure();
     }
 
     updateCollapsedDomains(collapsedDomains) {
@@ -208,28 +100,151 @@ export class OdooPivotModel extends PivotModel {
         this.resetTableStructure();
     }
 
-    getDefinition() {
-        return this.definition;
+    //--------------------------------------------------------------------------
+    // Protected
+    //--------------------------------------------------------------------------
+
+    _registerLabels(tree, groupBys) {
+        const group = tree.root;
+        if (!tree.directSubTrees.size) {
+            for (let i = 0; i < group.values.length; i++) {
+                const { field } = this.parseGroupField(groupBys[i]);
+                if (!field.relation) {
+                    this._registerDisplayLabel(field.name, group.values[i], group.labels[i]);
+                } else {
+                    const id = group.values[i];
+                    const displayName = group.labels[i];
+                    this._registerDisplayName(field.relation, id, displayName);
+                }
+            }
+        }
+        [...tree.directSubTrees.values()].forEach((subTree) => {
+            this._registerLabels(subTree, groupBys);
+        });
     }
 
-    async load(searchParams) {
-        if (
-            this.metaData.activeMeasures.find(
-                (fieldName) => fieldName !== "__count" && !this.metaData.fields[fieldName]
-            )
-        ) {
-            throw new Error(
-                _t(
-                    "Some measures are not available: %s",
-                    this.metaData.activeMeasures
-                        .filter((fieldName) => !this.metaData.fields[fieldName])
-                        .join(", ")
-                )
-            );
+    /**
+     * Add labels/values in the provided groupTree. A new leaf is created in
+     * the groupTree with a root object corresponding to the group with given
+     * labels/values.
+     *
+     * @protected
+     * @param {Object} groupTree, either this.data.rowGroupTree or this.data.colGroupTree
+     * @param {string[]} labels
+     * @param {Array} values
+     */
+    _addGroup(groupTree, labels, values) {
+        let tree = groupTree;
+        // we assume here that the group with value value.slice(value.length - 2) has already been added.
+        values.slice(0, values.length - 1).forEach(function (value) {
+            tree = tree.directSubTrees.get(value);
+        });
+        const value = values[values.length - 1];
+        if (tree.directSubTrees.has(value)) {
+            return;
         }
-        searchParams.groupBy = [];
-        searchParams.orderBy = [];
-        await super.load(searchParams);
+        tree.directSubTrees.set(value, {
+            root: {
+                labels: labels,
+                values: values,
+            },
+            directSubTrees: new Map(),
+        });
+    }
+    /**
+     * Find a group with given values in the provided groupTree, either
+     * this.rowGrouptree or this.data.colGroupTree.
+     *
+     * @protected
+     * @param {Object} groupTree
+     * @param {Array} values
+     * @returns {Object}
+     */
+    _findGroup(groupTree, values) {
+        let tree = groupTree;
+        values.slice(0, values.length).forEach((value) => {
+            tree = tree.directSubTrees.get(value);
+        });
+        return tree;
+    }
+    /**
+     * Returns the group sanitized labels.
+     *
+     * @protected
+     * @param {Object} group
+     * @param {string[]} groupBys
+     * @returns {string[]}
+     */
+    _getGroupLabels(group, groupBys) {
+        return groupBys.map((gb) => {
+            const groupBy = this._normalize(gb);
+            return this._sanitizeLabel(group[groupBy], groupBy);
+        });
+    }
+
+    /**
+     * Returns the group sanitized values.
+     *
+     * @protected
+     * @param {Object} group
+     * @param {string[]} groupBys
+     * @returns {Array}
+     */
+    _getGroupValues(group, groupBys) {
+        return groupBys.map((gb) => {
+            const groupBy = this._normalize(gb);
+            const { field, granularity } = this.parseGroupField(gb);
+            if (isDateOrDatetimeField(field)) {
+                return pivotTimeAdapter(granularity).normalizeServerValue(
+                    groupBy,
+                    field,
+                    group,
+                    this.getters.getLocale()
+                );
+            }
+            return this._sanitizeValue(group[groupBy]);
+        });
+    }
+    /**
+     * Returns the leaf counts of each group inside the given tree.
+     *
+     * @protected
+     * @param {Object} tree
+     * @returns {Object} keys are group ids
+     */
+    _getLeafCounts(tree) {
+        const leafCounts = {};
+        let leafCount;
+        if (!tree.directSubTrees.size) {
+            leafCount = 1;
+        } else {
+            leafCount = [...tree.directSubTrees.values()].reduce((acc, subTree) => {
+                const subLeafCounts = this._getLeafCounts(subTree);
+                Object.assign(leafCounts, subLeafCounts);
+                return acc + leafCounts[JSON.stringify(subTree.root.values)];
+            }, 0);
+        }
+
+        leafCounts[JSON.stringify(tree.root.values)] = leafCount;
+        return leafCounts;
+    }
+
+    _getMeasurements(group) {
+        return this.definition.measures
+            .filter((measure) => !measure.computedBy)
+            .reduce((measurements, measure) => {
+                const measurementId = this._getAggregateSpec(measure);
+                let measurement = group[measurementId];
+                if (measurement instanceof Array) {
+                    // case field is many2one and used as measure and groupBy simultaneously
+                    measurement = 1;
+                }
+                if (measure.type === "boolean" && measurement instanceof Boolean) {
+                    measurement = measurement ? 1 : 0;
+                }
+                measurements[measurementId] = measurement;
+                return measurements;
+            }, {});
     }
 
     //--------------------------------------------------------------------------
@@ -359,7 +374,7 @@ export class OdooPivotModel extends PivotModel {
     }
 
     /**
-     * @param {import("@odoo/o-spreadsheet").PivotDimension} dimension
+     * @param {PivotDimension} dimension
      * @returns {{ value: string | number | boolean, label: string }[]}
      */
     getPossibleFieldValues(dimension) {
@@ -398,150 +413,25 @@ export class OdooPivotModel extends PivotModel {
         const cols = this._getSpreadsheetCols();
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
-        const measures = this.getDefinition()
-            .measures.filter((measure) => !measure.isHidden)
+        const measures = this.definition.measures
+            .filter((measure) => !measure.isHidden)
             .map((measure) => measure.id);
         /** @type {Record<string, string | undefined>} */
         const fieldsType = {};
-        for (const columns of this.getDefinition().columns) {
+        for (const columns of this.definition.columns) {
             fieldsType[columns.fieldName] = columns.type;
         }
-        for (const row of this.getDefinition().rows) {
+        for (const row of this.definition.rows) {
             fieldsType[row.fieldName] = row.type;
         }
         const collapsedDomains =
-            mode === "collapsed" ? this.getDefinition().collapsedDomains : undefined;
+            mode === "collapsed" ? this.definition.collapsedDomains : undefined;
         return new SpreadsheetPivotTable(cols, rows, measures, fieldsType, collapsedDomains);
     }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _loadData(config) {
-        /** @type {(groupFieldString: string) => ReturnType<parseGroupField>} */
-        this.parseGroupField = parseGroupField.bind(null, this.metaData.fields);
-        /*
-         * prune is manually set to false in order to expand all the groups
-         * automatically
-         */
-        const prune = false;
-        await super._loadData(config, prune);
-
-        const registerLabels = (tree, groupBys) => {
-            const group = tree.root;
-            if (!tree.directSubTrees.size) {
-                for (let i = 0; i < group.values.length; i++) {
-                    const { field } = this.parseGroupField(groupBys[i]);
-                    if (!field.relation) {
-                        this._registerDisplayLabel(field.name, group.values[i], group.labels[i]);
-                    } else {
-                        const id = group.values[i];
-                        const displayName = group.labels[i];
-                        this._registerDisplayName(field.relation, id, displayName);
-                    }
-                }
-            }
-            [...tree.directSubTrees.values()].forEach((subTree) => {
-                registerLabels(subTree, groupBys);
-            });
-        };
-
-        registerLabels(this.data.colGroupTree, this.metaData.fullColGroupBys);
-        registerLabels(this.data.rowGroupTree, this.metaData.fullRowGroupBys);
-    }
-
-    _registerDisplayLabel(fieldName, value, label) {
-        if (!this._displayLabels[fieldName]) {
-            this._displayLabels[fieldName] = {};
-        }
-        this._displayLabels[fieldName][value] = label;
-    }
-
-    _registerDisplayName(resModel, resId, displayName) {
-        if (!this._displayNames[resModel]) {
-            this._displayNames[resModel] = {};
-        }
-        this._displayNames[resModel][resId] = displayName;
-    }
-
-    _getRelationalDisplayName(resModel, resId) {
-        const displayName =
-            this._displayNames[resModel]?.[resId] ||
-            this.serverData.batch.get("spreadsheet.mixin", "get_display_names_for_spreadsheet", {
-                model: resModel,
-                id: resId,
-            });
-        if (!displayName) {
-            throw new EvaluationError(
-                _t("Unable to fetch the label of %(id)s of model %(model)s", {
-                    id: resId,
-                    model: resModel,
-                })
-            );
-        }
-        return displayName;
-    }
-
-    _normalize(groupBy) {
-        const [fieldName] = groupBy.split(":");
-        const field = this.metaData.fields[fieldName];
-        if (!field) {
-            throw new EvaluationError(_t("Field %s does not exist", fieldName));
-        }
-        return super._normalize(groupBy);
-    }
-
-    /**
-     * @override
-     */
-    _getGroupValues(group, groupBys) {
-        return groupBys.map((gb) => {
-            const groupBy = this._normalize(gb);
-            const { field, granularity } = this.parseGroupField(gb);
-            if (isDateOrDatetimeField(field)) {
-                return pivotTimeAdapter(granularity).normalizeServerValue(
-                    groupBy,
-                    field,
-                    group,
-                    this.getters.getLocale()
-                );
-            }
-            return this._sanitizeValue(group[groupBy]);
-        });
-    }
-
-    /**
-     * @override
-     */
-    _sanitizeLabel(value, groupBy, config) {
-        const { metaData } = config;
-        const fieldName = groupBy.split(":")[0];
-        if (fieldName && metaData.fields[fieldName]) {
-            const fields = fieldName.split(".");
-            if (fields.length > 1 && fields.at(-1) === "id" && Array.isArray(value)) {
-                return value[0];
-            }
-        }
-        return super._sanitizeLabel(value, groupBy, config);
-    }
-
-    /**
-     * Check if the given field is used as col group by
-     */
-    _isCol(nameWithGranularity) {
-        return this.metaData.fullColGroupBys.includes(nameWithGranularity);
-    }
-
-    /**
-     * Check if the given field is used as row group by
-     */
-    _isRow(nameWithGranularity) {
-        return this.metaData.fullRowGroupBys.includes(nameWithGranularity);
-    }
 
     /**
      * Get the value of a field-value for a positional group by
@@ -622,7 +512,7 @@ export class OdooPivotModel extends PivotModel {
         const rows = [];
         const group = tree.root;
         const indent = group.labels.length;
-        const rowGroupBys = this.metaData.fullRowGroupBys;
+        const rowGroupBys = this.rowGroupBys;
 
         rows.push({
             fields: rowGroupBys.slice(0, indent),
@@ -643,9 +533,9 @@ export class OdooPivotModel extends PivotModel {
      * @returns {PivotTableColumn[][]}
      */
     _getSpreadsheetCols() {
-        const colGroupBys = this.metaData.fullColGroupBys;
+        const colGroupBys = this.colGroupBys;
         const height = colGroupBys.length;
-        const measures = this.getDefinition().measures.filter((measure) => !measure.isHidden);
+        const measures = this.definition.measures.filter((measure) => !measure.isHidden);
         const measureCount = measures.length;
         const leafCounts = this._getLeafCounts(this.data.colGroupTree);
 
@@ -670,8 +560,8 @@ export class OdooPivotModel extends PivotModel {
             });
         }
 
-        generateTreeHeaders(this.data.colGroupTree, this.metaData.fields);
-        const hasColGroupBys = this.metaData.colGroupBys.length;
+        generateTreeHeaders(this.data.colGroupTree, this.definition.fields);
+        const hasColGroupBys = this.colGroupBys.length;
 
         // 2) generate measures row
         const measureRow = [];
@@ -725,307 +615,232 @@ export class OdooPivotModel extends PivotModel {
         if (measure.type === "many2one") {
             return `${measure.fieldName}:count_distinct`;
         }
-        const field = this.metaData.fields[measure.fieldName];
+        const field = this.definition.fields[measure.fieldName];
         if (!field.aggregator) {
             throw new Error(`Field ${measure.fieldName} doesn't have a default aggregator`);
         }
         return `${measure.fieldName}:${field.aggregator}`;
     }
-
     /**
-     * @override
+     * Make sure that the labels of different many2one values are distinguished
+     * by numbering them if necessary.
+     *
      * @protected
-     * @return {string[]}
+     * @param {Array} label
+     * @param {string} fieldName
+     * @returns {string}
      */
-    _getMeasureSpecs() {
-        return this.getDefinition()
-            .measures.filter((measure) => !measure.computedBy)
-            .map(this._getAggregateSpec, this);
+    _getNumberedLabel(label, fieldName) {
+        const id = label[0];
+        const name = label[1];
+        this.data.numbering[fieldName] = this.data.numbering[fieldName] || {};
+        this.data.numbering[fieldName][name] = this.data.numbering[fieldName][name] || {};
+        const numbers = this.data.numbering[fieldName][name];
+        numbers[id] = numbers[id] || Object.keys(numbers).length + 1;
+        return name + (numbers[id] > 1 ? "  (" + numbers[id] + ")" : "");
+    }
+
+    _registerDisplayLabel(fieldName, value, label) {
+        if (!this._displayLabels[fieldName]) {
+            this._displayLabels[fieldName] = {};
+        }
+        this._displayLabels[fieldName][value] = label;
     }
 
     /**
-     * @override to add the order by clause to the read_group kwargs
+     * @param {string} resModel
+     * @param {number} resId
+     * @param {string} displayName
      */
-    async _getGroupsSubdivision(params, groupInfo) {
-        const customFields = this.definition.customFields || {};
-
-        const { columns, rows } = this.getDefinition();
-        const allGroupBys = params.groupingSets.flat();
-        const order = columns
-            .concat(rows)
-            .filter(
-                (dimension) =>
-                    dimension.order && allGroupBys.includes(dimension.nameWithGranularity)
-            )
-            .map((dimension) => `${dimension.nameWithGranularity} ${dimension.order}`)
-            .join(",");
-        params.kwargs.order = order;
-
-        const hasCustomField = allGroupBys.some((gb) => customFields[gb] !== undefined);
-        if (!hasCustomField) {
-            return await super._getGroupsSubdivision(params, groupInfo);
-        } else if (params.measureSpecs.some((measure) => measure.endsWith(":count_distinct"))) {
-            throw new Error(_t('Cannot use custom pivot groups with "Count Distinct" measure'));
-        } else {
-            return this._doCustomGroupSubdivision(params, groupInfo);
+    _registerDisplayName(resModel, resId, displayName) {
+        if (!this._displayNames[resModel]) {
+            this._displayNames[resModel] = {};
         }
-    }
-
-    _aggregateSubGroups(subGroups, measures) {
-        if (subGroups.length === 1) {
-            return subGroups[0];
-        }
-        const subGroup = { ...subGroups[0] };
-        for (const measure of measures) {
-            const aggregator = measure.split(":")[1];
-            switch (aggregator) {
-                case "sum":
-                case "count":
-                    subGroup[measure] = subGroups.reduce((sum, sg) => sum + sg[measure], 0);
-                    break;
-                case "min":
-                    subGroup[measure] = Math.min(...subGroups.map((sg) => sg[measure]));
-                    break;
-                case "max":
-                    subGroup[measure] = Math.max(...subGroups.map((sg) => sg[measure]));
-                    break;
-                case "avg": {
-                    const totalCount = subGroups.reduce((sum, sg) => sum + (sg.__count || 0), 0);
-                    if (totalCount === 0) {
-                        subGroup[measure] = 0;
-                    } else {
-                        subGroup[measure] =
-                            subGroups.reduce((sum, sg) => sum + sg[measure] * sg.__count, 0) /
-                            totalCount;
-                    }
-                    break;
-                }
-            }
-        }
-        subGroup.__count = subGroups.reduce((sum, sg) => sum + (sg.__count || 0), 0);
-
-        const domains = subGroups.map((sg) => sg.__domain || []);
-        subGroup.__domain = Domain.combine(domains, "OR").toList();
-        const extraDomains = subGroups.map((sg) => sg.__extraDomain || []);
-        subGroup.__extraDomain = Domain.combine(extraDomains, "OR").toList();
-
-        return subGroup;
-    }
-
-    _sortCustomFieldsInSubGroups(groupBys, subGroups) {
-        const isInOthersGroup = (subGroup, groupBy, customField) => {
-            const value = Array.isArray(subGroup[groupBy])
-                ? subGroup[groupBy][0]
-                : subGroup[groupBy];
-            const otherGroup = customField.groups.find((g) => g.isOtherGroup);
-            return otherGroup && value === otherGroup.name;
-        };
-
-        const sortFn = (subGroupA, subGroupB, order, groupBy, customField) => {
-            if (isInOthersGroup(subGroupB, groupBy, customField)) {
-                return -1;
-            }
-            if (isInOthersGroup(subGroupA, groupBy, customField)) {
-                return 1;
-            }
-            const aValue = subGroupA[groupBy];
-            const bValue = subGroupB[groupBy];
-            if (aValue === false) {
-                return order === "asc" ? 1 : -1;
-            } else if (bValue === false) {
-                return order === "asc" ? -1 : 1;
-            }
-
-            const aLabel = (Array.isArray(aValue) ? aValue[1] : String(aValue)).toLowerCase();
-            const bLabel = (Array.isArray(bValue) ? bValue[1] : String(bValue)).toLowerCase();
-            return order === "asc" ? aLabel.localeCompare(bLabel) : bLabel.localeCompare(aLabel);
-        };
-
-        const sortSubGroups = (groupBys, subGroups) => {
-            const groupBy = groupBys[0];
-            const childrenMap = new Map();
-
-            for (const item of subGroups) {
-                const value = item[groupBy];
-                const key = Array.isArray(value) ? value[0] : value;
-                if (!childrenMap.has(key)) {
-                    childrenMap.set(key, []);
-                }
-                childrenMap.get(key).push(item);
-            }
-
-            // Sort group keys
-            const customField = this.definition.customFields?.[groupBy];
-            const keys = Array.from(childrenMap.keys());
-            const order = this.definition.getDimension(groupBy)?.order;
-
-            if (customField && order) {
-                keys.sort((a, b) => {
-                    const subGroupB = childrenMap.get(b)[0];
-                    const subGroupA = childrenMap.get(a)[0];
-                    return sortFn(subGroupA, subGroupB, order, groupBy, customField);
-                });
-            }
-
-            return keys.flatMap((key) =>
-                groupBys.length > 1
-                    ? sortSubGroups(groupBys.slice(1), childrenMap.get(key))
-                    : childrenMap.get(key)
-            );
-        };
-
-        return sortSubGroups(groupBys, subGroups);
+        this._displayNames[resModel][resId] = displayName;
     }
 
     /**
-     * If the measures can be aggregated client side (not `count_distinct`), we can do a single RPC to get all the
-     * subgroups, then do a Object.groupBy() client side to aggregate the subgroups.
-     *
-     * See comment at the start of the file for more details.
+     * @param {string} resModel
+     * @param {number} resId
+     * @returns {string}
      */
-    async _doCustomGroupSubdivision(params, groupInfo) {
-        const customFields = this.definition.customFields || {};
-
-        const mockGroupInfo = groupInfo.map((info) => ({
-            ...info,
-            rowGroupBy: info.rowGroupBy.map((gb) => customFields[gb]?.parentField || gb),
-            colGroupBy: info.colGroupBy.map((gb) => customFields[gb]?.parentField || gb),
-        }));
-
-        // Grouping sets need to be unique, but with custom groups some might be duplicated. It happens when we do
-        // something like groupBy=[grouped:user_id, user_id], we only want to fetch groupBy=[user_id]
-        const groupInfoKeysSet = new Set();
-        const uniqueGroupInfo = [];
-        for (const info of mockGroupInfo) {
-            const { rowGroupBy, colGroupBy } = info;
-            const uniqueGroups = [...new Set([...rowGroupBy, ...colGroupBy].sort())].join(",");
-            if (!groupInfoKeysSet.has(uniqueGroups)) {
-                uniqueGroupInfo.push({
-                    ...info,
-                    rowGroupBy,
-                    colGroupBy,
-                    subGroupIndex: groupInfoKeysSet.size,
-                });
-                groupInfoKeysSet.add(uniqueGroups);
-            }
+    _getRelationalDisplayName(resModel, resId) {
+        let displayName = this._displayNames[resModel]?.[resId];
+        if (displayName) {
+            return displayName;
         }
-        const uniqueGroupingSets = [...groupInfoKeysSet].map((key) =>
-            key.split(",").filter((gb) => gb !== "")
-        );
-
-        // Remove custom groups from order
-        if (params.kwargs.order) {
-            const fieldNameRegex = /(.*) (asc|desc)/;
-            params.kwargs.order = params.kwargs.order
-                .split(",")
-                .filter((part) => {
-                    const groupBy = part.match(fieldNameRegex)?.[1];
-                    return customFields[groupBy] === undefined;
+        displayName = this.pivotDataProvider.loadRelationalDisplayName(resModel, resId);
+        if (!displayName) {
+            throw new EvaluationError(
+                _t("Unable to fetch the label of %(id)s of model %(model)s", {
+                    id: resId,
+                    model: resModel,
                 })
-                .join(",");
-        }
-
-        const result = await super._getGroupsSubdivision(
-            { ...params, groupingSets: uniqueGroupingSets },
-            uniqueGroupInfo
-        );
-
-        const resultWithCustomGroups = [];
-        for (let i = 0; i < groupInfo.length; i++) {
-            const info = groupInfo[i];
-            const mockInfo = mockGroupInfo[i];
-            const mockGroupBys = [
-                ...new Set([...mockInfo.rowGroupBy, ...mockInfo.colGroupBy].sort()),
-            ];
-            const resultIndex = uniqueGroupingSets.findIndex((groups) =>
-                deepEquals(groups, mockGroupBys)
             );
-            const subGroups = result[resultIndex].subGroups;
-
-            const groupBys = [...info.rowGroupBy, ...info.colGroupBy];
-            const hasCustomField = groupBys.some((gb) => customFields[gb] !== undefined);
-            if (hasCustomField) {
-                resultWithCustomGroups.push(this._addCustomGroupsToGroup(params, info, subGroups));
-            } else {
-                resultWithCustomGroups.push({ ...info, subGroups });
-            }
         }
-        return resultWithCustomGroups;
-    }
-
-    _addCustomGroupsToGroup(params, groupInfo, subGroups) {
-        const customFields = this.definition.customFields || {};
-        const { rowGroupBy, colGroupBy } = groupInfo;
-        const groupBys = [...rowGroupBy, ...colGroupBy];
-
-        for (const groupBy of groupBys) {
-            const customField = customFields[groupBy];
-            if (!customField) {
-                continue;
-            }
-
-            for (const subGroup of subGroups) {
-                const parentFieldName = customField.parentField;
-                const parentValue = Array.isArray(subGroup[parentFieldName])
-                    ? subGroup[parentFieldName][0]
-                    : subGroup[parentFieldName];
-                const group =
-                    customField.groups.find((g) => g.values.includes(parentValue)) ||
-                    customField.groups.find((g) => g.isOtherGroup);
-
-                subGroup[groupBy] = group ? group.name : subGroup[parentFieldName];
-            }
-        }
-
-        // Note: we need to preserve the order of the subGroups from the server. Object.groupBy() has no guarantee
-        // on the order of keys, but its implementation in major browsers does seem to preserve the order. We'll use
-        // Object.groupBy() until we find practical issues with it.
-        const getKey = (subGroup) => JSON.stringify(groupBys.map((groupBy) => subGroup[groupBy]));
-        const groupedSubgroups = Object.groupBy(subGroups, getKey);
-
-        const aggregatedSubgroups = Object.values(groupedSubgroups).map((subGroups) =>
-            this._aggregateSubGroups(subGroups, params.measureSpecs)
-        );
-        const sortedSubGroups = this._sortCustomFieldsInSubGroups(groupBys, aggregatedSubgroups);
-
-        return { ...groupInfo, subGroups: sortedSubGroups };
+        return displayName;
     }
 
     /**
-     * Override to support multiple aggregators for a same field
-     *
-     * @override
+     * @protected
+     * @param {string} gb
+     * @returns {string}
      */
-    _getMeasurements(group) {
-        return this.getDefinition()
-            .measures.filter((measure) => !measure.computedBy)
-            .reduce((measurements, measure) => {
-                const measurementId = this._getAggregateSpec(measure);
-                var measurement = group[measurementId];
-                if (measurement instanceof Array) {
-                    // case field is many2one and used as measure and groupBy simultaneously
-                    measurement = 1;
+    _normalize(gb) {
+        const [fieldName, interval] = gb.split(":");
+        const field = this.definition.fields[fieldName];
+        if (!field) {
+            throw new EvaluationError(_t("Field %s does not exist", fieldName));
+        }
+        if (["date", "datetime"].includes(field.type)) {
+            return `${fieldName}:${interval || "month"}`;
+        } else {
+            return fieldName;
+        }
+    }
+    /**
+     * Extract the information in the read_group results (groupSubdivisions)
+     * and develop this.data.rowGroupTree, colGroupTree, measurements, counts, and
+     * groupDomains.
+     * If a column needs to be sorted, the rowGroupTree corresponding to the
+     * group is sorted.
+     *
+     * @protected
+     * @param {Object} group
+     * @param {Object[]} groupSubdivisions
+     */
+    _prepareData(group, groupSubdivisions) {
+        const groupRowValues = group.rowValues;
+        let groupRowLabels = [];
+        let rowSubTree = this.data.rowGroupTree;
+        let root;
+        if (groupRowValues.length) {
+            // we should have labels information on hand! regretful!
+            rowSubTree = this._findGroup(this.data.rowGroupTree, groupRowValues);
+            root = rowSubTree.root;
+            groupRowLabels = root.labels;
+        }
+
+        const groupColValues = group.colValues;
+        let groupColLabels = [];
+        if (groupColValues.length) {
+            root = this._findGroup(this.data.colGroupTree, groupColValues).root;
+            groupColLabels = root.labels;
+        }
+
+        groupSubdivisions.forEach((groupSubdivision) => {
+            groupSubdivision.subGroups.forEach((subGroup) => {
+                const rowValues = groupRowValues.concat(
+                    this._getGroupValues(subGroup, groupSubdivision.rowGroupBy)
+                );
+                const rowLabels = groupRowLabels.concat(
+                    this._getGroupLabels(subGroup, groupSubdivision.rowGroupBy)
+                );
+
+                const colValues = groupColValues.concat(
+                    this._getGroupValues(subGroup, groupSubdivision.colGroupBy)
+                );
+                const colLabels = groupColLabels.concat(
+                    this._getGroupLabels(subGroup, groupSubdivision.colGroupBy)
+                );
+
+                if (!colValues.length && rowValues.length) {
+                    this._addGroup(this.data.rowGroupTree, rowLabels, rowValues);
                 }
-                if (measure.type === "boolean" && measurement instanceof Boolean) {
-                    measurement = measurement ? 1 : 0;
+                if (colValues.length && !rowValues.length) {
+                    this._addGroup(this.data.colGroupTree, colLabels, colValues);
                 }
-                measurements[measurementId] = measurement;
-                return measurements;
-            }, {});
+
+                const key = JSON.stringify([rowValues, colValues]);
+
+                this.data.measurements[key] = this._getMeasurements(subGroup);
+                this.data.counts[key] = subGroup.__count;
+
+                // if __domain is not defined this means that we are in the
+                // case where
+                // groupSubdivision.rowGroupBy = groupSubdivision.rowGroupBy = []
+                if (subGroup.__domain) {
+                    this.data.groupDomains[key] = subGroup.__domain;
+                } else {
+                    this.data.groupDomains[key] = Domain.FALSE.toList();
+                }
+            });
+        });
     }
 
     /**
-     * Override to support multiple aggregators for a same field
+     * Extract from a groupBy value a label.
      *
-     * @override
+     * @protected
+     * @param {any} value
+     * @param {string} groupBy
+     * @returns {string}
      */
-    _getCellValue(groupId, measureName, config) {
-        const measure = this.getDefinition().measures.find((m) => m.fieldName === measureName);
-        const measurementId = this._getAggregateSpec(measure);
-        var key = JSON.stringify(groupId);
-        if (!config.data.measurements[key]) {
-            return;
+    _sanitizeLabel(value, groupBy) {
+        const fieldName = groupBy.split(":")[0];
+        if (fieldName && this.definition.fields[fieldName]) {
+            const fields = fieldName.split(".");
+            if (fields.length > 1 && fields.at(-1) === "id" && Array.isArray(value)) {
+                return value[0];
+            }
         }
-        return config.data.measurements[key][measurementId];
+        if (fieldName && this.definition.fields[fieldName]) {
+            const field = this.definition.fields[fieldName];
+            if (field.type === "boolean") {
+                return value === undefined ? _t("None") : value ? _t("Yes") : _t("No");
+            } else if (field.type === "integer") {
+                if (fieldName === "id" && Array.isArray(value)) {
+                    return value[1];
+                }
+                return value || "0";
+            }
+        }
+        if (value === false) {
+            return this.definition.fields[fieldName].falsy_value_label || _t("None");
+        }
+        if (value instanceof Array) {
+            return this._getNumberedLabel(value, fieldName);
+        }
+        if (
+            fieldName &&
+            this.definition.fields[fieldName] &&
+            this.definition.fields[fieldName].type === "selection"
+        ) {
+            const selected = this.definition.fields[fieldName].selection.find(
+                (o) => o[0] === value
+            );
+            return selected ? selected[1] : value; // selected should be truthy normally ?!
+        }
+        return value;
+    }
+    /**
+     * Extract from a groupBy value the raw value of that groupBy (discarding
+     * a label if any)
+     *
+     * @protected
+     * @param {any} value
+     * @returns {any}
+     */
+    _sanitizeValue(value) {
+        if (value instanceof Array) {
+            return value[0];
+        }
+        return value;
+    }
+
+    /**
+     * Check if the given field is used as col group by
+     * @param {string} nameWithGranularity
+     */
+    _isCol(nameWithGranularity) {
+        return this.colGroupBys.includes(nameWithGranularity);
+    }
+
+    /**
+     * Check if the given field is used as row group by
+     * @param {string} nameWithGranularity
+     */
+    _isRow(nameWithGranularity) {
+        return this.rowGroupBys.includes(nameWithGranularity);
     }
 }
