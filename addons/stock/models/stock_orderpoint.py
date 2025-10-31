@@ -712,6 +712,8 @@ class StockWarehouseOrderpoint(models.Model):
         reference = self.env.context.get('origins')
         if reference:
             values['reference_ids'] = self.env['stock.reference'].browse(reference.get(self.id))
+        if self.replenishment_uom_id:
+            values['force_uom'] = True
         return values
 
     def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=None, raise_user_error=True):
@@ -745,8 +747,13 @@ class StockWarehouseOrderpoint(models.Model):
                             if global_horizon_days:
                                 date -= relativedelta.relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
+                            qty_to_order = orderpoint.qty_to_order
+                            product_uom = orderpoint.uom_id
+                            if values.get('force_uom') and orderpoint.replenishment_uom_id != product_uom:
+                                qty_to_order = product_uom._compute_quantity(orderpoint.qty_to_order, orderpoint.replenishment_uom_id)
+                                product_uom = orderpoint.replenishment_uom_id
                             procurements.append(self.env['stock.rule'].Procurement(
-                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.uom_id,
+                                orderpoint.product_id, qty_to_order, product_uom,
                                 orderpoint.location_id, orderpoint.name, origin,
                                 orderpoint.company_id, values))
 
