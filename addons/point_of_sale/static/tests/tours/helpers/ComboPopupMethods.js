@@ -47,3 +47,11 @@ export function confirm() {
         trigger: confirmationButtonTrigger,
     };
 }
+
+export function isNotPresent(productName) {
+    return {
+        content: `Check that ${productName} is not present in the combo options`,
+        trigger: isNot(productTrigger(productName)),
+        isCheck: true,
+    };
+}

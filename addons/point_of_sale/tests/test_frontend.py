@@ -938,6 +938,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_07_pos_combo(self):
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 50})
+        # Archive a product to test that combo lines with archived products do not appear
+        self.office_combo.combo_ids.combo_line_ids.product_id.filtered(lambda p: p.name == 'Combo Product 1').active = False
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboPriceTaxIncludedTour', login="pos_user")
         order = self.env['pos.order'].search([])
