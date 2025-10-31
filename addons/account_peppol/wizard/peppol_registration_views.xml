@@ -26,10 +26,18 @@
                         </div>
 
                         <group col="1">
+                            <field name="peppol_eas_country"
+                                   placeholder="Peppol Country"
+                                   nolabel="1"
+                                   readonly="use_parent_connection"
+                                   class="o_field_peppol_eas_country_selection"/>
+                            <field name="peppol_eas_identifier" invisible="1"/>
                             <group>
                                 <field name="peppol_eas"
                                        placeholder="Peppol ID"
                                        nolabel="1"
+                                       widget="dynamic_selection"
+                                       options="{'available_field': 'peppol_eas_identifier'}"
                                        readonly="use_parent_connection"
                                        class="o_field_peppol_eas_selection"/>
                                 <field name="peppol_endpoint"

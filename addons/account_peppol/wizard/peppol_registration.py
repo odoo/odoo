@@ -8,6 +8,7 @@ except ImportError:
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
 
 class PeppolRegistration(models.TransientModel):
@@ -69,6 +70,11 @@ class PeppolRegistration(models.TransientModel):
         required=True,
     )
     phone_number = fields.Char(related='selected_company_id.account_peppol_phone_number', readonly=False)
+    peppol_eas_identifier = fields.Char(compute='_compute_peppol_eas_identifier')
+    peppol_eas_country = fields.Selection(
+        selection='_get_peppol_eas_country_selection',
+        default=lambda self: self.env.company.country_code
+    )
     peppol_eas = fields.Selection(related='selected_company_id.peppol_eas', readonly=False, required=True)
     peppol_endpoint = fields.Char(related='selected_company_id.peppol_endpoint', readonly=False, required=True)
     smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
@@ -80,6 +86,15 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
+
+    @api.onchange('peppol_eas_country')
+    def _onchange_peppol_eas_country(self):
+        for wizard in self:
+            if wizard.peppol_eas_identifier:
+                if 'odemo' in wizard.peppol_eas_identifier:
+                    wizard.peppol_eas = 'odemo'
+                else:
+                    wizard.peppol_eas = wizard.peppol_eas_identifier.split(',')[0]
 
     @api.onchange('peppol_endpoint')
     def _onchange_peppol_endpoint(self):
@@ -106,6 +121,19 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('peppol_eas_country')
+    def _compute_peppol_eas_identifier(self):
+        for wizard in self:
+            if wizard.peppol_eas_country:
+                if wizard.peppol_eas_country != 'OTH':
+                    wizard.peppol_eas_identifier = ",".join(list(EAS_MAPPING.get(wizard.peppol_eas_country).keys()))
+                else:
+                    all_identifiers = set(dict(self.env['res.partner']._fields['peppol_eas'].selection).keys())
+                    country_wise_identifiers = set()
+                    for eas in EAS_MAPPING:
+                        country_wise_identifiers.update(EAS_MAPPING[eas].keys())
+                    wizard.peppol_eas_identifier = ",".join(all_identifiers.difference(country_wise_identifiers))
 
     @api.depends('company_id')
     def _compute_from_company_id(self):
@@ -179,6 +207,10 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+
+    def _get_peppol_eas_country_selection(self):
+        all_countries = self.env['res.country'].search([('code', 'in', EAS_MAPPING.keys())])
+        return [(country.code, country.name) for country in all_countries] + [('OTH', 'Other EAS')]
 
     def _branch_with_same_address(self):
         self.ensure_one()
