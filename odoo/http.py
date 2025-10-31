@@ -1139,9 +1139,6 @@ class Session(collections.abc.MutableMapping):
         self.is_dirty = True
         return new_trace
 
-    def _delete_old_sessions(self):
-        root.session_store.delete_old_sessions(self)
-
 
 # =========================================================
 # Session Store
@@ -1212,6 +1209,7 @@ class SessionStore:
                 os.mkdir(session_dir, mode=0o755)
                 os.replace(tmp, session_path)
             os.chmod(session_path, 0o644)
+        session.is_dirty = False
 
     def delete(self, session: Session) -> None:
         """ Delete a session. """
@@ -1277,14 +1275,13 @@ class SessionStore:
             session['deletion_time'] = time.time() + SESSION_DELETION_TIMER
             self.save(session)
             # Now prepare the new session
-            session['gc_previous_sessions'] = True
             session.sid = next_sid
             del session['deletion_time']
             del session['next_sid']
         else:
             self.delete(session)
             session.sid = self.generate_key()
-        if session.uid and env:
+        if session.uid:
             session.session_token = security.compute_session_token(session, env)
         session.should_rotate = False
         session['create_time'] = time.time()
@@ -1336,14 +1333,6 @@ class SessionStore:
         for fn in files_to_unlink:
             with contextlib.suppress(OSError):
                 os.unlink(fn)
-
-    def delete_old_sessions(self, session):
-        """ Delete old sessions based on expiration and cleanup flag value. """
-        if 'gc_previous_sessions' in session:
-            if session['create_time'] + SESSION_DELETION_TIMER < time.time():
-                self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
-                del session['gc_previous_sessions']
-                self.save(session)
 
 
 # =========================================================
@@ -2177,11 +2166,13 @@ class Request:
             root.session_store.rotate(sess, env)  # it saves
         elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
             root.session_store.rotate(sess, env, soft=True)
+            root.session_store.delete_from_identifiers([sess.sid[:STORED_SESSION_BYTES]])
         elif sess.is_dirty:
             root.session_store.save(sess)
+        else:
+            return
 
-        cookie_sid = self.cookies.get('session_id')
-        if sess.is_dirty or cookie_sid != sess.sid:
+        if self.cookies.get('session_id') != sess.sid:
             self.future_response.set_cookie(
                 'session_id',
                 sess.sid,
@@ -2317,11 +2308,13 @@ class Request:
             except Exception as exc:  # noqa: BLE001
                 raise self._update_served_exception(exc)
         finally:
+            self.env = None
             if cr is not None:
                 cr.close()
 
     def _update_served_exception(self, exc):
         if isinstance(exc, HTTPException) and exc.code is None:
+            self.registry['ir.http']._post_dispatch(exc.get_response())
             return exc  # bubble up to odoo.http.Application.__call__
         if (
             'werkzeug' in config['dev_mode']
@@ -2859,9 +2852,7 @@ class Application:
             except Exception as exc:
                 # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
                 if isinstance(exc, HTTPException) and exc.code is None:
-                    response = exc.get_response()
-                    HttpDispatcher(request).post_dispatch(response)
-                    return response(environ, start_response)
+                    return exc.get_response()(environ, start_response)
 
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
