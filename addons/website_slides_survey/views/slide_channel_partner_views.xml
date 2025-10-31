@@ -7,7 +7,6 @@
             <field name="inherit_id" ref="website_slides.slide_channel_partner_view_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='member_status']" position="after">
-                    <field name="nbr_certification" column_invisible="True"/>
                     <field name="survey_certification_success" invisible="nbr_certification == 0" optional="hide"/>
                 </xpath>
             </field>

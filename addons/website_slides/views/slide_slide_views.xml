@@ -47,8 +47,6 @@
             <field name="arch" type="xml">
                 <form string="Lesson">
                     <sheet>
-                        <field name="channel_type" invisible="1" readonly="1"/>
-                        <field name="channel_allow_comment" invisible="1" readonly="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="%(slide_slide_partner_action_from_slide)d"
                                     class="oe_stat_button" type="action" icon="fa-graduation-cap"
@@ -86,7 +84,6 @@
                             </div>
                             <h1>
                                 <field name="name" default_focus="1" placeholder="e.g. Setting up your computer" class="me-0"/>
-                                <field name="is_category" invisible="1"/>
                             </h1>
                             <field name="tag_ids" invisible="is_category" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
@@ -94,10 +91,8 @@
                             <page name="document" string="Document">
                                 <group>
                                     <group name="lesson_details">
-                                        <field name="active" invisible="1"/>
                                         <field name="channel_id"/>
                                         <field name="slide_category" string="Content Type"/>
-                                        <field name="slide_type" invisible="1"/>
                                         <div class="text-muted" colspan="2" invisible="slide_category != 'quiz'">
                                             You can add questions to this quiz in the 'Quiz' tab.
                                         </div>
@@ -148,7 +143,6 @@
                                             <field name="sequence" widget="handle"/>
                                             <field name="resource_type"/>
                                             <field name="name" required="1"/>
-                                            <field name="file_name" column_invisible="True"/>
                                             <field name="data" readonly="resource_type == 'url'" filename="file_name"/>
                                             <field name="link" string="Link"
                                                 readonly="resource_type == 'file'"
@@ -325,11 +319,11 @@
                     <field name="channel_id"/>
                     <field name="slide_category"/>
                     <field name="total_views" type="measure"/>
-                    <field name="quiz_first_attempt_reward" invisible="1"/>
-                    <field name="quiz_second_attempt_reward" invisible="1"/>
-                    <field name="quiz_third_attempt_reward" invisible="1"/>
-                    <field name="quiz_fourth_attempt_reward" invisible="1"/>
-                    <field name="sequence" invisible="1"/>
+                    <field name="quiz_first_attempt_reward"/>
+                    <field name="quiz_second_attempt_reward"/>
+                    <field name="quiz_third_attempt_reward"/>
+                    <field name="quiz_fourth_attempt_reward"/>
+                    <field name="sequence"/>
                 </graph>
             </field>
         </record>

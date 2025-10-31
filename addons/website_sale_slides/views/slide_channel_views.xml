@@ -38,7 +38,6 @@
         <field name="inherit_id" ref="website_slides.slide_channel_view_tree_report"/>
         <field name="arch" type="xml">
             <field name="members_completed_count" position="after">
-                <field name="currency_id" column_invisible="True"/>
                 <field name="product_sale_revenues" string="Total Revenues" sum="Total Revenues" widget="monetary"/>
             </field>
         </field>
@@ -53,7 +52,6 @@
                 <div class="d-flex" invisible="enroll != 'payment'">
                     <label for="product_sale_revenues" class="mb0 me-auto">Sales</label>
                     <field class="text-nowrap" name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                    <field name="currency_id" invisible="True"/>
                 </div>
             </xpath>
         </field>

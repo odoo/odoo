@@ -11,7 +11,6 @@
                     <xpath expr="//page[@name='usage']" position="inside">
                         <group invisible="state != 'code' or context.get('is_modal')">
                             <field name="website_published" string="Use in website"/>
-                            <field name="xml_id" invisible="1"/>
                             <field name="website_path" invisible="not website_published"/>
                             <field name="website_url" widget="url" readonly="1" invisible="not website_published"/>
                         </group>

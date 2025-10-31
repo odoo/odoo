@@ -180,7 +180,6 @@
                     </div>
                     <group id="general_info">
                         <group string="Details">
-                            <field name="is_connected" invisible="1"/>
                             <field name="partner_id"/>
                             <field name="email"/>
                             <field name="mobile" class="o_force_ltr"/>
@@ -213,8 +212,6 @@
                 <field name="visit_count"/>
                 <field name="page_ids" widget="many2many_tags" string="Pages"/>
                 <field name="last_visited_page_id" string="Last Page" optional="hide"/>
-                <field name="is_connected" column_invisible="True"/>
-                <field name="email" column_invisible="True"/>
                 <button string="Email" name="action_send_mail" type="object"
                     icon="fa-envelope" invisible="not email"/>
             </list>
