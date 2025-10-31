@@ -38,9 +38,10 @@ import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { initLNA } from "../utils/init_lna";
+import { htmlToCanvas } from "@point_of_sale/app/services/render_service";
 
 const { DateTime } = luxon;
 
@@ -2694,6 +2695,25 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
         this.addNewOrder();
+    }
+
+    async downloadSessionReport(report) {
+        const link = document.createElement("a");
+        const currentDate = formatDateTime(DateTime.now(), {
+            format: "MM_dd_yyyy-HH_mm_ss",
+        });
+        const configName = this.config.name.replaceAll(" ", "_");
+        link.download = `${configName}-${this.session.id}-${currentDate}.png`;
+        const canvas = await htmlToCanvas(report, {});
+        link.href = canvas.toDataURL().replace("data:image/jpeg;base64,", "");
+        link.click();
+    }
+
+    get sessionReportType() {
+        if (this.session.state == "closed") {
+            return _t("Z Report");
+        }
+        return _t("X Report");
     }
 
     async isSessionDeleted() {

@@ -1,5 +1,8 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
+import {
+    SaleDetailsButton,
+    handleSaleDetails,
+} from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
@@ -252,6 +255,7 @@ export class ClosePosPopup extends Component {
                 return this.handleClosingError(response);
             }
             this.pos.session.state = "closed";
+            await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
             location.reload();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
