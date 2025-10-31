@@ -294,13 +294,6 @@ export class DynamicList extends DataPoint {
         return unlinked;
     }
 
-    async _leaveSampleMode() {
-        if (this.model.useSampleModel) {
-            await this._load(this.offset, this.limit, this.orderBy, this.domain);
-            this.model.useSampleModel = false;
-        }
-    }
-
     async _multiSave(editedRecord, changes) {
         if (!Object.keys(changes).length || editedRecord === this._recordToDiscard) {
             return;

@@ -9,6 +9,7 @@ import { deepCopy } from "../utils/objects";
  * maxAge?: number; // Max age in milliseconds.
  *                  // Defines the validity of a new entry created by this call.
  *                  // On read, the entry is checked against last stored expiry time; if expired, it is ignored.
+ * noCache?: boolean;
  * }} RPCCacheSettings
  */
 
@@ -137,21 +138,31 @@ export class RPCCache {
         table,
         key,
         fallback,
-        { callback = () => {}, type = "ram", update = "once", maxAge = ONE_YEAR } = {}
+        {
+            callback = () => {},
+            type = "ram",
+            update = "once",
+            maxAge = ONE_YEAR,
+            noCache = false,
+        } = {}
     ) {
         validateSettings({ type, update });
 
-        const ramEntry = this.ramCache.read(table, key);
+        const ramEntry = !noCache ? this.ramCache.read(table, key) : null;
         const isExpired = ramEntry?.expires && ramEntry?.expires < Date.now();
         let ramValue = !isExpired ? ramEntry?.data : null;
 
         const requestKey = `${table}/${key}`;
-        const hasPendingRequest = requestKey in this.pendingRequests;
-        if (hasPendingRequest) {
-            // never do the same call multiple times in parallel => return the same value for all
-            // those calls, but store their callback to call them when/if the real value is obtained
-            this.pendingRequests[requestKey].callbacks.push(callback);
-            return ramValue.then((result) => deepCopy(result));
+        const pendingRequest = this.pendingRequests[requestKey];
+        if (pendingRequest) {
+            if (!noCache) {
+                // never do the same call multiple times in parallel => return the same value for all
+                // those calls, but store their callback to call them when/if the real value is obtained
+                pendingRequest.callbacks.push(callback);
+                return ramValue.then((result) => deepCopy(result));
+            } else {
+                pendingRequest.invalidated = true;
+            }
         }
 
         if (!ramValue || update === "always") {
@@ -223,7 +234,7 @@ export class RPCCache {
                         fromCacheValue = value;
                         fromCache.resolve();
                     });
-                } else if (type === "disk") {
+                } else if (type === "disk" && !noCache) {
                     this.indexedDB
                         .read(table, key)
                         .then(async (result) => {
