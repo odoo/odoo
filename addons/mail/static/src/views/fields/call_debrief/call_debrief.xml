@@ -1,0 +1,92 @@
+<templates xml:space="preserve">
+    <t t-name="mail.CallDebrief" owl="1">
+        <t t-if="state.error">
+            <div class="text-danger">
+                <t t-esc="state.error"/>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o-CallDebrief" t-ref="callDebriefRoot">
+                <CallDebriefTimeline
+                    totalDuration="callDurationSeconds"
+                    transcriptLines="state.transcriptLines"
+                    mediaSegments="state.mediaSegments"
+                    onSeek="setPlaybackTime"
+                    currentTime="state.currentTime"
+                    activeArtifact="state.currentSegment"
+                />
+                <t t-if="hasMedia">
+                    <CallDebriefMediaControls
+                        isPlaying="state.isPlaying"
+                        volume="state.volume"
+                        isMuted="state.isMuted"
+                        playbackRate="state.playbackRate"
+                        playbackRates="playbackRates"
+                        currentTime="state.currentTime"
+                        totalDuration="callDurationSeconds"
+                        media="state.currentSegment"
+                        feedback="state.feedback"
+                        onTogglePlay="togglePlay"
+                        onSeek="seekRelative"
+                        onSetPlaybackRate="setPlaybackRate"
+                        onSetVolume="setVolume"
+                        onToggleMute="toggleMute"
+                    />
+                </t>
+                <div class="o-CallDebrief-media-container" t-att-class="{ 'o-CallDebrief-media-container--no-video': !hasVideo, 'o-CallDebrief-media-container--no-transcript': !hasTranscript }">
+                    <div
+                        t-if="hasTranscript"
+                        class="o-CallDebrief-transcript"
+                        t-ref="transcriptContainer"
+                    >
+                        <t t-if="hasTranscriptLines">
+                            <t t-foreach="state.transcriptLines" t-as="line" t-key="line.startSecRelToCall + '-' + line_index">
+                                <t t-if="line.isGap">
+                                    <div class="o-CallDebrief-transcript-gap text-muted">
+                                        <span>... <t t-esc="this.formatDuration(line.duration)"/> ...</span>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <p t-att-data-timestamp="line.startSecRelToCall" t-on-click="() => this.onTranscriptLineClick(line)">
+                                        <span class="o-CallDebrief-transcript-timestamp text-muted" t-esc="this.formatDuration(line.startSecRelToCall)"/>
+                                        <span class="o-CallDebrief-transcript-text" t-esc="line.text"/>
+                                    </p>
+                                </t>
+                            </t>
+                        </t>
+                        <div t-elif="hasPlainTextTranscript" class="o-CallDebrief-plaintext-transcript">
+                            <div>
+                                <pre t-esc="state.plainTextTranscript"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="hasVideo" class="o-CallDebrief-video">
+                        <video t-if="state.currentSegment and state.currentSegment.type === 'video'"
+                               t-ref="mediaPlayer"
+                               t-att-src="state.currentSegment.mediaUrl"
+                               style="width: 100%; height: 100%; object-fit: contain;"
+                               t-on-loadedmetadata="onLoadedMetadata"
+                               t-on-loadeddata="_onMediaLoaded"
+                               t-on-timeupdate="onTimeUpdate"
+                               t-on-play="() => this.state.isPlaying = true"
+                               t-on-pause="() => this.state.isPlaying = false"
+                               t-on-ended="onMediaEnded"
+                               t-on-error="onMediaError"/>
+
+                    </div>
+                    <audio t-if="state.currentSegment and state.currentSegment.type === 'audio'"
+                           t-ref="mediaPlayer"
+                           t-att-src="state.currentSegment.mediaUrl"
+                           class="d-none"
+                           t-on-loadedmetadata="onLoadedMetadata"
+                           t-on-loadeddata="_onMediaLoaded"
+                           t-on-timeupdate="onTimeUpdate"
+                           t-on-play="() => this.state.isPlaying = true"
+                           t-on-pause="() => this.state.isPlaying = false"
+                           t-on-ended="onMediaEnded"
+                           t-on-error="onMediaError"/>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

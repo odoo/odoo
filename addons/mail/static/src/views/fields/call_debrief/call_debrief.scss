@@ -1,0 +1,91 @@
+$o-CallDebrief-content-max-width: 1000px;
+$o-CallDebrief-video-margin: 0.1em;
+
+/*
+    Odoo's form renderer wraps field widgets in a container that uses
+    `display: inline-block`, which causes the container to shrink to the width
+    of its content. This is problematic when the video is absent.
+    This is allowing our component to expand correctly.
+*/
+.o_field_widget:has(> .o-CallDebrief) {
+    width: 100%;
+    display: block;
+}
+
+.o-CallDebrief {
+    display: flex;
+    flex-direction: column;
+    max-height: 45vh;
+}
+
+.o-CallDebrief-media-container {
+    display: flex;
+    gap: map-get($spacers, 2);
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.o-CallDebrief-media-container--no-transcript {
+    justify-content: center;
+
+    .o-CallDebrief-video {
+        flex: 1 1 100%;
+        max-width: $o-CallDebrief-content-max-width; // Limit max width for better appearance if no transcript
+    }
+}
+
+.o-CallDebrief-media-container--no-video .o-CallDebrief-transcript {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+    width: 100%;
+    max-width: $o-CallDebrief-content-max-width;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.o-CallDebrief-transcript {
+    overflow-y: auto;
+    flex: 1 1 40%;
+    min-width: 300px;
+    padding-right: map-get($spacers, 2);
+}
+
+.o-CallDebrief-video{
+    flex: 1 1 60%;
+    min-width: 0;
+    margin: $o-CallDebrief-video-margin;
+}
+
+.o-CallDebrief-transcript p {
+    display: flex;
+    align-items: baseline;
+    margin: 0;
+    cursor: pointer;
+}
+
+.o-CallDebrief-transcript-gap {
+    text-align: center;
+    margin: map-get($spacers, 2) 0;
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+.o-CallDebrief-transcript-timestamp {
+    font-size: 0.8em;
+    min-width: 50px;
+    margin-right: map-get($spacers, 2);
+    flex-shrink: 0;
+}
+
+.o-CallDebrief-transcript-text {
+    font-size: 1rem;
+    flex-grow: 1;
+}
+
+.o-CallDebrief-transcript-highlight {
+    border-radius: 4px;
+    background-color: rgba($primary, 0.1);
+    transition: background-color 0.15s ease;
+    font-weight: $font-weight-bold;
+}

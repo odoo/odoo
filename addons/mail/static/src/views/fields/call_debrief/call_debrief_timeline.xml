@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CallDebriefTimeline">
+        <div class="o-CallDebriefTimeline-container">
+            <div class="o-CallDebriefTimeline-labels">
+                <span>00:00</span>
+                <span t-esc="formattedTotalDuration"/>
+            </div>
+            <div class="o-CallDebriefTimeline" t-ref="timeline" t-on-mousedown="onDragStart" t-att-style="'height: ' + state.timelineHeight + 'px;'">
+                <div class="o-CallDebriefTimeline-track">
+                    <t t-if="props.mediaSegments">
+                        <t t-foreach="props.mediaSegments" t-as="segment" t-key="segment.id">
+                            <div t-att-class="{
+                                    'o-CallDebriefTimeline-media-segment': true,
+                                    'o-CallDebriefTimeline-line-segment': true,
+                                    'o-CallDebriefTimeline-line-segment--video': segment.type === 'video',
+                                    'o-CallDebriefTimeline-line-segment--audio': segment.type === 'audio',
+                                    'o-active-segment': props.activeArtifact and props.activeArtifact.id === segment.id,
+                                 }"
+                                 t-att-style="_stylePositionMediaSegment(segment)"/>
+                        </t>
+                    </t>
+                    <t t-foreach="props.transcriptLines" t-as="line" t-key="line.startSecRelToCall + '-' + line_index">
+                        <div class="o-CallDebriefTimeline-transcript-marker"
+                             t-att-style="_stylePositionTranscriptMarker(line)"/>
+                    </t>
+                </div>
+
+                <!-- Playhead (rendered on top of everything) -->
+                <div t-if="props.currentTime !== undefined" class="o-CallDebriefTimeline-playhead" t-ref="playhead"
+                     t-att-style="_stylePositionPlayhead()">
+                    <span class="o-CallDebriefTimeline-playhead-timestamp" t-esc="this.formatDuration(props.currentTime)"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,63 @@
+<odoo>
+    <data noupdate="1">
+        <record id="mail.demo_call_channel" model="discuss.channel">
+            <field name="name">Demo Call Channel</field>
+            <field name="channel_type">channel</field>
+        </record>
+
+        <record id="mail.demo_call_channel_member" model="discuss.channel.member">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.demo_call_channel"/>
+        </record>
+
+        <!-- Audio Call Data -->
+        <record id="mail.demo_call_history_audio" model="discuss.call.history">
+            <field name="channel_id" ref="mail.demo_call_channel"/>
+            <field name="start_dt" eval="(datetime.now() - relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="end_dt" eval="(datetime.now() - relativedelta(hours=2, minutes=-1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mail.demo_call_artifact_audio" model="call.artifact">
+            <field name="discuss_call_history_id" ref="mail.demo_call_history_audio"/>
+            <field name="start_ms">0</field>
+            <field name="end_ms">60000</field>
+        </record>
+
+        <record id="mail.demo_call_attachment_audio" model="ir.attachment">
+            <field name="name">demo_audio_call.webm</field>
+            <field name="mimetype">audio/webm</field>
+            <field name="datas" type="base64" file="mail/demo/discuss/fixtures/audio_opus_60s_long_3s_content.webm"/>
+            <field name="description">Demo Audio Recording</field>
+            <field name="res_model">call.artifact</field>
+            <field name="res_id" ref="mail.demo_call_artifact_audio"/>
+        </record>
+
+        <!-- Video Call Data -->
+        <record id="mail.demo_call_history_video" model="discuss.call.history">
+            <field name="channel_id" ref="mail.demo_call_channel"/>
+            <field name="start_dt" eval="(datetime.now() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="end_dt" eval="(datetime.now() - relativedelta(days=1, minutes=-1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mail.demo_call_artifact_video" model="call.artifact">
+            <field name="discuss_call_history_id" ref="mail.demo_call_history_video"/>
+            <field name="start_ms">0</field>
+            <field name="end_ms">60000</field>
+        </record>
+
+        <record id="mail.demo_call_attachment_video" model="ir.attachment">
+            <field name="name">demo_video_call.webm</field>
+            <field name="mimetype">video/webm</field>
+            <field name="datas" type="base64" file="mail/demo/discuss/fixtures/video_60s_long_3s_content_av1_opus.webm"/>
+            <field name="description">Demo Video Recording</field>
+            <field name="res_model">call.artifact</field>
+            <field name="res_id" ref="mail.demo_call_artifact_video"/>
+        </record>
+
+        <record id="mail.demo_call_history_no_media" model="discuss.call.history">
+            <field name="channel_id" ref="mail.demo_call_channel"/>
+            <field name="start_dt" eval="(datetime.now() - relativedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="end_dt" eval="(datetime.now() - relativedelta(hours=5, minutes=-2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+</data>
+</odoo>
