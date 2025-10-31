@@ -422,8 +422,8 @@ class MailMessage(models.Model):
                 - uid has write or create access on the related document
                 - otherwise: raise
 
-        Specific case: non employee users see only messages with subtype (aka do
-        not see internal logs).
+        Specific case: non employee users cannot see internal messages (aka logs):
+        'is_internal' flag on message, 'internal' flag on subtype.
         """
         result = super()._check_access(operation)
         if not self:
@@ -446,14 +446,16 @@ class MailMessage(models.Model):
 
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env.user._is_internal():
+            message_type_condition = ''
+            if operation in ('create', 'read'):
+                message_type_condition = "message.message_type = 'comment' AND"
             rows = self.env.execute_query(SQL(
                 ''' SELECT message.id
                     FROM "mail_message" AS message
                     LEFT JOIN "mail_message_subtype" as subtype ON message.subtype_id = subtype.id
-                    WHERE message.id = ANY (%s)
-                        AND message.message_type = 'comment'
+                    WHERE %s message.id = ANY (%%s)
                         AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
-                ''',
+                ''' % message_type_condition,
                 self.ids,
             ))
             if rows:
