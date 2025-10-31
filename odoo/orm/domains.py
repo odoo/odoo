@@ -788,6 +788,9 @@ class DomainCustom(Domain):
     def __iter__(self):
         yield self
 
+    def __repr__(self):
+        return object.__repr__(self)
+
     def _to_sql(self, table: TableSQL) -> SQL:
         return self._sql(table)
 
