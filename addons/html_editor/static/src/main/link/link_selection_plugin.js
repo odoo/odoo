@@ -26,16 +26,9 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
     - on non-editable links or links that are not within the editable area
  */
 
-/**
- * @typedef { Object } LinkSelectionShared
- * @property { LinkSelectionPlugin['padLinkWithZwnbsp'] } padLinkWithZwnbsp
- */
-
 export class LinkSelectionPlugin extends Plugin {
     static id = "linkSelection";
     static dependencies = ["selection", "feff"];
-    // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing padLinkWithZwnbsp.
-    static shared = ["padLinkWithZwnbsp"];
     resources = {
         /** Handlers */
         selectionchange_handlers: this.resetLinkInSelection.bind(this),
@@ -49,18 +42,6 @@ export class LinkSelectionPlugin extends Plugin {
         return [...selectElements(root, "a")]
             .filter(this.isLinkEligibleForZwnbsp.bind(this))
             .flatMap((link) => this.dependencies.feff.surroundWithFeffs(link, cursors));
-    }
-
-    /**
-     * Take a link and pad it with non-break zero-width spaces to ensure that it
-     * is always possible to place the cursor at its inner and outer edges.
-     *
-     * @param {HTMLAnchorElement} link
-     */
-    padLinkWithZwnbsp(link) {
-        const cursors = this.dependencies.selection.preserveSelection();
-        this.dependencies.feff.surroundWithFeffs(link, cursors);
-        cursors.restore();
     }
 
     isLinkEligibleForZwnbsp(link) {
