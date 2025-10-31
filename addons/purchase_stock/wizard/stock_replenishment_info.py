@@ -8,7 +8,7 @@ class StockReplenishmentInfo(models.TransientModel):
     _inherit = 'stock.replenishment.info'
     _description = 'Stock supplier replenishment information'
 
-    supplierinfo_id = fields.Many2one(related='orderpoint_id.supplier_id')
+    effective_supplier_id = fields.Many2one(related='orderpoint_id.effective_supplier_id')
     supplierinfo_ids = fields.Many2many('product.supplierinfo', compute='_compute_supplierinfo_ids', store=True)
     show_vendor_tab = fields.Boolean(compute='_compute_show_vendor_tab')
 
@@ -25,6 +25,12 @@ class StockReplenishmentInfo(models.TransientModel):
                     orderpoint.route_id
                     and 'buy' in orderpoint.rule_ids.mapped('action')
             )
+
+    def _get_lead_days_values(self):
+        values = super()._get_lead_days_values()
+        if self.effective_supplier_id:
+            values['supplierinfo'] = self.effective_supplier_id
+        return values
 
 
 class StockReplenishmentOption(models.TransientModel):

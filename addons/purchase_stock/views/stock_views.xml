@@ -31,9 +31,10 @@
             <field name="inherit_id" ref="stock.view_warehouse_orderpoint_tree_editable"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_stock_replenishment_info']" position="before">
-                    <field name="show_supplier" column_invisible="True"/>
-                    <field name="supplier_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
-                    <field name="supplier_id" widget="stock.forced_placeholder" string="Vendor" optional="hidden" invisible="not show_supplier" options="{'no_create': True, 'placeholder_field': 'supplier_id_placeholder'}" decoration-muted="not supplier_id"/>
+                    <field name="show_partner" column_invisible="True"/>
+                    <field name="partner_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                    <field name="partner_id" widget="stock.forced_placeholder" optional="hidden" invisible="not show_partner"
+                        options="{'no_create': True, 'placeholder_field': 'partner_id_placeholder'}" decoration-muted="not partner_id"/>
                 </xpath>
             </field>
         </record>

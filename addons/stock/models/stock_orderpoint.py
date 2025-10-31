@@ -122,7 +122,7 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.show_supply_warning = not orderpoint.rule_ids
 
-    @api.depends('location_id', 'product_min_qty', 'route_id', 'product_id.route_ids', 'product_id.stock_move_ids.date',
+    @api.depends('location_id', 'product_min_qty', 'route_id', 'product_id.route_ids', 'product_id.stock_move_ids.date', 'replenishment_uom_id',
                  'product_id.stock_move_ids.state', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days')
     def _compute_deadline_date(self):
         """ This function first checks if the qty_on_hand is less than the product_min_qty. If it is the case,
@@ -179,7 +179,7 @@ class StockWarehouseOrderpoint(models.Model):
                         break
                 orderpoint.deadline_date = tentative_deadline if tentative_deadline < horizon_date else False
 
-    @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days')
+    @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days', 'replenishment_uom_id')
     def _compute_lead_days(self):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
         for orderpoint in orderpoints_to_compute.with_context(bypass_delay_description=True):
@@ -379,7 +379,7 @@ class StockWarehouseOrderpoint(models.Model):
         self.trigger = 'auto'
         return self.action_replenish()
 
-    @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state',
+    @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state', 'replenishment_uom_id',
                  'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty', 'product_id.seller_ids.delay')
     def _compute_qty(self):
         orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
