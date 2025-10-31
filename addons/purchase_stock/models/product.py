@@ -278,7 +278,7 @@ class ProductSupplierinfo(models.Model):
         if orderpoint_id:
             orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_id)
             self.filtered(
-                lambda s: s.id == orderpoint.supplier_id.id
+                lambda s: s.partner_id.id == orderpoint.partner_id.id
             ).show_set_supplier_button = False
 
     @api.depends('partner_id', 'min_qty', 'product_uom_id', 'currency_id', 'price')
@@ -306,7 +306,7 @@ class ProductSupplierinfo(models.Model):
                 ]),
             ])
             orderpoint.route_id = self.env['stock.rule'].search(domain, limit=1).route_id.id
-        orderpoint.supplier_id = self
+        orderpoint.partner_id = self.partner_id
         supplier_min_qty = self.product_uom_id._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
         if orderpoint.qty_to_order < supplier_min_qty:
             orderpoint.qty_to_order = supplier_min_qty

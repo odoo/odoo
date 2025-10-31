@@ -22,6 +22,7 @@ class TestReorderingRule(TransactionCase):
     def setUpClass(cls):
         super(TestReorderingRule, cls).setUpClass()
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('stock.group_stock_multi_locations')
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
@@ -296,6 +297,70 @@ class TestReorderingRule(TransactionCase):
                 'product_min_qty': 2,
                 'product_max_qty': 1,
             })
+
+    def test_reordering_rule_best_vendor_price_selection(self):
+        """ Check that when multiple vendor price rules exist for multiple vendors,
+        the reordering rule always applies the correct vendor and vendor price rule
+        depending on the ordered quantity and selected Vendor."""
+
+        partner1 = self.partner
+        partner2 = self.env['res.partner'].create({'name': "Vendor V2"})
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = "Product A"
+        product_form.is_storable = True
+        price_rules = [
+            {'partner': partner1, 'min_qty': 1.0, 'price': 1.0},
+            {'partner': partner2, 'min_qty': 1.0, 'price': 10.0},
+            {'partner': partner2, 'min_qty': 5.0, 'price': 5.0},
+        ]
+        for rule in price_rules:
+            with product_form.seller_ids.new() as s:
+                s.partner_id = rule['partner']
+                s.min_qty = rule['min_qty']
+                s.price = rule['price']
+                s.product_uom_id = uom_unit
+        product = product_form.save()
+
+        # Reordering rule without vendor → should pick Vendor V1 → 2 @ $1
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+        orderpoint.invalidate_recordset()
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order'].search([('product_id', '=', product.id)]).order_line
+        self.assertRecordValues(pol, [{
+            'partner_id': partner1.id, 'price_unit': 1.0, 'product_qty': 2.0}
+        ])
+        pol.order_id.button_cancel()
+
+        # Reordering rule with Vendor V2 → 4 @ $10
+        orderpoint.partner_id = partner2
+        orderpoint.product_min_qty = 4.0
+        orderpoint.product_max_qty = 4.0
+        orderpoint.invalidate_recordset()
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order'].search([('product_id', '=', product.id), ('state', '=', 'draft')]).order_line
+        self.assertRecordValues(pol, [
+            {'partner_id': partner2.id, 'price_unit': 10.0, 'product_qty': 4.0}
+        ])
+        pol.order_id.button_cancel()
+
+        # Reordering rule with Vendor V2 → 5 @ $5
+        orderpoint.product_min_qty = 5.0
+        orderpoint.product_max_qty = 5.0
+        orderpoint.invalidate_recordset()
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order'].search([('product_id', '=', product.id), ('state', '=', 'draft')]).order_line
+        self.assertRecordValues(pol, [{
+            'partner_id': partner2.id, 'price_unit': 5.0, 'product_qty': 5.0
+        }])
 
     def test_reordering_rule_triggered_two_times(self):
         """
@@ -868,7 +933,6 @@ class TestReorderingRule(TransactionCase):
             'product_min_qty': 1,
             'product_max_qty': 5,
             'route_id': route_buy_id,
-            'supplier_id': self.product_01.seller_ids.id,
         })
         orderpoint.action_replenish()
 
@@ -1181,7 +1245,7 @@ class TestReorderingRule(TransactionCase):
             'product_max_qty': 500,
         })
         product.seller_ids.with_context(orderpoint_id=orderpoint.id).action_set_supplier()
-        self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
+        self.assertEqual(orderpoint.partner_id, product.seller_ids.partner_id, 'The supplier should be set in the orderpoint')
         self.assertEqual(orderpoint.product_uom, product.uom_id, 'The orderpoint uom should be the same as the product uom')
         self.assertEqual(orderpoint.qty_to_order, 6000)
 

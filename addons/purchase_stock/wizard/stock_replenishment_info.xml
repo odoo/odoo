@@ -15,7 +15,7 @@
                         invisible="not show_set_supplier_button"/>
             </field>
             <xpath expr="//list" position="attributes">
-                <attribute name="decoration-bf">parent.supplierinfo_id == id</attribute>
+                <attribute name="decoration-bf">parent.effective_supplier_id == id</attribute>
             </xpath>
             <field name="sequence" position="attributes">
                 <attribute name="column_invisible">True</attribute>
@@ -44,7 +44,7 @@
         <field name="arch" type="xml">
             <xpath expr="//page" position="before">
                 <page string="Vendors" name="page_vendors" invisible="not show_vendor_tab">
-                    <field name="supplierinfo_id" invisible="1"/>
+                    <field name="effective_supplier_id" invisible="1"/>
                     <field name="supplierinfo_ids" readonly="1" context="{'list_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
                 </page>
             </xpath>

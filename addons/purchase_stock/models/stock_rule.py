@@ -172,6 +172,7 @@ class StockRule(models.Model):
         return super()._filter_warehouse_routes(product, warehouses, route)
 
     def _get_matching_supplier(self, product_id, product_qty, product_uom, company_id, values):
+        partner = self._get_partner_id(values, self)
         supplier = False
         # Get the schedule date in order to find a valid seller
         if 'date_planned' in values:
@@ -181,11 +182,9 @@ class StockRule(models.Model):
 
         if values.get('supplierinfo_id'):
             supplier = values['supplierinfo_id']
-        elif values.get('orderpoint_id') and values['orderpoint_id'].supplier_id:
-            supplier = values['orderpoint_id'].supplier_id
         else:
             supplier = product_id.with_company(company_id.id)._select_seller(
-                partner_id=self._get_partner_id(values, self),
+                partner_id=partner,
                 quantity=product_qty,
                 date=date,
                 uom_id=product_uom,
@@ -194,9 +193,11 @@ class StockRule(models.Model):
 
         # Fall back on a supplier for which no price may be defined. Not ideal, but better than
         # blocking the user.
-        supplier = supplier or product_id._prepare_sellers(False).filtered(
-            lambda s: not s.company_id or s.company_id == company_id
-        )[:1]
+        if not supplier:
+            sellers = product_id.with_company(company_id.id)._prepare_sellers()
+            if partner:
+                supplier = sellers.filtered(lambda s: s.partner_id == partner)[:1]
+            supplier = supplier or sellers[:1]
 
         return supplier
 

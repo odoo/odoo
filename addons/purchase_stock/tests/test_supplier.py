@@ -55,6 +55,5 @@ class TestSupplier(TestStockCommon):
         self.env.invalidate_all()
         # The route is set and there is a supplier -> effective vendor is available
         self.assertEqual(orderpoint.effective_vendor_id, self.partner_1)
-        self.assertEqual(orderpoint.supplier_id_placeholder, 'Julia Agrolait (10.0 Units - $\xa050.00)')
         # The actual vendor remains empty
-        self.assertFalse(orderpoint.supplier_id)
+        self.assertFalse(orderpoint.partner_id)
