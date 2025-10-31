@@ -14,12 +14,6 @@
                 <field name="vat" string="ABN" invisible="country_code != 'AU'"/>
                 <field name="l10n_au_is_gst_registered" string="GST registered" invisible="country_code != 'AU'"/>
             </xpath>
-            <xpath expr="//field[@name='company_registry']" position="attributes">
-                <attribute name="invisible" add="country_code == 'AU'" separator=" or "/>
-            </xpath>
-            <xpath expr="//field[@name='company_registry']" position="after">
-                <field name="company_registry" string="ACN" invisible="country_code != 'AU'"/>
-            </xpath>
         </field>
     </record>
 

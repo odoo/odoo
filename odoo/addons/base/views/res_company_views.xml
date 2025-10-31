@@ -40,7 +40,8 @@
                                     </div>
                                     <field name="vat"/>
                                     <field name="company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
-                                    <field name="company_registry" options="{'placeholder_field': 'company_registry_placeholder'}"/>
+                                    <field name="company_registry_label" invisible="1"/> <!-- Needed for the dynamic label in FormLabel -->
+                                    <field name="company_registry" options="{'placeholder_field': 'company_registry_placeholder', 'label_field': 'company_registry_label'}"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
                                 </group>
                                 <group>

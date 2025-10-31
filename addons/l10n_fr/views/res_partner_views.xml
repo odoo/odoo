@@ -7,10 +7,10 @@
         <field name="priority">14</field>
         <field name="arch" type="xml">
             <field name="company_registry" position="attributes">
-                <attribute name="invisible">parent_id or not is_company or l10n_fr_is_french</attribute>
+                <attribute name="invisible" add="l10n_fr_is_french" separator="or"/>
             </field>
             <field name="vat" position="after">
-                <field name="company_registry" string="Siret" invisible="not l10n_fr_is_french" options="{'placeholder_field': 'company_registry_placeholder'}"/>
+                <field name="company_registry" invisible="parent_id or not is_company or not l10n_fr_is_french" options="{'placeholder_field': 'company_registry_placeholder', 'label_field': 'company_registry_label'}"/>
             </field>
         </field>
     </record>

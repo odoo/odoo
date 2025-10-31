@@ -113,7 +113,7 @@ class ResPartner(models.Model):
 
     def _get_company_registry_labels(self):
         labels = super()._get_company_registry_labels()
-        labels['DK'] = 'CVR'
+        labels['DK'] = _("CVR")
         return labels
 
     def _get_edi_builder(self, invoice_edi_format):

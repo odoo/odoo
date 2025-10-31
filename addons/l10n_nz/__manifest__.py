@@ -26,7 +26,6 @@ Also:
         'data/res_currency_data.xml',
         'views/report_invoice.xml',
         'views/res_company_views.xml',
-        'views/res_partner_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
