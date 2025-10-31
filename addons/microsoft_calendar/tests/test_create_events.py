@@ -521,47 +521,67 @@ class TestCreateEvents(TestCommon):
         """
         Test syncing an event from Odoo to Microsoft Calendar.
         Ensures that meeting details are correctly updated after syncing from Microsoft.
+        Ensures that calendar_external_videocall_link_generation is correctly applied
         """
-        record = self.env["calendar.event"].with_user(self.organizer_user).create(self.simple_event_values)
-        self.assertEqual(record.name, "simple_event", "Event name should be same as simple_event")
-
-        # Mock values to simulate Microsoft event creation
-        event_id = "123"
-        event_iCalUId = "456"
-        mock_insert.return_value = (event_id, event_iCalUId)
-
-        # Prepare the mock event response from Microsoft
-        self.response_from_outlook_organizer = {
-            **self.simple_event_from_outlook_organizer,
-            '_odoo_id': record.id,
-            'onlineMeeting': {
-                'joinUrl': 'https://teams.microsoft.com/l/meetup-join/test',
-                'conferenceId': '275984951',
-                'tollNumber': '+1 323-555-0166',
+        ms_videocall_data_with_link = {
+            "onlineMeeting": {
+                "joinUrl": "https://teams.microsoft.com/l/meetup-join/test",
+                "conferenceId": "275984951",
+                "tollNumber": "+1 323-555-0166",
             },
-            'lastModifiedDateTime': _modified_date_in_the_future(record),
-            'isOnlineMeeting': True,
-            'onlineMeetingProvider': 'teamsForBusiness',
+            "onlineMeetingProvider": "teamsForBusiness",
+            "isOnlineMeeting": True
         }
-        mock_get_events.return_value = (MicrosoftEvent([self.response_from_outlook_organizer]), None)
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
-        self.call_post_commit_hooks()
-        record.invalidate_recordset()
+        ms_videocall_data_without_link = {
+            "onlineMeetingProvider": False,
+            "isOnlineMeeting": False
+        }
 
-        # Check that Microsoft insert was called exactly once
-        mock_insert.assert_called_once()
-        self.assertEqual(record.microsoft_id, event_id, "The Microsoft ID should be assigned to the event.")
-        self.assertEqual(record.ms_universal_event_id, event_iCalUId)
-        self.assertEqual(mock_insert.call_args[0][0].get('isOnlineMeeting'), True,
-                         "The event should be marked as an online meeting.")
-        self.assertEqual(mock_insert.call_args[0][0].get('onlineMeetingProvider'), 'teamsForBusiness',
-                         "The event's online meeting provider should be set to Microsoft Teams.")
-        self.assertEqual(record.need_sync_m, False)
+        for event_name, external_generation_setting, videocall_data, idx in [
+            ("simple_event_generation_on", True, ms_videocall_data_with_link, 0),
+            ("simple_event_generation_off", False, ms_videocall_data_without_link, 1)
+        ]:
+            with self.subTest(event_name=event_name, external_generation_setting=external_generation_setting, videocall_data=videocall_data, idx=idx):
+                self.env["ir.config_parameter"].sudo().set_bool(
+                    "calendar.calendar_external_videocall_link_generation",
+                    external_generation_setting
+                )
+                record = self.env["calendar.event"].with_user(self.organizer_user).create({
+                    **self.simple_event_values,
+                    "name": event_name
+                })
+                self.assertEqual(record.name, event_name)
+                self.assertFalse(record.location)
 
-        # Verify the event's videocall_location is updated in Odoo
-        event = self.env['calendar.event'].search([('name', '=', self.response_from_outlook_organizer.get('subject'))])
-        self.assertTrue(event, "The event should exist in the calendar after sync.")
-        self.assertEqual(event.videocall_location, 'https://teams.microsoft.com/l/meetup-join/test', "The meeting URL should match.")
+                # Mock values to simulate Microsoft event creation
+                event_id = f"123{idx}"
+                event_iCalUId = f"456{idx}"
+                mock_insert.return_value = (event_id, event_iCalUId)
+
+                # Prepare the mock event response from Microsoft
+                self.response_from_outlook_organizer = {
+                    **self.simple_event_from_outlook_organizer,
+                    **videocall_data,
+                    "_odoo_id": record.id,
+                    "lastModifiedDateTime": _modified_date_in_the_future(record),
+                    "subject": event_name,
+                }
+                mock_get_events.return_value = (MicrosoftEvent([self.response_from_outlook_organizer]), None)
+                self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+                self.call_post_commit_hooks()
+                record.invalidate_recordset()
+
+                # Verify ms values
+                self.assertEqual(record.microsoft_id, event_id, "The Microsoft ID should be assigned to the event.")
+                self.assertEqual(record.ms_universal_event_id, event_iCalUId)
+                self.assertEqual(mock_insert.call_args[0][0].get("isOnlineMeeting"), videocall_data["isOnlineMeeting"])
+                self.assertEqual(mock_insert.call_args[0][0].get("onlineMeetingProvider"), videocall_data["onlineMeetingProvider"] or None)
+                self.assertEqual(record.need_sync_m, False)
+
+                # Verify the event's videocall_location is updated in Odoo if necessary
+                event = self.env["calendar.event"].search([("name", "=", self.response_from_outlook_organizer.get("subject"))])
+                self.assertTrue(event, "The event should exist in the calendar after sync.")
+                self.assertEqual(event.videocall_location, videocall_data.get("onlineMeeting", {}).get("joinUrl", False))
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     @patch.object(MicrosoftCalendarService, 'insert')
