@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryFirst, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
@@ -59,6 +59,26 @@ test("toggle datepicker", async () => {
 
     await fieldInput("char_field").click();
     expect(".o_datetime_picker").toHaveCount(0);
+});
+
+test("Ensure only one datepicker is open", async () => {
+    Partner._fields.date_start = fields.Date();
+
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `
+            <form>
+                <field name="date_start"/>
+                <field name="date"/>
+            </form>`,
+        resId: 1,
+    });
+
+    await queryFirst("[data-field='date_start']").click();
+    await queryFirst("[data-field='date']").click();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
 });
 
 test.tags("desktop");
