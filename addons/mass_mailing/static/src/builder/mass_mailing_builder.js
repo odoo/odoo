@@ -4,10 +4,26 @@ import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
 import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { registry } from "@web/core/registry";
+import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
+import { OptionsContainerWithSnippetVersionControl } from "./options/options_container";
+
+class CustomizeTabWithSnippetVersionControl extends CustomizeTab {
+    static components = {
+        ...CustomizeTab.components,
+        OptionsContainer: OptionsContainerWithSnippetVersionControl,
+    };
+}
+
+class BuilderWithSnippetVersionControl extends Builder {
+    static components = {
+        ...Builder.components,
+        CustomizeTab: CustomizeTabWithSnippetVersionControl,
+    };
+}
 
 export class MassMailingBuilder extends Component {
     static template = "mass_mailing.MassMailingBuilder";
-    static components = { Builder };
+    static components = { Builder: BuilderWithSnippetVersionControl };
     static props = {
         builderProps: { type: Object },
         toggleCodeView: { type: Function, optional: true },

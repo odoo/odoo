@@ -3,14 +3,19 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 export class MailingBackgroundOption extends BackgroundOption {
-    static template = "mass_mailing.BackgroundOption";
     static selector =
         ".s_masonry_block > .container > .row > div:not(:has(.row)), .s_cover > .container > .row > div, .s_reviews_wall";
+    static props = {
+        ...BackgroundOption.props,
+        withColors: { type: Boolean, optional: true },
+        withImages: { type: Boolean, optional: true },
+        withColorCombinations: { type: Boolean, optional: true },
+    };
     static defaultProps = {
         withImages: true,
         withColors: false,
         withColorCombinations: false,
-    }
+    };
 }
 
 class BackgroundOptionPlugin extends Plugin {
