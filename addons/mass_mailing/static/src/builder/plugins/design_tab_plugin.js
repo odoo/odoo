@@ -71,7 +71,7 @@ class DesignTabPlugin extends Plugin {
     getDesignOptionBlock(id, options) {
         const Option = class extends BaseOptionComponent {
             static selector = "*";
-        }
+        };
         Object.assign(Option, options);
 
         return {

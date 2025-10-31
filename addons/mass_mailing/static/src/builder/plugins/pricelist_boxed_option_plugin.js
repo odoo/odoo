@@ -12,9 +12,7 @@ export class MassMailingAddProductOption extends BaseAddProductOption {
 export class PricelistBoxedOptionPlugin extends Plugin {
     static id = "mass_mailing.PricelistBoxedOptionPlugin";
     resources = {
-        builder_options: [
-            withSequence(BEGIN, MassMailingAddProductOption),
-        ],
+        builder_options: [withSequence(BEGIN, MassMailingAddProductOption)],
     };
 }
 
