@@ -91,8 +91,7 @@ class ChatbotScriptStep(models.Model):
                 ),
             )
             teams = possible_teams.filtered(
-                lambda team: team.assignment_max
-                and lead.filtered_domain(literal_eval(team.assignment_domain or "[]"))
+                lambda team: lead.filtered_domain(literal_eval(team.assignment_domain or "[]"))
             )
         if self.env.user.partner_id.company_id:
             teams = teams.filtered(
@@ -102,9 +101,7 @@ class ChatbotScriptStep(models.Model):
         assignable_user_ids = [
             member.user_id.id
             for member in teams.crm_team_member_ids
-            if not member.assignment_optout
-            and member._get_assignment_quota() > 0
-            and lead.filtered_domain(literal_eval(member.assignment_domain or "[]"))
+            if lead.filtered_domain(literal_eval(member.assignment_domain or "[]"))
         ]
         previous_operator = discuss_channel.livechat_operator_id
         users = self.env["res.users"]

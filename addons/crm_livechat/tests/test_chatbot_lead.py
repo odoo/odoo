@@ -38,19 +38,6 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         assigned_lead = self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
         self.assertEqual(assigned_lead.user_id, self.user_employee)
         self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
-        # sales team member quota is reached (lead already assigned before)
-        discuss_channel = self._play_session_with_lead()
-        quota_reached_lead = self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
-        self.assertFalse(quota_reached_lead.user_id)
-        self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
-        assigned_lead.unlink()
-        # sales team member opt out
-        self.sale_team.crm_team_member_ids.assignment_optout = True
-        discuss_channel = self._play_session_with_lead()
-        optout_lead = self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
-        self.assertFalse(optout_lead.user_id)
-        self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
-        self.sale_team.crm_team_member_ids.assignment_optout = False
         # sales team member invalid domain (probability of lead is 5.39)
         self.sale_team.crm_team_member_ids.assignment_domain = "[('probability', '>=', 20)]"
         discuss_channel = self._play_session_with_lead()
@@ -66,13 +53,6 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(auto_team_lead.team_id, self.sale_team)
         self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
         auto_team_lead.unlink()
-        # sales team opt out
-        self.sale_team.assignment_optout = True
-        discuss_channel = self._play_session_with_lead()
-        team_optout_lead = self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
-        self.assertFalse(team_optout_lead.user_id)
-        self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
-        self.sale_team.assignment_optout = False
         # sales team invalid domain (probability of lead is 5.39)
         self.sale_team.assignment_domain = "[('probability', '>=', 20)]"
         discuss_channel = self._play_session_with_lead()
