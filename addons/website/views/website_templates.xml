@@ -993,9 +993,6 @@
 </template>
 
 <template id="template_header_search_align_center" inherit_id="website.template_header_search" active="False">
-    <xpath expr="//div[hasclass('o_grid_header_3_cols')]" position="attributes">
-        <attribute name="class" add="o_grid_header_3_cols_fixed" remove="o_grid_header_3_cols_fixed" separator=" "/>
-    </xpath>
     <xpath expr="//t[@t-set='_nav_class']" position="replace">
         <t t-set="_nav_class" t-valuef="order-1 justify-content-center mx-auto w-100 px-4"/>
     </xpath>
@@ -1008,9 +1005,6 @@
 </template>
 
 <template id="template_header_search_align_right" inherit_id="website.template_header_search" active="False">
-    <xpath expr="//div[hasclass('o_grid_header_3_cols')]" position="attributes">
-        <attribute name="class" add="o_grid_header_3_cols_fixed" remove="o_grid_header_3_cols_fixed" separator=" "/>
-    </xpath>
     <xpath expr="//t[@t-set='_nav_class']" position="replace">
         <t t-set="_nav_class" t-valuef="order-2 justify-content-end ms-auto w-100 ps-4"/>
     </xpath>
