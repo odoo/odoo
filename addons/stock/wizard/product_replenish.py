@@ -32,6 +32,7 @@ class ProductReplenish(models.TransientModel):
     def _onchange_product_id(self):
         if not self.env.context.get('default_quantity'):
             self.quantity = abs(self.forecasted_quantity) if self.forecasted_quantity < 0 else 1
+        self.route_id = self._get_default_route_id(self.product_tmpl_id)
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
     def _compute_allowed_uom_ids(self):
@@ -74,11 +75,14 @@ class ProductReplenish(models.TransientModel):
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             res['warehouse_id'] = warehouse.id
         if 'route_id' in fields and 'route_id' not in res and product_tmpl_id:
-            res['route_id'] = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1).id
-            if not res['route_id']:
-                if product_tmpl_id.route_ids:
-                    res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
+            res['route_id'] = self._get_default_route_id(product_tmpl_id).id
         return res
+
+    def _get_default_route_id(self, product_tmpl_id):
+        route_id = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1)
+        if not route_id and product_tmpl_id.route_ids:
+            route_id = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0]
+        return route_id
 
     def _get_date_planned(self, route_id, **kwargs):
         now = fields.Datetime.now()

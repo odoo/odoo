@@ -75,7 +75,7 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days = fields.Float(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route',
-        domain="['|', ('product_selectable', '=', True), ('rule_ids.action', 'in', ['buy', 'manufacture'])]",
+        domain="[('rule_ids.action', 'in', ['buy', 'manufacture', 'pull_push', 'pull']), ('rule_ids.location_dest_id.warehouse_id', '=', warehouse_id)]",
         inverse='_inverse_route_id')
     route_id_placeholder = fields.Char(compute='_compute_route_id_placeholder')
     effective_route_id = fields.Many2one(

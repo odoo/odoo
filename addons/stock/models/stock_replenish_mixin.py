@@ -15,7 +15,7 @@ class StockReplenishMixin(models.AbstractModel):
     allowed_route_ids = fields.Many2many('stock.route', compute='_compute_allowed_route_ids')
 
     # INHERITS in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management'
-    @api.depends('product_id', 'product_tmpl_id')
+    @api.depends('product_id', 'product_tmpl_id', 'warehouse_id')
     def _compute_allowed_route_ids(self):
         domain = self._get_allowed_route_domain()
         route_ids = self.env['stock.route'].search(domain)
@@ -26,14 +26,16 @@ class StockReplenishMixin(models.AbstractModel):
     def _get_allowed_route_domain(self):
         stock_location_inter_company_id = self.env.ref('stock.stock_location_inter_company').id
 
-        base_domain = Domain('product_selectable', '=', True)
-        if self.warehouse_id:
-            wh_route_ids = self.warehouse_id.route_ids.filtered(lambda r: r._is_valid_resupply_route_for_product(self.product_id)).ids
+        domain = []
+        warehouse = self.warehouse_id or self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id', False))
+        if warehouse:
+            domain = Domain([('rule_ids.location_dest_id.warehouse_id', '=', warehouse.id), ('rule_ids.action', 'not in', ['buy', 'manufacture'])])
+            wh_route_ids = warehouse.route_ids.filtered(lambda r: r._is_valid_resupply_route_for_product(self.product_id)).ids
             if wh_route_ids:
-                base_domain |= Domain('id', 'in', wh_route_ids)
+                domain |= Domain('id', 'in', wh_route_ids)
 
         return Domain.AND([
-            base_domain,
+            domain,
             Domain('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
             Domain('rule_ids.location_dest_id', '!=', stock_location_inter_company_id),
         ])
