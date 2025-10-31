@@ -415,11 +415,21 @@ class AccountJournal(models.Model):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
             if journal.type in ('bank', 'cash', 'credit'):
+                existing_method_lines = journal.inbound_payment_method_line_ids
                 default_methods = journal._default_inbound_payment_methods()
-                pay_method_line_ids_commands += [Command.create({
-                    'name': pay_method.name,
-                    'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
+                for pay_method in default_methods:
+                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method).payment_account_id
+                    pay_method_line_ids_commands += [
+                        Command.create({
+                            'name': pay_method.name,
+                            'payment_method_id': pay_method.id,
+                            'payment_account_id': (
+                                payment_account.id
+                                if not payment_account.currency_id or payment_account.currency_id == journal.currency_id
+                                else False
+                            ),
+                        })
+                    ]
             journal.inbound_payment_method_line_ids = pay_method_line_ids_commands
 
     @api.depends('type', 'currency_id')
@@ -427,11 +437,21 @@ class AccountJournal(models.Model):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
             if journal.type in ('bank', 'cash', 'credit'):
+                existing_method_lines = journal.outbound_payment_method_line_ids
                 default_methods = journal._default_outbound_payment_methods()
-                pay_method_line_ids_commands += [Command.create({
-                    'name': pay_method.name,
-                    'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
+                for pay_method in default_methods:
+                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method).payment_account_id
+                    pay_method_line_ids_commands += [
+                        Command.create({
+                            'name': pay_method.name,
+                            'payment_method_id': pay_method.id,
+                            'payment_account_id': (
+                                payment_account.id
+                                if not payment_account.currency_id or payment_account.currency_id == journal.currency_id
+                                else False
+                            ),
+                        })
+                    ]
             journal.outbound_payment_method_line_ids = pay_method_line_ids_commands
 
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')

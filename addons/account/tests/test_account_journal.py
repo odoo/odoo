@@ -460,3 +460,37 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
             journal_form.default_account_id = default_account
             journal_2 = journal_form.save()
         self.assertNotEqual(journal_1.alias_id.alias_name, journal_2.alias_id.alias_name)
+
+    def test_payment_method_line_accounts_on_recompute(self):
+        """
+        Test that outstanding payments/receipts accounts are not removed during the computation of the payment method lines
+        """
+        bank_journal = self.company_data['default_journal_bank']
+        outstanding_receipt_account = self.env['account.chart.template'].ref('account_journal_payment_debit_account_id')
+        outstanding_payment_account = self.env['account.chart.template'].ref('account_journal_payment_credit_account_id')
+
+        inbound_method_lines = bank_journal.inbound_payment_method_line_ids
+        inbound_method_lines_names = inbound_method_lines.mapped('name')
+        inbound_method_lines[0].payment_account_id = outstanding_receipt_account
+
+        outbound_method_lines = bank_journal.outbound_payment_method_line_ids
+        outbound_method_lines_names = outbound_method_lines.mapped('name')
+        outbound_method_lines[0].payment_account_id = outstanding_payment_account
+        new_outbound_payment_line = outbound_method_lines[0].copy({'payment_account_id': outstanding_payment_account.id})
+        bank_journal.outbound_payment_method_line_ids = [Command.link(new_outbound_payment_line.id)]
+
+        # Set currency_id to trigger the compute of {in,out}bound_payment_method_line_ids
+        bank_journal.currency_id = self.company_data['currency']
+
+        self.assertRecordValues(bank_journal.inbound_payment_method_line_ids, [
+            {
+                'name': name,
+                'payment_account_id': outstanding_receipt_account.id if index == 0 else False,
+            } for index, name in enumerate(inbound_method_lines_names)
+        ])
+        self.assertRecordValues(bank_journal.outbound_payment_method_line_ids, [
+            {
+                'name': name,
+                'payment_account_id': outstanding_payment_account.id if index == 0 else False,
+            } for index, name in enumerate(outbound_method_lines_names)
+        ])
