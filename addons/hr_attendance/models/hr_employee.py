@@ -201,19 +201,6 @@ class HrEmployee(models.Model):
                 empl_name=self.sudo().name))
         return attendance
 
-    @api.model
-    def get_overtime_data(self, domain=None, employee_id=None):
-        domain = [] if domain is None else domain
-        validated_overtime = {
-            attendance[0].id: attendance[1]
-            for attendance in self.env["hr.attendance"]._read_group(
-                domain=domain,
-                groupby=['employee_id'],
-                aggregates=['validated_overtime_hours:sum']
-            )
-        }
-        return {"validated_overtime": validated_overtime, "overtime_adjustments": {}}
-
     def action_open_last_month_attendances(self):
         self.ensure_one()
         return {
