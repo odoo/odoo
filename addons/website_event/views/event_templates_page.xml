@@ -7,6 +7,7 @@
         <!-- Options -->
         <t t-set="opt_events_list_categories" t-value="is_view_active('website_event.opt_events_list_categories')"/>
         <div id="wrap" t-attf-class="o_wevent_event js_event d-flex flex-column h-100 #{'o_wevent_hide_sponsors' if hide_sponsors else ''}">
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_0" data-editor-sub-message.translate="Following content will appear on all events."/>
             <t t-if="not hide_submenu" t-call="website_event.navbar"/>
             <t t-out="0"/>
             <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_1" data-editor-sub-message.translate="Following content will appear on all events."/>
