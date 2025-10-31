@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 15:18+0000\n"
+"PO-Revision-Date: 2025-10-31 12:54+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/project/"
 "de/>\n"
@@ -2622,6 +2622,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Wenn diese Option aktiviert ist, wird diese Phase in der Kanban- und "
+"Listenansicht Ihrer Projekte als ausgeblendet angezeigt. Projekte in einer "
+"ausgeblendeten Phase gelten als abgeschlossen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2631,6 +2634,10 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"Wenn diese Option aktiviert ist, wird automatisch eine Bewertungsanfrage per "
+"E-Mail an den Kunden gesendet, sobald die Aufgabe diese Phase erreicht.\n"
+"Alternativ wird die Anfrage in regelmäßigen Abständen versendet, solange "
+"sich die Aufgabe in dieser Phase befindet."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2663,7 +2670,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Import Template for Tasks"
-msgstr ""
+msgstr "Importvorlage für Aufgaben"
 
 #. module: project
 #. odoo-javascript
@@ -2716,17 +2723,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "Ungültiger Anzeigename"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "Eingeladene interne Benutzer und Portalbenutzer"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "Eingeladene interne Benutzer"
 
 #. module: project
 #. odoo-javascript
@@ -2900,7 +2907,7 @@ msgstr "Später"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create a regular <b>project</b>."
-msgstr ""
+msgstr "Erstellen wir ein reguläres <b>Projekt</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3714,7 +3721,7 @@ msgstr "Private Aufgaben können nicht in Vorlagen umgewandelt werden."
 #. module: project
 #: model:project.project,name:project.project_template_1
 msgid "Product Launch Campaign"
-msgstr ""
+msgstr "Produktvorstellungskampagne"
 
 #. module: project
 #. odoo-javascript
@@ -3832,7 +3839,7 @@ msgstr "Assistent zum Löschen von Projektphasen"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "Projektphase: Bewertung senden"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3909,6 +3916,31 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Sichtbarkeit von Projekten und Aufgaben:\n"
+"- Eingeladene interne Benutzer: Haben nur Zugriff auf die Projekte oder "
+"Aufgaben, denen sie folgen. Zugewiesene Personen erhalten automatisch "
+"Zugriff.\n"
+"- Eingeladene interne Benutzer und Portalbenutzer: Wie oben, erweitert auf "
+"Portalbenutzer.\n"
+"- Alle internen Benutzer: Voller Zugriff auf das Projekt und alle seine "
+"Aufgaben.\n"
+"- Alle internen und eingeladenen Portalbenutzer: Interne Benutzer erhalten "
+"vollen Zugriff. Portalbenutzer haben nur Zugriff auf die Projekte oder "
+"Aufgaben, denen sie folgen.\n"
+"\n"
+"Portal-Zugriffsebenen:\n"
+"- Schreibgeschützt: Portalbenutzer sehen Aufgaben über ihr Portal, können "
+"diese jedoch nicht bearbeiten.\n"
+"- Bearbeiten (eingeschränkt): Portalbenutzer greifen auf Kanban-/"
+"Listenansichten zu und können bestimmte Felder der Aufgaben, denen sie "
+"folgen, bearbeiten.\n"
+"- Bearbeiten: Wie oben, mit Zugriff auf alle Aufgaben.\n"
+"\n"
+"Weitere Regeln:\n"
+"- Interne Benutzer können eine Aufgabe über einen direkten Link öffnen, auch "
+"ohne Zugriff auf das Projekt.\n"
+"- Projektadministratoren haben Zugriff auf private Projekte, auch wenn sie "
+"diesen nicht folgen.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4344,7 +4376,7 @@ msgstr "Rolle an Benutzer"
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "Verfall"
 
 #. module: project
 #. odoo-javascript
@@ -4475,7 +4507,7 @@ msgstr "Einladung senden"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "Anfrage einer Kundenbewertung senden"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4696,7 +4728,7 @@ msgstr "Phasenbesitzer"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "Bewertungsstatus der Phase"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4904,7 +4936,7 @@ msgstr "Aufgabenwiederholung"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "Aufgabe teilen"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5066,7 +5098,7 @@ msgstr "Vorlage"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "Vorlage hat Daten"
 
 #. module: project
 #. odoo-python
@@ -5875,6 +5907,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Wenn Sie ein Projekt aus einer Vorlage erstellen, können Sie auswählen, "
+"welcher Mitarbeiter welche Rolle übernimmt. Diese Mitarbeiter werden den "
+"Aufgaben hinzugefügt, zusammen mit allen bereits zugewiesenen Mitarbeitern."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -6296,7 +6331,7 @@ msgstr ", um den aktuellen Status Ihrer Idee anzuzeigen."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "beim Erreichen dieser Phase"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

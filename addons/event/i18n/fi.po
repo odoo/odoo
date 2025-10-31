@@ -33,7 +33,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-28 15:18+0000\n"
+"PO-Revision-Date: 2025-10-30 08:31+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/event/fi/"
 ">\n"
@@ -1618,10 +1618,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
-"Aikaa ei voida ajoittaa tapahtuman aikavälin ulkopuolelle.\n"
+"Aikaa ei voida valita tapahtuma-ajan ulkopuolelle.\n"
 "\n"
 "Tapahtuma:\t\t%(event_start)s - %(event_end)s\n"
-"Aikaväli:\t\t%(slot_name)s"
+"Aikaikkuna:\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1787,9 +1787,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
-"Salli useita ajanjaksoja. Viestintä, osallistujien enimmäismäärä ja lippujen "
-"enimmäisrekisteröinnit määritetään jokaista ajanjaksoa kohden erikseen, ei "
-"koko tapahtumalle."
+"Salli useita aikaikkunoita. Viestintä, osallistujien enimmäismäärä ja "
+"lippujen enimmäisrekisteröinnit määritetään jokaista aikaa kohden erikseen, "
+"ei koko tapahtumalle."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_reusable
@@ -2672,7 +2672,7 @@ msgstr "Tapahtuman jaettava URL"
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr "Tapahtuman ajanjakso"
+msgstr "Tapahtuman aikaikkuna"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2967,8 +2967,9 @@ msgid ""
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
 "Jokaiselle tapahtumalle voidaan määrittää paikkarajoitus (osallistujamäärä), "
-"jonka täytyttyä rekisteröitymisiä ei hyväksytä. Jos tapahtumassa on useita "
-"ajanjaksoja, tämä enimmäismäärä koskee jokaista ajanjaksoa erikseen."
+"jonka täytyttyä rekisteröitymisiä ei enää hyväksytä. Jos tapahtumalla on "
+"useita aikaikkunoita, tämä enimmäismäärä koskee jokaista aikaikkunaa "
+"erikseen."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -3265,9 +3266,8 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
-"Määrittää, milloin viesti lähetetään. Jos tapahtumassa on useita "
-"ajanjaksoja, viestin ajankohta liittyy kuhunkin ajanjaksoon yksitellen, ei "
-"koko tapahtumaan."
+"Osoittaa viestinnän lähetysajan. Jos tapahtumalla on useita aikaikkunoita, "
+"viestin ajankohta liittyy kuhunkin aikaan erikseen, ei koko tapahtumaan."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3295,7 +3295,7 @@ msgstr "Tutustuminen, CRM, myynninhallinta"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr "Virheellinen tapahtuman tai ajanjakson valinta"
+msgstr "Virheellinen tapahtuman tai aikaikkunan valinta"
 
 #. module: event
 #. odoo-python
@@ -3317,7 +3317,7 @@ msgstr "On saatavilla"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr "Tapahtuma sisältää useita ajanjaksoja"
+msgstr "Tapahtuma sisältää useita aikaikkunoita"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -4419,8 +4419,7 @@ msgstr "Ajanjakson sähköpostin ajastustoiminto"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
-"Ajanjakson valinta on pakollista, kun tapahtumassa on useita ajanjaksoja."
+msgstr "Ajan valinta on pakollista, kun tapahtumalla on useita aikaikkunoita."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4769,7 +4768,7 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
-"Seuraaviin tapahtumiin ei voida lisätä ajanjaksoja niiden tapahtumaaikojen "
+"Näihin tapahtumiin ei voi lisätä aikaikkunoita niiden tapahtuma-aikojen "
 "ulkopuolelle:\n"
 "%(event_names)s"
 
