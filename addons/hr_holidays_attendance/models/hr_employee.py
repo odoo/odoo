@@ -1,30 +1,47 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import models, api
-from odoo.fields import Domain
+from odoo import models
 
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    @api.model
-    def get_overtime_data(self, domain=None, employee_id=None):
-        overtime_data = super().get_overtime_data(domain, employee_id)
-        domain = [] if domain is None else domain
-        overtime_adjustments = {
-            allocation[0].id: allocation[1]
-            for allocation in self.env["hr.leave.allocation"]._read_group(
-                domain=Domain.AND(
-                    domain,
-                    [
-                        ('holiday_status_id.overtime_deductible', '=', True),
-                        ('state', '=', 'confirm'),
-                    ]),
-                groupby=['employee_id'],
-                aggregates=['number_of_hours_display:sum']
+    def get_overtime_data_by_employee(self):
+        """
+        Provide a summary of an employee's overtime.
+        A compensable overtime is an overtime that can be cumulated to be used
+        as time off.
+        Extra hours and overtime is used interchangably.
+        """
+        # Make so that at least all employees are present in return value
+        overtime_data = {}
+        for employee_id in self.ids:
+            overtime_data[employee_id] = {
+                "compensable_overtime": 0,
+                "not_compensable_overtime": 0,
+                "unspent_compensable_overtime": 0,
+            }
+
+        unspent_overtime = self.env[
+            'hr.leave'
+        ]._get_deductible_employee_overtime(self)
+        for employee in unspent_overtime:
+            overtime_data[employee.id]['unspent_compensable_overtime'] += max(
+                0, unspent_overtime[employee]
             )
-        }
-        overtime_data.update({
-            'overtime_adjustments': overtime_adjustments
-        })
+
+        all_overtimes = self.env['hr.attendance.overtime.line']._read_group(
+            domain=[
+                ('employee_id', 'in', self.ids),
+            ],
+            groupby=["employee_id", "compensable_as_leave"],
+            aggregates=["duration:sum"],
+        )
+        for employee, is_compensable, amount in all_overtimes:
+            overtime_type = (
+                'compensable_overtime'
+                if is_compensable
+                else 'not_compensable_overtime'
+            )
+            overtime_data[employee.id][overtime_type] += amount
+
         return overtime_data

@@ -20,4 +20,14 @@
         </field>
     </record>
 
+    <record id="hr_attendance_employee_simple_tree_view" model="ir.ui.view">
+        <field name="name">hr.attendance.employee.simple.tree.view.inherit.hr_holidays_attendance</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_employee_simple_tree_view"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="js_class">extra_hours_list_view</attribute>
+            </list>
+        </field>
+    </record>
 </odoo>
