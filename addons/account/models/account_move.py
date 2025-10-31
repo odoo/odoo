@@ -4761,7 +4761,7 @@ class AccountMove(models.Model):
         if new_lines := (self.invoice_line_ids - existing_lines):
             new_lines.is_imported = True
             if not existing_lines:
-                self._link_bill_origin_to_purchase_orders(timeout=4)
+                self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
 
         return res
 
