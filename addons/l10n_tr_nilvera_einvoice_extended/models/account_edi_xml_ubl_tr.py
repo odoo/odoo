@@ -440,7 +440,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                     },
                     'cbc:Percent': {
                         # The percentatge can't be a float as it is expected to return as an integer
-                        '_text': grouping_key['percent_withheld'] if is_withholding else False,
+                        '_text': grouping_key['percent_withheld'] if is_withholding else grouping_key['amount'],
                     },
                     'cac:TaxCategory': self._get_tax_category_node({**vals, 'grouping_key': grouping_key}),
                 }
