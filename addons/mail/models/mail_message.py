@@ -542,19 +542,26 @@ class Message(models.Model):
         ]
         model_record_ids = _generate_model_record_ids(message_values, document_related_candidate_ids)
         for model, doc_ids in model_record_ids.items():
-            DocumentModel = self.env[model]
-            if hasattr(DocumentModel, '_get_mail_message_access'):
-                check_operation = DocumentModel._get_mail_message_access(doc_ids, operation)  ## why not giving model here?
-            else:
-                check_operation = self.env['mail.thread']._get_mail_message_access(doc_ids, operation, model_name=model)
-            records = DocumentModel.browse(doc_ids)
-            records.check_access_rights(check_operation)
-            mids = records.browse(doc_ids)._filter_access_rules(check_operation)
+            documents = self.env[model].browse(doc_ids)
+            documents_per_operation = defaultdict(self.env[model].browse)
+
+            for document in documents:
+                if hasattr(document, '_get_mail_message_access'):
+                    doc_operation = self.env[document._name]._get_mail_message_access(document.ids, operation)  # why not giving model here?
+                else:
+                    doc_operation = self.env['mail.thread']._get_mail_message_access(document.ids, operation, model_name=model)
+                documents_per_operation[doc_operation] |= document
+            allowed = self.env[model]
+            for record_operation, records in documents_per_operation.items():
+                operation_allowed = records.check_access_rights(record_operation, raise_exception=False)
+                if operation_allowed:
+                    allowed += records._filter_access_rules(record_operation)
+
             document_related_ids += [
                 mid for mid, message in message_values.items()
                 if (
                     message.get('model') == model and
-                    message.get('res_id') in mids.ids and
+                    message.get('res_id') in allowed.ids and
                     message.get('message_type') != 'user_notification'
                 )
             ]
@@ -723,6 +730,12 @@ class Message(models.Model):
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access_rule('read')
         return super(Message, self).read(fields=fields, load=load)
+
+    def copy_data(self, default=None):
+        """ Make is symmetric to read, to avoid spurious issues with recordsets
+        differences. """
+        self.check_access_rule('read')
+        return super().copy_data(default=default)
 
     def fetch(self, field_names):
         # This freaky hack is aimed at reading data without the overhead of
