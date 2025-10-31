@@ -127,7 +127,7 @@ class MailThread(models.AbstractModel):
             raise ValueError(_('Invalid token or rating.'))
 
         rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
-        if isinstance(self, self.env.registry['mail.thread']):
+        if isinstance(self, self.env.registry['mail.thread']) and not self.env.context.get('do_not_post_rating_message', False):
             if subtype_xmlid is None:
                 subtype_id = self._rating_apply_get_default_subtype_id()
             else:
