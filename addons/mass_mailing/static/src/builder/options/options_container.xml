@@ -1,0 +1,24 @@
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.OptionsContainer" t-inherit="html_builder.OptionsContainer">
+        <xpath expr="//div[@t-ref='content']" position="replace">
+            <t t-if="versionState.isUpToDate">
+                <div class="we-bg-options-container pb-3" t-ref="content">
+                    <t t-foreach="props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
+                        <BuilderContext applyTo="OptionClass.applyTo" t-if="hasAccess(OptionClass.groups)">
+                            <t t-component="OptionClass"></t>
+                        </BuilderContext>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_we_version_control d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
+                    <div class="title">This block is outdated.</div>
+                    <div>You might not be able to customize it anymore.</div>
+                    <button type="button" class="btn btn-primary py-2 my-4 border-0" t-on-click="() => this.replaceElementWithNewVersion()">REPLACE BY NEW VERSION</button>
+                    <div>You can still access the block options but it might be ineffective.</div>
+                    <button type="button" class="btn btn-primary py-2 my-4 border-0" t-on-click="() => this.accessOutdated()">ACCESS OPTIONS ANYWAY</button>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>
