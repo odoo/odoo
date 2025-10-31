@@ -25,6 +25,7 @@
             'project_todo/static/src/scss/todo.scss',
             'project_todo/static/src/views/**/*',
             'project_todo/static/src/web/**/*',
+            'project_todo/static/src/webclient/**/*',
         ],
         'web.assets_tests': [
             'project_todo/static/tests/tours/**/*',

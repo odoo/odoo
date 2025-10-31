@@ -78,6 +78,7 @@
             'project/static/src/scss/project_form.scss',
             'project/static/src/scss/project_widgets.scss',
             'project/static/src/xml/**/*',
+            'project/static/src/webclient/**/*',
             ('remove', 'project/static/src/views/project_task_activity/**'),
             ('remove', 'project/static/src/views/project_task_graph/**'),
             ('remove', 'project/static/src/views/project_task_pivot/**'),
