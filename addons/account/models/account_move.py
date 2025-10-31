@@ -917,9 +917,8 @@ class AccountMove(models.Model):
     @api.depends('move_type')
     def _compute_is_storno(self):
         for move in self:
-            move.is_storno = move.is_storno or (
-                move.company_id.account_storno and move.move_type in ('out_refund', 'in_refund')
-            )
+            is_refund = move.move_type in ('out_refund', 'in_refund')
+            move.is_storno = move.is_storno or (is_refund and move.company_id.account_storno)
 
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
