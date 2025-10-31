@@ -362,6 +362,36 @@ class TestReorderingRule(TransactionCase):
             'partner_id': partner2.id, 'price_unit': 5.0, 'product_qty': 5.0
         }])
 
+    def test_reordering_rule_prefer_replenishment_uom(self):
+        """ Check that the replenishment_uom_id defined on a reordering rule
+        is preferred over the supplier's default UoM on the generated
+        purchase order line, allowing users to purchase products in the exact
+        units they want.
+
+        - Use storable product with a vendor using UoM = Unit
+        - Add Pack of 6 to the product's available UoMs
+        - Create a reordering rule with replenishment_uom_id = Pack of 6
+        - Trigger the reordering rule manually
+        - Verify that the generated purchase order line uses Pack of 6
+          instead of the supplier's Unit
+        """
+        uom_pack_6 = self.env.ref('uom.product_uom_pack_6')
+        product = self.product_01
+        product.uom_ids |= uom_pack_6
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 12,
+            'replenishment_uom_id': uom_pack_6.id,
+        })
+        orderpoint.action_replenish()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertRecordValues(pol, [
+            {'partner_id': self.partner.id, 'product_uom_id': uom_pack_6.id, 'product_qty': 2.0, 'product_uom_qty': 12.0}
+        ])
+
     def test_reordering_rule_triggered_two_times(self):
         """
         A product P wth RR 0-0-1.
