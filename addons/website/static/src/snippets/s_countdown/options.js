@@ -116,7 +116,7 @@ options.registry.countdown = options.Class.extend({
 
             case 'selectDataAttribute': {
                 if (params.colorNames) {
-                    params.attributeDefaultValue = 'rgba(0, 0, 0, 255)';
+                    params.attributeDefaultValue = "rgba(0, 0, 0, 0)";
                 }
                 break;
             }

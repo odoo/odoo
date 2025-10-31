@@ -6,7 +6,9 @@ import { rpc } from "@web/core/network/rpc";
 patch(PosData.prototype, {
     async loadInitialData() {
         const configId = session.data.config_id;
-        return await rpc(`/pos-self/data/${parseInt(configId)}`);
+        return await rpc(`/pos-self/data/${parseInt(configId)}`, {
+            access_token: odoo.access_token,
+        });
     },
     get databaseName() {
         return `self_order-${odoo.access_token}`;

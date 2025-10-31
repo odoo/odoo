@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { PosStore, posService } from "@point_of_sale/app/store/pos_store";
 import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -25,11 +25,16 @@ function inverted(fn) {
     return (arg) => !fn(arg);
 }
 
+patch(posService, {
+    dependencies: [...posService.dependencies, "report"],
+});
+
 patch(PosStore.prototype, {
-    async setup() {
+    async setup(env, { report }) {
         this.couponByLineUuidCache = {};
         this.rewardProductByLineUuidCache = {};
         await super.setup(...arguments);
+        this.report = report;
 
         effect(
             batched((orders) => {
@@ -887,12 +892,15 @@ patch(PosStore.prototype, {
                 }
             }
             if (payload.coupon_report) {
-                for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
-                    await this.report.doAction(actionId, active_ids);
+                if (this.get_order() && this.get_order().uuid == order.uuid) {
+                    for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
+                        await this.report.doAction(actionId, active_ids);
+                    }
                 }
                 order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
             }
             order.new_coupon_info = payload.new_coupon_info;
+            return payload;
         }
     },
 });
