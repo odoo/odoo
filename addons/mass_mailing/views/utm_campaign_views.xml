@@ -9,7 +9,7 @@
                 <field name="is_mailing_campaign_activated" invisible="1"/>
                 <button name="%(action_create_mass_mailings_from_campaign)d"
                     type="action" class="oe_highlight" invisible="not is_mailing_campaign_activated"
-                    groups="mass_mailing.group_mass_mailing_user" string="Send Mailing"/>
+                    groups="mass_mailing.group_mass_mailing_user" string="New Mailing"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(action_view_mass_mailings_from_campaign)d"
@@ -24,7 +24,7 @@
                     invisible="mailing_mail_count == 0 or not is_mailing_campaign_activated"
                     groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_mail_ids" nolabel="1">
-                        <list>
+                        <list editable="bottom" open_form_view="1" delete="0">
                             <field name="calendar_date" string="Date"/>
                             <field name="subject" readonly="state in ('sending', 'done')"/>
                             <field name="mailing_model_id" string="Recipients" optional="hide"/>
@@ -69,9 +69,8 @@
                 <field name="is_mailing_campaign_activated"/>
             </xpath>
             <xpath expr="//ul[@id='o_utm_actions']">
-                <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
-                    t-attf-class="pe-2 oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}"
-                    t-if="record.is_mailing_campaign_activated.raw_value"
+                <a name="%(action_view_mass_mailings_from_campaign)d" type="action" class="pe-2"
+                    t-if="record.is_mailing_campaign_activated.raw_value and record.mailing_mail_ids.raw_value.length !== 0"
                     groups="mass_mailing.group_mass_mailing_user">
                     <t t-out="record.mailing_mail_ids.raw_value.length"/> Mailings
                 </a>
