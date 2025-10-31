@@ -16,7 +16,8 @@ export class ColorPickerOption extends BaseOptionComponent {
 
 export class ColorPickerOption2 extends BaseOptionComponent {
     static template = "mass_mailing.ColorPickerOption";
-    static selector = ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div";
+    static selector =
+        ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div";
     static applyTo = ".card-body";
 }
 
