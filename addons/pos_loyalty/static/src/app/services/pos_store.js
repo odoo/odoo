@@ -1,5 +1,11 @@
 import { patch } from "@web/core/utils/patch";
+<<<<<<< 7d16685d47eed75913beb22156c57fc70ff47624:addons/pos_loyalty/static/src/app/services/pos_store.js
 import { PosStore } from "@point_of_sale/app/services/pos_store";
+||||||| 3c3ea2602febdb72d200dd07730ea65ad81d9d9c:addons/pos_loyalty/static/src/overrides/models/pos_store.js
+import { PosStore } from "@point_of_sale/app/store/pos_store";
+=======
+import { PosStore, posService } from "@point_of_sale/app/store/pos_store";
+>>>>>>> d4a35a47ea38da8633e605dab3ef154ca886ef26:addons/pos_loyalty/static/src/overrides/models/pos_store.js
 import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -23,11 +29,46 @@ function inverted(fn) {
     return (arg) => !fn(arg);
 }
 
+patch(posService, {
+    dependencies: [...posService.dependencies, "report"],
+});
+
 patch(PosStore.prototype, {
-    async setup() {
+    async setup(env, { report }) {
         this.couponByLineUuidCache = {};
         this.rewardProductByLineUuidCache = {};
         await super.setup(...arguments);
+<<<<<<< 7d16685d47eed75913beb22156c57fc70ff47624:addons/pos_loyalty/static/src/app/services/pos_store.js
+||||||| 3c3ea2602febdb72d200dd07730ea65ad81d9d9c:addons/pos_loyalty/static/src/overrides/models/pos_store.js
+
+        effect(
+            batched((orders) => {
+                const order = Array.from(orders.values()).find(
+                    (order) => order.uuid === this.selectedOrderUuid
+                );
+
+                if (order) {
+                    this.updateOrder(order);
+                }
+            }),
+            [this.data.records["pos.order"]]
+        );
+=======
+        this.report = report;
+
+        effect(
+            batched((orders) => {
+                const order = Array.from(orders.values()).find(
+                    (order) => order.uuid === this.selectedOrderUuid
+                );
+
+                if (order) {
+                    this.updateOrder(order);
+                }
+            }),
+            [this.data.records["pos.order"]]
+        );
+>>>>>>> d4a35a47ea38da8633e605dab3ef154ca886ef26:addons/pos_loyalty/static/src/overrides/models/pos_store.js
     },
     async afterProcessServerData() {
         // Remove reward lines that have no reward anymore (could happen if the program got archived)
@@ -856,12 +897,23 @@ patch(PosStore.prototype, {
                 }
             }
             if (payload.coupon_report) {
+<<<<<<< 7d16685d47eed75913beb22156c57fc70ff47624:addons/pos_loyalty/static/src/app/services/pos_store.js
                 for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
                     await this.env.services.report.doAction(actionId, active_ids);
+||||||| 3c3ea2602febdb72d200dd07730ea65ad81d9d9c:addons/pos_loyalty/static/src/overrides/models/pos_store.js
+                for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
+                    await this.report.doAction(actionId, active_ids);
+=======
+                if (this.get_order() && this.get_order().uuid == order.uuid) {
+                    for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
+                        await this.report.doAction(actionId, active_ids);
+                    }
+>>>>>>> d4a35a47ea38da8633e605dab3ef154ca886ef26:addons/pos_loyalty/static/src/overrides/models/pos_store.js
                 }
                 order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
             }
             order.new_coupon_info = payload.new_coupon_info;
+            return payload;
         }
     },
 });
