@@ -160,9 +160,8 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         ctx = self.env.context
         domain = [('type', '=', 'consu')]
-        if ctx.get("domain"):
-            domain = fields.Domain.AND([domain, ctx.get("domain")])
-
+        if ctx.get("suggest_domain"):
+            domain = fields.Domain.AND([domain, ctx.get("suggest_domain")])
         products = self.env['product.product'].search(domain)
 
         self.partner_id.write({
