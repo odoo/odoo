@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
@@ -866,6 +865,7 @@ class TestTimesheet(TestCommonTimesheet):
         timesheet.invalidate_recordset(['calendar_display_name'])
         self.assertEqual(timesheet.calendar_display_name, f"{self.project_customer.name} (1.5d)")
 
+    @freeze_time("2025-10-31 08:00:00")
     def test_multi_create_timesheets_from_calendar(self):
         """
         Simulate creating timesheets using the multi-create feature in the calendar view
