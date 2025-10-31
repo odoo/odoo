@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="action_create_mass_sms" type="object"  class="oe_highlight" string="Send SMS"
+                <button name="action_create_mass_sms" type="object"  class="oe_highlight" string="New SMS"
                     invisible="not is_mailing_campaign_activated"
                     groups="mass_mailing.group_mass_mailing_user"/>
             </xpath>
@@ -58,9 +58,8 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//ul[@id='o_utm_actions']">
-                <a name="action_redirect_to_mailing_sms" type="object"
-                    t-attf-class="pe-2 oe_mailings #{record.mailing_sms_count.raw_value === 0 ? 'text-muted' : ''}"
-                    t-if="record.is_mailing_campaign_activated.raw_value"
+                <a name="action_redirect_to_mailing_sms" type="object" class="pe-2"
+                    t-if="record.is_mailing_campaign_activated.raw_value and record.mailing_sms_count.raw_value !== 0"
                     groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_sms_count"/> SMS
                 </a>
