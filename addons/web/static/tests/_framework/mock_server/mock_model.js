@@ -1647,6 +1647,7 @@ export class Model extends Array {
 
     constructor() {
         super(...arguments);
+        this.setup();
 
         if (!modelInstanceLock) {
             const modelInstance = this.constructor.definition;
@@ -1665,6 +1666,9 @@ export class Model extends Array {
             this._views = modelInstance._views;
         }
     }
+
+    /** To define new fields in patches */
+    setup() {}
 
     //-------------------------------------------------------------------------
     // Public

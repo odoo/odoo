@@ -1,13 +1,16 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { patch } from "@web/core/utils/patch";
 
-export class ResPartner extends mailModels.ResPartner {
-    employee_ids = fields.One2many({
-        relation: "hr.employee",
-        inverse: "work_contact_id",
-    });
-
+patch(mailModels.ResPartner.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.employee_ids = fields.One2many({
+            relation: "hr.employee",
+            inverse: "work_contact_id",
+        });
+    },
     _get_store_avatar_card_fields() {
         return [
             ...super._get_store_avatar_card_fields(),
@@ -19,5 +22,5 @@ export class ResPartner extends mailModels.ResPartner {
                 })
             ),
         ];
-    }
-}
+    },
+});
