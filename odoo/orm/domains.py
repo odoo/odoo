@@ -285,16 +285,19 @@ class Domain:
     @staticmethod
     def custom(
         *,
-        to_sql: Callable[[TableSQL], SQL],
+        to_sql: Callable[[TableSQL], SQL] | None = None,
         predicate: Callable[[BaseModel], bool] | None = None,
+        optimize: Callable[[DomainCustom, BaseModel], Domain] | None = None,
     ) -> DomainCustom:
         """Create a custom domain.
 
         :param to_sql: callable(model, alias, query) that returns the SQL
+        :param optimize: callable(custom_domain, model) that runs for full
+                         optimization in order to translate to a normal domain
         :param predicate: callable(record) that checks whether a record is kept
                           when filtering
         """
-        return DomainCustom(to_sql, predicate)
+        return DomainCustom(to_sql, predicate, optimize)
 
     @staticmethod
     def AND(items: Iterable) -> Domain:
@@ -755,15 +758,17 @@ class DomainOr(DomainNary):
 
 class DomainCustom(Domain):
     """Domain condition that generates directly SQL and possibly a ``filtered`` predicate."""
-    __slots__ = ('_filtered', '_sql')
+    __slots__ = ('_filtered', '_optimize_func', '_sql')
 
     _filtered: Callable[[BaseModel], bool] | None
-    _sql: Callable[[BaseModel, str, Query], SQL]
+    _optimize_func: Callable[[DomainCustom, BaseModel], Domain] | None
+    _sql: Callable[[BaseModel, str, Query], SQL] | None
 
     def __new__(
         cls,
-        sql: Callable[[TableSQL], SQL],
+        sql: Callable[[TableSQL], SQL] | None = None,
         filtered: Callable[[BaseModel], bool] | None = None,
+        optimize_func: Callable[[DomainCustom, BaseModel], Domain] | None = None,
     ):
         """Create a new domain.
 
@@ -771,11 +776,21 @@ class DomainCustom(Domain):
                        which is used to generate the query for searching
         :param predicate: callable(record) that checks whether a record is kept
                           when filtering (``Model.filtered``)
+        :param optimize_func: callable(custom_domain, model) when set this
+                              domain is at dynamic level and can be fully
+                              optimized by that function
         """
+        assert sql or optimize_func, "Need optimization or sql function"
         self = object.__new__(cls)
         object.__setattr__(self, '_sql', sql)
         object.__setattr__(self, '_filtered', filtered)
-        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL)
+        object.__setattr__(self, '_optimize_func', optimize_func)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL if optimize_func is None else OptimizationLevel.DYNAMIC_VALUES)
+        return self
+
+    def _optimize_step(self, model, level):
+        if level == OptimizationLevel.FULL and self._optimize_func:
+            return self._optimize_func(self, model)
         return self
 
     def _as_predicate(self, records):
@@ -790,10 +805,11 @@ class DomainCustom(Domain):
             isinstance(other, DomainCustom)
             and self._sql == other._sql
             and self._filtered == other._filtered
+            and self._optimize_func == other._optimize_func
         )
 
     def __hash__(self):
-        return hash(self._sql)
+        return hash(self._sql or self._optimize_func)
 
     def __iter__(self):
         yield self
@@ -802,6 +818,8 @@ class DomainCustom(Domain):
         return object.__repr__(self)
 
     def _to_sql(self, table: TableSQL) -> SQL:
+        assert self._sql is not None, \
+            f"Must fully optimize before generating the query {self}"
         return self._sql(table)
 
 
