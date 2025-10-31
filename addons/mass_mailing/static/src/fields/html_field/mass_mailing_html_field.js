@@ -305,7 +305,7 @@ export class MassMailingHtmlField extends HtmlField {
                 return;
             }
         }
-        if (this.editor?.isDestroyed) {
+        if (!this.state.showCodeView && this.editor?.isDestroyed) {
             return;
         }
         return super._commitChanges({ urgent });
