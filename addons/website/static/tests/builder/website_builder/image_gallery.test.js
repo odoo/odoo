@@ -10,6 +10,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -277,4 +278,21 @@ test("Changing layout of an image gallery to grid should remove size option on i
     expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Grid");
     await contains(":iframe .first_img").click();
     expect("[data-label='Size']").toHaveCount(0);
+});
+
+test("Click the outline option for the image gallery thumbnails", async () => {
+    await setupWebsiteBuilderWithSnippet("s_image_gallery");
+    await contains(":iframe .s_image_gallery").click();
+    await contains(".options-container [data-label='Indicators'] .dropdown-toggle").click();
+    await contains(
+        ".o-dropdown--menu [data-action-param='s_image_gallery_indicators_squared']"
+    ).click();
+    expect(":iframe section.o_slideshow").not.toHaveClass("s_image_gallery_indicators_outline");
+    await contains("[data-class-action='s_image_gallery_indicators_outline'] .o-checkbox").click();
+    expect(":iframe section.o_slideshow").toHaveClass("s_image_gallery_indicators_outline");
+    await contains(".options-container [data-label='Indicators'] .dropdown-toggle").click();
+    await contains(
+        ".o-dropdown--menu [data-action-param='s_image_gallery_indicators_dots']"
+    ).click();
+    expect(":iframe section.o_slideshow").not.toHaveClass("s_image_gallery_indicators_outline");
 });

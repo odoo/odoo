@@ -213,6 +213,22 @@
                     opacity: 1;
                 }
             }
+
+            &.s_image_gallery_indicators_outline .carousel {
+                --indicators-border-color: #{$carousel-indicator-active-bg};
+
+                &.carousel-dark {
+                    --indicators-border-color: #{$carousel-dark-indicator-active-bg};
+                }
+
+                .carousel-indicators > button {
+                    box-shadow: inset 0 0 0 0.5px color-mix(
+                        in srgb,
+                        var(--indicators-border-color),
+                        transparent 40%
+                    );
+                }
+            }
         }
 
         // Indicators - Rounded Miniatures
