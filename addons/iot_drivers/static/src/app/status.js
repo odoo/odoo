@@ -35,13 +35,10 @@ class StatusPage extends Component {
         <div class="text-center pt-5">
             <img class="odoo-logo" src="/web/static/img/logo2.png" alt="Odoo logo"/>
         </div>
-        <div t-if="state.loading || state.data.new_database_url" class="position-fixed top-0 start-0 vh-100 w-100 justify-content-center align-items-center d-flex flex-column gap-5">
+        <div t-if="state.loading" class="position-fixed top-0 start-0 vh-100 w-100 justify-content-center align-items-center d-flex flex-column gap-5">
             <div class="spinner-border">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <span t-if="state.data.new_database_url" class="fs-4">
-                Connecting to <t t-out="state.data.new_database_url"/>, please wait
-            </span>
         </div>
         <div t-else="" class="container-fluid">
             <!-- QR Codes shown on status page -->

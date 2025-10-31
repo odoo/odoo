@@ -1,7 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
-from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO
+from cups import (
+    IPPError,
+    IPP_JOB_COMPLETED,
+    IPP_JOB_PROCESSING,
+    IPP_JOB_PENDING,
+    CUPS_FORMAT_AUTO,
+    Connection as CupsConnection,
+)
 from escpos import printer
 from escpos.escpos import EscposIO
 import escpos.exceptions
@@ -13,12 +20,13 @@ from odoo import http
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
-from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
-from odoo.addons.iot_drivers.main import iot_devices
+from odoo.addons.iot_drivers.main import iot_devices, print_lock
 from odoo.addons.iot_drivers.tools import helpers, route, system, wifi
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
+
+conn = CupsConnection()
 
 
 class PrinterDriver(PrinterDriverBase):
@@ -82,7 +90,7 @@ class PrinterDriver(PrinterDriverBase):
             return
 
         try:
-            with cups_lock:
+            with print_lock:
                 job_id = conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
                 conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
                 conn.writeRequestData(data, len(data))
@@ -248,7 +256,7 @@ class PrinterDriver(PrinterDriverBase):
 
     def _check_job_status(self, job_id):
         try:
-            with cups_lock:
+            with print_lock:
                 job = conn.getJobAttributes(job_id, requested_attributes=['job-state', 'job-state-reasons', 'job-printer-state-message', 'time-at-creation'])
                 _logger.debug("job details for job id #%d: %s", job_id, job)
                 job_state = job['job-state']

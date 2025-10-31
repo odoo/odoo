@@ -2,7 +2,6 @@
 
 from cups import Connection as CupsConnection, IPPError
 from itertools import groupby
-from threading import Lock
 from urllib.parse import urlsplit, parse_qs, unquote
 from zeroconf import (
     IPVersion,
@@ -16,13 +15,12 @@ import re
 import time
 
 from odoo.addons.iot_drivers.interface import Interface
-from odoo.addons.iot_drivers.main import iot_devices
+from odoo.addons.iot_drivers.main import iot_devices, print_lock
 
 _logger = logging.getLogger(__name__)
 
 conn = CupsConnection()
 PPDs = conn.getPPDs()
-cups_lock = Lock()  # We can only make one call to Cups at a time
 
 
 class PrinterInterface(Interface):
@@ -35,7 +33,7 @@ class PrinterInterface(Interface):
 
     def get_devices(self):
         discovered_devices = {}
-        with cups_lock:
+        with print_lock:
             printers = conn.getPrinters()
             devices = conn.getDevices()
 
@@ -228,7 +226,7 @@ class PrinterInterface(Interface):
         ppdname_argument = next(({"ppdname": ppd} for ppd in PPDs if model and model in PPDs[ppd]['ppd-product']), {})
 
         try:
-            with cups_lock:
+            with print_lock:
                 conn.addPrinter(name=device['identifier'], device=device['url'], **ppdname_argument)
                 conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
                 conn.enablePrinter(device['identifier'])

@@ -63,17 +63,6 @@ export class UpdateDialog extends Component {
         }
     }
 
-    async forceUpdateIotHandlers() {
-        this.state.waitRestart = true;
-        try {
-            await this.store.rpc({
-                url: "/iot_drivers/load_iot_handlers",
-            });
-        } catch {
-            console.warn("Error while downloading handlers from db.");
-        }
-    }
-
     get everythingIsUpToDate() {
         return this.state.odooIsUpToDate && this.state.imageIsUpToDate;
     }
@@ -134,13 +123,6 @@ export class UpdateDialog extends Component {
                             <t t-esc="this.state.currentCommitHash"/>
                         </a>
                     </div>
-                </div>
-
-                <h6>Drivers Update</h6>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-secondary btn-sm" t-on-click="forceUpdateIotHandlers">
-                        Force Drivers Update
-                    </button>
                 </div>
             </t>
             <t t-set-slot="footer">

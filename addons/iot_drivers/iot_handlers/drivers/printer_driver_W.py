@@ -12,9 +12,9 @@ import ghostscript
 
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
+from odoo.addons.iot_drivers.main import print_lock
 from odoo.addons.iot_drivers.tools import system
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock
 
 _logger = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ class PrinterDriver(PrinterDriverBase):
         if not self.check_printer_status():
             return
 
-        with win32print_lock:
+        with print_lock:
             job_id = win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
             win32print.StartPagePrinter(self.printer_handle)
             win32print.WritePrinter(self.printer_handle, data)
@@ -75,7 +75,7 @@ class PrinterDriver(PrinterDriverBase):
         self.job_ids.append(job_id)
 
     def print_report(self, data):
-        with win32print_lock:
+        with print_lock:
             file_name = system.path_file('document.pdf')
             file_name.write_bytes(data)
             printer = self.device_name
