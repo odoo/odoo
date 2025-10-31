@@ -319,14 +319,18 @@ class MailMessage(models.Model):
         ids uid could not see according to our custom rules. Please refer to
         _check_access() for more details about those rules.
 
-        Non employees users see only message with subtype (aka do not see
-        internal logs).
+        Non employees users see only message with subtype, and cannot see
+        internal messages, either coming from message 'is_internal' flag,
+        subtype 'internal' flag, or being pure logs (no subtype). See
+        `_get_search_domain_share` which generates the domain.
 
         After having received ids of a classic search, keep only:
         - if author_id == pid, uid is the author, OR
         - uid belongs to a notified channel, OR
         - uid is in the specified recipients, OR
-        - uid has a notification on the message
+        - uid has a notification on the message, OR
+        - uid has acces to the message linked document for messages that are not
+          'user_notification'
         - otherwise: remove the id
         """
         # Rules do not apply to administrator
@@ -395,7 +399,7 @@ class MailMessage(models.Model):
 
     @api.model
     def _find_allowed_doc_ids(self, model_ids):
-        """ Filter out message user cannot read due to missing document access.
+        """ Filters out messages user cannot read due to missing document access.
 
         :param dict model_ids: dictionary like {
             'document_model_name': {
