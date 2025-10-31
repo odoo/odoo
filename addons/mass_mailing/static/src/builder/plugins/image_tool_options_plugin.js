@@ -1,6 +1,9 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-import { CropImageAction, ImageAndFaOption } from "@html_builder/plugins/image/image_tool_option_plugin";
+import {
+    CropImageAction,
+    ImageAndFaOption,
+} from "@html_builder/plugins/image/image_tool_option_plugin";
 import { IMAGE_TOOL } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -15,8 +18,8 @@ export class FontAwesomeOption extends BaseOptionComponent {
 }
 
 patch(ImageAndFaOption, {
-    components: {...ImageAndFaOption.components, BorderConfigurator},
-})
+    components: { ...ImageAndFaOption.components, BorderConfigurator },
+});
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "mass_mailing.ImageToolOption";

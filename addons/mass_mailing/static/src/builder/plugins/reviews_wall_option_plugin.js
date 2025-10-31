@@ -16,10 +16,7 @@ export class MassMailingLayoutColumnOption extends LayoutColumnOption {
 class ReviewsWallOptionPlugin extends Plugin {
     static id = "mass_mailing.ReviewsWallOptionPlugin";
     resources = {
-        builder_options: [
-            CustomerTestimonialsBlockquote,
-            MassMailingLayoutColumnOption,
-        ],
+        builder_options: [CustomerTestimonialsBlockquote, MassMailingLayoutColumnOption],
     };
 }
 

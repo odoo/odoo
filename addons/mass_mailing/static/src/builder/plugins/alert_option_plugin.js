@@ -13,7 +13,7 @@ export class AlertOption extends BaseOptionComponent {
 export class BorderOption extends BaseOptionComponent {
     static template = "mass_mailing.BorderOption";
     static selector = ".s_mail_alert .s_alert";
-    static components = {BorderConfigurator}
+    static components = { BorderConfigurator };
 }
 
 class AlertOptionPlugin extends Plugin {
