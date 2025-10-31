@@ -229,7 +229,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                     "taxable_amount": get_withholding_taxable_amount() if withholding else vals.get("base_amount_currency"),
                     "tax_amount": abs(vals.get("tax_amount_currency")),
                     "tax_category_vals": tax_category_vals,
-                    "percent": subtotal_percent if withholding else tax_category_vals.get("percent"),
+                    "percent": subtotal_percent if withholding else vals.get("_tax_category_vals_", {}).get("percent"),
                 },
             )
 
