@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
   <t t-name="hr_timesheet.ActivityWatchTimesheet">
-    <div class="o_activitywatch_sync d-flex">
+    <div class="o_activitywatch_sync d-flex h-100">
 
       <!-- LEFT SIDE: suggestions -->
-      <div class="o_suggestions w-50 pe-3">
+      <div class="o_suggestions w-50 pe-3" t-on-click.stop="() => this.onClickLeftSide()">
         <t t-if="state.loading">
           <span>Loading ActivityWatch data...</span>
         </t>
@@ -28,7 +28,7 @@
                     t-att-class="{
                       'bg-danger-subtle': this.isSuggestionClicked(groupKey, title),
                     }"
-                    t-on-click="() => this.onSelectSuggestion(groupKey, title)"
+                    t-on-click.stop="() => this.onSelectSuggestion(groupKey, title)"
                   >
                     <span><t t-esc="title"/></span>
                     <span class="badge bg-light text-dark">
@@ -56,15 +56,15 @@
       </div>
 
       <!-- RIGHT SIDE: form + billable + non-billable -->
-      <div class="o_form flex-grow-1 border-start ps-3">
+      <div class="o_form_view flex-grow-1 border-start ps-3 d-flex flex-column h-100" style="min-height: 0;">
 
         <!-- Timesheet form -->
         <div class="mb-4">
           <t t-if="!state.selected">
-            <TimesheetTimer/>
+            <TimesheetTimer onSaveCallback="() => this.onSaveTimesheetForm()"/>
           </t>
           <t t-else="">
-            <TimesheetTimer data="state.selectedData"/>
+            <TimesheetTimer data="state.selectedData" onSaveCallback="() => this.onSaveTimesheetForm()"/>
           </t>
         </div>
 
@@ -95,7 +95,7 @@
         </div> -->
 
         <!-- Non-Billable section -->
-        <div>
+        <div class="d-flex flex-column flex-grow-1" style="min-height: 0;">
           <h6 class="fw-bold text-secondary mb-2">
             Non-Billable -
             <t t-esc="state.nonBillableTime.toFixed(2)"/>h
@@ -105,7 +105,7 @@
             <p class="text-muted small mb-0">No non-billable timesheets today.</p>
           </t>
           <t t-else="">
-            <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush overflow-auto flex-grow-1" style="min-height: 0;">
               <t t-foreach="state.nonBillableTimesheets" t-as="tsh" t-key="tsh.id">
                 <li class="list-group-item py-1">
                   <div class="fw-semibold"><t t-esc="tsh.name"/></div>

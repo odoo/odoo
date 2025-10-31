@@ -49,9 +49,10 @@ export class ActivityWatchTimesheet extends Component {
         // project and task in odoo url
         let match = url.match(/^https:\/\/www\.odoo\.com\/odoo\/project\/(\d+)\/tasks\/(\d+)$/);
         if (match) {
-            event.name = "Woring on project"; // should come from config
+            event.name = "Working on project"; // should come from config
             event.project_id = match[1];
             event.task_id = match[2];
+            return true;
         }
 
         // only project in odoo url
@@ -62,7 +63,7 @@ export class ActivityWatchTimesheet extends Component {
         }
 
         if (url.includes("meet.google")) {
-            event.name = "on a meeting";
+            event.name = "In a meeting";
             return true;
         }
 
@@ -82,34 +83,44 @@ export class ActivityWatchTimesheet extends Component {
 
     async getWatchers(baseUrl) {
         // get all available buckets
-        const buckets = await fetch(`${baseUrl}/api/0/buckets/`).then((response) => response.json());
+        const buckets = await fetch(`${baseUrl}/api/0/buckets/`).then((response) =>
+            response.json()
+        );
 
         // we will focus on:
         // - vsCode watcher
         // - window watcher (browser + computer) giving the app and the tab title
         // - browser extension watcher (giving the url which is not returned by the previous watcher)
         return Object.keys(buckets)
-            .filter(key => ["aw-watcher-vscode", "aw-watcher-window", "aw-client-web"].includes(buckets[key].client))
-            .map(key => buckets[key])
+            .filter((key) =>
+                ["aw-watcher-vscode", "aw-watcher-window", "aw-client-web"].includes(
+                    buckets[key].client
+                )
+            )
+            .map((key) => buckets[key]);
     }
 
     async loadAwEvents(baseUrl, watchers, start, end) {
         try {
             const requests = [];
             for (const watcher of watchers) {
-                requests.push(fetch(`${baseUrl}/api/0/buckets/${watcher["id"]}/events?start=${start}&end=${end}`));
+                requests.push(
+                    fetch(
+                        `${baseUrl}/api/0/buckets/${watcher["id"]}/events?start=${start}&end=${end}`
+                    )
+                );
             }
 
             const responses = await Promise.all(requests);
             const failed = [];
             const res = {};
 
-            for (let index = 0 ; index < requests.length ; index++) {
+            for (let index = 0; index < requests.length; index++) {
                 if (responses[index].ok) {
                     // assuming that you have one watcher per client for the poc (one browser extension, no 2 browsers opened with the extension)
                     const events = await Promise.resolve(responses[index].json());
                     const formatedEvents = [];
-                    for (let event of events) {
+                    for (const event of events) {
                         if (watchers[index].client === "aw-watcher-vscode") {
                             event.name = "Programming In VS Code"; // should be done in config
                         } else if (watchers[index].client === "aw-client-web") {
@@ -124,7 +135,9 @@ export class ActivityWatchTimesheet extends Component {
                             continue;
                         }
                         event.start = DateTime.fromISO(event.timestamp);
-                        event.stop = event.start.plus(Duration.fromObject({ seconds: event.duration }));
+                        event.stop = event.start.plus(
+                            Duration.fromObject({ seconds: event.duration })
+                        );
                         formatedEvents.push(event);
                     }
 
@@ -132,7 +145,7 @@ export class ActivityWatchTimesheet extends Component {
                         res[watchers[index].client] = formatedEvents;
                     }
                 } else {
-                    failed.push(ids[index]);
+                    failed.push(responses[index]);
                 }
             }
 
@@ -141,25 +154,42 @@ export class ActivityWatchTimesheet extends Component {
                     return {};
                 }
 
-                this.notification.add(_t("All watchers failed to return data, please try again or check they're running well on Activity watch via %(url)s", {
-                    url: baseUrl,
-                }), {
-                    type: "danger",
-                });
+                this.notification.add(
+                    _t(
+                        "All watchers failed to return data, please try again or check they're running well on Activity watch via %(url)s",
+                        {
+                            url: baseUrl,
+                        }
+                    ),
+                    {
+                        type: "danger",
+                    }
+                );
                 return {};
             }
 
             if (failed.length > 0) {
-                this.notification.add(_t("Some watchers failed to return data (%(watchers)s), please try again or check they're running well on Activity watch via %(url)s", {
-                    watchers: failed.join(", "),
-                    url: baseUrl,
-                }), {
-                    type: "warning",
-                });
+                this.notification.add(
+                    _t(
+                        "Some watchers failed to return data (%(watchers)s), please try again or check they're running well on Activity watch via %(url)s",
+                        {
+                            watchers: failed,
+                            url: baseUrl,
+                        }
+                    ),
+                    {
+                        type: "warning",
+                    }
+                );
             }
             return res;
-        } catch(errors) {
-            this.notification.add(_t("Something went wrong getting data from Activity Watch, make sure to start the server with the right cors origins E.G ./aw-server --cors-origins http://localhost:8069"), { type: "danger" });
+        } catch {
+            this.notification.add(
+                _t(
+                    "Something went wrong getting data from Activity Watch, make sure to start the server with the right cors origins E.G ./aw-server --cors-origins http://localhost:8069"
+                ),
+                { type: "danger" }
+            );
             return {};
         }
     }
@@ -169,8 +199,8 @@ export class ActivityWatchTimesheet extends Component {
 
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
         const baseUrl = "http://localhost:5600";
-        const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-        const todayEnd = new Date(new Date().setHours(23, 59, 59, 999)).toISOString()
+        const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
+        const todayEnd = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
 
         const watchers = await this.getWatchers(baseUrl);
         const events = await this.loadAwEvents(baseUrl, watchers, todayStart, todayEnd);
@@ -213,9 +243,9 @@ export class ActivityWatchTimesheet extends Component {
         // if the range contains project AND/OR task info, everything coming after belongs to that context
 
         let ranges = await this.orm.call("account.analytic.line", "get_events", [[]]);
-        for (let range of ranges) {
-            range['start'] = deserializeDateTime(range['start'])
-            range['stop'] = deserializeDateTime(range['stop'])
+        for (const range of ranges) {
+            range["start"] = deserializeDateTime(range["start"]);
+            range["stop"] = deserializeDateTime(range["stop"]);
         }
 
         ranges = this.merge(ranges, events["aw-watcher-vscode"]);
@@ -224,7 +254,7 @@ export class ActivityWatchTimesheet extends Component {
         let prevProjectId = false;
         let prevTaskId = false;
 
-        for (let range of ranges) {
+        for (const range of ranges) {
             if (range.project_id || range.task_id) {
                 prevProjectId = range.project_id;
                 prevTaskId = range.task_id;
@@ -250,7 +280,7 @@ export class ActivityWatchTimesheet extends Component {
         // get timesheets
         const fields = ["id", "name", "date", "project_id", "task_id", "unit_amount", "so_line"];
         const domain = [
-            ["date", "=", todayStart.split('T')[0]],
+            ["date", "=", todayStart.split("T")[0]],
             ["user_id", "=", session.user_id], // uid and user_id are both nor working to check the reason not working
         ];
 
@@ -263,7 +293,7 @@ export class ActivityWatchTimesheet extends Component {
         this.state.nonBillableTime = 0;
         this.state.totalTime = 0;
 
-        for (let timesheet of timesheets) {
+        for (const timesheet of timesheets) {
             if (timesheet.so_line) {
                 this.state.billableTimesheets.push(timesheet);
                 this.state.billableTime += timesheet.unit_amount;
@@ -274,14 +304,21 @@ export class ActivityWatchTimesheet extends Component {
             this.state.totalTime += timesheet.unit_amount;
         }
 
-        this.state.billablePercentage = this.state.billableTime * 100 / this.state.totalTime;
-        this.state.nonBillablePercentage = this.state.nonBillableTime * 100 / this.state.totalTime;
+        this.state.billablePercentage = (this.state.billableTime * 100) / this.state.totalTime;
+        this.state.nonBillablePercentage =
+            (this.state.nonBillableTime * 100) / this.state.totalTime;
     }
 
     merge(ranges, intervalsToInclude) {
-        if (intervalsToInclude == null || intervalsToInclude.length === 0) return ranges;
-        if (ranges.length === 0) return intervalsToInclude;
+        if (intervalsToInclude == null || intervalsToInclude.length === 0) {
+            return ranges;
+        }
+        if (ranges.length === 0) {
+            return intervalsToInclude;
+        }
         const gaps = [];
+        ranges.sort((a, b) => a.start - b.start);
+        intervalsToInclude.sort((a, b) => a.start - b.start);
 
         // gap before first range
         if (intervalsToInclude[0].start < ranges[0].start) {
@@ -296,8 +333,13 @@ export class ActivityWatchTimesheet extends Component {
         }
 
         // gap after last range
-        if (intervalsToInclude[intervalsToInclude.length - 1].stop > ranges[ranges.length - 1].stop) {
-            gaps.push([ranges[ranges.length - 1].stop, intervalsToInclude[intervalsToInclude.length - 1].stop]);
+        if (
+            intervalsToInclude[intervalsToInclude.length - 1].stop > ranges[ranges.length - 1].stop
+        ) {
+            gaps.push([
+                ranges[ranges.length - 1].stop,
+                intervalsToInclude[intervalsToInclude.length - 1].stop,
+            ]);
         }
 
         const res = [...ranges];
@@ -309,10 +351,14 @@ export class ActivityWatchTimesheet extends Component {
                 j++;
             }
 
-            if (j === intervalsToInclude.length) break;
+            if (j === intervalsToInclude.length) {
+                break;
+            }
 
             // skip if interval starts after the gap
-            if (intervalsToInclude[j].start >= gap[1]) continue;
+            if (intervalsToInclude[j].start >= gap[1]) {
+                continue;
+            }
 
             // intersect interval with gap
             const interval = { ...intervalsToInclude[j] };
@@ -346,17 +392,24 @@ export class ActivityWatchTimesheet extends Component {
         let task_id = this.parseId(ids[1]);
         // to fix, i need to get projects by id (the one we get from odoo url)
         // just for testing as i need  an array [id, name]
-        project_id = [8, 'Internal'];
-        task_id = [86, 'Meeting'];
+        project_id = [8, "Internal"];
+        task_id = [86, "Meeting"];
         const unit_amount = this.state.grouped[groupKey][title] / 60; // seconds => minutes
         const name = title;
 
         return { project_id, task_id, unit_amount, name };
     }
 
+    onClickLeftSide() {
+        this.state.selected = null;
+        this.state.selectedData = {};
+    }
+
     onSelectSuggestion(groupKey, title) {
         const params = this.getSuggestionParams(groupKey, title);
-        if (params === false) return;
+        if (params === false) {
+            return;
+        }
         this.state.selected = { groupKey, title };
         this.state.selectedData = params;
     }
@@ -364,14 +417,16 @@ export class ActivityWatchTimesheet extends Component {
     async onTake(groupKey, title) {
         // duplicated in loadData
         const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
-        const date = todayStart.split('T')[0];
+        const date = todayStart.split("T")[0];
         const params = this.getSuggestionParams(groupKey, title);
-        if (params === false) return;
+        if (params === false) {
+            return;
+        }
 
         const vals = {
             date,
             user_id: session.user_id,
-            ...params
+            ...params,
         };
 
         // to fix hardcoded
@@ -389,6 +444,14 @@ export class ActivityWatchTimesheet extends Component {
         if (Object.keys(this.state.grouped[groupKey]).length === 0) {
             delete this.state.grouped[groupKey];
         }
+    }
+
+    onSaveTimesheetForm() {
+        // Assume the timesheet has been saved
+        if (this.state.selected) {
+            this.onDelete(this.state.selected.groupKey, this.state.selected.title);
+        }
+        this.notification.add("Timesheet entry created!", { type: "success" });
     }
 }
 
