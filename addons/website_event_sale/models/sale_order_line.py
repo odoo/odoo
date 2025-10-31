@@ -21,3 +21,12 @@ class SaleOrderLine(models.Model):
 
     def _is_reorder_allowed(self):
         return not self.event_id and super()._is_reorder_allowed()
+
+    def _is_sellable(self):
+        """Override of `website_sale` to flag ticket lines and the additional products as not sellable.
+        This avoid having the cart update button for these lines.
+        """
+        return super()._is_sellable() and (
+            self.product_id.service_tracking != 'event' and
+            self.linked_line_id.product_id.service_tracking != 'event'
+        )

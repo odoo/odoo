@@ -26,7 +26,7 @@ export class EventConfiguratorController extends formView.Controller {
      */
     async onRecordSaved(record) {
         await super.onRecordSaved(...arguments);
-        const { event_id, event_slot_id, event_ticket_id } = record.data;
+        const { event_id, event_slot_id, event_ticket_id, additional_product_ids } = record.data;
         return this.action.doAction({
             type: "ir.actions.act_window_close",
             infos: {
@@ -34,6 +34,9 @@ export class EventConfiguratorController extends formView.Controller {
                     event_id,
                     event_slot_id,
                     event_ticket_id,
+                },
+                eventTicketInfo: {
+                    additional_product_ids,
                 },
             },
         });

@@ -22,10 +22,17 @@ class EventTypeTicket(models.Model):
         domain=[("service_tracking", "=", "event")], default=_default_product_id)
     currency_id = fields.Many2one(related="product_id.currency_id", string="Currency")
     price = fields.Float(
-        string='Price', compute='_compute_price',
+        string='Ticket Price', compute='_compute_price',
         digits='Product Price', readonly=False, store=True)
     price_reduce = fields.Float(
         string="Price Reduce", compute="_compute_price_reduce",
+        compute_sudo=True, digits='Product Price')
+    additional_product_ids = fields.Many2many('product.product', string='Additional Products',
+            domain=[('service_tracking', '!=', 'event')],
+            help="Select products to include with each registration. They will also show up separately on Sale Orders.")
+    total_price = fields.Float(string='Total Price', compute='_compute_total_price', digits='Product Price',
+        help="Price at which this ticket will be sold, which takes into account the Ticket Price and the price of every Additional Product")
+    total_price_reduce = fields.Float(string='Total Price Reduce', compute='_compute_price_reduce',
         compute_sudo=True, digits='Product Price')
 
     @api.depends('product_id')
@@ -35,6 +42,11 @@ class EventTypeTicket(models.Model):
                 ticket.price = ticket.product_id.lst_price or 0
             elif not ticket.price:
                 ticket.price = 0
+
+    @api.depends('additional_product_ids', 'additional_product_ids.lst_price', 'price')
+    def _compute_total_price(self):
+        for ticket in self:
+            ticket.total_price = ticket.price + sum(ticket.additional_product_ids.mapped('lst_price'))
 
     @api.depends('product_id')
     def _compute_description(self):
@@ -51,11 +63,16 @@ class EventTypeTicket(models.Model):
     # This field usage should be restricted to the UX, and any use in effective
     # price computation should be replaced by clear calls to the pricelist API
     @api.depends_context(*PRICE_CONTEXT_KEYS)
-    @api.depends('product_id', 'price')
+    @api.depends('additional_product_ids', 'product_id', 'price', 'total_price')
     def _compute_price_reduce(self):
         for ticket in self:
             contextual_discount = ticket.product_id._get_contextual_discount()
             ticket.price_reduce = (1.0 - contextual_discount) * ticket.price
+            total_additional_products_price_reduce = 0
+            for product in ticket.additional_product_ids:
+                contextual_discount = product._get_contextual_discount()
+                total_additional_products_price_reduce += (1.0 - contextual_discount) * product.lst_price
+            ticket.total_price_reduce = ticket.price_reduce + total_additional_products_price_reduce
 
     def _init_column(self, column_name):
         if column_name != "product_id":

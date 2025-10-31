@@ -15,6 +15,7 @@ class EventEventConfigurator(models.TransientModel):
         compute="_compute_event_slot_id", readonly=False, store=True)
     event_ticket_id = fields.Many2one('event.event.ticket', string="Ticket Type", domain="[('event_id', '=', event_id)]",
         compute="_compute_event_ticket_id", readonly=False, store=True)
+    additional_product_ids = fields.Many2many(related='event_ticket_id.additional_product_ids')
     is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
     has_available_tickets = fields.Boolean("Has Available Tickets", compute="_compute_has_available_tickets")
 
