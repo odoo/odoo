@@ -262,7 +262,7 @@ test("within iframe", async () => {
 
     await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 }, { scrollable: false });
     await animationFrame();
-    expect.verifySteps(["bottom"]);
+    expect.verifySteps(["bottom", "bottom"]);
     popoverBox = comp.popoverRef.el.getBoundingClientRect();
     expectedTop -= 100;
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
@@ -421,6 +421,51 @@ test("popover position is updated when the content dimensions change", async () 
     expect.verifySteps(["onPositioned"]);
     await contains("#popover button").click();
     expect("#popover span").toHaveCount(1);
+    await expect.waitForSteps(["onPositioned"]);
+});
+
+test("popover repositions when content changes without animation", async () => {
+    class DynamicContent extends Component {
+        setup() {
+            this.state = useState({
+                expanded: false,
+            });
+        }
+        static props = ["*"];
+        static template = xml`
+            <div id="popover">
+                <button t-on-click="() => this.state.expanded = true">Expand</button>
+                <div t-if="state.expanded" style="height: 200px; width: 200px;">
+                    Large content that changes the popover dimensions
+                </div>
+            </div>
+        `;
+    }
+
+    await mountWithCleanup(Popover, {
+        props: {
+            close: () => {},
+            target: getFixture(),
+            component: DynamicContent,
+            animation: false,
+            onPositioned() {
+                expect.step("onPositioned");
+            },
+            fixedPosition: false,
+        },
+    });
+
+    expect(".o_popover").toHaveCount(1);
+    await expect.waitForSteps([
+        "onPositioned", // Initial positioning
+        "onPositioned", // Resize on render
+    ]);
+
+    // Click to expand content
+    await contains("#popover button").click();
+    expect("#popover div").toHaveCount(1);
+
+    // Popover should reposition due to content size change
     await expect.waitForSteps(["onPositioned"]);
 });
 
