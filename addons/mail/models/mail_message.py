@@ -579,7 +579,6 @@ class MailMessage(models.Model):
             if (message.get('model') and message.get('res_id') and
                     message.get('message_type') != 'user_notification'):
                 model_docid_msgids[message['model']][message['res_id']].append(mid)
-
         for model, docid_msgids in model_docid_msgids.items():
             documents = self.env[model].browse(docid_msgids)
             # group documents per operation to check, based on mail.message access
@@ -784,6 +783,12 @@ class MailMessage(models.Model):
             by the ORM. It instead directly fetches ir.rules and apply them. """
         self.check_access('read')
         return super().read(fields=fields, load=load)
+
+    def copy_data(self, default=None):
+        """ Make is symmetric to read, to avoid spurious issues with recordsets
+        differences. """
+        self.check_access('read')
+        return super().copy_data(default=default)
 
     def fetch(self, field_names=None):
         # This freaky hack is aimed at reading data without the overhead of
