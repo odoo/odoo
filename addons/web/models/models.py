@@ -36,15 +36,6 @@ class lazymapping(defaultdict):
         return value
 
 
-def AND(domains):
-    return list(Domain.AND(domains))
-
-
-def OR(domains):
-    return list(Domain.OR(domains))
-
-
-
 class Base(models.AbstractModel):
     _inherit = 'base'
 
@@ -650,7 +641,7 @@ class Base(models.AbstractModel):
         aggregates: Sequence[str] = (),
         *,
         order: str | None = None,
-    ):
+    ) -> list[list[dict]]:
         """
         A method similar to :meth:`_read_grouping_set` but with all the
         formatting needed by the webclient.
@@ -1101,7 +1092,7 @@ class Base(models.AbstractModel):
 
         # Reconstruct groups domain part
         for dict_group in result:
-            dict_group['__extra_domain'] = AND(dict_group.pop('__extra_domains'))
+            dict_group['__extra_domain'] = list(Domain.AND(dict_group.pop('__extra_domains')) or [])
 
         for aggregate_spec, values in zip(aggregates, column_iterator, strict=True):
             for value, dict_group in zip(values, result, strict=True):
@@ -1123,8 +1114,8 @@ class Base(models.AbstractModel):
             def formatter_follow_many2one(value):
                 value, domain = sub_formatter(value)
                 if not value:
-                    return value, ['|', (field_name, 'not any', []), (field_name, 'any', domain)]
-                return value, [(field_name, 'any', domain)]
+                    return value, Domain(field_name, 'not any', []) | Domain(field_name, 'any', domain)
+                return value, Domain(field_name, 'any', domain)
 
             return formatter_follow_many2one
 
@@ -1135,7 +1126,7 @@ class Base(models.AbstractModel):
                 if not value:
                     return False, [(field_name, 'not any', [])]
                 id_ = value.id
-                return (id_, value.sudo().display_name), [(field_name, '=', id_)]
+                return (id_, value.sudo().display_name), Domain(field_name, '=', id_)
 
             return formatter_many2many
 
@@ -1145,7 +1136,7 @@ class Base(models.AbstractModel):
                 if not value:
                     return False, [(field_name, '=', False)]
                 id_ = value.id
-                return (id_, value.sudo().display_name), [(field_name, '=', id_)]
+                return (id_, value.sudo().display_name), Domain(field_name, '=', id_)
 
             return formatter_many2one
 
@@ -1189,10 +1180,10 @@ class Base(models.AbstractModel):
                         )
                         label = f"W{week} {year:04}"
 
-                    additional_domain = ['&',
-                        (field_name, '>=', range_start.strftime(fmt)),
-                        (field_name, '<', range_end.strftime(fmt)),
-                    ]
+                    additional_domain = (
+                        Domain(field_name, '>=', range_start.strftime(fmt))
+                        & Domain(field_name, '<', range_end.strftime(fmt))
+                    )
                     # TODO: date label should be created by the webclient.
                     return (range_start.strftime(fmt), label), additional_domain
 
@@ -1203,7 +1194,7 @@ class Base(models.AbstractModel):
                 def formatter_date_number_granularity(value):
                     if value is None:
                         return [(field_name, '=', value)]
-                    return value, [(f"{field_name}.{granularity}", '=', value)]
+                    return value, Domain(f"{field_name}.{granularity}", '=', value)
 
                 return formatter_date_number_granularity
 
@@ -1212,7 +1203,7 @@ class Base(models.AbstractModel):
         if field.type == "properties":
             return self._web_read_group_groupby_properties_formatter(groupby_spec, values)
 
-        return lambda value: (value, [(field_name, '=', value)])
+        return lambda value: (value, Domain(field_name, '=', value))
 
     def _web_read_group_groupby_properties_formatter(self, groupby_spec, values):
         if '.' not in groupby_spec:
@@ -1230,7 +1221,7 @@ class Base(models.AbstractModel):
                     # can not do ('selection', '=', False) because we might have
                     # option in database that does not exist anymore
                     return value, ['|', (fullname, '=', False), (fullname, 'not in', options)]
-                return value, [(fullname, '=', value)]
+                return value, Domain(fullname, '=', value)
 
             return formatter_property_selection
 
@@ -1244,7 +1235,7 @@ class Base(models.AbstractModel):
                     # record in database that does not exist anymore
                     return value, ['|', (fullname, '=', False), (fullname, 'not in', all_groups)]
                 record = self.env[comodel].browse(value).with_prefetch(all_groups)
-                return (value, record.display_name), [(fullname, '=', value)]
+                return (value, record.display_name), Domain(fullname, '=', value)
 
             return formatter_property_many2one
 
@@ -1254,12 +1245,11 @@ class Base(models.AbstractModel):
 
             def formatter_property_many2many(value):
                 if not value:
-                    return value, OR([
-                        [(fullname, '=', False)],
-                        AND([[(fullname, 'not in', group)] for group in all_groups]),
-                    ]) if all_groups else []
+                    return value, ['|', (fullname, '=', False), *Domain.AND(
+                        Domain(fullname, 'not in', group) for group in all_groups
+                    )] if all_groups else []
                 record = self.env[comodel].browse(value).with_prefetch(all_groups)
-                return (value, record.display_name), [(fullname, 'in', value)]
+                return (value, record.display_name), Domain(fullname, 'in', value)
 
             return formatter_property_many2many
 
@@ -1269,13 +1259,12 @@ class Base(models.AbstractModel):
 
             def formatter_property_tags(value):
                 if not value:
-                    return value, OR([
-                        [(fullname, '=', False)],
-                        AND([[(fullname, 'not in', tag)] for tag in tags]),
-                    ]) if tags else []
+                    return value, ['|', (fullname, '=', False), *Domain.AND(
+                        Domain(fullname, 'not in', tag) for tag in tags
+                    )] if tags else []
 
                 # replace tag raw value with list of raw value, label and color
-                return tags.get(value), [(fullname, 'in', value)]
+                return tags.get(value), Domain(fullname, 'in', value)
 
             return formatter_property_tags
 
@@ -1283,7 +1272,7 @@ class Base(models.AbstractModel):
 
             def formatter_property_datetime(value):
                 if not value:
-                    return False, [(fullname, '=', False)]
+                    return False, Domain(fullname, '=', False)
 
                 # Date / Datetime are not JSONifiable, so they are stored as raw text
                 db_format = '%Y-%m-%d' if property_type == 'date' else '%Y-%m-%d %H:%M:%S'
@@ -1302,12 +1291,11 @@ class Base(models.AbstractModel):
                     format=READ_GROUP_DISPLAY_FORMAT[func],
                     locale=get_lang(self.env).code,
                 )
-                return (value.strftime(fmt), label), [(fullname, '>=', start), (fullname, '<', end)]
+                return (value.strftime(fmt), label), Domain(fullname, '>=', start) & Domain(fullname, '<', end)
 
             return formatter_property_datetime
 
-        return lambda value: (value, [(fullname, '=', value)])
-
+        return lambda value: (value, Domain(fullname, '=', value))
 
     @api.model
     @api.readonly
@@ -1369,9 +1357,9 @@ class Base(models.AbstractModel):
 
         enable_counters = kwargs.get('enable_counters')
         only_counters = kwargs.get('only_counters')
-        extra_domain = Domain(kwargs.get('extra_domain', []))
+        extra_domain = Domain(kwargs.get('extra_domain', Domain.TRUE))
         no_extra = extra_domain.is_true()
-        model_domain = Domain(kwargs.get('model_domain', []))
+        model_domain = Domain(kwargs.get('model_domain', Domain.TRUE))
         count_domain = model_domain & extra_domain
 
         limit = kwargs.get('limit')
@@ -1422,10 +1410,7 @@ class Base(models.AbstractModel):
             def group_id_name(value):
                 return value, field_name_selection[value]
 
-        domain = AND([
-            domain,
-            [(field_name, '!=', False)],
-        ])
+        domain = Domain(domain) & Domain(field_name, '!=', False)
         groups = self.with_context(read_group_expand=True).formatted_read_group(
             domain, [field_name], ['__count'], limit=limit)
 
@@ -1441,7 +1426,6 @@ class Base(models.AbstractModel):
             domain_image[id_] = values
 
         return domain_image
-
 
     @api.model
     def _search_panel_global_counters(self, values_range, parent_name):
@@ -1628,11 +1612,11 @@ class Base(models.AbstractModel):
                 field_type=types[field.type],
             ))
 
-        model_domain = kwargs.get('search_domain', [])
-        extra_domain = AND([
-            kwargs.get('category_domain', []),
-            kwargs.get('filter_domain', []),
-        ])
+        true = Domain.TRUE
+        model_domain = Domain(kwargs.get('search_domain', true))
+        extra_domain = Domain(kwargs.get('category_domain', true)) & Domain(kwargs.get('filter_domain', true))
+        model_domain = model_domain.optimize(self)
+        extra_domain = extra_domain.optimize(self)
 
         if field.type == 'selection':
             return {
@@ -1656,7 +1640,7 @@ class Base(models.AbstractModel):
         else:
             hierarchize = False
 
-        comodel_domain = kwargs.get('comodel_domain', [])
+        comodel_domain = Domain(kwargs.get('comodel_domain', true))
         enable_counters = kwargs.get('enable_counters')
         expand = kwargs.get('expand')
         limit = kwargs.get('limit')
@@ -1680,10 +1664,10 @@ class Base(models.AbstractModel):
         if not expand:
             image_element_ids = list(domain_image.keys())
             if hierarchize:
-                condition = [('id', 'parent_of', image_element_ids)]
+                condition = Domain('id', 'parent_of', image_element_ids)
             else:
-                condition = [('id', 'in', image_element_ids)]
-            comodel_domain = AND([comodel_domain, condition])
+                condition = Domain('id', 'in', image_element_ids)
+            comodel_domain &= condition
         comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
 
         if hierarchize:
@@ -1769,11 +1753,11 @@ class Base(models.AbstractModel):
                 'Only types %(supported_types)s are supported for filter (found type %(field_type)s)',
                 supported_types=supported_types, field_type=field.type))
 
-        model_domain = kwargs.get('search_domain', [])
-        extra_domain = AND([
-            kwargs.get('category_domain', []),
-            kwargs.get('filter_domain', []),
-        ])
+        true = Domain.TRUE
+        model_domain = Domain(kwargs.get('search_domain', true))
+        extra_domain = (Domain(kwargs.get('category_domain', true)) & Domain(kwargs.get('filter_domain', true)))
+        model_domain = model_domain.optimize(self)
+        extra_domain = extra_domain.optimize(self)
 
         if field.type == 'selection':
             return {
@@ -1807,18 +1791,14 @@ class Base(models.AbstractModel):
                 def group_id_name(value):
                     return (value, value) if value else (False, self.env._("Not Set"))
 
-        comodel_domain = kwargs.get('comodel_domain', [])
+        comodel_domain = Domain(kwargs.get('comodel_domain', true))
         enable_counters = kwargs.get('enable_counters')
         expand = kwargs.get('expand')
 
         if field.type == 'many2many':
             if not expand:
                 domain_image = self._search_panel_domain_image(field_name, model_domain, limit=limit)
-                image_element_ids = list(domain_image.keys())
-                comodel_domain = AND([
-                    comodel_domain,
-                    [('id', 'in', image_element_ids)],
-                ])
+                comodel_domain &= Domain('id', 'in', list(domain_image))
 
             comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
             if limit and len(comodel_records) == limit:
@@ -1838,20 +1818,9 @@ class Base(models.AbstractModel):
                     values['group_name'] = group_name
 
                 if enable_counters:
-                    search_domain = AND([
-                            model_domain,
-                            [(field_name, 'in', record_id)],
-                        ])
-                    local_extra_domain = extra_domain
+                    search_count_domain = model_domain & Domain(field_name, 'in', record_id) & extra_domain
                     if group_by and group_domain:
-                        local_extra_domain = AND([
-                            local_extra_domain,
-                            group_domain.get(json.dumps(group_id), []),
-                        ])
-                    search_count_domain = AND([
-                        search_domain,
-                        local_extra_domain
-                    ])
+                        search_count_domain &= Domain(group_domain.get(json.dumps(group_id), true))
                     values['__count'] = self.search_count(search_count_domain)
                 field_range.append(values)
 
@@ -1859,10 +1828,7 @@ class Base(models.AbstractModel):
 
         if field.type == 'many2one':
             if enable_counters or not expand:
-                extra_domain = AND([
-                    extra_domain,
-                    kwargs.get('group_domain', []),
-                ])
+                extra_domain &= Domain(kwargs.get('group_domain', true))
                 domain_image = self._search_panel_field_image(field_name,
                                     model_domain=model_domain, extra_domain=extra_domain,
                                     only_counters=expand,
@@ -1876,11 +1842,7 @@ class Base(models.AbstractModel):
                 return {'values': values, }
 
             if not expand:
-                image_element_ids = list(domain_image.keys())
-                comodel_domain = AND([
-                    comodel_domain,
-                    [('id', 'in', image_element_ids)],
-                ])
+                comodel_domain &= Domain('id', 'in', list(domain_image))
             comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
             if limit and len(comodel_records) == limit:
                 return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
