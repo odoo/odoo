@@ -10,6 +10,14 @@ patch(PaymentStripe.prototype, {
         }
     },
 
+    async sendPaymentAdjust(uuid) {
+        var order = this.pos.getOrder();
+        var line = order.getPaymentlineByUuid(uuid);
+        this.capturePaymentStripe(line.transaction_id, line.amount, {
+            stripe_currency_rounding: line.currency_id.rounding,
+        });
+    },
+
     canBeAdjusted(uuid) {
         var order = this.pos.getOrder();
         var line = order.getPaymentlineByUuid(uuid);
