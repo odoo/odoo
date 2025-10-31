@@ -33,17 +33,29 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
                 ...Order.doesNotHaveLine(),
             ]),
             scan_barcode("SuperCombo"),
+            combo.isNotPresent("Combo Product 1 (archived)"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 9"),
             // Check Product Configurator is open
             Dialog.is("Attribute selection"),
+<<<<<<< 605bc809d00194c4b5e6f85be34d7b9f747e3d0f:addons/point_of_sale/static/tests/pos/tours/pos_combo_tour.js
             {
                 content: "dialog discard",
                 trigger:
                     ".modal-footer .o-default-button:text(Add) + .o-default-button:text(Discard)",
                 run: "click",
             },
+||||||| a4b5e713f34c42915502af54b43b18e3c54477ca:addons/point_of_sale/static/tests/tours/pos_combo_tour.js
+            Dialog.discard(),
+            {
+                content: "Check that Combo Product 10 (White) archived variant is disabled",
+                trigger: `.ptav-not-available article.product .product-content .product-name:contains("Combo Product 10 (White)")`,
+            },
+            combo.isConfirmationButtonDisabled(),
+=======
+            Dialog.discard(),
+>>>>>>> cbed7e4dc41a94e8aca56b4c5d0c85dbc4b46cd7:addons/point_of_sale/static/tests/tours/pos_combo_tour.js
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),
             combo.isSelected("Combo Product 7"),

@@ -4,8 +4,16 @@
         <Dialog t-if="this.hasMultipleChoices()" title="props.productTemplate.display_name" contentClass="'combo-configurator-popup'">
             <div t-foreach="props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
                 <h3 class="me-auto mb-3" t-esc="combo.name"/>
+<<<<<<< 605bc809d00194c4b5e6f85be34d7b9f747e3d0f:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml
                 <div class="product-list d-grid gap-1 gap-lg-2">
                     <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" t-if="combo_item.product_id">
+||||||| a4b5e713f34c42915502af54b43b18e3c54477ca:addons/point_of_sale/static/src/app/store/combo_configurator_popup/combo_configurator_popup.xml
+                <div class="product-list d-grid gap-1">
+                    <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" class="m-2" t-att-class="{'ptav-not-available' : isArchived(combo_item)}">
+=======
+                <div class="product-list d-grid gap-1">
+                    <div t-foreach="getAvailableComboLines(combo)" t-as="combo_item" t-key="combo_item.id" class="m-2" t-att-class="{'ptav-not-available' : isArchived(combo_item)}">
+>>>>>>> cbed7e4dc41a94e8aca56b4c5d0c85dbc4b46cd7:addons/point_of_sale/static/src/app/store/combo_configurator_popup/combo_configurator_popup.xml
                         <t t-set="product" t-value="combo_item.product_id"/>
                         <input type="radio"
                             t-attf-name="combo-{{combo.id}}"
