@@ -1251,4 +1251,4 @@ class TestWebReadGroup(common.TransactionCase):
         result = self.env["test_orm.view.str.id"].formatted_read_group([], ["name"], ["__count"])
         self.assertEqual(result, [{"name": "test", "__count": 1, "__extra_domain": [("name", "=", "test")]}])
         result = self.env["test_orm.view.str.id"].formatted_read_group([], [], ["name:count"])
-        self.assertEqual(result, [{"name:count": 1, "__extra_domain": [(1, "=", 1)]}])
+        self.assertEqual(result, [{"name:count": 1, "__extra_domain": []}])

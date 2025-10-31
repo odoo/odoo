@@ -187,7 +187,7 @@ class TestFormattedReadGroup(common.TransactionCase):
                 [
                     {
                         '__count': 0,
-                        '__extra_domain': [(1, '=', 1)],
+                        '__extra_domain': [],
                         'partner_id:count': 0,
                         'partner_id:count_distinct': 0,
                     },
@@ -255,12 +255,12 @@ class TestFormattedReadGroup(common.TransactionCase):
 
         self.assertEqual(
             Model.formatted_read_group([], aggregates=['key:count']),
-            [{'__extra_domain': [(1, '=', 1)], 'key:count': 2}]
+            [{'__extra_domain': [], 'key:count': 2}]
         )
 
         self.assertEqual(
             Model.formatted_read_group([], aggregates=['key:count_distinct']),
-            [{'__extra_domain': [(1, '=', 1)], 'key:count_distinct': 1}]
+            [{'__extra_domain': [], 'key:count_distinct': 1}]
         )
 
     def test_malformed_params(self):
@@ -1425,7 +1425,7 @@ class TestFormattedReadGroup(common.TransactionCase):
 
         self.assertEqual(
             RelatedBase.formatted_read_group([], aggregates=['foo_id_bar_id_name:count_distinct']),
-            [{'__extra_domain': [(1, '=', 1)], 'foo_id_bar_id_name:count_distinct': 1}],
+            [{'__extra_domain': [], 'foo_id_bar_id_name:count_distinct': 1}],
         )
 
         # Cannot groupby on foo_names_sudo because it traverse One2many
@@ -2181,7 +2181,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                         'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
                         # 3 $ + 3 euro + 1 Db + 1 no currency = 7.8 $
                         'total_in_currency_id:sum_currency': 3 + 3 * 1.25 + 0.05 + 1,
-                        '__extra_domain': [(1, '=', 1)],
+                        '__extra_domain': [],
                     },
                 ]
             )
@@ -2291,7 +2291,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                         # 3 $ + 3 euro + 1 Db + 1 no currency = 6.44 euro
                         (3 * 0.8) + 3 + (1 * 0.05 * 0.8) +
                         1,  # Do nothing, if no currency is set
-                    '__extra_domain': [(1, '=', 1)],
+                    '__extra_domain': [],
                 }],
             )
 
@@ -2335,6 +2335,6 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     # 7 $ + 4 euro + 1 Db + 1 no currency = 13.05 euro
                     7 + (4 * 1.25) + 0.05 + 1,  # Do nothing, if no currency is set
 
-                '__extra_domain': [(1, '=', 1)],
+                '__extra_domain': [],
             }],
         )
