@@ -95,7 +95,7 @@ class HrAttendanceOvertimeRule(models.Model):
         # ('employee', "Outside the employee's working schedule"),
         # ('off_time', "When employee is off"),  # TODO in ..._holidays
         # ('public_leave', "On a holiday"), ......
-    ])
+    ], default='work_days')
     timing_start = fields.Float("From", default=0)
     timing_stop = fields.Float("To", default=24)
     expected_hours_from_contract = fields.Boolean("Hours from employee schedule", default=True)
