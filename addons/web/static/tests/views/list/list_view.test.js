@@ -563,12 +563,10 @@ test(`[Offline] editable list`, async () => {
     });
     expect(`tbody tr.o_data_row[data-id]`).toHaveCount(4);
 
-    expect(`.o_searchview`).toHaveCount(1);
     await contains(`.o_data_cell`).click();
     expect(`tbody tr.o_selected_row`).toHaveCount(1, { message: "should have editable row" });
 
     await setOffline(true);
-    expect(`.o_searchview`).toHaveCount(0);
     await contains(`.o_data_cell`).click();
     expect(`tbody tr.o_selected_row`).toHaveCount(0, { message: "should not have editable row" });
 });
@@ -18379,36 +18377,6 @@ test(`monetary field display for rtl languages`, async () => {
     );
 });
 
-test(`add record in editable list view with sample data`, async () => {
-    Foo._records = [];
-
-    let deferred = null;
-    onRpc("web_search_read", () => deferred);
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list sample="1" editable="top"><field name="int_field"/></list>`,
-        noContentHelp: "click to add a record",
-    });
-    expect(`.o_view_sample_data`).toHaveCount(1);
-    expect(`.o_view_nocontent`).toHaveCount(1);
-    expect(`.o_data_row`).toHaveCount(10);
-
-    deferred = new Deferred();
-    await contains(`.o_list_button_add`).click();
-    expect(`.o_view_sample_data`).toHaveCount(1);
-    expect(`.o_view_nocontent`).toHaveCount(1);
-    expect(`.o_data_row`).toHaveCount(10);
-
-    deferred.resolve();
-    await animationFrame();
-    expect(`.o_view_sample_data`).toHaveCount(0);
-    expect(`.o_view_nocontent`).toHaveCount(0);
-    expect(`.o_data_row`).toHaveCount(1);
-    expect(`.o_data_row.o_selected_row`).toHaveCount(1);
-});
-
 test(`Adding new record in list view with open form view button`, async () => {
     await mountView({
         resModel: "foo",
@@ -19277,7 +19245,7 @@ test(`cache web_search_read (onUpdate called after another load)`, async () => {
     expect(`.o_data_row`).toHaveCount(4);
     expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
 
-    // create a record and go back to the form => will display data from the cache
+    // create a record and go back to the list => will display data from the cache
     await contains(`.o_list_button_add`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("new record");
     await contains(`.breadcrumb-item a, .o_back_button`).click();
@@ -19613,14 +19581,12 @@ test(`cache web_read_group (switch view, go back)`, async () => {
     expect(`.o_group_header`).toHaveCount(4);
 });
 
-test.todo(`cache web_read_group: do not send opening_info if not necessary`, async () => {
+test(`cache web_read_group: do not send opening_info if not necessary`, async () => {
     // This test ensures that the params of the web_read_group aren't polluted by the opening_info
     // kwargs when successively toggling different filters
-    let def;
+    const setOffline = mockOffline();
     onRpc("web_read_group", async () => {
         expect.step("web_read_group");
-        await def;
-        expect.step("done");
     });
 
     Foo._views = {
@@ -19657,17 +19623,10 @@ test.todo(`cache web_read_group: do not send opening_info if not necessary`, asy
     await removeFacet("First filter or Second filter");
     expect(`.o_group_header`).toHaveCount(4);
 
-    expect.verifySteps([
-        "web_read_group",
-        "done",
-        "web_read_group",
-        "done",
-        "web_read_group",
-        "done",
-    ]);
+    expect.verifySteps(["web_read_group", "web_read_group", "web_read_group"]);
 
-    // Execute action 1 again and rely on the cache
-    def = new Deferred();
+    // Switch offline and execute action 1 again (rely on the cache)
+    await setOffline(true);
     await getService("action").doAction(1);
     expect(`.o_group_header`).toHaveCount(1);
 
@@ -19675,13 +19634,113 @@ test.todo(`cache web_read_group: do not send opening_info if not necessary`, asy
     await removeFacet("First filter");
     expect(`.o_group_header`).toHaveCount(4);
 
-    expect.verifySteps(["web_read_group", "web_read_group"]);
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/web_read_group" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_read_group" couldn't be established`,
+    ]);
+});
 
-    def.resolve();
+test(`[Offline] cache web_search_read: browsing with pager online/offline`, async () => {
+    expect.errors(2);
+    const setOffline = mockOffline();
+
+    let searchReadDef;
+    onRpc("web_search_read", () => {
+        expect.step("web_search_read");
+        return searchReadDef;
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2"><field name="foo"/></list>`,
+    });
+
+    // put data in cache
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip"]); // page 1
+    await contains(".o_pager_next").click();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // page 2
+    expect.verifySteps(["web_search_read", "web_search_read"]);
+
+    // simulate a slow network => do not use data from cache
+    searchReadDef = new Deferred();
+    await contains(".o_pager_next").click();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // still display page 2
+    expect.verifySteps(["web_search_read"]);
+
+    // unblock web_search_read rpc
+    searchReadDef.resolve();
     await animationFrame();
-    expect(`.o_group_header`).toHaveCount(4);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip"]); // display page 1
 
-    expect.verifySteps(["done", "done"]);
+    expect.verifyErrors([]);
+
+    // switch offline => use data from cache
+    await setOffline(true);
+
+    await contains(".o_pager_next").click();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // page 1
+    await contains(".o_pager_next").click();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip"]); // page 2
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+    ]);
+});
+
+test(`[Offline] cache web_search_read: enable filter online/offline`, async () => {
+    expect.errors(2);
+    const setOffline = mockOffline();
+
+    let searchReadDef;
+    onRpc("web_search_read", () => {
+        expect.step("web_search_read");
+        return searchReadDef;
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+        searchViewArch: `
+            <search>
+                <filter string="My filter" name="my_filter" domain="[['foo', '=', 'blip']]"/>
+            </search>`,
+    });
+
+    // put data in cache
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My filter");
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip"]);
+    expect.verifySteps(["web_search_read", "web_search_read"]);
+
+    // simulate a slow network => do not use data from cache
+    searchReadDef = new Deferred();
+    await toggleMenuItem("My filter");
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip"]); // still display filtered records
+    expect.verifySteps(["web_search_read"]);
+
+    // unblock web_search_read rpc
+    searchReadDef.resolve();
+    await animationFrame();
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    expect.verifyErrors([]);
+
+    // switch offline => use data from cache
+    await setOffline(true);
+
+    await toggleMenuItem("My filter");
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip"]);
+    await toggleMenuItem("My filter");
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+    ]);
 });
 
 test.tags("desktop");

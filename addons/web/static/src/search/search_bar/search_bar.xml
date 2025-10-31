@@ -51,6 +51,7 @@
                         aria-label="Remove"
                         title="Remove"
                         t-on-click="() => this.onFacetRemove(facet)"
+                        data-available-offline=""
                     />
                 </div>
             </div>
@@ -86,7 +87,7 @@
     </t>
 
     <t t-name="web.SearchBar">
-        <div t-if="visibilityState.showSearchBar and !offlineService.offline" class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
+        <div t-if="visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
             <Dropdown
                 state="inputDropdownState"
                 manual="true"

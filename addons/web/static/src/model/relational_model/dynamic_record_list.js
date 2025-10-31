@@ -55,7 +55,11 @@ export class DynamicRecordList extends DynamicList {
      */
     addNewRecord(atFirstPosition = false) {
         return this.model.mutex.exec(async () => {
-            await this._leaveSampleMode();
+            if (this.model.useSampleModel) {
+                // leave sample mode
+                this._setData({ records: [], length: 0 });
+                this.model.useSampleModel = false;
+            }
             return this._addNewRecord(atFirstPosition);
         });
     }
