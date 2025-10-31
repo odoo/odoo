@@ -4602,7 +4602,9 @@ class BaseModel(metaclass=MetaModel):
             and self.env.context.get('active_test', True)
             and not any(leaf.field_expr == self._active_name for leaf in domain.iter_conditions())
         ):
-            domain &= Domain(self._active_name, '=', True)
+            # try to create the domain close to what it will look like after optimization
+            # to avoid reoptimizing it
+            domain = Domain(self._active_name, 'in', OrderedSet((True,))) & domain
 
         # build the query
         domain = domain.optimize_full(self)
