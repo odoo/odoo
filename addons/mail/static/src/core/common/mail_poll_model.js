@@ -36,7 +36,7 @@ export class MailPollModel extends Record {
         return _t(
             '%(author)s\'s poll %(strong_tag_start)s"%(question)s"%(strong_tag_end)s has closed.',
             {
-                author: this.start_message_id.author_id.name,
+                author: this.start_message_id.authorName,
                 question: this.poll_question,
                 strong_tag_start: markup`<strong>`,
                 strong_tag_end: markup`</strong>`,

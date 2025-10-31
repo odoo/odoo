@@ -130,9 +130,24 @@ class TestMailPoll(HttpCase):
                     )
 
     def test_poll_ui(self):
+        self.authenticate(self.internal.login, self.internal.login)
         channel = self.env["discuss.channel"].create({"name": "General"})
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "duration": 1,
+                "option_labels": ["foo", "bar", "baz"],
+                "question": "???",
+                "thread_id": channel.id,
+                "thread_model": "discuss.channel",
+            },
+        )
+        # Posting enough message so that the poll message isn't loaded when
+        # opening the channel.
+        for i in range(50):
+            channel.message_post(body=f"message_{i}", message_type="comment")
         self.start_tour(
-            f"/odoo/discuss?active_id={channel.id}",
+            f"/odoo/discuss?active_id={channel.id}&test_poll_id={poll_id}",
             "mail_poll_tour.js",
             login=self.internal.login,
         )
