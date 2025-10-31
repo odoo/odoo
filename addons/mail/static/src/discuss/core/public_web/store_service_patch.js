@@ -8,7 +8,7 @@ import { patch } from "@web/core/utils/patch";
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.channels = this.makeCachedFetchData("channels_as_member");
+        this.channels = this.makeCachedFetchData("channels_as_member", { readonly: false });
         this.fetchSsearchConversationsSequential = useSequential();
     },
     /** @param {string} searchValue */

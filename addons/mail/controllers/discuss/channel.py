@@ -27,6 +27,7 @@ class DiscussChannelWebclientController(WebclientController):
         if request.env.context["add_channels_last_message"]:
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
+            channels.channel_fetched()
             store.add(channels._get_last_messages())
 
     @classmethod

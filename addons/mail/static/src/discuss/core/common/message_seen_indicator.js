@@ -51,7 +51,7 @@ export class MessageSeenIndicator extends Component {
         const [user1, user2, user3] = seenMembers.map((member) => member.name);
         switch (seenMembers.length) {
             case 0:
-                return _t("Sent");
+                return _t("Received");
             case 1:
                 return _t("Seen by %(user)s", { user: user1 });
             case 2:
