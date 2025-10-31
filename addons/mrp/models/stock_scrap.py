@@ -56,6 +56,13 @@ class StockScrap(models.Model):
             else:
                 return super()._onchange_serial_number()
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_is_kit:
+            self.bom_id = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id, bom_type='phantom')[self.product_id]
+        else:
+            self.bom_id = False
+
     @api.depends('move_ids', 'move_ids.move_line_ids.quantity', 'product_id')
     def _compute_scrap_qty(self):
         self.scrap_qty = 1

@@ -12,7 +12,7 @@ from unittest.mock import patch
 from socket import getaddrinfo  # keep a reference on the non-patched function
 
 from odoo.exceptions import UserError
-from odoo.tools import file_path, mute_logger
+from odoo.tools import config, file_path, mute_logger
 from .common import TransactionCaseWithUserDemo
 
 try:
@@ -62,7 +62,7 @@ class Certificate:
 # fail fast for timeout errors
 @patch('odoo.addons.base.models.ir_mail_server.SMTP_TIMEOUT', .1)
 # prevent the CLI from interfering with the tests
-@patch.dict('odoo.tools.config.options', {'smtp_server': ''})
+@patch.dict(config.options, {'smtp_server': ''})
 class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
@@ -146,8 +146,8 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         # when resolving "localhost" (so stupid), use the following to
         # force aiosmtpd/odoo to bind/connect to a fixed ipv4 OR ipv6
         # address.
-        family, _, cls.port = _find_free_local_address()
-        cls.localhost = getaddrinfo('localhost', cls.port, family)
+        family, addr, cls.port = _find_free_local_address()
+        cls.localhost = getaddrinfo(addr, cls.port, family)
         cls.startClassPatcher(patch('socket.getaddrinfo', cls.getaddrinfo))
 
     @classmethod

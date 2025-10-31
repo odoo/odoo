@@ -1,30 +1,52 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email.message import EmailMessage
-from email.utils import make_msgid
 import base64
 import datetime
 import email
 import email.policy
-import idna
 import logging
 import re
 import smtplib
 import ssl
 import sys
 import threading
+from email.message import EmailMessage
 from email.parser import BytesParser
-
+from email.utils import make_msgid
 from socket import gaierror, timeout
-from OpenSSL import crypto as SSLCrypto
-from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
+
+import idna
+import OpenSSL
+from OpenSSL.crypto import Error as SSLCryptoError
 from OpenSSL.SSL import Error as SSLError
 from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize
+from odoo.tools import (
+    email_domain_extract,
+    email_domain_normalize,
+    email_normalize,
+    encapsulate_email,
+    formataddr,
+    parse_version,
+    pycompat,
+    ustr,
+)
+
+if parse_version(OpenSSL.__version__) >= parse_version('24.3.0'):
+    from cryptography.hazmat.primitives.serialization import load_pem_private_key
+    from cryptography.x509 import load_pem_x509_certificate
+else:
+    from OpenSSL import crypto as SSLCrypto
+    from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
+
+    def load_pem_private_key(pem_key, password):
+        return SSLCrypto.load_privatekey(FILETYPE_PEM, pem_key)
+
+    def load_pem_x509_certificate(pem_cert):
+        return SSLCrypto.load_certificate(FILETYPE_PEM, pem_cert)
 
 
 _logger = logging.getLogger(__name__)
@@ -367,12 +389,11 @@ class IrMailServer(models.Model):
             if mail_server.smtp_authentication == "certificate":
                 try:
                     ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
-                    smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
-                    certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
-                    smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
-                    private_key = SSLCrypto.load_privatekey(FILETYPE_PEM, smtp_ssl_private_key)
-                    ssl_context._ctx.use_certificate(certificate)
-                    ssl_context._ctx.use_privatekey(private_key)
+                    ssl_context._ctx.use_certificate(load_pem_x509_certificate(
+                        base64.b64decode(mail_server.smtp_ssl_certificate)))
+                    ssl_context._ctx.use_privatekey(load_pem_private_key(
+                        base64.b64decode(mail_server.smtp_ssl_private_key),
+                        password=None))
                     # Check that the private key match the certificate
                     ssl_context._ctx.check_privatekey()
                 except SSLCryptoError as e:
