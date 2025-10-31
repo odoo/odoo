@@ -85,15 +85,19 @@
      </BuilderRow>
 
     <BuilderRow label.translate="Indicators" level="1" t-if="this.state.isSlideShow">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="'s_image_gallery_indicators_bars'">Bars</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_indicators_dots'">Dots</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_indicators_numbers'">Numbers</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_indicators_squared'">Squared Miniatures</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_indicators_rounded'">Rounded Miniatures</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_image_gallery_indicators_hidden'">Hidden</BuilderSelectItem>
+        <BuilderSelect action="'indicatorsStyle'">
+            <BuilderSelectItem actionParam="'s_image_gallery_indicators_bars'">Bars</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'s_image_gallery_indicators_dots'">Dots</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'s_image_gallery_indicators_numbers'">Numbers</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'s_image_gallery_indicators_squared'" id="'indicators_squared_opt'">Squared Miniatures</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'s_image_gallery_indicators_rounded'" id="'indicators_rounded_opt'">Rounded Miniatures</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'s_image_gallery_indicators_hidden'">Hidden</BuilderSelectItem>
         </BuilderSelect>
      </BuilderRow>
+
+    <BuilderRow label.translate="Outline" level="2" t-if="isActiveItem('indicators_squared_opt') || isActiveItem('indicators_rounded_opt')">
+        <BuilderCheckbox classAction="'s_image_gallery_indicators_outline'"/>
+    </BuilderRow>
 
     <t t-call="website.ImagePopUpOption"/>
 
