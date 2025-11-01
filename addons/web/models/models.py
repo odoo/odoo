@@ -552,7 +552,7 @@ class Base(models.AbstractModel):
             fold = group.pop('__fold', False)
 
             groupby_value = group[groupby_spec]
-            # For relational/date/datetime field
+            # For relational/date/datetime/property tags field
             raw_groupby_value = groupby_value[0] if isinstance(groupby_value, tuple) else groupby_value
 
             limit = unfold_read_default_limit
@@ -1255,7 +1255,7 @@ class Base(models.AbstractModel):
 
         if property_type == 'tags':
             tags = definition.get('tags') or []
-            tags = {tag[0]: tag for tag in tags}
+            tags = {tag[0]: tuple(tag) for tag in tags}
 
             def formatter_property_tags(value):
                 if not value:
@@ -1263,7 +1263,7 @@ class Base(models.AbstractModel):
                         Domain(fullname, 'not in', tag) for tag in tags
                     )] if tags else []
 
-                # replace tag raw value with list of raw value, label and color
+                # replace tag raw value with tuple of raw value, label and color
                 return tags.get(value), Domain(fullname, 'in', value)
 
             return formatter_property_tags
