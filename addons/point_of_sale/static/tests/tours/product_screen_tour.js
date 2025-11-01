@@ -751,3 +751,25 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_ref_displayed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test name"),
+            ProductScreen.clickInfoProduct("Test name"),
+            {
+                trigger: ".modal .btn-secondary:contains(Edit)",
+                run: "click",
+            },
+            {
+                trigger: ".modal .btn-primary:contains(Save)",
+                run: "click",
+            },
+            ProductScreen.clickDisplayedProduct("Test name"),
+            ProductScreen.selectedOrderlineHas("Test name", "2.0"),
+
+            Chrome.endTour(),
+        ].flat(),
+});

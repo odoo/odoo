@@ -10,6 +10,7 @@ patch(ControlButtons.prototype, {
             ["state", "!=", "cancel"],
             ["invoice_status", "!=", "invoiced"],
             ["currency_id", "=", this.pos.currency.id],
+            ["amount_unpaid", ">", 0],
         ];
         if (this.pos.get_order()?.get_partner()) {
             domain = [

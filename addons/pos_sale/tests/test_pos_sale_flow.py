@@ -1602,6 +1602,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_1', login="accountman")
         sale_order.action_confirm()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_2', login="accountman")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_3', login="accountman")
         self.main_pos_config.current_session_id.action_pos_session_close()
         picking = sale_order.pos_order_line_ids.order_id.picking_ids
         self.assertEqual(picking.move_ids.quantity, 3)
@@ -1645,3 +1646,76 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_selected_partner_quotation_loading', login="accountman")
+
+    def test_ecommerce_paid_order_is_hidden_in_pos(self):
+        """
+        Tests that a Sale Order fully paid via a payment.transaction (eCommerce)
+        does not appear in the list of orders fetched by the Point of Sale.
+        """
+        partner_1 = self.env['res.partner'].create({'name': 'A Test Partner 1', 'email': 'test.customer@example.com'})
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'lst_price': 10.0,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_1.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 2,
+                'price_unit': product_a.lst_price
+            })]
+        })
+        provider = self.env['payment.provider'].create({
+            'name': 'Test',
+        })
+        transaction = self.env['payment.transaction'].create({
+            'provider_id': provider.id,
+            'payment_method_id': self.env.ref('payment.payment_method_unknown').id,
+            'amount': sale_order.amount_total,
+            'currency_id': sale_order.currency_id.id,
+            'partner_id': sale_order.partner_id.id,
+            'sale_order_ids': [(6, 0, [sale_order.id])],
+        })
+        transaction._set_done()
+        sale_order.invalidate_recordset(['transaction_ids'])
+
+        self.assertEqual(
+            sale_order.amount_unpaid, 0.0,
+            "The amount_unpaid for the SO should be 0 after a successful transaction."
+        )
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_ecommerce_paid_order_is_hidden_in_pos', login="accountman")
+
+    def test_ecommerce_unpaid_order_is_shown_in_pos(self):
+        """
+        Tests that a Sale Order fully paid via a payment.transaction (eCommerce)
+        does not appear in the list of orders fetched by the Point of Sale.
+        """
+        partner_1 = self.env['res.partner'].create({'name': 'A Test Partner 1', 'email': 'test.customer@example.com'})
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'lst_price': 10.0,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_1.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 2,
+                'price_unit': product_a.lst_price
+            })]
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_1.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 2,
+                'price_unit': product_a.lst_price
+            })]
+        })
+        self.assertEqual(
+            sale_order.amount_unpaid, sale_order.amount_total,
+            "The amount_unpaid for the SO should not be 0 if there are no transactions."
+        )
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_ecommerce_unpaid_order_is_shown_in_pos', login="accountman")

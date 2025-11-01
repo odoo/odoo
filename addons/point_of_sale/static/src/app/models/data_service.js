@@ -357,15 +357,31 @@ export class PosData extends Reactive {
                     break;
                 case "read":
                     queue = false;
+                    if (!options) {
+                        options = { context: {} };
+                    }
+                    if (!options.context) {
+                        options.context = {};
+                    }
+                    options.context.display_default_code ??= false;
                     result = await this.orm.read(model, ids, fields, {
                         ...options,
+                        context: { ...options.context },
                         load: false,
                     });
                     break;
                 case "search_read":
                     queue = false;
+                    if (!options) {
+                        options = { context: {} };
+                    }
+                    if (!options.context) {
+                        options.context = {};
+                    }
+                    options.context.display_default_code ??= false;
                     result = await this.orm.searchRead(model, args, fields, {
                         ...options,
+                        context: { ...options.context },
                         load: false,
                     });
             }
@@ -533,6 +549,7 @@ export class PosData extends Reactive {
 
             const data = await this.orm.read(model, Array.from(ids), this.fields[model], {
                 load: false,
+                context: { display_default_code: false },
             });
             newRecordMap[model] = data;
         }
