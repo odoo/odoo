@@ -6,20 +6,20 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @template('vn')
-    def _get_vn_template_data(self):
+    @template('vn_TT99')
+    def _get_vn_tt99_template_data(self):
         return {
-            'name': 'Chart of Accounts - No. 200/2014/TT-BTC',
+            'name': 'Chart of Accounts - Circular No. 99/2025/TT-BTC',
             'code_digits': '0',
             'property_account_receivable_id': 'chart131',
             'property_account_payable_id': 'chart331',
-            'property_account_expense_categ_id': 'chart1561',
-            'property_account_income_categ_id': 'chart5111',
+            'property_account_expense_categ_id': 'chart156',
+            'property_account_income_categ_id': 'chart511',
             'display_invoice_amount_total_words': True,
         }
 
-    @template('vn', 'res.company')
-    def _get_vn_res_company(self):
+    @template('vn_TT99', 'res.company')
+    def _get_vn_tt99_res_company(self):
         return {
             self.env.company.id: {
                 'anglo_saxon_accounting': False,
@@ -30,8 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'chart131',
                 'income_currency_exchange_account_id': 'chart515',
                 'expense_currency_exchange_account_id': 'chart635',
-                'account_journal_early_pay_discount_loss_account_id': 'chart9993',
-                'account_journal_early_pay_discount_gain_account_id': 'chart9994',
+                'account_journal_early_pay_discount_loss_account_id': 'chart635',
+                'account_journal_early_pay_discount_gain_account_id': 'chart515',
                 'account_sale_tax_id': 'tax_sale_vat10',
                 'account_purchase_tax_id': 'tax_purchase_vat10',
             },
