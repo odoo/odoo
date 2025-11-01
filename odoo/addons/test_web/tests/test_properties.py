@@ -515,6 +515,35 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         # group False
         self.assertEqual(groups[2]['__records'], [{'id': self.message_4.id}])
 
+    def test_properties_tags_field_web_read_group(self):
+        self.discussion_1.attributes_definition = [
+            {
+                'name': 'my_tags',
+                'string': 'My Tags',
+                'type': 'tags',
+                'tags': [
+                    ('be', 'BE', 1),
+                    ('it', 'IT', 2),
+                ],
+                'default': ['be'],
+            },
+        ]
+        self.env['test_orm.message'].create(
+            {'discussion': self.discussion_1.id, 'author': self.user.id})
+
+        self.env.flush_all()
+        result = self.env['test_orm.message'].web_read_group(
+            domain=[],
+            aggregates=['__count'],
+            groupby=['attributes.my_tags'],
+            opening_info=[{'folded': True, 'value': '1'}],
+            unfold_read_specification={'id': {}},
+        )
+
+        self.assertEqual(len(result['groups']), 2)
+        self.assertEqual(result['groups'][0]['attributes.my_tags'], ('be', 'BE', 1))
+        self.assertEqual(result['groups'][1]['attributes.my_tags'], False)
+
     @mute_logger('odoo.fields')
     def test_properties_field_read_progress_bar(self):
         """Test "_read_progress_bar" with a properties field."""
@@ -1124,7 +1153,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.assertEqual(len(result), 6)
 
         all_tags = self.message_1.read(['attributes'])[0]['attributes'][0]['tags']
-        all_tags = {tag[0]: tag for tag in all_tags}
+        all_tags = {tag[0]: tuple(tag) for tag in all_tags}
 
         for group, (tag, count) in zip(result, (('a', 3), ('c', 1), ('d', 1), ('e', 2), ('g', 2))):
             self.assertEqual(group['attributes.mytags'], all_tags[tag])
