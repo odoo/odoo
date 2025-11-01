@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 18:37+0000\n"
+"POT-Creation-Date: 2025-10-31 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -8872,6 +8872,15 @@ msgid "This invoice has been created from the point of sale session:%s"
 msgstr "Faktur ini telah dibuat dari sesi POS:%s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"This invoice is linked to a POS Order, resetting it to draft prevents "
+"closing the session. You should rather refund the order or create a credit "
+"note."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
@@ -9608,6 +9617,12 @@ msgid ""
 msgstr ""
 "Peringatan, jumlah yang dibayar lebih tinggi dari jumlah total. (Perbedaan: "
 "%s)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid "Warning: Invoice Reset Risk"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

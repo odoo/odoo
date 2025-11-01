@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-17 18:36+0000\n"
+"POT-Creation-Date: 2025-10-31 18:36+0000\n"
 "PO-Revision-Date: 2025-10-14 01:01+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -2320,11 +2320,9 @@ msgstr "應計項目過賬"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
-"its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
+"reverse entry: %(reverse_entry)s."
 msgstr ""
-"於 %(date)s 建立的應計項目記項： %(accrual_entry)s 。相關反向記項： %"
-"(reverse_entry)s 。"
 
 #. module: account
 #. odoo-python
@@ -3798,6 +3796,22 @@ msgstr "大批付款序列"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "批量付款"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, activate the cron to enable "
+"batch sending of invoices."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, contact your system "
+"administrator to activate the cron to enable batch sending of invoices."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -7940,6 +7954,12 @@ msgstr "在給特定的客戶開具應收憑單時的警告"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "全域鎖定日期"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Go to cron configuration"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -19228,6 +19248,13 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 付款收據(編號 {{ object.name 或 'n/a' }})"
+
+#~ msgid ""
+#~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
+#~ "And its reverse entry: %(reverse_entry)s."
+#~ msgstr ""
+#~ "於 %(date)s 建立的應計項目記項： %(accrual_entry)s 。相關反向記項： %"
+#~ "(reverse_entry)s 。"
 
 #~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"

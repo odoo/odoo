@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-17 18:36+0000\n"
+"POT-Creation-Date: 2025-10-31 18:36+0000\n"
 "PO-Revision-Date: 2025-10-28 01:01+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -21,8 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: account
@@ -2407,11 +2407,9 @@ msgstr "Ratei e risconti"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
-"its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
+"reverse entry: %(reverse_entry)s."
 msgstr ""
-"Registrazione di competenza creata il %(date)s: %"
-"(accrual_entry)s.                    Storno: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3935,6 +3933,22 @@ msgstr "Sequenza pagamento raggruppato"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "Pagamenti raggruppati"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, activate the cron to enable "
+"batch sending of invoices."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, contact your system "
+"administrator to activate the cron to enable batch sending of invoices."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -8179,6 +8193,12 @@ msgstr "Ricezione di avvisi alla fatturazione di clienti specifici"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "Data di chiusura globale"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Go to cron configuration"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -20032,6 +20052,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Ricevuta di pagamento (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
+#~ "And its reverse entry: %(reverse_entry)s."
+#~ msgstr ""
+#~ "Registrazione di competenza creata il %(date)s: %"
+#~ "(accrual_entry)s.                    Storno: %(reverse_entry)s."
 
 #~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"
