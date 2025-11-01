@@ -3,7 +3,7 @@
 import logging
 from datetime import timedelta
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import _, api, fields, models, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.exceptions import UserError
@@ -21,6 +21,51 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+<<<<<<< ba8e9d2545ba77c93abafa7d242a3db290a8b69d
+||||||| c245065eb5e4462e3a931f40997b0c9ce77ba7f5
+
+
+    def _make_request(self, url, params=False):
+        if self.proxy_type == 'peppol':
+            return self._make_request_peppol(url, params=params)
+        return super()._make_request(url, params=params)
+
+    @handle_demo
+    def _make_request_peppol(self, url, params=False):
+        # extends account_edi_proxy_client to update peppol_proxy_state
+        # of archived users
+        try:
+            result = super()._make_request(url, params)
+        except AccountEdiProxyError as e:
+            if (
+                e.code == 'no_such_user'
+                and not self.active
+                # only soft-delete the user in case we were actually waiting for a migration
+                and self.company_id.account_peppol_migration_key
+                and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+            ):
+                self.company_id.write({
+                    'account_peppol_proxy_state': 'not_registered',
+                    'account_peppol_migration_key': False,
+                })
+                # commit the above changes before raising below
+                if not tools.config['test_enable'] and not modules.module.current_test:
+                    self.env.cr.commit()
+            raise AccountEdiProxyError(e.code, e.message)
+        return result
+
+=======
+
+    def _make_request(self, url, params=False):
+        if self.proxy_type == 'peppol':
+            return self._make_request_peppol(url, params=params)
+        return super()._make_request(url, params=params)
+
+    @handle_demo
+    def _make_request_peppol(self, url, params=False):
+        return super()._make_request(url, params)
+
+>>>>>>> 1bc5c3133c87fd52098d3be5bfdf08aa849fad7e
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['peppol'] = {
