@@ -664,6 +664,9 @@ function getValueFromGroupData(field, rawValue) {
     if (field.type === "many2many") {
         return value ? value[0] : false;
     }
+    if (field.type === "tags") {
+        return value ? value[0] : false;
+    }
     return value;
 }
 
