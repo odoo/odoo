@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 18:36+0000\n"
+"POT-Creation-Date: 2025-10-31 18:37+0000\n"
 "PO-Revision-Date: 2025-10-30 16:41+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
@@ -8249,6 +8249,15 @@ msgid "This invoice has been created from the point of sale session: %s"
 msgstr "Esta factura se creó desde una sesión de punto de venta: %s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"This invoice is linked to a POS Order, resetting it to draft prevents "
+"closing the session. You should rather refund the order or create a credit "
+"note."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
@@ -8931,6 +8940,12 @@ msgstr ""
 "Advertencia: El importe pagado es mayor al importe total. (Diferencia: %s)"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid "Warning: Invoice Reset Risk"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -9198,16 +9213,6 @@ msgstr "No puede editar el pago de una orden registrada. "
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "No puede facturar órdenes que pertenezcan a diferentes empresas."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_move.py:0
-msgid ""
-"You cannot reset to draft an invoice linked to a POS order. You must refund "
-"the order or create a credit note instead."
-msgstr ""
-"No puedes restablecer a borrador una factura vinculada a una orden de PdV. "
-"Reembolsa la orden o crea una nota de crédito."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9541,6 +9546,13 @@ msgstr "para activar los botones."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid ""
+#~ "You cannot reset to draft an invoice linked to a POS order. You must "
+#~ "refund the order or create a credit note instead."
+#~ msgstr ""
+#~ "No puedes restablecer a borrador una factura vinculada a una orden de "
+#~ "PdV. Reembolsa la orden o crea una nota de crédito."
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Registre el número de comprobante"
