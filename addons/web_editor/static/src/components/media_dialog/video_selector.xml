@@ -29,7 +29,7 @@
                     <b>Video code </b>(URL or Embed)
                 </label>
                 <div class="text-start">
-                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Instagram</i></b> videos</small>
                 </div>
                 <textarea t-ref="autofocus" t-model="state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="onChangeUrl" t-att-class="{ 'is-valid': state.urlInput and !this.state.errorMessage, 'is-invalid': state.urlInput and this.state.errorMessage }"/>
             </div>
