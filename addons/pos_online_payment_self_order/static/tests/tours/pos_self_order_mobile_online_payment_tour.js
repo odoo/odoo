@@ -69,7 +69,6 @@ registry
     });
 
 registry.category("web_tour.tours").add("test_kiosk_cart_restore_and_cancel", {
-    test: true,
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Coca-Cola"),
