@@ -266,6 +266,10 @@
 
         // Grouped list views
         tbody > tr.o_group_header {
+            --table-bg: var(--table-striped-bg);
+            --table-color: var(--table-striped-color);
+            height: 40px;
+
             &:hover .o_group_config {
                 visibility: visible;
             }
@@ -277,6 +281,10 @@
             }
             .o_group_name {
                 @include o-text-overflow(table-cell);
+                vertical-align: middle !important;
+            }
+            .o_group_title {
+                font-weight: 400 !important;
             }
             .o_group_buttons {
                 display: inline-block;
@@ -305,6 +313,10 @@
                         background-color: $o-brand-lightsecondary;
                     }
                 }
+            }
+            .o_group_count_padding {
+                display: inline-block;
+                width: 70px;
             }
             .o_group_caret {
                 margin-inline-start: calc(var(--o-list-group-level, 0) * #{map-get($spacers, 4)});

@@ -2260,7 +2260,7 @@ test(`group a list view with the aggregable field 'value'`, async () => {
         groupBy: ["bar"],
     });
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["No (1)\n 1", "Yes (3)\n 3"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["No\n1\n 1", "Yes\n3\n 3"]);
 });
 
 test(`basic grouped list rendering with groupby m2m field`, async () => {
@@ -2278,10 +2278,10 @@ test(`basic grouped list rendering with groupby m2m field`, async () => {
     expect(`.o_group_header`).toHaveCount(4, { message: "should contain 4 open groups" });
     expect(`.o_group_open`).toHaveCount(0, { message: "no group is open" });
     expect(queryAllTexts(`.o_group_header .o_group_name`)).toEqual([
-        "Value 1 (3)",
-        "Value 2 (2)",
-        "Value 3 (1)",
-        "None (1)",
+        "Value 1\n3",
+        "Value 2\n2",
+        "Value 3\n1",
+        "None\n1",
     ]);
 
     // Open all groups
@@ -2291,16 +2291,16 @@ test(`basic grouped list rendering with groupby m2m field`, async () => {
     await contains(`.o_group_name:eq(3)`).click();
     expect(`.o_group_open`).toHaveCount(4, { message: "all groups are open" });
     expect(queryAllTexts(`.o_list_view tbody > tr`)).toEqual([
-        "Value 1 (3)",
+        "Value 1\n3",
         "yop \nValue 1\nValue 2",
         "blip \nValue 1\nValue 2\nValue 3",
         "blip \nValue 1",
-        "Value 2 (2)",
+        "Value 2\n2",
         "yop \nValue 1\nValue 2",
         "blip \nValue 1\nValue 2\nValue 3",
-        "Value 3 (1)",
+        "Value 3\n1",
         "blip \nValue 1\nValue 2\nValue 3",
-        "None (1)",
+        "None\n1",
         "gnap",
     ]);
 });
@@ -2321,27 +2321,27 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
     expect(`.o_list_footer td > button`).toHaveCount(0, {
         message: "no quick create since no default groupby",
     });
-    expect(queryAllTexts(`tbody > tr`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(queryAllTexts(`tbody > tr`)).toEqual(["Value 1\n3", "Value 2\n1"]);
 
     await contains(`th.o_group_name`).click();
     expect(queryAllTexts(`tbody > tr`)).toEqual([
-        "Value 1 (3)",
-        "Value 1 (2)",
-        "Value 2 (1)",
-        "None (1)",
-        "Value 2 (1)",
+        "Value 1\n3",
+        "Value 1\n2",
+        "Value 2\n1",
+        "None\n1",
+        "Value 2\n1",
     ]);
 
     await contains(`tbody th.o_group_name:eq(4)`).click();
     expect(queryAllTexts(`.o_list_view tbody > tr`)).toEqual([
-        "Value 1 (3)",
-        "Value 1 (2)",
-        "Value 2 (1)",
-        "None (1)",
-        "Value 2 (1)",
-        "Value 1 (1)",
-        "Value 2 (1)",
-        "Value 3 (1)",
+        "Value 1\n3",
+        "Value 1\n2",
+        "Value 2\n1",
+        "None\n1",
+        "Value 2\n1",
+        "Value 1\n1",
+        "Value 2\n1",
+        "Value 3\n1",
     ]);
 });
 
@@ -2356,7 +2356,7 @@ test(`grouped list rendering with default_group_by m2o field: add group`, async 
         arch: `<list default_group_by="m2o"><field name="foo"/></list>`,
     });
     expect(`.o_group_header:eq(0) th`).toHaveCount(2);
-    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1\n3", "Value 2\n1"]);
     expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
     await contains(`.o_list_footer td > button`).click();
     expect(`.o_list_footer td > button`).toHaveCount(0);
@@ -2364,7 +2364,7 @@ test(`grouped list rendering with default_group_by m2o field: add group`, async 
     await contains(`.o_list_footer td input`).edit("New group", { confirm: false });
     await contains(`.o_list_footer .o_list_group_confirm`).click();
     expect.verifySteps(["name_create"]);
-    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)", "New group (0)"]);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1\n3", "Value 2\n1", "New group\n0"]);
 });
 
 test(`grouped list rendering with groupby m2o field: group_create = false`, async () => {
@@ -2401,7 +2401,7 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
 
-    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1\n3", "Value 2\n1"]);
     expect(`.o_group_header:first th:last .o_group_config`).toHaveCount(1);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
     expect(`.o-dropdown--group-config-menu`).toHaveCount(1);
@@ -2414,7 +2414,7 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     await contains(`.o_dialog .o_form_button_save`).click();
     expect(`.o_dialog`).toHaveCount(0);
     expect.verifySteps(["web_save"]);
-    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value edit (3)", "Value 2 (1)"]);
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value edit\n3", "Value 2\n1"]);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
     if (getMockEnv().isSmall) {
         await contains(".o_bottom_sheet_backdrop").click();
@@ -2438,7 +2438,7 @@ test(`grouped list rendering with groupby m2o field: delete group`, async () => 
         groupBy: ["m2o"],
     });
 
-    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1\n3", "Value 2\n1"]);
     expect(`.o_group_header:first .o_group_config`).toHaveCount(1);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
     expect(`.o-dropdown--group-config-menu`).toHaveCount(1);
@@ -2447,7 +2447,7 @@ test(`grouped list rendering with groupby m2o field: delete group`, async () => 
     expect(`.o_dialog .modal-body`).toHaveText("Are you sure you want to delete this column?");
     await contains(`.o_dialog footer button:contains(Delete)`).click();
     expect.verifySteps(["unlink"]);
-    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 2 (1)", "None (3)"]);
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 2\n1", "None\n3"]);
 });
 
 test(`grouped list rendering with groupby non m2o field`, async () => {
@@ -2507,7 +2507,7 @@ test(`list view with multiple groupbys`, async () => {
     });
     expect(`.o_view_nocontent`).toHaveCount(0);
     expect(`.o_group_has_content`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_has_content`)).toEqual(["No (1)", "Yes (3)"]);
+    expect(queryAllTexts(`.o_group_has_content`)).toEqual(["No\n1", "Yes\n3"]);
 });
 
 test(`enabling archive in list when groupby m2m field`, async () => {
@@ -2857,10 +2857,10 @@ test(`add record in list grouped by m2m`, async () => {
 
     expect(`.o_group_header`).toHaveCount(4);
     expect(queryAllTexts(`.o_group_header`)).toEqual([
-        "Value 1 (3)",
-        "Value 2 (2)",
-        "Value 3 (1)",
-        "None (1)",
+        "Value 1\n3",
+        "Value 2\n2",
+        "Value 3\n1",
+        "None\n1",
     ]);
 
     await contains(`.o_group_header`).click();
@@ -4470,13 +4470,13 @@ test(`selection is kept on render without reload`, async () => {
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // open blip grouping and check all lines
-    await contains(`.o_group_header:contains(blip (2))`).click();
+    await contains(`.o_group_header:contains(blip\n2)`).click();
     await contains(`.o_data_row input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
 
     // open yop grouping and verify blip are still checked
-    await contains(`.o_group_header:contains(yop (1))`).click();
+    await contains(`.o_group_header:contains(yop\n1)`).click();
     expect(`.o_data_row input:checked`).toHaveCount(1, {
         message: "opening a grouping does not uncheck others",
     });
@@ -4484,8 +4484,8 @@ test(`selection is kept on render without reload`, async () => {
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
 
     // close and open blip grouping and verify blip are unchecked
-    await contains(`.o_group_header:contains(blip (2))`).click();
-    await contains(`.o_group_header:contains(blip (2))`).click();
+    await contains(`.o_group_header:contains(blip\n2)`).click();
+    await contains(`.o_group_header:contains(blip\n2)`).click();
     expect(`.o_data_row input:checked`).toHaveCount(0, {
         message: "opening and closing a grouping uncheck its elements",
     });
@@ -4662,8 +4662,8 @@ test(`monetary aggregates in grouped list`, async () => {
     await contains(`.o_group_header:last`).click();
     // Don't handle currencies in aggregates for non monetary fields even with the widget:
     // it is bad practice and the server won't send the information anyway
-    expect(`.o_group_header:first`).toHaveText("USD (3)\n $ 800.00 19.00");
-    expect(`.o_group_header:last`).toHaveText("EUR (1)\n 1,200.00 € 0.40");
+    expect(`.o_group_header:first`).toHaveText("USD\n3\n $ 800.00 19.00");
+    expect(`.o_group_header:last`).toHaveText("EUR\n1\n 1,200.00 € 0.40");
     expect(`.o_list_footer .o_list_number span:first`).toHaveText("$ 1,400.00?");
     await toggleMultiCurrencyPopover(".o_list_footer .o_list_number span:first sup");
     expect(".o_multi_currency_popover").toHaveCount(1);
@@ -4686,8 +4686,8 @@ test(`monetary aggregates in grouped list (!= currencies in same group)`, async 
     expect(`.o_group_header`).toHaveCount(2);
     await contains(`.o_group_header:first`).click();
     await contains(`.o_group_header:last`).click();
-    expect(`.o_group_header:first`).toHaveText("No (1)\n $ 0.00");
-    expect(`.o_group_header:last`).toHaveText("Yes (3)\n $ 2,000.00?");
+    expect(`.o_group_header:first`).toHaveText("No\n1\n $ 0.00");
+    expect(`.o_group_header:last`).toHaveText("Yes\n3\n $ 2,000.00?");
     expect(`.o_list_footer .o_list_number span`).toHaveText("$ 2,000.00?");
 });
 
@@ -4706,7 +4706,7 @@ test(`monetary aggregates in grouped list (!= currencies in same group, delete)`
         actionMenus: {},
     });
     expect(`.o_group_header`).toHaveCount(2);
-    expect(`.o_group_header:last`).toHaveText("Yes (3)\n $ 2,000.00?");
+    expect(`.o_group_header:last`).toHaveText("Yes\n3\n $ 2,000.00?");
     await contains(`.o_group_header:last`).click();
     expect(`.o_data_row`).toHaveCount(3);
     await selectAllRecords();
@@ -4715,7 +4715,7 @@ test(`monetary aggregates in grouped list (!= currencies in same group, delete)`
     await toggleMenuItem("Delete");
     await contains(`.o_dialog footer .btn-primary`).click(); // confirm
     expect(`.o_data_row`).toHaveCount(0);
-    expect(`.o_group_header:last`).toHaveText("Yes (0)\n 0.00");
+    expect(`.o_group_header:last`).toHaveText("Yes\n0\n 0.00");
 });
 
 test(`list with monetary field with attribute column_invisible="1"`, async () => {
@@ -4768,8 +4768,8 @@ test(`handle false values in aggregates`, async () => {
         groupBy: ["bar"],
     });
     expect.verifySteps(["web_read_group"]);
-    expect(`.o_group_header:first`).toHaveText("No (1)\n 9.00 $ 0.00 $ 0.00");
-    expect(`.o_group_header:last`).toHaveText("Yes (3)\n $ 2,000.00?", {
+    expect(`.o_group_header:first`).toHaveText("No\n1\n 9.00 $ 0.00 $ 0.00");
+    expect(`.o_group_header:last`).toHaveText("Yes\n3\n $ 2,000.00?", {
         message: "false values are just hidden except for monetary field with multiple currencies",
     });
 });
@@ -4813,7 +4813,7 @@ test(`date field aggregates in grouped lists`, async () => {
         `,
     });
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header`)).toEqual([`Value 1 (3)`, `Value 2 (1)`]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual([`Value 1\n3`, `Value 2\n1`]);
 });
 
 test(`hide aggregated value in grouped lists when no data provided by RPC call`, async () => {
@@ -5070,8 +5070,8 @@ test(`groups can be sorted on the first field of the groupBy`, async () => {
         arch: `<list default_order="bar desc"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0)`).toHaveText("Yes (3)");
-    expect(`.o_group_header:eq(-1)`).toHaveText("No (1)");
+    expect(`.o_group_header:eq(0)`).toHaveText("Yes\n3");
+    expect(`.o_group_header:eq(-1)`).toHaveText("No\n1");
     expect.verifySteps(["web_read_group"]);
 });
 
@@ -5947,9 +5947,9 @@ test(`grouped, update the count of the group (and ancestors) when a record is de
         groupBy: ["foo", "bar"],
         actionMenus: {},
     });
-    expect(`.o_group_header:eq(0)`).toHaveText("blip (6)");
-    expect(`.o_group_header:eq(1)`).toHaveText("No (2)");
-    expect(`.o_group_header:eq(2)`).toHaveText("Yes (4)");
+    expect(`.o_group_header:eq(0)`).toHaveText("blip\n6");
+    expect(`.o_group_header:eq(1)`).toHaveText("No\n2");
+    expect(`.o_group_header:eq(2)`).toHaveText("Yes\n4");
 
     await contains(`.o_group_header:eq(2)`).click();
     expect(`.o_data_row`).toHaveCount(4);
@@ -5958,8 +5958,8 @@ test(`grouped, update the count of the group (and ancestors) when a record is de
     await toggleActionMenu();
     await toggleMenuItem("Delete");
     await contains(`.modal .btn-primary`).click();
-    expect(`.o_group_header:eq(0)`).toHaveText("blip (5)");
-    expect(`.o_group_header:eq(2)`).toHaveText("Yes (3)");
+    expect(`.o_group_header:eq(0)`).toHaveText("blip\n5");
+    expect(`.o_group_header:eq(2)`).toHaveText("Yes\n3");
 });
 
 test(`grouped list, reload aggregates when a record is deleted`, async () => {
@@ -7888,7 +7888,7 @@ test(`edit button does not trigger fold group`, async () => {
                 </groupby>
             </list>
         `,
-        groupBy: ['currency_id']
+        groupBy: ["currency_id"],
     });
     expect(`.o_group_open`).toHaveCount(0);
     await contains(`.o_group_header:eq(0)`).click();
@@ -8430,7 +8430,7 @@ test(`list view with nested groups`, async () => {
 
     // basic rendering tests
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (4)", "Value 2 (2)"]);
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1\n4", "Value 2\n2"]);
     expect(`.o_group_name .fa-caret-right`).toHaveCount(2);
     expect(`.o_group_header:eq(0) span:first`).toHaveStyle({ "--o-list-group-level": "0" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual(["16", "14"]);
@@ -8439,11 +8439,11 @@ test(`list view with nested groups`, async () => {
     await contains(`.o_group_header:eq(0)`).click();
     expect.verifySteps(["web_read_group"]);
     expect(queryAllTexts(`.o_group_name`)).toEqual([
-        "Value 1 (4)",
-        "blip (2)",
-        "gnap (1)",
-        "yop (1)",
-        "Value 2 (2)",
+        "Value 1\n4",
+        "blip\n2",
+        "gnap\n1",
+        "yop\n1",
+        "Value 2\n2",
     ]);
     expect(`.o_group_name:eq(0) .fa-caret-down`).toHaveCount(1);
     expect(`.o_group_header:eq(1) span:first`).toHaveStyle({ "--o-list-group-level": "1" });
@@ -8519,11 +8519,11 @@ test(`grouped list on selection field at level 2`, async () => {
         message: "should contain 2 groups at first level and 3 groups at second level",
     });
     expect(queryAllTexts(`.o_group_header .o_group_name`)).toEqual([
-        "Value 1 (5)",
-        "Low (3)",
-        "Medium (1)",
-        "High (1)",
-        "Value 2 (1)",
+        "Value 1\n5",
+        "Low\n3",
+        "Medium\n1",
+        "High\n1",
+        "Value 2\n1",
     ]);
 });
 
@@ -10409,8 +10409,8 @@ test(`editable grouped list with handle widget`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     await contains(`.o_group_header:first`).click();
     await contains(`.o_group_header:last`).click();
-    expect(`.o_group_header:first`).toHaveText("No (1)\n 0");
-    expect(`.o_group_header:last`).toHaveText("Yes (3)\n 2,000");
+    expect(`.o_group_header:first`).toHaveText("No\n1\n 0");
+    expect(`.o_group_header:last`).toHaveText("Yes\n3\n 2,000");
     expect(`tbody .o_data_row:eq(0) td:eq(-2)`).toHaveText("0", {
         message: "default fourth record should have amount 0",
     });
@@ -10433,8 +10433,8 @@ test(`editable grouped list with handle widget`, async () => {
         ["web_resequence", [3], "int_field", 2],
     ]);
     // Aggregates are not updated, todo later?
-    expect(`.o_group_header:first`).toHaveText("No (2)\n 0");
-    expect(`.o_group_header:last`).toHaveText("Yes (2)\n 2,000");
+    expect(`.o_group_header:first`).toHaveText("No\n2\n 0");
+    expect(`.o_group_header:last`).toHaveText("Yes\n2\n 2,000");
     expect(`tbody .o_data_row:eq(0) td:eq(-2)`).toHaveText("300", {
         message: "new first record should have amount 300",
     });
@@ -10469,8 +10469,8 @@ test(`editable grouped list with handle widget (group by date)`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     await contains(`.o_group_header:first`).click();
     await contains(`.o_group_header:last`).click();
-    expect(`.o_group_header:first`).toHaveText("January 2017 (1)\n 1,200");
-    expect(`.o_group_header:last`).toHaveText("None (3)\n 800");
+    expect(`.o_group_header:first`).toHaveText("January 2017\n1\n 1,200");
+    expect(`.o_group_header:last`).toHaveText("None\n3\n 800");
     expect(`.o_field_handle:first span`).not.toBeEnabled();
 });
 
@@ -10489,8 +10489,8 @@ test(`editable grouped list with handle widget (multiple group by)`, async () =>
     expect(`.o_group_header`).toHaveCount(2);
     await contains(`.o_group_header:first`).click();
     await contains(`.o_group_header:eq(1)`).click(); // sub group
-    expect(`.o_group_header:first`).toHaveText("No (1)\n 0");
-    expect(`.o_group_header:eq(1)`).toHaveText("blip (1)\n 0");
+    expect(`.o_group_header:first`).toHaveText("No\n1\n 0");
+    expect(`.o_group_header:eq(1)`).toHaveText("blip\n1\n 0");
     expect(`.o_field_handle:first span`).not.toBeEnabled();
 });
 
@@ -12468,7 +12468,7 @@ test(`list grouped by date:month`, async () => {
         arch: `<list><field name="date"/></list>`,
         groupBy: ["date:month"],
     });
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["January 2017 (1)", "None (3)"], {
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["January 2017\n1", "None\n3"], {
         message: "the group names should be correct",
     });
 });
@@ -12680,10 +12680,10 @@ test(`grouped list view move to previous page of group when all records from las
         actionMenus: {},
         groupBy: ["m2o"],
     });
-    expect(`th:contains(Value 1 (3))`).toHaveCount(1, {
+    expect(`th:contains(Value 1\n3)`).toHaveCount(1, {
         message: "Value 1 should contain 3 records",
     });
-    expect(`th:contains(Value 2 (1))`).toHaveCount(1, {
+    expect(`th:contains(Value 2\n1)`).toHaveCount(1, {
         message: "Value 2 should contain 1 record",
     });
 
@@ -12724,8 +12724,8 @@ test(`grouped list view move to next page when all records from the current page
         actionMenus: {},
         groupBy: ["m2o"],
     });
-    expect(`tr.o_group_header:eq(0) th:eq(0)`).toHaveText("Value 1 (6)");
-    expect(`tr.o_group_header:eq(1) th:eq(0)`).toHaveText("Value 2 (1)");
+    expect(`tr.o_group_header:eq(0) th:eq(0)`).toHaveText("Value 1\n6");
+    expect(`tr.o_group_header:eq(1) th:eq(0)`).toHaveText("Value 2\n1");
 
     const firstGroup = queryFirst(`tr.o_group_header:eq(0)`);
     await contains(firstGroup).click();
@@ -12737,7 +12737,7 @@ test(`grouped list view move to next page when all records from the current page
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await contains(`.dropdown-item:contains(Delete)`).click();
     await contains(`.modal .btn-primary`).click();
-    expect(`.o_group_header:eq(0) .o_group_name`).toHaveText(`Value 1 (4)\n1-2 / 4`);
+    expect(`.o_group_header:eq(0) .o_group_name`).toHaveText(`Value 1\n1-2 / 4`);
     expect(queryAllTexts(`.o_data_row`)).toEqual(["yop3", "yop4"]);
 });
 
@@ -13025,18 +13025,18 @@ test(`multi level grouped list with groups_limit attribute`, async () => {
         message: "pager should be correct",
     });
     expect(`.o_pager_limit`).toHaveText("4");
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["blip (2)", "foo (5)", "gnap (1)"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["blip\n2", "foo\n5", "gnap\n1"]);
 
     // open foo group
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_group_header`).toHaveCount(6);
     expect(queryAllTexts(`.o_group_header`)).toEqual([
-        "blip (2)",
-        "foo (5)\n1-3 / 5",
-        "50 (1)",
-        "51 (1)",
-        "52 (1)",
-        "gnap (1)",
+        "blip\n2",
+        "foo\n1-3 / 5",
+        "50\n1",
+        "51\n1",
+        "52\n1",
+        "gnap\n1",
     ]);
 });
 
@@ -13128,29 +13128,29 @@ test(`grouped lists with expand attribute and a lot of groups`, async () => {
     expect(`.o_data_row`).toHaveCount(10); // two groups contains two records
     expect(`.o_pager`).toHaveCount(1); // has a pager
     expect(queryAllTexts(`.o_group_name`)).toEqual([
-        "-4 (1)",
-        "0 (1)",
-        "1 (1)",
-        "2 (1)",
-        "3 (1)",
-        "4 (1)",
-        "5 (1)",
-        "6 (1)",
-        "7 (1)",
-        "8 (1)",
+        "-4\n1",
+        "0\n1",
+        "1\n1",
+        "2\n1",
+        "3\n1",
+        "4\n1",
+        "5\n1",
+        "6\n1",
+        "7\n1",
+        "8\n1",
     ]);
 
     await pagerNext(); // switch to page 2
     expect(`.o_group_header`).toHaveCount(7); // page 2
     expect(`.o_data_row`).toHaveCount(9); // two groups contains two records
     expect(queryAllTexts(`.o_group_name`)).toEqual([
-        "9 (2)",
-        "10 (2)",
-        "11 (1)",
-        "12 (1)",
-        "13 (1)",
-        "14 (1)",
-        "17 (1)",
+        "9\n2",
+        "10\n2",
+        "11\n1",
+        "12\n1",
+        "13\n1",
+        "14\n1",
+        "17\n1",
     ]);
     expect.verifySteps([
         "web_read_group", // web_read_group page 1
@@ -14118,7 +14118,7 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     expect(`.o_selected_row`).toHaveCount(0);
 
     // Click on last data row of first group
-    expect(`.o_group_header:eq(0)`).toHaveText("No (1)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n1\n -4");
     await contains(`.o_data_row:eq(0) [name=foo]`).click();
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
@@ -14126,13 +14126,13 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n2\n -4");
 
     // Enter should discard the edited row as it is pristine + get to next data row
     await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (1)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n1\n -4");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of first row
@@ -14144,12 +14144,12 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n2\n -4");
 
     // Edit the row and press enter: should add a new row
     await contains(`.o_data_row:eq(1) [name=foo] input`).edit("zzapp", { confirm: "enter" });
     expect(`.o_data_row`).toHaveCount(7);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (3)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n3\n -4");
     expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 });
 
@@ -14220,7 +14220,7 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(0);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (1)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n1\n -4");
 
     // Click on last data row of first group
     await contains(`.o_data_row:eq(0) [name=foo]`).click();
@@ -14230,13 +14230,13 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n2\n -4");
 
     // Enter should discard the edited row as it is pristine + get to next data row
     await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (1)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n1\n -4");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of first row
@@ -14248,13 +14248,13 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n2\n -4");
 
     // Edit the row and press enter: should add a new row
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
     await contains(`.o_data_row:eq(1) [name=foo] input`).edit("zzapp", { confirm: "enter" });
     expect(`.o_data_row`).toHaveCount(7);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (3)\n -4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n3\n -4");
     expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 });
 
@@ -14365,22 +14365,22 @@ test(`editable grouped list: adding a second record pass the first in readonly`,
     await contains(`.o_group_header:eq(0)`).click();
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(4);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (1)");
-    expect(`.o_group_header:eq(1)`).toHaveText("Yes (3)");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n1");
+    expect(`.o_group_header:eq(1)`).toHaveText("Yes\n3");
 
     // add a row in first group
     await contains(`.o_group_field_row_add:eq(0) a`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(5);
-    expect(`.o_group_header:eq(0)`).toHaveText("No (2)");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n2");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // add a row in second group
     await contains(`.o_group_field_row_add:eq(1) a`).click();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(5);
-    expect(`.o_group_header:eq(1)`).toHaveText("Yes (4)");
-    expect(`.o_group_header:eq(0)`).toHaveText("No (1)");
+    expect(`.o_group_header:eq(1)`).toHaveText("Yes\n4");
+    expect(`.o_group_header:eq(0)`).toHaveText("No\n1");
     expect(`.o_data_row:eq(4) [name=foo] input`).toBeFocused();
 });
 
@@ -14712,7 +14712,7 @@ test(`add a new row in grouped editable="top" list`, async () => {
     expect(`.o_data_row`).toHaveCount(4);
 
     await contains(`.o_group_field_row_add a:eq(1)`).click(); // create row in second group "Yes"
-    expect(`.o_group_name:eq(1)`).toHaveText("Yes (4)", {
+    expect(`.o_group_name:eq(1)`).toHaveText("Yes\n4", {
         message: "group should have correct name and count",
     });
     expect(`.o_data_row`).toHaveCount(5);
@@ -16107,7 +16107,7 @@ test(`go to the next page after leaving and coming back to a grouped list view`,
     });
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(1);
-    expect(`.o_group_header`).toHaveText("No (1)");
+    expect(`.o_group_header`).toHaveText("No\n1");
 
     // unfold the second group
     await contains(`.o_group_header`).click();
@@ -16120,11 +16120,11 @@ test(`go to the next page after leaving and coming back to a grouped list view`,
 
     await contains(`.breadcrumb-item a, .o_back_button`).click();
     expect(`.o_group_header`).toHaveCount(1);
-    expect(`.o_group_header`).toHaveText("No (1)");
+    expect(`.o_group_header`).toHaveText("No\n1");
 
     await pagerNext();
     expect(`.o_group_header`).toHaveCount(1);
-    expect(`.o_group_header`).toHaveText("Yes (3)");
+    expect(`.o_group_header`).toHaveText("Yes\n3");
 });
 
 test(`keep order after grouping`, async () => {
@@ -16147,7 +16147,7 @@ test(`keep order after grouping`, async () => {
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Foo");
-    expect(queryAllTexts`.o_group_name`).toEqual(["yop (1)", "gnap (1)", "blip (2)"]);
+    expect(queryAllTexts`.o_group_name`).toEqual(["yop\n1", "gnap\n1", "blip\n2"]);
 
     await toggleMenuItem("Foo");
     expect(queryAllTexts`.o_data_row td[name=foo]`).toEqual(["yop", "gnap", "blip", "blip"]);
@@ -16523,7 +16523,7 @@ test(`have some records, then go to next page in pager then group by some field:
     await toggleSearchBarMenu();
     await toggleMenuItem("Bar");
     expect(`tbody .o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`tbody .o_group_header`)).toEqual(["No (1)", "Yes (3)"]);
+    expect(queryAllTexts(`tbody .o_group_header`)).toEqual(["No\n1", "Yes\n3"]);
 
     await removeFacet("Bar");
     expect(`tbody .o_data_row`).toHaveCount(2);
@@ -16536,7 +16536,7 @@ test(`have some records, then go to next page in pager then group by some field:
     await toggleSearchBarMenu();
     await toggleMenuItem("Bar");
     expect(`tbody .o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`tbody .o_group_header`)).toEqual(["No (1)", "Yes (3)"]);
+    expect(queryAllTexts(`tbody .o_group_header`)).toEqual(["No\n1", "Yes\n3"]);
 });
 
 test(`optional field selection do not unselect current row`, async () => {
@@ -18450,7 +18450,7 @@ test(`display 'None' for false group, when grouped by char field`, async () => {
         groupBy: ["foo"],
     });
 
-    expect(`tbody tr:nth-child(3)`).toHaveText("None (1)");
+    expect(`tbody tr:nth-child(3)`).toHaveText("None\n1");
 });
 
 test(`display '0' for false group, when grouped by int field`, async () => {
@@ -18463,7 +18463,7 @@ test(`display '0' for false group, when grouped by int field`, async () => {
         groupBy: ["int_field"],
     });
 
-    expect(`tbody tr:nth-child(2)`).toHaveText("0 (1)");
+    expect(`tbody tr:nth-child(2)`).toHaveText("0\n1");
 });
 
 test(`display the field's falsy_value_label for false group, if defined`, async () => {
@@ -18477,7 +18477,7 @@ test(`display the field's falsy_value_label for false group, if defined`, async 
         groupBy: ["foo"],
     });
 
-    expect(`tbody tr:nth-child(3)`).toHaveText("I'm the false group (1)");
+    expect(`tbody tr:nth-child(3)`).toHaveText("I'm the false group\n1");
 });
 
 test(`hide pager in the list view with sample data`, async () => {
@@ -18952,7 +18952,7 @@ test(`cache web_read_group (no change)`, async () => {
     await getService("action").doAction(1);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["No (1)", "Yes (3)"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["No\n1", "Yes\n3"]);
 
     // execute another action to remove the list from the DOM
     await getService("action").doAction(2);
@@ -18963,14 +18963,14 @@ test(`cache web_read_group (no change)`, async () => {
     await getService("action").doAction(1);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["No (1)", "Yes (3)"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["No\n1", "Yes\n3"]);
 
     // simulate the return of web_read_group => nothing should have changed
     def.resolve();
     await animationFrame();
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["No (1)", "Yes (3)"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["No\n1", "Yes\n3"]);
 });
 
 test(`cache web_read_group (change)`, async () => {
@@ -19011,7 +19011,7 @@ test(`cache web_read_group (change)`, async () => {
     await getService("action").doAction(1);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(4);
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["-4 (1)", "9 (1)", "10 (1)", "17 (1)"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["-4\n1", "9\n1", "10\n1", "17\n1"]);
 
     // simulate the create of new records by someone else
     MockServer.env.foo.create([{ int_field: 44 }, { int_field: -4 }]);
@@ -19025,20 +19025,14 @@ test(`cache web_read_group (change)`, async () => {
     await getService("action").doAction(1);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(4);
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["-4 (1)", "9 (1)", "10 (1)", "17 (1)"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["-4\n1", "9\n1", "10\n1", "17\n1"]);
 
     // simulate the return of web_read_group => the data should have been updated
     def.resolve();
     await animationFrame();
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(5);
-    expect(queryAllTexts(`.o_group_header`)).toEqual([
-        "-4 (2)",
-        "9 (1)",
-        "10 (1)",
-        "17 (1)",
-        "44 (1)",
-    ]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["-4\n2", "9\n1", "10\n1", "17\n1", "44\n1"]);
 });
 
 test(`cache web_read_group (with sample data, no change)`, async () => {
@@ -19151,7 +19145,7 @@ test(`cache web_read_group (with sample data, change)`, async () => {
     await animationFrame();
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header`)).toEqual(["-4 (1)", "44 (1)"]);
+    expect(queryAllTexts(`.o_group_header`)).toEqual(["-4\n1", "44\n1"]);
 });
 
 test.tags("desktop");
