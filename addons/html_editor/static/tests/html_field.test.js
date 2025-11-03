@@ -1166,6 +1166,47 @@ test("should display overlay on video hover and handle video replacement and rem
     await expectElementCount('div[data-embedded="video"]', 0);
 });
 
+test.tags("desktop");
+test("add Vimeo video link in 'Videos' tab of MediaDialog", async () => {
+    const vimeoVideoLink = "https://vimeo.com/1128489814?fl=wc";
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+
+    await onRpc("/html_editor/video_url/data", async () => {
+        return {
+            video_id: "1128489814",
+            platform: "vimeo",
+            embed_url: vimeoVideoLink,
+        };
+    });
+
+    // Insert Vimeo video link
+    await insertText(htmlEditor, "/video");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
+
+    await press("Enter");
+    await contains(".modal-body .nav-link:contains('Videos')").click();
+    await waitFor("textarea[id='o_video_text']");
+
+    const input = queryOne("textarea[id='o_video_text']");
+    input.value = vimeoVideoLink;
+    manuallyDispatchProgrammaticEvent(input, "input", {
+        inputType: "insertText",
+    });
+    await waitFor(".o_video_dialog_options", { timeout: 1500 });
+    expect(input).toHaveClass("is-valid");
+    await click(queryOne(".modal-footer").firstChild);
+});
+
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     await mountView({
         type: "form",
