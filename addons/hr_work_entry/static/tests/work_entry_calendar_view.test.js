@@ -56,7 +56,7 @@ test("Test work entry calendar without work entry type", async () => {
     });
 });
 
-test("should use default_employee_id from context in multi create popover", async () => {
+test("should use default_employee_id from context in work entry", async () => {
     const defaultEmployeeId = 100;
     const view = await mountView({
         type: "calendar",
@@ -68,9 +68,18 @@ test("should use default_employee_id from context in multi create popover", asyn
         view,
         (component) => component instanceof WorkEntryCalendarMultiSelectionButtons
     );
+    const workEntryTypeId = 1;
+    const values = controller.makeValues(workEntryTypeId);
+
+    expect(values).toEqual({
+        employee_id: defaultEmployeeId,
+        duration: -1,
+        is_manual: true,
+        work_entry_type_id: workEntryTypeId,
+    });
 
     await controller.loadMultiCreateView()
-    const values = controller.getMultiCreatePopoverProps();
-    expect(values.multiCreateRecordProps.context).toInclude("default_employee_id");
-    expect(values.multiCreateRecordProps.context.default_employee_id).toEqual(defaultEmployeeId);
+    const data = controller.getMultiCreatePopoverProps();
+    expect(data.multiCreateRecordProps.context).toInclude("default_employee_id");
+    expect(data.multiCreateRecordProps.context.default_employee_id).toEqual(defaultEmployeeId);
 });
