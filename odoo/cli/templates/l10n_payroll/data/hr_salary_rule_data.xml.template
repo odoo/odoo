@@ -15,7 +15,7 @@
 result_rate = payslip.rule_parameter('l10n_{{code}}_social_employee_rate')
 result = categories.BASIC
         </field>
-        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary'))]"/>
     </record>
 
     <record id="l10n_{{code}}_social_contribution_employer" model="hr.salary.rule">
@@ -30,7 +30,7 @@ result_rate = payslip.rule_parameter('l10n_{{code}}_social_employer_rate')
 result = categories.BASIC
         </field>
         <field name="appears_on_payslip">never</field>
-        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary'))]"/>
     </record>
 
     <record id="l10n_{{code}}_social_employee_total" model="hr.salary.rule">
@@ -44,7 +44,7 @@ result = categories.BASIC
 result = categories['SOCIAL.EMPLOYEE']
         </field>
         <field name="appears_on_payslip">always</field>
-        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary'))]"/>
     </record>
 
     <record id="l10n_{{code}}_social_employer_total" model="hr.salary.rule">
@@ -58,7 +58,7 @@ result = categories['SOCIAL.EMPLOYEE']
 result = categories['SOCIAL.EMPLOYER']
         </field>
         <field name="appears_on_payslip">never</field>
-        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary'))]"/>
     </record>
 
     <record id="l10n_{{code}}_taxable_amount" model="hr.salary.rule">
@@ -72,7 +72,7 @@ result = categories['SOCIAL.EMPLOYER']
 result = categories.GROSS
         </field>
         <field name="appears_on_payslip">always</field>
-        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary'))]"/>
     </record>
 
     <record id="l10n_{{code}}_withholding_taxes" model="hr.salary.rule">
@@ -93,7 +93,7 @@ for low, high, prev, rate in brackets:
             result = -(prev + (taxable - low) * rate / 100)
         </field>
         <field name="appears_on_payslip">always</field>
-        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary'))]"/>
     </record>
 
     <record id="l10n_{{code}}_childcare_relief" model="hr.salary.rule">
@@ -118,7 +118,7 @@ elif children &gt;= 4:
     result = amounts[0] + amounts[1] + amounts[2] + (children - 3) * amounts[3]
         </field>
         <field name="appears_on_payslip">always</field>
-        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary'))]"/>
     </record>
 
 </odoo>
