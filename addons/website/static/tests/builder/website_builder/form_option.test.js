@@ -435,3 +435,77 @@ test("Last list entry cannot be removed", async () => {
     await contains(".options-container .builder_list_add_item").click();
     expect(".options-container .builder_list_remove_item").toHaveCount(2);
 });
+
+test("Can link states to a country", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form"><form data-model_name="mail.mail">
+            <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
+                <div>
+                    <label class="s_website_form_label" for="country">
+                        <span class="s_website_form_label_content">Country</span>
+                    </label>
+                    <div>
+                        <select class="form-select s_website_form_input" name="country_id" id="country">
+                            <option value=""></option>
+                            <option value="1" selected="selected">Country 1 (A)</option>
+                            <option value="2">Country 2 (B)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+                <div>
+                    <label class="s_website_form_label" for="state">
+                        <span class="s_website_form_label_content">State</span>
+                    </label>
+                    <div>
+                        <select class="form-select s_website_form_input" name="state_id" id="state">
+                            <option value=""></option>
+                            <option data-country-id="1" value="s1">State 1 (A)</option>
+                            <option data-country-id="2" value="s2">State 2 (B)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form></section>`
+    );
+    await contains(":iframe select[name='state_id']").click();
+    expect(".options-container .hb-row [data-action-id='linkStateToCountry']").toHaveCount(1);
+    expect(
+        ".options-container .hb-row [data-action-id='linkStateToCountry'] input"
+    ).not.toBeChecked();
+    expect(".options-container .hb-row p:contains('Option List')").toHaveCount(1);
+
+    await contains(
+        ".options-container .hb-row [data-action-id='linkStateToCountry'] input"
+    ).click();
+
+    expect(".options-container .hb-row [data-action-id='linkStateToCountry'] input").toBeChecked();
+    expect(".options-container .hb-row :contains('Option List')").toHaveCount(0);
+    expect(":iframe select[name='state_id']").toHaveAttribute("data-link-state-to-country", "true");
+});
+
+test("Shouldn't have the 'Link to country' option if there's no country field", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form"><form data-model_name="mail.mail">
+            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+                <div>
+                    <label class="s_website_form_label" for="state">
+                        <span class="s_website_form_label_content">State</span>
+                    </label>
+                    <div>
+                        <select class="form-select s_website_form_input" name="state_id" id="state">
+                            <option value=""></option>
+                            <option data-country-id="1" value="s1">State 1 (A)</option>
+                            <option data-country-id="2" value="s2">State 2 (B)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form></section>`
+    );
+    await contains(":iframe select[name='state_id']").click();
+    expect(".options-container .hb-row[data-action-id='linkStateToCountry']").toHaveCount(0);
+});
