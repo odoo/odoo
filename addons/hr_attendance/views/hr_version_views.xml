@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_version_list_view_enhanced_hr_attendance_base" model="ir.ui.view">
+        <field name="name">hr.version.list.view.enhanced.hr.attendance.base</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_version_list_view_enhanced"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="date_version" position="replace"/>
+            <field name="resource_calendar_id" position="replace"/>
+            <field name="job_id" position="after">
+                <field name="resource_calendar_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_version_list_view_enhanced_hr_attendance_add" model="ir.ui.view">
+        <field name="name">hr.version.list.view.enhanced.hr.attendance.add</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr_version_list_view_enhanced_hr_attendance_base"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button display="always" name="action_assign_ruleset" type="object" string="Add" class="btn-primary"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_version_list_view_enhanced_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.version.list.view.enhanced.hr.attendance</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr_version_list_view_enhanced_hr_attendance_base"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button display="always" name="action_open_version_selector" type="object" string="Add Employees" class="btn-primary"/>
+                    <button name="action_unassign_ruleset" type="object" string="Remove" class="btn-secondary"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_version_search_view_enhanced_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.version.search.view.enhanced.hr.attendance</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_version_search_view_enhanced"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//search/group/filter[@name='group_department']" position="before">
+                <filter name="group_resource_calendar" string="Working Hours" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_version_list_view" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.version</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="hr_attendance.hr_version_list_view_enhanced_hr_attendance"/>
+        <field name="search_view_id" ref="hr_attendance.hr_version_search_view_enhanced_hr_attendance"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Records.
+            </p><p>
+                There are no employees assigned to this overtime ruleset.
+            </p>
+        </field>
+    </record>
+    
+    <record id="hr_version_list_view_add" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.version</field>
+        <field name="view_mode">list</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="hr_attendance.hr_version_list_view_enhanced_hr_attendance_add"/>
+        <field name="search_view_id" ref="hr_attendance.hr_version_search_view_enhanced_hr_attendance"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Records.
+            </p><p>
+                There are no employees without an overtime ruleset.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -112,6 +112,23 @@
                             <h1><field name="name" placeholder="e.g. Legal Rules"/></h1>
                         </div>
                     </header>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_show_versions"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-id-card-o"
+                            invisible="not id"
+                            >
+                            <field name="versions_count" widget="statinfo" string="Employees" invisible="not versions_count"/>
+                            <div class="o_field_widget o_stat_info" invisible="versions_count">
+                                <div class="o_field_widget o_stat_info ms-1">
+                                    <span class="o_stat_value">Add</span>
+                                    <span class="o_stat_text">Employees</span>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="rate_combination_mode"/>

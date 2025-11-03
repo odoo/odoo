@@ -19,6 +19,7 @@ class HrVersion(models.Model):
          domain=_domain_current_countries,
          groups="hr.group_hr_manager",
          tracking=True,
+         index='btree_not_null',
          default=lambda self: self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False),
     )
 
@@ -48,3 +49,24 @@ class HrVersion(models.Model):
                     version_index += 1
                 version_by_employee_and_date[employee][date] = versions[version_index]
         return version_by_employee_and_date
+
+    def action_open_version_selector(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view_add')
+        today = fields.Date.today()
+        action['domain'] = [
+            ("ruleset_id", "=", False),
+            ("contract_date_start", "<=", today),
+            "|",
+            ("contract_date_end", "=", False),
+            ("contract_date_end", ">=", today),
+            ("employee_id", "!=", False),
+        ]
+        action['context'] = {'default_ruleset_id': self.env.context.get('default_ruleset_id', False)}
+        return action
+
+    def action_unassign_ruleset(self):
+        self.ruleset_id = False
+
+    def action_assign_ruleset(self):
+        if ruleset_id := self.env.context.get('default_ruleset_id', False):
+            self.ruleset_id = ruleset_id
