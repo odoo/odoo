@@ -1,6 +1,6 @@
 import { LivechatChannel } from "@im_livechat/core/common/livechat_channel_model";
 
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";
 

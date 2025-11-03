@@ -1,4 +1,4 @@
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 import { useSequential } from "@mail/utils/common/hooks";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";

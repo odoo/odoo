@@ -1,5 +1,5 @@
 import { Attachment } from "@mail/core/common/attachment_model";
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Attachment} */

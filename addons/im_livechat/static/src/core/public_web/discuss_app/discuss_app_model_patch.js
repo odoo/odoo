@@ -1,5 +1,5 @@
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";

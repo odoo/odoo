@@ -1,7 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
-import { fields } from "../common/record";
+import { fields } from "@mail/model/export";
 import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 

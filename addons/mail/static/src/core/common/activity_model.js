@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { assignDefined } from "@mail/utils/common/misc";
 
 export class Activity extends Record {

@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { assignDefined } from "@mail/utils/common/misc";
 import { generatePdfThumbnail } from "@mail/utils/common/pdf_thumbnail";
 

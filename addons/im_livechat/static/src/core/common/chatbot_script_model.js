@@ -1,4 +1,4 @@
-import { Record, fields } from "@mail/core/common/record";
+import { Record, fields } from "@mail/model/export";
 
 export class ChatbotScript extends Record {
     static _name = "chatbot.script";

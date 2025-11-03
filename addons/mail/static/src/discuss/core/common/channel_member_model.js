@@ -1,5 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";

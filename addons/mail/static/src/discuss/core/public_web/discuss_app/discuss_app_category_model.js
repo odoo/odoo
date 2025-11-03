@@ -1,5 +1,5 @@
 import { compareDatetime } from "@mail/utils/common/misc";
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { browser } from "@web/core/browser/browser";
 
 export const DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS = "discuss_sidebar_category_folded_";

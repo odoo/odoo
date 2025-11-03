@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { markup, reactive, toRaw } from "@odoo/owl";
 import { mockService } from "@web/../tests/web_test_helpers";
 
-import { Record, Store, makeStore } from "@mail/core/common/record";
+import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
