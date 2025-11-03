@@ -35,10 +35,10 @@ export class DiscussCorePublicWeb {
                 if (action === "OPEN_CHANNEL") {
                     const channel = await this.store["discuss.channel"].getOrFetch(data.id);
                     channel?.open({ focus: true });
-                    if (!data.joinCall || !channel || this.store.rtc.state.channel?.eq(channel)) {
+                    if (!data.joinCall || !channel || this.store.rtc.localChannel?.eq(channel)) {
                         return;
                     }
-                    if (this.store.rtc.state.channel) {
+                    if (this.store.rtc.localChannel) {
                         await this.store.rtc.leaveCall();
                     }
                     this.store.rtc.joinCall(channel);

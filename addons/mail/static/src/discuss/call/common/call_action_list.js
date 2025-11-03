@@ -66,7 +66,7 @@ export class CallActionList extends Component {
     }
 
     get isSmall() {
-        return Boolean(this.props.compact && this.rtc.state.isFullscreen);
+        return Boolean(this.props.compact && this.rtc.isFullscreen);
     }
 
     get isMobileOS() {
