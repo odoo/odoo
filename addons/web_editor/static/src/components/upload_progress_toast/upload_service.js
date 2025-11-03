@@ -97,11 +97,34 @@ export const uploadService = {
              * @param {Array<File>} files
              * @param {Object} options
              * @param {Function} onUploaded
+             * @param {Function} setAbortCallback // Optional - To abort uploads
              */
-            uploadFiles: async (files, {resModel, resId, isImage}, onUploaded) => {
+            uploadFiles: async (
+                files,
+                { resModel, resId, isImage },
+                onUploaded,
+                setAbortCallback
+            ) => {
                 // Upload the smallest file first to block the user the least possible.
                 const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
+
+                const controller = new AbortController();
+                const { signal } = controller;
+
+                let currentXHR = null;
+                let addAttachmentRpc = null;
+
+                setAbortCallback?.(() => {
+                    controller.abort();
+                    addAttachmentRpc?.abort?.();
+                    currentXHR?.abort?.();
+                });
+
                 for (const file of sortedFiles) {
+                    if (signal.aborted) {
+                        return;
+                    }
+
                     let fileSize = file.size;
                     if (!checkFileSize(fileSize, notification)) {
                         return null;
@@ -126,10 +149,17 @@ export const uploadService = {
                 // Upload one file at a time: no need to parallel as upload is
                 // limited by bandwidth.
                 for (const sortedFile of sortedFiles) {
+                    if (signal.aborted) {
+                        break;
+                    }
+
                     const file = progressToast.files[sortedFile.progressToastId];
                     let dataURL;
                     try {
                         dataURL = await getDataURLFromFile(sortedFile);
+                        if (signal.aborted) {
+                            break;
+                        }
                     } catch {
                         deleteFile(file.id);
                         env.services.notification.add(
@@ -139,50 +169,85 @@ export const uploadService = {
                             ),
                             { type: 'danger' }
                         );
-                        continue
+                        continue;
                     }
+
+                    currentXHR = new XMLHttpRequest();
+                    addAttachmentRpc = null;
+
+                    const onProgress = (ev) => {
+                        if (ev.lengthComputable) {
+                            file.progress = (ev.loaded / ev.total) * 100;
+                        }
+                    };
+                    const onLoad = () => (file.progress = 100);
+
+                    currentXHR.upload.addEventListener("progress", onProgress);
+                    currentXHR.upload.addEventListener("load", onLoad);
+
                     try {
-                        const xhr = new XMLHttpRequest();
-                        xhr.upload.addEventListener('progress', ev => {
-                            const rpcComplete = ev.loaded / ev.total * 100;
-                            file.progress = rpcComplete;
-                        });
-                        xhr.upload.addEventListener('load', function () {
-                            // Don't show yet success as backend code only starts now
-                            file.progress = 100;
-                        });
-                        const attachment = await rpc('/web_editor/attachment/add_data', {
-                            'name': file.name,
-                            'data': dataURL.split(',')[1],
-                            'res_id': resId,
-                            'res_model': resModel,
-                            'is_image': !!isImage,
-                            'width': 0,
-                            'quality': 0,
-                        }, {xhr});
+                        addAttachmentRpc = rpc(
+                            "/web_editor/attachment/add_data",
+                            {
+                                name: file.name,
+                                data: dataURL.split(",")[1],
+                                res_id: resId,
+                                res_model: resModel,
+                                is_image: !!isImage,
+                                width: 0,
+                                quality: 0,
+                            },
+                            { xhr: currentXHR }
+                        );
+
+                        const attachment = await addAttachmentRpc;
+                        if (signal.aborted) {
+                            break;
+                        }
+
                         if (attachment.error) {
                             file.hasError = true;
                             file.errorMessage = attachment.error;
                         } else {
-                            if (attachment.mimetype === 'image/webp') {
-                                // Generate alternate format for reports.
-                                await convertWebpToJpeg(
-                                    dataURL,
-                                    file.name,
-                                    attachment.id
-                                );
+                            if (attachment.mimetype === "image/webp") {
+                                try {
+                                    // Generate alternate format for reports.
+                                    await convertWebpToJpeg(
+                                        dataURL,
+                                        file.name,
+                                        attachment.id
+                                    );
+                                } catch (convErr) {
+                                    console.warn(
+                                        "[uploadService] webp conversion failed:",
+                                        convErr
+                                    );
+                                }
                             }
                             file.uploaded = true;
                             await onUploaded(attachment);
                         }
-                        setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY);
-                    } catch (error) {
+                    } catch (err) {
+                        if (signal.aborted) {
+                            break;
+                        }
                         file.hasError = true;
+                        console.error("Upload error:", err);
+                        throw err;
+                    } finally {
+                        currentXHR.upload.removeEventListener(
+                            "progress",
+                            onProgress
+                        );
+                        currentXHR.upload.removeEventListener("load", onLoad);
                         setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY);
-                        throw error;
+                        dataURL = null;
                     }
                 }
-            }
+
+                currentXHR = null;
+                addAttachmentRpc = null;
+            },
         };
     },
 };
