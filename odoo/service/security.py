@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from odoo.tools.misc import consteq
 
 
@@ -11,10 +9,6 @@ def compute_session_token(session, env):
 
 
 def check_session(session, env, request=None):
-    session._delete_old_sessions()
-    # Make sure we don't use a deleted session that can be saved again
-    if 'deletion_time' in session and session['deletion_time'] <= time.time():
-        return False
     self = env['res.users'].browse(session.uid)
     expected = self._compute_session_token(session.sid)
     if expected:

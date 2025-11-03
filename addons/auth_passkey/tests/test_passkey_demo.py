@@ -235,17 +235,22 @@ class PasskeyTest(HttpCaseWithUserDemo):
                 # It sets the webauthn challenge in the session
                 self.url_open('/auth/passkey/start-auth', '{}', headers={"Content-Type": "application/json"})
 
-                # 3. POST the login using the webauthn response
+                # 3. POST the login using the webauthn response and check rotation
+                first_sid = self.opener.cookies['session_id']
                 response = self.url_open('/web/login', data={
                     'type': 'webauthn',
                     'webauthn_response': json.dumps(webauthn_response),
                     'csrf_token': csrf_token,
                     'password': '',  # Currently mandatory because of `if request.params['password'] != 'admin':`
                 })
+                second_sid = self.opener.cookies['session_id']
+                self.assertTrue(first_sid and second_sid and first_sid != second_sid)
 
                 # Assert the login is successful
                 self.assertEqual(response.status_code, 200)
-                self.assertTrue(response.headers.get('Set-Cookie'))
+                self.assertFalse(response.headers.get('Set-Cookie'),
+                    "The 'Set-Cookie' header is not propagated during redirect.",
+                )
                 if passkey.get('supports_sign_count', True):
                     # If the passkey supports sign counts, the sign count increases
                     self.assertGreater(passkey['passkey'].sign_count, sign_count)
