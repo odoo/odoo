@@ -4,13 +4,16 @@ from datetime import date
 from psycopg2.errors import CheckViolation
 
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase, freeze_time
-from odoo.exceptions import ValidationError
+from odoo.tests.common import freeze_time
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import mute_logger
+
+from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('post_install', '-at_install')
-class TestHrVersion(TransactionCase):
+class TestHrVersion(TestHrCommon):
     def test_dates_constraints(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
@@ -698,3 +701,74 @@ class TestHrVersion(TransactionCase):
             fields_without_tracking,
             f"The following hr.version fields should have tracking=True: {fields_without_tracking}",
         )
+
+    def test_search_on_version_fields(self):
+        Department = self.env['hr.department'].with_context(tracking_disable=True)
+        rd_dep = Department.create({
+            'name': 'Research and devlopment',
+        })
+        employee1, employee2 = employees = self.env['hr.employee'].create([
+            {
+                'contract_date_start': '2020-10-10',
+                'wage': 3000,
+                'name': 'Employee1',
+                'hr_responsible_id': self.res_users_hr_manager.id,
+                'department_id': rd_dep.id,
+            },
+            {
+                'contract_date_start': '2022-10-10',
+                'wage': 2000,
+                'name': 'Employee2',
+            },
+        ])
+        internal_user = mail_new_test_user(
+            self.env,
+            email='internal_user@example.com',
+            login='internal_user',
+            name='Internal User',
+        )
+        self.employee.department_id = rd_dep
+        self.employee.user_id = internal_user
+
+        HrEmployeePublic_with_internal_user = self.env['hr.employee.public'].with_user(internal_user)
+        with self.assertRaises(AccessError, msg="Internal user should not be able to access to hr.employee model"):
+            HrEmployeePublic_with_internal_user.search([
+                ('employee_id.contract_date_start', '<', '2022-01-01'),
+                ('id', 'in', employees.ids),
+            ])
+        with self.assertRaises(AccessError, msg="Internal user should not be able to access to hr.employee model"):
+            HrEmployeePublic_with_internal_user.search([('employee_id.wage', '=', 2000), ('id', 'in', employees.ids)])
+        with self.assertRaises(AccessError, msg="Internal user should not be able to access to hr.employee model"):
+            HrEmployeePublic_with_internal_user.search([('employee_id.version_id.wage', '=', 2000), ('id', 'in', employees.ids)])
+        self.assertEqual(
+            HrEmployeePublic_with_internal_user.search([('name', '=', 'Employee2'), ('id', 'in', employees.ids)]),
+            self.env['hr.employee.public'].browse(employee2.id),
+        )
+        self.assertEqual(
+            HrEmployeePublic_with_internal_user.search([('member_of_department', '=', True), ('id', 'in', employees.ids)]),
+            self.env['hr.employee.public'].browse(employee1.id),
+        )
+
+        HrEmployee_with_office_user = self.env['hr.employee'].with_user(self.res_users_hr_officer)
+        self.employee.user_id = self.res_users_hr_officer
+        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
+            HrEmployee_with_office_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)])
+        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
+            HrEmployee_with_office_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)])
+        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
+            HrEmployee_with_office_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)])
+        self.assertEqual(HrEmployee_with_office_user.search([('name', '=', 'Employee1'), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_office_user.search([('hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_office_user.search([('version_id.hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_office_user.search([('member_of_department', '=', True), ('id', 'in', employees.ids)]), employee1)
+
+        if payroll_group := self.env.ref('hr_payroll.group_hr_payroll_user', raise_if_not_found=False):
+            self.res_users_hr_manager.group_ids += payroll_group
+        HrEmployee_with_manager_user = self.env['hr.employee'].with_user(self.res_users_hr_manager)
+        self.employee.user_id = self.res_users_hr_manager
+        self.assertEqual(HrEmployee_with_manager_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_manager_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
+        self.assertEqual(HrEmployee_with_manager_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
+        self.assertEqual(HrEmployee_with_manager_user.search([('hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_manager_user.search([('version_id.hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_manager_user.search([('member_of_department', '=', True), ('id', 'in', employees.ids)]), employee1)
