@@ -139,6 +139,10 @@
         background-color: $border-color;
         content: "";
     }
+
+    &:where(:not(:has(.o_dragged_embedded_action))) {
+        overflow: hidden;
+    }
 }
 
 .o_embedded_actions_dropdown_menu {
