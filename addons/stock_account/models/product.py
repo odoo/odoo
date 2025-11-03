@@ -135,7 +135,7 @@ class ProductProduct(models.Model):
         help="Technical field to correctly show the currently selected company's currency that corresponds "
              "to the totaled value of the product's valuation layers")
 
-    @api.depends_context('to_date', 'company')
+    @api.depends_context('to_date', 'company', 'warehouse_id')
     @api.depends('cost_method', 'stock_move_ids.value', 'standard_price')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
@@ -146,19 +146,28 @@ class ProductProduct(models.Model):
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
             if at_date:
                 product = product.with_context(at_date=at_date)
-            qty_available = product.sudo(False)._with_valuation_context().qty_available
+            valuated_product = product.sudo(False)._with_valuation_context()
+            qty_available = valuated_product.qty_available
+            total_qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_available
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
+            elif product.uom_id.is_zero(qty_available):
+                product.total_value = 0
+            elif product.uom_id.is_zero(total_qty_available):
+                product.total_value = product._get_standard_price_at_date() * qty_available
             elif product.cost_method == 'standard':
                 standard_price = product.standard_price
                 if at_date:
                     standard_price = product._get_standard_price_at_date(at_date)
                 product.total_value = standard_price * qty_available
             elif product.cost_method == 'average':
-                product.total_value = product._run_avco(at_date=at_date)[1]
+                product.total_value = product._run_avco(at_date=at_date)[1] * qty_available / total_qty_available
             else:
-                product.total_value = product._run_fifo(qty_available, at_date=at_date)
-            product.avg_cost = product.total_value / qty_available if qty_available else 0.0
+                product.total_value = product.with_context(warehouse_id=False)._run_fifo(total_qty_available, at_date=at_date) * qty_available / total_qty_available
+            if product.company_currency_id.is_zero(product.total_value):
+                product.avg_cost = product._get_standard_price_at_date()
+            else:
+                product.avg_cost = product.total_value / qty_available if not product.uom_id.is_zero(qty_available) else product._get_standard_price_at_date()
 
     def write(self, vals):
         old_price = False
