@@ -18,6 +18,12 @@ import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 
+// Selectors for special cases where snippet options are bound to parent
+// containers instead of the snippet itself.
+export const BLOCKQUOTE_PARENT_HANDLERS = ".s_reviews_wall .row > div";
+export const BLOCKQUOTE_DISABLE_WIDTH_APPLY_TO = ":scope > .s_blockquote";
+export const SPECIAL_BLOCKQUOTE_SELECTOR = `${BLOCKQUOTE_PARENT_HANDLERS} > .s_blockquote`;
+
 /**
  * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
  */

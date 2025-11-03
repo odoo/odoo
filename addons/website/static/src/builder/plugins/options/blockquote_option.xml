@@ -2,6 +2,29 @@
 <templates xml:space="preserve">
 
 <t t-name="website.BlockquoteOption">
+    <t t-if="!this.props.disableWidth">
+        <BaseWebsiteBackgroundOption
+            withColors="true"
+            withImages="true"
+            withShapes="true"
+            withColorCombinations="true"
+        />
+        <BuilderRow label.translate="Width">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'w-25'">25%</BuilderSelectItem>
+                <BuilderSelectItem classAction="'w-50'">50%</BuilderSelectItem>
+                <BuilderSelectItem classAction="'w-75'">75%</BuilderSelectItem>
+                <BuilderSelectItem classAction="'w-100'" id="'so_width_100'">100%</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')" level="1">
+            <BuilderButtonGroup>
+                <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
+                <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
+                <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </t>
     <!-- Layout -->
     <BuilderRow label.translate="Edge Spacing">
         <BuilderRange action="'setClassRange'" actionParam="['p-1','p-2','p-3','p-4','p-5']" max="4"/>
@@ -19,13 +42,18 @@
         <BuilderColorPicker styleAction="'background-color'" enabledTabs="['solid', 'custom', 'gradient']"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Author Alignment" applyTo="'.s_blockquote_infos'">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="'flex-row align-items-start justify-content-start text-start'">Left</BuilderSelectItem>
-            <BuilderSelectItem classAction="'flex-column align-items-center text-center'">Center</BuilderSelectItem>
-            <BuilderSelectItem classAction="'flex-row-reverse align-items-start justify-content-start text-end'">Right</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
+    <BuilderContext applyTo="'.s_blockquote_infos'">
+        <BuilderRow label.translate="Show Author">
+            <BuilderCheckbox id="'blockquote_show_author_opt'" classAction="'d-flex'"/>
+        </BuilderRow>
+        <BuilderRow t-if="this.isActiveItem('blockquote_show_author_opt')" label.translate="Author Alignment" level="1">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'flex-row align-items-start justify-content-start text-start'">Left</BuilderSelectItem>
+                <BuilderSelectItem classAction="'flex-column align-items-center text-center'">Center</BuilderSelectItem>
+                <BuilderSelectItem classAction="'flex-row-reverse align-items-start justify-content-start text-end'">Right</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
 
     <BorderConfigurator label.translate="Border"/>
     <ShadowOption/>
