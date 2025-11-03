@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { press, queryFirst } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertText, tripleClick, undo } from "./_helpers/user_actions";
+import { insertSpace, insertText, tripleClick, undo } from "./_helpers/user_actions";
 import { animationFrame } from "@odoo/hoot-mock";
 import { defineStyle } from "@web/../tests/web_test_helpers";
 
@@ -1320,22 +1320,25 @@ describe("to blockquote", () => {
 describe("transform", () => {
     test("should transform space preceding by a hashtag to heading 1", async () => {
         const { el, editor } = await setupEditor("<p>[]</p>");
-        await insertText(editor, "# ");
+        await insertText(editor, "#");
+        await insertSpace(editor);
         expect(getContent(el)).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1>`);
 
         undo(editor);
-        expect(getContent(el)).toBe(`<p># []</p>`);
+        expect(getContent(el)).toBe(`<p>#&nbsp;[]</p>`);
     });
 
     test("should transform space preceding by two hashtags to heading 2", async () => {
         const { el, editor } = await setupEditor("<p>[]</p>");
-        await insertText(editor, "## ");
+        await insertText(editor, "##");
+        await insertSpace(editor);
         expect(getContent(el)).toBe(`<h2 o-we-hint-text="Heading 2" class="o-we-hint">[]<br></h2>`);
     });
 
     test("should transform space preceding by three hashtags to heading 3", async () => {
         const { el, editor } = await setupEditor("<p>[]<br></p>");
-        await insertText(editor, "### ");
+        await insertText(editor, "###");
+        await insertSpace(editor);
         expect(getContent(el)).toBe(`<h3 o-we-hint-text="Heading 3" class="o-we-hint">[]<br></h3>`);
     });
 
@@ -1368,7 +1371,8 @@ describe("transform", () => {
 
     test("should transform three dashes in an empty block to separator before the block", async () => {
         const { el, editor } = await setupEditor("<p>[]<br></p>");
-        await insertText(editor, "--- ");
+        await insertText(editor, "---");
+        await insertSpace(editor);
         expect(getContent(el)).toBe(
             `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
@@ -1384,7 +1388,8 @@ describe("transform", () => {
 
     test("should transform space preceding by greater-than symbol to blockquote", async () => {
         const { el, editor } = await setupEditor("<p>[]<br></p>");
-        await insertText(editor, "> ");
+        await insertText(editor, ">");
+        await insertSpace(editor);
         expect(getContent(el)).toBe(
             `<blockquote o-we-hint-text="Quote" class="o-we-hint">[]<br></blockquote>`
         );

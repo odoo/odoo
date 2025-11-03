@@ -81,6 +81,75 @@ export async function insertText(editor, text) {
 }
 
 /**
+ * Inserts space in the editor by dispatching keyboard/input events
+ * for space character and inserting it into the current selection's position.
+ *
+ * @param {Editor} editor
+ */
+export async function insertSpace(editor) {
+    const keydownEvent = await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
+        key: " ",
+    });
+    if (keydownEvent.defaultPrevented) {
+        return;
+    }
+    // InputEvent is required to simulate the insert text.
+    const [beforeinputEvent] = await manuallyDispatchProgrammaticEvent(
+        editor.editable,
+        "beforeinput",
+        {
+            inputType: "insertText",
+            data: " ",
+        }
+    );
+    if (beforeinputEvent.defaultPrevented) {
+        return;
+    }
+    const range = editor.document.getSelection().getRangeAt(0);
+    if (!range.collapsed) {
+        throw new Error("need to implement something... maybe");
+    }
+    let offset = range.startOffset;
+    const node = range.startContainer;
+    // mimic the behavior of the browser when inserting a &nbsp
+    const twoSpace = " \u00A0";
+    node.textContent = (
+        node.textContent.slice(0, offset) +
+        " " +
+        node.textContent.slice(offset)
+    ).replaceAll("  ", twoSpace);
+
+    if (
+        node.nextSibling &&
+        node.nextSibling.textContent.startsWith(" ") &&
+        node.textContent.endsWith(" ")
+    ) {
+        node.nextSibling.textContent = "\u00A0" + node.nextSibling.textContent.slice(1);
+    }
+
+    offset++;
+    // If inserted space is the trailing space, convert it to &nbsp
+    if (node.textContent.length == offset && node.textContent.endsWith(" ")) {
+        node.textContent = node.textContent.slice(0, -1) + "\u00A0";
+    }
+
+    setSelection({
+        anchorNode: node,
+        anchorOffset: offset,
+    });
+
+    const [inputEvent] = await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
+        inputType: "insertText",
+        data: " ",
+    });
+    if (inputEvent.defaultPrevented) {
+        return;
+    }
+    // KeyUpEvent is not required but is triggered like the browser would.
+    await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: " " });
+}
+
+/**
  * Simulate the automatic removal of BR from the browser.
  *
  * BR nodes are used to make empty blocks visible. When a character is inserted
