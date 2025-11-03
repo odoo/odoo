@@ -10,4 +10,19 @@
             }
         }
     }
+    &.o_full_screen_height {
+        @extend %full_screen_carousel;
+    }
+}
+
+// Reusable full-screen carousel behavior
+%full_screen_carousel {
+    .carousel,
+    .carousel-inner,
+    .carousel-item {
+        min-height: inherit !important;
+    }
+    .carousel-item {
+        align-content: center;
+    }
 }

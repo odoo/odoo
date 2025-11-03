@@ -9,24 +9,12 @@ export class CarouselSlider extends Interaction {
             "t-on-slide.bs.carousel": this.onSlideCarousel,
             "t-on-slid.bs.carousel": this.onSlidCarousel,
         },
-        img: {
-            "t-on-load": this.computeMaxHeight,
-        },
-        _window: {
-            "t-on-resize": this.debounced(this.computeMaxHeight, 250),
-        },
-        ".carousel-item": {
-            "t-att-style": () => ({
-                "min-height": this.maxHeight ? `${this.maxHeight}px` : "",
-            }),
-        },
         ".slide-link": { "t-att-class": () => ({ "d-none": !this.showClickableSlideLinks }) },
     };
     carouselOptions = undefined;
     showClickableSlideLinks = true;
 
     setup() {
-        this.maxHeight = undefined;
         this.hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
         if (!["true", "carousel", "false"].includes(this.el.dataset.bsRide)) {
             this.el.dataset.bsRide = this.hasInterval ? "carousel" : "false";
@@ -39,7 +27,7 @@ export class CarouselSlider extends Interaction {
     }
 
     start() {
-        this.computeMaxHeight();
+        this.activeCarouselItemState();
         this.updateContent();
         const carouselBS = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
         this.registerCleanup(() => carouselBS.dispose());
@@ -67,18 +55,9 @@ export class CarouselSlider extends Interaction {
         observer.observe(this.el);
     }
 
-    computeMaxHeight() {
-        this.maxHeight = undefined;
-        // "updateContent()" is necessary to reset the min-height before the
-        // following check.
-        this.updateContent();
+    activeCarouselItemState() {
         for (const itemEl of this.el.querySelectorAll(".carousel-item")) {
             const isActive = itemEl.classList.contains("active");
-            itemEl.classList.add("active");
-            const height = itemEl.getBoundingClientRect().height;
-            if (height > this.maxHeight || this.maxHeight === undefined) {
-                this.maxHeight = height;
-            }
             itemEl.classList.toggle("active", isActive);
         }
     }

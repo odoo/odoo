@@ -24,16 +24,6 @@
             transform: scale(.98);
             cursor: pointer;
 
-            [data-snippet="s_carousel"],
-            [data-snippet="s_carousel_intro"],
-            [data-snippet="s_carousel_cards"],
-            [data-snippet="s_quotes_carousel_minimal"],
-            [data-snippet="s_quotes_carousel"] {
-                height: 550px;
-            }
-            [data-snippet="s_quotes_carousel_compact"] {
-                height: 350px;
-            }
             [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
                 /* In Travel theme. */
                 height: 500px !important;
@@ -50,6 +40,18 @@
             }
             .o_half_screen_height {
                 aspect-ratio: 8 / 3;
+            }
+            [data-snippet="s_carousel"],
+            [data-snippet="s_carousel_intro"],
+            [data-snippet="s_carousel_cards"],
+            [data-snippet="s_quotes_carousel_minimal"],
+            [data-snippet="s_quotes_carousel"] {
+                height: 550px;
+                min-height: -webkit-fill-available !important;
+            }
+            [data-snippet="s_quotes_carousel_compact"] {
+                height: 350px;
+                min-height: -webkit-fill-available !important;
             }
             [inert="inert"] > [data-snippet] {
                 isolation: isolate;

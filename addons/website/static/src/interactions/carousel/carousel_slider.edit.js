@@ -15,7 +15,7 @@ const CarouselSliderEdit = (I) =>
         showClickableSlideLinks = false;
 
         onContentChanged() {
-            this.computeMaxHeight();
+            this.activeCarouselItemState();
         }
     };
 
