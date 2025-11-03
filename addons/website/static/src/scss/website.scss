@@ -435,6 +435,8 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
         }
 
         .accordion-button {
+            font-size: inherit;
+
             &:not(.collapsed) {
                 @if $-navbar-mobile-bg-color != null {
                     background-color: shade-color($-navbar-mobile-bg-color, 5%);
