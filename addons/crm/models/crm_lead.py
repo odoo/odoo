@@ -666,12 +666,16 @@ class Lead(models.Model):
         return values
 
     def _prepare_contact_name_from_partner(self, partner):
+        if not partner:
+            return {'contact_name': self.contact_name}
         contact_name = False if partner.is_company else partner.name
         return {'contact_name': contact_name or self.contact_name}
 
     def _prepare_partner_name_from_partner(self, partner):
         """ Company name: name of partner parent (if set) or name of partner
         (if company) or company_name of partner (if not a company). """
+        if not partner:
+            return {'partner_name': self.partner_name}
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
