@@ -78,13 +78,10 @@ export class DiscussChannel extends Record {
         inverse: "channel",
         onDelete: (r) => r?.delete(),
     });
-
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });
 
-    delete(options = { closeChatWindow: true }) {
-        if (this.chatWindow?.exists() && options.closeChatWindow) {
-            this.chatWindow.close();
-        }
+    delete() {
+        this.chatWindow?.close();
         super.delete(...arguments);
     }
 
