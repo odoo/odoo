@@ -284,6 +284,11 @@ export function setActiveProperties(fieldEl, field) {
     field.modelRequired = classList.contains("s_website_form_model_required");
     field.hidden = classList.contains("s_website_form_field_hidden");
     field.formatInfo = getFieldFormat(fieldEl);
+    // this is needed to link states to the country
+    if (field.name === "state_id") {
+        field.linkStateToCountry =
+            fieldEl.querySelector(".s_website_form_input").dataset.linkStateToCountry !== "false";
+    }
 }
 
 /**
@@ -501,6 +506,24 @@ export function getModelName(formEl) {
     return formEl.dataset.model_name || "mail.mail";
 }
 
+export function getFormCacheKey(formEl) {
+    // Combine model and fields into cache key.
+    const model = getModelName(formEl);
+    const propertyOrigins = {};
+    const parts = [model];
+    for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
+        (firstEl, secondEl) => firstEl.name.localeCompare(secondEl.name)
+    )) {
+        // Pushing using the name order to avoid being impacted by the
+        // order of hidden fields within the DOM.
+        parts.push(hiddenInputEl.name);
+        parts.push(hiddenInputEl.value);
+        propertyOrigins[hiddenInputEl.name] = hiddenInputEl.value;
+    }
+    const cacheKey = parts.join("/");
+    return { cacheKey, model, propertyOrigins };
+}
+
 export function getListItems(fieldEl) {
     const selectEl = getSelect(fieldEl);
     const multipleInputsEl = getMultipleInputs(fieldEl);
@@ -512,11 +535,15 @@ export function getListItems(fieldEl) {
     }
     return options.map((opt) => {
         const name = selectEl ? opt : opt.nextElementSibling;
-        return {
+        const res = {
             id: isSmallInteger(opt.value) ? parseInt(opt.value) : opt.value,
             display_name: name.textContent.trim(),
             selected: selectEl ? opt.selected : opt.checked,
         };
+        if (opt.dataset.countryId) {
+            res.country_id = [parseInt(opt.dataset.countryId), ""];
+        }
+        return res;
     });
 }
 

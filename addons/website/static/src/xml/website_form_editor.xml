@@ -279,9 +279,15 @@
         <!-- Generic one2many -->
         <t t-if="field.relation !== 'ir.attachment'">
             <t t-call="website.form_field">
-                <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id">
+                <select class="form-select s_website_form_input" t-att-name="field.name"
+                    t-att-required="field.required || field.modelRequired || None" t-att-id="field.id"
+                    t-attf-data-link-state-to-country="{{ field.name == 'state_id' and field.linkStateToCountry ? 'true' : 'false' }}">
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
+                        <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id"
+                            t-att="{
+                                selected: record.selected and 'selected' or None,
+                                'data-country-id': field.name == 'state_id' and (record.country_id and record.country_id[0]) or None
+                            }" />
                     </t>
                 </select>
             </t>

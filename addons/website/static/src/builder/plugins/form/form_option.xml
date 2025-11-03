@@ -159,6 +159,10 @@
             <BuilderButton title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
+    <BuilderRow label.translate="Link to country">
+        <BuilderCheckbox action="'linkStateToCountry'" t-if="this.canLinkStateToCountry.value"
+            id="'link_state_to_country_opt'" applyTo="'.s_website_form_input'"/>
+    </BuilderRow>
     <BuilderRow label.translate="Description">
         <BuilderCheckbox action="'toggleDescription'" preview="false"/>
     </BuilderRow>
@@ -212,7 +216,7 @@
             applyWithUnit="false"
         />
     </BuilderRow>
-    <BuilderRow t-if="state.valueList">
+    <BuilderRow t-if="state.valueList and (!(this.domState.fieldName === 'state_id' and isActiveItem('link_state_to_country_opt')))">
         <div class="d-flex flex-column w-100">
             <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
                 <t t-out="state.valueList.title" />

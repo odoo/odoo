@@ -33,6 +33,7 @@ import {
     setVisibilityDependency,
     getParsedDataFor,
     rerenderField,
+    getFormCacheKey,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -52,6 +53,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
  * @property { FormOptionPlugin['applyFormModel'] } applyFormModel
  * @property { FormOptionPlugin['addHiddenField'] } addHiddenField
  * @property { FormOptionPlugin['fetchAuthorizedFields'] } fetchAuthorizedFields
+ * @property { FormOptionPlugin['fetchFieldRecords'] } fetchFieldRecords
  * @property { FormOptionPlugin['loadFieldOptionData'] } loadFieldOptionData
  * @property { FormOptionPlugin['prepareFields'] } prepareFields
  * @property { FormOptionPlugin['replaceField'] } replaceField
@@ -80,6 +82,7 @@ export class FormOptionPlugin extends Plugin {
         "applyFormModel",
         "addHiddenField",
         "fetchAuthorizedFields",
+        "fetchFieldRecords",
         "loadFieldOptionData",
         "prepareFields",
         "replaceField",
@@ -160,6 +163,7 @@ export class FormOptionPlugin extends Plugin {
             // Field actions
             CustomFieldAction,
             ExistingFieldAction,
+            LinkStateToCountryAction,
             SelectTypeAction,
             ExistingFieldSelectTypeAction,
             MultiCheckboxDisplayAction,
@@ -232,9 +236,9 @@ export class FormOptionPlugin extends Plugin {
     async _fetchModels() {
         return await this.services.orm.call("ir.model", "get_compatible_form_models");
     }
-    async fetchFieldRecords(field) {
+    async fetchFieldRecords(field, formEl) {
         if (field) {
-            field.records = await this.fieldRecordsCache.preload(field);
+            field.records = await this.fieldRecordsCache.preload({ field, formEl });
             return field.records;
         }
     }
@@ -245,11 +249,7 @@ export class FormOptionPlugin extends Plugin {
      * @param {Object} field
      * @returns {Promise<Object>}
      */
-    async _fetchFieldRecords(field) {
-        // TODO remove this - put there to avoid crash
-        if (!field) {
-            return;
-        }
+    async _fetchFieldRecords({ field, formEl }) {
         // Convert the required boolean to a value directly usable
         // in qweb js to avoid duplicating this in the templates
         field.required = field.required ? 1 : null;
@@ -277,6 +277,13 @@ export class FormOptionPlugin extends Plugin {
             }));
         } else if (field.relation && field.relation !== "ir.attachment") {
             const fieldNames = field.fieldName ? [field.fieldName] : ["display_name"];
+            if (field.name === "state_id" && formEl) {
+                // if there's a country_id field on the form, fetch country_id
+                const cachedFields = await this.authorizedFieldsCache.read(getFormCacheKey(formEl));
+                if (cachedFields?.country_id) {
+                    fieldNames.push("country_id");
+                }
+            }
             field.records = await this.services.orm.searchRead(
                 field.relation,
                 field.domain || [],
@@ -289,6 +296,7 @@ export class FormOptionPlugin extends Plugin {
         return field.records;
     }
     async prepareFormModel(el, activeForm) {
+        const formEl = el.closest("form");
         const formKey = activeForm?.website_form_key;
         const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
         if (formInfo) {
@@ -296,7 +304,7 @@ export class FormOptionPlugin extends Plugin {
             await Promise.all(
                 formInfo.formFields.map((field) => {
                     field.formatInfo = formatInfo;
-                    return this.fetchFieldRecords(field);
+                    return this.fetchFieldRecords(field, formEl);
                 })
             );
             await this.fetchFormInfoFields(formInfo);
@@ -411,20 +419,7 @@ export class FormOptionPlugin extends Plugin {
         }
     }
     async fetchAuthorizedFields(formEl) {
-        // Combine model and fields into cache key.
-        const model = getModelName(formEl);
-        const propertyOrigins = {};
-        const parts = [model];
-        for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
-            (firstEl, secondEl) => firstEl.name.localeCompare(secondEl.name)
-        )) {
-            // Pushing using the name order to avoid being impacted by the
-            // order of hidden fields within the DOM.
-            parts.push(hiddenInputEl.name);
-            parts.push(hiddenInputEl.value);
-            propertyOrigins[hiddenInputEl.name] = hiddenInputEl.value;
-        }
-        const cacheKey = parts.join("/");
+        const { cacheKey, model, propertyOrigins } = getFormCacheKey(formEl);
         return this.authorizedFieldsCache.read({ cacheKey, model, propertyOrigins });
     }
     async _fetchAuthorizedFields({ cacheKey, model, propertyOrigins }) {
@@ -497,9 +492,10 @@ export class FormOptionPlugin extends Plugin {
         const fieldOptionData = await this.loadFieldOptionData(fieldEl);
         const fieldName = getFieldName(fieldEl);
         const field = fieldOptionData.fields[fieldName];
-        await this.fetchFieldRecords(field);
+        const formEl = fieldEl.closest("form");
+        await this.fetchFieldRecords(field, formEl);
         if (fieldOptionData.fields[value]) {
-            await this.fetchFieldRecords(fieldOptionData.fields[value]);
+            await this.fetchFieldRecords(fieldOptionData.fields[value], formEl);
         }
         return fieldOptionData.fields;
     }
@@ -508,9 +504,10 @@ export class FormOptionPlugin extends Plugin {
         const fieldOptionData = await this.loadFieldOptionData(fieldEl);
         const fieldName = getFieldName(fieldEl);
         const field = fieldOptionData.fields[fieldName];
-        await this.fetchFieldRecords(field);
+        const formEl = fieldEl.closest("form");
+        await this.fetchFieldRecords(field, formEl);
         if (fieldOptionData.fields[value]) {
-            await this.fetchFieldRecords(fieldOptionData.fields[value]);
+            await this.fetchFieldRecords(fieldOptionData.fields[value], formEl);
         }
         return fieldOptionData.conditionInputs;
     }
@@ -726,7 +723,7 @@ export class FormOptionPlugin extends Plugin {
             );
             let availableRecords = undefined;
             if (!isFieldCustom(fieldEl)) {
-                await this.fetchFieldRecords(field);
+                await this.fetchFieldRecords(field, formEl);
                 availableRecords = JSON.stringify(field.records);
             }
             valueList = reactive({
@@ -1166,6 +1163,36 @@ export class ExistingFieldSelectTypeAction extends BuilderAction {
     isApplied({ editingElement: fieldEl, value }) {
         const currentValue = getFieldType(fieldEl);
         return currentValue === value;
+    }
+}
+export class LinkStateToCountryAction extends BuilderAction {
+    static id = "linkStateToCountry";
+    static dependencies = ["websiteFormOption"];
+    setup() {
+        this.preview = false;
+    }
+
+    async apply({ editingElement: inputEl }) {
+        const fieldEl = inputEl.closest(".s_website_form_field");
+        const formEl = fieldEl.closest("form");
+        const fields = await this.dependencies.websiteFormOption.prepareFields({
+            editingElement: fieldEl,
+        });
+        inputEl.dataset.linkStateToCountry = "true";
+        const field = getActiveField(fieldEl, { fields });
+        const records = field.records;
+        delete field.records;
+        field.records =
+            (await this.dependencies.websiteFormOption.fetchFieldRecords(field, formEl)) || records;
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+
+    clean({ editingElement: inputEl }) {
+        inputEl.dataset.linkStateToCountry = "false";
+    }
+
+    isApplied({ editingElement: inputEl }) {
+        return inputEl.dataset.linkStateToCountry === "true";
     }
 }
 export class MultiCheckboxDisplayAction extends BuilderAction {
