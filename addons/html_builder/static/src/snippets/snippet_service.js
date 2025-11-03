@@ -442,7 +442,7 @@ export class SnippetModel extends Reactive {
     }
 }
 
-registry.category("services").add("html_builder.snippets", {
+export const snippetService = {
     dependencies: ["orm", "dialog"],
 
     start(env, { orm, dialog }) {
@@ -469,7 +469,9 @@ registry.category("services").add("html_builder.snippets", {
 
         return { getSnippetModel };
     },
-});
+};
+
+registry.category("services").add("html_builder.snippets", snippetService);
 
 export function useSnippets(snippetsName) {
     const snippetsService = useService("html_builder.snippets");
