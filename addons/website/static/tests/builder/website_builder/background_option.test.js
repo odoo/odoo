@@ -301,13 +301,16 @@ async function openBgPositionOverlay(editingElement, waitSidebarUpdated) {
     await waitFor(".o-overlay-container .o_we_overlay_dragger", { timeout: 2000 });
 }
 
-async function dragAndDropBgImage() {
-    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+async function dragAndDropBgImage(builderOptions = {}) {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
             <div class="o_we_shape o_html_builder_Connections_01">
                 AAAA
             </div>
-        </section>`);
+        </section>`,
+        builderOptions
+    );
     await openBgPositionOverlay(":iframe section", waitSidebarUpdated);
     const { startDrag, endDrag } = patchDragImage(
         ".o-overlay-container .o_we_overlay_dragger",
@@ -667,4 +670,20 @@ test("Previewed shape has the correct color and flip when a shape is applied", a
     ).backgroundImage;
     expect(shapePreviewStyle).toInclude(encodeURIComponent(HEX_BLUE));
     expect(shapePreviewStyle).toInclude("flip=xy");
+});
+
+test("Change the background position when multiple background layer is applied", async () => {
+    await dragAndDropBgImage({ loadIframeBundles: true });
+    const section = await waitFor(":iframe section");
+    await contains(section).click();
+    expect(section).not.toHaveClass("o_bg_img_opt_repeat");
+    expect(section).toHaveStyle("background-size: cover");
+    await contains("[data-label='Background'] .o_we_color_preview").click();
+    await contains(".o_font_color_selector .gradient-tab").click();
+    await contains(".o_colorpicker_sections .o_gradient_color_button").click();
+    await contains("[data-label='Position'] .dropdown-toggle").click();
+    await contains("[data-action-value='repeat-pattern']").click();
+    expect(section).toHaveClass("o_bg_img_opt_repeat");
+    expect(section).toHaveStyle("background-size: 100px, cover");
+    expect("[data-action-value='repeat-pattern']").toHaveClass("active");
 });
