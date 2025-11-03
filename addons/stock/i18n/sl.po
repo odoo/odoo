@@ -10,13 +10,14 @@
 # Wil Odoo, 2025
 # Aleš Pipan, 2025
 # Tadej Vengust <tadej.vengust@implex.si>, 2025.
+# Jan Zorko <jan.zorko@implex.si>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-27 01:48+0000\n"
-"PO-Revision-Date: 2025-10-30 18:01+0000\n"
-"Last-Translator: Tadej Vengust <tadej.vengust@implex.si>\n"
+"PO-Revision-Date: 2025-11-03 21:51+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/stock/"
 "sl/>\n"
 "Language: sl\n"
@@ -161,7 +162,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "%(product)s: Insufficient Quantity To Scrap"
-msgstr ""
+msgstr "%(product)s: Nezadostna količina za zavreči"
 
 #. module: stock
 #. odoo-python
@@ -453,6 +454,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Current Inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Trenutni inventar: </strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -646,7 +649,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Premiki izdelkov</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -866,7 +869,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? To lahko privede do nedoslednosti v vašem inventarju."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -1746,7 +1749,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move__scrapped
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "Označite, če želite to lokacijo uporabljati za izmet."
+msgstr "Označite, če želite to lokacijo uporabljati za odpad."
 
 #. module: stock
 #. odoo-python
@@ -3103,7 +3106,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "Do you confirm you want to scrap"
-msgstr ""
+msgstr "Potrjujete, da želite zavreči"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3197,7 +3200,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Effective Date"
-msgstr "DUR"
+msgstr "Izvedeno"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3739,7 +3742,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
 msgid "Has Scrap Moves"
-msgstr ""
+msgstr "Ima premike odpada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
@@ -4468,7 +4471,7 @@ msgstr "Je podpisano"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "Je lokacija odpisa?"
+msgstr "Je lokacija odpada?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -5602,6 +5605,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Ni bilo najdenega pravila za dopolnitev \"%(product)s\" v \"%(location)s\".\n"
+"Preverite nastavitev prog na izdelku."
 
 #. module: stock
 #. odoo-python
@@ -7481,7 +7486,7 @@ msgstr "Lokacija dopolnitve"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Quantities"
-msgstr "Obnovi količine"
+msgstr "Napolni zalogo"
 
 #. module: stock
 #. odoo-python
@@ -7929,7 +7934,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 msgid "Scrap"
-msgstr "Odpis"
+msgstr "Odpad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
@@ -7940,19 +7945,19 @@ msgstr "Lokacija odpada"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr "Naročila odpisov"
+msgstr "Naročila zavrnitev"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 msgid "Scrap Products"
-msgstr "Odpiši Izdelke"
+msgstr "Zavrzi izdelke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_reason_tag_ids
 msgid "Scrap Reason"
-msgstr "Razlog Odpisa"
+msgstr "Razlog Zavrnitve"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap_reason_tag
@@ -7967,12 +7972,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
 msgid "Scrap products"
-msgstr "Odpisani izdelki"
+msgstr "Zavrženi izdelki"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrapped
 msgid "Scrapped"
-msgstr "Odpisano"
+msgstr "Zavrženo"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -7981,14 +7986,14 @@ msgid ""
 "                end up in a scrap location that can be used for reporting "
 "purpose."
 msgstr ""
-"Z odpisom izdelka ga boste odstranili iz zaloge. Izdelek bo\n"
-"                končal na odpisni lokaciji, ki jo je mogoče uporabiti za "
+"Z zavrnitvijo izdelka ga boste odstranili iz zaloge. Izdelek bo\n"
+"                končal na odpadni lokaciji, ki jo je mogoče uporabiti za "
 "namene poročanja."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Scraps"
-msgstr "Odpisi"
+msgstr "Zavrnitve"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
@@ -7998,7 +8003,7 @@ msgstr "Iskanje internih oskrbnih nalogov"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
-msgstr "Išči po odpisih"
+msgstr "Išči po zavrnitvah"
 
 #. module: stock
 #. odoo-python
@@ -9093,7 +9098,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product is not available in sufficient quantity"
-msgstr ""
+msgstr "Ta izdelek ni na voljo v zadostni količini"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_quantity
@@ -9248,6 +9253,7 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
+"Ta kljukica je samo indikator, ne potrjuje ali generira premikov izdelkov."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9815,7 +9821,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr "Sproži obnovitev količin za odpisane izdelke"
+msgstr "Sproži dopolnitev zaloge za zavržene izdelke"
 
 #. module: stock
 #. odoo-javascript
@@ -10830,7 +10836,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
-msgstr ""
+msgstr "Zavrnitve, ki je končana, ni možno izbrisati."
 
 #. module: stock
 #. odoo-python
@@ -10894,8 +10900,8 @@ msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr ""
-"Lokacije odpadkov ne morete nastaviti kot ciljno lokacijo za operacijo  tipa "
-"proizvodnja"
+"Lokacije odpada ne morate nastaviti kot ciljno lokacijo za operacijo tipa "
+"proizvodnja."
 
 #. module: stock
 #. odoo-python
@@ -11223,7 +11229,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr ""
+msgstr "iz lokacije"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view

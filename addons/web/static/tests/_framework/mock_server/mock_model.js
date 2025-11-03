@@ -25,6 +25,7 @@ const {
     DEFAULT_RELATIONAL_FIELD_VALUES,
     DEFAULT_SELECTION_FIELD_VALUES,
     S_FIELD,
+    copyFields,
     isComputed,
 } = fields;
 
@@ -384,12 +385,11 @@ function getModelDefinition(previous, constructor) {
                 }
             }
             for (const [key, map] of INHERITED_OBJECT_KEYS) {
-                for (const subKey in previous[key]) {
+                const previousValue = map ? map(previous[key]) : previous[key];
+                for (const subKey in previousValue) {
                     // Assign only if empty
                     if (isEmptyValue(model[key][subKey])) {
-                        model[key][subKey] = map
-                            ? map(previous[key][subKey])
-                            : previous[key][subKey];
+                        model[key][subKey] = previousValue[subKey];
                     }
                 }
             }
@@ -865,7 +865,7 @@ function parseView(model, params) {
     const { arch } = params;
     const level = params.level || 0;
     const editable = params.editable || true;
-    const fields = deepCopy(model._fields);
+    const fields = copyFields(model._fields);
 
     const { _onChanges } = model;
     const fieldNodes = {};
@@ -1340,7 +1340,7 @@ const DATETIME_FORMAT = {
 };
 const INHERITED_OBJECT_KEYS = [
     ["_computes", null],
-    ["_fields", deepCopy],
+    ["_fields", copyFields],
     ["_onChanges", null],
     ["_toolbar", deepCopy],
     ["_views", null],
