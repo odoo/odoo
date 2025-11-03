@@ -1,4 +1,4 @@
-import { AND, fields, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/model/export";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 export class ChatbotStep extends Record {

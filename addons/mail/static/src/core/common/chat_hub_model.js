@@ -1,5 +1,5 @@
 import { browser } from "@web/core/browser/browser";
-import { fields, Record } from "./record";
+import { fields, Record } from "@mail/model/export";
 
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 

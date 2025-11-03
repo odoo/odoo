@@ -1,5 +1,5 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";

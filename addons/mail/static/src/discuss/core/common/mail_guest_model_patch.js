@@ -1,5 +1,5 @@
 import { MailGuest } from "@mail/core/common/mail_guest_model";
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";
 

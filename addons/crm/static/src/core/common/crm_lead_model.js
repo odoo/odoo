@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { router } from "@web/core/browser/router";
 
 export class CrmLead extends Record {

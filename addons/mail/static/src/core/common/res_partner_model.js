@@ -1,5 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { imageUrl } from "@web/core/utils/urls";
 import { debounce } from "@web/core/utils/timing";
 

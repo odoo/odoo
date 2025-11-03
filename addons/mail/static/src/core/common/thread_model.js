@@ -1,4 +1,4 @@
-import { AND, fields, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 

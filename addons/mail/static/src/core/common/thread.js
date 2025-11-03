@@ -1,7 +1,7 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
-import { Record } from "@mail/core/common/record";
+import { Record } from "@mail/model/export";
 import { useChildRefs, useVisible } from "@mail/utils/common/hooks";
 
 import {

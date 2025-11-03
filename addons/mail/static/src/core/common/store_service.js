@@ -1,4 +1,4 @@
-import { Store as BaseStore, fields, makeStore } from "@mail/core/common/record";
+import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
 

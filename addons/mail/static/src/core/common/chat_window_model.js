@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 

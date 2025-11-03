@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { rpc } from "@web/core/network/rpc";
