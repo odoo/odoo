@@ -116,3 +116,25 @@ class TestMrpCancelMO(TestMrpCommon):
 
         self.assertEqual(mo.move_finished_ids.state, 'cancel')
         self.assertEqual(mo.state, 'cancel')
+
+    def test_cannot_cancel_done_mo_with_three_steps(self):
+        """Test that a done manufacturing order cannot be canceled.
+
+        The test ensures that when the warehouse uses a 3-step manufacturing route (Pick → Produce → Store),
+        attempting to cancel a manufacturing order that is already in 'done' state raises a UserError.
+        It also verifies that the linked pickings are not canceled in this case.
+        """
+        # Enable 3-step manufacturing process
+        self.warehouse_1.manufacture_steps = 'pbm_sam'
+        # Create and confirm a manufacturing order
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+        })
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        with self.assertRaises(UserError):
+            mo.action_cancel()
+        self.assertNotEqual(mo.picking_ids.mapped('state'), ['cancel', 'cancel'])
+        with self.assertRaises(UserError):
+            mo.unlink()
