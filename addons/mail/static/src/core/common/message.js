@@ -488,10 +488,6 @@ export class Message extends Component {
             { context: this }
         );
     }
-
-    get shouldHideFromMessageListOnDelete() {
-        return false;
-    }
 }
 
 discussComponentRegistry.add("Message", Message);

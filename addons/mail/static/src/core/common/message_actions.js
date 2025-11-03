@@ -3,8 +3,6 @@ import { toRaw } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { discussComponentRegistry } from "./discuss_component_registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
@@ -141,25 +139,7 @@ registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
-    onSelected: async ({ message: msg, owner, store }) => {
-        const message = toRaw(msg);
-        const def = new Deferred();
-        store.env.services.dialog.add(
-            discussComponentRegistry.get("MessageConfirmDialog"),
-            {
-                message,
-                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
-                onConfirm: () => {
-                    def.resolve(true);
-                    message.remove({
-                        removeFromThread: owner.shouldHideFromMessageListOnDelete,
-                    });
-                },
-            },
-            { context: owner, onClose: () => def.resolve(false) }
-        );
-        return def;
-    },
+    onSelected: ({ message, owner }) => toRaw(message).showDeleteConfirm(owner),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });

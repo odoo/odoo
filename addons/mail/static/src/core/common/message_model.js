@@ -20,6 +20,7 @@ import { createDocumentFragmentFromContent, createElementWithContent } from "@we
 import { url } from "@web/core/utils/urls";
 
 import { markup } from "@odoo/owl";
+import { discussComponentRegistry } from "./discuss_component_registry";
 
 const { DateTime } = luxon;
 export class Message extends Record {
@@ -652,6 +653,33 @@ export class Message extends Record {
     }
 
     /**
+     * @param {Object} owner
+     * @param {import("@web/env").OdooEnv} owner.env
+     */
+    showDeleteConfirm(owner) {
+        this.store.env.services.dialog.add(
+            discussComponentRegistry.get("MessageConfirmDialog"),
+            {
+                message: this,
+                confirmText: _t("Delete"),
+                onConfirm: () => this.onShowDeleteConfirm(owner),
+                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
+                size: "xl",
+                title: _t("Send this message to the great trash can in the sky?"),
+            },
+            { context: owner }
+        );
+    }
+
+    /**
+     * @param {Object} owner
+     * @param {import("@web/env").OdooEnv} owner.env
+     */
+    onShowDeleteConfirm(owner) {
+        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env) });
+    }
+
+    /**
      * Provide fallback to displayName in the absence of a thread
      *
      * @param {import("models").Persona} persona
@@ -720,6 +748,10 @@ export class Message extends Record {
         await this.store.env.services.orm.silent.call("mail.message", "set_message_done", [
             [this.id],
         ]);
+    }
+
+    shouldHideFromMessageListOnDelete(env) {
+        return false;
     }
 
     async toggleStar() {
