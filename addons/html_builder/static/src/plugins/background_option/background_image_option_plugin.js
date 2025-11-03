@@ -153,6 +153,10 @@ export class BackgroundImageOptionPlugin extends Plugin {
             loadResult: "",
             params: { ...params, forceClean: true },
         });
+        // When background image with position "Repeat pattern" is removed,
+        // remove background size to avoid repeating gradient
+        editingElement.classList.remove("o_bg_img_opt_repeat");
+        editingElement.style.removeProperty("background-size");
         this.dispatchTo("on_bg_image_hide_handlers", editingElement);
     }
 }

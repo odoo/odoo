@@ -7,7 +7,10 @@ import { loadImage } from "@html_editor/utils/image_processing";
 
 const getBgSizeValue = function ({ editingElement, params: { mainParam: styleName } }) {
     const backgroundSize = editingElement.style.backgroundSize;
-    const bgWidthAndHeight = backgroundSize.split(/\s+/g);
+    // Handle multiple background layers, only consider the image layer
+    const sizeLayers = backgroundSize.split(",").map((s) => s.trim());
+    const imageLayerSize = sizeLayers[0] || "";
+    const bgWidthAndHeight = imageLayerSize.split(/\s+/g);
     const value = styleName === "width" ? bgWidthAndHeight[0] : bgWidthAndHeight[1] || "";
     return value === "auto" ? "" : value;
 };
@@ -74,12 +77,14 @@ export class BackgroundTypeAction extends BuilderAction {
         editingElement.style.setProperty("background-position", "");
         editingElement.style.setProperty(
             "background-size",
-            value !== "repeat-pattern" ? "" : "100px"
+            value !== "repeat-pattern" ? "" : "100px, cover"
         );
     }
     isApplied({ editingElement, value }) {
-        const hasElRepeatStyle = getComputedStyle(editingElement).backgroundRepeat === "repeat";
-        return value === "repeat-pattern" ? hasElRepeatStyle : !hasElRepeatStyle;
+        const bgRepeat = getComputedStyle(editingElement).backgroundRepeat;
+        const repeatLayers = bgRepeat.split(",").map((s) => s.trim());
+        const isRepeating = repeatLayers.every((r) => r === "repeat");
+        return value === "repeat-pattern" ? isRepeating : !isRepeating;
     }
 }
 
@@ -103,6 +108,8 @@ export class SetBackgroundSizeAction extends BuilderAction {
             otherBgSize ||= "auto";
             bgSize = `${otherBgSize} ${value}`;
         }
+        // if multiple bg layers, ensure second (gradient) layer stays "cover"
+        bgSize = `${bgSize}, cover`;
         editingElement.style.setProperty("background-size", bgSize);
     }
 }
