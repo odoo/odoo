@@ -31,7 +31,7 @@ class ResPartner(models.Model):
         res = super()._onchange_country_id()
         if self.country_id and self.country_id.code != 'IN':
             self.l10n_in_gst_treatment = 'overseas'
-        elif self.country_id and self.country_id.code == 'IN':
+        elif self.country_id and self.country_id.code == 'IN' and not self.l10n_in_gst_treatment:
             self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
         return res
 
