@@ -163,6 +163,7 @@ patch(PosStore.prototype, {
             newLine.setUnitPrice(converted_line.price_unit);
             newLine.setDiscount(line.discount);
 
+            const lot_splitted_lines = [];
             const product_unit = line.product_id.uom_id;
             if (product_unit && !product_unit.is_pos_groupable) {
                 let remaining_quantity = newLine.qty;
@@ -177,6 +178,9 @@ patch(PosStore.prototype, {
                     splitted_line.setUnitPrice(priceUnit);
                     splitted_line.setDiscount(line.discount);
                     remaining_quantity -= splitted_line.qty;
+                    if (splitted_line.product_id.tracking == "lot") {
+                        lot_splitted_lines.push(splitted_line);
+                    }
                 }
             }
 
@@ -187,16 +191,39 @@ patch(PosStore.prototype, {
                 useLoadedLots
             ) {
                 newLine.delete();
+                let total_lot_quantity = 0;
                 for (const lot of converted_line.lot_names) {
+                    let lot_remaining_quantity = converted_line.lot_qty_by_name[lot] || 0;
+                    while (lot_splitted_lines.length && lot_remaining_quantity > 0) {
+                        const splitted_line = lot_splitted_lines.shift();
+                        splitted_line.setPackLotLines({
+                            modifiedPackLotLines: [],
+                            newPackLotLines: [{ lot_name: lot }],
+                            setQuantity: false,
+                        });
+                        total_lot_quantity += splitted_line.qty;
+                        lot_remaining_quantity -= splitted_line.qty;
+                    }
+                    if (lot_remaining_quantity > 0 && lot_splitted_lines.length == 0) {
+                        const splitted_line = this.models["pos.order.line"].create({
+                            ...newLineValues,
+                        });
+                        splitted_line.setQuantity(lot_remaining_quantity, true);
+                        splitted_line.setDiscount(line.discount);
+                        splitted_line.setPackLotLines({
+                            modifiedPackLotLines: [],
+                            newPackLotLines: [{ lot_name: lot }],
+                            setQuantity: false,
+                        });
+                        total_lot_quantity += lot_remaining_quantity;
+                    }
+                }
+                if (total_lot_quantity < newLineValues.qty && lot_splitted_lines.length == 0) {
                     const splitted_line = this.models["pos.order.line"].create({
                         ...newLineValues,
                     });
-                    splitted_line.setQuantity(converted_line.lot_qty_by_name[lot] || 0, true);
-                    splitted_line.setPackLotLines({
-                        modifiedPackLotLines: [],
-                        newPackLotLines: [{ lot_name: lot }],
-                        setQuantity: false,
-                    });
+                    splitted_line.setQuantity(newLineValues.qty - total_lot_quantity, true);
+                    splitted_line.setDiscount(line.discount);
                 }
             }
         }
