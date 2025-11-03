@@ -801,11 +801,7 @@ export class OdooPivotModel {
         if (value instanceof Array) {
             return this._getNumberedLabel(value, fieldName);
         }
-        if (
-            fieldName &&
-            this.definition.fields[fieldName] &&
-            this.definition.fields[fieldName].type === "selection"
-        ) {
+        if (this.definition.fields[fieldName]?.type === "selection") {
             const selected = this.definition.fields[fieldName].selection.find(
                 (o) => o[0] === value
             );
