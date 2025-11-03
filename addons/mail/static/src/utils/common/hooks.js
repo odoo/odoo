@@ -51,9 +51,9 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
     });
 }
 
-export function onExternalClick(refName, cb) {
+export function onExternalClick(refOrName, cb) {
     let downTarget, upTarget;
-    const ref = useRef(refName);
+    const ref = refOrName instanceof String ? useRef(refOrName) : refOrName;
     function onClick(ev) {
         if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
             cb(ev, { downTarget, upTarget });
