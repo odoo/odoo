@@ -144,7 +144,7 @@
                 <field name="picking_type_id" readonly="state != 'draft'"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')" decoration-danger="state == 'cancel'"/>
-                <field name="activity_exception_decoration" widget="activity_exception"/>
+                <field name="activity_exception_decoration" widget="activity_exception" column_invisible="True"/>
             </tree>
         </field>
     </record>
