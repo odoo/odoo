@@ -367,10 +367,14 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
             ProductScreen.selectedOrderlineHas("Test Product 1", "1", "80.0"),
 
             scan_barcode("0100201"),
+            ProductScreen.enterLotNumber("1", "lot"),
             ProductScreen.selectedOrderlineHas("Test Product 2", "1", "100.0", "White"),
 
             scan_barcode("0100202"),
+            ProductScreen.enterLotNumber("1", "lot"),
             ProductScreen.selectedOrderlineHas("Test Product 2", "1", "120.0", "Red"),
+
+            ProductScreen.totalAmountIs("300.0"),
 
             refresh(),
             inLeftSide([
