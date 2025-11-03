@@ -61,7 +61,7 @@ class IotBoxOwlHomePage(http.Controller):
     # GET methods                                                #
     # -> Always use json.dumps() to return a JSON response       #
     # ---------------------------------------------------------- #
-    @route.iot_route('/iot_drivers/restart_odoo_service', type='http', cors='*')
+    @route.iot_route(['/iot_drivers/restart_odoo_service', '/hw_posbox_homepage/restart_odoo_service'], type='http', cors='*')
     def odoo_service_restart(self):
         helpers.odoo_restart(0)
         return json.dumps({
@@ -302,7 +302,11 @@ class IotBoxOwlHomePage(http.Controller):
         return res_payload
 
     @route.iot_route(
-        '/iot_drivers/generate_password', type="jsonrpc", methods=["POST"], cors='*', linux_only=True
+        ['/iot_drivers/generate_password', '/hw_posbox_homepage/generate_password'],
+        type="jsonrpc",
+        methods=["POST"],
+        cors='*',
+        linux_only=True,
     )
     def generate_password(self):
         return {
