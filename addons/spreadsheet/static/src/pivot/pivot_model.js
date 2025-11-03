@@ -176,10 +176,7 @@ export class OdooPivotModel {
      * @returns {string[]}
      */
     _getGroupLabels(group, groupBys) {
-        return groupBys.map((gb) => {
-            const groupBy = this._normalize(gb);
-            return this._sanitizeLabel(group[groupBy], groupBy);
-        });
+        return groupBys.map((gb) => this._sanitizeLabel(group[gb], gb));
     }
 
     /**
@@ -191,9 +188,8 @@ export class OdooPivotModel {
      * @returns {Array}
      */
     _getGroupValues(group, groupBys) {
-        return groupBys.map((gb) => {
-            const groupBy = this._normalize(gb);
-            const { field, granularity } = this.parseGroupField(gb);
+        return groupBys.map((groupBy) => {
+            const { field, granularity } = this.parseGroupField(groupBy);
             if (isDateOrDatetimeField(field)) {
                 return pivotTimeAdapter(granularity).normalizeServerValue(
                     groupBy,
@@ -681,19 +677,6 @@ export class OdooPivotModel {
         return displayName;
     }
 
-    /**
-     * @protected
-     * @param {string} gb
-     * @returns {string}
-     */
-    _normalize(gb) {
-        const [fieldName, interval] = gb.split(":");
-        const field = this.definition.fields[fieldName];
-        if (!field) {
-            throw new EvaluationError(_t("Field %s does not exist", fieldName));
-        }
-        return gb;
-    }
     /**
      * Extract the information in the read_group results (groupSubdivisions)
      * and develop this.data.rowGroupTree, colGroupTree, measurements, counts, and
