@@ -215,8 +215,8 @@
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
                         t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
-                    <span>
-                        <t t-out="odoomark(group.displayName)"/> <span class="ms-1">(<t t-esc="group.count"/>)</span>
+                    <span class="fw-normal">
+                        <t t-out="odoomark(group.displayName)"/>
                     </span>
                     <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
@@ -240,8 +240,13 @@
                             </t>
                         </t>
                     </div>
-                    <div t-if="showGroupPager(group)" t-on-click.stop="" class="ms-auto">
-                        <Pager t-props="getGroupPagerProps(group)"/>
+                    <div class="d-flex align-items-center ms-auto gap-2">
+                        <t t-if="!showGroupPager(group)" class="m-1">
+                            <span><t t-esc="group.count"/></span>
+                        </t>
+                        <div t-att-class="showGroupPager(group) ? '' : 'o_pager_hidden'" t-on-click.stop="">
+                            <Pager t-props="getGroupPagerProps(group)"/>
+                        </div>
                     </div>
                 </div>
             </th>
