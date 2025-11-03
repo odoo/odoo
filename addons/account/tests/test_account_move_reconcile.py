@@ -1155,6 +1155,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_one_foreign_currency_fallback_company_currency(self):
         comp_curr = self.company_data['currency']
         foreign_curr = self.other_currency_3
+        foreign_curr.rounding = 0.001   # to be able to check the amounts up to the 3rd digit
 
         line_1 = self.create_line_for_reconciliation(-10.0, -10.0, comp_curr, '2017-01-01')
         line_2 = self.create_line_for_reconciliation(1000000.0, 100.0, foreign_curr, '2017-01-01')
