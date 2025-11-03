@@ -65,7 +65,7 @@ class StockReturnPickingLine(models.TransientModel):
                 move_orig_to_link |= self.move_id\
                     .move_dest_ids.filtered(lambda m: m.state not in ('cancel'))\
                     .move_orig_ids.filtered(lambda m: m.state not in ('cancel'))
-                move_dest_to_link = self.move_id.move_orig_ids.returned_move_ids
+                move_dest_to_link = self.move_id.move_orig_ids.returned_move_ids if not self.env.context.get('skip_inter_company_link') else self.env['stock.move']
                 # link to children of originally returned moves, if any. Note that the use of
                 # 'return_line.move_id.move_orig_ids.returned_move_ids.move_orig_ids.move_dest_ids'
                 # instead of 'return_line.move_id.move_orig_ids.move_dest_ids' prevents linking a
@@ -73,7 +73,7 @@ class StockReturnPickingLine(models.TransientModel):
                 # the return will be linked to the destination moves.
                 move_dest_to_link |= self.move_id.move_orig_ids.returned_move_ids\
                     .move_orig_ids.filtered(lambda m: m.state not in ('cancel'))\
-                    .move_dest_ids.filtered(lambda m: m.state not in ('cancel'))
+                    .move_dest_ids.filtered(lambda m: m.state not in ('cancel')) if not self.env.context.get('skip_inter_company_link') else self.env['stock.move']
                 vals['move_orig_ids'] = [Command.link(m.id) for m in move_orig_to_link]
                 vals['move_dest_ids'] = [Command.link(m.id) for m in move_dest_to_link]
                 new_return_move.write(vals)

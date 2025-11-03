@@ -206,8 +206,8 @@ class StockReplenishmentOption(models.TransientModel):
     uom = fields.Char(related='product_id.uom_name')
     qty_to_order = fields.Float(related='replenishment_info_id.qty_to_order')
 
-    free_qty = fields.Float(compute='_compute_free_qty')
-    lead_time = fields.Char(compute='_compute_lead_time')
+    free_qty = fields.Float(compute='_compute_free_qty', compute_sudo=True)
+    lead_time = fields.Char(compute='_compute_lead_time', compute_sudo=True)
 
     warning_message = fields.Char(compute='_compute_warning_message')
 
