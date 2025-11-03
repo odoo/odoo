@@ -31,6 +31,21 @@ export class FullScreenHeight extends Interaction {
         this.isActive = !isVisible(this.el) || currentHeight > idealHeight + 1;
     }
 
+    start() {
+        const carouselEl = this.el.querySelector(".carousel");
+        if (!carouselEl) {
+            return;
+        }
+        // The carousel computes its item's min-height from the rendered
+        // section height, so we notify it once after this interaction
+        // applies its screen-height style and again when that style is
+        // cleaned up (e.g., 100% → auto).
+        const notifyCarouselContentChanged = () =>
+            carouselEl.dispatchEvent(new CustomEvent("content_changed"));
+        requestAnimationFrame(notifyCarouselContentChanged);
+        this.registerCleanup(() => notifyCarouselContentChanged());
+    }
+
     computeIdealHeight() {
         // Compute the smallest viewport height (svh) to use to set up the ideal
         // height of the element, which won't flicker based on the viewport

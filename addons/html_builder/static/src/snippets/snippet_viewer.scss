@@ -32,9 +32,18 @@
             [data-snippet="s_quotes_carousel_minimal"],
             [data-snippet="s_quotes_carousel"],
             [data-snippet="s_quotes_carousel_compact"] {
-                .carousel-inner, .carousel-inner > .carousel-item {
+                .carousel, .carousel-inner {
+                    min-height: 100%;
+                }
+                .carousel-inner {
+                    display: flex;
+                    align-items: center;
+                }
+                .carousel-inner > .carousel-item {
                     height: fit-content;
                 }
+                display: flex;
+                flex-direction: column;
             }
             [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
                 /* In Travel theme. */
