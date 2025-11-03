@@ -54,6 +54,10 @@ registerWebsitePreviewTour('fullscreen_slide_text_highlights', {
         {
             content: "Click on the fullscreen button",
             trigger: ':iframe #wrapwrap a[aria-label="Fullscreen"]',
+            run: "click",
+        }, {
+            content: "Wait for fullscreen",
+            trigger: ':iframe #wrapwrap a[title="Exit Fullscreen"]',
         }, {
             content: "Check that the highlight was applied in fullscreen",
             trigger: ":iframe .s_text_block p span.o_text_highlight > .o_text_highlight_item > svg:has(.o_text_highlight_path_underline)",
