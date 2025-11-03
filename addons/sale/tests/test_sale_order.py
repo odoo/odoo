@@ -241,7 +241,7 @@ class TestSaleOrder(SaleCommon):
         })
         no_variant_product = no_variant_product_tmpl.product_variant_id
         ptals = no_variant_product_tmpl.valid_product_template_attribute_line_ids
-        ptav1 = next(iter(ptals.product_template_value_ids))
+        ptav1 = ptals.product_template_value_ids[0]
         product_with_desc = self.env['product.product'].create({
             'name': "Product with description",
             'description_sale': "Additional\ninfo.",

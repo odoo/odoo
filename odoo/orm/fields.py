@@ -686,8 +686,7 @@ class Field(typing.Generic[T]):
         one, and return it as a pair `(last_record, last_field)`. """
         for name in self.related.split('.')[:-1]:
             # take the first record when traversing
-            corecord = record[name]
-            record = next(iter(corecord), corecord)
+            record = record[name][:1]
         return record, self.related_field
 
     def traverse_related_sql(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, Field, str]:
@@ -741,7 +740,7 @@ class Field(typing.Generic[T]):
         values = list(records)
         for name in self.related.split('.')[:-1]:
             try:
-                values = [next(iter(val := value[name]), val) for value in values]
+                values = [value[name][:1] for value in values]
             except AccessError as e:
                 description = records.env['ir.model']._get(records._name).name
                 env = records.env

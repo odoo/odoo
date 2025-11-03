@@ -540,7 +540,7 @@ class ResConfigSettings(models.TransientModel):
                 old_value = field0.convert_to_record(
                     field0.convert_to_cache(vals[fname0], self), self)
                 for fname in fnames:
-                    old_value = next(iter(old_value), old_value)[fname]
+                    old_value = old_value[:1][fname]
 
                 # determine the new value
                 new_value = field.convert_to_record(
