@@ -17,7 +17,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
     async updateData(data) {
         const { start, end } = this.computeRange();
         await this.orm.call("hr.employee", "generate_work_entries", [
-            [this.meta.context.active_id],
+            [this.meta.context.default_employee_id],
             serializeDate(start),
             serializeDate(end),
         ]);
