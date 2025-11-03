@@ -605,6 +605,8 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_in_refund_line_onchange_currency_1(self):
+        self.other_currency.rounding = 0.001
+
         move_form = Form(self.invoice)
         move_form.currency_id = self.other_currency
         move_form.save()
