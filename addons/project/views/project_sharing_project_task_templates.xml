@@ -15,7 +15,10 @@
                     <t t-set="ignore_missing_deps" t-value="True"/>
                 </t>
             </t>
-            <t t-set="head" t-value="head_project_sharing + (head or '')"/>
+            <t t-set="head">
+                <t t-out="head_project_sharing"/>
+                <t t-out="head"/>
+            </t>
             <t t-set="body_classname" t-value="'o_web_client o_project_sharing'"/>
         </t>
     </template>
