@@ -246,6 +246,8 @@ class AccountMoveSendWizard(models.TransientModel):
     @api.depends('template_id')
     def _compute_model(self):
         for wizard in self:
+            if wizard.model:
+                continue
             wizard.model = self.env.context.get('active_model')
 
     # Similar of mail.compose.message
