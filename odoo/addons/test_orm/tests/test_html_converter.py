@@ -50,7 +50,7 @@ class TestExport(common.TransactionCase):
 
 
 class TestBasicExport(TestExport):
-    _model = 'test_converter.test_model'
+    _model = 'test_html_converter.test_model'
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -107,7 +107,7 @@ class TestFloatExport(TestBasicExport):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCurrencyExport(TestExport):
-    _model = 'test_converter.monetary'
+    _model = 'test_html_converter.monetary'
 
     def setUp(self):
         super().setUp()
@@ -209,7 +209,7 @@ class TestTextExport(TestBasicExport):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMany2OneExport(TestBasicExport):
     def test_many2one(self):
-        Sub = self.env['test_converter.test_model.sub']
+        Sub = self.env['test_html_converter.test_model.sub']
         converter = self.get_converter('many2one')
 
         value = converter(Sub.create({'name': "Foo"}).id)

@@ -16,7 +16,7 @@ class TestPerformanceTimeit(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.Model = cls.env['test_performance.simple.minded'].with_context(active_test=False)
+        cls.Model = cls.env['test_timeit.simple.minded'].with_context(active_test=False)
 
         def create_parent(size):
             return cls.Model.create({

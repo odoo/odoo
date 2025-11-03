@@ -6,7 +6,7 @@ from odoo.tests import tagged, common, new_test_user
 class TestPrivateReadGroupingSets(common.TransactionCase):
 
     def test_simple_read_grouping_sets(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_grouping_sets.aggregate']
         Partner = self.env['res.partner']
         partner_1 = Partner.create({'name': 'z_one'})
         partner_2 = Partner.create({'name': 'a_two'})
@@ -29,24 +29,24 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries(["""
             SELECT
                 GROUPING(
-                    "test_read_group_aggregate"."key",
-                    "test_read_group_aggregate"."partner_id"
+                    "read_grouping_sets_aggregate"."key",
+                    "read_grouping_sets_aggregate"."partner_id"
                 ),
-                "test_read_group_aggregate"."key",
-                "test_read_group_aggregate"."partner_id",
-                SUM("test_read_group_aggregate"."value")
+                "read_grouping_sets_aggregate"."key",
+                "read_grouping_sets_aggregate"."partner_id",
+                SUM("read_grouping_sets_aggregate"."value")
             FROM
-                "test_read_group_aggregate"
+                "read_grouping_sets_aggregate"
             GROUP BY
                 GROUPING SETS (
-                    ("test_read_group_aggregate"."key", "test_read_group_aggregate"."partner_id"),
-                    ("test_read_group_aggregate"."key"),
-                    ("test_read_group_aggregate"."partner_id"),
+                    ("read_grouping_sets_aggregate"."key", "read_grouping_sets_aggregate"."partner_id"),
+                    ("read_grouping_sets_aggregate"."key"),
+                    ("read_grouping_sets_aggregate"."partner_id"),
                     ()
                 )
             ORDER BY
-                "test_read_group_aggregate"."key" ASC,
-                "test_read_group_aggregate"."partner_id" ASC
+                "read_grouping_sets_aggregate"."key" ASC,
+                "read_grouping_sets_aggregate"."partner_id" ASC
         """]):
             self.assertEqual(
                 Model._read_grouping_sets([], grouping_sets, aggregates=['value:sum']),
@@ -64,37 +64,37 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries(["""
             SELECT
                 GROUPING(
-                    "test_read_group_aggregate"."key",
-                    "test_read_group_aggregate"."partner_id"
+                    "read_grouping_sets_aggregate"."key",
+                    "read_grouping_sets_aggregate"."partner_id"
                 ),
-                "test_read_group_aggregate"."key",
-                "test_read_group_aggregate"."partner_id",
-                SUM("test_read_group_aggregate"."value")
+                "read_grouping_sets_aggregate"."key",
+                "read_grouping_sets_aggregate"."partner_id",
+                SUM("read_grouping_sets_aggregate"."value")
             FROM
-                "test_read_group_aggregate"
-                LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id" ON (
-                    "test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id"
+                "read_grouping_sets_aggregate"
+                LEFT JOIN "res_partner" AS "read_grouping_sets_aggregate__partner_id" ON (
+                    "read_grouping_sets_aggregate"."partner_id" = "read_grouping_sets_aggregate__partner_id"."id"
                 )
             GROUP BY
                 GROUPING SETS (
                     (
-                        "test_read_group_aggregate"."key",
-                        "test_read_group_aggregate"."partner_id",
-                        "test_read_group_aggregate__partner_id"."complete_name",
-                        "test_read_group_aggregate__partner_id"."id"
+                        "read_grouping_sets_aggregate"."key",
+                        "read_grouping_sets_aggregate"."partner_id",
+                        "read_grouping_sets_aggregate__partner_id"."complete_name",
+                        "read_grouping_sets_aggregate__partner_id"."id"
                     ),
-                    ("test_read_group_aggregate"."key"),
+                    ("read_grouping_sets_aggregate"."key"),
                     (
-                        "test_read_group_aggregate"."partner_id",
-                        "test_read_group_aggregate__partner_id"."complete_name",
-                        "test_read_group_aggregate__partner_id"."id"
+                        "read_grouping_sets_aggregate"."partner_id",
+                        "read_grouping_sets_aggregate__partner_id"."complete_name",
+                        "read_grouping_sets_aggregate__partner_id"."id"
                     ),
                     ()
                 )
             ORDER BY
-                "test_read_group_aggregate__partner_id"."complete_name" ASC,
-                "test_read_group_aggregate__partner_id"."id" DESC,
-                "test_read_group_aggregate"."key" ASC
+                "read_grouping_sets_aggregate__partner_id"."complete_name" ASC,
+                "read_grouping_sets_aggregate__partner_id"."id" DESC,
+                "read_grouping_sets_aggregate"."key" ASC
         """]):
             self.assertEqual(
                 Model._read_grouping_sets([], grouping_sets, aggregates=['value:sum'], order="partner_id, key"),
@@ -102,9 +102,9 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
             )
 
     def test_many2many_read_grouping_sets(self):
-        User = self.env['test_read_group.user']
+        User = self.env['read_grouping_sets.user']
         mario, luigi = User.create([{'name': 'Mario'}, {'name': 'Luigi'}])
-        tasks = self.env['test_read_group.task'].create([
+        tasks = self.env['read_grouping_sets.task'].create([
             {   # both users
                 'name': "Super Mario Bros.",
                 'user_ids': [Command.set((mario + luigi).ids)],
@@ -139,34 +139,34 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries([
             """
             SELECT
-                GROUPING("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                "test_read_group_task__user_ids"."user_id",
-                "test_read_group_task"."key",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
+                GROUPING("read_grouping_sets_task__user_ids"."user_id", "read_grouping_sets_task"."key"),
+                "read_grouping_sets_task__user_ids"."user_id",
+                "read_grouping_sets_task"."key",
+                ARRAY_AGG("read_grouping_sets_task"."name" ORDER BY "read_grouping_sets_task"."id"),
                 COUNT(*),
-                SUM("test_read_group_task"."integer")
-            FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids" ON (
-                    "test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id"
+                SUM("read_grouping_sets_task"."integer")
+            FROM "read_grouping_sets_task"
+                LEFT JOIN "read_grouping_sets_task_user_rel" AS "read_grouping_sets_task__user_ids" ON (
+                    "read_grouping_sets_task"."id" = "read_grouping_sets_task__user_ids"."task_id"
                 )
-            WHERE "test_read_group_task"."id" IN %s
+            WHERE "read_grouping_sets_task"."id" IN %s
             GROUP BY GROUPING SETS (
-                ("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                ("test_read_group_task__user_ids"."user_id"))
-            ORDER BY "test_read_group_task__user_ids"."user_id" ASC,
-                "test_read_group_task"."key" ASC
+                ("read_grouping_sets_task__user_ids"."user_id", "read_grouping_sets_task"."key"),
+                ("read_grouping_sets_task__user_ids"."user_id"))
+            ORDER BY "read_grouping_sets_task__user_ids"."user_id" ASC,
+                "read_grouping_sets_task"."key" ASC
             """,
             """
             SELECT
-                GROUPING("test_read_group_task"."key"),
-                "test_read_group_task"."key",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
+                GROUPING("read_grouping_sets_task"."key"),
+                "read_grouping_sets_task"."key",
+                ARRAY_AGG("read_grouping_sets_task"."name" ORDER BY "read_grouping_sets_task"."id"),
                 COUNT(*),
-                SUM("test_read_group_task"."integer")
-            FROM "test_read_group_task"
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY GROUPING SETS (("test_read_group_task"."key"), ())
-            ORDER BY "test_read_group_task"."key" ASC
+                SUM("read_grouping_sets_task"."integer")
+            FROM "read_grouping_sets_task"
+            WHERE "read_grouping_sets_task"."id" IN %s
+            GROUP BY GROUPING SETS (("read_grouping_sets_task"."key"), ())
+            ORDER BY "read_grouping_sets_task"."key" ASC
             """,
         ]):
             self.assertEqual(
@@ -186,34 +186,34 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries([
             """
             SELECT
-                GROUPING("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                "test_read_group_task__user_ids"."user_id",
-                "test_read_group_task"."key",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
+                GROUPING("read_grouping_sets_task__user_ids"."user_id", "read_grouping_sets_task"."key"),
+                "read_grouping_sets_task__user_ids"."user_id",
+                "read_grouping_sets_task"."key",
+                ARRAY_AGG("read_grouping_sets_task"."name" ORDER BY "read_grouping_sets_task"."id"),
                 COUNT(*),
-                SUM("test_read_group_task"."integer")
-            FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids" ON (
-                    "test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id"
+                SUM("read_grouping_sets_task"."integer")
+            FROM "read_grouping_sets_task"
+                LEFT JOIN "read_grouping_sets_task_user_rel" AS "read_grouping_sets_task__user_ids" ON (
+                    "read_grouping_sets_task"."id" = "read_grouping_sets_task__user_ids"."task_id"
                 )
-            WHERE "test_read_group_task"."id" IN %s
+            WHERE "read_grouping_sets_task"."id" IN %s
             GROUP BY GROUPING SETS (
-                ("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
-                ("test_read_group_task__user_ids"."user_id"))
-            ORDER BY "test_read_group_task__user_ids"."user_id" DESC,
-                "test_read_group_task"."key" ASC
+                ("read_grouping_sets_task__user_ids"."user_id", "read_grouping_sets_task"."key"),
+                ("read_grouping_sets_task__user_ids"."user_id"))
+            ORDER BY "read_grouping_sets_task__user_ids"."user_id" DESC,
+                "read_grouping_sets_task"."key" ASC
             """,
             """
             SELECT
-                GROUPING("test_read_group_task"."key"),
-                "test_read_group_task"."key",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
+                GROUPING("read_grouping_sets_task"."key"),
+                "read_grouping_sets_task"."key",
+                ARRAY_AGG("read_grouping_sets_task"."name" ORDER BY "read_grouping_sets_task"."id"),
                 COUNT(*),
-                SUM("test_read_group_task"."integer")
-            FROM "test_read_group_task"
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY GROUPING SETS (("test_read_group_task"."key"), ())
-            ORDER BY "test_read_group_task"."key" ASC
+                SUM("read_grouping_sets_task"."integer")
+            FROM "read_grouping_sets_task"
+            WHERE "read_grouping_sets_task"."id" IN %s
+            GROUP BY GROUPING SETS (("read_grouping_sets_task"."key"), ())
+            ORDER BY "read_grouping_sets_task"."key" ASC
             """,
         ]):
             self.assertEqual(
@@ -302,7 +302,7 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         cls.base_user = new_test_user(cls.env, login='Base User', groups='base.group_user')
 
     def test_simple_formatted_read_grouping_sets(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_grouping_sets.aggregate']
         Partner = self.env['res.partner']
         partner_1 = Partner.create({'name': 'z_one'})
         partner_2 = Partner.create({'name': 'a_two'})
@@ -325,37 +325,37 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         with self.assertQueries(["""
             SELECT
                 GROUPING(
-                    "test_read_group_aggregate"."partner_id",
-                    "test_read_group_aggregate"."key"
+                    "read_grouping_sets_aggregate"."partner_id",
+                    "read_grouping_sets_aggregate"."key"
                 ),
-                "test_read_group_aggregate"."partner_id",
-                "test_read_group_aggregate"."key",
-                SUM("test_read_group_aggregate"."value")
+                "read_grouping_sets_aggregate"."partner_id",
+                "read_grouping_sets_aggregate"."key",
+                SUM("read_grouping_sets_aggregate"."value")
             FROM
-                "test_read_group_aggregate"
-                LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id" ON (
-                    "test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id"
+                "read_grouping_sets_aggregate"
+                LEFT JOIN "res_partner" AS "read_grouping_sets_aggregate__partner_id" ON (
+                    "read_grouping_sets_aggregate"."partner_id" = "read_grouping_sets_aggregate__partner_id"."id"
                 )
             GROUP BY
                 GROUPING SETS (
                     (
-                        "test_read_group_aggregate"."partner_id",
-                        "test_read_group_aggregate__partner_id"."complete_name",
-                        "test_read_group_aggregate__partner_id"."id",
-                        "test_read_group_aggregate"."key"
+                        "read_grouping_sets_aggregate"."partner_id",
+                        "read_grouping_sets_aggregate__partner_id"."complete_name",
+                        "read_grouping_sets_aggregate__partner_id"."id",
+                        "read_grouping_sets_aggregate"."key"
                     ),
-                    ("test_read_group_aggregate"."key"),
+                    ("read_grouping_sets_aggregate"."key"),
                     (
-                        "test_read_group_aggregate"."partner_id",
-                        "test_read_group_aggregate__partner_id"."complete_name",
-                        "test_read_group_aggregate__partner_id"."id"
+                        "read_grouping_sets_aggregate"."partner_id",
+                        "read_grouping_sets_aggregate__partner_id"."complete_name",
+                        "read_grouping_sets_aggregate__partner_id"."id"
                     ),
                     ()
                 )
             ORDER BY
-                "test_read_group_aggregate__partner_id"."complete_name" ASC,
-                "test_read_group_aggregate__partner_id"."id" DESC,
-                "test_read_group_aggregate"."key" ASC
+                "read_grouping_sets_aggregate__partner_id"."complete_name" ASC,
+                "read_grouping_sets_aggregate__partner_id"."id" DESC,
+                "read_grouping_sets_aggregate"."key" ASC
         """]):
             self.assertEqual(
                 Model.formatted_read_grouping_sets([], grouping_sets, aggregates=['value:sum']),
@@ -363,9 +363,9 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
             )
 
     def test_many2many_formatted_read_grouping_sets(self):
-        User = self.env['test_read_group.user']
+        User = self.env['read_grouping_sets.user']
         mario, luigi = User.create([{'name': 'Mario'}, {'name': 'Luigi'}])
-        tasks = self.env['test_read_group.task'].create([
+        tasks = self.env['read_grouping_sets.task'].create([
             {   # both users
                 'name': "Super Mario Bros.",
                 'user_ids': [Command.set((mario + luigi).ids)],
@@ -488,9 +488,9 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
                 self.assertEqual(result, expected_result)
 
     def test_related(self):
-        RelatedBar = self.env['test_read_group.related_bar']
-        RelatedFoo = self.env['test_read_group.related_foo']
-        RelatedBase = self.env['test_read_group.related_base']
+        RelatedBar = self.env['read_grouping_sets.r_bar']
+        RelatedFoo = self.env['read_grouping_sets.r_foo']
+        RelatedBase = self.env['read_grouping_sets.r_base']
 
         bars = RelatedBar.create(
             [
@@ -540,9 +540,9 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
             RelatedBar.formatted_read_grouping_sets([], [['foo_names_sudo']], ['__count'])
 
     def test_groupby_chain_fnames(self):
-        RelatedBar = self.env['test_read_group.related_bar']
-        RelatedFoo = self.env['test_read_group.related_foo']
-        RelatedBase = self.env['test_read_group.related_base']
+        RelatedBar = self.env['read_grouping_sets.r_bar']
+        RelatedFoo = self.env['read_grouping_sets.r_foo']
+        RelatedBase = self.env['read_grouping_sets.r_base']
 
         bars = RelatedBar.create([
             {'name': 'bar_a'},
@@ -580,9 +580,9 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         )
 
     def test_chain_inherited_fname(self):
-        RelatedBase = self.env['test_read_group.related_base']
-        RelatedInherits = self.env['test_read_group.related_inherits']
-        ChainInherits = self.env['test_read_group.chain_inherits']
+        RelatedBase = self.env['read_grouping_sets.r_base']
+        RelatedInherits = self.env['read_grouping_sets.r_inherits']
+        ChainInherits = self.env['read_grouping_sets.chain_inherits']
 
         bases = RelatedBase.create([
             {'name': 'a', 'value': 1},
@@ -627,9 +627,9 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         )
 
     def test_chain_many2many(self):
-        RelatedBase = self.env['test_read_group.related_base']
-        RelatedBar = self.env['test_read_group.related_bar']
-        RelatedFoo = self.env['test_read_group.related_foo']
+        RelatedBase = self.env['read_grouping_sets.r_base']
+        RelatedBar = self.env['read_grouping_sets.r_bar']
+        RelatedFoo = self.env['read_grouping_sets.r_foo']
 
         bases = RelatedBase.create(
             [

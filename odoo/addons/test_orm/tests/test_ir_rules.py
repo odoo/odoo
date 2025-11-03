@@ -11,8 +11,8 @@ class TestRules(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        ObjCateg = cls.env['test_access_right.obj_categ']
-        SomeObj = cls.env['test_access_right.some_obj']
+        ObjCateg = cls.env['test_ir_rules.obj_categ']
+        SomeObj = cls.env['test_ir_rules.some_obj']
         cls.categ = ObjCateg.create({'name': 'Food'})
         cls.allowed = SomeObj.create({'val': 1, 'categ_id': cls.categ.id})
         cls.forbidden = SomeObj.create({'val': -1, 'categ_id': cls.categ.id})
@@ -20,15 +20,15 @@ class TestRules(TransactionCase):
         # (or zero) val
         cls.env['ir.rule'].create({
             'name': 'Forbid negatives',
-            'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'model_id': cls.env.ref('test_orm.model_test_ir_rules_some_obj').id,
             'domain_force': "[('val', '>', 0)]",
         })
         # create a global rule that forbid access to records without
         # categories, the search is part of the test
         cls.env['ir.rule'].create({
             'name': 'See all categories',
-            'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
-            'domain_force': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]",
+            'model_id': cls.env.ref('test_orm.model_test_ir_rules_some_obj').id,
+            'domain_force': "[('categ_id', 'in', user.env['test_ir_rules.obj_categ'].search([]).ids)]",
         })
 
     @mute_logger('odoo.addons.base.models.ir_rule')
@@ -54,7 +54,7 @@ class TestRules(TransactionCase):
         # we forbid access to the public group, to which the public user belongs
         self.env['ir.rule'].create({
             'name': 'Forbid public group',
-            'model_id': self.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'model_id': self.env.ref('test_orm.model_test_ir_rules_some_obj').id,
             'groups': [Command.set([self.env.ref('base.group_public').id])],
             'domain_force': "[(0, '=', 1)]",
         })
@@ -71,7 +71,7 @@ class TestRules(TransactionCase):
         ids = [self.allowed.id, self.forbidden.id]
 
         # create container as superuser, connected to all some_objs
-        container_admin = self.env['test_access_right.container'].create({'some_ids': [Command.set(ids)]})
+        container_admin = self.env['test_ir_rules.container'].create({'some_ids': [Command.set(ids)]})
         self.assertItemsEqual(container_admin.some_ids.ids, ids)
 
         # check the container as the public user
@@ -98,7 +98,7 @@ class TestRules(TransactionCase):
 
     def test_access_rule_performance(self):
         env = self.env(user=self.env.ref('base.public_user'))
-        Model = env['test_access_right.some_obj']
+        Model = env['test_ir_rules.some_obj']
         # cache warmup for check() in 'ir.model.access'
         Model.check_access('read')
         with self.assertQueryCount(0):
@@ -106,8 +106,8 @@ class TestRules(TransactionCase):
 
     def test_no_context_in_ir_rules(self):
         """ The context should not impact the ir rules. """
-        ObjCateg = self.env['test_access_right.obj_categ']
-        SomeObj = self.env['test_access_right.some_obj']
+        ObjCateg = self.env['test_ir_rules.obj_categ']
+        SomeObj = self.env['test_ir_rules.some_obj']
 
         # validate the effect of context on category search, there are
         # no existing media category
@@ -130,7 +130,7 @@ class TestRules(TransactionCase):
         For models in `_inherits`, verify that both methods `check_access`
         and `_search` check the rules from parent models.
         """
-        ChildModel = self.env['test_access_right.inherits']
+        ChildModel = self.env['test_ir_rules.inherits']
         allowed_child, __ = children = ChildModel.create([
             {'some_id': self.allowed.id}, {'some_id': self.forbidden.id},
         ])
@@ -147,13 +147,13 @@ class TestRules(TransactionCase):
         For models with `_inherits`, verify that fields of the rules from inherited models
         are flushed correctly.
         """
-        ChildModel = self.env['test_access_right.inherits']
+        ChildModel = self.env['test_ir_rules.inherits']
         child = ChildModel.create([{'some_id': self.allowed.id}])
         self.env.flush_all()
 
         self.env['ir.rule'].create({
             'name': 'Forbid 0 value',
-            'model_id': self.env['ir.model']._get('test_access_right.some_obj').id,
+            'model_id': self.env['ir.model']._get('test_ir_rules.some_obj').id,
             'domain_force': str([('val', '!=', 0)]),
         })
 
@@ -174,7 +174,7 @@ class TestRules(TransactionCase):
 
         rule = self.env['ir.rule'].create({
             'name': 'Test record rule',
-            'model_id': self.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'model_id': self.env.ref('test_orm.model_test_ir_rules_some_obj').id,
             'domain_force': [],
         })
         invalid_domains = [
@@ -200,7 +200,7 @@ class TestRules(TransactionCase):
     def test_ir_rule_cache_after_error(self):
         NB_RECORD = 14  # At least twice 6, 6 is used by _make_access_error
         # copy the forbidden record 15 times
-        SomeObj = self.env['test_access_right.some_obj']
+        SomeObj = self.env['test_ir_rules.some_obj']
         forbiddens = SomeObj.create([{'val': -1, 'categ_id': self.categ.id}] * NB_RECORD)
         forbiddens.invalidate_model()
 

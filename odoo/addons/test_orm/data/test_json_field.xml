@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record id="test_json_field_category_0" model="test_json_field.category">
+            <field name="name">Chat</field>
+        </record>
+        <record id="test_json_field_category_0_0" model="test_json_field.category">
+            <field name="name">Foolish</field>
+            <field name="parent" ref="test_json_field_category_0"/>
+        </record>
+
+        <record id="test_json_field_discussion_0" model="test_json_field.discussion">
+            <field name="name">Stuff</field>
+            <field name="participants" eval="[Command.link(ref('base.user_root'))]"/>
+        </record>
+
+        <record id="test_json_field_message_0_0" model="test_json_field.message">
+            <field name="discussion" ref="test_json_field_discussion_0"/>
+            <field name="body">Hey dude!</field>
+            <field name="label">hello</field>
+        </record>
+        <record id="test_json_field_message_0_1" model="test_json_field.message">
+            <field name="discussion" ref="test_json_field_discussion_0"/>
+            <field name="body">What's up?</field>
+        </record>
+        <record id="test_json_field_message_0_2" model="test_json_field.message">
+            <field name="discussion" ref="test_json_field_discussion_0"/>
+            <field name="body">This is a much longer message</field>
+        </record>
+
+        <record id="test_json_field_emailmessage_0_0" model="test_json_field.emailmessage">
+            <field name="message" ref="test_json_field_message_0_0"/>
+            <field name="email_to">first@example.localhost</field>
+        </record>
+    </data>
+</odoo>

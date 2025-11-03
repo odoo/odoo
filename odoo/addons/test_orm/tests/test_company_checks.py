@@ -19,15 +19,15 @@ class TestCompanyCheck(common.TransactionCase):
         cls.company_c = cls.env['res.company'].create({
             'name': 'Company C',
         })
-        cls.parent_0 = cls.env['test_orm.model_parent'].create({
+        cls.parent_0 = cls.env['test_company_checks.parent'].create({
             'name': 'M0',
             'company_id': False,
         })
-        cls.parent_a = cls.env['test_orm.model_parent'].create({
+        cls.parent_a = cls.env['test_company_checks.parent'].create({
             'name': 'M1',
             'company_id': cls.company_a.id,
         })
-        cls.parent_b = cls.env['test_orm.model_parent'].create({
+        cls.parent_b = cls.env['test_company_checks.parent'].create({
             'name': 'M2',
             'company_id': cls.company_b.id,
         })
@@ -40,12 +40,12 @@ class TestCompanyCheck(common.TransactionCase):
 
     def test_check_company_auto(self):
         """ Check the option _check_company_auto is well set on records"""
-        m1 = self.env['test_orm.model_child'].create({'company_id': self.company_a.id})
+        m1 = self.env['test_company_checks.child'].create({'company_id': self.company_a.id})
         self.assertTrue(m1._check_company_auto)
 
     def test_company_and_same_company(self):
         """ Check you can create an object if the company are consistent"""
-        self.env['test_orm.model_child'].create({
+        self.env['test_company_checks.child'].create({
             'name': 'M1',
             'company_id': self.company_a.id,
             'parent_id': self.parent_a.id,
@@ -55,20 +55,20 @@ class TestCompanyCheck(common.TransactionCase):
     def test_company_and_different_company(self):
         """ Check you cannot create a record if the company is inconsistent"""
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
+            self.env['test_company_checks.child'].create({
                 'name': 'M1',
                 'company_id': self.company_b.id,
                 'parent_id': self.parent_a.id,
             })
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
+            self.env['test_company_checks.child'].create({
                 'name': 'M1',
                 'company_id': self.company_b.id,
                 'parent_ids': [Command.link(self.parent_a.id), Command.link(self.parent_b.id)],
             })
 
     def test_company_and_no_company(self):
-        self.env['test_orm.model_child'].create({
+        self.env['test_company_checks.child'].create({
             'name': 'M1',
             'company_id': self.company_a.id,
             'parent_id': self.parent_0.id,
@@ -76,7 +76,7 @@ class TestCompanyCheck(common.TransactionCase):
         })
 
     def test_no_company_and_no_company(self):
-        self.env['test_orm.model_child'].create({
+        self.env['test_company_checks.child'].create({
             'name': 'M1',
             'company_id': False,
             'parent_id': self.parent_0.id,
@@ -85,13 +85,13 @@ class TestCompanyCheck(common.TransactionCase):
 
     def test_no_company_and_some_company(self):
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
+            self.env['test_company_checks.child'].create({
                 'name': 'M1',
                 'company_id': False,
                 'parent_id': self.parent_a.id,
             })
         with self.assertRaises(UserError):
-            self.env['test_orm.model_child'].create({
+            self.env['test_company_checks.child'].create({
                 'name': 'M1',
                 'company_id': False,
                 'parent_ids': [Command.link(self.parent_0.id), Command.link(self.parent_a.id)],
@@ -99,7 +99,7 @@ class TestCompanyCheck(common.TransactionCase):
 
     def test_no_company_check(self):
         """ Check you can create a record with the inconsistent company if there are no check"""
-        self.env['test_orm.model_child_nocheck'].create({
+        self.env['test_company_checks.child_nocheck'].create({
             'name': 'M1',
             'company_id': self.company_b.id,
             'parent_id': self.parent_a.id,
@@ -107,7 +107,7 @@ class TestCompanyCheck(common.TransactionCase):
 
     def test_company_write(self):
         """ Check the company consistency is respected at write. """
-        child = self.env['test_orm.model_child'].create({
+        child = self.env['test_company_checks.child'].create({
             'name': 'M1',
             'company_id': self.company_a.id,
             'parent_id': self.parent_a.id,
@@ -130,13 +130,13 @@ class TestCompanyCheck(common.TransactionCase):
         })
 
     def test_check_company_write_performance(self):
-        child = self.env['test_orm.model_child'].create({
+        child = self.env['test_company_checks.child'].create({
             'name': 'M1',
             'company_id': self.company_b.id,
         })
         self.env.invalidate_all()
 
-        ChildModel = self.registry['test_orm.model_child']
+        ChildModel = self.registry['test_company_checks.child']
         _check_company = ChildModel._check_company  # noqa: RUF052
         # One query for reading child company_id field (for check_company)
         # One query for reading parent_b company_id field (for check_company)

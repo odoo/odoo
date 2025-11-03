@@ -11,7 +11,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         cls.base_user = new_test_user(cls.env, login='Base User', groups='base.group_user')
 
     def test_simple_private_read_group(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         partner_1 = self.env['res.partner'].create({'name': 'z_one'})
         partner_2 = self.env['res.partner'].create({'name': 'a_two'})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 1})
@@ -25,11 +25,11 @@ class TestPrivateReadGroup(common.TransactionCase):
         Model.create({})
 
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
-                   SUM("test_read_group_aggregate"."value")
-            FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key"
-            ORDER BY "test_read_group_aggregate"."key" ASC
+            SELECT "read_group_private_aggregate"."key",
+                   SUM("read_group_private_aggregate"."value")
+            FROM "read_group_private_aggregate"
+            GROUP BY "read_group_private_aggregate"."key"
+            ORDER BY "read_group_private_aggregate"."key" ASC
         """]):
             self.assertEqual(
                 Model._read_group([], groupby=['key'], aggregates=['value:sum']),
@@ -42,19 +42,19 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         # Forcing order with many2one, traverse use the order of the comodel (res.partner)
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
-                   "test_read_group_aggregate"."partner_id",
-                   SUM("test_read_group_aggregate"."value")
-            FROM "test_read_group_aggregate"
-            LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id"
-                ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
-            GROUP BY "test_read_group_aggregate"."key",
-                     "test_read_group_aggregate"."partner_id",
-                     "test_read_group_aggregate__partner_id"."complete_name",
-                     "test_read_group_aggregate__partner_id"."id"
-            ORDER BY "test_read_group_aggregate"."key" ASC,
-                     "test_read_group_aggregate__partner_id"."complete_name" ASC,
-                     "test_read_group_aggregate__partner_id"."id" DESC
+            SELECT "read_group_private_aggregate"."key",
+                   "read_group_private_aggregate"."partner_id",
+                   SUM("read_group_private_aggregate"."value")
+            FROM "read_group_private_aggregate"
+            LEFT JOIN "res_partner" AS "read_group_private_aggregate__partner_id"
+                ON ("read_group_private_aggregate"."partner_id" = "read_group_private_aggregate__partner_id"."id")
+            GROUP BY "read_group_private_aggregate"."key",
+                     "read_group_private_aggregate"."partner_id",
+                     "read_group_private_aggregate__partner_id"."complete_name",
+                     "read_group_private_aggregate__partner_id"."id"
+            ORDER BY "read_group_private_aggregate"."key" ASC,
+                     "read_group_private_aggregate__partner_id"."complete_name" ASC,
+                     "read_group_private_aggregate__partner_id"."id" DESC
         """]):
             self.assertEqual(
                 Model._read_group([], groupby=['key', 'partner_id'], aggregates=['value:sum'], order="key, partner_id"),
@@ -71,14 +71,14 @@ class TestPrivateReadGroup(common.TransactionCase):
         # Same than before but with private method, the order doesn't traverse
         # many2one order, then the order is based on id of partner
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
-                   "test_read_group_aggregate"."partner_id",
-                   SUM("test_read_group_aggregate"."value")
-            FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key",
-                     "test_read_group_aggregate"."partner_id"
-            ORDER BY "test_read_group_aggregate"."key" ASC,
-                     "test_read_group_aggregate"."partner_id" ASC
+            SELECT "read_group_private_aggregate"."key",
+                   "read_group_private_aggregate"."partner_id",
+                   SUM("read_group_private_aggregate"."value")
+            FROM "read_group_private_aggregate"
+            GROUP BY "read_group_private_aggregate"."key",
+                     "read_group_private_aggregate"."partner_id"
+            ORDER BY "read_group_private_aggregate"."key" ASC,
+                     "read_group_private_aggregate"."partner_id" ASC
         """]):
             self.assertEqual(
                 Model._read_group([], groupby=['key', 'partner_id'], aggregates=['value:sum']),
@@ -93,7 +93,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
     def test_limit_offset(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         Model.create({'key': 1, 'value': 1})
         Model.create({'key': 1, 'value': 2})
         Model.create({'key': 1, 'value': 3})
@@ -128,7 +128,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         )
 
     def test_falsy_domain(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
 
         with self.assertQueryCount(0):
             result = Model._read_group([('id', 'in', [])], groupby=['partner_id'], aggregates=[])
@@ -146,7 +146,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             self.assertEqual(result, [(0, 0, 0)])
 
     def test_prefetch_for_records(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         Partner = self.env['res.partner']
         partner_1 = Partner.create({'name': 'z_one'})
         partner_2 = Partner.create({'name': 'a_two'})
@@ -178,23 +178,23 @@ class TestPrivateReadGroup(common.TransactionCase):
     def test_ambiguous_field_name(self):
         """ Check that _read_group doesn't generate ambiguous (display_name) alias for PostgreSQL
         """
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         partner_1 = self.env['res.partner'].create({'name': 'z_one'})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 1, 'display_name': 'blabla'})
 
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."display_name",
-                   "test_read_group_aggregate"."partner_id",
+            SELECT "read_group_private_aggregate"."display_name",
+                   "read_group_private_aggregate"."partner_id",
                    COUNT(*)
-            FROM "test_read_group_aggregate"
-            LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id"
-                ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
-            GROUP BY "test_read_group_aggregate"."display_name",
-                     "test_read_group_aggregate"."partner_id",
-                     "test_read_group_aggregate__partner_id"."complete_name",
-                     "test_read_group_aggregate__partner_id"."id"
-            ORDER BY "test_read_group_aggregate__partner_id"."complete_name" DESC,
-                     "test_read_group_aggregate__partner_id"."id" ASC
+            FROM "read_group_private_aggregate"
+            LEFT JOIN "res_partner" AS "read_group_private_aggregate__partner_id"
+                ON ("read_group_private_aggregate"."partner_id" = "read_group_private_aggregate__partner_id"."id")
+            GROUP BY "read_group_private_aggregate"."display_name",
+                     "read_group_private_aggregate"."partner_id",
+                     "read_group_private_aggregate__partner_id"."complete_name",
+                     "read_group_private_aggregate__partner_id"."id"
+            ORDER BY "read_group_private_aggregate__partner_id"."complete_name" DESC,
+                     "read_group_private_aggregate__partner_id"."id" ASC
         """]):
             result = Model._read_group(
                 [],
@@ -205,7 +205,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             self.assertEqual(result, [('blabla', partner_1, 1)])
 
     def test_bool_read_groups(self):
-        Model = self.env['test_read_group.aggregate.boolean']
+        Model = self.env['read_group_private.aggregate.boolean']
         Model.create({'key': 1, 'bool_and': True})
         Model.create({'key': 1, 'bool_and': True})
 
@@ -231,7 +231,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         ])
 
     def test_count_read_groups(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         Model.create({'key': 1})
         Model.create({'key': 1})
         Model.create({})
@@ -247,7 +247,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         )
 
     def test_array_read_groups(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         Model.create({'partner_id': 1})
         Model.create({'partner_id': 1})
         Model.create({'partner_id': 2})
@@ -263,7 +263,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         )
 
     def test_flush_read_group(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         a = Model.create({'key': 1, 'value': 5})
         b = Model.create({'key': 1, 'value': 5})
 
@@ -302,7 +302,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         )
 
     def test_having_clause(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         Model.create({'key': 1, 'value': 8})
         Model.create({'key': 1, 'value': 2})
         Model.create({'key': 2, 'value': 5})
@@ -311,12 +311,12 @@ class TestPrivateReadGroup(common.TransactionCase):
         Model.create({'key': 3, 'value': 1})
 
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
-                   SUM("test_read_group_aggregate"."value")
-            FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key"
-            HAVING SUM("test_read_group_aggregate"."value") > %s
-            ORDER BY "test_read_group_aggregate"."key" ASC
+            SELECT "read_group_private_aggregate"."key",
+                   SUM("read_group_private_aggregate"."value")
+            FROM "read_group_private_aggregate"
+            GROUP BY "read_group_private_aggregate"."key"
+            HAVING SUM("read_group_private_aggregate"."value") > %s
+            ORDER BY "read_group_private_aggregate"."key" ASC
         """]):
             self.assertEqual(
                 Model._read_group(
@@ -329,13 +329,13 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
-                   SUM("test_read_group_aggregate"."value"),
+            SELECT "read_group_private_aggregate"."key",
+                   SUM("read_group_private_aggregate"."value"),
                    COUNT(*)
-            FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key"
-            HAVING (COUNT(*) < %s AND SUM("test_read_group_aggregate"."value") > %s)
-            ORDER BY "test_read_group_aggregate"."key" ASC
+            FROM "read_group_private_aggregate"
+            GROUP BY "read_group_private_aggregate"."key"
+            HAVING (COUNT(*) < %s AND SUM("read_group_private_aggregate"."value") > %s)
+            ORDER BY "read_group_private_aggregate"."key" ASC
         """]):
             self.assertEqual(
                 Model._read_group(
@@ -351,7 +351,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
     def test_malformed_params(self):
-        Model = self.env['test_read_group.order.line']
+        Model = self.env['read_group_private.order.line']
         # Test malformed groupby clause
         with self.assertRaises(ValueError):
             Model._read_group([], ['create_date:bad_granularity'])
@@ -393,7 +393,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         with self.assertRaises(ValueError):
             Model._read_group([], aggregates=['order_id.create_date:min'])
 
-        with self.assertRaisesRegex(ValueError, "Invalid field 'not_another_field' on model 'test_read_group.order.line' for 'not_another_field:sum'."):
+        with self.assertRaisesRegex(ValueError, "Invalid field 'not_another_field' on model 'read_group_private.order.line' for 'not_another_field:sum'."):
             Model._read_group([], aggregates=['value:sum', 'not_another_field:sum'])
 
         # Test malformed having clause
@@ -418,7 +418,7 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_groupby_date(self):
         """ Test what happens when grouping on date fields """
-        Model = self.env['test_read_group.fill_temporal']
+        Model = self.env['read_group_private.fill_temporal']
         Model.create({})  # Falsy date
         Model.create({'date': '2022-01-29'})  # Saturday (week of '2022-01-24')
         Model.create({'date': '2022-01-29'})  # Same day
@@ -505,7 +505,7 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_groupby_date_part_number(self):
         """ Test grouping by date part number (ex. month_number gives 1 for January) """
-        Model = self.env['test_read_group.fill_temporal']
+        Model = self.env['read_group_private.fill_temporal']
         Model.create({})  # Falsy date
         Model.create({'date': '2022-01-29', 'datetime': '2022-01-29 13:55:12'})  # W4, M1, Q1
         Model.create({'date': '2022-01-29', 'datetime': '2022-01-29 15:55:13'})  # W4, M1, Q1
@@ -605,7 +605,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         ])
 
     def test_groupby_datetime(self):
-        Model = self.env['test_read_group.fill_temporal']
+        Model = self.env['read_group_private.fill_temporal']
         records = Model.create([
             {'datetime': False, 'value': 13},
             {'datetime': '1916-08-18 12:30:00', 'value': 1},
@@ -748,7 +748,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         )
 
     def test_aggregate_datetime(self):
-        Model = self.env['test_read_group.fill_temporal']
+        Model = self.env['read_group_private.fill_temporal']
         records = Model.create([
             {'datetime': False, 'value': 13},
             {'datetime': '1916-08-18 01:50:00', 'value': 3},
@@ -778,7 +778,7 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_field_bypass_search_access(self):
         """ Test what happens when grouping with a domain using a one2many field with bypass_search_access. """
-        model = self.env['test_read_group.order']
+        model = self.env['read_group_private.order']
         records = model.create([{
             'line_ids': [Command.create({'value': 1}), Command.create({'value': 2})],
         }, {
@@ -811,9 +811,9 @@ class TestPrivateReadGroup(common.TransactionCase):
         self.assertEqual(result2, [(2,)])
 
     def test_groupby_many2many(self):
-        User = self.env['test_read_group.user']
+        User = self.env['read_group_private.user']
         mario, luigi = User.create([{'name': 'Mario'}, {'name': 'Luigi'}])
-        tasks = self.env['test_read_group.task'].create([
+        tasks = self.env['read_group_private.task'].create([
             {   # both users
                 'name': "Super Mario Bros.",
                 'user_ids': [Command.set((mario + luigi).ids)],
@@ -835,14 +835,14 @@ class TestPrivateReadGroup(common.TransactionCase):
         # (same than many2one) ? for public methods ?
         expected = """
             SELECT
-                "test_read_group_task__user_ids"."user_id",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
-            FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
-                    ON ("test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id")
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__user_ids"."user_id"
-            ORDER BY "test_read_group_task__user_ids"."user_id" ASC
+                "read_group_private_task__user_ids"."user_id",
+                ARRAY_AGG("read_group_private_task"."name" ORDER BY "read_group_private_task"."id")
+            FROM "read_group_private_task"
+                LEFT JOIN "read_group_private_task_user_rel" AS "read_group_private_task__user_ids"
+                    ON ("read_group_private_task"."id" = "read_group_private_task__user_ids"."task_id")
+            WHERE "read_group_private_task"."id" IN %s
+            GROUP BY "read_group_private_task__user_ids"."user_id"
+            ORDER BY "read_group_private_task__user_ids"."user_id" ASC
         """
         with self.assertQueries([expected]):
             self.assertEqual(tasks._read_group(
@@ -860,14 +860,14 @@ class TestPrivateReadGroup(common.TransactionCase):
         # Inverse the order, only inverse depending of id (see TODO above)
         expected = """
             SELECT
-                "test_read_group_task__user_ids"."user_id",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
-            FROM "test_read_group_task"
-                LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
-                    ON ("test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id")
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__user_ids"."user_id"
-            ORDER BY "test_read_group_task__user_ids"."user_id" DESC
+                "read_group_private_task__user_ids"."user_id",
+                ARRAY_AGG("read_group_private_task"."name" ORDER BY "read_group_private_task"."id")
+            FROM "read_group_private_task"
+                LEFT JOIN "read_group_private_task_user_rel" AS "read_group_private_task__user_ids"
+                    ON ("read_group_private_task"."id" = "read_group_private_task__user_ids"."task_id")
+            WHERE "read_group_private_task"."id" IN %s
+            GROUP BY "read_group_private_task__user_ids"."user_id"
+            ORDER BY "read_group_private_task__user_ids"."user_id" DESC
         """
         with self.assertQueries([expected]):
             self.assertEqual(tasks._read_group(
@@ -898,20 +898,20 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         expected = """
             SELECT
-                "test_read_group_task__user_ids"."user_id",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
-            FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
+                "read_group_private_task__user_ids"."user_id",
+                ARRAY_AGG("read_group_private_task"."name" ORDER BY "read_group_private_task"."id")
+            FROM "read_group_private_task"
+            LEFT JOIN "read_group_private_task_user_rel" AS "read_group_private_task__user_ids"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id"
-                    AND "test_read_group_task__user_ids"."user_id" IN (
-                        SELECT "test_read_group_user"."id"
-                        FROM "test_read_group_user"
-                        WHERE "test_read_group_user"."id" IN %s
+                    "read_group_private_task"."id" = "read_group_private_task__user_ids"."task_id"
+                    AND "read_group_private_task__user_ids"."user_id" IN (
+                        SELECT "read_group_private_user"."id"
+                        FROM "read_group_private_user"
+                        WHERE "read_group_private_user"."id" IN %s
                     )
                 )
-            GROUP BY "test_read_group_task__user_ids"."user_id"
-            ORDER BY "test_read_group_task__user_ids"."user_id" ASC
+            GROUP BY "read_group_private_task__user_ids"."user_id"
+            ORDER BY "read_group_private_task__user_ids"."user_id" ASC
         """
         with self.assertQueries([expected]):
             self.assertEqual(
@@ -923,12 +923,12 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
     def test_groupby_many2many_active_test_domain(self):
-        Tag = self.env['test_read_group.tag']
+        Tag = self.env['read_group_private.tag']
         active_tag, archive_tag = Tag.create([
             {'name': 'Active tag', 'active': True},
             {'name': 'Archive tag', 'active': False},
         ])
-        tasks = self.env['test_read_group.task'].create([
+        tasks = self.env['read_group_private.task'].create([
             {
                 'name': "Both tags",
                 'tag_ids': [Command.set((active_tag + archive_tag).ids)],
@@ -948,24 +948,24 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertQueries([
             """
-            SELECT "test_read_group_task__tag_ids"."tag_id",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
-            FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__tag_ids"
+            SELECT "read_group_private_task__tag_ids"."tag_id",
+                ARRAY_AGG("read_group_private_task"."name" ORDER BY "read_group_private_task"."id")
+            FROM "read_group_private_task"
+            LEFT JOIN "read_group_private_task_tag_rel" AS "read_group_private_task__tag_ids"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__tag_ids"."task_id"
-                    AND "test_read_group_task__tag_ids"."tag_id" IN (
+                    "read_group_private_task"."id" = "read_group_private_task__tag_ids"."task_id"
+                    AND "read_group_private_task__tag_ids"."tag_id" IN (
                         SELECT
-                            "test_read_group_tag"."id"
+                            "read_group_private_tag"."id"
                         FROM
-                            "test_read_group_tag"
+                            "read_group_private_tag"
                         WHERE
-                            "test_read_group_tag"."active" IS TRUE
+                            "read_group_private_tag"."active" IS TRUE
                     )
                 )
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__tag_ids"."tag_id"
-            ORDER BY "test_read_group_task__tag_ids"."tag_id" ASC
+            WHERE "read_group_private_task"."id" IN %s
+            GROUP BY "read_group_private_task__tag_ids"."tag_id"
+            ORDER BY "read_group_private_task__tag_ids"."tag_id" ASC
             """,
         ]):
             self.assertEqual(
@@ -982,24 +982,24 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertQueries([
             """
-            SELECT "test_read_group_task__active_tag_ids"."tag_id",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
-            FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__active_tag_ids"
+            SELECT "read_group_private_task__active_tag_ids"."tag_id",
+                ARRAY_AGG("read_group_private_task"."name" ORDER BY "read_group_private_task"."id")
+            FROM "read_group_private_task"
+            LEFT JOIN "read_group_private_task_tag_rel" AS "read_group_private_task__active_tag_ids"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__active_tag_ids"."task_id"
-                    AND "test_read_group_task__active_tag_ids"."tag_id" IN (
+                    "read_group_private_task"."id" = "read_group_private_task__active_tag_ids"."task_id"
+                    AND "read_group_private_task__active_tag_ids"."tag_id" IN (
                         SELECT
-                            "test_read_group_tag"."id"
+                            "read_group_private_tag"."id"
                         FROM
-                            "test_read_group_tag"
+                            "read_group_private_tag"
                         WHERE
-                            "test_read_group_tag"."active" IS TRUE
+                            "read_group_private_tag"."active" IS TRUE
                     )
                 )
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__active_tag_ids"."tag_id"
-            ORDER BY "test_read_group_task__active_tag_ids"."tag_id" ASC
+            WHERE "read_group_private_task"."id" IN %s
+            GROUP BY "read_group_private_task__active_tag_ids"."tag_id"
+            ORDER BY "read_group_private_task__active_tag_ids"."tag_id" ASC
             """,
         ]):
             self.assertEqual(
@@ -1016,16 +1016,16 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertQueries([
             """
-            SELECT "test_read_group_task__all_tag_ids"."tag_id",
-                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
-            FROM "test_read_group_task"
-            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__all_tag_ids"
+            SELECT "read_group_private_task__all_tag_ids"."tag_id",
+                ARRAY_AGG("read_group_private_task"."name" ORDER BY "read_group_private_task"."id")
+            FROM "read_group_private_task"
+            LEFT JOIN "read_group_private_task_tag_rel" AS "read_group_private_task__all_tag_ids"
                 ON (
-                    "test_read_group_task"."id" = "test_read_group_task__all_tag_ids"."task_id"
+                    "read_group_private_task"."id" = "read_group_private_task__all_tag_ids"."task_id"
                 )
-            WHERE "test_read_group_task"."id" IN %s
-            GROUP BY "test_read_group_task__all_tag_ids"."tag_id"
-            ORDER BY "test_read_group_task__all_tag_ids"."tag_id" ASC
+            WHERE "read_group_private_task"."id" IN %s
+            GROUP BY "read_group_private_task__all_tag_ids"."tag_id"
+            ORDER BY "read_group_private_task__all_tag_ids"."tag_id" ASC
             """,
         ]):
             self.assertEqual(
@@ -1042,15 +1042,15 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
     def test_float_aggregate(self):
-        records = self.env['test_read_group.aggregate'].create({'numeric_value': 42.42})
+        records = self.env['read_group_private.aggregate'].create({'numeric_value': 42.42})
         [[result]] = records._read_group([('id', 'in', records.ids)], [], ['numeric_value:array_agg'])
         self.assertIsInstance(result, list)
         self.assertIsInstance(result[0], float)
 
     def test_related(self):
-        RelatedBar = self.env['test_read_group.related_bar']
-        RelatedFoo = self.env['test_read_group.related_foo']
-        RelatedBase = self.env['test_read_group.related_base']
+        RelatedBar = self.env['read_group_private.r_bar']
+        RelatedFoo = self.env['read_group_private.r_foo']
+        RelatedBase = self.env['read_group_private.related_base']
 
         bars = RelatedBar.create([
             {'name': 'bar_a'},
@@ -1096,13 +1096,13 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         RelatedBase._read_group([], ['foo_id_name'], ['__count'])
         with self.assertQueries(["""
-            SELECT "test_read_group_related_base__foo_id"."name",
+            SELECT "read_group_private_related_base__foo_id"."name",
                     COUNT(*)
-            FROM "test_read_group_related_base"
-            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
-                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
-            GROUP BY "test_read_group_related_base__foo_id"."name"
-            ORDER BY "test_read_group_related_base__foo_id"."name" ASC
+            FROM "read_group_private_related_base"
+            LEFT JOIN "read_group_private_r_foo" AS "read_group_private_related_base__foo_id"
+                ON ("read_group_private_related_base"."foo_id" = "read_group_private_related_base__foo_id"."id")
+            GROUP BY "read_group_private_related_base__foo_id"."name"
+            ORDER BY "read_group_private_related_base__foo_id"."name" ASC
         """]):
             self.assertEqual(
                 RelatedBase._read_group([], ['foo_id_name_sudo'], ['__count']),
@@ -1111,15 +1111,15 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         # Same query generated by grouping foo_id_bar_id_name/foo_id_bar_name/foo_id_bar_name_sudo
         foo_bar_name_query = """
-            SELECT "test_read_group_related_base__foo_id__bar_id"."name",
+            SELECT "read_group_private_related_base__foo_id__bar_id"."name",
                     COUNT(*)
-            FROM "test_read_group_related_base"
-            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
-                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
-            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_base__foo_id__bar_id"
-                ON ("test_read_group_related_base__foo_id"."bar_id" = "test_read_group_related_base__foo_id__bar_id"."id")
-            GROUP BY "test_read_group_related_base__foo_id__bar_id"."name"
-            ORDER BY "test_read_group_related_base__foo_id__bar_id"."name" ASC
+            FROM "read_group_private_related_base"
+            LEFT JOIN "read_group_private_r_foo" AS "read_group_private_related_base__foo_id"
+                ON ("read_group_private_related_base"."foo_id" = "read_group_private_related_base__foo_id"."id")
+            LEFT JOIN "read_group_private_r_bar" AS "read_group_private_related_base__foo_id__bar_id"
+                ON ("read_group_private_related_base__foo_id"."bar_id" = "read_group_private_related_base__foo_id__bar_id"."id")
+            GROUP BY "read_group_private_related_base__foo_id__bar_id"."name"
+            ORDER BY "read_group_private_related_base__foo_id__bar_id"."name" ASC
         """
 
         with self.assertQueries([foo_bar_name_query] * 3):
@@ -1131,12 +1131,12 @@ class TestPrivateReadGroup(common.TransactionCase):
             RelatedBase._read_group([], ['foo_id_bar_name_sudo'], ['__count'])
 
         with self.assertQueries(["""
-            SELECT COUNT(DISTINCT "test_read_group_related_base__foo_id__bar_id"."name")
-            FROM "test_read_group_related_base"
-            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
-                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
-            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_base__foo_id__bar_id"
-                ON ("test_read_group_related_base__foo_id"."bar_id" = "test_read_group_related_base__foo_id__bar_id"."id")
+            SELECT COUNT(DISTINCT "read_group_private_related_base__foo_id__bar_id"."name")
+            FROM "read_group_private_related_base"
+            LEFT JOIN "read_group_private_r_foo" AS "read_group_private_related_base__foo_id"
+                ON ("read_group_private_related_base"."foo_id" = "read_group_private_related_base__foo_id"."id")
+            LEFT JOIN "read_group_private_r_bar" AS "read_group_private_related_base__foo_id__bar_id"
+                ON ("read_group_private_related_base__foo_id"."bar_id" = "read_group_private_related_base__foo_id__bar_id"."id")
         """]):
             self.assertEqual(
                 RelatedBase._read_group([], aggregates=['foo_id_bar_id_name:count_distinct']),
@@ -1148,8 +1148,8 @@ class TestPrivateReadGroup(common.TransactionCase):
             RelatedBar._read_group([], ['foo_names_sudo'])
 
     def test_inherited(self):
-        RelatedBase = self.env['test_read_group.related_base']
-        RelatedInherits = self.env['test_read_group.related_inherits']
+        RelatedBase = self.env['read_group_private.related_base']
+        RelatedInherits = self.env['read_group_private.related_inherits']
 
         bases = RelatedBase.create([
             {'name': 'a', 'value': 1},
@@ -1180,13 +1180,13 @@ class TestPrivateReadGroup(common.TransactionCase):
         # warmup
         RelatedInherits._read_group([], ['name'], ['__count'])
         with self.assertQueries(["""
-            SELECT "test_read_group_related_inherits__base_id"."name",
+            SELECT "read_group_private_related_inherits__base_id"."name",
                     COUNT(*)
-            FROM "test_read_group_related_inherits"
-            LEFT JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
-                ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
-            GROUP BY "test_read_group_related_inherits__base_id"."name"
-            ORDER BY "test_read_group_related_inherits__base_id"."name" ASC
+            FROM "read_group_private_related_inherits"
+            LEFT JOIN "read_group_private_related_base" AS "read_group_private_related_inherits__base_id"
+                ON ("read_group_private_related_inherits"."base_id" = "read_group_private_related_inherits__base_id"."id")
+            GROUP BY "read_group_private_related_inherits__base_id"."name"
+            ORDER BY "read_group_private_related_inherits__base_id"."name" ASC
         """]):
             self.assertEqual(
                 RelatedInherits._read_group([], ['name'], ['__count']),
@@ -1194,13 +1194,13 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
         with self.assertQueries(["""
-            SELECT "test_read_group_related_inherits__base_id"."name",
-                    SUM("test_read_group_related_inherits__base_id"."value")
-            FROM "test_read_group_related_inherits"
-            LEFT JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
-                ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
-            GROUP BY "test_read_group_related_inherits__base_id"."name"
-            ORDER BY "test_read_group_related_inherits__base_id"."name" ASC
+            SELECT "read_group_private_related_inherits__base_id"."name",
+                    SUM("read_group_private_related_inherits__base_id"."value")
+            FROM "read_group_private_related_inherits"
+            LEFT JOIN "read_group_private_related_base" AS "read_group_private_related_inherits__base_id"
+                ON ("read_group_private_related_inherits"."base_id" = "read_group_private_related_inherits__base_id"."id")
+            GROUP BY "read_group_private_related_inherits__base_id"."name"
+            ORDER BY "read_group_private_related_inherits__base_id"."name" ASC
         """]):
             self.assertEqual(
                 RelatedInherits._read_group([], ['name'], ['value:sum']),
@@ -1208,15 +1208,15 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
         expected_query = """
-            SELECT "test_read_group_related_inherits__base_id__foo_id"."name",
+            SELECT "read_group_private_related_inherits__base_id__foo_id"."name",
                     COUNT(*)
-            FROM "test_read_group_related_inherits"
-            LEFT JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
-                ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
-            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_inherits__base_id__foo_id"
-                ON ("test_read_group_related_inherits__base_id"."foo_id" = "test_read_group_related_inherits__base_id__foo_id"."id")
-            GROUP BY "test_read_group_related_inherits__base_id__foo_id"."name"
-            ORDER BY "test_read_group_related_inherits__base_id__foo_id"."name" ASC
+            FROM "read_group_private_related_inherits"
+            LEFT JOIN "read_group_private_related_base" AS "read_group_private_related_inherits__base_id"
+                ON ("read_group_private_related_inherits"."base_id" = "read_group_private_related_inherits__base_id"."id")
+            LEFT JOIN "read_group_private_r_foo" AS "read_group_private_related_inherits__base_id__foo_id"
+                ON ("read_group_private_related_inherits__base_id"."foo_id" = "read_group_private_related_inherits__base_id__foo_id"."id")
+            GROUP BY "read_group_private_related_inherits__base_id__foo_id"."name"
+            ORDER BY "read_group_private_related_inherits__base_id__foo_id"."name" ASC
         """
         with self.assertQueries([expected_query, expected_query]):
             self.assertEqual(
@@ -1229,20 +1229,20 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
     def test_related_many2many_groupby(self):
-        RelatedFoo = self.env['test_read_group.related_foo'].with_user(self.base_user)
+        RelatedFoo = self.env['read_group_private.r_foo'].with_user(self.base_user)
 
         # warmup
         RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
         with self.assertQueries(["""
-            SELECT "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id",
+            SELECT "read_group_private_r_foo__bar_id__base_ids"."read_group_private_related_base_id",
                     COUNT(*)
-            FROM "test_read_group_related_foo"
-            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_foo__bar_id"
-                ON ("test_read_group_related_foo"."bar_id" = "test_read_group_related_foo__bar_id"."id")
-            LEFT JOIN "test_read_group_related_bar_test_read_group_related_base_rel" AS "test_read_group_related_foo__bar_id__base_ids"
-                ON ("test_read_group_related_foo__bar_id"."id" = "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_bar_id")
-            GROUP BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id"
-            ORDER BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" ASC
+            FROM "read_group_private_r_foo"
+            LEFT JOIN "read_group_private_r_bar" AS "read_group_private_r_foo__bar_id"
+                ON ("read_group_private_r_foo"."bar_id" = "read_group_private_r_foo__bar_id"."id")
+            LEFT JOIN "read_group_private_r_bar_read_group_private_related_base_rel" AS "read_group_private_r_foo__bar_id__base_ids"
+                ON ("read_group_private_r_foo__bar_id"."id" = "read_group_private_r_foo__bar_id__base_ids"."read_group_private_r_bar_id")
+            GROUP BY "read_group_private_r_foo__bar_id__base_ids"."read_group_private_related_base_id"
+            ORDER BY "read_group_private_r_foo__bar_id__base_ids"."read_group_private_related_base_id" ASC
         """]):
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
 
@@ -1250,7 +1250,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         self.assertTrue(field_info['bar_base_ids']['groupable'])
 
         # With ir.rule on the comodel of the many2many
-        related_base_model = self.env['ir.model']._get('test_read_group.related_base')
+        related_base_model = self.env['ir.model']._get('read_group_private.related_base')
         self.env['ir.rule'].create({
             'name': "Only The Lone Wanderer allowed",
             'model_id': related_base_model.id,
@@ -1261,20 +1261,20 @@ class TestPrivateReadGroup(common.TransactionCase):
         RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
         # The related_sudo=True should not bypass ir_rule of the comodel
         with self.assertQueries(["""
-            SELECT "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id", COUNT(*)
-            FROM "test_read_group_related_foo"
-            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_foo__bar_id"
-                ON ("test_read_group_related_foo"."bar_id" = "test_read_group_related_foo__bar_id"."id")
-            LEFT JOIN "test_read_group_related_bar_test_read_group_related_base_rel" AS "test_read_group_related_foo__bar_id__base_ids"
-                ON ("test_read_group_related_foo__bar_id"."id" = "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_bar_id"
-                    AND "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" IN (
-                        SELECT "test_read_group_related_base"."id"
-                        FROM "test_read_group_related_base"
-                        WHERE "test_read_group_related_base"."id" IN %s
+            SELECT "read_group_private_r_foo__bar_id__base_ids"."read_group_private_related_base_id", COUNT(*)
+            FROM "read_group_private_r_foo"
+            LEFT JOIN "read_group_private_r_bar" AS "read_group_private_r_foo__bar_id"
+                ON ("read_group_private_r_foo"."bar_id" = "read_group_private_r_foo__bar_id"."id")
+            LEFT JOIN "read_group_private_r_bar_read_group_private_related_base_rel" AS "read_group_private_r_foo__bar_id__base_ids"
+                ON ("read_group_private_r_foo__bar_id"."id" = "read_group_private_r_foo__bar_id__base_ids"."read_group_private_r_bar_id"
+                    AND "read_group_private_r_foo__bar_id__base_ids"."read_group_private_related_base_id" IN (
+                        SELECT "read_group_private_related_base"."id"
+                        FROM "read_group_private_related_base"
+                        WHERE "read_group_private_related_base"."id" IN %s
                     )
                 )
-            GROUP BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id"
-            ORDER BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" ASC
+            GROUP BY "read_group_private_r_foo__bar_id__base_ids"."read_group_private_related_base_id"
+            ORDER BY "read_group_private_r_foo__bar_id__base_ids"."read_group_private_related_base_id" ASC
         """]):
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
 
@@ -1286,7 +1286,7 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_many2many_aggregate(self):
         """ many2many fields are not aggregable """
-        Model = self.env['test_read_group.task']
+        Model = self.env['read_group_private.task']
 
         # it works with another field
         Model._read_group([], [], ['name:array_agg'])
@@ -1295,12 +1295,12 @@ class TestPrivateReadGroup(common.TransactionCase):
             Model._read_group([], [], ['user_ids:array_agg'])
 
     def test_many2many_compute_not_groupable(self):
-        Model = self.env['test_read_group.related_bar']
+        Model = self.env['read_group_private.r_bar']
         field_info = Model.fields_get(['computed_base_ids'], ['groupable'])
         self.assertFalse(field_info['computed_base_ids']['groupable'])
 
     def test_duplicate_arguments(self):
-        Model = self.env['test_read_group.aggregate']
+        Model = self.env['read_group_private.aggregate']
         Model.create({'key': 1, 'value': 5})
         self.assertEqual(
             Model._read_group([], groupby=['key', 'key'], aggregates=['value:sum', 'value:sum', 'key:sum']),
@@ -1310,9 +1310,9 @@ class TestPrivateReadGroup(common.TransactionCase):
         )
 
     def test_groupby_chain_fnames_many2one(self):
-        RelatedBar = self.env['test_read_group.related_bar']
-        RelatedFoo = self.env['test_read_group.related_foo']
-        RelatedBase = self.env['test_read_group.related_base']
+        RelatedBar = self.env['read_group_private.r_bar']
+        RelatedFoo = self.env['read_group_private.r_foo']
+        RelatedBase = self.env['read_group_private.related_base']
 
         bars = RelatedBar.create([
             {'name': 'bar_a'},
@@ -1338,13 +1338,13 @@ class TestPrivateReadGroup(common.TransactionCase):
         RelatedBase._read_group([], ['foo_id.bar_id'], ['__count'])
 
         expected_query = """
-            SELECT "test_read_group_related_base__foo_id"."bar_id",
+            SELECT "read_group_private_related_base__foo_id"."bar_id",
                     COUNT(*)
-            FROM "test_read_group_related_base"
-            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
-                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
-            GROUP BY "test_read_group_related_base__foo_id"."bar_id"
-            ORDER BY "test_read_group_related_base__foo_id"."bar_id" ASC
+            FROM "read_group_private_related_base"
+            LEFT JOIN "read_group_private_r_foo" AS "read_group_private_related_base__foo_id"
+                ON ("read_group_private_related_base"."foo_id" = "read_group_private_related_base__foo_id"."id")
+            GROUP BY "read_group_private_related_base__foo_id"."bar_id"
+            ORDER BY "read_group_private_related_base__foo_id"."bar_id" ASC
         """
         with self.assertQueries([expected_query]):
             self.assertEqual(
@@ -1376,18 +1376,18 @@ class TestPrivateReadGroup(common.TransactionCase):
         # warmup ormcache
         RelatedBase._read_group([], ['foo_id.bar_id'], ['__count'])
 
-        alias_join = f"test_read_group_related_base__foo_id__{self.base_user.id}"
+        alias_join = f"read_group_private_related_base__foo_id__{self.base_user.id}"
         with self.assertQueries([f"""
             SELECT "{alias_join}"."bar_id",
                    COUNT(*)
-            FROM "test_read_group_related_base"
+            FROM "read_group_private_related_base"
             LEFT JOIN (
-                SELECT "test_read_group_related_foo".*
-                FROM "test_read_group_related_foo"
-                WHERE "test_read_group_related_foo"."id" IN %s
+                SELECT "read_group_private_r_foo".*
+                FROM "read_group_private_r_foo"
+                WHERE "read_group_private_r_foo"."id" IN %s
             ) AS "{alias_join}"
             ON (
-                "test_read_group_related_base"."foo_id" = "{alias_join}"."id"
+                "read_group_private_related_base"."foo_id" = "{alias_join}"."id"
             )
             GROUP BY "{alias_join}"."bar_id"
             ORDER BY "{alias_join}"."bar_id" ASC
@@ -1399,9 +1399,9 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
     def test_groupby_chain_fnames_char(self):
-        RelatedBar = self.env['test_read_group.related_bar']
-        RelatedFoo = self.env['test_read_group.related_foo']
-        RelatedBase = self.env['test_read_group.related_base']
+        RelatedBar = self.env['read_group_private.r_bar']
+        RelatedFoo = self.env['read_group_private.r_foo']
+        RelatedBase = self.env['read_group_private.related_base']
 
         bars = RelatedBar.create([
             {'name': 'bar_a'},
@@ -1428,15 +1428,15 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         # Same query generated by grouping foo_id.bar_id.name/foo_id.bar_name/foo_id.bar_name_sudo
         query_expected = """
-            SELECT "test_read_group_related_base__foo_id__bar_id"."name",
+            SELECT "read_group_private_related_base__foo_id__bar_id"."name",
                     COUNT(*)
-            FROM "test_read_group_related_base"
-            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
-                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
-            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_base__foo_id__bar_id"
-                ON ("test_read_group_related_base__foo_id"."bar_id" = "test_read_group_related_base__foo_id__bar_id"."id")
-            GROUP BY "test_read_group_related_base__foo_id__bar_id"."name"
-            ORDER BY "test_read_group_related_base__foo_id__bar_id"."name" ASC
+            FROM "read_group_private_related_base"
+            LEFT JOIN "read_group_private_r_foo" AS "read_group_private_related_base__foo_id"
+                ON ("read_group_private_related_base"."foo_id" = "read_group_private_related_base__foo_id"."id")
+            LEFT JOIN "read_group_private_r_bar" AS "read_group_private_related_base__foo_id__bar_id"
+                ON ("read_group_private_related_base__foo_id"."bar_id" = "read_group_private_related_base__foo_id__bar_id"."id")
+            GROUP BY "read_group_private_related_base__foo_id__bar_id"."name"
+            ORDER BY "read_group_private_related_base__foo_id__bar_id"."name" ASC
         """
         with self.assertQueries([query_expected] * 3):
             for fname_chain in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo', 'foo_id.bar_name']:
@@ -1458,15 +1458,15 @@ class TestPrivateReadGroup(common.TransactionCase):
         # Same query generated by grouping foo_id.bar_id.name/foo_id.bar_name_sudo
         # and foo_id.bar_name (unsudoed, but no record rules)
         expected_query = """
-            SELECT "test_read_group_related_base__foo_id__bar_id"."name",
+            SELECT "read_group_private_related_base__foo_id__bar_id"."name",
                     COUNT(*)
-            FROM "test_read_group_related_base"
-            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
-                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
-            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_base__foo_id__bar_id"
-                ON ("test_read_group_related_base__foo_id"."bar_id" = "test_read_group_related_base__foo_id__bar_id"."id")
-            GROUP BY "test_read_group_related_base__foo_id__bar_id"."name"
-            ORDER BY "test_read_group_related_base__foo_id__bar_id"."name" ASC
+            FROM "read_group_private_related_base"
+            LEFT JOIN "read_group_private_r_foo" AS "read_group_private_related_base__foo_id"
+                ON ("read_group_private_related_base"."foo_id" = "read_group_private_related_base__foo_id"."id")
+            LEFT JOIN "read_group_private_r_bar" AS "read_group_private_related_base__foo_id__bar_id"
+                ON ("read_group_private_related_base__foo_id"."bar_id" = "read_group_private_related_base__foo_id__bar_id"."id")
+            GROUP BY "read_group_private_related_base__foo_id__bar_id"."name"
+            ORDER BY "read_group_private_related_base__foo_id__bar_id"."name" ASC
         """
         for fname_chain in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo', 'foo_id.bar_name']:
             with self.assertQueries([expected_query]):
@@ -1487,19 +1487,19 @@ class TestPrivateReadGroup(common.TransactionCase):
         RelatedBase._read_group([], ['foo_id.bar_id.name'], ['__count'])
 
         # Same query generated by grouping foo_id.bar_id.name/foo_id.bar_name_sudo
-        alias_join = f"test_read_group_related_base__foo_id__{self.base_user.id}"
+        alias_join = f"read_group_private_related_base__foo_id__{self.base_user.id}"
         expected_query = f"""
             SELECT "{alias_join}__bar_id"."name",
                    COUNT(*)
-            FROM "test_read_group_related_base"
+            FROM "read_group_private_related_base"
             LEFT JOIN (
-                SELECT "test_read_group_related_foo".*
-                FROM "test_read_group_related_foo"
-                WHERE "test_read_group_related_foo"."id" IN %s
+                SELECT "read_group_private_r_foo".*
+                FROM "read_group_private_r_foo"
+                WHERE "read_group_private_r_foo"."id" IN %s
             ) AS "{alias_join}" ON (
-                "test_read_group_related_base"."foo_id" = "{alias_join}"."id"
+                "read_group_private_related_base"."foo_id" = "{alias_join}"."id"
             )
-            LEFT JOIN "test_read_group_related_bar" AS "{alias_join}__bar_id" ON (
+            LEFT JOIN "read_group_private_r_bar" AS "{alias_join}__bar_id" ON (
                 "{alias_join}"."bar_id" = "{alias_join}__bar_id"."id"
             )
             GROUP BY "{alias_join}__bar_id"."name"

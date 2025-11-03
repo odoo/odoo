@@ -1,0 +1,250 @@
+<odoo>
+    <data>
+        <menuitem id="properties_menu_main" name="Discussions" sequence="20" parent="base.menu_tests"/>
+
+        <menuitem id="properties_menu_sub" name="Discussions" parent="menu_main" sequence="10"/>
+
+        <record id="properties_action_discussions" model="ir.actions.act_window">
+            <field name="name">properties Discussions</field>
+            <field name="res_model">test_properties.discussion</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="properties_menu_discussions" action="action_discussions" parent="menu_sub" sequence="10"/>
+
+        <record id="properties_action_messages" model="ir.actions.act_window">
+            <field name="name">properties Messages</field>
+            <field name="res_model">test_properties.message</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="properties_menu_messages" action="action_messages" parent="menu_sub" sequence="20"/>
+
+        <menuitem id="properties_menu_config" name="Configuration" parent="menu_main" sequence="20"/>
+
+        <record id="properties_action_categories" model="ir.actions.act_window">
+            <field name="name">properties Categories</field>
+            <field name="res_model">test_properties.category</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="properties_menu_categories" action="action_categories" parent="menu_config"/>
+
+        <!-- Discussion form view -->
+        <record id="properties_discussion_form" model="ir.ui.view">
+            <field name="name">properties discussion form view</field>
+            <field name="model">test_properties.discussion</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Discussion">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <!--
+                                Bug if the view contains at least 5 fields.
+                                The order of the dic values changes and the _check_author constraint raise.
+                                <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            -->
+                            <field name="moderator"/>
+                        </group>
+                        <notebook>
+                            <page string="Messages">
+                                <field name="messages">
+                                    <list string="Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                        <field name="important"/>
+                                    </list>
+                                    <form string="Message">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                            <field name="important"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Emails">
+                                <field name="important_emails">
+                                    <list name="Important Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                        <field name="important"/>
+                                        <field name="email_to"/>
+                                    </list>
+                                    <form string="Important Message">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                            <field name="important"/>
+                                            <field name="email_to"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Participants">
+                                <field name="participants" widget="many2many">
+                                    <list string="Participants">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="message_concat"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Discussion form view with editable list -->
+        <record id="properties_discussion_form_2" model="ir.ui.view">
+            <field name="name">properties discussion form view</field>
+            <field name="model">test_properties.discussion</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Discussion">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                        <notebook>
+                            <page string="Messages">
+                                <field name="messages">
+                                    <list name="Messages" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="author"/>
+                                        <field name="body" required="1"/>
+                                        <field name="size"/>
+                                        <field name="has_important_sibling"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Participants">
+                                <field name="participants"/>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="message_concat"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="properties_action_discussions_2" model="ir.actions.act_window">
+            <field name="name">properties Discussions 2</field>
+            <field name="res_model">test_properties.discussion</field>
+            <field name="view_ids" eval="[Command.clear(),
+                          (0,0,{'view_mode':'list'}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('properties_discussion_form_2')})]"/>
+        </record>
+        <menuitem id="properties_menu_discussions_2" action="action_discussions_2" parent="menu_sub" sequence="10"/>
+
+        <!-- Discussion form view with embedded list -->
+        <record id="properties_discussion_form_3" model="ir.ui.view">
+            <field name="name">properties discussion form view</field>
+            <field name="model">test_properties.discussion</field>
+            <field name="priority" eval="11"/>
+            <field name="arch" type="xml">
+                <form string="Discussion">
+                    <sheet>
+                        <group>
+                            <field name="name" context="{'generate_dummy_message': True}"/>
+                        </group>
+                        <group>
+                            <field name="messages" />
+                            <field name="important_messages">
+                                <list string="Important messages">
+                                    <field name="name"/>
+                                    <field name="author"/>
+                                    <field name="size"/>
+                                </list>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="properties_action_discussions_3" model="ir.actions.act_window">
+            <field name="name">properties Discussions 3</field>
+            <field name="res_model">test_properties.discussion</field>
+            <field name="view_ids" eval="[Command.clear(),
+                          (0,0,{'view_mode':'list'}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('properties_discussion_form_3')})]"/>
+        </record>
+        <menuitem id="properties_menu_discussions_3" action="action_discussions_3" parent="menu_sub" sequence="11"/>
+
+
+        <!-- Message list view -->
+        <record id="properties_message_tree" model="ir.ui.view">
+            <field name="name">properties message list view</field>
+            <field name="model">test_properties.message</field>
+            <field name="arch" type="xml">
+                <list string="Messages">
+                    <field name="name"/>
+                    <field name="author"/>
+                    <field name="size"/>
+                    <field name="important"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Message form view -->
+        <record id="properties_message_form" model="ir.ui.view">
+            <field name="name">properties message form view</field>
+            <field name="model">test_properties.message</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <sheet>
+                        <group>
+                            <field name="discussion"/>
+                            <field name="name"/>
+                            <field name="author"/>
+                            <field name="size"/>
+                            <field name="attributes"/>
+                        </group>
+                        <label for="body"/>
+                        <field name="body"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Category list view -->
+        <record id="properties_category_tree" model="ir.ui.view">
+            <field name="name">properties category list view</field>
+            <field name="model">test_properties.category</field>
+            <field name="arch" type="xml">
+                <list string="Categories">
+                    <field name="display_name"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Category form view -->
+        <record id="properties_category_form" model="ir.ui.view">
+            <field name="name">properties category form view</field>
+            <field name="model">test_properties.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent"/>
+                            <field name="root_categ"/>
+                            <field name="dummy"/>
+                            <field name="color"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

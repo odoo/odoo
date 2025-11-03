@@ -24,7 +24,7 @@ class Feedback(TransactionCase):
 class TestSudo(Feedback):
     """ Test the behavior of method sudo(). """
     def test_sudo(self):
-        record = self.env['test_access_right.some_obj'].create({'val': 5})
+        record = self.env['test_access_feedback.some_obj'].create({'val': 5})
         user1 = self.user
         partner_demo = self.env['res.partner'].create({
             'name': 'Marc Demo',
@@ -96,7 +96,7 @@ class TestACLFeedback(Feedback):
         super().setUpClass()
 
         ACL = cls.env['ir.model.access']
-        m = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+        m = cls.env['ir.model'].search([('model', '=', 'test_access_feedback.some_obj')])
         ACL.search([('model_id', '=', m.id)]).unlink()
         ACL.create({
             'name': "read",
@@ -111,7 +111,7 @@ class TestACLFeedback(Feedback):
             'perm_read': True,
             'perm_create': True,
         })
-        cls.record = cls.env['test_access_right.some_obj'].create({'val': 5})
+        cls.record = cls.env['test_access_feedback.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
         cls.env.flush_all()
         cls.env.invalidate_all()
@@ -123,7 +123,7 @@ class TestACLFeedback(Feedback):
             self.record.with_user(self.user).write({'val': 10})
         self.assertEqual(
             ctx.exception.args[0],
-            """You are not allowed to modify 'Object For Test Access Right' (test_access_right.some_obj) records.
+            """You are not allowed to modify 'Object For Test Access Right' (test_access_feedback.some_obj) records.
 
 No group currently allows this operation.
 
@@ -132,12 +132,12 @@ Contact your administrator to request access if necessary.""",
 
     def test_one_group(self):
         with self.assertRaises(AccessError) as ctx:
-            self.env(user=self.user)['test_access_right.some_obj'].create({
+            self.env(user=self.user)['test_access_feedback.some_obj'].create({
                 'val': 1,
             })
         self.assertEqual(
             ctx.exception.args[0],
-            """You are not allowed to create 'Object For Test Access Right' (test_access_right.some_obj) records.
+            """You are not allowed to create 'Object For Test Access Right' (test_access_feedback.some_obj) records.
 
 This operation is allowed for the following groups:\n\t- Group 0
 
@@ -146,7 +146,7 @@ Contact your administrator to request access if necessary.""",
 
     def test_two_groups(self):
         r = self.record.with_user(self.user)
-        expected = """You are not allowed to access 'Object For Test Access Right' (test_access_right.some_obj) records.
+        expected = """You are not allowed to access 'Object For Test Access Right' (test_access_feedback.some_obj) records.
 
 This operation is allowed for the following groups:\n\t- Group 0\n\t- Group 1
 
@@ -168,8 +168,8 @@ class TestIRRuleFeedback(Feedback):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.group_user').write({'user_ids': [Command.link(cls.user.id)]})
-        cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
-        cls.record = cls.env['test_access_right.some_obj'].create({
+        cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_feedback.some_obj')])
+        cls.record = cls.env['test_access_feedback.some_obj'].create({
             'val': 0,
         }).with_user(cls.user)
         cls.maxDiff = None
@@ -216,7 +216,7 @@ Blame the following rules:
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
         )
 
-        ChildModel = self.env['test_access_right.inherits']
+        ChildModel = self.env['test_access_feedback.inherits']
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             ChildModel.with_user(self.user).create({'some_id': self.record.id, 'val': 2})
         self.assertEqual(
@@ -340,7 +340,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         this might be a multi-company issue, but the record doesn't have company_id field
         then no information about the company is shown.
         """
-        ChildModel = self.env['test_access_right.child'].sudo()
+        ChildModel = self.env['test_access_feedback.child'].sudo()
         self.env['ir.rule'].create({
             'name': 'rule 0',
             'model_id': self.env['ir.model'].search([('model', '=', ChildModel._name)]).id,
@@ -389,12 +389,12 @@ If you really, really need access, perhaps you can win over your friendly admini
 
 This seems to be a multi-company issue, you might be able to access the record by switching to the company: {self.record.sudo().company_id.display_name}.""",
         )
-        p = self.env['test_access_right.inherits'].create({'some_id': self.record.id})
+        p = self.env['test_access_feedback.inherits'].create({'some_id': self.record.id})
         self.env.flush_all()
         self.env.invalidate_all()
         with self.assertRaisesRegex(
             AccessError,
-            r"Implicitly accessed through 'Object for testing related access rights' \(test_access_right.inherits\)\.",
+            r"Implicitly accessed through 'Object for testing related access rights' \(test_access_feedback.inherits\)\.",
         ):
             p.with_user(self.user).val
 
@@ -404,7 +404,7 @@ This seems to be a multi-company issue, you might be able to access the record b
             {'name': 'Brosse Inc.'},
             {'name': 'Brosse Inc. 2'},
         ])
-        records = self.env["test_access_right.some_obj"].create([
+        records = self.env["test_access_feedback.some_obj"].create([
             {"val": 1, "company_id": company_1.id},
             {"val": 2, "company_id": company_2.id},
         ])
@@ -436,10 +436,10 @@ class TestFieldGroupFeedback(Feedback):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.record = cls.env['test_access_right.some_obj'].create({
+        cls.record = cls.env['test_access_feedback.some_obj'].create({
             'val': 0,
         }).with_user(cls.user)
-        cls.inherits_record = cls.env['test_access_right.inherits'].create({
+        cls.inherits_record = cls.env['test_access_feedback.inherits'].create({
             'some_id': cls.record.id,
         }).with_user(cls.user)
 
@@ -453,7 +453,7 @@ class TestFieldGroupFeedback(Feedback):
 
         self.assertEqual(
             ctx.exception.args[0],
-            f"""You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            f"""You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_feedback.some_obj). Please contact your system administrator.
 
 Operation: read
 User: {self.user.id}
@@ -465,7 +465,7 @@ Groups: allowed for groups 'Role / Portal', 'Test Group'""",
 
         self.assertEqual(
             ctx.exception.args[0],
-            f"""You do not have enough rights to access the field "forbidden3" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            f"""You do not have enough rights to access the field "forbidden3" on Object For Test Access Right (test_access_feedback.some_obj). Please contact your system administrator.
 
 Operation: read
 User: {self.user.id}
@@ -482,7 +482,7 @@ Groups: always forbidden""",
 
         self.assertEqual(
             ctx.exception.args[0],
-            f"""You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            f"""You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_feedback.some_obj). Please contact your system administrator.
 
 Operation: write
 User: {self.user.id}
