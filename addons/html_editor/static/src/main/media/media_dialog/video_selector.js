@@ -454,7 +454,7 @@ export class VideoSelector extends Component {
      * @returns {string} - The start time in seconds.
      */
     parseTimeToSeconds(value) {
-        const match = value.match(/^(?:(\d+)m(\d+)s|(\d+)m|(\d+)s|(\d+))$/);
+        const match = value?.match(/^(?:(\d+)m(\d+)s|(\d+)m|(\d+)s|(\d+))$/);
         if (!match) {
             return value;
         }
