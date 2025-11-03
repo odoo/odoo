@@ -206,11 +206,9 @@ export class ProductTemplate extends Base {
         const basePrice = variant ? variant.lst_price : this.list_price;
         let price = basePrice + (price_extra || 0);
 
-        if (original_line && original_line.isLotTracked()) {
+        if (original_line && original_line.isLotTracked() && variant) {
             related_lines.push(
-                ...original_line.order_id.lines.filter(
-                    (line) => line.product_id.product_tmpl_id.id == this.id
-                )
+                ...original_line.order_id.lines.filter((line) => line.product_id.id == variant.id)
             );
             quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
         }
