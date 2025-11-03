@@ -45,6 +45,10 @@
                             <field name="sale_ok"/>
                             <label for="sale_ok"/>
                         </span>
+                        <span name="purchase_option" class="d-inline-flex" invisible="type == 'combo'">
+                            <field name="purchase_ok"/>
+                            <label for="purchase_ok"/>
+                        </span>
                     </div>
                     <notebook>
                         <page string="General Information" name="general_information">
@@ -243,6 +247,7 @@
                 <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>
                 <filter string="Sales" name="filter_to_sell" domain="[('sale_ok','=',True)]"/>
+                <filter string="Purchase" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
                 <separator/>
                 <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
                 <filter invisible="1" string="My Activities" name="filter_activities_my"

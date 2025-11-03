@@ -8,7 +8,7 @@
             <field name="categ_id" position="after">
                 <field string="POS Product Category" name="pos_categ_ids" filter_domain="[('pos_categ_ids', 'child_of', raw_value)]"/>
             </field>
-            <filter name="filter_to_sell" position="after">
+            <filter name="filter_to_purchase" position="after">
                <filter name="filter_to_availabe_pos" string="Point of Sale" domain="[('available_in_pos', '=', True)]"/>
             </filter>
             <filter name="group_by_categ_id" position="after">
@@ -92,7 +92,7 @@
                     </group>
                 </page>
             </page>
-            <span name="sale_option" position="after">
+            <span name="purchase_option" position="after">
                 <span class="d-inline-block">
                     <field name="available_in_pos"/>
                     <label for="available_in_pos" string="Point of Sale"/>
