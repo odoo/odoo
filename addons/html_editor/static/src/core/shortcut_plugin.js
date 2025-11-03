@@ -36,11 +36,34 @@ import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand", "selection", "split"];
+    static dependencies = ["userCommand", "selection", "split", "dom", "history"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
         input_handlers: this.onInput.bind(this),
+        user_commands: [
+            {
+                id: "replaceSymbol",
+                run: ({ symbol }) => this.replaceSymbol(symbol),
+            },
+        ],
+        shorthands: [
+            {
+                pattern: /->$/,
+                commandId: "replaceSymbol",
+                commandParams: { symbol: "\u2192" }, //→
+            },
+            {
+                pattern: /<-$/,
+                commandId: "replaceSymbol",
+                commandParams: { symbol: "\u2190" }, //←
+            },
+            {
+                pattern: /=>$/,
+                commandId: "replaceSymbol",
+                commandParams: { symbol: "\u2B95" }, //⮕
+            },
+        ],
     };
 
     setup() {
@@ -80,6 +103,11 @@ export class ShortCutPlugin extends Plugin {
         );
     }
 
+    replaceSymbol(symbol) {
+        this.dependencies.dom.insert(symbol + "\u00A0");
+        this.dependencies.history.addStep();
+    }
+
     onInput(ev) {
         if (ev.data !== " ") {
             return;
@@ -108,7 +136,7 @@ export class ShortCutPlugin extends Plugin {
         }
         const precedingText = blockEl.textContent.substring(lineOffset, spaceOffset - 1);
         const matchedShortcut = this.getResource("shorthands").find(({ pattern }) =>
-            pattern.test(precedingText.trim())
+            pattern.test(precedingText.trimStart())
         );
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
@@ -117,12 +145,13 @@ export class ShortCutPlugin extends Plugin {
                     this.dependencies.split.splitBlockSegments();
                     blockEl = closestBlock(selection.anchorNode);
                 }
-                this.dependencies.selection.setSelection({
-                    anchorNode: blockEl.firstChild,
-                    anchorOffset: 0,
-                    focusNode: selection.focusNode,
-                    focusOffset: selection.focusOffset,
-                });
+                // Set selection to the matched string with space
+                let offset =
+                    matchedShortcut.pattern.exec(precedingText.trimStart())?.[0].length + 1;
+                while (offset > 0) {
+                    this.dependencies.selection.modifySelection("extend", "backward", "character");
+                    offset--;
+                }
                 this.dependencies.selection.extractContent(
                     this.dependencies.selection.getEditableSelection()
                 );

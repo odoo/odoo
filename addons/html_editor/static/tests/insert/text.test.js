@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
-import { deleteBackward, insertText } from "../_helpers/user_actions";
+import { deleteBackward, insertSpace, insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { press } from "@odoo/hoot-dom";
@@ -92,6 +92,33 @@ describe("collapsed selection", () => {
                 </div>
             `),
         });
+    });
+
+    test("should replace '->' with '→' and be a undoable step", async () => {
+        const { editor, el } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "->");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>ab→&nbsp;[]</p>");
+        execCommand(editor, "historyUndo");
+        expect(getContent(el)).toBe("<p>ab->&nbsp;[]</p>");
+    });
+
+    test("should replace '<-' with '←' and be a undoable step", async () => {
+        const { editor, el } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "<-");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>ab←&nbsp;[]</p>");
+        execCommand(editor, "historyUndo");
+        expect(getContent(el)).toBe("<p>ab<-&nbsp;[]</p>");
+    });
+
+    test("should replace '=>' with '⮕' and be a undoable step", async () => {
+        const { editor, el } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "=>");
+        await insertSpace(editor);
+        expect(getContent(el)).toBe("<p>ab⮕&nbsp;[]</p>");
+        execCommand(editor, "historyUndo");
+        expect(getContent(el)).toBe("<p>ab=>&nbsp;[]</p>");
     });
 });
 

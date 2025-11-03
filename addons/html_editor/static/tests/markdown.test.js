@@ -1,7 +1,7 @@
 import { describe, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { base64Img, testEditor } from "./_helpers/editor";
-import { insertText } from "./_helpers/user_actions";
+import { insertSpace, insertText } from "./_helpers/user_actions";
 
 describe("inline code", () => {
     test("should convert text into inline code (start)", async () => {
@@ -303,7 +303,7 @@ describe("pre", () => {
     test("should create pre block on triple-backtick", async () => {
         await testEditor({
             contentBefore: "<p>```[]</p>",
-            stepFunction: async (editor) => await insertText(editor, " "),
+            stepFunction: async (editor) => await insertSpace(editor),
             contentAfterEdit: '<pre o-we-hint-text="Code" class="o-we-hint">[]<br></pre>',
             contentAfter: "<pre>[]<br></pre>",
         });
