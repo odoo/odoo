@@ -1,3 +1,4 @@
+import { deepCopy } from "@web/core/utils/objects";
 import { MockServerError } from "./mock_server_utils";
 
 /**
@@ -91,6 +92,21 @@ const R_CAMEL_CASE = /_([a-z])/g;
 const R_ENDS_WITH_ID = /_id(s)?$/i;
 const R_LOWER_FOLLOWED_BY_UPPER = /([a-z])([A-Z])/g;
 const R_SPACE_OR_UNDERSCORE = /[\s_]+/g;
+
+/**
+ * @param {Record<string, FieldDefinition & MockFieldProperties>} fields
+ */
+export function copyFields(fields) {
+    const fieldsCopy = {};
+    for (const [fieldName, field] of Object.entries(fields)) {
+        const fieldCopy = {};
+        for (const [property, value] of Object.entries(field)) {
+            fieldCopy[property] = typeof value === "object" ? deepCopy(value) : value;
+        }
+        fieldsCopy[fieldName] = fieldCopy;
+    }
+    return fieldsCopy;
+}
 
 /**
  * @param {FieldDefinition & MockFieldProperties} field
