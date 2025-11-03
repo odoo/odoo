@@ -58,13 +58,6 @@ const patchHrPresenceStatusPill = () => ({
         }
         return super.color;
     },
-
-    get label() {
-        if (this.location) {
-            return this.props.record.data.work_location_name || _t("Unspecified");
-        }
-        return super.label;
-    },
 });
 
 // for the both components: first applies the common patch and then applies patch for label
