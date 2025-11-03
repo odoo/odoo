@@ -3,6 +3,7 @@ import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { findComponent, makeMockServer, mountView } from "@web/../tests/web_test_helpers";
 import { defineHrWorkEntryModels } from "@hr_work_entry/../tests/hr_work_entry_test_helpers";
 import { WorkEntryCalendarController } from "@hr_work_entry/views/work_entry_calendar/work_entry_calendar_controller";
+import { WorkEntryCalendarMultiSelectionButtons } from "@hr_work_entry/views/work_entry_calendar/work_entry_multi_selection_buttons";
 const { DateTime } = luxon;
 
 describe.current.tags("desktop");
@@ -53,4 +54,23 @@ test("Test work entry calendar without work entry type", async () => {
     expect(".fc-event").toHaveCount(2, {
         message: "2 work entries should be displayed in the calendar view",
     });
+});
+
+test("should use default_employee_id from context in multi create popover", async () => {
+    const defaultEmployeeId = 100;
+    const view = await mountView({
+        type: "calendar",
+        resModel: "hr.work.entry",
+        context: { default_employee_id: defaultEmployeeId },
+    });
+
+    const controller = findComponent(
+        view,
+        (component) => component instanceof WorkEntryCalendarMultiSelectionButtons
+    );
+
+    await controller.loadMultiCreateView()
+    const values = controller.getMultiCreatePopoverProps();
+    expect(values.multiCreateRecordProps.context).toInclude("default_employee_id");
+    expect(values.multiCreateRecordProps.context.default_employee_id).toEqual(defaultEmployeeId);
 });
