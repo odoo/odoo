@@ -121,7 +121,7 @@ class StockRule(models.Model):
     def _check_company_consistency(self):
         for rule in self:
             route = rule.route_id
-            if route.company_id and rule.company_id.id != route.company_id.id:
+            if route.company_id and not rule.company_id.parent_path.startswith(route.company_id.parent_path):
                 raise ValidationError(_(
                     "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
                     rule=rule.display_name,
