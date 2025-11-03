@@ -3,7 +3,7 @@
 from odoo import api, models
 
 
-class ReportProductReport_Pricelist(models.AbstractModel):
+class ProductPricelistReport(models.AbstractModel):
     _name = 'report.product.report_pricelist'
     _description = 'Pricelist Report'
 
@@ -38,18 +38,19 @@ class ReportProductReport_Pricelist(models.AbstractModel):
         return {
             'is_html_type': report_type == 'html',
             'is_product_tmpl': is_product_tmpl,
-            'display_pricelist_title': data.get('display_pricelist_title', False) and bool(data['display_pricelist_title']),
+            'display_pricelist_title': bool(data.get('display_pricelist_title', False)),
             'pricelist': pricelist,
             'products': products_data,
             'quantities': quantities,
             'docs': pricelist,
+            'currency': pricelist.currency_id or self.env.company.currency_id,
         }
 
     def _get_product_data(self, is_product_tmpl, product, pricelist, quantities):
         product = product.with_context(display_default_code=False)
         data = {
             'id': product.id,
-            'name': is_product_tmpl and product.name or product.display_name,
+            'name': (is_product_tmpl and product.name) or product.display_name,
             'price': dict.fromkeys(quantities, 0.0),
             'uom': product.uom_id.name,
             'default_code': product.default_code,
