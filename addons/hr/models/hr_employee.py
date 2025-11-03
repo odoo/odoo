@@ -685,6 +685,8 @@ class HrEmployee(models.Model):
         version_domain = Domain('contract_date_start', '!=', False)
         if self.ids:
             version_domain &= Domain('employee_id', 'in', self.ids)
+        elif not any(self._ids):  # onchange
+            version_domain &= Domain('employee_id', 'in', self._origin.ids)
         if date_start:
             version_domain &= Domain('contract_date_end', '=', False) | Domain('contract_date_end', '>=', date_start)
         if date_end:
@@ -698,7 +700,8 @@ class HrEmployee(models.Model):
         )
         contract_versions_by_employee = defaultdict(lambda: defaultdict(lambda: self.env["hr.version"]))
         for employee, _date_version, version in all_versions:
-            contract_versions_by_employee[employee.id][version[0].contract_date_start] |= version
+            first_version = next(iter(version), version)
+            contract_versions_by_employee[employee.id][first_version.contract_date_start] |= version
         return contract_versions_by_employee
 
     def _get_all_contract_dates(self):
