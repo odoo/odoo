@@ -8,7 +8,7 @@ import {
 } from "@website/js/text_processing";
 
 export class TextHighlight extends Interaction {
-    static selector = "#wrapwrap";
+    static selector = "#wrapwrap, .o_wslides_fs_content";
     dynamicContent = {
         _root: {
             "t-on-text_highlight_added": this.onTextHighlightAdded,
