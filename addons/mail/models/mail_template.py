@@ -214,7 +214,7 @@ class MailTemplate(models.Model):
         if copy_attachments:
             copy.write({
                 'attachment_ids': [
-                    (4, copy.id) for copy in (
+                    (4, att_copy.id) for att_copy in (
                         attachment.copy(default={'res_id': copy.id, 'res_model': self._name}) for attachment in self.attachment_ids
                     )
                 ]
