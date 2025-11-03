@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="hr_work_entry.Many2OneWorkEntryTypeField">
         <div class="d-flex align-items-center gap-1">
-            <t t-if="value !== false">
+            <t t-if="m2oProps.value !== false">
                 <WorkEntryType data="state.data"/>
             </t>
             <Many2One t-props="m2oProps" cssClass="'w-100'">

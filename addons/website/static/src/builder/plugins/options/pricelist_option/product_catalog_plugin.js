@@ -3,33 +3,36 @@ import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { AddProductOption } from "@html_builder/plugins/add_product_option";
+import { BaseAddProductOption } from "@html_builder/plugins/add_product_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+
+export class ProductCatalogDescriptionOption extends BaseOptionComponent {
+    static template = "website.ProductCatalogDescriptionOption";
+    static selector = ".s_product_catalog";
+    static components = { BorderConfigurator };
+}
+
+export class AddProductCatalogOption extends BaseAddProductOption {
+    static selector = ".s_product_catalog";
+    buttonApplyTo =
+        ":scope > :has(.s_product_catalog_dish):not(:has(.row > div .s_product_catalog_dish))";
+    productSelector = ".s_product_catalog_dish";
+}
+
+export class AddProductCatalogSectionOption extends BaseAddProductOption {
+    static selector = ".s_product_catalog .row > div";
+    buttonApplyTo = ":scope > :has(.s_product_catalog_dish)";
+    productSelector = ".s_product_catalog_dish";
+}
 
 class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";
     resources = {
         builder_options: [
-            withSequence(BEGIN, {
-                selector: ".s_product_catalog",
-                OptionComponent: AddProductOption,
-                props: {
-                    applyTo:
-                        ":scope > :has(.s_product_catalog_dish):not(:has(.row > div .s_product_catalog_dish))",
-                    productSelector: ".s_product_catalog_dish",
-                },
-            }),
-            withSequence(BEGIN, {
-                selector: ".s_product_catalog .row > div",
-                OptionComponent: AddProductOption,
-                props: {
-                    applyTo: ":scope > :has(.s_product_catalog_dish)",
-                    productSelector: ".s_product_catalog_dish",
-                },
-            }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.ProductCatalogDescriptionOption",
-                selector: ".s_product_catalog",
-            }),
+            withSequence(BEGIN, AddProductCatalogOption),
+            withSequence(BEGIN, AddProductCatalogSectionOption),
+            withSequence(SNIPPET_SPECIFIC_END, ProductCatalogDescriptionOption),
         ],
         dropzone_selector: {
             selector: ".s_product_catalog_dish",

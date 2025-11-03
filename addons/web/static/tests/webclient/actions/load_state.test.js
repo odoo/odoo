@@ -1869,7 +1869,9 @@ describe(`new urls`, () => {
 
         await mountWebClient();
         await getService("action").doAction(100);
+        await runAllTimers(); // wait for the router to be updated
         await contains(".o_data_cell").click();
+        await runAllTimers(); // wait for the router to be updated
         await getService("action").doAction(200);
         expect.verifySteps(["/web/action/load", "/web/action/load"]);
 

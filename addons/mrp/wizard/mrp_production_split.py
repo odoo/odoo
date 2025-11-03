@@ -39,7 +39,7 @@ class MrpProductionSplit(models.TransientModel):
     def _compute_num_splits(self):
         self.num_splits = 0
         for wizard in self:
-            if wizard.product_uom_id.compare(self.max_batch_size, 0) > 0:
+            if wizard.product_uom_id.compare(wizard.max_batch_size, 0) > 0:
                 wizard.num_splits = float_round(
                     wizard.product_qty / wizard.max_batch_size,
                     precision_digits=0,

@@ -250,25 +250,23 @@ test("Applying an overlay button action should wait for the actions in progress"
 
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
 
     await contains(":iframe .test-options-target").click();
     await contains(".overlay .test_button").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
 
     customActionDef.resolve();
     await tick();
     expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph customAction overlayButton">plop</div>`
+        `<div class="test-options-target customAction overlayButton">plop</div>`
     );
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph customAction">plop</div>`
-    );
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target customAction">plop</div>`);
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
 });
 
 test("The overlay buttons should only appear for elements in editable areas, unless specified otherwise", async () => {

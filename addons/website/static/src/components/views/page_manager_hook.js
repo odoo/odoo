@@ -51,14 +51,13 @@ export function usePageManager({ resModel, createAction }) {
                             const path = params.computePath();
                             actionService.doAction({
                                 type: "ir.actions.act_window_close",
-                                infos: { path }
+                                infos: { path },
                             });
                         }
-                    }
-                }
+                    },
+                },
             });
         }
-
     }
 
     function selectWebsite(website) {
@@ -68,12 +67,12 @@ export function usePageManager({ resModel, createAction }) {
     return {
         get websites() {
             const activeId = state.activeWebsite.id;
-            return websiteSelection.map(website => {
+            return websiteSelection.map((website) => {
                 const isActive = website.id === activeId;
                 return { ...website, isActive };
             });
         },
         createWebsiteContent,
-        selectWebsite
+        selectWebsite,
     };
 }

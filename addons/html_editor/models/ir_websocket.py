@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-
 from odoo import models
-from odoo.exceptions import AccessDenied
+from odoo.exceptions import AccessDenied, AccessError
 
 
 class IrWebsocket(models.AbstractModel):
@@ -29,11 +28,14 @@ class IrWebsocket(models.AbstractModel):
                         if not document.exists():
                             continue
 
-                        document.check_access('read')
-                        document.check_access('write')
-                        if field := document._fields.get(field_name):
-                            document._check_field_access(field, 'read')
-                            document._check_field_access(field, 'write')
+                        try:
+                            document.check_access('read')
+                            document.check_access('write')
+                            if field := document._fields.get(field_name):
+                                document._check_field_access(field, 'read')
+                                document._check_field_access(field, 'write')
+                        except AccessError:
+                            continue
 
                         channels.append((self.env.registry.db_name, 'editor_collaboration', model_name, field_name, res_id))
         return super()._build_bus_channel_list(channels)

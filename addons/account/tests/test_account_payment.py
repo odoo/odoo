@@ -654,12 +654,12 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         }])
         invoice_1.action_post()
         register_payment_and_assert_state(invoice_1, 100.0, is_community=True)
-        self.assertTrue(invoice_1.matched_payment_ids.move_id)
+        self.assertTrue(invoice_1.reconciled_payment_ids.move_id)
 
         invoice_2 = invoice_1.copy()
         invoice_2.action_post()
         register_payment_and_assert_state(invoice_2, 100.0, is_community=False)
-        self.assertFalse(invoice_2.matched_payment_ids.move_id)
+        self.assertFalse(invoice_2.reconciled_payment_ids.move_id)
 
     def test_payment_confirmation_with_bank_outstanding_account(self):
         """ Ensures that when the outstanding account of the payment method is set to a bank,
@@ -879,3 +879,36 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             'amount_signed': -100,
             'amount_company_currency_signed': -50,
         }])
+
+    def test_payment_state_computation(self):
+        def create_invoice(post=False, kwargs=None):
+            move = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            })
+            if post:
+                move.action_post()
+            if kwargs is not None:
+                move.update({**kwargs})
+            return move
+
+        for post, payment_state, expected in [
+            (False, 'not_paid', 'draft'),
+            (False, 'partial', 'partial'),
+            (False, 'in_payment', 'in_payment'),
+            (False, 'paid', 'paid'),
+            (True, 'partial', 'partial'),
+            (True, 'in_payment', 'in_payment'),
+            (True, 'paid', 'paid'),
+            (True, 'reversed', 'reversed'),
+        ]:
+            invoice = create_invoice(post=post, kwargs={'payment_state': payment_state})
+            self.assertEqual(invoice.status_in_payment, expected)
+
+        for is_move_sent, expected in [
+            (True, 'sent'),
+            (False, 'posted'),
+        ]:
+            invoice = create_invoice(post=True, kwargs={'is_move_sent': is_move_sent})
+            self.assertEqual(invoice.status_in_payment, expected)

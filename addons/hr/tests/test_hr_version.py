@@ -652,6 +652,7 @@ class TestHrVersion(TransactionCase):
             "currency_id",
             "date_end",
             "date_start",
+            "departure_description",
             "display_name",
             "id",
             "is_current",
@@ -690,7 +691,7 @@ class TestHrVersion(TransactionCase):
                 continue
             if hasattr(field, 'store') and field.store is False:
                 continue
-            if not (hasattr(field, 'tracking') and field.tracking):
+            if hasattr(field, 'tracking') and not field.tracking:
                 fields_without_tracking.append(field_name)
 
         self.assertFalse(

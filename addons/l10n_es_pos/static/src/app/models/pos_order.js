@@ -6,7 +6,7 @@ patch(PosOrder.prototype, {
     canBeSimplifiedInvoiced() {
         return (
             this.config.is_spanish &&
-            roundCurrency(this.getTotalWithTax(), this.currency) <
+            roundCurrency(this.priceIncl, this.currency) <
                 this.company.l10n_es_simplified_invoice_limit
         );
     },

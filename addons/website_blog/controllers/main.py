@@ -185,11 +185,20 @@ class WebsiteBlog(http.Controller):
 
         date_begin, date_end = opt.get('date_begin'), opt.get('date_end')
 
-        if tag and request.httprequest.method == 'GET':
-            # redirect get tag-1,tag-2 -> get tag-1
+        # Checking referrer and search to see if the GET request is from
+        # a SEO bot, in which case every tag but one should be removed to
+        # avoid combinatorial explosion
+        if tag and request.httprequest.method == 'GET' and request.env['ir.http'].is_a_bot():
+            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
+            # in GET request for proper bot indexation;
             tags = tag.split(',')
             if len(tags) > 1:
                 url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end, search=search)()
+                # The vast majority of bots will follow the links in the
+                # client side, which are protected by the nofollow
+                # attribute of the tags links
+                # This redirect is used to stop combinatorial explosions
+                # from bots that send direct requests
                 return request.redirect(url, code=302)
 
         values = self._prepare_blog_values(blogs=blogs, blog=blog, tags=tag, page=page, search=search, **opt)

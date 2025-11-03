@@ -1015,11 +1015,16 @@ class IrModelFields(models.Model):
                 if relation and not IrModel._get_id(relation):
                     raise UserError(_("Model %s does not exist!", vals['relation']))
 
-                if vals.get('ttype') == 'one2many' and not self.search_count([
-                    ('ttype', '=', 'many2one'),
-                    ('model', '=', vals['relation']),
-                    ('name', '=', vals['relation_field']),
-                ]):
+                if (
+                    vals.get('ttype') == 'one2many' and
+                    vals.get("store", True) and
+                    not vals.get("related") and
+                    not self.search_count([
+                        ('ttype', '=', 'many2one'),
+                        ('model', '=', vals['relation']),
+                        ('name', '=', vals['relation_field']),
+                    ])
+                ):
                     raise UserError(_("Many2one %(field)s on model %(model)s does not exist!", field=vals['relation_field'], model=vals['relation']))
 
         if any(model in self.pool for model in models):

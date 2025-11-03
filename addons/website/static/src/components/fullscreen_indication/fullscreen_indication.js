@@ -15,8 +15,8 @@ export class FullscreenIndication extends Component {
     }
 
     show() {
-        setTimeout(() => this.state.isVisible = true);
-        this.autofade = setTimeout(() => this.state.isVisible = false, 2000);
+        setTimeout(() => (this.state.isVisible = true));
+        this.autofade = setTimeout(() => (this.state.isVisible = false), 2000);
     }
 
     hide() {

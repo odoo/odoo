@@ -4,12 +4,13 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-25 17:34+0000\n"
+"PO-Revision-Date: 2025-10-30 21:26+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/project_timesheet_holidays/es_419/>\n"
@@ -43,7 +44,7 @@ msgstr "Ajustes de configuración"
 #. module: project_timesheet_holidays
 #: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Crear una tarea"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
@@ -54,7 +55,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Mostrar nombre"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -70,7 +71,7 @@ msgstr "Empleado"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -163,6 +164,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Usa estas palabras clave en el título para establecer nuevas tareas:\n"
+"\n"
+"        30h asigna 30 horas a la tarea\n"
+"        #etiquetas Agrega etiquetas a la tarea\n"
+"        @usuario Asigna la tarea a un usuario\n"
+"        ! Dale una prioridad media a la tarea\n"
+"        !! Dale una prioridad alta a la tarea\n"
+"        !!! Dale una prioridad urgente a la tarea\n"
+"\n"
+"        Asegúrate de usar el formato y el orden correctos. Por ejemplo, "
+"Mejorar la pantalla de configuración 5h #función #v16 @Mitchell !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -177,14 +189,16 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
-"No puede crear hojas de horas para una tarea vinculada a un tipo de tiempo "
-"personal. Use la aplicación Tiempo personal para solicitar uno nuevo."
+"No puedes crear hojas de horas para una tarea vinculada a un tipo de tiempo "
+"personal. Usa la aplicación Vacaciones para solicitar un nuevo permiso."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "You cannot delete timesheets that are linked to global time off."
 msgstr ""
+"No puedes eliminar los registros de hora que estén vinculados al tiempo "
+"personal global."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -193,8 +207,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
-"No puede eliminar hojas de horas vinculadas a solicitudes de tiempo "
-"personal. Cancele la solicitud desde la aplicación Tiempo personal."
+"No puedes eliminar hojas de horas que están vinculadas a solicitudes de "
+"tiempo personal. Cancela la solicitud desde la aplicación Vacaciones."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -203,14 +217,14 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"No puede modificar las hojas de horas vinculadas a solicitudes de tiempo "
-"personal. Use la aplicación Tiempo personal para modificar sus solicitudes."
+"No puedes modificar las hojas de horas vinculadas a solicitudes de tiempo "
+"personal. Usa la aplicación Vacaciones para modificar tus solicitudes."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
-msgstr ""
+msgstr "allow_timesheets"
 
 #~ msgid ""
 #~ "Both the internal project and task are required to generate a timesheet "

@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-dom";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import { RPCCache } from "@web/core/network/rpc_cache";
 
@@ -11,7 +12,7 @@ function promiseState(promise) {
     );
 }
 test("RamCache: can cache a simple call", async () => {
-    // The fist call to rpcCache.read will save the result on the RamCache.
+    // The fist call to rpcCache.read saves the result on the RamCache.
     // Each next call will retrive the ram cache independently, without executing the fallback
     const rpcCache = new RPCCache(
         "mockRpc",
@@ -86,7 +87,7 @@ test("PersistentCache: can cache a simple call", async () => {
         value: { test: 123 },
     });
 
-    // Simulate a reload (Clear the Ram Cache)
+    // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
     const def = new Deferred();
@@ -231,7 +232,7 @@ test("IndexedDB Crypt: can cache a simple call", async () => {
         value: { test: 123 },
     });
 
-    // Simulate a reload (Clear the Ram Cache)
+    // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
     const def = new Deferred();
@@ -326,7 +327,7 @@ test("update callback - Disk Value", async () => {
         value: { test: 123 },
     });
 
-    // Simulate a reload (Clear the Ram Cache)
+    // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
     const def = new Deferred();
@@ -448,7 +449,7 @@ test("Ram value shouldn't change (update the IndexedDB response)", async () => {
         value: { test: 123 },
     });
 
-    // Simulate a reload (Clear the Ram Cache)
+    // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
 
@@ -533,7 +534,7 @@ test("Changing the result shouldn't force the call to callback with hasChanged (
         value: { test: 123 },
     });
 
-    // Simulate a reload (Clear the Ram Cache)
+    // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
 
@@ -563,11 +564,62 @@ test("Changing the result shouldn't force the call to callback with hasChanged (
     def.resolve({ test: 123 });
 });
 
-test("DiskCache: multiple consecutive calls, call once fallback", async () => {
-    // The fist call to rpcCache.read will save the promise to the Ram Cache.
-    // Each next call (before the end of the first call) will retrive the promise of the first call
-    // without executing the fallback
-    // the callback of each call is executed.
+test("RamCache (no update): consecutive calls (success)", async () => {
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    const def = new Deferred();
+    rpcCache
+        .read("table", "key", () => def)
+        .then((r) => {
+            expect.step(`first prom resolved with ${r}`);
+        });
+    rpcCache
+        .read("table", "key", () => expect.step("should not be called"))
+        .then((r) => {
+            expect.step(`second prom resolved with ${r}`);
+        });
+
+    def.resolve("some value");
+    await tick();
+    expect.verifySteps([
+        "first prom resolved with some value",
+        "second prom resolved with some value",
+    ]);
+});
+
+test("RamCache (no update): consecutive calls and rejected promise", async () => {
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    const def = new Deferred();
+    rpcCache
+        .read("table", "key", () => def)
+        .catch((e) => {
+            expect.step(`first prom rejected ${e.message}`);
+        });
+    rpcCache
+        .read("table", "key", () => expect.step("should not be called"))
+        .catch((e) => {
+            expect.step(`second prom rejected ${e.message}`);
+        });
+
+    def.reject(new Error("boom"));
+    await tick();
+    expect.verifySteps(["first prom rejected boom", "second prom rejected boom"]);
+});
+
+test("DiskCache: multiple consecutive calls, empty cache", async () => {
+    // The fist call to rpcCache.read saves the promise to the RAM cache.
+    // Each next call (before the end of the first call) retrieves the same result as the first call
+    // without executing the fallback.
+    // The callback of each call is executed.
 
     const rpcCache = new RPCCache(
         "mockRpc",
@@ -586,7 +638,7 @@ test("DiskCache: multiple consecutive calls, call once fallback", async () => {
             },
             {
                 callback: () => {
-                    expect.step("callback " + id++);
+                    expect.step(`callback ${++id}`);
                 },
             }
         );
@@ -595,10 +647,195 @@ test("DiskCache: multiple consecutive calls, call once fallback", async () => {
     rpcCacheRead();
     rpcCacheRead();
     rpcCacheRead();
-    rpcCacheRead();
 
+    expect.verifySteps(["fallback"]);
     def.resolve({ test: 123 });
-    await microTick();
+    await tick();
 
-    expect.verifySteps(["fallback", "callback 0", "callback 1", "callback 2", "callback 3"]);
+    expect.verifySteps(["callback 1", "callback 2", "callback 3"]);
+});
+
+test("DiskCache: multiple consecutive calls, value already in disk cache", async () => {
+    // The first call to rpcCache.read saves the promise to the RAM cache.
+    // Each next call (before the end of the first call) retrieves the same result as the first call.
+    // Each call receives as value the disk value, then each callback is executed.
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+    const def = new Deferred();
+
+    // fill the cache
+    await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
+        type: "disk",
+    });
+    await tick();
+    expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        `encrypted data:{"test":123}`
+    );
+    expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 123 },
+    });
+
+    // simulate a reload (clear ramCache)
+    rpcCache.ramCache.invalidate();
+    expect(rpcCache.ramCache.ram).toEqual({});
+
+    const rpcCacheRead = (id) =>
+        rpcCache.read(
+            "table",
+            "key",
+            () => {
+                expect.step(`fallback ${id}`);
+                return def;
+            },
+            {
+                type: "disk",
+                callback: (result, hasChanged) => {
+                    expect.step(
+                        `callback ${id}: ${JSON.stringify(result)} ${hasChanged ? "(changed)" : ""}`
+                    );
+                },
+            }
+        );
+
+    rpcCacheRead(1).then((result) => expect.step("res call 1: " + JSON.stringify(result)));
+    await tick();
+    rpcCacheRead(2).then((result) => expect.step("res call 2: " + JSON.stringify(result)));
+    await tick();
+    rpcCacheRead(3).then((result) => expect.step("res call 3: " + JSON.stringify(result)));
+    await tick();
+
+    expect.verifySteps([
+        "fallback 1",
+        'res call 1: {"test":123}',
+        'res call 2: {"test":123}',
+        'res call 3: {"test":123}',
+    ]);
+
+    def.resolve({ test: 456 });
+    await tick();
+    expect.verifySteps([
+        'callback 1: {"test":456} (changed)',
+        'callback 2: {"test":456} (changed)',
+        'callback 3: {"test":456} (changed)',
+    ]);
+});
+
+test("DiskCache: multiple consecutive calls, fallback fails", async () => {
+    // The first call to rpcCache.read saves the promise to the RAM cache.
+    // Each next call (before the end of the first call) retrieves the same result as the first call.
+    // The fallback fails.
+    // Each call receives as value the disk value, callbacks aren't executed.
+    expect.errors(1);
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+    const def = new Deferred();
+
+    // fill the cache
+    await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
+        type: "disk",
+    });
+    await tick();
+    expect(rpcCache.indexedDB.mockIndexedDB.table.key.ciphertext).toBe(
+        `encrypted data:{"test":123}`
+    );
+    expect(await promiseState(rpcCache.ramCache.ram.table.key)).toEqual({
+        status: "fulfilled",
+        value: { test: 123 },
+    });
+
+    // simulate a reload (clear ramCache)
+    rpcCache.ramCache.invalidate();
+    expect(rpcCache.ramCache.ram).toEqual({});
+
+    const rpcCacheRead = (id) =>
+        rpcCache.read(
+            "table",
+            "key",
+            () => {
+                expect.step(`fallback ${id}`);
+                return def;
+            },
+            {
+                type: "disk",
+                callback: () => {
+                    expect.step("callback (should not be executed)");
+                },
+            }
+        );
+
+    rpcCacheRead(1).then((result) => expect.step("res call 1: " + JSON.stringify(result)));
+    await tick();
+    rpcCacheRead(2).then((result) => expect.step("res call 2: " + JSON.stringify(result)));
+    await tick();
+    rpcCacheRead(3).then((result) => expect.step("res call 3: " + JSON.stringify(result)));
+    await tick();
+
+    expect.verifySteps([
+        "fallback 1",
+        'res call 1: {"test":123}',
+        'res call 2: {"test":123}',
+        'res call 3: {"test":123}',
+    ]);
+
+    def.reject(new Error("my RPCError"));
+    await tick();
+    await tick();
+
+    expect.verifySteps([]);
+    expect.verifyErrors(["my RPCError"]);
+});
+
+test("DiskCache: multiple consecutive calls, empty cache, fallback fails", async () => {
+    // The first call to rpcCache.read saves the promise to the RAM cache. That promise will be
+    // rejected.
+    // Each next call (before the end of the first call) retrieves the same result as the first call.
+    // The fallback fails.
+    // Each call receives the error.
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+    const def = new Deferred();
+
+    const rpcCacheRead = (id) =>
+        rpcCache.read(
+            "table",
+            "key",
+            () => {
+                expect.step(`fallback ${id}`);
+                return def;
+            },
+            {
+                type: "disk",
+                callback: () => {
+                    expect.step("callback (should not be executed)");
+                },
+            }
+        );
+
+    rpcCacheRead(1).catch((error) => expect.step(`error call 1: ${error.message}`));
+    await tick();
+    rpcCacheRead(2).catch((error) => expect.step(`error call 2: ${error.message}`));
+    await tick();
+    rpcCacheRead(3).catch((error) => expect.step(`error call 3: ${error.message}`));
+    await tick();
+
+    expect.verifySteps(["fallback 1"]);
+
+    def.reject(new Error("my RPCError"));
+    await tick();
+
+    expect.verifySteps([
+        "error call 1: my RPCError",
+        "error call 2: my RPCError",
+        "error call 3: my RPCError",
+    ]);
 });

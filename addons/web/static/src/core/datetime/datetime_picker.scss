@@ -56,13 +56,9 @@
     // Utilities
 
     .o_date_item_picker .o_datetime_button {
-        &.o_selected,
-        &:hover,
-        &.o_today:not(.o_selected):hover {
-            &:not(.o_select_start):not(.o_select_end) {
-                background: $o-component-active-bg;
-                color: $o-component-active-color;
-            }
+        &.o_selected:not(.o_select_start, .o_select_end) {
+            background: $o-component-active-bg;
+            color: $o-component-active-color;
         }
     }
 
@@ -73,5 +69,24 @@
 
     .o_date_item_cell {
         aspect-ratio: 1;
+        position: relative;
+
+        &:hover, &:focus {
+            --DateTimePicker__date-cell-border-color-hover: #{$o-component-active-border};
+        }
+
+        &:not([disabled])::before {
+            @include o-position-absolute(0,0,0,0);
+
+            content: '';
+            aspect-ratio: 1;
+            border: $border-width solid var(--DateTimePicker__date-cell-border-color-hover);
+            border-radius: $border-radius-pill;
+            pointer-events: none;
+        }
+    }
+
+    .o_week_number_cell {
+        font-variant: tabular-nums;
     }
 }

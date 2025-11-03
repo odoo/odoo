@@ -324,7 +324,22 @@ export function addBuilderPlugin(Plugin) {
     });
 }
 
-export function addBuilderOption({
+export function addBuilderOption(Option) {
+    const pluginId = uniqueId("test-option");
+
+    const P = {
+        [pluginId]: class extends Plugin {
+            static id = pluginId;
+            resources = {
+                builder_options: Option,
+            };
+        },
+    }[pluginId];
+
+    addBuilderPlugin(P);
+}
+
+export function addLegacyBuilderOption({
     selector,
     exclude,
     applyTo,
@@ -361,7 +376,6 @@ export function addBuilderOption({
             };
         },
     }[pluginId];
-
     addBuilderPlugin(P);
 }
 
@@ -459,7 +473,7 @@ export function getBasicSection(
     return unformat(
         `<section class="${classes}" data-snippet="${snippet}" ${
             name ? `data-name="${name}"` : ""
-        }><div class="test_a o-paragraph">${content}</div></section>`
+        }><div class="test_a">${content}</div></section>`
     );
 }
 

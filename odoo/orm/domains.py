@@ -1566,7 +1566,7 @@ def _value_to_datetime(value, env, iso_only=False):
             tz = None
         elif (tz := env.tz) != pytz.utc:
             # get the tzinfo (without LMT)
-            tz = tz.localize(datetime.now()).tzinfo
+            tz = tz.localize(datetime.combine(value, time.min)).tzinfo
         else:
             tz = None
         value = datetime.combine(value, time.min, tz)
@@ -1738,7 +1738,7 @@ def _operator_hierarchy(condition, model):
     if isinstance(result, Domain):
         if field.name == 'id':
             return result
-        return DomainCondition(field.name, 'any', result)
+        return DomainCondition(field.name, 'any!', result)
     return DomainCondition(field.name, 'in', result)
 
 

@@ -11,13 +11,7 @@ class CoverPropertiesOptionPlugin extends Plugin {
     static id = "coverPropertiesOption";
     static dependencies = ["builderActions", "media", "imagePostProcess"];
     resources = {
-        builder_options: [
-            withSequence(COVER_PROPERTIES, {
-                OptionComponent: CoverPropertiesOption,
-                selector: ".o_record_cover_container",
-                editableOnly: false,
-            }),
-        ],
+        builder_options: [withSequence(COVER_PROPERTIES, CoverPropertiesOption)],
         builder_actions: {
             SetCoverBackgroundAction,
             MarkCoverPropertiesToBeSavedAction,

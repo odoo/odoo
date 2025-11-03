@@ -268,7 +268,7 @@ class PurchaseOrder(models.Model):
                 company=order.company_id,
             )
             if order.currency_id != order.company_currency_id:
-                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=self.company_currency_id)})"
+                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=order.company_currency_id)})"
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -1185,12 +1185,18 @@ class PurchaseOrder(models.Model):
             params=params
         )
         if seller:
+            product_uom = (seller.product_id or seller.product_tmpl_id).uom_id
             price = seller.price_discounted
             if seller.currency_id != self.currency_id:
-                price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
+                price = seller.currency_id._convert(price, self.currency_id)
+            if seller.product_uom_id != product_uom:
+                # The discounted price is expressed in the product's UoM, not in the vendor
+                # price's UoM, so we need to convert it into to match the displayed UoM.
+                price = product_uom._compute_price(price, seller.product_uom_id)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,
+                uomDisplayName=seller.product_uom_id.display_name,
             )
 
         return product_infos
@@ -1272,7 +1278,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         pol = self.order_line.filtered(
             lambda l: l.product_id.id == product_id
-            and l.get_parent_section_line().id == section_id,
+            and l.get_parent_section_line().id == section_id
         )
         if pol:
             if quantity != 0:
@@ -1293,10 +1299,11 @@ class PurchaseOrder(models.Model):
             if pol.selected_seller_id:
                 # Fix the PO line's price on the seller's one.
                 seller = pol.selected_seller_id
-                price = seller.price_discounted
+                price = seller.price
                 if seller.currency_id != self.currency_id:
-                    price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
-                pol.price_unit = price
+                    price = seller.currency_id._convert(price, self.currency_id)
+                pol.price_unit = pol.technical_price_unit = price
+                pol.discount = seller.discount
         return pol.price_unit_discounted
 
     def _get_default_create_section_values(self):

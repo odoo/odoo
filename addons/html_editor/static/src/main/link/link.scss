@@ -16,4 +16,14 @@
     [contenteditable=false] .btn {
         cursor: pointer;
     }
+
+    // Unset the font size and family applied by `.btn` 
+    // if inside `FONT_SIZE_CLASSES`.
+    span[class$="-fs"],
+    span.small {
+        .btn:not(:has(span[class$="-fs"], span.small)) {
+            font-family: unset;
+            font-size: unset;
+        }
+    }
 }

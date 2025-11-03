@@ -43,6 +43,7 @@ import { composeToolbarButton } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
+import { isColorGradient } from "@web/core/utils/colors";
 
 const listSelectorItems = [
     {
@@ -1085,7 +1086,7 @@ export class ListPlugin extends Plugin {
         const listItems = new Set(
             targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
         );
-        if (!listItems.size || mode !== "color") {
+        if (!listItems.size || mode !== "color" || isColorGradient(color)) {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();

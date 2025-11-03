@@ -1445,7 +1445,6 @@ test(`create event with timezone in week mode European locale`, async () => {
             </calendar>
         `,
     });
-
     await selectTimeRange("2016-12-13 08:00:00", "2016-12-13 10:00:00");
     expect(`.fc-event-main .fc-event-time`).toHaveText("08:00 - 10:00");
 
@@ -1458,6 +1457,23 @@ test(`create event with timezone in week mode European locale`, async () => {
     await contains(`.o_cw_popover_delete`).click();
     await contains(`.modal button.btn-primary`).click();
     expect(`.fc-event-main`).toHaveCount(0);
+});
+
+test(`create multi day event in week mode`, async () => {
+    mockTimeZone(2);
+
+    patchWithCleanup(CalendarCommonRenderer.prototype, {
+        get options() {
+            return { ...super.options, selectAllow: () => true };
+        },
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+    });
+    await selectTimeRange("2016-12-13 11:00:00", "2016-12-14 16:00:00");
+    expect(`.fc-event-main .fc-event-time`).toHaveText("11:00 - 16:00");
 });
 
 test(`default week start (US)`, async () => {

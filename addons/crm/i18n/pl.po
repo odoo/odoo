@@ -31,20 +31,21 @@
 # Maksym <ms@myodoo.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 10:04+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-23 13:56+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/crm/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
+"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
@@ -104,7 +105,7 @@ msgstr "Szanse %s"
 #. odoo-python
 #: code:addons/crm/models/res_users.py:0
 msgid "(Team Leader)"
-msgstr ""
+msgstr "(Lider zespołu)"
 
 #. module: crm
 #. odoo-javascript
@@ -305,9 +306,10 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
-"<span>Okresowe przypisywanie leadów na priorytetów i filtrów.</span><br/>\n"
-"                                <span invisible=\"not "
-"crm_use_auto_assignment\">\n"
+"<span>Okresowe przypisywanie leadów na podstawie priorytetów i "
+"filtrów.</span><br/>\n"
+"                                <span invisible="
+"\"not crm_use_auto_assignment\">\n"
 "                                    Wszystkie zespoły sprzedaży będą używać "
 "tego ustawienia domyślnie, chyba że\n"
 "                                    określono inaczej.\n"
@@ -726,7 +728,7 @@ msgstr "Dodaj opis..."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before the creation of an opportunity"
-msgstr "Dodaj krok z kwalifikacją przez stworzeniem szansy"
+msgstr "Dodaj krok kwalifikacyjny przed stworzeniem okazji"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_followers_edit_action_from_lead
@@ -1029,7 +1031,7 @@ msgstr "Anuluj"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Capacity"
-msgstr ""
+msgstr "Pojemność"
 
 #. module: crm
 #. odoo-python
@@ -1319,8 +1321,8 @@ msgid ""
 "Convert visitors of your website into leads and perform data enrichment "
 "based on their IP address"
 msgstr ""
-"Przekształcanie odwiedzających witrynę w leady i wzbogacanie danych w "
-"oparciu o ich adres IP."
+"Przekształć odwiedzających witrynę w leady i wzbogacaj dane w oparciu o ich "
+"adres IP."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
@@ -1502,7 +1504,7 @@ msgstr "Data zamknięcia"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Liczba dni od ostatniej aktualizacji tego zespołu"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1512,7 +1514,7 @@ msgstr "Dni"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Dni bezczynności"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1527,7 +1529,7 @@ msgstr "Dni do zamknięcia"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Dni przed uznaniem za bezczynne"
 
 #. module: crm
 #. odoo-python
@@ -1725,7 +1727,7 @@ msgstr "Email cc:"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "Domena e-mail, np. „example.com” w „odoo@example.com”."
+msgstr "Domena e-mail, np. „example.com” w „odoo@example.com”"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1753,8 +1755,8 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
-"Automatycznie wzbogacaj swoje leady o dane firmy na podstawie ich adresu e-"
-"mail."
+"Automatycznie wzbogacaj swoje leady o dane firmy na podstawie ich adresu "
+"e-mail."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1883,6 +1885,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"Dla zespołu sprzedaży nie ma nic gorszego niż brak potencjalnych klientów. "
+"Na szczęście wystarczy kilka kliknięć, aby wygenerować potencjalnych "
+"klientów dostosowanych do Twoich potrzeb: wielkość firmy, branża itp. Aby "
+"pomóc Ci przetestować tę funkcję, oferujemy 20 darmowych kredytów."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1971,6 +1977,10 @@ msgid ""
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"Podkreśl okazje, które nie były zaktualizowane przez wiele dni.         "
+"Ustaw na 0, aby dezaktywować tę funkcję. Zmiana tego parametru nie będzie "
+"miała wpływu na status bezczynności/datę ostatniej aktualizacji zasobów "
+"przed tą zmianą."
 
 #. module: crm
 #. odoo-javascript
@@ -2612,7 +2622,7 @@ msgstr "Niski"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.xml:0
 msgid "MRR"
-msgstr ""
+msgstr "MRR"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2953,6 +2963,7 @@ msgstr "Nie znaleziono danych!"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
 msgstr ""
+"Żadnych objazdów, żadnych opóźnień - od %(stage_name)s wprost po wygraną! 🚀"
 
 #. module: crm
 #. odoo-python
@@ -3054,11 +3065,13 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Liczba leadów przypisana do tego członka w ostatnich 24 godzinach (z "
+"wyłączeniem przegranych szans)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "Liczba leadów przypisana do tego członka w ostatnich 30 dniach"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3317,7 +3330,7 @@ msgstr "Oczekujące"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Phew, that took some effort — but you nailed it. Good job!"
-msgstr ""
+msgstr "Uff, to wymagało wysiłku, ale dałeś radę. Świetna robota!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3552,7 +3565,7 @@ msgstr "Powiązany klient"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_interval_number
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Repeat every"
-msgstr "Powtarzać co"
+msgstr "Powtarzaj co"
 
 #. module: crm
 #. odoo-python
@@ -3595,7 +3608,7 @@ msgstr "Telefon Ringover VOIP"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "Bezczynny"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3744,7 +3757,7 @@ msgstr "Ustawienia"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Shared with all teams"
-msgstr ""
+msgstr "Udostępnione wszystkim zespołom"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -4118,6 +4131,8 @@ msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
+"Ten nowy lead utworzony z %(creation_source)s został automatycznie "
+"przypisany do lidera zespołu %(user_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4514,19 +4529,19 @@ msgstr "Wygrane/Stracone"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "Wow, co za prędkość. Ta umowa nie miała szans!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "Brawo, Twoja pierwsza wygrana z %(utm_source_name)s!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "O tak! Najlepsza oferta dla zespołu z ostatnich 7 dni."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4567,7 +4582,7 @@ msgstr "Gratulacje! Pobiłeś rekord osobisty ostatnich 7 dni."
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
-msgstr ""
+msgstr "Właśnie rozszerzyłeś mapę! Pierwsza wygrana w %(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4586,13 +4601,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "Jesteś na fali! 3 transakcje w 3 dni, gratulacje!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "Jesteś w formie! To już piąta wygrana transakcja dzisiaj 🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4666,7 +4681,7 @@ msgstr "ma wartość"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "przychodzące e-maile"
 
 #. module: crm
 #. odoo-python

@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageFilterOption">
-    <BuilderRow label.translate="Filter" level="this.props.level" t-if="state.showFilter">
-        <BuilderSelect>
+    <BuilderRow label.translate="Filter" level="this.props.level" t-if="state.showFilter" disabled="state.disableFilter" tooltip="state.tooltip">
+        <BuilderSelect disabled="state.disableFilter">
             <BuilderSelectItem action="'glFilter'" actionParam="''">None</BuilderSelectItem>
             <BuilderSelectItem action="'glFilter'" actionParam="'blur'">Blur</BuilderSelectItem>
             <BuilderSelectItem action="'glFilter'" actionParam="'1977'">1977</BuilderSelectItem>

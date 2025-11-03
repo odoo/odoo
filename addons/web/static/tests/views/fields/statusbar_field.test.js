@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import {
     click,
+    Deferred,
     edit,
     press,
     queryAll,
@@ -23,6 +24,8 @@ import {
     mountWithCleanup,
     onRpc,
     serverState,
+    pagerNext,
+    pagerPrevious,
 } from "@web/../tests/web_test_helpers";
 import { EventBus } from "@odoo/owl";
 import { WebClient } from "@web/webclient/webclient";
@@ -1065,4 +1068,101 @@ test('"status" with no stages does not crash command palette', async () => {
     const commands = queryAllTexts(".o_command");
 
     expect(commands).not.toInclude("Move to next Stage");
+});
+
+test.tags("desktop");
+test("cache: update current status if it changed", async () => {
+    class Stage extends models.Model {
+        name = fields.Char();
+        _records = [
+            { id: 1, name: "Stage 1" },
+            { id: 2, name: "Stage 2" },
+        ];
+    }
+    Partner._fields.stage_id = fields.Many2one({ relation: "stage" });
+    Partner._records = [
+        {
+            id: 1,
+            name: "first record",
+            stage_id: 1,
+        },
+        {
+            id: 2,
+            name: "second record",
+            stage_id: 2,
+        },
+        {
+            id: 3,
+            name: "third record",
+            stage_id: 2,
+        },
+    ];
+    defineModels([Stage]);
+
+    Partner._views = {
+        kanban: `
+            <kanban default_group_by="stage_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        form: `
+            <form>
+                <header>
+                    <field name="stage_id" widget="statusbar" />
+                </header>
+            </form>`,
+        search: `<search></search>`,
+    };
+
+    onRpc("has_group", () => true);
+    let def;
+    onRpc("web_read", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        id: 1,
+        name: "Partners",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        cache: true,
+        views: [
+            [false, "kanban"],
+            [false, "form"],
+        ],
+    });
+
+    // populate the cache by visiting the 3 records
+    await contains(".o_kanban_record").click();
+    expect(".o_last_breadcrumb_item").toHaveText("first record");
+    await pagerNext();
+    expect(".o_last_breadcrumb_item").toHaveText("second record");
+    await pagerNext();
+    expect(".o_last_breadcrumb_item").toHaveText("third record");
+
+    // go back to kanban and drag the first record of stage 2 on top of stage 1 column
+    await contains(".o_breadcrumb .o_back_button").click();
+    const dragActions = await contains(".o_kanban_record:contains(second record)").drag();
+    await dragActions.moveTo(".o_kanban_record:contains(first record)");
+    await dragActions.drop();
+    expect(queryAllTexts(".o_kanban_record")).toEqual([
+        "second record",
+        "first record",
+        "third record",
+    ]);
+
+    // re-open last record and use to pager to reach the record we just moved
+    await contains(".o_kanban_record:contains(third record)").click();
+    await pagerPrevious();
+    def = new Deferred();
+    await pagerPrevious();
+    // retrieved from the cache => former value
+    expect(".o_last_breadcrumb_item").toHaveText("second record");
+    expect('.o_statusbar_status button[data-value="2"]').toHaveClass("o_arrow_button_current");
+    def.resolve();
+    await animationFrame();
+    // updated when the rpc returns
+    expect(".o_last_breadcrumb_item").toHaveText("second record");
+    expect('.o_statusbar_status button[data-value="1"]').toHaveClass("o_arrow_button_current");
 });

@@ -18,7 +18,7 @@ from odoo.tools.date_utils import float_to_time
 from odoo.fields import Command, Date, Domain
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.intervals import Intervals
-from odoo.tools.misc import format_date
+from odoo.tools.misc import clean_context, format_date
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -1007,15 +1007,17 @@ Versions:
         meeting_holidays = holidays.filtered(lambda l: l.holiday_status_id.create_calendar_meeting)
         meetings = self.env['calendar.event']
         if meeting_holidays:
+            Meeting = self.env['calendar.event']
+            Meeting.check_access('create')
             meeting_values_for_user_id = meeting_holidays._prepare_holidays_meeting_values()
             Meeting = self.env['calendar.event']
             for user_id, meeting_values in meeting_values_for_user_id.items():
-                meetings += Meeting.with_user(user_id or self.env.uid).with_context(
+                meetings += Meeting.with_user(user_id or self.env.uid).sudo().with_context(clean_context({**self.env.context, **dict(
                                 allowed_company_ids=[],
                                 no_mail_to_attendees=True,
                                 calendar_no_videocall=True,
                                 active_model=self._name
-                            ).create(meeting_values)
+                            )})).create(meeting_values)
         Holiday = self.env['hr.leave']
         for meeting in meetings:
             Holiday.browse(meeting.res_id).meeting_id = meeting

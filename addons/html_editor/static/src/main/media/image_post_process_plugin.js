@@ -4,6 +4,7 @@ import {
     getDataURLBinarySize,
     getImageSizeFromCache,
     isGif,
+    isWebGLEnabled,
     loadImage,
     loadImageDataURL,
     loadImageInfo,
@@ -32,8 +33,8 @@ export class ImagePostProcessPlugin extends Plugin {
      * @param {Object} newDataset an object containing the modifications to apply
      * @param {Function} [onImageInfoLoaded] can be used to fill
      * newDataset after having access to image info, return true to cancel call
-     * @returns {Function} callback that sets dataURL of the image with the
-     * applied modifications to `img` element
+     * @returns {{ url: string, newDataset: object }} Object containing the image
+     * URL and the updated dataset.
      */
     async _processImage({ img, newDataset = {}, onImageInfoLoaded }) {
         const processContext = {};
@@ -81,7 +82,7 @@ export class ImagePostProcessPlugin extends Plugin {
                 newDataset,
                 processContext
             );
-            return () => this.updateImageAttributes(img, postUrl, postDataset);
+            return { url: postUrl, newDataset: postDataset };
         }
         // Crop
         const container = document.createElement("div");
@@ -186,7 +187,8 @@ export class ImagePostProcessPlugin extends Plugin {
         }
 
         // GL filter
-        if (glFilter) {
+        const canUseWebGL = glFilter && isWebGLEnabled() && window.WebGLImageFilter;
+        if (canUseWebGL) {
             const glf = new window.WebGLImageFilter();
             const cv = document.createElement("canvas");
             cv.width = canvas.width;
@@ -238,7 +240,8 @@ export class ImagePostProcessPlugin extends Plugin {
     }
     async getProcessedImageSize(img) {
         const processed = await this._processImage({ img });
-        if (processed.url) {
+        // return undefined if the image is a gif
+        if (!shouldPreventGifTransformation(processed.newDataset)) {
             return getDataURLBinarySize(processed.url);
         }
         return undefined;

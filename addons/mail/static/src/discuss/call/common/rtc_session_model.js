@@ -1,6 +1,16 @@
 import { fields, Record } from "@mail/core/common/record";
 import { Deferred } from "@web/core/utils/concurrency";
 
+/**
+ * @typedef {object} SessionInfo
+ * @property {boolean} [isSelfMuted]
+ * @property {boolean} [isDeaf]
+ * @property {boolean} [isTalking]
+ * @property {boolean} [isRaisingHand]
+ * @property {boolean} [isCameraOn]
+ * @property {boolean} [isScreenSharingOn]
+ */
+
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
     static id = "id";

@@ -24,12 +24,8 @@ export class FooterSlideout extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.footer_slideout", FooterSlideout);
+registry.category("public.interactions").add("website.footer_slideout", FooterSlideout);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.footer_slideout", {
-        Interaction: FooterSlideout,
-    });
+registry.category("public.interactions.edit").add("website.footer_slideout", {
+    Interaction: FooterSlideout,
+});

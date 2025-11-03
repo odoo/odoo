@@ -170,7 +170,7 @@ class PaymentTransaction(models.Model):
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Adyen."""
         if self.provider_code != 'adyen':
-            super()._send_refund_request()
+            return super()._send_refund_request()
 
         # Send the refund request to Adyen.
         converted_amount = payment_utils.to_minor_currency_units(

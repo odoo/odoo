@@ -11,7 +11,7 @@
             </div>
             <div class="o_customer_display_main d-flex flex-column flex-grow-1 overflow-auto">
                 <div t-if="Object.keys(order).length and order.lines.length > 0 and !order.finalized" class="d-flex flex-column flex-grow-1 rounded-3 bg-white overflow-hidden">
-                    <div style="scroll-snap-type: y mandatory;" class="gap-0 p-0 mx-2 pb-3 bg-view order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
+                    <div t-ref="scrollable" style="scroll-snap-type: y mandatory;" class="gap-0 p-0 mx-2 pb-3 bg-view order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
                          <li t-foreach="order.lines" t-as="line" t-key="line_index"  class="orderline position-relative d-flex align-items-center p-2 lh-sm cursor-pointer o_customer_display_orderline bg-white fs-3 rounded-0" t-attf-class="{{ line.comboParent ? 'orderline-combo ms-4 fst-italic' : '' }} {{ line.isSelected ? 'selected' : '' }}">
                             <div class="o_line_container d-flex align-items-center justify-content-center">
                                 <img t-attf-style="border-radius: 1rem;" t-att-src="`/web/image/product.product/${line.productId}/image_128`"/>

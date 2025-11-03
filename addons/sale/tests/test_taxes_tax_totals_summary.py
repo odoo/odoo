@@ -31,12 +31,6 @@ class TestTaxesTaxTotalsSummarySale(TestTaxCommonSale, TestTaxesTaxTotalsSummary
                 sale_order = self.convert_document_to_sale_order(document)
                 self.assert_sale_order_tax_totals_summary(sale_order, expected_values)
 
-    def test_taxes_l10n_pt_sale_orders(self):
-        for test_index, document, expected_values in self._test_taxes_l10n_pt():
-            with self.subTest(test_index=test_index):
-                sale_order = self.convert_document_to_sale_order(document)
-                self.assert_sale_order_tax_totals_summary(sale_order, expected_values)
-
     def test_reverse_charge_taxes_1_generic_helpers(self):
         for document, expected_values in self._test_reverse_charge_taxes_1():
             sale_order = self.convert_document_to_sale_order(document)

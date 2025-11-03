@@ -54,10 +54,12 @@ export class ProductImageViewer extends Dialog {
         );
         onMounted(() => {
             const carousel = document.querySelector('.o_wsale_image_viewer_carousel');
-            carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
-            carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
-            const lastImg = carousel.querySelector('li:last-of-type img');
-            lastImg?.addEventListener('load', this._updateCarousel.bind(this), { once: true });
+            if (carousel) {
+                carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
+                carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
+                const lastImg = carousel.querySelector('li:last-of-type img');
+                lastImg?.addEventListener('load', this._updateCarousel.bind(this), { once: true });
+            }
         });
         // For some reason the styling does not always update properly.
         onRendered(() => {
@@ -124,7 +126,11 @@ export class ProductImageViewer extends Dialog {
         if (ev.target.tagName === "IMG") {
             // Only zoom if the image did not move
             if (this.dragStartPos.clientX === ev.clientX && this.dragStartPos.clientY === ev.clientY) {
-                this.zoomIn(ZOOM_STEP * 3);
+                if (this.state.imageScale <= 1) {
+                    this.zoomIn(ZOOM_STEP * 3);
+                } else {
+                    this.zoomOut(this.state.imageScale - 1);
+                }
             }
         }
         if (ev.target.classList.contains('o_wsale_image_viewer_void') && !this.isDragging) {

@@ -384,7 +384,7 @@ export class CustomizeWebsitePlugin extends Plugin {
 
 export class SwitchThemeAction extends BuilderAction {
     static id = "switchTheme";
-    static dependencies = ["savePlugin", "action"];
+    static dependencies = ["savePlugin"];
     setup() {
         this.preview = false;
     }

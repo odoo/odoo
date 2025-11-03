@@ -123,3 +123,23 @@ test("Jump to message from notification", async () => {
     await click(".o_mail_notification a", { text: "message" });
     await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });
 });
+
+test("can add reactions from pinned panel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "Hello world!",
+        model: "discuss.channel",
+        res_id: channelId,
+        pinned_at: "2025-10-09 11:15:04",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message-actions [title='Add a Reaction']");
+    await click(".o-mail-QuickReactionMenu button", { text: "👍" });
+    await contains(".o-mail-MessageReaction", { text: "👍1" });
+    await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
+    await click(".o-discuss-PinnedMessagesPanel .o-mail-Message [title='Add a Reaction']");
+    await click(".o-mail-QuickReactionMenu button", { text: "👍" });
+    await contains(".o-mail-MessageReaction", { count: 0 });
+});

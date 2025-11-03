@@ -27,6 +27,7 @@ patch(PosStore.prototype, {
         this.couponByLineUuidCache = {};
         this.rewardProductByLineUuidCache = {};
         await super.setup(...arguments);
+        await this.updateOrder(this.getOrder());
     },
     async afterProcessServerData() {
         // Remove reward lines that have no reward anymore (could happen if the program got archived)
@@ -85,17 +86,6 @@ patch(PosStore.prototype, {
                         (reward.reward_type !== "product" ||
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
-                        if (
-                            (reward.reward_type == "product" &&
-                                reward.program_id.applies_on !== "both") ||
-                            (reward.program_id.applies_on == "both" && reward.reward_product_qty)
-                        ) {
-                            this.addLineToCurrentOrder({
-                                product_id: reward.reward_product_id,
-                                product_tmpl_id: reward.reward_product_id.product_tmpl_id,
-                                qty: reward.reward_product_qty || 1,
-                            });
-                        }
                         order._applyReward(reward, coupon_id);
                         changed = true;
                     }
@@ -395,7 +385,7 @@ patch(PosStore.prototype, {
             selectedProgram = linkedPrograms[0];
         }
 
-        const orderTotal = this.getOrder().getTotalWithTax();
+        const orderTotal = this.getOrder().priceIncl;
         if (
             selectedProgram &&
             ["gift_card", "ewallet"].includes(selectedProgram.program_type) &&

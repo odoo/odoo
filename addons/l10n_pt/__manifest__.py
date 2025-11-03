@@ -21,5 +21,13 @@
     'demo': [
         'demo/demo_company.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_pt/static/src/helpers/*.js',
+        ],
+        'web.assets_frontend': [
+            'l10n_pt/static/src/helpers/*.js',
+        ],
+    },
     'license': 'LGPL-3',
 }

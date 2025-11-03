@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";

@@ -27,7 +27,7 @@ class Cloc(Command):
         self.parser.add_argument('--database', '-d', dest="database", help="Database name")
         self.parser.add_argument('--path', '-p', action='append', help="File or directory path")
         self.parser.add_argument('--verbose', '-v', action='count', default=0)
-        opt, unknown = self.parser.parse_known_args(args)
+        opt, unknown = self.parser.parse_known_args(args + ['--no-http'])
         if not opt.database and not opt.path:
             self.parser.print_help()
             sys.exit()

@@ -13,8 +13,4 @@ export class ActionHelper extends Component {
     get showDefaultHelper() {
         return !this.props.noContentHelp;
     }
-
-    showWidgetSampleData() {
-        return this.props.showRibbon;
-    }
 }

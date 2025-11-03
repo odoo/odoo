@@ -658,6 +658,13 @@ export class SampleServer {
                 delete group["id:array_agg"];
             }
         }
+        if (params.opening_info) {
+            params.opening_info.forEach((info, i) => {
+                if (!info.folded) {
+                    groups[i].__records ||= [];
+                }
+            });
+        }
 
         return {
             groups,

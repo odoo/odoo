@@ -40,9 +40,10 @@ const STICKY_CLASS = "o_mobile_sticky";
  */
 
 class EmbeddedActionsConfigHandler {
-    constructor(parentActionId, currentActiveId, ormService) {
+    constructor(parentActionId, currentActiveId, parentResModel, ormService) {
         this.parentActionId = parentActionId;
         this.currentActiveId = currentActiveId;
+        this.parentResModel = parentResModel;
         this.embeddedActionsKey = `${this.parentActionId}+${this.currentActiveId || ""}`;
         this.embeddedActionsConfig = user.settings.embedded_actions_config_ids || {};
         this.orm = ormService;
@@ -71,9 +72,12 @@ class EmbeddedActionsConfigHandler {
     }
 
     async fetchEmbeddedActionsConfig() {
-        return await this.orm.call("res.users.settings", "get_embedded_actions_settings", [
-            user.settings.id,
-        ]);
+        return await this.orm.call(
+            "res.users.settings",
+            "get_embedded_actions_settings",
+            [user.settings.id],
+            { context: { res_model: this.parentResModel, res_id: this.currentActiveId } }
+        );
     }
 
     updateEmbeddedActionsConfig(newSettings) {
@@ -139,6 +143,7 @@ export class ControlPanel extends Component {
         this.embeddedActionsConfigHandler = new EmbeddedActionsConfigHandler(
             parentActionId,
             currentActiveId,
+            this.currentEmbeddedAction?.parent_res_model,
             this.orm
         );
 

@@ -101,14 +101,14 @@
                                            domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]"
                                            mode="list,kanban"
                                            context="{'add_livechat_channel_ctx': True}">
-                                        <list no_open="1">
+                                        <list no_open="1" create="0">
                                             <field name="partner_id" string="Agent" widget="many2one_avatar_user" width="175px" context="{'im_livechat_hide_partner_company': True}"/>
                                             <field name="livechat_is_in_call" widget="boolean_phone" nolabel="1"/>
                                             <field string="Languages" name="livechat_lang_ids" widget="many2many_tags" optional="show"/>
                                             <field string="Expertise" name="livechat_expertise_ids" widget="many2many_tags" optional="show"/>
                                             <field string="Ongoing Sessions" name="livechat_ongoing_session_count" width="150px" optional="show"/>
                                         </list>
-                                        <kanban class="o_kanban_mobile" can_open="False">
+                                        <kanban class="o_kanban_mobile" can_open="False" create="0">
                                             <templates>
                                                 <t t-name="card" class="flex-row">
                                                     <aside>

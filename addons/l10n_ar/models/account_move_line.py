@@ -43,9 +43,6 @@ class AccountMoveLine(models.Model):
             'price_net': price_net,
         }
 
+    # TODO: deprecated, remove in master
     def get_column_to_exclude_for_colspan_calculation(self, taxes=None):
-        # OVERRIDE OF ACCOUNT
-        if self.move_id.company_id.country_code == 'AR':
-            return 0 if self.display_type == 'product' else 2
-
         return super().get_column_to_exclude_for_colspan_calculation(taxes)

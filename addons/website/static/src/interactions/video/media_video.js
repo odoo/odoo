@@ -40,7 +40,7 @@ export class MediaVideo extends Interaction {
     }
 
     start() {
-        let iframeEl = this.el.querySelector(':scope > iframe');
+        let iframeEl = this.el.querySelector(":scope > iframe");
 
         // The following code is only there to ensure compatibility with
         // videos added before bug fixes or new Odoo versions where the
@@ -50,9 +50,14 @@ export class MediaVideo extends Interaction {
         }
 
         if (iframeEl?.hasAttribute("src")) {
-            const promise = setupAutoplay(iframeEl.getAttribute('src'), !!this.el.dataset.needCookiesApproval);
+            const promise = setupAutoplay(
+                iframeEl.getAttribute("src"),
+                !!this.el.dataset.needCookiesApproval
+            );
             if (promise) {
-                this.waitFor(promise).then(this.protectSyncAfterAsync(() => triggerAutoplay(iframeEl)));
+                this.waitFor(promise).then(
+                    this.protectSyncAfterAsync(() => triggerAutoplay(iframeEl))
+                );
             }
         }
     }
@@ -77,21 +82,27 @@ export class MediaVideo extends Interaction {
         // 'data-oe-expression' one (the latter is used as a workaround in 10.0
         // system but should obviously be reviewed in master).
 
-        let src = htmlEscape(this.el.getAttribute("data-oe-expression") || this.el.getAttribute("data-src"));
+        const src = htmlEscape(
+            this.el.getAttribute("data-oe-expression") || this.el.getAttribute("data-src")
+        );
         // Validate the src to only accept supported domains we can trust
 
-        let m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
+        const m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
         if (!m) {
             return;
         }
 
-        let domain = m[1].replace(/^www\./, '');
+        const domain = m[1].replace(/^www\./, "");
         const supportedDomains = [
-            "youtu.be", "youtube.com", "youtube-nocookie.com",
+            "youtu.be",
+            "youtube.com",
+            "youtube-nocookie.com",
             "instagram.com",
-            "player.vimeo.com", "vimeo.com",
+            "player.vimeo.com",
+            "vimeo.com",
             "dailymotion.com",
-            "player.youku.com", "youku.com",
+            "player.youku.com",
+            "youku.com",
         ];
         if (!supportedDomains.includes(domain)) {
             return;
@@ -107,6 +118,4 @@ export class MediaVideo extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.media_video", MediaVideo);
+registry.category("public.interactions").add("website.media_video", MediaVideo);

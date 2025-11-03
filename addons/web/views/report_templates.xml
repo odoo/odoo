@@ -609,7 +609,7 @@
                 <div class="flex-grow-1 me-2 text-start" t-field="company.report_footer"/>
                 <div class="text-end text-muted">
                     <div t-if="report_type == 'pdf' and display_name_in_footer" t-out="o.name">(document name)</div>
-                    <div t-if="report_type == 'pdf'">Page <span class="page"/> / <span class="topage"/></div>
+                    <div t-if="report_type == 'pdf'" class="text-nowrap">Page <span class="page"/> / <span class="topage"/></div>
                 </div>
             </div>
         </div>

@@ -8,7 +8,7 @@ import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Widget } from "@web/views/widgets/widget";
 import { ActionHelper } from "@web/views/action_helper";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useEffect, useRef } from "@odoo/owl";
 
 export class PivotController extends Component {
     static template = "web.PivotView";
@@ -28,7 +28,7 @@ export class PivotController extends Component {
             this.modelOptions
         );
 
-        useSetupAction({
+        const { setScrollFromState } = useSetupAction({
             rootRef: useRef("root"),
             getLocalState: () => {
                 const { data, metaData } = this.model;
@@ -36,6 +36,14 @@ export class PivotController extends Component {
             },
             getContext: () => this.getContext(),
         });
+        useEffect(
+            (isReady) => {
+                if (isReady) {
+                    setScrollFromState();
+                }
+            },
+            () => [this.model.isReady]
+        );
         this.searchBarToggler = useSearchBarToggler();
     }
 

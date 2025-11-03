@@ -238,10 +238,15 @@ class PosConfig(models.Model):
         delete_record_ids = {}
         dynamic_records = {}
 
-        for model, domain in domain.items():
-            ids = record_ids[model]
-            delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
-            dynamic_records[model] = self.env[model].search(domain)
+        for model, dom in domain.items():
+            ids = record_ids.get(model, [])
+            browsed = self.env[model].browse(ids)
+
+            dynamic_records[model] = self.env[model].search(dom)
+            delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
+            # Cancelled orders must be forced deleted from the user interface.
+            if model == "pos.order":
+                delete_record_ids[model] += browsed.filtered(lambda r: r.state == "cancel").ids
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
         data = pos_order_data.read_pos_data([], self)
@@ -275,6 +280,7 @@ class PosConfig(models.Model):
         record['_base_url'] = self.get_base_url()
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
         record['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
+        record['_has_cash_delete_perm'] = self.env.user.has_group('account.group_account_basic')
         record['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
 
         # Add custom fields for 'formula' taxes.
@@ -799,6 +805,9 @@ class PosConfig(models.Model):
 
         self._check_company_has_fiscal_country()
         return self._action_to_open_ui()
+
+    def close_ui(self):
+        return self.open_ui()
 
     def open_existing_session_cb(self):
         """ close session button

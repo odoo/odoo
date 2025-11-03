@@ -3,13 +3,14 @@
 # * event_booth_sale
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 13:44+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 12:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "event_booth_sale/ar/>\n"
 "Language: ar\n"
@@ -354,6 +355,9 @@ msgid ""
 "Category, %(event_booth_category_name)s. The service_tracking must remain "
 "\"Event Booth\"."
 msgstr ""
+"لا يمكن تغيير \"service_tracking\" لقالب المنتج %(product_template_name)s "
+"لأنه تم تخصيص أحد متغيراته لفئة جناح الفعالية، %(event_booth_category_name)"
+"s. يجب أن تبقى service_tracking كـ\"جناح الفعالية\"."
 
 #. module: event_booth_sale
 #. odoo-python
@@ -370,6 +374,8 @@ msgid ""
 "The product, %(product_name)s , is used for Event Booth, it must have "
 "service_tracking set to \"Event Booth\"."
 msgstr ""
+"المنتج %(product_name)s يُستخدم في جناح الفعالية، يجب أن يتم تعيين "
+"Service_tracking كـ \"جناح الفعالية\"."
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
@@ -402,6 +408,9 @@ msgid ""
 "because it is already assigned to %(booth_category_name)s. The "
 "service_tracking must remain 'event_booth'."
 msgstr ""
+"لا يمكنك تغيير service_tracking الخاص بالمنتج %(product_name)s لأنه مسند "
+"بالفعل إلى %(booth_category_name)s. يجب أن تبقى service_tracking  كـ "
+"'event_booth'."
 
 #. module: event_booth_sale
 #. odoo-python

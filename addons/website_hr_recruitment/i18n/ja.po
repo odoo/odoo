@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-14 21:19+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-27 02:33+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "website_hr_recruitment/ja/>\n"
 "Language: ja\n"
@@ -37,12 +38,21 @@ msgid ""
 "            <h6>4 Days after Interview</h6>\n"
 "        "
 msgstr ""
+"\n"
+"            <span class=\"text-muted small\">回答時間</span>\n"
+"            <h6>受付2日間</h6>\n"
+"            <span class=\"text-muted small\">プロセス</span>\n"
+"            <h6>電話1回</h6>\n"
+"            <h6>面接対面1回</h6>\n"
+"            <span class=\"text-muted small\">オファーまでの日数</span>\n"
+"            <h6>面接後4日</h6>\n"
+"        "
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid " In case of issue, contact %(contact_infos)s"
-msgstr ""
+msgstr " 問題がある場合は、%(contact_infos)sにご連絡下さい"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -52,7 +62,7 @@ msgstr "」。 次の結果を表示しています「"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "+1 (650) 555-0187"
-msgstr ""
+msgstr "+1 (650) 555-0187"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -65,6 +75,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\""
+"><small><b>詳しく見る</b></small></a>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -302,15 +314,15 @@ msgid ""
 "solving problem skills."
 msgstr ""
 "当社の社員として、<b>各部門と協力して革新的な製品を生み出し展開して\n"
-"　　　　　　　いただきます。</b> 成長中の企業で働きませんか？実績のあるリー"
-"ダー達の側で学びながら前進するチャンスと、素晴らしい待遇を提供します。経験の"
-"ある優秀な\n"
-"　　　　　　スタッフを募集しています。\n"
+"                         いただきます。</b> "
+"成長中の企業で働きませんか？実績のあるリーダー達の側で学びながら前進するチャ"
+"ンスと、素晴らしい待遇を提供します。経験のある優秀な\n"
+"                         スタッフを募集しています。\n"
 "                            <br/><br/>\n"
-"                         この職位では<b>創造性と厳密さ</b>の両方が必要で、枠"
-"にとらわれない発想が求められます。積極的に行動し、「やり遂げる」精神を持った"
-"応募者の方を\n"
-"　　　　　　お待ちしています。\n"
+"                         "
+"この職位では<b>創造性と厳密さ</b>の両方が必要で、枠にとらわれない発想が求めら"
+"れます。積極的に行動し、「やり遂げる」精神を持った応募者の方を\n"
+"                         お待ちしています。\n"
 "                        また、優れた問題解決能力をお持ちの方を採用致します。"
 
 #. module: website_hr_recruitment
@@ -512,19 +524,19 @@ msgid ""
 msgstr ""
 "通常、<strong>ご応募に対して、3日以内に返信します</strong>。\n"
 "                                                <br/><br/>\n"
-"                                                次の段階は、電話またはオフィ"
-"スでの面接です。\n"
+"                                                "
+"次の段階は、電話またはオフィスでの面接です。\n"
 "                                                <br/><br/>\n"
-"                                                <strong>もしお急ぎで回答が\n"
-"必要な\n"
-"　　　　　　　　　　　　 場合</strong>または返信が遅い場合　　　　　　　に"
-"は\n"
+"                                                <strong>"
+"もしお急ぎで回答が必要な\n"
+"                                               場合</strong>"
+"または返信が遅い場合には\n"
 "                                                ご連絡下さい。"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "I'm feeling lucky"
-msgstr "私はラッキーです"
+msgstr "応募"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__id
@@ -1020,7 +1032,7 @@ msgstr "当社からオファーするもの"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "What's great in the job?"
-msgstr "この職の素晴らしい点"
+msgstr "この仕事の素晴らしい点"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -1046,7 +1058,7 @@ msgid ""
 "                                    We usually respond within 3 days..."
 msgstr ""
 "応募を正常に受け付けました。<br class=\"mb-2\"/>\n"
-"　　　　　　　　 通常3日以内にお返事いたします。"
+"通常3日以内にお返事いたします。"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply

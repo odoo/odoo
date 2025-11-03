@@ -3,13 +3,14 @@
 # * loyalty
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 13:46+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 12:17+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/loyalty/"
 "ar/>\n"
 "Language: ar\n"
@@ -46,6 +47,11 @@ msgid ""
 "         and used by reward.\n"
 "        "
 msgstr ""
+"\n"
+"        قم بإظهار عدد النقاط المتاحة والمستخدمة من قِبَل المكافآت في بوابة "
+"الويب وتذاكر عملاء نقطة البيع ونقطة الدفع\n"
+"         والخروج في المتجر الإلكتروني.\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -192,6 +198,60 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"background: #ffffff\">\n"
+"                <div style=\"margin:0px; font-size:24px; font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; "
+"text-align: center\">\n"
+"                    إليك بطاقة الهدايات الخاصة بك!\n"
+"                </div>\n"
+"                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" style="
+"\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\""
+" width=\"300\"/>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; "
+"padding-bottom:35px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:48px; font-family:"
+"arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-"
+"style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                        <strong t-out="
+"\"format_amount(object.points, object.currency_id) or ''\">$ "
+"150.00</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; "
+"padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                    <p style=\"margin:0px; font-size:14px;font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                        <strong>كود بطاقة الهدايا</strong>\n"
+"                    </p>\n"
+"                    <p style=\"margin:0px; font-size:25px;font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" "
+"t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"                </div>\n"
+"                <div t-if=\"object.expiration_date\" style=\"padding:0; "
+"margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:"
+"arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
+"style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">تاريخ "
+"انتهاء الصلاحية <t t-out=\"format_date(object.expiration_date) or ''\">05/05/"
+"2021</t></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
+"\n"
+"                    <span style=\"background-color:#999999; display:inline-"
+"block; width:auto; border-radius:5px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
+"target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: {{"
+"object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
+"align:center\">استخدمها الآن!</a>\n"
+"                    </span>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -395,6 +455,67 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style="
+"\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
+"<tr>\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object._mail_get_customer().name\">\n"
+"             تهانينا <t t-out=\"object._mail_get_customer().name or ''\""
+">براندن فريمان</t>،<br/>\n"
+"        </t>\n"
+"\n"
+"        إليك مكافأتك من <t t-out=\"object.program_id.company_id.name or ''\""
+">YourCompany</t>.<br/>\n"
+"\n"
+"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
+"            <t t-if=\"reward.required_points &lt;= object.points\">\n"
+"                <span t-attf-style=\"font-size: 50px; color: {{"
+"object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
+"weight: bold;\" t-esc=\"reward.description\">وصف المكافأة</span>\n"
+"                <br/>\n"
+"            </t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"<tr style=\"margin-top: 16px\">\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        استخدم هذا الكود الترويجي\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            قبل <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
+"background-color: #F1F1F1;\" t-out=\"object.code or ''\""
+">15637502648479132902</strong>\n"
+"        </p>\n"
+"        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
+"            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    الحد الأدنى للشراء هو <t t-out=\"rule.minimum_qty or ''\""
+">10</t> منتجات\n"
+"                </span><br/>\n"
+"            </t>\n"
+"            <t t-if=\"rule.minimum_amount != 0.00\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    صالح للمنتجات التي تفوق قيمتها <t t-out="
+"\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out="
+"\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                </span><br/>\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/>\n"
+"        شكراً لك،\n"
+"        <t t-if=\"object._get_signature()\" data-o-mail-quote-container=\"1\""
+">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object._get_signature() or ''\" data-o-mail-quote=\"1\">ميتشل "
+"آدمن</t></div>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -742,7 +863,7 @@ msgstr "الكوبونات"
 #. module: loyalty
 #: model:ir.model,website_form_label:loyalty.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Create a Customer"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
@@ -1443,7 +1564,7 @@ msgstr "نقاط الولاء"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
 msgid "Manage where your program should be available for use."
-msgstr ""
+msgstr "قم بإدارة أين يجب أن يكون برنامجك متاحاً للاستخدام."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
@@ -1959,7 +2080,7 @@ msgstr ""
 msgid ""
 "This pricelist may not be archived. It is being used for active promotion "
 "programs: %s"
-msgstr ""
+msgstr "لا يمكنك أرشفة قائمة الأسعار هذه. فهي تُستخدم في برامج ترويجية نشطة: %s"
 
 #. module: loyalty
 #. odoo-python
@@ -2049,7 +2170,7 @@ msgstr "سارية حتى"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "مرئي للكل"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__website_message_ids
@@ -2095,6 +2216,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid..."
 msgstr ""
+"ما إذا كان يجب فصل كوبونات المكافآت لكل وحدة مطابقة أم لا. ينطبق ذلك فقط على "
+"البرامج \"المستقبلية\" ويقوم بتشغيل وضعية \"حسب المبلغ المنفق\" أو "
+"\"حسب الوحدة المدفوعة\"..."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2222,13 +2346,13 @@ msgstr "مكافأة الولاء"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "mail.template"
-msgstr ""
+msgstr "mail.template"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "money"
-msgstr ""
+msgstr "نقود"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2308,7 +2432,7 @@ msgstr "مرات الاستخدام"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "used)"
-msgstr ""
+msgstr "مستخدمة)"
 
 #. module: loyalty
 #. odoo-python

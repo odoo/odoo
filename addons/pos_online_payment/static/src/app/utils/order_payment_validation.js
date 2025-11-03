@@ -105,6 +105,7 @@ patch(OrderPaymentValidation.prototype, {
                         return false;
                     }
 
+                    await this.pos.syncAllOrders({ orders: [this.order] });
                     onlinePaymentLine.setPaymentStatus("waiting");
                     this.order.selectPaymentline(onlinePaymentLine);
                     const onlinePaymentData = {
@@ -214,7 +215,7 @@ patch(OrderPaymentValidation.prototype, {
 
         // Now, do practically the normal flow
         if (
-            (this.order.isPaidWithCash() || this.order.getChange()) &&
+            (this.order.isPaidWithCash() || this.order.change) &&
             this.pos.config.iface_cashdrawer
         ) {
             this.hardwareProxy.printer.openCashbox();

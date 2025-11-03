@@ -917,7 +917,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "mail.message": [
                             {
                                 "attachment_ids": [],
-                                "body": ['markup', '<p>Test update</p><span class="o-mail-Message-edited"></span>'],
+                                "body": ['markup', '<p>Test update <span class="o-mail-Message-edited"></span></p>'],
                                 "id": message.id,
                                 "parent_id": False,
                                 "partner_ids": message.partner_ids.ids,

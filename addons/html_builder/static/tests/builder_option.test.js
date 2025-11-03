@@ -5,6 +5,7 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
@@ -21,10 +22,12 @@ test("Undo/Redo correctly restores the stored container target", async () => {
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'customAction'">Test</BuilderButton>`;
+        }
+    );
     await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
@@ -56,10 +59,12 @@ test("Undo/Redo multiple actions always restores the action container target", a
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'customAction'">Test</BuilderButton>`;
+        }
+    );
     await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
@@ -102,10 +107,12 @@ test("Undo/Redo an action that activates another target restores the old one on 
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'customAction'">Test</BuilderButton>`;
+        }
+    );
     const { getEditor } = await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
@@ -139,10 +146,12 @@ test("Undo/Redo an action that deactivates the containers restores the old one o
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'customAction'">Test</BuilderButton>`;
+        }
+    );
     const { getEditor } = await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
@@ -178,14 +187,18 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'targetAction'">Test</BuilderButton>`,
-    });
-    addBuilderOption({
-        selector: ".test-ancestor",
-        template: xml`<BuilderButton action="'ancestorAction'">Ancestor selected</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'targetAction'">Test</BuilderButton>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-ancestor";
+            static template = xml`<BuilderButton action="'ancestorAction'">Ancestor selected</BuilderButton>`;
+        }
+    );
     await setupHTMLBuilder(`
         <div data-name="Ancestor" class="test-ancestor">
             Hey I'm an ancestor
@@ -210,10 +223,12 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
 });
 
 test("Do not activate/update containers if the element clicked is excluded", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton classAction="'test'">Test</BuilderButton>`;
+        }
+    );
     await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1 o_we_no_overlay">
             Homepage
@@ -241,18 +256,24 @@ test("Do not show parent container for no_parent_containers targets", async () =
         };
     }
     addBuilderPlugin(TestPlugin);
-    addBuilderOption({
-        selector: ".test-parent-target",
-        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
-    });
-    addBuilderOption({
-        selector: ".test-child-target",
-        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
-    });
-    addBuilderOption({
-        selector: ".test-grand-child-target",
-        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-parent-target";
+            static template = xml`<BuilderButton classAction="'test'">Test</BuilderButton>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-child-target";
+            static template = xml`<BuilderButton classAction="'test'">Test</BuilderButton>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-grand-child-target";
+            static template = xml`<BuilderButton classAction="'test'">Test</BuilderButton>`;
+        }
+    );
     await setupHTMLBuilder(`
         <div data-name="Parent" class="test-parent-target">
             Parent

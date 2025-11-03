@@ -45,7 +45,6 @@ class AccountFiscalPosition(models.Model):
         column1='account_fiscal_position_id',
         column2='account_tax_id',
         string='Taxes',
-        context={'active_test': False},
     )
     tax_map = fields.Binary(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")

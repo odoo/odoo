@@ -4,22 +4,23 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 02:36+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/crm/ru/"
-">\n"
+"PO-Revision-Date: 2025-10-30 13:26+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/crm/ru/>"
+"\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: crm
@@ -79,13 +80,13 @@ msgstr "Возможность %s"
 #. odoo-python
 #: code:addons/crm/models/res_users.py:0
 msgid "(Team Leader)"
-msgstr ""
+msgstr "Руководитель команды"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "(sample data)"
-msgstr ""
+msgstr "(пример данных)"
 
 #. module: crm
 #. odoo-javascript
@@ -112,17 +113,17 @@ msgstr "<b>Введите несколько букв</b>, чтобы найти
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-briefcase\" title=\"Opportunity Name\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-briefcase\" title=\"Название возможности\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"Компания\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-envelope\" title=\"Contact Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\" title=\"Электронная почта контакта\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -133,22 +134,22 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-mobile fa-lg\" title=\"Contact Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-mobile fa-lg\" title=\"Телефон контакта\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-money\" title=\"Expected Revenue\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" title=\"Ожидаемый доход\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-refresh\" title=\"Recurring Revenue\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-refresh\" title=\"Повторяющийся доход\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-user\" title=\"Contact\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user\" title=\"Контакт\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -223,7 +224,7 @@ msgstr "<span class=\"o_stat_text\"> Лиды</span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"> at </span>"
-msgstr ""
+msgstr "<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"> в </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -233,16 +234,20 @@ msgid ""
 "                                        <span class=\"opacity-50 p-2\" "
 "groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"opacity-50 p-2\" groups=\"crm.group_use_recurring_revenues\"> +"
+" </span>\n"
+"                                        <span class=\"opacity-50 p-2\" "
+"groups=\"!crm.group_use_recurring_revenues\"> в </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"opacity-50 p-2\"> %</span>"
-msgstr ""
+msgstr "<span class=\"opacity-50 p-2\"> %</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
-msgstr ""
+msgstr "<span> лидов, назначенных за последние 30 дней, из максимума </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -275,6 +280,14 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Периодически назначать лиды на основе приоритетов и фильтров.</span><"
+"br/>\n"
+"                                <span invisible="
+"\"not crm_use_auto_assignment\">\n"
+"                                    Все отделы продаж будут использовать эту "
+"настройку по умолчанию,\n"
+"                                    если не указано иное.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -391,6 +404,118 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 24px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"100%\" style=\"background-color: white; padding: 0; border-"
+"collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Ваш "
+"лид/возможность</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;"
+"\" t-out=\"object.name or ''\">Интерес к вашей продукции</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src="
+"\"/logo.png?company={{ object.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt="
+"\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Здравствуйте, <t t-out="
+"\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>!<br/><"
+"br/>\n"
+"                            Добро пожаловать в <t t-out="
+"\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
+"                            Рады познакомиться! Теперь, вы сможете оценить "
+"все преимущества <t t-out=\"object.company_id.name or ''\">My Company (San "
+"Francisco)</t>. Меня зовут <t t-out=\"object.user_id.name or ''\">Марк Демо</"
+"t>, и я помогу вам максимально эффективно использовать Odoo. Давайте "
+"запланируем короткое демо.<br/>\n"
+"                            Не стесняйтесь обращаться в любое время!<br/><br/"
+">\n"
+"                            С уважением,<br/>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\""
+">Марк Демо</t></b>\n"
+"                                <br/>E-mail: <t t-out="
+"\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Телефон: <t t-out="
+"\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">My "
+"Company (San Francisco)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; "
+"font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San "
+"Francisco)</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href="
+"\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none;"
+" color: #999999;\" t-out=\"object.company_id.email or ''\""
+">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href="
+"\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; "
+"color: #999999;\" t-out=\"object.company_id.website or ''\""
+">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Работает на базе <a target=\"_blank\" href="
+"\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" t-attf-style="
+"\"color: {{object.company_id.email_secondary_color or '#875A7B'}};;\""
+">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -421,6 +546,8 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
 msgstr ""
+"Лид на стадии «Выигран» не может быть помечен как потерянный. Сначала "
+"переместите его на другую стадию."
 
 #. module: crm
 #. odoo-python
@@ -439,19 +566,19 @@ msgstr "Для команды \"%(team_name)s\" создан новый лид."
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "AI"
-msgstr ""
+msgstr "ИИ"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "AI-computed chances of winning"
-msgstr ""
+msgstr "Вероятность победы, рассчитанная ИИ"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "AI-computed chances of winning for"
-msgstr ""
+msgstr "Вероятность победы, рассчитанная ИИ для"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -507,7 +634,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Activities of"
-msgstr ""
+msgstr "Дела"
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -523,7 +650,7 @@ msgstr "Описание задачи"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Оформление исключения задачи"
+msgstr "Оформление задачи-исключения"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
@@ -570,7 +697,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Activity type"
-msgstr ""
+msgstr "Тип дела"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -585,7 +712,7 @@ msgstr "Добавьте шаг квалификации перед создан
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_followers_edit_action_from_lead
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Добавить / удалить наблюдателей"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_domain
@@ -807,7 +934,7 @@ msgstr "Средняя емкость лидов (за 30 дней)"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Belgium"
-msgstr ""
+msgstr "Бельгия"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
@@ -885,7 +1012,7 @@ msgstr "Отменить"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Capacity"
-msgstr ""
+msgstr "Нагрузка"
 
 #. module: crm
 #. odoo-python
@@ -895,6 +1022,9 @@ msgid ""
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
 msgstr ""
+"Изменение значения поля «Этап выигрыша» может повлечь за собой большое "
+"количество операций, поскольку при сохранении будут пересчитаны вероятности "
+"всех возможностей, находящихся на этом этапе."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -957,7 +1087,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Close opportunities to get insights."
-msgstr ""
+msgstr "Закрывайте возможности, чтобы получить аналитику."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -984,7 +1114,7 @@ msgstr "Примечание о закрытии"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__color
 msgid "Color"
-msgstr ""
+msgstr "Цвет"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -1008,7 +1138,7 @@ msgstr "Компания"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Company Information"
-msgstr ""
+msgstr "Информация о компании"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_partner_name
@@ -1037,7 +1167,7 @@ msgstr "Дата завершения"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Computed by Odoo AI using your data."
-msgstr ""
+msgstr "Вычислено ИИ Odoo на основе ваших данных."
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
@@ -1063,7 +1193,7 @@ msgstr "Учитывать лиды, созданные с:"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Consulting"
-msgstr ""
+msgstr "Консалтинг"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1080,7 +1210,7 @@ msgstr "Контактные данные:"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact Email"
-msgstr ""
+msgstr "Эл. почта контакта"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1097,7 +1227,7 @@ msgstr "Имя контакта"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact Phone"
-msgstr ""
+msgstr "Телефон контакта"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1107,7 +1237,7 @@ msgstr "Контакт:"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Contacts"
-msgstr ""
+msgstr "Контакты"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
@@ -1210,7 +1340,7 @@ msgstr "Создать возможность"
 #. module: crm
 #: model:ir.model,website_form_label:crm.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Создать клиента"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
@@ -1340,7 +1470,7 @@ msgstr "Клиент"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__commercial_partner_id
 msgid "Customer Company"
-msgstr ""
+msgstr "Компания клиента"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1356,7 +1486,7 @@ msgstr "Дата закрытия"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Количество дней с момента последнего обновления ресурса"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1366,7 +1496,7 @@ msgstr "Дни"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Дней в статусе «зависший»"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1381,7 +1511,7 @@ msgstr "Дней до закрытия"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Дней до перехода в статус «зависший»"
 
 #. module: crm
 #. odoo-python
@@ -1455,7 +1585,7 @@ msgstr "Дайджест"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Отменить"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
@@ -1495,19 +1625,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_stage.py:0
 msgid "Do you really want to update this stage?"
-msgstr ""
+msgstr "Вы действительно хотите обновить этот этап?"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Does not have a"
-msgstr ""
+msgstr "Не имеет"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Does not have an"
-msgstr ""
+msgstr "Не имеет"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -1517,7 +1647,7 @@ msgstr "Домен"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Don't link to a company"
-msgstr ""
+msgstr "Не связывать с компанией"
 
 #. module: crm
 #. odoo-javascript
@@ -1673,7 +1803,7 @@ msgstr "Ожидаемые доходы"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Exploration"
-msgstr ""
+msgstr "Исследование"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1739,6 +1869,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"Для отдела продаж нет ничего хуже, чем отсутствие лидов. К счастью, всего за "
+"несколько кликов вы можете генерировать лиды, специально ориентированные на "
+"ваши потребности: размер компании, отрасль и т. д. Для тестирования функции "
+"мы предоставляем 200 кредитов бесплатно."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1811,7 +1945,7 @@ msgstr "Имеет сообщение"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Has a"
-msgstr ""
+msgstr "Имеет"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__2
@@ -1825,12 +1959,15 @@ msgid ""
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"Выделить возможности, которые не обновлялись в течение указанного количества "
+"дней.         Укажите 0, чтобы отключить. Изменение этого параметра не "
+"повлияет на статус/дату «зависших» ресурсов, обновленных до этого изменения."
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Historic win rate"
-msgstr ""
+msgstr "Исторический процент выигрышей"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__hours
@@ -1880,7 +2017,7 @@ msgstr "Иконка"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Иконка, указывающая на исключительную задачу."
+msgstr "Иконка, указывающая на задачу-исключение."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1994,7 +2131,7 @@ msgstr "Виден ли партнер"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__won_status
 msgid "Is Won"
-msgstr ""
+msgstr "Выиграно"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
@@ -2046,7 +2183,7 @@ msgstr "Язык"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Language is"
-msgstr ""
+msgstr "Язык"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -2123,7 +2260,7 @@ msgstr "Лид"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
 msgid "Lead Activity Plans"
-msgstr ""
+msgstr "Планы дел по лидам"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
@@ -2134,12 +2271,12 @@ msgstr "Назначение лидов"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment"
-msgstr ""
+msgstr "Назначение лидов"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment Filter"
-msgstr ""
+msgstr "Фильтр назначения лидов"
 
 #. module: crm
 #. odoo-python
@@ -2170,7 +2307,7 @@ msgstr "Поиск лидов"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Priority Filter"
-msgstr ""
+msgstr "Фильтр приоритета лидов"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2342,7 +2479,7 @@ msgstr "Количество лидов/возможностей"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Learn More"
-msgstr ""
+msgstr "Подробнее"
 
 #. module: crm
 #. odoo-javascript
@@ -2391,7 +2528,7 @@ msgstr "Код локализации"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Located in"
-msgstr ""
+msgstr "Расположен в"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -2465,7 +2602,7 @@ msgstr "Низкий"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.xml:0
 msgid "MRR"
-msgstr ""
+msgstr "MRR"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2487,6 +2624,8 @@ msgid ""
 "Manage members or partners. Members get grades and pricelists, partners "
 "allow lead assignment and commission plans."
 msgstr ""
+"Управляйте участниками или партнерами. Участники получают категории и прайс-"
+"листы, партнеры позволяют назначать лиды и планы комиссий."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_action
@@ -2589,11 +2728,13 @@ msgid ""
 "Member preferred assignment domain for user %(user)s and team %(team)s is "
 "incorrectly formatted"
 msgstr ""
+"Предпочитаемый домен назначения для пользователя %(user)s и команды %(team)s "
+"некорректно отформатирован"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_partnership
 msgid "Membership / Partnership"
-msgstr ""
+msgstr "Членство / Партнерство"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2785,7 +2926,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "No closing estimate"
-msgstr ""
+msgstr "Прогноз не указан"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2798,6 +2939,7 @@ msgstr "Данные не найдены!"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
 msgstr ""
+"Без задержек и обходных путей – от этапа «%(stage_name)s» прямо к победе! 🚀"
 
 #. module: crm
 #. odoo-python
@@ -2850,7 +2992,7 @@ msgstr "Недостаточно запасов"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Not specified"
-msgstr ""
+msgstr "Не указано"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
@@ -2899,11 +3041,13 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Количество лидов, назначенных этому сотруднику за последние 24 часа (без "
+"учета потерянных)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "Количество лидов, назначенных этому сотруднику за последние 30 дней"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3078,7 +3222,7 @@ msgstr "Возможность выиграна"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Opportunity's Name"
-msgstr ""
+msgstr "Название возможности"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_force_thread_id
@@ -3110,7 +3254,7 @@ msgstr "Просроченные возможности"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Ownership"
-msgstr ""
+msgstr "Владение"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_model_id
@@ -3151,19 +3295,19 @@ msgstr "Партнер в черном списке"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Pause assignment"
-msgstr ""
+msgstr "Приостановить назначение"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__won_status__pending
 msgid "Pending"
-msgstr ""
+msgstr "Ожидает"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Phew, that took some effort — but you nailed it. Good job!"
-msgstr ""
+msgstr "Ух, это потребовало усилий – но вы справились. Отличная работа!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3178,7 +3322,7 @@ msgstr "Телефон в черном списке"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
 msgid "Phone Number"
-msgstr ""
+msgstr "Номер телефона"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
@@ -3272,7 +3416,7 @@ msgstr "Прогнозная оценка лидов: пересчет авто�
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain_preferred
 msgid "Preference assignment Domain"
-msgstr ""
+msgstr "Домен предпочтительного назначения"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3439,7 +3583,7 @@ msgstr "Ringover VOIP телефон"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "Зависшие"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3540,12 +3684,12 @@ msgstr "Поиск возможностей"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "See AI-computed chances details"
-msgstr ""
+msgstr "Посмотреть детали вероятностей, рассчитанных ИИ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Select a Lost Reason..."
-msgstr ""
+msgstr "Выберите причину потери..."
 
 #. module: crm
 #. odoo-python
@@ -3588,7 +3732,7 @@ msgstr "Настройки"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Shared with all teams"
-msgstr ""
+msgstr "Доступно всем командам"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -3645,7 +3789,7 @@ msgstr "Источник"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Source is"
-msgstr ""
+msgstr "Источник:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3764,7 +3908,7 @@ msgstr "Подтип"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Switch to AI-computed probabilities"
-msgstr ""
+msgstr "Переключиться на вероятности, рассчитанные ИИ"
 
 #. module: crm
 #: model:ir.model,name:crm.model_ir_config_parameter
@@ -3781,7 +3925,7 @@ msgstr "Тег"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Tagged as"
-msgstr ""
+msgstr "Тег"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__tag_ids
@@ -3828,7 +3972,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "The lead %s cannot be won and lost at the same time."
-msgstr ""
+msgstr "Лид %s не может быть выигран и потерян одновременно."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -3954,6 +4098,8 @@ msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
+"Новый лид, созданный через %(creation_source)s, был автоматически назначен "
+"руководителю команды %(user_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4047,13 +4193,13 @@ msgstr "Слишком дорого"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Top Negatives"
-msgstr ""
+msgstr "Основные минусы"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Top Positives"
-msgstr ""
+msgstr "Основные плюсы"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4088,7 +4234,7 @@ msgstr "Тип разделяет лиды и возможности"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Тип исключающей задачи в записи."
+msgstr "Тип задачи-исключения в записи."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -4260,7 +4406,7 @@ msgstr "Очень высокий"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Видно всем"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4332,25 +4478,25 @@ msgstr "Кол-во выигранных"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__won_status
 msgid "Won/Lost"
-msgstr ""
+msgstr "Выиграно/Потеряно"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "Вот это скорость! Сделка закрыта мгновенно."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "Ура! Первая победа по источнику %(utm_source_name)s!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "Отлично! Лучшая сделка за последние 7 дней в команде."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4392,6 +4538,7 @@ msgstr "Вы побили личный рекорд за 7 дней."
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
 msgstr ""
+"Вы расширили географию продаж! Первая победа в новой стране: %(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4410,13 +4557,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "Отличный результат: 3 сделки за 3 дня! Так держать!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "Вы в ударе! Пятая выигранная сделка сегодня 🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4468,7 +4615,7 @@ msgstr "например, mycompany.com"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "email address"
-msgstr ""
+msgstr "e-mail адрес"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4484,49 +4631,49 @@ msgstr "создать возможности в воронке?<br>"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "has value"
-msgstr ""
+msgstr "имеет значение"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "входящее письмо"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lost_reason.py:0
 msgid "lost_reason_id"
-msgstr ""
+msgstr "lost_reason_id"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/forecast_kanban/forecast_kanban_column_quick_create.js:0
 msgid "next %s"
-msgstr ""
+msgstr "следующий %s"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "phone number"
-msgstr ""
+msgstr "номер телефона"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "sample data"
-msgstr ""
+msgstr "пример данных"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "stage"
-msgstr ""
+msgstr "этап"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "team"
-msgstr ""
+msgstr "команда"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
@@ -4537,7 +4684,7 @@ msgstr "team_count"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "this lead"
-msgstr ""
+msgstr "этот лид"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4553,7 +4700,7 @@ msgstr "в вашу CRM. Адрес эл. почты настраивается 
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "type"
-msgstr ""
+msgstr "тип"
 
 #. module: crm
 #. odoo-python
@@ -4565,13 +4712,13 @@ msgstr "неизвестно"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid email address"
-msgstr ""
+msgstr "действительный e-mail адрес"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
-msgstr ""
+msgstr "действительный номер телефона"
 
 #~ msgid ""
 #~ "For a sales team, there is nothing worse than being dry on leads. "

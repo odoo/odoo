@@ -160,7 +160,7 @@ export class TicketScreen extends Component {
             const order = orders[0];
             if (order) {
                 this.state.filter = "SYNCED";
-                this.state.selectedOrder = order;
+                this.setSelectedOrder(order);
                 this.pos.scanning = !this.pos.scanning;
             } else {
                 this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
@@ -456,7 +456,7 @@ export class TicketScreen extends Component {
         return this.pos.getDate(order.date_order);
     }
     getTotal(order) {
-        return this.env.utils.formatCurrency(order.getTotalWithTax());
+        return this.env.utils.formatCurrency(order.priceIncl);
     }
     getPartner(order) {
         return order.getPartnerName();
@@ -654,6 +654,16 @@ export class TicketScreen extends Component {
         this.pos.setOrder(order);
         this.pos.navigateToOrderScreen(order);
     }
+
+    onClickNewOrder() {
+        const order = this.pos.createNewOrder({
+            preset_id: this.state.selectedPreset || null,
+        });
+        this.pos.selectedOrderUuid = order.uuid;
+        this.pos.addPendingOrder([order.id]);
+        this.pos.navigateToOrderScreen(order);
+    }
+
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
         orderStates.set("SYNCED", { text: _t("Paid") });

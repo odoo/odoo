@@ -1640,3 +1640,26 @@ test("send a message end with a space clears the composer", async () => {
     await press("Enter");
     await contains(editor.editable, { text: "Hello", count: 0 });
 });
+
+test.tags("html composer");
+test("parse link correctly in html composer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "www.google.com");
+    await contains(editor.editable, { text: "www.google.com", count: 1 });
+    await contains(editor.editable.querySelector("a"), { text: "www.google.com", count: 0 });
+    await htmlInsertText(editor, " ");
+    await contains(editor.editable.querySelector("a"), { text: "www.google.com" });
+});

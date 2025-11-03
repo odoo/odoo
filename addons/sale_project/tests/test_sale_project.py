@@ -1854,3 +1854,25 @@ class TestSaleProject(TestSaleProjectCommon):
             so.project_ids.allow_milestones,
             'The generated project should have the "Allow Milestones" setting enabled, as one of the products has invoice policy based on milestones.',
         )
+
+    def test_sale_order_creation_without_service_product_for_project(self):
+        """Test that a sale order is created for a project using a non-service product"""
+        self.project_global.partner_id = self.partner
+        action_dict = self.project_global.with_context(
+            create_for_project_id=self.project_global.id,
+            default_project_id=self.project_global.id,
+            default_partner_id=self.partner.id
+        ).action_view_sos()
+
+        self.product_milestone.type = 'consu'
+        sale_order = self.env['sale.order'].with_context(action_dict['context']).create({
+            'order_line': [Command.create({
+                'product_id': self.product_milestone.id,
+                'product_uom_qty': 1,
+            })],
+        })
+
+        self.assertEqual(sale_order.project_id, self.project_global)
+        self.assertEqual(sale_order.partner_id, self.partner)
+        self.assertFalse(self.project_global.sale_line_id)
+        self.assertEqual(self.project_global.reinvoiced_sale_order_id, sale_order)

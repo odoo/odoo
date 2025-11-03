@@ -11,17 +11,10 @@ import {
 class DynamicSnippetProductsOptionPlugin extends Plugin {
     static id = "dynamicSnippetProductsOption";
     static dependencies = ["dynamicSnippetCarouselOption"];
-    selector = ".s_dynamic_snippet_products";
+    static shared = ["fetchCategories", "getModelNameFilter"];
     modelNameFilter = "product.product";
     resources = {
-        builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, {
-            OptionComponent: DynamicSnippetProductsOption,
-            props: {
-                modelNameFilter: this.modelNameFilter,
-                fetchCategories: this.fetchCategories.bind(this),
-            },
-            selector: this.selector,
-        }),
+        builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, DynamicSnippetProductsOption),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
@@ -33,7 +26,7 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
         this.categories = undefined;
     }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(this.selector)) {
+        if (snippetEl.matches(DynamicSnippetProductsOption.selector)) {
             for (const [optionName, value] of [
                 ["productCategoryId", "all"],
                 ["showVariants", true],
@@ -47,8 +40,11 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
             );
         }
     }
+    getModelNameFilter() {
+        return this.modelNameFilter;
+    }
     onTemplateUpdated({ el, template }) {
-        if (el.matches(this.selector)) {
+        if (el.matches(DynamicSnippetProductsOption.selector)) {
             this.dependencies.dynamicSnippetCarouselOption.updateTemplateSnippetCarousel(
                 el,
                 template

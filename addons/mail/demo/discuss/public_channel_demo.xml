@@ -28,6 +28,7 @@
             <field name="res_id" ref="mail.channel_public_community_demo"/>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id"/>
             <field name="author_guest_id" ref="mail.guest_alex_demo"/>
             <field name="parent_id" ref="mail.channel_public_community_message_0_demo"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=20)).strftime('%Y-%m-%d %H:%M')"/>

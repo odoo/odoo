@@ -352,7 +352,7 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
             Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Test Product", true, "1", "100.0"),
-            ProductScreen.totalAmountIs("110.0"),
+            ProductScreen.totalAmountIs("100.0"), // Order total is also displayed excluding tax
             Chrome.endTour(),
         ].flat(),
 });
@@ -397,10 +397,52 @@ registry.category("web_tour.tours").add("test_restricted_categories_combo_produc
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 5"),
             Dialog.confirm(),
-            checkPreparationTicketData([
-                { name: "Office Combo", qty: 1 },
-                { name: "Combo Product 5", qty: 1 },
-            ]),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_printer_restricts_to_allowed_categories_for_combo", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 3"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
+            checkPreparationTicketData(
+                [
+                    { name: "Office Combo", qty: 1 },
+                    { name: "Combo Product 5", qty: 1 },
+                ],
+                {
+                    invisibleInDom: ["Combo Product 3", "Combo Product 8"],
+                }
+            ),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_printer_not_linked_to_any_combo_category", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 3"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Wall Shelf Unit"),
+            checkPreparationTicketData([{ name: "Wall Shelf Unit", qty: 1 }], {
+                invisibleInDom: [
+                    "Office Combo",
+                    "Combo Product 5",
+                    "Combo Product 3",
+                    "Combo Product 8",
+                ],
+            }),
             Chrome.endTour(),
         ].flat(),
 });
@@ -1131,5 +1173,31 @@ registry.category("web_tour.tours").add("test_preset_customer_selection", {
             PartnerList.clickPartner("Test Partner"),
             ProductScreen.customerIsSelected("Test Partner"),
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_product_info_product_inventory", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            inLeftSide([
+                ...scan_barcode("product_variant_0"),
+                ...ProductScreen.clickControlButton("Info"),
+                {
+                    trigger: ".section-inventory-body :contains(100)",
+                },
+                Dialog.confirm("Close"),
+            ]),
+
+            inLeftSide([
+                ...scan_barcode("product_variant_1"),
+                ...ProductScreen.clickControlButton("Info"),
+                {
+                    trigger: ".section-inventory-body :contains(200)",
+                },
+                Dialog.confirm("Close"),
+            ]),
         ].flat(),
 });

@@ -18,7 +18,7 @@
             >
                 <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
                 <div t-if="props.asCard and isMobileOS" class="position-absolute end-0 z-1 m-n2"><t t-call="mail.Message.actions"/></div>
-                <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit" t-att-class="{ 'ps-xl-2': env.inDiscussApp and !ui.isSmall }">
+                <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
                         <t t-if="!props.squashed">
                             <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="getAvatarContainerAttClass()">

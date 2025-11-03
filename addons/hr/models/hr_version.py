@@ -133,7 +133,7 @@ class HrVersion(models.Model):
 
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason",
                                           groups="hr.group_hr_user", copy=False, ondelete='restrict', tracking=True)
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
 
     resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=True)
@@ -383,7 +383,7 @@ class HrVersion(models.Model):
         :param date date_from: the start of the period
         :param date date_to: the stop of the period
         """
-        if not self.contract_date_start:
+        if not (self.contract_date_start and date_from and date_to):
             return False
         return self.date_start <= date_to and (not self.date_end or self.date_end >= date_from)
 
