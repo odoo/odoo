@@ -20,13 +20,6 @@ class StockRule(models.Model):
             if rule.action == 'buy':
                 rule.picking_type_code_domain += ['dropship']
 
-    @api.model
-    def _get_rule_domain(self, location, values):
-        domain = super()._get_rule_domain(location, values)
-        if 'sale_line_id' in values and values.get('company_id'):
-            domain = Domain.AND([domain, [('company_id', '=', values['company_id'].id)]])
-        return domain
-
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'

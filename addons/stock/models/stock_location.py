@@ -18,6 +18,7 @@ class StockLocation(models.Model):
     _order = 'complete_name, id'
     _rec_names_search = ['complete_name', 'barcode']
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     @api.model
     def default_get(self, fields):
