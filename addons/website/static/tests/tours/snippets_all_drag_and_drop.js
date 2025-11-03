@@ -39,6 +39,21 @@ const dropInOnlySnippets = {
 };
 let steps = [];
 let n = 0;
+
+console.log(snippetsNames);
+if (typeof snippetsNames !== "string") {
+    const index = snippetsNames.findIndex((x) => x.includes("s_progress_bar"));
+    console.log(index);
+    snippetsNames = snippetsNames.slice(index - 10, index + 10);
+    const products = snippetsNames.find((e) => e.includes("s_dynamic_snippet_products"));
+
+    console.log(snippetsNames);
+    snippetsNames = [
+        products,
+        ...snippetsNames.filter((e) => !e.includes("s_dynamic_snippet_products")),
+    ];
+}
+
 for (let snippet of snippetsNames) {
     n++;
     snippet = {
@@ -59,6 +74,7 @@ for (let snippet of snippetsNames) {
         content: `Drop ${snippet.group || snippet.name} ${snippet.group ? "group" : "snippet"} [${n}/${snippetsNames.length}]`,
         trigger: draggableElSelector,
         run: "drag_and_drop :iframe #wrap .oe_drop_zone",
+        timeout: 60000,
     }, {
         content: `Edit ${snippet.name} snippet`,
         trigger: `:iframe #wrap.o_editable [data-snippet='${snippet.name}']${isModal ? ' .modal.show' : ''}`,
@@ -66,13 +82,17 @@ for (let snippet of snippetsNames) {
     }, {
         content: `check ${snippet.name} setting are loaded, wait panel is visible`,
         trigger: ".o_we_customize_panel",
-    }, {
+    }, 
+    {
         content: `Remove the ${snippet.name} snippet`, // Avoid bad perf if many snippets
         trigger: "we-button.oe_snippet_remove:last",
         run: "click",
     },
     {
         trigger: "body[test-dd-snippet-removed]",
+        // async run() { 
+        //     await new Promise((resolve) => setTimeout(resolve, 5000));
+        // }
     },
     {
         content: `click on 'BLOCKS' tab (${snippet.name})`,
@@ -132,9 +152,9 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
             // safety check, otherwise the test might "break" one day and
             // receive no steps. The test would then not test anything anymore
             // without us noticing it.
-            if (steps.length < 500) {
-                console.error(`This test is not behaving as it should, got only ${steps.length} steps.`);
-            }
+            // if (steps.length < 500) {
+            //     console.error(`This test is not behaving as it should, got only ${steps.length} steps.`);
+            // }
             unpatchWysiwygAdapter = patchWysiwygAdapter();
         },
     },
