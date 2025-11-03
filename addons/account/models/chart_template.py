@@ -409,10 +409,11 @@ class AccountChartTemplate(models.AbstractModel):
                             if rename_idx:
                                 tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
-                        fiscal_position_ids = values.get('fiscal_position_ids')
-                        original_tax_ids = values.get('original_tax_ids')
-                        repartition_lines = values.get('repartition_line_ids')
-                        values.clear()
+                        fiscal_position_ids = values.pop('fiscal_position_ids', None)
+                        original_tax_ids = values.pop('original_tax_ids', None)
+                        repartition_lines = values.pop('repartition_line_ids', None)
+                        if not force_update:
+                            values.clear()
                         # taxes will always be (re)linked to fiscal positions (unless the fp doesn't exist and won't be created)
                         if fiscal_position_ids:
                             link_commands = [
