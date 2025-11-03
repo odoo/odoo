@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { EventBus } from "@website/utils/misc";
 
-registry.category("services").add("website_cookies", {
+export const websiteCookiesService = {
     dependencies: ["public.interactions"],
     start(env, deps) {
         const bus = new EventBus();
@@ -26,4 +26,6 @@ registry.category("services").add("website_cookies", {
 
         return { bus, manageIframeSrc };
     },
-});
+};
+
+registry.category("services").add("website_cookies", websiteCookiesService);
