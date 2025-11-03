@@ -115,7 +115,7 @@ class StockRule(models.Model):
     def _check_company_consistency(self):
         for rule in self:
             route = rule.route_id
-            if route.company_id and rule.company_id.id != route.company_id.id:
+            if route.company_id and route.company_id not in rule.company_id.parent_ids:
                 raise ValidationError(_(
                     "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
                     rule=rule.display_name,
