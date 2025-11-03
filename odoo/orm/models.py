@@ -6111,7 +6111,10 @@ class BaseModel(metaclass=MetaModel):
         env = self.env
         for field in fields:
             field._invalidate_cache(env, ids)
-            # TODO VSC: used to remove the inverse of many_to_one from the cache, though we might not need it anymore
+            if field.type == 'one2many':
+                # skip invalidation of inverse for o2m fields
+                # (o2m is "computed" from m2o)
+                continue
             for invf in self.pool.field_inverses[field]:
                 self.env[invf.model_name].flush_model([invf.name])
                 invf._invalidate_cache(env)

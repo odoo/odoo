@@ -5220,16 +5220,7 @@ class TestModifiedPerformance(TransactionCase):
                    "test_orm_modified_line"."create_date"
             FROM "test_orm_modified_line"
             WHERE "test_orm_modified_line"."id" IN %s
-        """, """
-            SELECT "test_orm_modified_line"."id",
-                   "test_orm_modified_line"."parent_id"
-            FROM "test_orm_modified_line"
-            WHERE "test_orm_modified_line"."id" IN %s
         """], flush=False):
-            # Two requests:
-            # - one for fetch modified_line_a_child_child data (invalidate just before)
-            # - one because modified_line_a_child.parent_id (invalidate just before because we invalidate inverse in `_invalidate_cache`,
-            # see TODO) -> We should change that
             self.modified_line_a_child_child.price = 4
         self.assertEqual(self.modified_line_a_child_child.total_price_quantity, 20)
         self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
