@@ -2074,7 +2074,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move_dest_ids = move.move_dest_ids
-                    move_dest_ids.write({
+                    move_dest_ids.sudo().write({
                         'procure_method': 'make_to_stock',
                         'move_orig_ids': [Command.unlink(move.id)]
                     })
