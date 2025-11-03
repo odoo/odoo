@@ -132,6 +132,19 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_import_lot_groupable_and_non_groupable", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Groupable Product", []),
+            ProductScreen.checkOrderlinesNumber(5),
+            ProductScreen.totalAmountIs(60),
+            ProductScreen.selectedOrderlineHas("Groupable Product", "1", "10"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
     steps: () =>
         [
