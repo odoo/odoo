@@ -27,7 +27,7 @@ export class PaymentForm extends Interaction {
         )?.textContent;
 
         // Enable tooltips.
-        this.el.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        this.el.querySelectorAll('#o_payment_form [data-bs-toggle="tooltip"]').forEach(el => {
             const tooltip = window.Tooltip.getOrCreateInstance(el);
             this.registerCleanup(() => tooltip.dispose());
         });
