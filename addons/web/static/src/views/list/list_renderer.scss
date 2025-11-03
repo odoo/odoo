@@ -266,6 +266,10 @@
 
         // Grouped list views
         tbody > tr.o_group_header {
+            --table-bg: var(--table-striped-bg);
+            --table-color: var(--table-striped-color);
+            height: 40px;
+
             &:hover .o_group_config {
                 visibility: visible;
             }
@@ -277,6 +281,7 @@
             }
             .o_group_name {
                 @include o-text-overflow(table-cell);
+                vertical-align: middle;
             }
             .o_group_buttons {
                 display: inline-block;
@@ -304,6 +309,15 @@
                     background-color: lighten($o-brand-lightsecondary, 10%);
                     &:hover {
                         background-color: $o-brand-lightsecondary;
+                    }
+                }
+            }
+            .o_pager_hidden {
+                .o_pager {
+                    visibility: hidden;
+
+                    .o_pager_counter {
+                        display: none;
                     }
                 }
             }
