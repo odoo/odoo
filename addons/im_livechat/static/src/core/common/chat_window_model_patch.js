@@ -26,8 +26,9 @@ const chatWindowPatch = {
         switch (this.livechatStep) {
             case CW_LIVECHAT_STEP.NONE: {
                 if (this.channel.isTransient) {
-                    this.channel.delete({ closeChatWindow: false });
-                    super.close(...arguments);
+                    const channel = this.channel;
+                    this.delete();
+                    channel.delete();
                     break;
                 }
                 if (this.channel.livechat_end_dt) {
