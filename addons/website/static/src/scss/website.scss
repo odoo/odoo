@@ -1544,6 +1544,18 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 }
 
+// Defines shared height behavior for carousels in full and three-quarter screen
+// sections. This placeholder is also applied to `s_carousel_intro` and
+// `s_quotes_carousel`.
+%carousel_screen_height {
+    .carousel, .carousel-inner, .carousel-item {
+        min-height: inherit;
+    }
+    .carousel-item {
+        align-content: center;
+    }
+}
+
 .carousel .container {
     .carousel-img img {
         max-height: 95%;
