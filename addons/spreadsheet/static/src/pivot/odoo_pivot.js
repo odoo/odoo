@@ -662,6 +662,7 @@ pivotRegistry.add("ODOO", {
         !field.name.includes(".") && // relational field path are not supported as measures (e.g. 'company_id.partner_id')
         field.store,
     isGroupable: (field) => field.groupable,
+    isPivotUnused: () => true,
     canHaveCustomGroup: (field) =>
         field.groupable &&
         !field.isCustomField &&
