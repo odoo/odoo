@@ -692,11 +692,7 @@ export class OdooPivotModel {
         if (!field) {
             throw new EvaluationError(_t("Field %s does not exist", fieldName));
         }
-        if (["date", "datetime"].includes(field.type)) {
-            return `${fieldName}:${interval || "month"}`;
-        } else {
-            return fieldName;
-        }
+        return gb;
     }
     /**
      * Extract the information in the read_group results (groupSubdivisions)
