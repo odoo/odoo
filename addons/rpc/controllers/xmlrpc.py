@@ -8,7 +8,7 @@ from datetime import date, datetime
 from markupsafe import Markup
 
 import odoo.exceptions
-from odoo.fields import Command, Date, Datetime
+from odoo.fields import Command, Domain, Date, Datetime
 from odoo.http import Controller, Response, dispatch_rpc, request, route
 from odoo.tools import lazy
 from odoo.tools.misc import frozendict
@@ -106,6 +106,7 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     dispatch[lazy] = dump_lazy
     dispatch[str] = dump_unicode
     dispatch[Command] = dispatch[int]
+    dispatch[Domain] = lambda self, value, write: self.dispatch[list](self, list(value), write)
     dispatch[defaultdict] = dispatch[dict]
     dispatch[Markup] = lambda self, value, write: self.dispatch[str](self, str(value), write)
 
