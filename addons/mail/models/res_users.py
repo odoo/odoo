@@ -670,9 +670,12 @@ class ResUsers(models.Model):
             return (self.env["res.users"], self.env["mail.guest"]._get_guest_from_context())
         return (self.env.user, self.env["mail.guest"])
 
-    def _webpush_notification(self, body, model, res_id, icon, title='Odoo', author=None, extra_payload=None, force_direct_send=False):
+    def _webpush_notification(self, body, model, res_id, icon, title='Odoo', author=None, extra_payload=None, force_direct_send=False, actions=[]):
         if extra_payload is None:
             extra_payload = {}
+        model = model or 'res.users'
+        res_id = res_id or self.id
+        author = author or self.env.ref('base.partner_root')
         devices, private_key, public_key = self.env['mail.thread']._web_push_get_partners_parameters(self.partner_id.ids)
         if devices:
             payload_webpush = {
@@ -682,10 +685,11 @@ class ResUsers(models.Model):
                     'tag': f'{model}_{res_id}',
                     'body': body,
                     'icon': icon or '/web/static/img/odoo-icon-192x192.png',
+                    'actions': actions,
                     'data': {
-                        'author_name': author.name if author and author.name else self.env.ref('base.partner_root').name,
-                        'model': model or 'res.users',
-                        'res_id': res_id or self.id,
+                        'author_name': author.name,
+                        'model': model,
+                        'res_id': res_id,
                     },
                 }
             } | extra_payload
