@@ -280,10 +280,10 @@ class AccountEdiFormat(models.Model):
                 or not partner_id.l10n_sa_edi_additional_identification_number
             )
         ):
-            missing.append(_("""
-                Please set the Identification Scheme as National ID and Identification Number as the respective
-                number on the Customer, as the Tax Exemption Reason is set either as VATEX-SA-HEA or VATEX-SA-EDU
-            """))
+            missing.append(_(
+                "Please set the Identification Scheme as National ID and Identification Number as the respective "
+                "number on the Customer as the Tax Exemption Reason is set either as VATEX-SA-HEA or VATEX-SA-EDU"
+            ))
         if identification_scheme == 'TIN' and not partner_id.vat:
             missing.append(_("Please set the VAT Number as the Identification Scheme is Tax Identification Number"))
         return missing
