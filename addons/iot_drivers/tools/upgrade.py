@@ -1,11 +1,11 @@
 """Module to manage odoo code upgrades using git"""
 
 import logging
+import re
 import requests
 import subprocess
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
-    require_db,
     toggleable,
 )
 from odoo.addons.iot_drivers.tools.system import (
@@ -19,50 +19,46 @@ from odoo.addons.iot_drivers.tools.system import (
 _logger = logging.getLogger(__name__)
 
 
-def get_db_branch(server_url):
-    """Get the current branch of the database.
-
-    :param server_url: The URL of the connected Odoo database.
-    :return: the current branch of the database
-    """
+def get_last_stable_odoo_version():
+    """Get the last stable Odoo version from the server."""
     try:
-        response = requests.post(server_url + "/web/webclient/version_info", json={}, timeout=5)
+        # 200 per page, as there already are 86 branches (08/2025)
+        response = requests.get(
+        'https://api.github.com/repos/odoo/odoo/branches?per_page=200', timeout=5
+        )
         response.raise_for_status()
-    except requests.exceptions.HTTPError:
-        _logger.exception('Could not reach configured server to get the Odoo version')
+        branches = response.json()
+    except requests.exceptions.RequestException:
+        _logger.exception("Failed to fetch branches from GitHub")
         return None
-    try:
-        return response.json()['result']['server_serie'].replace('~', '-')
-    except ValueError:
-        _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
+
+    ordered_branches = sorted({
+        float(match.group(1))
+        for branch in branches
+        if (match := re.search(r'(\d+(?:\.\d+)?)', branch['name']))
+    }, reverse=True)
+
+    if not ordered_branches:
         return None
+
+    last = ordered_branches[0]
+    return f'saas-{last}' if int(last) != last else str(last)
 
 
 @toggleable
-@require_db
-def check_git_branch(server_url=None, force=False):
-    """Update the Odoo code using git to match the branch of the connected database.
-    This method will also update the Python requirements and system packages, based
-    on requirements.txt and packages.txt files.
-
-    If the database cannot be reached, we fetch the last changes from the current branch.
-
-    :param server_url: The URL of the connected Odoo database (provided by decorator).
-    :param force: check out even if the db's branch matches the current one
-    """
+def check_git_branch():
+    """Checkout the IoT Box code to the last stable Odoo branch"""
     if IS_TEST:
         return
 
     try:
-        target_branch = get_db_branch(server_url)
-        current_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
-        if not git('ls-remote', 'origin', target_branch):
-            _logger.warning("Branch '%s' doesn't exist on github.com/odoo/odoo.git, assuming 'master'", target_branch)
-            target_branch = 'master'
-
-        if current_branch == target_branch and not force:
-            _logger.info("No branch change detected (%s)", current_branch)
-            return
+        target_branch = get_last_stable_odoo_version()
+        if not target_branch:
+            _logger.warning("Could not get latest stable Odoo branch, will update following the local branch")
+            target_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
+            if not git('ls-remote', 'origin', target_branch):
+                _logger.warning("'%s' does not exist on remote, assuming 'master'", target_branch)
+                target_branch = "master"
 
         # Repository updates
         shallow_lock = path_file("odoo/.git/shallow.lock")
@@ -71,11 +67,8 @@ def check_git_branch(server_url=None, force=False):
         checkout(target_branch)
         update_requirements()
 
-        # System updates
-        update_packages()
+        update_packages()  # System updates
 
-        # Miscellaneous updates (version migrations)
-        misc_migration_updates()
         _logger.warning("Update completed, restarting...")
         odoo_restart()
     except Exception:
@@ -156,27 +149,3 @@ def update_packages():
     # upgrade and remove packages in the background
     background_cmd = 'chroot /root_bypass_ramdisks /bin/bash -c "apt-get upgrade -y && apt-get -y autoremove"'
     subprocess.Popen(["sudo", "bash", "-c", background_cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-
-@rpi_only
-def misc_migration_updates():
-    """Run miscellaneous updates after the code update."""
-    _logger.warning("Running version migration updates")
-
-    if path_file('odoo', 'addons', 'hw_drivers').exists():
-        # TODO: remove this when v18.4 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
-        subprocess.run(
-            ['sed', '-i', 's|iot_drivers|hw_drivers,hw_posbox_homepage|g', '/home/pi/odoo.conf'], check=False
-        )
-
-    # if ramdisk.service points to `setup/iot_box_builder`, we symlink it to
-    # `iot_box_image` or `point_of_sale/tools/posbox` instead
-    iot_box_builder_path = path_file('odoo', 'setup', 'iot_box_builder')
-    iot_box_image_path = path_file('odoo', 'addons', 'iot_box_image', 'configuration')
-    point_of_sale_path = path_file('odoo', 'addons', 'point_of_sale', 'tools', 'posbox', 'configuration')
-    iot_box_builder_path.mkdir(parents=True, exist_ok=True)
-    iot_box_builder_path /= "configuration"
-    if iot_box_image_path.exists():  # images <= v19.1
-        iot_box_builder_path.symlink_to(iot_box_image_path)
-    elif point_of_sale_path.exists():  # images before <=v18.0
-        iot_box_builder_path.symlink_to(point_of_sale_path)

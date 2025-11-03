@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import socket
+
 import requests
 import schedule
 import subprocess
@@ -23,6 +25,7 @@ unsupported_devices = {}
 
 class Manager(Thread):
     daemon = True
+    ws_channel = ""
 
     def __init__(self):
         super().__init__()
@@ -83,6 +86,7 @@ class Manager(Thread):
             'ip': self.domain,
             'token': helpers.get_token(),
             'version': self.version,
+            'name': socket.gethostname(),  # TODO: remove when v18.0 is deprecated (backward compatibility)
         }
         devices_list = {}
         for device in self.previous_iot_devices.values():
@@ -106,6 +110,9 @@ class Manager(Thread):
                     timeout=5,
                 )
                 response.raise_for_status()
+                # TODO: remove when v19 is deprecated, ws channel is provided by db
+                data = response.json()
+                self.ws_channel = data.get('result', '')
                 break  # Success, exit the retry loop
             except requests.exceptions.RequestException:
                 if attempt < max_retries:
@@ -132,7 +139,6 @@ class Manager(Thread):
 
         system.start_nginx_server()
         _logger.info("IoT Box Image version: %s", system.get_version(detailed_version=True))
-        upgrade.check_git_branch()
 
         if system.IS_RPI and helpers.get_odoo_server_url():
             system.generate_password()
@@ -147,10 +153,10 @@ class Manager(Thread):
         # Set scheduled actions
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
-        schedule.every().monday.at("00:00").do(upgrade.check_git_branch, force=True)
+        schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
 
         # Set up the websocket connection
-        ws_client = WebsocketClient()
+        ws_client = WebsocketClient(self.ws_channel)
         if ws_client:
             ws_client.start()
 
