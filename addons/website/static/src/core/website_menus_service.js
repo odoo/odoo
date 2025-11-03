@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 
-registry.category("services").add("website_menus", {
+export const websiteMenusService = {
     start() {
         const updateCallbacks = new Set();
         return {
@@ -16,4 +16,6 @@ registry.category("services").add("website_menus", {
             },
         };
     },
-});
+};
+
+registry.category("services").add("website_menus", websiteMenusService);
