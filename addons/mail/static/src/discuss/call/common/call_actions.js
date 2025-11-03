@@ -180,11 +180,11 @@ registerCallAction("fullscreen", {
             ),
         }),
     condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
-    name: ({ store }) => (store.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
-    isActive: ({ store }) => store.rtc.state.isFullscreen,
+    name: ({ store }) => (store.rtc.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
+    isActive: ({ store }) => store.rtc.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
     onSelected: ({ store }) => {
-        if (store.rtc.state.isFullscreen) {
+        if (store.rtc.isFullscreen) {
             store.rtc.exitFullscreen();
         } else {
             store.rtc.closePip();
@@ -201,11 +201,11 @@ registerCallAction("picture-in-picture", {
         !store.env?.isSmall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
-        store.rtc?.state.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
-    isActive: ({ store }) => store.rtc?.state.isPipMode,
+        store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
+    isActive: ({ store }) => store.rtc?.isPipMode,
     icon: "oi oi-launch",
     onSelected: ({ owner, store }) => {
-        const isPipMode = store.rtc?.state.isPipMode;
+        const isPipMode = store.rtc?.isPipMode;
         if (isPipMode) {
             store.rtc.closePip();
         } else {
@@ -219,7 +219,7 @@ export const acceptWithCamera = {
     condition: ({ thread }) =>
         thread?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
         typeof thread?.useCameraByDefault !== "boolean",
-    disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
+    disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Accept with camera"),
     icon: "fa fa-video-camera",
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
@@ -236,7 +236,7 @@ registerCallAction("join-back", {
         }),
     condition: ({ channel, store }) =>
         !channel?.eq(store.rtc?.channel) && typeof channel?.useCameraByDefault === "boolean",
-    disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
+    disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ thread }) => (thread.useCameraByDefault ? "fa fa-video-camera" : "fa fa-phone"),
     inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
     name: ({ thread }) => (thread.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
@@ -252,7 +252,7 @@ registerCallAction("join-with-camera", {
         !channel?.eq(store.rtc?.channel) &&
         !channel?.self_member_id?.rtc_inviting_session_id &&
         typeof channel?.useCameraByDefault !== "boolean",
-    disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
+    disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Video Call"),
     icon: "fa fa-video-camera",
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
@@ -263,7 +263,7 @@ registerCallAction("join-with-camera", {
 export const joinAction = {
     condition: ({ channel, store }) =>
         !channel?.eq(store.rtc?.channel) && typeof channel?.useCameraByDefault !== "boolean",
-    disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
+    disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Call"),
     icon: "fa fa-phone",
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
@@ -279,7 +279,7 @@ export const rejectAction = {
             "mx-1": !owner.env.inCallInvitation && typeof thread?.useCameraByDefault === "boolean",
         }),
     condition: ({ thread }) => thread?.self_member_id?.rtc_inviting_session_id,
-    disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
+    disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "oi oi-close",
     inlineName: ({ owner, thread }) =>
         !owner.env.inCallInvitation && typeof thread?.useCameraByDefault === "boolean"
@@ -287,7 +287,7 @@ export const rejectAction = {
             : undefined,
     name: _t("Reject"),
     onSelected: ({ channel, store }) => {
-        if (store.rtc.state.hasPendingRequest) {
+        if (store.rtc.hasPendingRequest) {
             return;
         }
         store.rtc.leaveCall(channel);
@@ -300,7 +300,7 @@ registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
     condition: ({ channel, store }) =>
         channel?.eq(store.rtc?.channel) && !channel?.self_member_id?.rtc_inviting_session_id,
-    disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
+    disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Disconnect"),
     icon: "fa fa-phone",
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),

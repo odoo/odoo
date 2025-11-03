@@ -207,7 +207,7 @@ export class ChannelInvitation extends Component {
             invitePromises.push(
                 this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
                     partner_ids: this.selectedPartners.map((partner) => partner.id),
-                    invite_to_rtc_call: this.rtc.state.channel?.eq(this.props.thread?.channel),
+                    invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.thread?.channel),
                 })
             );
         }

@@ -157,7 +157,7 @@ const ThreadPatch = {
         });
     },
     get showCallView() {
-        return !this.store.rtc.state.isFullscreen && this.rtc_session_ids.length > 0;
+        return !this.store.rtc.isFullscreen && this.rtc_session_ids.length > 0;
     },
     focusAvailableVideo() {
         if (this.isDisplayedInDiscussAppDesktop || !this.store.settings.useCallAutoFocus) {

@@ -7,8 +7,8 @@
             'o-fullSize': isFullSize,
             'o-compact': props.compact and !isMobileOs,
             'o-minimized': minimized,
-            'position-relative o-mx-0_5 o-mt-0_5 p-1': !rtc.state.isFullscreen and !props.isPip,
-            'rounded-2': !rtc.state.isFullscreen and !props.isPip and isActiveCall,
+            'position-relative o-mx-0_5 o-mt-0_5 p-1': !rtc.isFullscreen and !props.isPip,
+            'rounded-2': !rtc.isFullscreen and !props.isPip and isActiveCall,
             'o-hasVideo': channel.videoCount > 0,
             'o-selfInCall': isActiveCall,
             'border-bottom': !isActiveCall,
@@ -50,8 +50,8 @@
                         <CallActionList thread="channel.thread" compact="props.compact or props.isPip"/>
                     </div>
                 </div>
-                <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': rtc.state.isFullscreen, 'ps-2 pb-2': !rtc.state.isFullscreen }">
-                    <span class="o-discuss-Call-notification text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': rtc.state.isFullscreen, 'p-2': !rtc.state.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
+                <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': rtc.isFullscreen, 'ps-2 pb-2': !rtc.isFullscreen }">
+                    <span class="o-discuss-Call-notification text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': rtc.isFullscreen, 'p-2': !rtc.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
                 </div>
                 <div class="o-discuss-Call-layoutActions position-absolute bottom-0 end-0">
                     <ActionList actions="layoutActions" inline="true"/>

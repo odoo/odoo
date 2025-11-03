@@ -110,7 +110,7 @@ export class Settings extends Record {
             if (!rtc || !this.useBlur) {
                 return false;
             }
-            return this.useBlur && rtc.state?.cameraTrack && !hasHardwareAcceleration();
+            return this.useBlur && rtc.cameraTrack && !hasHardwareAcceleration();
         },
     });
     cameraFacingMode = undefined;
