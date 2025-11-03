@@ -79,6 +79,47 @@ class ResConfigSettings(models.TransientModel):
             }
         return True
 
+    def button_peppol_reception_transfer(self):
+        self.ensure_one()
+
+        def _action_notification(title, type_, message):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': title,
+                    'type': type_,
+                    'message': message,
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+
+        if not self.account_peppol_edi_user:
+            return
+
+        result = self.account_peppol_edi_user._peppol_transfer_reception()
+        if not result:
+            return _action_notification(
+                _("Unable to send transfer email"),
+                "danger",
+                _("We could not send the transfer email. Please try again later."),
+            )
+
+        return _action_notification(
+            _("We have sent an email to the owner of the receiving database"),
+            "success",
+            _(
+                "You will receive your supplier invoices as soon as the existing peppol "
+                "participant has accepted the transfer of the role of recipient."
+            ),
+        )
+
+    def button_peppol_unregister(self):
+        """Unregister the user from Peppol network."""
+        self.ensure_one()
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_deregister_participant()
+
     def button_reconnect_this_database(self):
         """Re-establish an out-of-sync connection"""
         self.ensure_one()

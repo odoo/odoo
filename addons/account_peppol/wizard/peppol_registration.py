@@ -153,10 +153,18 @@ class PeppolRegistration(models.TransientModel):
                 wizard.peppol_endpoint,
                 not wizard.smp_registration,
             )):
+                message = _(
+                    "Your company is already registered on an Access Point (%(external_provider)s) for receiving invoices."
+                    "We will register you on Odoo as a sender only.",
+                    external_provider=wizard.peppol_external_provider
+                )
+
+                if wizard.peppol_external_provider and 'Odoo' in wizard.peppol_external_provider:
+                    message += _(" We will send an email to the owner of this endpoint.")
+
                 peppol_warnings['company_already_on_smp'] = {
+                    'message': message,
                     'level': 'info',
-                    'message': _("Your company is already registered on an Access Point (%s) for receiving invoices. "
-                                 "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
                 }
             if wizard.peppol_eas == '9925':
                 peppol_warnings['be_9925_warning'] = {

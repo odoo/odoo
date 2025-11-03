@@ -477,6 +477,18 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
 
+    def _peppol_transfer_reception(self):
+        self.ensure_one()
+        company = self.company_id
+
+        edi_identification = self._get_proxy_identification(company, 'peppol')
+        peppol_info = company._get_company_info_on_peppol(edi_identification)
+        if peppol_info['is_on_peppol'] and "Odoo" not in peppol_info['external_provider']:
+            raise UserError(_("Please ensure you are the receiver on an Odoo database, not on another service provider."))
+
+        response = self._call_peppol_proxy(endpoint='/api/peppol/2/send_user_transfer_email')
+        return response.get('success')
+
     def _peppol_deregister_participant(self):
         self.ensure_one()
 
