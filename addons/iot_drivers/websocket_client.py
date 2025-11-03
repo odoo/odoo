@@ -37,16 +37,18 @@ def on_error(ws, error):
 
 @helpers.require_db
 class WebsocketClient(Thread):
+    channel = ""
+
     def on_open(self, ws):
-        """
-            When the client is setup, this function send a message to subscribe
-        """
+        """When the client is set up, sends a message to subscribe"""
         ws.send(json.dumps({
             'event_name': 'subscribe',
             'data': {
-                'channels': [],
+                'channels': [self.channel] if self.channel else [],  # TODO: remove when v19 is deprecated
                 'last': self.last_message_id,
                 'iot_token': helpers.get_token(),
+                'mac_address': system.get_mac_address(),  # TODO: remove when v18 is deprecated
+                'identifier': IOT_IDENTIFIER,  # TODO: remove when v19 is deprecated
             }
         }))
 
@@ -74,11 +76,13 @@ class WebsocketClient(Thread):
     def on_close(self, ws, close_status_code, close_msg):
         _logger.debug("websocket closed with status: %s", close_status_code)
 
-    def __init__(self, server_url=None):
+    def __init__(self, channel="", server_url=None):
         """This class will not be instantiated if no db is connected.
 
-        :param str server_url: URL of the Odoo server (provided by decorator).
+        :param channel: WebSocket channel provided by db, used for retro compatibility (optional).
+        :param server_url: URL of the Odoo server (provided by decorator).
         """
+        self.channel = channel
         self.server_url = server_url
         url_parsed = urllib.parse.urlsplit(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)

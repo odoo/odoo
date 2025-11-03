@@ -121,7 +121,7 @@ class DisplayDriver(Driver):
         if not data.get('data'):
             return
 
-        self.data['customer_display_data'] = data['data']
+        self.customer_display_data = data['data']
 
     def set_orientation(self, orientation=Orientation.NORMAL):
         if type(orientation) is not Orientation:
@@ -140,9 +140,13 @@ class DisplayDriver(Driver):
 
 class DisplayController(http.Controller):
     @route.iot_route('/hw_proxy/customer_facing_display', type='jsonrpc', cors='*')
-    def customer_facing_display(self):
+    def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
         display = self.ensure_display()
-        return display.data.get('customer_display_data', {})
+        if action == 'get':
+            return {'data': display.customer_display_data}
+
+        display.action({'action': action, 'pos_id': pos_id, 'access_token': access_token, 'data': data})
+        return {'status': 'success'}
 
     def ensure_display(self):
         display: DisplayDriver = DisplayDriver.get_default_display()
