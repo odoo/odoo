@@ -2947,7 +2947,7 @@ class AccountMove(models.Model):
                 not reference_date
                 or not self.invoice_date
                 or (
-                    (existing_discount_date := next(iter(payment_terms)).discount_date)
+                    (existing_discount_date := payment_terms[0].discount_date)
                     and
                     reference_date <= existing_discount_date
                 )

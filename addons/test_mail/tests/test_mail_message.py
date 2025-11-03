@@ -163,11 +163,11 @@ class TestMessageValues(MailCommon):
         self.assertEqual(m2_records, record3)
         self.assertEqual(m2_records._prefetch_ids, tuple(record3.ids))
         # methods called on individual message from a batch: prefetch from batch is kept
-        records_by_model_name = next(iter(messages))._records_by_model_name()
+        records_by_model_name = messages[0]._records_by_model_name()
         test_simple_records = records_by_model_name["mail.test.simple"]
         self.assertEqual(test_simple_records, record1)
         self.assertEqual(test_simple_records._prefetch_ids, tuple((record1 + record2).ids))
-        record_by_message = next(iter(messages))._record_by_message()
+        record_by_message = messages[0]._record_by_message()
         m0_records = record_by_message[messages[0]]
         self.assertEqual(m0_records, record1)
         self.assertEqual(m0_records._prefetch_ids, tuple((record1 + record2).ids))

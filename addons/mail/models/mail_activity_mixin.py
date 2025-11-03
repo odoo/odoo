@@ -210,7 +210,7 @@ class MailActivityMixin(models.AbstractModel):
     def _compute_activity_date_deadline(self):
         for record in self:
             activities = record.activity_ids
-            record.activity_date_deadline = next(iter(activities), activities).date_deadline
+            record.activity_date_deadline = activities[:1].date_deadline
 
     def _search_activity_date_deadline(self, operator, operand):
         if operator == 'in' and False in operand:
