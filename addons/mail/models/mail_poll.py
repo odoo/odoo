@@ -38,8 +38,8 @@ class MailPoll(models.Model):
             ]
             poll.winning_option_id = winners[0] if len(winners) == 1 else None
 
-    def _to_store_defaults(self, target):
-        return [
+    def _to_store_defaults(self, target, *, with_start_message_id=True):
+        fields = [
             "allow_multiple_options",
             "create_date",
             "create_uid",
@@ -47,9 +47,11 @@ class MailPoll(models.Model):
             Store.Many("option_ids"),
             "poll_end_dt",
             "poll_question",
-            "start_message_id",
             "winning_option_id",
         ]
+        if with_start_message_id:
+            fields.append(Store.One("start_message_id"))
+        return fields
 
     def _end_and_notify(self):
         thread_by_message = self.start_message_id._record_by_message()
@@ -58,7 +60,7 @@ class MailPoll(models.Model):
             poll.end_message_id = thread.message_post(
                 body="", message_type="mail_poll", subtype_xmlid="mail.mt_comment"
             )
-            Store(**thread._get_store_target()).add(poll, extra_fields=[Store.One("start_message_id")]).bus_send()
+            Store(**thread._get_store_target()).add(poll).bus_send()
 
     @api.model
     def _end_expired_polls(self):
