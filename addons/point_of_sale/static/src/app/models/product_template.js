@@ -200,11 +200,9 @@ export class ProductTemplate extends Base {
             return price;
         }
 
-        if (original_line && original_line.isLotTracked()) {
+        if (original_line && original_line.isLotTracked() && product) {
             related_lines.push(
-                ...original_line.order_id.lines.filter(
-                    (line) => line.product_id.product_tmpl_id.id == this.id
-                )
+                ...original_line.order_id.lines.filter((line) => line.product_id.id == product.id)
             );
             quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
         }
