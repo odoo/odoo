@@ -3,8 +3,9 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { BLOCKQUOTE_PARENT_HANDLERS } from "@html_builder/core/utils";
 
-const savableSelector = "[data-snippet], a.btn";
+const savableSelector = `[data-snippet], a.btn, ${BLOCKQUOTE_PARENT_HANDLERS}`;
 // TODO `so_submit_button_selector` ?
 const savableExclude = ".o_no_save, .s_donation_donate_btn, .s_website_form_send";
 
@@ -61,6 +62,13 @@ export class SaveSnippetPlugin extends Plugin {
     }
 
     async saveSnippet(el) {
+        // When saving a parent handler, save the child snippet instead
+        if (el.matches(BLOCKQUOTE_PARENT_HANDLERS)) {
+            const childBlockquote = el.querySelector(".s_blockquote");
+            if (childBlockquote) {
+                el = childBlockquote;
+            }
+        }
         const cleanForSaveHandlers = [
             ...this.getResource("clean_for_save_handlers"),
             ({ root }) => escapeTextNodes(root),

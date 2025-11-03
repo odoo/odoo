@@ -1,4 +1,9 @@
-import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import {
+    BaseOptionComponent,
+    useDomState,
+    SPECIAL_BLOCKQUOTE_SELECTOR,
+} from "@html_builder/core/utils";
+
 import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
 
 /**
@@ -9,8 +14,7 @@ export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";
     static dependencies = ["animateOption"];
     static selector = ".o_animable, section .row > div, img, .fa, .btn";
-    static exclude =
-        "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa";
+    static exclude = `[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, ${SPECIAL_BLOCKQUOTE_SELECTOR}`;
     static props = {
         requireAnimation: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },

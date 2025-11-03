@@ -14,7 +14,7 @@ class BlockAlignmentOptionPlugin extends Plugin {
 
 export class BlockAlignmentOption extends BaseOptionComponent {
     static template = "html_builder.BlockAlignmentOption";
-    static selector = ".s_alert, .s_blockquote, .s_text_highlight";
+    static selector = ".s_alert, .s_text_highlight";
 }
 
 registry.category("builder-plugins").add(BlockAlignmentOptionPlugin.id, BlockAlignmentOptionPlugin);

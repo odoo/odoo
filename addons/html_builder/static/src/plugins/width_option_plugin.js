@@ -14,7 +14,7 @@ class WidthOptionPlugin extends Plugin {
 
 export class WidthOption extends BaseOptionComponent {
     static template = "html_builder.WidthOption";
-    static selector = ".s_alert, .s_blockquote, .s_text_highlight";
+    static selector = ".s_alert, .s_text_highlight";
     static name = "widthOption";
 }
 registry.category("builder-plugins").add(WidthOptionPlugin.id, WidthOptionPlugin);

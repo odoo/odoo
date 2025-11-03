@@ -1,20 +1,17 @@
-import { after, ANIMATE, END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
+import {
+    BLOCKQUOTE_DISABLE_WIDTH_APPLY_TO,
+    BLOCKQUOTE_PARENT_HANDLERS,
+} from "@html_builder/core/utils";
 import { BaseWebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-import { ShadowOption } from "@html_builder/plugins/shadow_option";
-
-export class BlockquoteOption extends BaseOptionComponent {
-    static template = "website.BlockquoteOption";
-    static selector = ".s_blockquote";
-    static components = { BorderConfigurator, ShadowOption };
-}
+import { BlockquoteOption, BlockquoteWithoutWidthOption } from "./blockquote_option";
+import { withSequence } from "@html_editor/utils/resource";
+import { SNIPPET_SPECIFIC_BEFORE } from "@html_builder/utils/option_sequence";
 
 export class WebsiteBackgroundBlockquoteOption extends BaseWebsiteBackgroundOption {
-    static selector = ".s_blockquote";
+    static selector = BLOCKQUOTE_PARENT_HANDLERS;
+    static applyTo = BLOCKQUOTE_DISABLE_WIDTH_APPLY_TO;
     static defaultProps = {
         withColors: true,
         withImages: true,
@@ -27,10 +24,14 @@ class BlockquoteOptionPlugin extends Plugin {
     static id = "blockquoteOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        mark_color_level_selector_params: [{ selector: ".s_blockquote" }],
+        mark_color_level_selector_params: [
+            { selector: BlockquoteOption.selector, exclude: BlockquoteOption.exclude },
+            { selector: BLOCKQUOTE_PARENT_HANDLERS, applyTo: BLOCKQUOTE_DISABLE_WIDTH_APPLY_TO },
+        ],
         builder_options: [
-            withSequence(after(ANIMATE), WebsiteBackgroundBlockquoteOption),
-            withSequence(END, BlockquoteOption),
+            withSequence(SNIPPET_SPECIFIC_BEFORE, WebsiteBackgroundBlockquoteOption),
+            BlockquoteOption,
+            BlockquoteWithoutWidthOption,
         ],
     };
 }
