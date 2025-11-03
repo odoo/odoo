@@ -105,7 +105,10 @@ class MailMessage(models.Model):
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
-        string='Attachments', bypass_search_access=True)
+        string='Attachments',
+        bypass_search_access=True,
+        context={'skip_res_field_check': True},
+    )
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', index='btree_not_null', ondelete='set null')
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')

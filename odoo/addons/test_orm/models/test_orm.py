@@ -3,7 +3,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import html_translate
@@ -1241,6 +1241,18 @@ class TestOrmAttachmentHost(models.Model):
     )
     m2m_attachment_ids = fields.Many2many(
         'test_orm.attachment', bypass_search_access=True,
+    )
+
+    real_binary = fields.Binary(attachment=True)
+    real_attachment_ids = fields.One2many(
+        'ir.attachment', 'res_id', bypass_search_access=True,
+        domain=lambda self: [('res_model', '=', self._name)],
+    )
+    real_m2m_attachment_ids = fields.Many2many(
+        'ir.attachment', bypass_search_access=True,
+        # this is needed to be able to link to attachments with res_field set
+        # see `IrAttachment._search` implementation
+        context={'skip_res_field_check': True},
     )
 
 

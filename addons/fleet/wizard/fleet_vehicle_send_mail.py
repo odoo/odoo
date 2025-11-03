@@ -16,6 +16,7 @@ class FleetVehicleSendMail(models.TransientModel):
         'wizard_id', 'attachment_id',
         string='Attachments',
         bypass_search_access=True,
+        context={'skip_res_field_check': True},
     )
 
     @api.depends('subject')

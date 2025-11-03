@@ -83,6 +83,7 @@ class MailActivity(models.Model):
         'activity_id', 'attachment_id',
         string='Attachments',
         bypass_search_access=True,
+        context={'skip_res_field_check': True},
     )
     # description
     user_id = fields.Many2one(

@@ -75,6 +75,7 @@ class MailTemplate(models.Model):
         'email_template_id', 'attachment_id',
         string='Attachments',
         bypass_search_access=True,
+        context={'skip_res_field_check': True},
     )
     report_template_ids = fields.Many2many(
         'ir.actions.report', relation='mail_template_ir_actions_report_rel',

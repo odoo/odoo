@@ -106,6 +106,7 @@ class AccountBankStatement(models.Model):
         comodel_name='ir.attachment',
         string="Attachments",
         bypass_search_access=True,
+        context={'skip_res_field_check': True},
     )
 
     _journal_id_date_desc_id_desc_idx = models.Index("(journal_id, date DESC, id DESC)")
