@@ -37,7 +37,7 @@ export class WebClient extends Component {
         }
         this.localization = localization;
         this.state = useState({
-            fullscreen: false,
+            fullscreen: true,
         });
         useBus(routerBus, "ROUTE_CHANGE", async () => {
             document.body.style.pointerEvents = "none";
@@ -146,6 +146,9 @@ export class WebClient extends Component {
         const root = this.menuService.getMenu("root");
         const firstApp = root.children[0];
         if (firstApp) {
+            if (!firstApp.actionID) {
+                this.state.fullscreen = false;
+            }
             return this.menuService.selectMenu(firstApp);
         }
     }
