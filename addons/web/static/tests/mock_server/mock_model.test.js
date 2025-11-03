@@ -158,10 +158,11 @@ describe("level 1", () => {
         await makeMockEnv();
 
         await expect(
-            getService("orm").searchRead("oui", [], ["id", "name", "age", "surname"])
+            getService("orm").searchRead("oui", [], ["id", "name", "age", "surname", "create_date"])
         ).resolves.toEqual([
             {
                 id: 1,
+                create_date: luxon.DateTime.utc().toSQL().slice(0, 19),
                 name: "John Doe",
                 age: 42,
                 surname: "doedoe",
