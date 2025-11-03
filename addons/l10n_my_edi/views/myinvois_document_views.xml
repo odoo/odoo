@@ -52,7 +52,7 @@
             <field name="name">myinvois.document.list.view</field>
             <field name="model">myinvois.document</field>
             <field name="arch" type="xml">
-                <list string="MyInvois Documents" create="false" sample="1" decoration-muted="myinvois_state == 'cancelled'">
+                <list string="MyInvois Documents" create="false" sample="0" decoration-muted="myinvois_state == 'cancelled'">
                     <header>
                         <button name="action_submit_to_myinvois" string="Submit To MyInvois" type="object" class="btn-primary"/>
                         <button name="action_update_submission_status" string="Fetch Status From MyInvois" type="object"/>
