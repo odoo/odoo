@@ -8,7 +8,7 @@ from odoo.fields import Domain
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.exceptions import AccessError
-from odoo.tools import escape_psql
+from odoo.tools import escape_psql, SQL
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.json import scriptsafe as json_safe
 
@@ -58,6 +58,7 @@ class WebsiteSeoMetadata(models.AbstractModel):
         }
         default_twitter = {
             'twitter:card': 'summary_large_image',
+            'twitter:image': default_opengraph['og:image'],
         }
 
         return {
@@ -82,11 +83,57 @@ class WebsiteSeoMetadata(models.AbstractModel):
         if self.website_meta_description:
             opengraph_meta['og:description'] = self.website_meta_description
         opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or opengraph_meta['og:image']))
+        twitter_meta['twitter:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or twitter_meta['twitter:image']))
         return {
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,
-            'meta_description': default_meta.get('default_meta_description')
+            'meta_description': self.website_meta_description,
         }
+
+    def _get_website_meta_translations(self):
+        """Return raw stored translations for meta fields with per-request caching."""
+        self.ensure_one()
+        cr = self.env.cr
+        lang_cache = cr.cache.setdefault('website_meta_i18n', {})
+        cache_key = (self._name, self.id)
+        if cache_key in lang_cache:
+            return lang_cache[cache_key]
+
+        stored_fields = [
+            name
+            for name in ('website_meta_description', 'website_meta_keywords')
+            if name in self._fields and self._fields[name].store and self._fields[name].translate
+        ]
+        translations = {}
+        if stored_fields:
+            cr = self.env.cr
+            fields_sql = SQL(', ').join(SQL.identifier(field) for field in stored_fields)
+            cr.execute(
+                SQL(
+                    "SELECT %s FROM %s WHERE id = %s",
+                    fields_sql,
+                    SQL.identifier(self._table),
+                    self.id
+                )
+            )
+            row = cr.fetchone() or ()
+            for idx, field_name in enumerate(stored_fields):
+                value = row[idx] if idx < len(row) else None
+                translations[field_name] = value if isinstance(value, dict) else {}
+
+        lang_cache[cache_key] = translations
+        return translations
+
+    def get_website_meta_i18n_value(self, field_name, lang_code):
+        """Return the translation for the given SEO meta field in lang_code, or ''. """
+        if not lang_code or field_name not in self._fields:
+            return ''
+        field = self._fields[field_name]
+        if not field.translate or not field.store:
+            return self[field_name] or ''
+
+        translations = self._get_website_meta_translations()
+        return translations.get(field_name, {}).get(lang_code) or ''
 
 
 class WebsiteCover_PropertiesMixin(models.AbstractModel):

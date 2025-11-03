@@ -35,7 +35,7 @@ class TestForumPerformance(UtilPerf):
         number_of_queries = self._get_url_hot_query(self.forum._compute_website_url())
         self.assertLessEqual(number_of_queries, 28)
         number_of_queries = self._get_url_hot_query(self.post.website_url)
-        self.assertLessEqual(number_of_queries, 25)
+        self.assertLessEqual(number_of_queries, 26)
 
     def test_perf_sql_forum_scaling_answers(self):
         self.env['forum.tag'].create([
@@ -62,7 +62,7 @@ class TestForumPerformance(UtilPerf):
         ])
         self.env.flush_all()
         number_of_queries = self._get_url_hot_query(self.post.website_url)
-        self.assertLessEqual(number_of_queries, 28)
+        self.assertLessEqual(number_of_queries, 29)
 
     def test_perf_sql_forum_scaling_posts(self):
         self.env['forum.post'].create([
