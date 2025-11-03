@@ -22,7 +22,7 @@ class HrWorkEntry(models.Model):
     name = fields.Char()
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
-    version_id = fields.Many2one('hr.version', string="Employee Record", required=True)
+    version_id = fields.Many2one('hr.version', string="Employee Record", required=True, index=True)
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
