@@ -47,7 +47,7 @@
                                     <td groups="uom.group_uom" class="px-1" t-out="product['uom']"/>
                                     <t t-foreach="quantities" t-as="qty">
                                         <td class="text-end px-1">
-                                            <span t-out="product['price'][qty]" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'>$15.00</span>
+                                            <span t-out="product['price'][qty]" t-options='{"widget": "monetary", "display_currency": currency}'>$15.00</span>
                                         </td>
                                     </t>
                                 </tr>
@@ -63,7 +63,7 @@
                                         <td groups="uom.group_uom" class="px-1" t-out="product['uom']"/>
                                         <t t-foreach="quantities" t-as="qty">
                                             <td class="text-end px-1">
-                                                <span t-out="variant['price'][qty]" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'>$14.00</span>
+                                                <span t-out="variant['price'][qty]" t-options='{"widget": "monetary", "display_currency": currency}'>$14.00</span>
                                             </td>
                                         </t>
                                     </tr>
