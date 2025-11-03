@@ -1182,6 +1182,7 @@ class StockQuant(models.Model):
                 ('state', 'in', ['assigned', 'partially_available', 'waiting', 'confirmed']),
                 ('quantity_product_uom', '!=', 0),
                 ('product_id.is_storable', '=', True),
+                ('company_id', 'in', [False] + self.env.context.get('allowed_company_ids', [self.env.company.id])),  # Needed to avoid intercompany
             ],
             ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
             ['quantity_product_uom:sum'],
