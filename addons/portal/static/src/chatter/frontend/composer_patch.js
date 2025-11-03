@@ -6,8 +6,4 @@ patch(Composer.prototype, {
     get showComposerAvatar() {
         return super.showComposerAvatar || (this.compact && this.props.composer.portalComment);
     },
-
-    get shouldHideFromMessageListOnDelete() {
-        return this.env.inFrontendPortalChatter || super.shouldHideFromMessageListOnDelete;
-    },
 });

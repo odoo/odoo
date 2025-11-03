@@ -12,8 +12,4 @@ patch(Message.prototype, {
         }
         return super.authorAvatarUrl;
     },
-
-    get shouldHideFromMessageListOnDelete() {
-        return this.env.inFrontendPortalChatter || super.shouldHideFromMessageListOnDelete;
-    },
 });
