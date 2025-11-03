@@ -58,6 +58,7 @@ class SaleOrder(models.Model):
                 order_lines = self.order_line.filtered(
                     lambda line: line.product_id.id == product.id
                     and line.product_no_variant_attribute_value_ids.ids == no_variant_attribute_values.ids
+                    and not line.combo_item_id
                 )
 
                 # if product variant already exist in order lines
@@ -141,7 +142,7 @@ class SaleOrder(models.Model):
                 for cell in line:
                     if not cell.get('name', False):
                         line = order_lines.filtered(lambda line: has_ptavs(line, cell['ptav_ids']))
-                        if line:
+                        if line and not line.combo_item_id:
                             cell.update({
                                 'qty': sum(line.mapped('product_uom_qty'))
                             })
