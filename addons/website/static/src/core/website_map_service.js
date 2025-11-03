@@ -6,7 +6,7 @@ import { user } from "@web/core/user";
 import { markup } from "@odoo/owl";
 import { escape } from "@web/core/utils/strings";
 
-registry.category("services").add("website_map", {
+export const websiteMapService = {
     dependencies: ["public.interactions", "notification"],
     start(env, deps) {
         const publicInteractions = deps["public.interactions"];
@@ -137,6 +137,8 @@ registry.category("services").add("website_map", {
                     )}`
                 );
             },
-        }
-    }
-});
+        };
+    },
+};
+
+registry.category("services").add("website_map", websiteMapService);

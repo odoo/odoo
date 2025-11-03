@@ -46,7 +46,7 @@ export function buildEditableInteractions(builders) {
     return result;
 }
 
-registry.category("services").add("website_edit", {
+export const websiteEditService = {
     dependencies: ["public.interactions"],
     start(env, { ["public.interactions"]: publicInteractions }) {
         let editableInteractions = null;
@@ -317,7 +317,8 @@ registry.category("services").add("website_edit", {
 
         return websiteEditService;
     },
-});
+};
+registry.category("services").add("website_edit", websiteEditService);
 
 // Patch PublicRoot.
 
