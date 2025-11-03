@@ -451,6 +451,10 @@ class DiscussChannelMember(models.Model):
                 [("partner_id", "=", False)],
                 [("partner_id.user_ids.manual_im_status", "!=", "busy")],
             ]),
+            Domain.OR([
+                Domain("guest_id", "=", False),
+                Domain("guest_id.presence_ids.last_poll", ">", fields.Datetime.now() - timedelta(hours=12))
+            ]),
         ])
         if member_ids:
             domain &= Domain('id', 'in', member_ids)
