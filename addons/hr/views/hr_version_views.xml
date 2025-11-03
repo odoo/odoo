@@ -28,6 +28,31 @@
         </field>
     </record>
 
+    <record id="hr_version_list_view_enhanced" model="ir.ui.view">
+        <field name="name">hr.version.list.view.enhanced</field>
+        <field name="model">hr.version</field>
+        <field name="arch" type="xml">
+            <list string="Records" default_order='employee_id ASC' create="0" delete="0">
+                <field name="employee_id" optional="show" widget="many2one_avatar_employee"/>
+                <field name="date_version" readonly="False" string="Effective Date"/>
+                <field name="contract_date_start" string="Contract Period" widget="daterange" options="{'end_date_field': 'contract_date_end'}" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="wage" widget="monetary" optional="hide"/>
+                <field name="contract_type_id" optional="hide"/>
+                <field name="structure_type_id" optional="hide"/>
+                <field name="job_id" optional="show"/>
+                <field name="department_id" optional="show"/>
+                <field name="hr_responsible_id" optional="hide"/>
+                <field name="resource_calendar_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                <field name="create_uid" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+                <field name="last_modified_uid" optional="hide" readonly="1"/>
+                <field name="last_modified_date" optional="hide" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
     <record id="hr_version_graph_view" model="ir.ui.view">
         <field name="name">hr.version.graph</field>
         <field name="model">hr.version</field>
@@ -102,6 +127,29 @@
                 <separator />
                 <filter string="Working Schedule" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
                 <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_version_search_view_enhanced" model="ir.ui.view">
+        <field name="name">hr.version.search.view.enhanced</field>
+        <field name="model">hr.version</field>
+        <field name="arch" type="xml">
+            <search string="Employees">
+                <field name="employee_id" string="Employee" filter_domain="['|', ('employee_id.work_email', 'ilike', self), ('employee_id.name', 'ilike', self)]"/>
+                <field name="department_id"/>
+                <field name="job_id"/>
+                <field name="resource_calendar_id"/>
+                <field name="company_id"/>
+                <separator/>
+                <filter name="employee_id.newly_hired" string="Newly Hired" domain="[('employee_id.newly_hired', '=', True)]"/>
+                <filter name="departure_reason_id" string="Departure" domain="[('departure_reason_id', '!=', False)]" />
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+                </group>
             </search>
         </field>
     </record>
