@@ -40,13 +40,23 @@ function turnIntoRow(row) {
     };
 }
 
-function moveRow(position, row) {
+function moveColumn(targetIndex, cell) {
+    return (editor) => {
+        if (!cell) {
+            const selection = editor.shared.selection.getEditableSelection();
+            cell = findInSelection(selection, "td, th");
+        }
+        editor.shared.table.moveColumn(targetIndex, cell);
+    };
+}
+
+function moveRow(targetIndex, row) {
     return (editor) => {
         if (!row) {
             const selection = editor.shared.selection.getEditableSelection();
             row = findInSelection(selection, "tr");
         }
-        editor.shared.table.moveRow(position, row);
+        editor.shared.table.moveRow(targetIndex, row);
     };
 }
 
@@ -64,7 +74,7 @@ function removeColumn(cell) {
     return (editor) => {
         if (!cell) {
             const selection = editor.shared.selection.getEditableSelection();
-            cell = findInSelection(selection, "td");
+            cell = findInSelection(selection, "td, th");
         }
         editor.shared.table.removeColumn(cell);
     };
@@ -284,7 +294,7 @@ describe("row", () => {
                         </tbody>
                     </table>
                 `),
-                stepFunction: moveRow("down"),
+                stepFunction: moveRow(1),
                 contentAfter: unformat(`
                     <table>
                         <tbody>
@@ -322,7 +332,7 @@ describe("row", () => {
                         </tbody>
                     </table>
                 `),
-                stepFunction: moveRow("up"),
+                stepFunction: moveRow(0),
                 contentAfter: unformat(`
                     <table>
                         <tbody>
@@ -640,6 +650,85 @@ describe("column", () => {
             });
         });
     });
+
+    describe("move", () => {
+        test("should move second column left", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 25px;">cd[]</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveColumn(0),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 25px;">cd[]</th>
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ij</td>
+                                <td>gh</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should move second column right", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij[]</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveColumn(2),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                                <th class="o_table_header" style="width: 25px;">cd</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>kl</td>
+                                <td>ij[]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
     describe("removal", () => {
         test("should remove a column based on selection", async () => {
             await testEditor({
@@ -670,6 +759,39 @@ describe("column", () => {
                 `),
             });
         });
+
+        test("should remove a column from a table with a header", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th class="o_table_header">[]Header 1</th>
+                                <th class="o_table_header">Header 2</th>
+                            </tr>
+                            <tr>
+                                <td>Cell 1</td>
+                                <td>Cell 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeColumn(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th class="o_table_header">[]Header 2</th>
+                            </tr>
+                            <tr>
+                                <td>Cell 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
         test("should remove the column passed as argument", async () => {
             await testEditor({
                 contentBefore: unformat(`

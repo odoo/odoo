@@ -1,4 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -78,13 +79,13 @@ export class TableMenu extends Component {
                 name: "move_left",
                 icon: "fa-chevron-left disabled",
                 text: ltr ? _t("Move left") : _t("Move right"),
-                action: this.props.moveColumn.bind(this, "left"),
+                action: (target) => this.props.moveColumn(getColumnIndex(target) - 1, target),
             },
             !this.isLast && {
                 name: "move_right",
                 icon: "fa-chevron-right",
                 text: ltr ? _t("Move right") : _t("Move left"),
-                action: this.props.moveColumn.bind(this, "right"),
+                action: (target) => this.props.moveColumn(getColumnIndex(target) + 1, target),
             },
             {
                 name: "insert_left",
@@ -147,13 +148,15 @@ export class TableMenu extends Component {
                 name: "move_up",
                 icon: "fa-chevron-up",
                 text: _t("Move up"),
-                action: (target) => this.props.moveRow("up", target.parentElement),
+                action: (target) =>
+                    this.props.moveRow(getRowIndex(target.parentElement) - 1, target.parentElement),
             },
             !this.isLast && {
                 name: "move_down",
                 icon: "fa-chevron-down",
                 text: _t("Move down"),
-                action: (target) => this.props.moveRow("down", target.parentElement),
+                action: (target) =>
+                    this.props.moveRow(getRowIndex(target.parentElement) + 1, target.parentElement),
             },
             !this.isTableHeader && {
                 name: "insert_above",

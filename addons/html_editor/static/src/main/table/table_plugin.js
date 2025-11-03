@@ -427,63 +427,69 @@ export class TablePlugin extends Plugin {
             : this.deleteTable(table);
     }
     /**
-     * @param {'left'|'right'} position
+     * @param {number} targetIndex - index to which the column should be moved
      * @param {HTMLTableCellElement} cell
      */
-    moveColumn(position, cell) {
+    moveColumn(targetIndex, cell) {
         const columnIndex = getColumnIndex(cell);
         const nColumns = cell.parentElement.children.length;
-        if (
-            columnIndex < 0 ||
-            (position === "left" && columnIndex === 0) ||
-            (position !== "left" && columnIndex === nColumns - 1)
-        ) {
+        if (targetIndex < 0 || targetIndex >= nColumns || targetIndex === columnIndex) {
             return;
         }
 
-        const trs = cell.parentElement.parentElement.children;
-        const tdsToMove = [...trs].map((tr) => tr.children[columnIndex]);
         const selectionToRestore = this.dependencies.selection.getEditableSelection();
-        if (position === "left") {
-            tdsToMove.forEach((td) => td.previousElementSibling.before(td));
-        } else {
-            tdsToMove.forEach((td) => td.nextElementSibling.after(td));
-        }
+        [...cell.parentElement.parentElement.children].map((tr) => {
+            const tdToMove = tr.children[columnIndex];
+            const targetTd = tr.children[targetIndex];
+            if (targetIndex < columnIndex) {
+                targetTd.before(tdToMove);
+            } else {
+                targetTd.after(tdToMove);
+            }
+        });
+
         this.dependencies.selection.setSelection(selectionToRestore);
     }
+
     /**
-     * @param {'up'|'down'} position
+     * @param {number} targetIndex - index to which the row should be moved
      * @param {HTMLTableRowElement} row
      */
-    moveRow(position, row) {
-        const selectionToRestore = this.dependencies.selection.getEditableSelection();
-        let adjustedRow;
-        if (position === "up") {
-            const isPreviousRowHeader =
-                [...row.previousElementSibling.children][0].nodeName === "TH";
-            row.previousElementSibling?.before(row);
-            adjustedRow = row;
-            if (isPreviousRowHeader) {
-                this.turnIntoHeader(row);
-                this.turnIntoRow(row.nextElementSibling);
-            }
-        } else {
-            const isRowHeader = [...row.children][0].nodeName === "TH";
-            row.nextElementSibling?.after(row);
-            adjustedRow = row.previousElementSibling;
-            if (isRowHeader) {
-                this.turnIntoHeader(adjustedRow);
-                this.turnIntoRow(row);
-            }
+    moveRow(targetIndex, row) {
+        const table = closestElement(row, "table");
+        const sourceIndex = getRowIndex(row);
+        const totalRows = table.rows.length;
+
+        if (targetIndex < 0 || targetIndex >= totalRows || targetIndex === sourceIndex) {
+            return;
         }
 
-        // If the moved row becomes the first row, copy the widths of its td
-        // elements from the previous first row, as td widths are only applied
-        // to the first row.
-        if (!adjustedRow.previousElementSibling) {
-            adjustedRow.childNodes.forEach((cell, index) => {
-                cell.style.width = adjustedRow.nextElementSibling.childNodes[index].style.width;
+        const selectionToRestore = this.dependencies.selection.getEditableSelection();
+        const oldFirstRow = table.rows[0];
+        const isHeader = oldFirstRow.firstElementChild?.nodeName === "TH";
+        const targetRow = table.rows[targetIndex];
+
+        if (targetIndex < sourceIndex) {
+            // Move up - insert before target row
+            targetRow.before(row);
+        } else {
+            // Move down - insert after target row
+            targetRow.after(row);
+        }
+
+        const newFirstRow = table.rows[0];
+        // If the moved row becomes the first row
+        if (newFirstRow !== oldFirstRow) {
+            // Copy the widths of its td elements from the previous
+            // first row, as td widths are only applied to the first row.
+            [...newFirstRow.cells].forEach((cell, i) => {
+                cell.style.width = oldFirstRow.cells[i].style.width || "";
             });
+            // Maintain header row at top position.
+            if (isHeader) {
+                this.turnIntoHeader(newFirstRow);
+                this.turnIntoRow(oldFirstRow);
+            }
         }
         this.dependencies.selection.setSelection(selectionToRestore);
     }
