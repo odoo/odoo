@@ -2,7 +2,14 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
-import { defineModels, fields, models, mountView, onRpc, contains } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+    onRpc,
+    contains,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     date = fields.Date({ string: "A date", searchable: true });
@@ -39,8 +46,8 @@ test("RemainingDaysField on a date field in list view", async () => {
     expect(cells[2]).toHaveText("Yesterday");
     expect(cells[3]).toHaveText("In 2 days");
     expect(cells[4]).toHaveText("3 days ago");
-    expect(cells[5]).toHaveText("02/08/2018");
-    expect(cells[6]).toHaveText("06/08/2017");
+    expect(cells[5]).toHaveText("Feb 8, 2018");
+    expect(cells[6]).toHaveText("Jun 8");
     expect(cells[7]).toHaveText("");
 
     expect(queryOne(".o_field_widget > div", { root: cells[0] })).toHaveAttribute(
@@ -286,8 +293,8 @@ test("RemainingDaysField on a datetime field in list view in UTC", async () => {
         "Yesterday",
         "In 2 days",
         "3 days ago",
-        "02/08/2018",
-        "06/08/2017",
+        "Feb 8, 2018",
+        "Jun 8",
         "",
     ]);
 
