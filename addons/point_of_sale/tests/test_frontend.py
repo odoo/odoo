@@ -1318,6 +1318,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'taxes_id': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, limited_category.id)],
+            'tracking': 'lot',
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': color_attribute.id,
                 'value_ids': [(6, 0, color_attribute.value_ids.ids)]
