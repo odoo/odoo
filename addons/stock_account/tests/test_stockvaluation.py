@@ -2252,6 +2252,51 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(report_value_1['docs']['value'], "U 50.00")
         self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
 
+    def test_stock_report_avco_warehouse_dependency(self):
+        """
+        Create two warehouses and check that the total value and the on hand quantity
+        displayed in the stock report accurately depends on the contextual warehouse.
+        """
+        product = self.product_avco_auto
+        warehouse_1, warehouse_2 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=2)
+
+        inventory_adjustment_loc = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)], limit=1)
+        self._make_in_move(product=product, quantity=15.0, location_id=inventory_adjustment_loc.id, location_dest_id=warehouse_1.lot_stock_id.id)
+        self._make_in_move(product=product, quantity=5.0, unit_cost=50, location_dest_id=warehouse_2.lot_stock_id.id)
+        self.assertRecordValues(product, [{'avg_cost': 20.0, 'total_value': 400, 'qty_available': 20}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 20.0, 'total_value': 300, 'qty_available': 15}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 20.0, 'total_value': 100, 'qty_available': 5}])
+
+        warehouse_3 = self.env['stock.warehouse'].create({'code': 'WH-neg'})
+        self._make_out_move(product=product, quantity=20.0, location_id=warehouse_3.lot_stock_id.id)
+        self.assertRecordValues(product, [{'avg_cost': 20.0, 'total_value': 0.0, 'qty_available': 0.0}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 20.0, 'total_value': 300, 'qty_available': 15}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 20.0, 'total_value': 100, 'qty_available': 5}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_3.id), [{'avg_cost': 20.0, 'total_value': -400, 'qty_available': -20}])
+
+    def test_stock_report_fifo_warehouse_dependency(self):
+        """
+        Create two warehouses and check that the total value and the on hand quantity
+        displayed in the stock report accurately depends on the contextual warehouse.
+        """
+        product = self.product_fifo_auto
+        warehouse_1, warehouse_2 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=2)
+
+        inventory_adjustment_loc = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)], limit=1)
+        self._make_in_move(product=product, quantity=15.0, location_id=inventory_adjustment_loc.id, location_dest_id=warehouse_1.lot_stock_id.id)
+        self._make_in_move(product=product, quantity=10.0, unit_cost=30, location_dest_id=warehouse_2.lot_stock_id.id)
+        self._make_out_move(product=product, quantity=5.0, location_id=warehouse_2.lot_stock_id.id)
+        self.assertRecordValues(product, [{'avg_cost': 20.0, 'total_value': 400, 'qty_available': 20}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 20.0, 'total_value': 300, 'qty_available': 15}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 20.0, 'total_value': 100, 'qty_available': 5}])
+
+        warehouse_3 = self.env['stock.warehouse'].create({'code': 'WH-neg'})
+        self._make_out_move(product=product, quantity=20.0, location_id=warehouse_3.lot_stock_id.id)
+        self.assertRecordValues(product, [{'avg_cost': 30.0, 'total_value': 0.0, 'qty_available': 0.0}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 30.0, 'total_value': 450, 'qty_available': 15}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 30.0, 'total_value': 150, 'qty_available': 5}])
+        self.assertRecordValues(product.with_context(warehouse_id=warehouse_3.id), [{'avg_cost': 30.0, 'total_value': -600, 'qty_available': -20}])
+
     def test_fifo_and_sml_owned_by_company(self):
         """
         When receiving a FIFO product, if the picking is owned by the company,
