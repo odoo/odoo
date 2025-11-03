@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach } from "@odoo/hoot";
+import { expect, test, describe, beforeEach, getFixture } from "@odoo/hoot";
 import {
     defineModels,
     fields,
@@ -8,6 +8,8 @@ import {
     clickSave,
     patchWithCleanup,
     contains,
+    getPagerValue,
+    getPagerLimit,
 } from "@web/../tests/web_test_helpers";
 import { click, queryAny, queryOne, waitFor } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
@@ -29,6 +31,16 @@ class Mailing extends models.Model {
         compute: "compute_model_real",
     });
     mailing_model_name = fields.Char({ string: "Recipients Model Name" });
+    state = fields.Selection({
+        string: "Status",
+        default: "draft",
+        selection: [
+            ["draft", "Draft"],
+            ["in_queue", "In Queue"],
+            ["sending", "Sending"],
+            ["done", "Sent"],
+        ],
+    });
 
     compute_model_real() {
         for (const record of this) {
@@ -58,6 +70,62 @@ class Mailing extends models.Model {
                         <div class="row">
                             <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable oe_empty" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true">
                                 This element <t t-out="'should be inline'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            state: "done",
+        },
+        {
+            id: 3,
+            display_name: "Readonly",
+            mailing_model_id: 1,
+            body_arch: `
+                <div data_name="Mailing" class="o_layout oe_unremovable oe_unmovable o_default_theme">
+                    <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
+                        <div class="row mw-100 mx-0">
+                            <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure">
+                                <section class="s_text_block o_mail_snippet_general" data-snippet="s_text_block">
+                                    <div class="container">
+                                        <p>Readonly</p>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            state: "done",
+        },
+        {
+            id: 4,
+            display_name: "Basic",
+            mailing_model_id: 1,
+            body_arch: `
+                <div data_name="Mailing" class="o_layout oe_unremovable oe_unmovable o_basic_theme">
+                    <div class="oe_structure">
+                        <div class="o_mail_no_options">
+                            <p>Basic</p>
+                        </div>
+                    </div>
+                </div>
+            `,
+        },
+        {
+            id: 5,
+            display_name: "Builder",
+            mailing_model_id: 1,
+            body_arch: `
+                <div data_name="Mailing" class="o_layout oe_unremovable oe_unmovable o_empty_theme">
+                    <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
+                        <div class="row mw-100 mx-0">
+                            <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure">
+                                <section class="s_text_block o_mail_snippet_general" data-snippet="s_text_block">
+                                    <div class="container">
+                                        <p>Builder</p>
+                                    </div>
+                                </section>
                             </div>
                         </div>
                     </div>
@@ -107,22 +175,14 @@ const mailViewArch = `
     <field name="mailing_model_name" invisible="1"/>
     <field name="mailing_model_id" invisible="1"/>
     <field name="mailing_model_real" invisible="1"/>
+    <field name="state" invisible="1"/>
     <field name="body_html" class="o_mail_body_inline"/>
-    <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
-        options="{ 'inline_field': 'body_html' }"/>
-</form>
-`;
-
-const readonlyMailViewArch = `
-<form>
-    <field name="mailing_model_name" invisible="1"/>
-    <field name="mailing_model_id" invisible="1"/>
-    <field name="body_html" invisible="1"/>
     <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
         options="{
             'inline_field': 'body_html',
             'dynamic_placeholder': true,
-        }" readonly="true"/>
+            'dynamic_placeholder_model_reference_field': 'mailing_model_real'
+            }" readonly="state in ('sending', 'done')"/>
 </form>
 `;
 
@@ -176,7 +236,7 @@ describe("field HTML", () => {
             type: "form",
             resModel: "mailing.mailing",
             resId: 2,
-            arch: readonlyMailViewArch,
+            arch: mailViewArch,
         });
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
         const tElement = await waitFor(":iframe t", { timeout: 3000 });
@@ -194,25 +254,26 @@ describe("field HTML", () => {
         // When those popovers are killed, OWL tries to reconcile its element List
         // in OverlayContainer, displaces the node that contains the iframe
         // and the editor subsequently crashes
-        const base64Img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
-        onRpc("/html_editor/get_image_info", () => {
-            return {
-                original: { image_src: base64Img },
-            };
-        });
+        const base64Img =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        onRpc("/html_editor/get_image_info", () => ({
+            original: { image_src: base64Img },
+        }));
         class SomeModel extends models.Model {
-            _name = "some.model"
-            mailing_ids = fields.One2many({relation: "mailing.mailing"});
+            _name = "some.model";
+            mailing_ids = fields.One2many({ relation: "mailing.mailing" });
 
-            _records = [{
-                id: 1,
-                mailing_ids: [1],
-            }]
+            _records = [
+                {
+                    id: 1,
+                    mailing_ids: [1],
+                },
+            ];
         }
 
         Mailing._views["form"] = mailViewArch;
         defineModels([SomeModel]);
-        const arch = `<form><field name="mailing_ids"> <list><field name="display_name" /></list> </field></form>`
+        const arch = `<form><field name="mailing_ids"> <list><field name="display_name" /></list> </field></form>`;
         await mountView({
             type: "form",
             resModel: "some.model",
@@ -223,9 +284,12 @@ describe("field HTML", () => {
         await waitFor(".o_dialog");
         await contains(".o_dialog [data-name='event']").click();
         await waitFor(".o_dialog .o_mass_mailing-builder_sidebar", { timeout: 1000 });
-        await contains(".o_dialog :iframe p", { timeout: 1000}).click();
-        await waitFor(".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)");
-        const overlayOptionsSelect = ".o-main-components-container .o-overlay-container .o_overlay_options"
+        await contains(".o_dialog :iframe p", { timeout: 1000 }).click();
+        await waitFor(
+            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)"
+        );
+        const overlayOptionsSelect =
+            ".o-main-components-container .o-overlay-container .o_overlay_options";
         await waitFor(overlayOptionsSelect + ":has(button[title='Move up'])");
         await contains(".o_dialog :iframe img").click();
         await waitFor(overlayOptionsSelect + ":not(:has(button[title='Move up']))");
@@ -255,6 +319,55 @@ describe("field HTML", () => {
             "t-if",
             'object.filtered_domain([("id", "=", 1)])'
         );
+    });
+    test(`Switching mailing records in the Form view properly switches between basic Editor, HtmlBuilder and readonly`, async () => {
+        const fixture = getFixture();
+        let htmlField;
+        patchWithCleanup(MassMailingHtmlField.prototype, {
+            setup() {
+                super.setup();
+                htmlField = this;
+            },
+        });
+        await mountView({
+            resModel: "mailing.mailing",
+            type: "form",
+            arch: mailViewArch,
+            resIds: [3, 4, 5],
+            resId: 3,
+        });
+        // readonly default
+        expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
+            "o_default_theme"
+        );
+        expect(getPagerValue()).toEqual([1]);
+        expect(getPagerLimit()).toBe(3);
+        expect(htmlField.state.activeTheme).toBe("default");
+        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
+        // editable basic
+        await contains(`.o_pager_next`).click();
+        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_basic_theme", {
+            timeout: 3000,
+        });
+        expect(getPagerValue()).toEqual([2]);
+        expect(htmlField.state.activeTheme).toBe("basic");
+        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
+        // editable builder
+        await contains(`.o_pager_next`).click();
+        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_empty_theme", {
+            timeout: 3000,
+        });
+        expect(getPagerValue()).toEqual([3]);
+        expect(htmlField.state.activeTheme).toBe("empty");
+        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(1);
+        // readonly default
+        await contains(`.o_pager_next`).click();
+        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_default_theme", {
+            timeout: 3000,
+        });
+        expect(getPagerValue()).toEqual([1]);
+        expect(htmlField.state.activeTheme).toBe("default");
+        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
     });
 });
 describe("field HTML: with loaded assets", () => {
