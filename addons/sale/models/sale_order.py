@@ -1276,7 +1276,7 @@ class SaleOrder(models.Model):
         pending_email_orders = self.search([('pending_email_template_id', '!=', False)])
         self.env['ir.cron']._commit_progress(remaining=len(pending_email_orders))
         for order in pending_email_orders:
-            order = order[0]  # Avoid pre-fetching after each cache invalidation due to committing.
+            order = order.with_prefetch()  # Avoid pre-fetching after each cache invalidation due to committing.
             order._send_order_notification_mail(
                 order.pending_email_template_id, allow_deferred_sending=False
             )  # Resume the email sending.
