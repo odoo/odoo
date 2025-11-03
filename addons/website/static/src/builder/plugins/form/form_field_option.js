@@ -96,6 +96,14 @@ export class FormFieldOption extends BaseOptionComponent {
             };
         });
 
+        this.canLinkStateToCountry = useDomState((el) => {
+            const formEl = el.closest("form");
+            const hasCountryField = !!formEl.querySelector(
+                ".s_website_form_input[name='country_id']"
+            );
+            return { value: getFieldName(el) === "state_id" && hasCountryField };
+        });
+
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await loadFieldOptionData(el);
