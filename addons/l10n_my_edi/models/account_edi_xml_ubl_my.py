@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-from datetime import datetime
 
+from datetime import datetime
 from pytz import UTC
+from lxml import etree
 
 from odoo import api, models
 from odoo.tools import html2plaintext
@@ -334,6 +335,17 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         }
 
     def _add_myinvois_document_header_nodes(self, document_node, vals):
+        original_document_id = None
+        if vals['document_type_code'] in {'02', '03', '04', '12', '13', '14'} and vals['original_document']:
+            if vals['original_document'].myinvois_file_id:
+                decoded_vals = self._l10n_my_edi_decode_myinvois_attachment(vals['original_document'].myinvois_file_id)
+                original_document_id = decoded_vals.get('original_document_id')
+            original_invoice = vals['original_document'].invoice_ids[:1]
+            if not original_document_id and vals['document_type_code'] in {'12', '13', '14'} and original_invoice.ref:
+                original_document_id = original_invoice.ref
+            if not original_document_id:
+                original_document_id = vals['original_document'].name
+
         document_node.update({
             'cbc:UBLVersionID': None,
             'cbc:ID': {'_text': vals['document_name']},
@@ -357,7 +369,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             # managed outside Odoo/...)
             'cac:BillingReference': {
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': (vals['original_document'] and vals['original_document'].name) or 'NA'},
+                    'cbc:ID': {'_text': original_document_id or 'NA'},
                     'cbc:UUID': {'_text': (vals['original_document'] and vals['original_document'].myinvois_external_uuid) or 'NA'},
                 }
             } if vals['document_type_code'] in {'02', '03', '04', '12', '13', '14'} else None,
@@ -654,6 +666,32 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         }
 
         constraints[f'myinvois_{record_identifier}_{code}'] = message_mapping[code]
+
+    @api.model
+    def _l10n_my_edi_decode_myinvois_attachment(self, attachment):
+        """ Extract data from MyInvois xml. """
+        def get_node(node, xpath):
+            nodes = node.xpath(xpath)
+            return nodes[0] if nodes else None
+
+        def get_value(node):
+            if node is None:
+                return None
+            return node.text
+
+        vals = {}
+        try:
+            root = etree.fromstring(attachment.raw)
+            invoice_id_node = get_node(root, "//*[local-name()='Invoice']/*[local-name()='ID']")
+        except etree.XMLSyntaxError:
+            # Not an xml
+            return {}
+        except AttributeError:
+            # Not a MyInvois xml
+            return {}
+
+        vals['original_document_id'] = get_value(invoice_id_node)
+        return vals
 
     # ----------------
     # EXPORT: Business methods
