@@ -1,13 +1,12 @@
 import { Component } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { getClassNameFromDecoration } from "@web/views/utils";
-import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { DateTimeField } from "../datetime/datetime_field";
 import { standardFieldProps } from "../standard_field_props";
 import { capitalize } from "@web/core/utils/strings";
+import { formatDate } from "../formatters";
 
 const { DateTime } = luxon;
 
@@ -54,9 +53,12 @@ export class RemainingDaysField extends Component {
 
     get formattedValue() {
         const { record, name } = this.props;
-        return record.fields[name].type === "datetime"
-            ? formatDateTime(record.data[name], { format: localization.dateFormat })
-            : formatDate(record.data[name]);
+        return formatDate(record.data[name]);
+    }
+
+    get numericValue() {
+        const { record, name } = this.props;
+        return formatDate(record.data[name], { numeric: true });
     }
 
     get classNames() {
