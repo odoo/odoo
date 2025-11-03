@@ -516,6 +516,64 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         prepaid_node = root.xpath('cac:PrepaidPayment/cbc:PaidAmount', namespaces=NS_MAP)
         self.assertEqual(prepaid_node[0].text, '2200.00')
 
+    def test_11_original_document_id(self):
+        """
+        Ensure the original document id is present in the reversed document.
+        """
+        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        bill.ref = 'BILL-123'
+        action = bill.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=bill.ids,
+            active_model='account.move',
+            default_journal_id=bill.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+
+        file, _errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+        self._assert_node_values(
+            root,
+            'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
+            'BILL-123',
+        )
+
+    def test_12_original_document_id_from_xml(self):
+        """
+        Ensure the original document id is present in the reversed document even if bill reference has changed after
+        sending.
+        """
+        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+
+        # Set reference before generating e-invoice
+        bill.ref = 'Initial Reference'
+
+        # Generate e-invoice and mock values
+        bill_file, _errors = bill._l10n_my_edi_generate_invoice_xml()
+        bill.l10n_my_edi_file_id = self.env['ir.attachment'].create({'name': 'test myinvois', 'raw': bill_file})
+        bill.ref = 'Some other reference'
+
+        # Generate credit note
+        action = bill.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=bill.ids,
+            active_model='account.move',
+            default_journal_id=bill.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+
+        credit_note_file, _errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(credit_note_file)
+        self._assert_node_values(
+            root,
+            'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
+            'Initial Reference',
+        )
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
