@@ -40,8 +40,10 @@ class ProductTemplate(models.Model):
         help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
 
     def _search_valuation(self, operator, value):
-        if operator != '=' or value not in ['periodic', 'real_time']:
-            raise UserError(_("Invalid search on valuation"))
+        if operator != '=':
+            raise UserError(self.env._("You can only use the '=' operator to search on valuation field."))
+        if value not in ['periodic', 'real_time']:
+            raise UserError(self.env._("Only the value 'periodic' and 'real_time' are accepted to search on valuation field."))
         domain_categ = Domain([('categ_id.property_valuation', operator, value)])
         domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), ('company_id.inventory_valuation', operator, value)])
         return domain_company | domain_categ
