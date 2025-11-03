@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from datetime import datetime
 
+from datetime import datetime
 from pytz import UTC
+from lxml import etree
 
 from odoo import _, api, models
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
@@ -140,9 +141,19 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # The original document is mandatory; but in some specific cases it will be empty (sending a credit note for an invoice
         # managed outside Odoo/...)
         if document_type_code in ('02', '03', '04', '12', '13', '14'):
+            original_document_id = None
+            if original_document:
+                if original_document.l10n_my_edi_file_id:
+                    decoded_vals = self._decode_myinvois_attachment(original_document.l10n_my_edi_file_id)
+                    original_document_id = decoded_vals.get('original_document_id')
+                if not original_document_id and self._is_self_billed(document_type_code) and original_document.ref:
+                    original_document_id = original_document.ref
+                if not original_document_id:
+                    original_document_id = original_document.name
+
             vals['vals'].update({
                 'billing_reference_vals': {
-                    'id': (original_document and original_document.name) or 'NA',
+                    'id': original_document_id or 'NA',
                     'uuid': (original_document and original_document.l10n_my_edi_external_uuid) or 'NA',
                 },
             })
@@ -155,6 +166,31 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             },
         })
 
+        return vals
+
+    def _decode_myinvois_attachment(self, attachment):
+        """ Extract data from MyInvois xml. """
+        def get_node(node, xpath):
+            nodes = node.xpath(xpath)
+            return nodes[0] if nodes else None
+
+        def get_value(node):
+            if node is None:
+                return None
+            return node.text
+
+        vals = {}
+        try:
+            root = etree.fromstring(attachment.raw)
+            invoice_id_node = get_node(root, "//*[local-name()='Invoice']/*[local-name()='ID']")
+        except etree.XMLSyntaxError:
+            # Not an xml
+            return {}
+        except AttributeError:
+            # Not a MyInvois xml
+            return {}
+
+        vals['original_document_id'] = get_value(invoice_id_node)
         return vals
 
     def _get_delivery_vals_list(self, invoice):
