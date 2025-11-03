@@ -287,7 +287,7 @@ export class DiscussCommandPalette {
                 },
                 name: _t("Create Chat"),
                 className: "d-flex",
-                props: { action: { icon: "fa fa-fw fa-users" } },
+                props: { action: { icon: "oi fa-fw oi-users" } },
             };
         }
         throw new Error(`Unsupported use of makeDiscussCommand("${threadOrPersona}")`);
