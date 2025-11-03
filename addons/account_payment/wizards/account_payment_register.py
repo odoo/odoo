@@ -1,4 +1,5 @@
-from odoo import api, Command, fields, models
+from odoo import api, fields, models
+from odoo.fields import Command, Domain
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -33,29 +34,37 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_method_line_id')
     def _compute_suitable_payment_token_ids(self):
         for wizard in self:
-            wizard.suitable_payment_token_ids = [Command.clear()]
-            if wizard.can_edit_wizard and wizard.use_electronic_payment_method:
-                batch = wizard.batches[0]
-                partner = batch['lines'].move_id.partner_id
-                if len(partner) == 1:
-                    wizard.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
-                        *self.env['payment.token']._check_company_domain(wizard.company_id),
-                        ('provider_id.capture_manually', '=', False),
-                        ('partner_id', '=', partner.id),
-                        ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
-                    ])
+            if (
+                wizard.can_edit_wizard
+                and wizard.use_electronic_payment_method
+                and (provider := wizard.payment_method_line_id.payment_provider_id)
+                and not provider.capture_manually
+            ):
+                token_partners = wizard.partner_id
+                lines_partners = wizard.batches[0]['lines'].move_id.partner_id
+                if len(lines_partners) == 1:
+                    token_partners |= lines_partners
+                wizard.suitable_payment_token_ids = self.env['payment.token'].sudo().search(
+                    Domain.AND([
+                        Domain('partner_id', 'in', token_partners.ids),
+                        Domain('provider_id', '=', provider.id),
+                        self.env['payment.token']._check_company_domain(wizard.company_id),
+                    ]),
+                )
+            else:
+                wizard.suitable_payment_token_ids = [Command.clear()]
 
     @api.depends('payment_method_line_id')
     def _compute_use_electronic_payment_method(self):
+        # Get all electronic payment method codes.
+        # These codes are comprised of the codes of each payment provider.
+        codes = dict(self.env['payment.provider']._fields['code']._description_selection(self.env))
         for wizard in self:
-            # Get a list of all electronic payment method codes.
-            # These codes are comprised of the codes of each payment provider.
-            codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
             wizard.use_electronic_payment_method = wizard.payment_method_code in codes
 
     @api.depends('can_edit_wizard', 'suitable_payment_token_ids', 'journal_id')
     def _compute_payment_token_id(self):
-        codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
+        codes = dict(self.env['payment.provider']._fields['code']._description_selection(self.env))
         for wizard in self:
             if wizard.payment_method_line_id and wizard.payment_method_line_id.code not in codes:
                 wizard.payment_token_id = False
