@@ -16,6 +16,20 @@ class AccountMove(models.Model):
                 shipping_fields[0].attrib.pop("groups", None)
         return arch, view
 
+    @api.depends('country_code', 'move_type')
+    def _compute_show_delivery_date(self):
+        # EXTENDS 'account'
+        super()._compute_show_delivery_date()
+        for move in self:
+            if move.country_code == 'FR':
+                move.show_delivery_date = move.is_sale_document()
+
+    def _post(self, soft=True):
+        for move in self:
+            if move.country_code == 'FR' and move.is_sale_document() and not move.delivery_date:
+                move.delivery_date = move.invoice_date or fields.Date.context_today(self)
+        return super()._post(soft)
+
     @api.depends('company_id.country_code')
     def _compute_l10n_fr_is_company_french(self):
         for record in self:
