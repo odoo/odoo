@@ -4,6 +4,8 @@
 
         <template id="custom_header" inherit_id="l10n_ar.custom_header" primary="True">
             <xpath expr="//div[@id='l10n_ar_header_right']//span" position="replace">
+                <span t-att-style="'color: %s;' % o.company_id.secondary_color"><strong>DOCUMENT NOT VALID AS AN INVOICE</strong></span>
+                <br/>
                 <span t-att-style="'color: %s;' % o.company_id.secondary_color">Delivery Guide No: </span>
                 <span t-out="o.l10n_ar_delivery_guide_number"/>
             </xpath>
@@ -65,8 +67,8 @@
             </xpath>
             <xpath expr="//t[@t-set='address']" position="replace"/>
             <xpath expr="//t[@t-set='information_block']" position="replace"/>
-            <xpath expr="//span[@t-field='o.name']" position="replace">
-                <span t-field="o.l10n_ar_delivery_guide_number"/>
+            <xpath expr="//h2/span[@t-field='o.name']/.." position="replace">
+                <br/>
             </xpath>
         </template>
 
