@@ -20,12 +20,12 @@ according to the enabled options.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 <span class="me-1">Show:</span>
                 <div class="btn-group btn-group-sm">
-                    <a t-attf-class="btn #{state == 'published' and 'btn-success' or 'btn-default bg-white border'}"
+                    <a t-attf-class="btn #{state == 'published' and 'btn-success' or 'bg-white border'}"
                        t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">
                         <i t-attf-class="fa me-1 #{state == 'published' and 'fa-check-square-o' or 'fa-square-o'}"/>
                         Published (<t t-out="state_info['published']" />)
                     </a>
-                    <a t-attf-class="btn #{state == 'unpublished' and 'btn-success' or 'btn-default bg-white border'}"
+                    <a t-attf-class="btn #{state == 'unpublished' and 'btn-success' or 'bg-white border'}"
                        t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">
                         <i t-attf-class="fa me-1 #{state == 'unpublished' and 'fa-check-square-o' or 'fa-square-o'}"/>
                         Unpublished (<t t-out="state_info['unpublished']" />)
