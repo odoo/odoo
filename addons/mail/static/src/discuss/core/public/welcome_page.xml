@@ -2,27 +2,27 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.WelcomePage">
-    <t t-set="showCallPreview" t-value="store.discuss.thread.channel.default_display_mode === 'video_full_screen'"/>
     <div class="o-mail-WelcomePage w-100 d-flex flex-column justify-content-md-center align-items-center bg-light p-3" style="min-height: 100dvh;">
         <h1 class="fw-light text-center">
-            <span t-if="this.store.discuss.thread.channel.default_display_mode === 'video_full_screen'">You've been invited to a meeting!</span>
+            <span t-if="showCallPreview">You've been invited to a meeting!</span>
             <span t-else="">You've been invited to a chat!</span>
         </h1>
         <h2 class="m-3 m-md-5" t-esc="store.companyName"/>
         <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
             <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
-                <CallPreview onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
+                <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
             </div>
             <div class="d-flex flex-column text-center justify-content-center">
-                <div class="d-flex flex-column gap-2" t-if="store.self_guest and !store.self_user">
-                    <label class="fs-4" >What's your name?</label>
-                    <input class="form-control mb-3 bg-white rounded" type="text" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
+                <div class="d-flex flex-column" t-if="store.self_guest and !store.self_user">
+                    <label class="fs-4 mb-2">What's your name?</label>
+                    <input class="form-control bg-white rounded" type="text" name="guest_name" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
+                    <small class="form-text text-end" t-att-class="{'text-danger': state.userName.length > 60}"><t t-out="state.userName.length"/>/60</small>
                 </div>
                 <div class="fs-3" t-if="store.self_user">
                     <p>Ready to join?</p>
                     <p t-if="showCallPreview and noActiveParticipants">No one else is here.</p>
                 </div>
-                <button class="d-flex btn btn-light rounded-pill align-items-center justify-content-center gap-3 px-4 fs-3" title="Join Channel" t-on-click="joinChannel">
+                <button class="d-flex btn btn-light rounded-pill align-items-center justify-content-center gap-3 px-4 fs-3" title="Join Channel" t-att-disabled="!canJoin" t-on-click="joinChannel">
                     <t t-if="showCallPreview" t-set="joinText">Join call</t>
                     <t t-else="" t-set="joinText">Join</t>
                     <span class="mb-0 text-success" t-esc="joinText"/>

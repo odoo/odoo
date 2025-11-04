@@ -3,6 +3,11 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
     steps: () => [
         {
+            content: "Close the video permission dialog",
+            trigger: ".o_dialog .modal-header .btn-close",
+            run: "click",
+        },
+        {
             content: "The call does not start on the welcome page",
             trigger: ".o-mail-WelcomePage",
             async run() {
@@ -12,6 +17,11 @@ registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
                     console.error("The call should not have started.");
                 }
             },
+        },
+        {
+            content: "Fill in guest name",
+            trigger: "input[name='guest_name']",
+            run: "edit Guest",
         },
         {
             content: "Click join",
