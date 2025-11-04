@@ -567,6 +567,7 @@ class MailActivity(models.Model):
 
         for model, activity_data in self._classify_by_model().items():
             records = self.env[model].browse(activity_data['record_ids'])
+            existing = records.exists()  # in case record was cascade-deleted in DB, skipping unlink override
             for record, activity in zip(records, activity_data['activities']):
                 # extract value to generate next activities
                 if activity.chaining_type == 'trigger':
@@ -574,22 +575,25 @@ class MailActivity(models.Model):
                     next_activities_values.append(vals)
 
                 # post message on activity, before deleting it
-                activity_message = record.message_post_with_view(
-                    'mail.message_activity_done',
-                    values={
-                        'activity': activity,
-                        'feedback': feedback,
-                        'display_assignee': activity.user_id != self.env.user
-                    },
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_activities'),
-                    mail_activity_type_id=activity.activity_type_id.id,
-                    attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
-                )
+                if record in existing:
+                    activity_message = record.message_post_with_view(
+                        'mail.message_activity_done',
+                        values={
+                            'activity': activity,
+                            'feedback': feedback,
+                            'display_assignee': activity.user_id != self.env.user
+                        },
+                        subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_activities'),
+                        mail_activity_type_id=activity.activity_type_id.id,
+                        attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
+                    )
+                else:
+                    activity_message = self.env['mail.message']
 
                 # Moving the attachments in the message
                 # TODO: Fix void res_id on attachment when you create an activity with an image
                 # directly, see route /web_editor/attachment/add
-                if activity_attachments[activity.id]:
+                if activity_attachments[activity.id] and activity_message:
                     message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
                     if message_attachments:
                         message_attachments.write({
@@ -597,6 +601,9 @@ class MailActivity(models.Model):
                             'res_model': activity_message._name,
                         })
                         activity_message.attachment_ids = message_attachments
+                # removing attachments linked to activity if record is missing
+                elif activity_attachments[activity.id]:
+                    self.env['ir.attachment'].browse(activity_attachments[activity.id]).unlink()
                 messages += activity_message
 
         next_activities = self.env['mail.activity']
