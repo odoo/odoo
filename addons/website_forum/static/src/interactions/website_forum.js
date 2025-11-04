@@ -114,6 +114,7 @@ export class WebsiteForum extends Interaction {
                     showHeading3: false,
                     showLink: hasFullEdit,
                     showImageEdit: hasFullEdit,
+                    showImageWidth: false,
                 },
                 recordInfo: {
                     context: this.services.website_page.context,
@@ -127,6 +128,7 @@ export class WebsiteForum extends Interaction {
                 value: textareaEl.getAttribute("content"),
                 resizable: true,
                 userGeneratedContent: true,
+                disableTransform: true,
                 height: 350,
             };
             options.allowCommandLink = hasFullEdit;
