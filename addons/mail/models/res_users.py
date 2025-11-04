@@ -690,7 +690,7 @@ class ResUsers(models.Model):
                         'author_name': author.name,
                         'model': model,
                         'res_id': res_id,
-                    },
+                    } | extra_payload,  # FIXME: clean this up with a better api
                 }
             } | extra_payload
             self.env['mail.thread']._web_push_send_notification(devices, private_key, public_key, payload=payload_webpush, force_direct_send=force_direct_send)
