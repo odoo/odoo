@@ -4,11 +4,38 @@ import { withSequence } from "@html_editor/utils/resource";
 import { groupBy } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/**
+ * @typedef { Object } SaveShared
+ * @property { SavePlugin['save'] } save
+ * @property { SavePlugin['saveView'] } saveView
+ * @property { SavePlugin['ignoreDirty'] } ignoreDirty
+ */
+
+/**
+ * @typedef {(() => void)[]} after_save_handlers
+ * @typedef {((el: HTMLElement) => Promise<Map<string,string> | void>)[]} before_save_handlers
+ * Called at the very beginning of the save process.
+ *
+ * @typedef {((el: HTMLElement) => Promise<void>)[]} save_element_handlers
+ * Called when saving an element (in parallel to saving the view).
+ *
+ * @typedef {(() => Promise<boolean>)[]} save_handlers
+ * Called at the very end of the save process.
+ *
+ * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
+ *
+ * @typedef {(() => HTMLElement[] | NodeList)[]} get_dirty_els
+ *
+ * @typedef {CSSSelector[]} savable_selectors
+ */
+
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
     static shared = ["save", "saveView", "ignoreDirty"];
     static dependencies = ["history"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         handleNewRecords: this.handleMutations.bind(this),
         start_edition_handlers: this.startObserving.bind(this),
@@ -18,28 +45,13 @@ export class SavePlugin extends Plugin {
             "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])",
             "#wrapwrap .s_cover[data-res-model]",
         ],
-        before_save_handlers: [
-            // async () => {
-            //     called at the very beginning of the save process
-            // }
-        ],
         clean_for_save_handlers: [
             // ({root}) => {
             //     clean DOM before save (leaving edit mode)
             //     root is the clone of a node that was o_dirty
             // }
         ],
-        save_element_handlers: [
-            // async (el) => {
-            //     called when saving an element (in parallel to saving the view)
-            // }
-            this.saveView.bind(this),
-        ],
-        save_handlers: [
-            // async () => {
-            //     called at the very end of the save process
-            // }
-        ],
+        save_element_handlers: [this.saveView.bind(this)],
         get_dirty_els: () => this.editable.querySelectorAll(".o_dirty"),
         // Do not change the sequence of this resource, it must stay the first
         // one to avoid marking dirty when not needed during the drag and drop.
