@@ -1,6 +1,5 @@
 import { Component, useEffect, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { Thread } from "@mail/core/common/thread_model";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { useHover } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -9,12 +8,13 @@ import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {Object} Props
- * @property {import("models").Thread} thread
+ * @property {import("models").DiscussChannel} channel
+ * @property {Boolean|undefined} [compact]
  * @extends {Component<Props, Env>}
  */
 export class DiscussSidebarCallParticipants extends Component {
     static template = "mail.DiscussSidebarCallParticipants";
-    static props = { thread: { type: Thread }, compact: { type: Boolean, optional: true } };
+    static props = ["channel", "compact?"];
     static components = { AvatarStack, DiscussSidebarCallParticipants, Dropdown };
 
     setup() {
@@ -48,7 +48,7 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     get lastActiveSession() {
-        const sessions = [...this.props.thread.rtc_session_ids];
+        const sessions = [...this.props.channel.rtc_session_ids];
         sessions?.sort((s1, s2) => {
             if (s1.isActuallyTalking && !s2.isActuallyTalking) {
                 return -1;
@@ -74,7 +74,7 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     get sessions() {
-        const sessions = [...this.props.thread.rtc_session_ids];
+        const sessions = [...this.props.channel.rtc_session_ids];
         return sessions.sort((s1, s2) => {
             const persona1 = s1.channel_member_id?.persona;
             const persona2 = s2.channel_member_id?.persona;

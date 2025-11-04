@@ -4,7 +4,7 @@
     <t t-name="discuss.CallInvitations">
         <div t-if="store.ringingThreads.length > 0" class="o-discuss-CallInvitations position-fixed top-0 end-0 d-flex flex-column p-2">
             <t t-foreach="store.ringingThreads" t-as="thread" t-key="thread.localId">
-                <CallInvitation thread="thread"/>
+                <CallInvitation channel="thread.channel"/>
             </t>
         </div>
     </t>

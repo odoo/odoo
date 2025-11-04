@@ -17,7 +17,7 @@ export class CallParticipantCard extends Component {
     static props = [
         "className",
         "cardData",
-        "thread",
+        "channel",
         "minimized?",
         "inset?",
         "isSidebarItem?",
@@ -195,7 +195,7 @@ export class CallParticipantCard extends Component {
             return;
         }
         await rpc("/mail/rtc/channel/cancel_call_invitation", {
-            channel_id: this.props.thread.id,
+            channel_id: this.props.channel.id,
             member_ids: [this.channelMember.id],
         });
     }
