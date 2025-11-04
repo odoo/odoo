@@ -279,9 +279,9 @@ export async function setupHTMLBuilder(
         setup() {
             super.setup();
             _resolve();
-            editableContent = this.getEditableElements(
-                '.oe_structure.oe_empty, [data-oe-type="html"]'
-            )[0];
+            editableContent = this.editable.querySelector(
+                '.o_savable.oe_structure.oe_empty, .o_savable[data-oe-type="html"]'
+            );
         },
     });
 

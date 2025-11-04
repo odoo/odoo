@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             run: "click",
         },
         {
-            trigger: '[name="body_arch"] :iframe .o_editable h1',
+            trigger: '[name="body_arch"] :iframe .o_savable h1',
             content: 'Verify that the title was inserted properly in the editor',
         },
         ...stepUtils.discardForm(),

@@ -188,7 +188,7 @@ registerWebsitePreviewTour(
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Footer should not be be editable for restricted user",
-            trigger: ":iframe :has(.o_editable) footer:not(.o_editable):not(:has(.o_editable))",
+            trigger: ":iframe :has(.o_savable) footer:not(.o_savable):not(:has(.o_savable))",
         },
         ...clickOnSave(),
     ]

@@ -565,7 +565,7 @@ export class DomPlugin extends Plugin {
     /**
      * Determines if a block element can be safely retagged.
      *
-     * Certain blocks (like 'o_editable') should not be retagged because doing so
+     * Certain blocks (like 'o_savable') should not be retagged because doing so
      * will recreate the block, potentially causing issues. This function checks
      * if retagging a block is safe.
      *

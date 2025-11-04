@@ -145,7 +145,7 @@ function singleLanguage() {
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Edit template text",
-            trigger: ":iframe main p.o_editable[data-oe-field='arch'][contenteditable='true']",
+            trigger: ":iframe main p.o_savable[data-oe-field='arch'][contenteditable='true']",
             run: "editor Modified Text",
         },
         ...clickOnSave("bottom", 50000, false),
@@ -392,7 +392,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Edit template text",
-            trigger: ":iframe main p.o_editable[contenteditable='true']",
+            trigger: ":iframe main p.o_savable[contenteditable='true']",
             run: "editor Modified View",
         },
         ...clickOnSave("bottom", 50000, false),
@@ -428,7 +428,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Edit template text",
-            trigger: ":iframe main p.o_editable[data-oe-field='arch'][contenteditable='true']",
+            trigger: ":iframe main p.o_savable[data-oe-field='arch'][contenteditable='true']",
             run: "editor Even more modified Text",
         },
         ...clickOnSave("bottom", 50000, false),
