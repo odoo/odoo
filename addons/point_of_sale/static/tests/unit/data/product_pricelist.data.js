@@ -20,5 +20,11 @@ export class ProductPricelist extends models.ServerModel {
             display_name: "Test Pricelist B (USD)",
             item_ids: [1],
         },
+        {
+            id: 3,
+            name: "Test Pricelist 90%",
+            display_name: "Test Pricelist 90% (USD)",
+            item_ids: [2],
+        },
     ];
 }
