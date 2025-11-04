@@ -4,6 +4,29 @@ import { isElement } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/**
+ * @typedef {{
+ *     selector: CSSSelector;
+ *     exclude: CSSSelector;
+ *     dropIn: CSSSelector;
+ *     dropNear: CSSSelector;
+ *     excludeNearParent: CSSSelector;
+ * }} DropzoneSelector
+ *
+ * @typedef { Object } DropZoneShared
+ * @property { DropZonePlugin['activateDropzones'] } activateDropzones
+ * @property { DropZonePlugin['removeDropzones'] } removeDropzones
+ * @property { DropZonePlugin['getDropRootElement'] } getDropRootElement
+ * @property { DropZonePlugin['getSelectorSiblings'] } getSelectorSiblings
+ * @property { DropZonePlugin['getSelectorChildren'] } getSelectorChildren
+ * @property { DropZonePlugin['getSelectors'] } getSelectors
+ */
+
+/**
+ * @typedef {DropzoneSelector[]} dropzone_selector
+ */
+
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history", "setup_editor_plugin"];
@@ -15,6 +38,7 @@ export class DropZonePlugin extends Plugin {
         "getSelectorChildren",
         "getSelectors",
     ];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         savable_mutation_record_predicates: (record) => {
             if (record.type === "childList") {

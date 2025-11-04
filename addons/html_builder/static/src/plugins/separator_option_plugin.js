@@ -5,6 +5,7 @@ import { BorderConfigurator } from "./border_configurator_option";
 
 class SeparatorOptionPlugin extends Plugin {
     static id = "separatorOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [SeparatorOption],
         dropzone_selector: {

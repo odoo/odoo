@@ -7,6 +7,7 @@ import { VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 
 export class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "verticalAlignmentOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(VERTICAL_ALIGNMENT, VerticalAlignmentOption)],
         builder_actions: {

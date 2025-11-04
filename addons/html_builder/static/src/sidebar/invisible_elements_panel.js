@@ -1,6 +1,10 @@
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
 
+/**
+ * @typedef {((snippetEl: HTMLElement) => void)[]} on_reveal_target_handlers
+ */
+
 export class InvisibleElementsPanel extends Component {
     static template = "html_builder.InvisibleElementsPanel";
     static props = {

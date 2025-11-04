@@ -15,6 +15,7 @@ const OLD_STYLES = ["border-width", "border-radius"];
 
 export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     static id = "compatibilityInlineBorderRemoval";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         apply_custom_css_style: withSequence(20, this.removeInlineBorderIfNecessary.bind(this)),
     };
