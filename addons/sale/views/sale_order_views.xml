@@ -579,6 +579,18 @@
                                 <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                 <field name="name"/>
+                                <group>
+                                    <field
+                                        name="collapse_composition"
+                                        invisible="display_type not in ['line_section', 'line_subsection']"
+                                        readonly="1"
+                                    />
+                                    <field
+                                        name="collapse_prices"
+                                        invisible="display_type not in ['line_section', 'line_subsection']"
+                                        readonly="1"
+                                    />
+                                </group>
                                 <div name="invoice_lines" groups="base.group_no_one" invisible="display_type">
                                     <label for="invoice_lines"/>
                                     <field name="invoice_lines"/>
@@ -618,8 +630,8 @@
                                 <field name="selected_combo_items" column_invisible="1"/>
                                 <field name="virtual_id" column_invisible="1"/>
                                 <field name="linked_virtual_id" column_invisible="1"/>
-                                <field name="collapse_prices" column_invisible="1"/>
                                 <field name="collapse_composition" column_invisible="1"/>
+                                <field name="collapse_prices" column_invisible="1"/>
 
                                 <!-- Currency, needed for monetary widgets to display the currency symbol -->
                                 <field name="currency_id" column_invisible="True"/>
