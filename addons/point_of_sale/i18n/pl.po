@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 18:36+0000\n"
+"POT-Creation-Date: 2025-10-31 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -8221,6 +8221,15 @@ msgid "This invoice has been created from the point of sale session: %s"
 msgstr "Ta faktura została utworzona z sesji punktu sprzedaży: %s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"This invoice is linked to a POS Order, resetting it to draft prevents "
+"closing the session. You should rather refund the order or create a credit "
+"note."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
@@ -8903,6 +8912,12 @@ msgid ""
 msgstr "Uwaga, zapłacona kwota jest wyższa niż suma całkowita. (Różnica: %s)"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid "Warning: Invoice Reset Risk"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -9165,14 +9180,6 @@ msgstr "Nie możesz edytować płatności dla opublikowanego zamówienia."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "Nie możesz fakturować zamówień należących do różnych firm."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_move.py:0
-msgid ""
-"You cannot reset to draft an invoice linked to a POS order. You must refund "
-"the order or create a credit note instead."
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

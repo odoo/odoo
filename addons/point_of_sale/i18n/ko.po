@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 18:36+0000\n"
+"POT-Creation-Date: 2025-10-31 18:37+0000\n"
 "PO-Revision-Date: 2025-10-21 22:20+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/"
@@ -8106,6 +8106,15 @@ msgid "This invoice has been created from the point of sale session: %s"
 msgstr "POS 세션에서 생성된 청구서입니다: %s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"This invoice is linked to a POS Order, resetting it to draft prevents "
+"closing the session. You should rather refund the order or create a credit "
+"note."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
@@ -8775,6 +8784,12 @@ msgid ""
 msgstr "경고, 결제 금액이 총 금액보다 높습니다. (금액차: %s)"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid "Warning: Invoice Reset Risk"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid ""
@@ -9031,14 +9046,6 @@ msgstr "게시가 완료된 주문서는 결제를 수정할 수 없습니다."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "다른 회사의 주문에 대해서는 청구서를 발행할 수 없습니다."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_move.py:0
-msgid ""
-"You cannot reset to draft an invoice linked to a POS order. You must refund "
-"the order or create a credit note instead."
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
