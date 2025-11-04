@@ -53,16 +53,16 @@ class HrExpensePostWizard(models.TransientModel):
             }
             for new_receipt_vals in expenses._prepare_receipts_vals()
         ]
-        moves = self.env['account.move'].sudo().create(expense_receipt_vals_list)
-        for move in moves:
-            move._message_set_main_attachment_id(move.attachment_ids, force=True, filter_xml=False)
-        moves.action_post()
+        moves_sudo = self.env['account.move'].sudo().create(expense_receipt_vals_list)
+        for move_sudo in moves_sudo:
+            move_sudo._message_set_main_attachment_id(move_sudo.attachment_ids, force=True, filter_xml=False)
+        moves_sudo.action_post()
 
         if not self.company_id.expense_journal_id:  # Sets the default one if not specified
             self.sudo().company_id.expense_journal_id = self.employee_journal_id.id
 
         # Add the company_paid ids to the redirect
-        moves_ids = moves.ids + self.env.context.get('company_paid_move_ids', tuple())
+        moves_ids = moves_sudo.ids + self.env.context.get('company_paid_move_ids', tuple())
 
         action = {
             'type': 'ir.actions.act_window',
@@ -70,7 +70,7 @@ class HrExpensePostWizard(models.TransientModel):
         }
         if len(moves_ids) == 1:
             action.update({
-                'name': moves.ref,
+                'name': moves_sudo.ref,
                 'view_mode': 'form',
                 'res_id': moves_ids[0],
             })
