@@ -34,6 +34,7 @@ export class ToggleBlockPlugin extends Plugin {
         "selection",
         "split",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         hints: [
             withSequence(20, {

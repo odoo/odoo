@@ -26,9 +26,15 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
     - on non-editable links or links that are not within the editable area
  */
 
+/**
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} ineligible_link_for_selection_indication_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} ineligible_link_for_zwnbsp_predicates
+ */
+
 export class LinkSelectionPlugin extends Plugin {
     static id = "linkSelection";
     static dependencies = ["selection", "feff"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         selectionchange_handlers: this.resetLinkInSelection.bind(this),

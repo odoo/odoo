@@ -6,7 +6,6 @@ export const isValidTargetForDomListener = (target) =>
 /**
  * @typedef { import("./editor").Editor } Editor
  * @typedef { import("./editor").EditorContext } EditorContext
- * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
  */
 
 export class Plugin {
@@ -14,6 +13,9 @@ export class Plugin {
     static dependencies = [];
     static shared = [];
     static defaultConfig = {};
+
+    /** @type {Partial<import("plugins").Resources>} */
+    resources;
 
     /**
      * @param { EditorContext } context

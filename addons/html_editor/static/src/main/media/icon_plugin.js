@@ -8,6 +8,7 @@ import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
 export class IconPlugin extends Plugin {
     static id = "icon";
     static dependencies = ["history", "selection", "dialog"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

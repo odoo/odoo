@@ -81,6 +81,7 @@ export class ListPlugin extends Plugin {
         allowChecklist: true,
     };
     toolbarListSelectorKey = reactive({ value: 0 });
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

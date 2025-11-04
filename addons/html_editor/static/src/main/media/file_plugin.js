@@ -13,6 +13,7 @@ export class FilePlugin extends Plugin {
     static defaultConfig = {
         allowFile: true,
     };
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: {
             id: "uploadFile",

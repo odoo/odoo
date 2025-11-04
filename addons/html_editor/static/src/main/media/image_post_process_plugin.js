@@ -20,6 +20,27 @@ export const DEFAULT_IMAGE_QUALITY = "75";
  * @property { ImagePostProcessPlugin['getProcessedImageSize'] } getProcessedImageSize
  */
 
+/**
+ * @typedef {(
+ *   (img: HTMLImageElement, newDataset: object) => Promise<{
+ *     getHeight: (canvas: HTMLCanvasElement) => number,
+ *     perspective: string | null,
+ *     newDataset: object,
+ *     postProcessCroppedCanvas: (canvas: HTMLCanvasElement) => Promise<HTMLCanvasElement>,
+ *     svg: SVGElement,
+ *     svgAspectRatio: number,
+ *     svgWidth: number,
+ *   }>
+ * )[]} process_image_warmup_handlers
+ * @typedef {(
+ *   (
+ *     url: string,
+ *     newDataset: object,
+ *     processContext: { svg: SVGElement, svgAspectRatio: number, svgWidth: number }
+ *   ) => Promise<[newUrl: string, handlerDataset: object]>
+ * )[]} process_image_post_handlers
+ */
+
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";
     static dependencies = ["style"];

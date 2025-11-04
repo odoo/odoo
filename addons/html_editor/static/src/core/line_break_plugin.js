@@ -14,10 +14,16 @@ import { nextLeaf } from "../utils/dom_info";
  * @property { LineBreakPlugin['insertLineBreakNode'] } insertLineBreakNode
  */
 
+/**
+ * @typedef {(() => void)[]} before_line_break_handlers
+ * @typedef {((params: { targetNode: Element, targetOffset: number }) => void | true)[]} insert_line_break_element_overrides
+ */
+
 export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "history", "input", "delete"];
     static id = "lineBreak";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
         legit_feff_predicates: [

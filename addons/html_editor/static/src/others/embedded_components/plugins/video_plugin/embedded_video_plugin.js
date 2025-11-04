@@ -9,6 +9,7 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
     static dependencies = ["embeddedComponents", "selection", "history", "overlay", "media"];
 
     // Extends the base class resources
+    /** @type {import("plugins").EditorResources} */
     resources = {
         ...this.resources,
         mount_component_handlers: this.extendEmbeddedVideoProps.bind(this),

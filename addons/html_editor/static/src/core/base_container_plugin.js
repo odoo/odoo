@@ -27,6 +27,10 @@ import { childNodeIndex } from "@html_editor/utils/position";
  * @property { BaseContainerPlugin['isCandidateForBaseContainer'] } isCandidateForBaseContainer
  */
 
+/**
+ * @typedef {((node: Node) => boolean)[]} invalid_for_base_container_predicates
+ */
+
 export class BaseContainerPlugin extends Plugin {
     static id = "baseContainer";
     static shared = ["createBaseContainer", "getDefaultNodeName", "isCandidateForBaseContainer"];
@@ -47,6 +51,7 @@ export class BaseContainerPlugin extends Plugin {
      */
     isUnsplittablePredicate = (element) =>
         this.getResource("unsplittable_node_predicates").some((fn) => fn(element));
+    /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         // `baseContainer` normalization should occur after every other normalization
