@@ -46,15 +46,16 @@ class ProductTemplate(models.Model):
         help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
              "Delivered Quantity: Invoice quantities delivered to the customer.")
     optional_product_ids = fields.Many2many(
-        comodel_name='product.template',
-        relation='product_optional_rel',
-        column1='src_id',
-        column2='dest_id',
         string="Optional Products",
         help="Optional Products are suggested "
              "whenever the customer hits *Add to Cart* (cross-sell strategy, "
              "e.g. for computers: warranty, software, etc.).",
-        check_company=True)
+        comodel_name='product.template',
+        relation='product_optional_rel',
+        column1='src_id',
+        column2='dest_id',
+        check_company=True,
+    )
 
     @api.depends('invoice_policy', 'sale_ok', 'service_tracking')
     def _compute_product_tooltip(self):

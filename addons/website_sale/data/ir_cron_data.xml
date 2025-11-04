@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    
+    <record id="ir_cron_update_suggested_products" model="ir.cron">
+        <field name="name">eCommerce: update suggested products</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="code">model._update_suggested_products(batch_size=100)</field>
+        <field name="active">False</field>
+        <field name="state">code</field>
+    </record>
 
     <record id="ir_cron_send_availability_email" model="ir.cron">
         <field name="name">eCommerce: send email to customers about their abandoned cart</field>

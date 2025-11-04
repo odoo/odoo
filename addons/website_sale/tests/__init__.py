@@ -37,6 +37,7 @@ from . import (
     test_show_compare_list_price,
     test_sitemap,
     test_snippets,
+    test_suggested_products,
     test_technical_page,
     test_website_editor,
     test_website_sale_checkout_steps,

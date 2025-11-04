@@ -267,4 +267,14 @@
         </field>
     </record>
 
+    <record id="action_update_suggested_products" model="ir.actions.server">
+            <field name="name">Update suggested products</field>
+            <field name="model_id" ref="website_sale.model_product_template"/>
+            <field name="binding_model_id" ref="website_sale.model_product_template"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="group_ids" eval="[(4, ref('website_sale.group_suggested_products'))]"/>
+            <field name="state">code</field>
+            <field name="code">if records: action = records._update_suggested_products()</field>
+        </record>
+
 </odoo>

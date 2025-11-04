@@ -1,14 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import defaultdict
+import random
+from collections import Counter, defaultdict
 
+from dateutil.relativedelta import relativedelta
 from werkzeug import urls
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import float_is_zero, is_html_empty
+from odoo.tools import float_is_zero, is_html_empty, split_every
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import html_translate
 
@@ -45,6 +47,10 @@ class ProductTemplate(models.Model):
     #=== DEFAULT METHODS ===#
 
     @api.model
+    def _default_suggest_products(self):
+        return self.env['res.groups']._is_feature_enabled('website_sale.group_suggested_products')
+
+    @api.model
     def _default_website_sequence(self):
         """ We want new product to be the last (highest seq).
         Every product should ideally have an unique sequence.
@@ -75,24 +81,45 @@ class ProductTemplate(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
     )
-
     alternative_product_ids = fields.Many2many(
         string="Alternative Products",
+        help="Suggest alternatives to your customer (upsell strategy)."
+             " Those products show up on the product page.",
         comodel_name='product.template',
         relation='product_alternative_rel',
-        column1='src_id', column2='dest_id',
+        column1='src_id',
+        column2='dest_id',
         check_company=True,
-        help="Suggest alternatives to your customer (upsell strategy)."
-            " Those products show up on the product page.",
+    )
+    suggest_alternative_products = fields.Boolean(
+        string="Suggest Alternative Products",
+        help="Alternative products will be automatically filled based on shared categories"
+             " and attributes.",
+        default=_default_suggest_products,
     )
     accessory_product_ids = fields.Many2many(
         string="Accessory Products",
         comodel_name='product.product',
         relation='product_accessory_rel',
-        column1='src_id', column2='dest_id',
+        column1='src_id',
+        column2='dest_id',
         check_company=True,
         help="Accessories show up when the customer reviews the cart before payment"
-            " (cross-sell strategy).",
+             " (cross-sell strategy).",
+    )
+    suggest_accessory_products = fields.Boolean(
+        string="Suggest Accessory Products",
+        help="Accessory products will be automatically filled based on sales history.",
+        default=_default_suggest_products,
+    )
+    suggest_optional_products = fields.Boolean(
+        string="Suggest Optional Products",
+        help="Optional products will be automatically filled based on sales history.",
+        default=_default_suggest_products,
+    )
+    suggested_products_last_update = fields.Datetime(
+        string="Last update of suggested products",
+        help="Last update date of the optional, accessory and alternative products.",
     )
 
     website_size_x = fields.Integer(string="Size X", default=1)
@@ -266,6 +293,13 @@ class ProductTemplate(models.Model):
             and not ('media_iframe_video' in description_ecommerce or 'data-embedded' in description_ecommerce)  # don't remove "empty" video div
         ):
             vals['description_ecommerce'] = ''
+        # Manual input deactivates the automation of suggested products
+        from_cron = self.env.context.get('cron_id')
+        from_settings = self.env.context.get('module')
+        if not (from_cron or from_settings):
+            vals['suggest_alternative_products'] = not vals.get('alternative_product_ids')
+            vals['suggest_accessory_products'] = not vals.get('accessory_product_ids')
+            vals['suggest_optional_products'] = not vals.get('optional_product_ids')
         return super().write(vals)
 
     #=== BUSINESS METHODS ===#
@@ -284,6 +318,168 @@ class ProductTemplate(models.Model):
     def _get_website_alternative_product(self):
         domain = self.env['website'].sale_product_domain()
         return self.alternative_product_ids.filtered_domain(domain)
+
+    def _update_suggested_products(self, batch_size=None):
+        """Complete optional, accessory and alternative products on salable and published products.
+
+        Optional products: up to 2 products bought together with the main product.
+        Accessory products: up to 1 product bought together with the main product.
+        Alternative products: up to 4 products sharing similar characteristics.
+
+        :param batch_size: maximum number of products to process at once (for the cron)
+        :type batch_size: int, optional
+        """
+        now = fields.Datetime.now()
+        products_domain = [('sale_ok', '=', True), ('is_published', '=', True)]
+        all_products = self.search(products_domain)
+        force_update = False
+
+        # Cron: update products not updated within the last 12 hours
+        if self.env.context.get('cron_id'):
+            last_update = now - relativedelta(hours=12)
+            cron_domain = Domain.AND([
+                [
+                    '|',
+                    ('suggested_products_last_update', '<', last_update),
+                    ('suggested_products_last_update', '=', False),
+                ],
+                products_domain,
+            ])
+            products_to_update = self.search(cron_domain, order='suggested_products_last_update')
+            self.env['ir.cron']._commit_progress(remaining=len(products_to_update))
+        # Action: update selected products only
+        else:
+            products_to_update = all_products & self
+            # Updating a product from the action re-enables the automation for the product
+            force_update = True
+
+        size = batch_size or len(products_to_update)
+        for products_batch in split_every(size, products_to_update):
+            for product in products_batch:
+                other_products = all_products.filtered_domain([
+                    ('id', '!=', product.id),
+                    '|', ('company_id', '=', product.company_id.id), ('company_id', '=', False),
+                ])
+                if (
+                    force_update
+                    or product.suggest_optional_products
+                    or product.suggest_accessory_products
+                ):
+                    optionals, accessories = (
+                        product._get_suggested_optionals_and_accessories(other_products, 2, 1)
+                    )
+                if force_update or product.suggest_optional_products:
+                    product.optional_product_ids = optionals
+                    product.suggest_optional_products = True
+                if force_update or product.suggest_accessory_products:
+                    product.accessory_product_ids = accessories
+                    product.suggest_accessory_products = True
+                if force_update or product.suggest_alternative_products:
+                    product.alternative_product_ids = (
+                        product._get_suggested_alternatives(other_products, 4)
+                    )
+                    product.suggest_alternative_products = True
+                product.suggested_products_last_update = now
+            # Track progress of the cron
+            if self.env.context.get('cron_id'):
+                self.env['ir.cron']._commit_progress(len(products_batch))
+
+    def _get_suggested_optionals_and_accessories(
+            self, other_products, max_optionals, max_accessories
+    ):
+        """Get products that are bought together with main product a.
+        Products bought together in at least 2 sale orders dated within 5 years."""
+        now = fields.Datetime.now()
+        batch_size = 6  # months
+        max_batches = 10  # 5 years
+        max_products = max_optionals + max_accessories
+        products_count = Counter()
+
+        for batch_index in range(max_batches):
+            end_date = now - relativedelta(months=batch_index * batch_size)
+            start_date = end_date - relativedelta(months=batch_size)
+            orders_with_product_a = self.env['sale.order'].search([
+                ('date_order', '>', start_date),
+                ('date_order', '<=', end_date),
+                ('state', '=', 'sale'),
+                ('order_line.product_id.product_tmpl_id', '=', self.id),
+            ])
+            for order in orders_with_product_a:
+                # product a has to be the first product in the order
+                if order.order_line[0].product_id.product_tmpl_id != self:
+                    continue
+                # combo items are part of the combo and therefore excluded from the recommendation
+                no_items_lines = order.order_line.filtered_domain([('combo_item_id', '=', False)])
+                # other products have to be cheaper than product a
+                other_products_on_so = no_items_lines.product_id.product_tmpl_id.filtered_domain([
+                        ('id', 'in', other_products.ids),
+                        ('list_price', '<', self.list_price),
+                ])
+                products_count.update(other_products_on_so.ids)
+            # Filter the products that have been bought together at least 2 times
+            qualified_products = {pid: count for pid, count in products_count.items() if count >= 2}
+            if len(qualified_products) >= max_products:
+                break
+
+        # Shuffle equal scores to avoid returning always the same top products
+        products_list = list(qualified_products.items())
+        random.shuffle(products_list)
+        products = sorted(products_list, key=lambda x: x[1], reverse=True)[:max_products]
+
+        optional_products_count = products[:max_optionals]  # first ones
+        optional_products_ids = [pid for pid, count in optional_products_count]
+        optional_products = self.env['product.template'].browse(optional_products_ids)
+
+        accessory_products_count = products[max_optionals:]  # last ones
+        accessory_products_ids = [pid for pid, count in accessory_products_count]
+        accessory_products = (
+            self.env['product.template'].browse(accessory_products_ids).product_variant_ids
+        )
+        # Return one of the variant as accessory_product_ids requires a product.product
+        accessory_product = random.choice(accessory_products) if accessory_products else None
+
+        return optional_products, accessory_product
+
+    def _get_suggested_alternatives(self, other_products, max_products):
+        """Get similar products based on the categories and attributes shared with initial product.
+        - Categories weight = 0.8, at least one category in common
+        - Attributes weight = 0.2.
+        """
+        scores = []
+        categories_a = set(self.public_categ_ids.ids)
+        attributes_a = set(
+            self.valid_product_template_attribute_line_ids
+            .mapped('product_template_value_ids').mapped('display_name')
+        )
+        # Limit to 1000 other products with at least one category in common (random order)
+        other_products_sharing_categories = list(
+            other_products.filtered_domain([('public_categ_ids', 'in', categories_a)])
+        )
+        random.shuffle(other_products_sharing_categories)
+
+        for product_b in other_products_sharing_categories[:1000]:
+            categories_b = set(product_b.public_categ_ids.ids)
+            attributes_b = set(
+                product_b.valid_product_template_attribute_line_ids
+                .mapped('product_template_value_ids').mapped('display_name')
+            )
+            # Jaccard coefficient (A and B / A or B)
+            intersection_cat = categories_a & categories_b
+            union_cat = categories_a | categories_b
+            similar_categories = len(intersection_cat) / len(union_cat)
+            intersection_attr = attributes_a & attributes_b
+            union_attr = attributes_a | attributes_b
+            similar_attributes = len(intersection_attr) / len(union_attr) if union_attr else 0
+            score = 0.8 * similar_categories + 0.2 * similar_attributes
+
+            scores.append((product_b, score))
+
+        # Shuffle equal scores to avoid returning always the same top products
+        random.shuffle(scores)
+        scores = sorted(scores, key=lambda x: x[1], reverse=True)[:max_products]
+
+        # Return the product templates with the highest score
+        return self.env['product.template'].browse([p.id for p, score in scores])
 
     def _has_no_variant_attributes(self):
         """Return whether this `product.template` has at least one no_variant
