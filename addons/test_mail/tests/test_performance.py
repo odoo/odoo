@@ -343,8 +343,12 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
+<<<<<<< HEAD
         with self.assertQueryCount(admin=8, employee=8):  # tm: 6 / 6
 
+=======
+        with self.assertQueryCount(admin=9, employee=8):  # tm: 6 / 6
+>>>>>>> e100ab1a752c ([FIX] mail: fix management of activities on removed records)
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
