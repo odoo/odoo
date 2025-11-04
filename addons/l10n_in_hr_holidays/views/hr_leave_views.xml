@@ -11,6 +11,14 @@
                     The requested time considers the sandwich leave policy.
                 </div>
             </xpath>
+            <xpath expr="//field[@name='holiday_status_id']" position="attributes">
+            <attribute name="domain">[('id', 'in', holiday_status_ids)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='holiday_status_id']" position="after">
+                <field name='is_optional_holiday' string="OptionalHoliday"/>
+                <field name='holiday_status_ids' invisible="1"/>
+            </xpath>
+
         </field>
     </record>
 

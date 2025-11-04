@@ -8,7 +8,7 @@ from odoo.fields import Domain
 class L10nInHrLeaveOptionalHoliday(models.Model):
     _name = 'l10n.in.hr.leave.optional.holiday'
     _description = 'Optional Holidays'
-    _order = 'date desc'
+    _order = 'date asc'
 
     @api.model
     def default_get(self, field_list=None):
@@ -18,6 +18,9 @@ class L10nInHrLeaveOptionalHoliday(models.Model):
 
     name = fields.Char(required=True)
     date = fields.Date(required=True)
+    end_date = fields.Date(
+        string='End Date', readonly=False, tracking=True, required=True,
+        compute='_compute_end_date', store=True, precompute=True)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
 
     @api.depends('name', 'date')
@@ -27,6 +30,11 @@ class L10nInHrLeaveOptionalHoliday(models.Model):
             if holiday.date:
                 name = f'{name} ({holiday.date})'
             holiday.display_name = name
+
+    @api.depends('date')
+    def _compute_end_date(self):
+        for holiday in self:
+            holiday.end_date = holiday.date
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_optional_holidays(self):

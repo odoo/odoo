@@ -12,6 +12,9 @@ class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
+    is_optional_holiday = fields.Boolean(compute='_compute_is_optional_holiday', default=False, precompute=True, store=True)
+    holiday_status_ids = fields.Many2many(
+        "hr.leave.type", compute='_compute_display_status_ids', store=True)
 
     @api.constrains("holiday_status_id", "request_date_from", "request_date_to")
     def _l10n_in_check_optional_holiday_request_dates(self):
@@ -111,3 +114,30 @@ class HrLeave(models.Model):
             elif leave.state not in ['validate', 'validate1']:
                 leave.l10n_in_contains_sandwich_leaves = False
         return result
+
+    @api.depends('request_date_from', 'request_date_to')
+    def _compute_is_optional_holiday(self):
+        for holiday in self:
+            optional_holidays = self.env["l10n.in.hr.leave.optional.holiday"].search(
+            [('date', '<=', holiday.request_date_from), ('end_date', '>=', holiday.request_date_to)])
+            if optional_holidays:
+                holiday.is_optional_holiday = True
+            else:
+                holiday.is_optional_holiday = False
+
+    @api.depends('request_date_from', 'request_date_to')
+    def _compute_display_status_ids(self):
+
+        for record in self:
+            allowed_ids = []
+            leave_types = self.env['hr.leave.type'].with_context(employee_id=record.employee_id.id).search(
+            ['|', ('country_code', '=', False), ('country_code', '=', 'IN')])
+            for leave_type in leave_types:
+                if leave_type.l10n_in_is_limited_to_optional_days:
+                    if record.is_optional_holiday and leave_type.virtual_remaining_leaves > 0:
+                        allowed_ids.append(leave_type.id)
+                else:
+                    if not leave_type.requires_allocation or (leave_type.requires_allocation and leave_type.allows_negative) or (leave_type.requires_allocation and leave_type.virtual_remaining_leaves > 0):
+                        allowed_ids.append(leave_type.id)
+
+            record.holiday_status_ids = [(6, 0, allowed_ids)]
