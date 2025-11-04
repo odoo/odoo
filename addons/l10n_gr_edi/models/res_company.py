@@ -7,6 +7,7 @@ from requests import RequestException
 
 from odoo import api, fields, models, Command
 from odoo.addons.l10n_gr_edi.models.preferred_classification import INVOICE_TYPES_HAVE_EXPENSE
+from odoo.exceptions import ValidationError
 
 NS_MYDATA = {"ns": "http://www.aade.gr/myDATA/invoice/v1.0"}
 
@@ -24,6 +25,14 @@ class ResCompany(models.Model):
         default=True,
         help="Enable test environments with credentials obtained from https://mydata-dev-register.azurewebsites.net/",
     )
+
+    # Tax representative
+    l10n_gr_edi_has_tax_representative = fields.Boolean(
+        help="The seller/provider is a non-resident subject which\
+        carries out transactions in Greece with relevance for VAT\
+        purposes and which takes avail of a tax representative in\
+        Greece")
+    l10n_gr_edi_tax_representative_partner_id = fields.Many2one('res.partner', string='Tax representative')
 
     @api.model
     def _cron_l10n_gr_edi_fetch_invoices(self):
@@ -111,3 +120,15 @@ class ResCompany(models.Model):
                 }
                 for bill, mark in zip(new_bills, marks_to_create)
             ])
+
+    @api.constrains('l10n_gr_edi_has_tax_representative', 'l10n_gr_edi_tax_representative_partner_id')
+    def _check_tax_representative(self):
+        for record in self:
+            if not record.l10n_gr_edi_tax_representative_partner_id:
+                continue
+            if not record.l10n_gr_edi_tax_representative_partner_id:
+                raise ValidationError(self.env._("You must select a tax representative."))
+            if not record.l10n_gr_edi_tax_representative_partner_id.vat:
+                raise ValidationError(self.env._("Your tax representative partner must have a tax number."))
+            if not record.l10n_gr_edi_tax_representative_partner_id.country_code == 'GR':
+                raise ValidationError(self.env._("Your tax representative partner must be located in Greece."))
