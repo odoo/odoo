@@ -10,7 +10,7 @@
         to digitize business tax and accounting information declaration.
     """,
     'countries': ['gr'],
-    'depends': ['l10n_gr'],
+    'depends': ['account_edi_ubl_cii', 'l10n_gr'],
     'data': [
         'data/ir_cron.xml',
         'data/template.xml',
