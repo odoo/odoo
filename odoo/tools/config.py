@@ -274,7 +274,7 @@ class configmanager:
                          help="Launch a python test file.")
         group.add_option("--test-enable", dest='test_enable', action="store_true", file_loadable=False,
                          help="Enable unit tests. Implies --stop-after-init")
-        group.add_option("--test-tags", dest="test_tags", file_loadable=False,
+        group.add_option("-t", "--test-tags", dest="test_tags", file_loadable=False,
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
                          "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
