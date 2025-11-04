@@ -151,6 +151,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     showHeading3: false,
                     showLink: hasFullEdit,
                     showImageEdit: hasFullEdit,
+                    showImageWidth: false,
                 },
                 recordInfo: {
                     context: self._getContext(),
@@ -160,6 +161,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 value: recordContent,
                 resizable: true,
                 userGeneratedContent: true,
+                disableTransform: true,
                 height: 350,
             };
             options.allowCommandLink = hasFullEdit;
