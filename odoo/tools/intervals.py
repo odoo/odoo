@@ -86,7 +86,7 @@ class Intervals(typing.Generic[T]):
 
         # using 'self' and 'other' below forces normalization
         bounds1 = _boundaries(self, 'start', 'stop')
-        bounds2 = _boundaries(other, 'switch', 'switch')
+        bounds2 = _boundaries(Intervals(other, keep_distinct=self._keep_distinct), 'switch', 'switch')
 
         start = None                    # set by start/stop
         recs1 = None                    # set by start
