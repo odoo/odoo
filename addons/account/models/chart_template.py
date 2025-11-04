@@ -1448,7 +1448,10 @@ class AccountChartTemplate(models.AbstractModel):
                             if field_translation:
                                 for company in chart_companies:
                                     xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
-                                    translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
+                                    if callable(field.translate) and (term_src := record.get(fname)):
+                                        translation_importer.model_terms_translations[mname][fname][xml_id][term_src][lang] = field_translation
+                                    else:
+                                        translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
 
         # Gather translations for the TEMPLATE_MODELS records that are not created from the chart_template data
         translation_langs = [lang for lang in langs if lang != 'en_US']  # there are no code translations for 'en_US' (original language)
@@ -1467,7 +1470,10 @@ class AccountChartTemplate(models.AbstractModel):
                         if not value_translated:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
                             value_translated = code_translations.get_python_translations(code_module, lang.split('_')[0]).get(value_en_US)
                         if value_translated:
-                            translation_importer.model_translations[mname][field][xml_id][lang] = value_translated
+                            if callable(self.env[mname]._fields[field].translate) and value_en_US:
+                                translation_importer.model_terms_translations[mname][field][xml_id][value_en_US][lang] = value_translated
+                            else:
+                                translation_importer.model_translations[mname][field][xml_id][lang] = value_translated
                             break
 
-        translation_importer.save(overwrite=False)
+        translation_importer.save(force_overwrite=True)
