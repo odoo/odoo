@@ -12,6 +12,11 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
             },
         },
         {
+            content: "Fill in guest name",
+            trigger: "input[name='guest_name']",
+            run: "edit Guest",
+        },
+        {
             content: "Click join",
             trigger: "button[title='Join Channel']",
             run: "click",
