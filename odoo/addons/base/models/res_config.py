@@ -226,7 +226,7 @@ class ResConfigSettings(models.TransientModel):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
                 module = IrModule._get(name.removeprefix("module_")).exists()
                 if not module:
-                    raise Exception("Field %s refer to an non-existing module" % field)
+                    raise Exception("Field %s refer to a non-existing module" % field)
                 modules += module
             elif hasattr(field, 'config_parameter') and field.config_parameter:
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
