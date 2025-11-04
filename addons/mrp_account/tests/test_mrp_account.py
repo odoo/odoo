@@ -814,7 +814,6 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         })
         mo.action_confirm()
         workorder = mo.workorder_ids
-        workorder.button_start()
         workorder.duration = 60
         self.assertEqual(workorder._cal_cost(), 20)
         # Simulate missing finished moves
