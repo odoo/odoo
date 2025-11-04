@@ -3,13 +3,26 @@ import { Composer } from "@mail/core/common/composer";
 import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
 import { useState } from "@odoo/owl";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+
+const MAX_STAR_RATING = 5;
+const DEFAULT_STAR_RATING = 4;
 
 patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
+        this.MAX_STAR_RATING = MAX_STAR_RATING;
         this.portalState = useState({
-            ratingValue: 4,
-            starValue: 4,
+            hoveredRatingValue: undefined,
+            ratingValue: DEFAULT_STAR_RATING,
+            /** @deprecated: use 'hoveredRatingValue' instead */
+            get starValue() {
+                return this.hoveredRatingValue;
+            },
+            /** @deprecated: use 'hoveredRatingValue' instead */
+            set starValue(val) {
+                this.hoveredRatingValue = val;
+            },
         });
     },
 
@@ -46,13 +59,37 @@ patch(Composer.prototype, {
         return super.askDeleteFromEdit && !this.message.rating_value;
     },
 
-    onMoveStar(ev) {
-        const index = parseInt(ev.currentTarget.getAttribute("index"));
-        this.portalState.starValue = index + 1;
+    get visibleRatingValue() {
+        return this.portalState.hoveredRatingValue ?? this.portalState.ratingValue;
     },
 
-    onClickStar() {
-        this.portalState.ratingValue = this.portalState.starValue;
+    onMoveStar(ev) {
+        this.handleStar(ev, { hovered: !isMobileOS() });
+    },
+
+    handleStar(ev, { hovered } = {}) {
+        const index = parseInt(ev.currentTarget.getAttribute("index"));
+        if (Number.isNaN(index) || index < 0 || index > MAX_STAR_RATING - 1) {
+            if (hovered) {
+                this.portalState.hoveredRatingValue = undefined;
+            }
+            return;
+        }
+        if (hovered) {
+            this.portalState.hoveredRatingValue = index + 1;
+        } else {
+            this.portalState.ratingValue = index + 1;
+        }
+    },
+
+    onClickStar(ev) {
+        this.handleStar(ev);
+    },
+
+    onMouseLeaveStar(ev) {
+        if (!isMobileOS()) {
+            this.handleStar(ev, { hovered: true });
+        }
     },
 
     get postData() {
@@ -60,6 +97,7 @@ patch(Composer.prototype, {
         if (this.env.displayRating && !this.message) {
             postData.rating_value = this.portalState.ratingValue;
         }
+        this.portalState.ratingValue = DEFAULT_STAR_RATING;
         return postData;
     },
 });
