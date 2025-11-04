@@ -676,6 +676,9 @@ test("Should properly apply color when selection on feff", async () => {
             </div>
         `)
     );
+    // Ensure the link inherited the font color.
+    const a = el.querySelector("a");
+    expect(getComputedStyle(a).color).toBe("rgb(255, 0, 0)");
 });
 
 test("should be able to remove color applied by 'text-*' classes (1)", async () => {
