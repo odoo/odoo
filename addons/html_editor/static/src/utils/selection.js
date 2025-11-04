@@ -239,35 +239,34 @@ export const callbacksForCursorUpdate = {
 };
 
 /**
- * @param {Selection} selection
+ * @param {Node} node
+ * @param {number} offset
  * @param {"previous"|"next"} side
- * @param {HTMLElement} editable
  * @returns {string | undefined}
  */
-export function getAdjacentCharacter(selection, side, editable) {
-    let { focusNode, focusOffset } = selection;
-    [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
-    const originalBlock = closestBlock(focusNode);
+export function getAdjacentCharacter(node, offset, side) {
+    [node, offset] = getDeepestPosition(node, offset);
+    const originalBlock = closestBlock(node);
     let adjacentCharacter;
-    while (!adjacentCharacter && focusNode) {
+    while (!adjacentCharacter && node) {
         if (side === "previous") {
-            adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
+            adjacentCharacter = offset > 0 && node.textContent[offset - 1];
         } else {
-            adjacentCharacter = focusNode.textContent[focusOffset];
+            adjacentCharacter = node.textContent[offset];
         }
         if (!adjacentCharacter) {
             if (side === "previous") {
-                focusNode = previousLeaf(focusNode, editable);
-                focusOffset = focusNode && nodeSize(focusNode);
+                node = previousLeaf(node, originalBlock);
+                offset = node && nodeSize(node);
             } else {
-                focusNode = nextLeaf(focusNode, editable);
-                focusOffset = 0;
+                node = nextLeaf(node, originalBlock);
+                offset = 0;
             }
-            const characterIndex = side === "previous" ? focusOffset - 1 : focusOffset;
-            adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
+            const characterIndex = side === "previous" ? offset - 1 : offset;
+            adjacentCharacter = node && node.textContent[characterIndex];
         }
     }
-    if (!focusNode || !isContentEditable(focusNode) || closestBlock(focusNode) !== originalBlock) {
+    if (!node || !isContentEditable(node)) {
         return undefined;
     }
     return adjacentCharacter;
