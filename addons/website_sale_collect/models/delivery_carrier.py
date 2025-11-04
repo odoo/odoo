@@ -67,12 +67,13 @@ class DeliveryCarrier(models.Model):
 
     # === BUSINESS METHODS ===#
 
-    def _in_store_get_close_locations(self, partner_address, product_id=None):
+    def _in_store_get_close_locations(self, partner_address, product_id=None, uom_id=None):
         """Get the formatted close pickup locations sorted by distance to the partner address.
 
         :param res.partner partner_address: The address to use to sort the pickup locations.
         :param str product_id: The product whose product page was used to open the location
                                selector, if any, as a `product.product` id.
+        :param int uom_id: The unit of measure to use for the product stock values, if any.
         :return: The sorted and formatted close pickup locations.
         :rtype: list[dict]
         """
@@ -94,7 +95,11 @@ class DeliveryCarrier(models.Model):
 
             # Prepare the stock data based on either the product or the order.
             if product:  # Called from the product page.
-                in_store_stock_data = utils.format_product_stock_values(product, wh.id)
+                uom = self.env['uom.uom'].browse(uom_id)
+                cart_qty = order_sudo._get_cart_qty(product.id)
+                in_store_stock_data = utils.format_product_stock_values(
+                    product, wh_id=wh.id, uom=uom, cart_qty=cart_qty
+                )
             else:  # Called from the checkout page.
                 in_store_stock_data = {'in_stock': order_sudo._is_in_stock(wh.id)}
 

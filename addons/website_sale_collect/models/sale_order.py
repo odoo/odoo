@@ -151,7 +151,7 @@ class SaleOrder(models.Model):
             free_qty = product.with_context(warehouse_id=wh_id).free_qty
             for ol in ols:
                 free_qty_in_uom = max(int(product.uom_id._compute_quantity(
-                    free_qty, ol.product_uom_id, rounding_method="DOWN"
+                    free_qty, ol.product_uom_id, rounding_method='DOWN'
                 )), 0)  # Round down as only integer quantities can be sold.
                 line_qty_in_uom = ol.product_uom_qty
                 if line_qty_in_uom > free_qty_in_uom:  # Not enough stock.

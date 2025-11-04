@@ -7,9 +7,9 @@
                 <t t-if="!!props.additionalData.in_store_stock_data.in_stock">
                     <t t-if="!!props.additionalData.in_store_stock_data.show_quantity">
                         <span class="text-warning">
-                            <i class="fa fa-circle"/>
-                            Only <t t-out="props.additionalData.in_store_stock_data.quantity"/>
-                            available
+                            <i class="fa fa-circle me-1"/>
+                            <t t-out="props.additionalData.in_store_stock_data.quantity"/> <t t-out="props.additionalData.in_store_stock_data.uom_name"/>
+                            in stock
                         </span>
                     </t>
                     <t t-else="">

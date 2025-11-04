@@ -22,8 +22,9 @@
                             t-if="this.state.inStoreStockData.show_quantity &amp;&amp; this.state.selectedLocationData.id"
                             class="text-muted"
                         >
-                            <i class="fa fa-fw fa-circle text-warning"/>
-                            Only <t t-out="this.state.inStoreStockData.quantity"/> available
+                            <i class="fa fa-fw fa-circle text-warning me-1"/>
+                            <t t-out="this.state.inStoreStockData.quantity"/> <t t-out="this.state.deliveryStockData.uom_name"/>
+                            in stock
                         </div>
                         <div t-else="" class="text-muted">
                             <i class="fa fa-fw fa-circle text-success"/> Available
@@ -58,8 +59,9 @@
                         t-if="this.state.deliveryStockData.show_quantity"
                         class="text-muted"
                     >
-                        <i class="fa fa-fw fa-circle text-warning"/>
-                        Only <t t-out="this.state.deliveryStockData.quantity"/> available
+                        <i class="fa fa-fw fa-circle text-warning me-1"/>
+                        <t t-out="this.state.deliveryStockData.quantity"/> <t t-out="this.state.deliveryStockData.uom_name"/>
+                        in stock
                     </div>
                     <div t-else="" class="text-muted">
                         <i class="fa fa-fw fa-circle text-success"/> Available

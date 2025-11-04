@@ -20,8 +20,12 @@ class ProductTemplate(models.Model):
             and product_or_template.is_product_variant
             and product_or_template.is_storable
         ):
+            product_sudo = product_or_template.sudo()  # To read the stock values when public user.
+            order_sudo = request.cart
+            cart_qty = order_sudo._get_cart_qty(product_sudo.id)
             # Enable the Click & Collect Availability widget.
             res['show_click_and_collect_availability'] = True
+            res['uom_id'] = uom.id
 
             # Prepare the delivery stock data.
             available_delivery_methods_sudo = self.env['delivery.carrier'].sudo().search([
@@ -31,26 +35,28 @@ class ProductTemplate(models.Model):
             ])
             if available_delivery_methods_sudo:
                 res['delivery_stock_data'] = utils.format_product_stock_values(
-                    product_or_template.sudo(), wh_id=website.warehouse_id.id
+                    product_sudo, uom=uom, cart_qty=cart_qty
                 )
             else:
                 res['delivery_stock_data'] = {}
 
             # Prepare the in-store stock data.
-            order_sudo = request.cart
             if (
                 order_sudo
                 and order_sudo.carrier_id.delivery_type == 'in_store'
                 and order_sudo.pickup_location_data
             ):  # Get stock values for the product variant in the selected store.
                 res['in_store_stock_data'] = utils.format_product_stock_values(
-                    product_or_template.sudo(), wh_id=order_sudo.pickup_location_data['id']
+                    product_sudo,
+                    uom=uom,
+                    wh_id=order_sudo.pickup_location_data['id'],
+                    cart_qty=cart_qty,
                 )
             else:
                 res['in_store_stock_data'] = utils.format_product_stock_values(
-                    product_or_template.sudo(),
-                    free_qty=website.sudo()._get_max_in_store_product_available_qty(
-                        product_or_template.sudo()
-                    )
+                    product_sudo,
+                    uom=uom,
+                    free_qty=website.sudo()._get_max_in_store_product_available_qty(product_sudo),
+                    cart_qty=cart_qty,
                 )
         return res

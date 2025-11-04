@@ -10,15 +10,16 @@ patch(LocationSelectorDialog, {
         ...LocationSelectorDialog.props,
         productId: { type: Number, optional: true },
         isProductPage: { type: Boolean, optional: true },
+        uomId: { type: Number, optional: true },
     },
 });
 
 patch(LocationSelectorDialog.prototype, {
     async _getLocations(zip) {
          if (this.props.isProductPage) {
-             return await rpc(
-                 this.getLocationUrl, {zip_code: zip, product_id: this.props.productId}
-             );
+             return await rpc(this.getLocationUrl, {
+                 zip_code: zip, product_id: this.props.productId, uom_id: this.props.uomId
+             });
          }
         else {
             return await super._getLocations(...arguments);
