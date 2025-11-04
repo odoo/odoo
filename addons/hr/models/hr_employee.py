@@ -483,7 +483,8 @@ class HrEmployee(models.Model):
             if not (k in new_version_vals and version_fields[k].type in ['one2many', 'many2many'])
         } | copy_vals
         new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
-        new_version.write(new_version_vals)
+        with self.env.protecting([f for f_name, f in version_fields.items() if f_name not in new_version_vals and f.copy], new_version):
+            new_version.write(new_version_vals)
         return new_version
 
     def _is_in_contract(self, date):
