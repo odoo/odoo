@@ -25,7 +25,6 @@ export class CharField extends Component {
     static defaultProps = { dynamicPlaceholder: false };
 
     setup() {
-        debugger;
         this.input = useRef("input");
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.input);

@@ -143,15 +143,17 @@ export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
 }
 
 export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
-    const readonly = evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
-    const required = evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds);
+    // const readonly = evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
+    // const required = evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds);
+    const readonly = false;
+    const required = false;
     const inEdit = record.isInEdition;
 
     let empty = !record.isNew;
     if ("isEmpty" in field) {
         empty = empty && field.isEmpty(record, fieldName);
     } else {
-        empty = empty && !record.orecord.reactiveData[fieldName];
+        empty = empty && !record.orecord[fieldName];
     }
     empty = inEdit ? empty && readonly : empty;
     return {
@@ -355,7 +357,6 @@ export class Field extends Component {
     };
 
     setup() {
-        debugger;
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {
@@ -442,10 +443,11 @@ export class Field extends Component {
                             return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
                         }
                     },
-                    required: evaluateBooleanExpr(
-                        fieldInfo.required,
-                        record.evalContextWithVirtualIds
-                    ),
+                    // required: evaluateBooleanExpr(
+                    //     fieldInfo.required,
+                    //     record.evalContextWithVirtualIds
+                    // ),
+                    required: false,
                     readonly: readonly,
                 };
                 propsFromNode = this.field.extractProps(fieldInfo, dynamicInfo);

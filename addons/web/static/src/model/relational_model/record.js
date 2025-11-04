@@ -320,7 +320,17 @@ class Record2 extends DataPoint {
         };
     }
 
-    // UI state - edit/readonly mode -------------------------------------------
+    // UI state - pager --------------------------------------------------------
+    // form pager, is it really used?
+    get resIds() {
+        return this.config.resIds;
+    }
+    // UI state - data presence ------------------------------------------------
+    // feature: 1) for no-content helper 2) fake data with sample_server.js, 3) maybe more
+    get hasData() {
+        return true;
+    }
+    // UI state - editable list ------------------------------------------------
     get isInEdition() {
         const { mode } = this.config;
         if (mode === "readonly") {
@@ -340,22 +350,11 @@ class Record2 extends DataPoint {
     _switchMode(mode) {
         this.model._updateConfig(this.config, { mode }, { reload: false });
         if (mode === "readonly") {
-            this._noUpdateParent = false;
-            this._invalidFields.clear();
+            // this._noUpdateParent = false;
+            // todo: why?
+            // this._invalidFields.clear();
         }
     }
-
-    // UI state - pager --------------------------------------------------------
-    // form pager, is it really used?
-    get resIds() {
-        return this.config.resIds;
-    }
-    // UI state - data presence ------------------------------------------------
-    // feature: 1) for no-content helper 2) fake data with sample_server.js, 3) maybe more
-    get hasData() {
-        return true;
-    }
-    // UI state - editable list ------------------------------------------------
     // list vue editable, can we discard the record (with key nav)
     get canBeAbandoned() {
         return this.isNew && !this.dirty && this._manuallyAdded;
