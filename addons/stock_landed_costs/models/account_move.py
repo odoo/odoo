@@ -41,11 +41,13 @@ class AccountMove(models.Model):
 
     def action_view_landed_costs(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
-        domain = [('id', 'in', self.landed_costs_ids.ids)]
-        context = dict(self.env.context, default_vendor_bill_id=self.id)
-        views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'list'), (False, 'form'), (False, 'kanban')]
-        return dict(action, domain=domain, context=context, views=views)
+
+        views = [(False, 'form')] if len(self.landed_costs_ids) == 1 else [
+            (self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'list'), (False, 'form'), (False, 'kanban')
+        ]
+        return self.landed_costs_ids.with_context(
+            default_vendor_bill_id=self.id
+        )._get_records_action(name=self.env._("Landed Costs"), views=views)
 
     def _update_order_line_info(self, product_id, quantity, **kwargs):
         price_unit = super()._update_order_line_info(product_id, quantity, **kwargs)
