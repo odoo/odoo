@@ -55,7 +55,7 @@ def get_certificate_end_date():
     cert_end_date = cert.not_valid_after_utc
     if (
         common_name == 'OdooTempIoTBoxCertificate'
-        or datetime.datetime.now() > cert_end_date - datetime.timedelta(days=10)
+        or datetime.datetime.now(datetime.timezone.utc) > cert_end_date - datetime.timedelta(days=10)
     ):
         _logger.debug("SSL certificate '%s' must be updated.", common_name)
         return None
