@@ -121,6 +121,18 @@ class TestTitleToSlug(BaseCase):
             self._slugify("_-__   -- -mi-dd-le- -- _ _-_- - ")
         )
 
+    def test_normalized_composed(self):
+        self.assertEqual(
+            '\N{HANGUL SYLLABLE GA}',
+            self._slugify('\N{HANGUL SYLLABLE GA}')
+        )
+
+    def test_normalized_decomposed(self):
+        self.assertEqual(
+            '\N{HANGUL SYLLABLE GA}',
+            self._slugify('\N{HANGUL CHOSEONG KIYEOK}\N{HANGUL JUNGSEONG A}')
+        )
+
     def test_all(self):
         self.assertEqual(
             "do-you-know-馬丁娜-a-la-海灘",
