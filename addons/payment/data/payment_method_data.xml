@@ -1020,6 +1020,19 @@
         <field name="supported_currency_ids" eval="[Command.set([ref('base.EGP')])]" />
     </record>
 
+    <!-- Generic payment method representing convenience store payments like 7/11, OKMart etc. -->
+    <record id="payment_method_cvs" model="payment.method">
+        <field name="name">Convenience Stores</field>
+        <field name="code">cvs</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/cvs.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+    </record>
+
     <record id="payment_method_dana" model="payment.method">
         <field name="name">Dana</field>
         <field name="code">dana</field>
@@ -2052,6 +2065,19 @@
                          ref('base.NOK'),
                      ])]"
         />
+    </record>
+
+    <!-- Generic payment method representing mobile wallet -->
+    <record id="payment_method_mobile_wallet" model="payment.method">
+        <field name="name">Mobile Wallet</field>
+        <field name="code">mobile_wallet</field>
+        <field name="sequence">10</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
     </record>
 
     <record id="payment_method_mobile_wallet_eg" model="payment.method">
@@ -3596,6 +3622,23 @@
         />
     </record>
 
+    <record id="payment_method_twqr" model="payment.method">
+        <field name="name">TWQR</field>
+        <field name="code">twqr</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/twqr.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.TWD'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_uatp" model="payment.method">
         <field name="name">Universal Air Travel Plan</field>
         <field name="code">uatp</field>
@@ -4205,6 +4248,15 @@
         <field name="image" type="base64" file="payment/static/img/facilito.png"/>
     </record>
 
+    <record id="payment_method_family_mart" model="payment.method">
+        <field name="name">Family Mart</field>
+        <field name="code">family_mart</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_cvs')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/family_mart.png"/>
+    </record>
+
     <record id="payment_method_hipercard" model="payment.method">
         <field name="name">Hipercard</field>
         <field name="code">hipercard</field>
@@ -4214,6 +4266,16 @@
         <field name="image" type="base64" file="payment/static/img/hipercard.png"/>
     </record>
 
+    <record id="payment_method_hi_life" model="payment.method">
+        <field name="name">Hi-Life</field>
+        <field name="code">hi_life</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_cvs')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/hi_life.png"/>
+    </record>
+
+
     <record id="payment_method_ideal_brand" model="payment.method">
         <field name="name">iDEAL</field>
         <field name="code">ideal_brand</field>
@@ -4221,6 +4283,15 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/ideal.png"/>
+    </record>
+
+    <record id="payment_method_ipass_money" model="payment.method">
+        <field name="name">iPASS Money</field>
+        <field name="code">ipass_money</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_mobile_wallet')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/ipass_money.png"/>
     </record>
 
     <record id="payment_method_jcb" model="payment.method">
@@ -4321,6 +4392,15 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_ok_mart" model="payment.method">
+        <field name="name">OK Mart</field>
+        <field name="code">ok_mart</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_cvs')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/ok_mart.png"/>
     </record>
 
     <record id="payment_method_omannet" model="payment.method">
