@@ -8,6 +8,19 @@ class AccountMoveSend(models.AbstractModel):
     def _is_gr_edi_applicable(self, move):
         return move.l10n_gr_edi_enable_send_invoices
 
+    def _is_applicable_to_move(self, method, move, **move_data):
+        # EXTENDS 'account'
+        # For Greek invoices with Peppol in ubl_gr format, prevent sending via Peppol until myDATA mark is received
+        res = super()._is_applicable_to_move(method, move, **move_data)
+        if not res or method != 'peppol' or move.country_code != 'GR':
+            return res
+        partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
+        invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
+        # Block Peppol for Greek CIUS format if no mark yet
+        if invoice_edi_format == 'ubl_gr' and not move.l10n_gr_edi_mark:
+            return False
+        return res
+
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
@@ -33,6 +46,18 @@ class AccountMoveSend(models.AbstractModel):
                 'action': invoices_with_alert._get_records_action(name=_("Check Invoice(s)")),
             }
 
+        # Alert for Greek invoices with Peppol that haven't been sent to myDATA yet
+        move_error = moves.filtered(lambda move: (move.country_code == 'GR'
+            and 'peppol' in moves_data[move]['sending_methods']
+            and moves_data[move]['invoice_edi_format'] == 'ubl_gr'
+            and not move.l10n_gr_edi_mark
+        ))
+        if move_error:
+            alerts['l10n_gr_edi_peppol_requires_mydata'] = {
+                'message': self.env._("Invoice(s) are not yet sent to myDATA."
+                             " First enable myDATA sending, then you can send via Peppol for B2G invoicing."),
+                'level': 'warning',
+            }
         return alerts
 
     # -------------------------------------------------------------------------

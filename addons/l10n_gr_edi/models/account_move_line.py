@@ -54,6 +54,13 @@ class AccountMoveLine(models.Model):
         store=True,
         readonly=False,
     )
+    l10n_gr_edi_cpv_code = fields.Char(
+        string='Item CPV Code',
+        help='Common Procurement Vocabulary (CPV) code for public sector procurement in Greece.',
+        store=True,
+        compute='_compute_l10n_gr_edi_cpv_code',
+        readonly=False,
+    )
 
     def _auto_init(self):
         """
@@ -65,11 +72,20 @@ class AccountMoveLine(models.Model):
             ('l10n_gr_edi_cls_type', 'varchar'),
             ('l10n_gr_edi_cls_vat', 'varchar'),
             ('l10n_gr_edi_tax_exemption_category', 'varchar'),
+            ('l10n_gr_edi_cpv_code', 'varchar'),
         ):
             if not column_exists(self.env.cr, 'account_move_line', column_name):
                 create_column(self.env.cr, 'account_move_line', column_name, column_type)
 
         return super()._auto_init()
+
+    @api.depends('product_id.l10n_gr_edi_cpv_code')
+    def _compute_l10n_gr_edi_cpv_code(self):
+        for line in self:
+            if line.product_id:
+                line.l10n_gr_edi_cpv_code = line.product_id.l10n_gr_edi_cpv_code
+            else:
+                line.l10n_gr_edi_cpv_code = False
 
     @api.depends('move_id.l10n_gr_edi_inv_type')
     def _compute_l10n_gr_edi_detail_type(self):
