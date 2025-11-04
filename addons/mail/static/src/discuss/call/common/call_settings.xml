@@ -18,13 +18,6 @@
                 <div class="flex-grow-1"/>
                 <DeviceSelect kind="'audioinput'"/>
             </label>
-            <label class="d-flex align-items-baseline mb-2" title="Audio Output" aria-label="Audio Output">
-                <span class="flex-shrink-0 pe-2">
-                    Audio Output
-                </span>
-                <div class="flex-grow-1"/>
-                <DeviceSelect kind="'audiooutput'"/>
-            </label>
             <div class="d-flex flex-column">
                 <button class="btn d-flex my-1" t-att-class="{'bg-300' : !store.settings.use_push_to_talk }" t-on-click="()=>this.store.settings.setPushToTalk(false)">
                     <input class="form-check-input" type="radio" t-att-checked="store.settings.use_push_to_talk ? '' : 'checked'"/>
@@ -81,6 +74,15 @@
                 </div>
                 <span t-if="store.settings.isRegisteringKey">Press a key to register it as the push-to-talk shortcut.</span>
             </div>
+            <hr class="o-discuss-separator my-2"/>
+            <h4>Audio</h4>
+            <label class="d-flex align-items-baseline mb-2" title="Speakers" aria-label="Speakers">
+                <span class="flex-shrink-0 pe-2">
+                    Speakers
+                </span>
+                <div class="flex-grow-1"/>
+                <DeviceSelect kind="'audiooutput'"/>
+            </label>
             <hr class="o-discuss-separator my-2"/>
             <h4>Video</h4>
             <label class="d-flex align-items-baseline mb-2" title="Camera" aria-label="Camera">
