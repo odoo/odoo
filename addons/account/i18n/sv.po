@@ -44,8 +44,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-31 18:37+0000\n"
-"PO-Revision-Date: 2025-10-09 22:21+0000\n"
-"Last-Translator: Mikael Akerberg <mikael.akerberg@mariaakerberg.com>\n"
+"PO-Revision-Date: 2025-11-04 09:08+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/account/"
 "sv/>\n"
 "Language: sv\n"
@@ -143,7 +143,7 @@ msgstr "#skapad av: %s"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "%(action)s for journal %(journal)s"
-msgstr "%(action)s för journal %(journal)s"
+msgstr "%(action)s för verifikat %(journal)s"
 
 #. module: account
 #. odoo-python
@@ -1639,9 +1639,8 @@ msgid ""
 "cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Med ett kassaregister kan du hantera kassaposter i dina kassajournaler\n"
-"                kassajournaler. Denna funktion gör det enkelt att följa upp "
-"kontant\n"
+"Med ett kassaregister kan du hantera kassaposter i dina kassaverifikat\n"
+"                Denna funktion gör det enkelt att följa upp kontant\n"
 "                betalningar på daglig basis."
 
 #. module: account
@@ -1662,7 +1661,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
-msgstr "Ett bankkonto kan endast tillhöra en journal."
+msgstr "Ett bankkonto kan endast tillhöra ett verifikat."
 
 #. module: account
 #. odoo-python
@@ -1710,8 +1709,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Ett verifikat består av flera journalrader där varje \n"
-"                journalrad antingen är en debet- eller kredittransaktion."
+"Ett verifikat består av flera verifikatsrader där varje \n"
+"                verifikatsrad antingen är en debet- eller kredittransaktion."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1719,7 +1718,7 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
-"En journal används för att dokumentera transaktioner av all "
+"Ett verifikat används för att dokumentera transaktioner av all "
 "redovisningsdata\n"
 "                relaterad till den dagliga verksamheten."
 
@@ -1776,7 +1775,7 @@ msgid ""
 "journal entry."
 msgstr ""
 "En betalning med ett utestående konto kan inte bekräftas utan att det finns "
-"en journalpost."
+"ett verifikat."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1812,7 +1811,7 @@ msgstr "Ett enda undantag måste ändra exakt ett fält för låsdatum."
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "A statement should only contain lines from the same journal."
-msgstr "En rapport bör endast innehålla rader från samma journal."
+msgstr "En rapport bör endast innehålla rader från samma verifikat."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
@@ -1823,8 +1822,7 @@ msgstr "En etikett med samma namn och tillämpbarhet finns redan i detta land."
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr ""
-"En skattemässig position kan endast definieras en gång för samma skatter."
+msgstr "En skatteområde kan endast definieras en gång för samma skatter."
 
 #. module: account
 #. odoo-python
@@ -2013,7 +2011,7 @@ msgstr "Kontoinnehavare"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_tree
 msgid "Account Journal"
-msgstr "Journal"
+msgstr "Verifikat"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
@@ -2398,7 +2396,7 @@ msgstr "Konton"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Kontokartläggning av Skattemässig Ställning"
+msgstr "Kontomappning för ett skatteområde"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2601,7 +2599,7 @@ msgstr "Lägg till en beskrivning till ditt föremål."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Add a journal"
-msgstr "Lägg till journal"
+msgstr "Lägg till verifikat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2847,7 +2845,7 @@ msgstr "Tillåt konfigurering av skatter med kontantprincipen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr "Tillåtna journaler"
+msgstr "Tillåtna verifikat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
@@ -3033,7 +3031,7 @@ msgstr "Ett konto utanför balansräkningen kan inte ha skatter"
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
-msgstr "En bokföringsposition kan endast definieras en gång på samma konton."
+msgstr "Ett skatteområde kan endast definieras en gång på samma konto."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -3535,7 +3533,7 @@ msgstr "Tillgänglighet"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_journal_ids
 msgid "Available Journal"
-msgstr "Tillgänglig Journal"
+msgstr "Tillgängliga Verifikat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
@@ -5252,7 +5250,7 @@ msgstr "Skapa en ny kund i din adressbok"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "Skapa en ny fiskal position"
+msgstr "Skapa ett nytt skatteområde"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -7651,7 +7649,7 @@ msgstr "Skatteområde"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Finanspolitiska positioner"
+msgstr "Skatteområden"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -7661,7 +7659,7 @@ msgstr "Slutet av räkenskapsåret"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr "Finanspolitisk ställning"
+msgstr "Skatteområde"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -8163,7 +8161,7 @@ msgstr "Har poster"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
 #: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "Har Skattemässig Position Förändrats"
+msgstr "Har skatteområdet förändrats"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -9842,7 +9840,7 @@ msgstr "Journal:"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Journals"
-msgstr "Tidskrifter"
+msgstr "Verifikat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
@@ -13094,8 +13092,7 @@ msgstr "Erkännandedatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
-msgstr ""
-"Omräkna alla skatter och konton baserat på denna skattemässiga position"
+msgstr "Omräkna alla skatter och konton baserat på denna skatteområde"
 
 #. module: account
 #. odoo-python
@@ -13842,7 +13839,7 @@ msgstr "Sökfält"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "Sök Skattepositioner"
+msgstr "Sök skatteområde"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -15015,7 +15012,7 @@ msgstr "Kartläggning av skatter"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Skattekartering av finansiell ställning"
+msgstr "Skattemappning av skatteområde"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
