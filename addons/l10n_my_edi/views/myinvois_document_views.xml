@@ -26,7 +26,11 @@
                     <sheet>
                         <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="myinvois_state != 'in_progress'"/>
                         <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="myinvois_state != 'rejected'"/>
-                        <div class="oe_button_box" name="button_box"/>  <!-- Add the box to make it easier to add buttons in there when inheriting. -->
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_linked_invoices" type="object" icon="fa-pencil-square-o" class="oe_stat_button" invisible="linked_invoice_count == 0">
+                                 <field name="linked_invoice_count" string="Source Documents" widget="statinfo"/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <h1>
                                 <field name="display_name"/>
@@ -54,13 +58,39 @@
             <field name="arch" type="xml">
                 <list string="MyInvois Documents" create="false" sample="0" decoration-muted="myinvois_state == 'cancelled'">
                     <header>
+                        <button name="action_open_consolidate_invoice_wizard" string="Consolidate Invoices" type="object" display="always" class="btn-primary" invisible="not context.get('display_consolidate_invoice_button', False)" context="{'default_consolidation_type': 'invoice'}"/>
                         <button name="action_submit_to_myinvois" string="Submit To MyInvois" type="object" class="btn-primary"/>
                         <button name="action_update_submission_status" string="Fetch Status From MyInvois" type="object"/>
                     </header>
-                    <field name="display_name"/>
+                    <field name="name" readonly="1"/>
+                    <field name="move_type"/>
+                    <field name="is_debit_note" optional="hide" widget="boolean_toggle"/>
                     <field name="myinvois_issuance_date"/>
                     <field name="myinvois_state"/>
                 </list>
+            </field>
+        </record>
+
+        <record id="myinvois_document_search_view" model="ir.ui.view">
+            <field name="name">myinvois.document.search.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="myinvois_issuance_date"/>
+                    <field name="myinvois_state"/>
+                    <field name="journal_id"/>
+                    <filter string="Consolidated Invoice" name="filter_is_consolidated_invoice" domain="[('is_consolidated_invoice', '=', True)]"/>
+                    <filter string="Debit Note" name="filter_is_debit_note" domain="[('is_debit_note', '=', True)]"/>
+                    <separator/>
+                    <filter string="Draft" name="filter_is_draft" domain="[('myinvois_state', '=', False)]"/>
+                    <filter string="In Progress" name="filter_is_in_progress" domain="[('myinvois_state', '=', 'in_progress')]"/>
+                    <filter string="Valid" name="filter_valid" domain="[('myinvois_state', '=', 'valid')]"/>
+                    <group>
+                        <filter string="Type" name="groupby_move_type" domain="[]" context="{'group_by':'move_type'}"/>
+                        <filter string="State" name="groupby_myinvois_state" domain="[]" context="{'group_by':'myinvois_state'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 

@@ -249,10 +249,12 @@ class TestMyInvoisPoS(TestPoSCommon):
             with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 consolidated_invoice.action_submit_to_myinvois()
                 self.assertRecordValues(consolidated_invoice, [{
+                    'name': 'CINV/2025/00001',
                     'myinvois_submission_uid': '123456789',
                     'myinvois_external_uuid': '123458974513518',
                     'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),
                 }, {
+                    'name': 'CINV/2025/00002',
                     'myinvois_submission_uid': '123456789',
                     'myinvois_external_uuid': '123458974513519',
                     'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),
@@ -384,6 +386,76 @@ class TestMyInvoisPoS(TestPoSCommon):
             self._assert_node_values(xml_tree, "cac:InvoiceLine/cac:ItemPriceExtension/cbc:Amount", '500.00')
             # And the discount should be 100
             self._assert_node_values(xml_tree, "cac:InvoiceLine/cac:AllowanceCharge/cbc:Amount", '100.00')
+
+    @mute_logger('odoo.addons.point_of_sale.models.pos_order')
+    def test_consolidate_invoices_pos_sequence_mix(self):
+        """
+        Post and submit mixes of regular and PoS consolidated invoices, to ensure that the sequence calculation follows as expected.
+        PoS consolidated invoices are expected to follow the in_invoice sequence of the invoice journal selected in the pos config.
+
+        We will:
+            - Create and submit one regular consolidated invoice
+            - Create and submit one PoS consolidated invoice
+            - Create and submit another regular consolidated invoice
+            - Create and submit another PoS consolidated invoice
+
+        We expect the sequences to correctly go from CINV/xxx/00001 to CINV/xxx/00004
+        """
+        def _make_accounting_conso_invoice():
+            self.init_invoice('out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True, invoice_date=fields.Date.today())
+            myinvois_document_action = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'invoice',
+            }).button_consolidate()
+            myinvois_document_id = myinvois_document_action['res_id']
+            myinvois_document = self.env['myinvois.document'].browse(myinvois_document_id)
+            with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+                myinvois_document.action_submit_to_myinvois()
+            return myinvois_document
+
+        def _make_pos_conso_invoice():
+            with self.with_pos_session():
+                self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+            # Consolidate them
+            myinvois_document_action = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2025-01-01',
+                'date_to': '2025-01-31',
+                'consolidation_type': 'pos',
+            }).button_consolidate()
+            myinvois_document_id = myinvois_document_action['res_id']
+            myinvois_document = self.env['myinvois.document'].browse(myinvois_document_id)
+            with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+                myinvois_document.action_submit_to_myinvois()
+            return myinvois_document
+
+        with freeze_time("2025-01-01"):
+            consolidated_invoices = _make_accounting_conso_invoice()
+            consolidated_invoices |= _make_pos_conso_invoice()
+            consolidated_invoices |= _make_accounting_conso_invoice()
+            consolidated_invoices |= _make_pos_conso_invoice()
+
+            self.assertRecordValues(consolidated_invoices, [{
+                'name': 'CINV/2025/00001',
+                'myinvois_submission_uid': '123456789',
+                'myinvois_external_uuid': '123458974513518',
+                'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),
+            }, {
+                'name': 'CINV/2025/00002',
+                'myinvois_submission_uid': '123456789',
+                'myinvois_external_uuid': '123458974513518',
+                'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),
+            }, {
+                'name': 'CINV/2025/00003',
+                'myinvois_submission_uid': '123456789',
+                'myinvois_external_uuid': '123458974513518',
+                'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),
+            }, {
+                'name': 'CINV/2025/00004',
+                'myinvois_submission_uid': '123456789',
+                'myinvois_external_uuid': '123458974513518',
+                'myinvois_validation_time': fields.Datetime.from_string('2025-01-01 01:00:00'),
+            }])
 
     #########
     # Refunds

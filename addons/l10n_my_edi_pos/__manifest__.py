@@ -10,8 +10,6 @@
     """,
     "depends": ["l10n_my_edi", "point_of_sale"],
     "data": [
-        "data/res_partner.xml",
-
         "views/myinvois_document_pos_views.xml",
         "views/pos_order_views.xml",
         "views/product_view.xml",
