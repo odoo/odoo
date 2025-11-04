@@ -47,6 +47,4 @@ def calculate_partner_distance(partner1, partner2):
         + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
         * (math.sin(dlong / 2) * math.sin(dlong / 2))
     )
-    d = 2 * R * math.atan2(math.sqrt(arcsin), math.sqrt(1 - arcsin))
-
-    return d
+    return 2 * R * math.atan2(math.sqrt(arcsin), math.sqrt(1 - arcsin))

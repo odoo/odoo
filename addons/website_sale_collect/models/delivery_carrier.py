@@ -68,7 +68,7 @@ class DeliveryCarrier(models.Model):
     # === BUSINESS METHODS ===#
 
     def _in_store_get_close_locations(self, partner_address, product_id=None):
-        """ Get the formatted close pickup locations sorted by distance to the partner address.
+        """Get the formatted close pickup locations sorted by distance to the partner address.
 
         :param res.partner partner_address: The address to use to sort the pickup locations.
         :param str product_id: The product whose product page was used to open the location
