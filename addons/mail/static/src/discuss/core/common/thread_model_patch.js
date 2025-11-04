@@ -519,7 +519,7 @@ const threadPatch = {
                 )
             );
         }
-        await this.closeChatWindow();
+        await this.channel.chatWindow?.close({ notifyState: false });
         this.leaveChannelRpc();
     },
     leaveChannelRpc() {

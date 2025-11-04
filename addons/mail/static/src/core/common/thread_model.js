@@ -78,7 +78,7 @@ export class Thread extends Record {
         onUpdate() {
             if (this.close_chat_window) {
                 this.close_chat_window = undefined;
-                this.closeChatWindow({ force: true });
+                this.channel.chatWindow?.close({ force: true });
             }
         },
     });
@@ -671,11 +671,6 @@ export class Thread extends Record {
         this.channel.chatWindow = { fromMessagingMenu, bypassCompact };
         this.channel.chatWindow.open({ focus, swapOpened });
         return this.channel.chatWindow;
-    }
-
-    async closeChatWindow(options = {}) {
-        await this.store.chatHub.initPromise;
-        await this.channel?.chatWindow?.close({ notifyState: false, ...options });
     }
 
     addOrReplaceMessage(message, tmpMsg) {
