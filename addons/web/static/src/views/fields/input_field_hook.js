@@ -2,6 +2,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
 import { onWillUnmount, useComponent, useEffect, useRef, effect } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -124,6 +125,11 @@ export function useInputField(params) {
         () => [inputRef.el]
     );
 
+    const state = reactive({});
+    useEffect(() => {
+        state.inputRef = inputRef;
+    });
+
     /**
      * Sometimes, a patch can happen with possible a new value for the field
      * If the user was typing a new value (isDirty) or the field is still invalid,
@@ -136,6 +142,7 @@ export function useInputField(params) {
             // the corresponding value in the record. Otherwise, in some cases,
             // if the value in the record change the useEffect isn't triggered.
             const value = params.getValue();
+            const inputRef = state.inputRef || {};
             if (inputRef.el && !isDirty && !component.props.record.isFieldInvalid(fieldName)) {
                 inputRef.el.value = value;
                 lastSetValue = inputRef.el.value;
