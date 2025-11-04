@@ -93,6 +93,7 @@ export class ChatWindow extends Record {
         swapOpened = true,
     } = {}) {
         await this.store.chatHub.initPromise;
+        this.store.env.bus.trigger("ChatWindow:will-open");
         this.store.chatHub.folded.delete(this);
         if (swapOpened || !this.store.chatHub.opened.includes(this)) {
             this.store.chatHub.opened.delete(this);
