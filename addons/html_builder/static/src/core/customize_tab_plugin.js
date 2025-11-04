@@ -2,9 +2,17 @@ import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
+/**
+ * @typedef { Object } CustomizeTabShared
+ * @property { CustomizeTabPlugin['getCustomizeComponent'] } getCustomizeComponent
+ * @property { CustomizeTabPlugin['openCustomizeComponent'] } openCustomizeComponent
+ * @property { CustomizeTabPlugin['closeCustomizeComponent'] } closeCustomizeComponent
+ */
+
 export class CustomizeTabPlugin extends Plugin {
     static id = "customizeTab";
     static shared = ["getCustomizeComponent", "openCustomizeComponent", "closeCustomizeComponent"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         post_redo_handlers: () => this.closeCustomizeComponent(),
         post_undo_handlers: () => this.closeCustomizeComponent(),

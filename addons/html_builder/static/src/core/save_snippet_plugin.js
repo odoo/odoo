@@ -16,6 +16,7 @@ function isSavable(el) {
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         get_options_container_top_buttons: withSequence(
             1,

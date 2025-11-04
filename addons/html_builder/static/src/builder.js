@@ -24,6 +24,12 @@ import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 
+/**
+ * @typedef {(() => void)[]} on_mobile_preview_clicked
+ * @typedef {(() => void)[]} trigger_dom_updated
+ * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
+ */
+
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };

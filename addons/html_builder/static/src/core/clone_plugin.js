@@ -5,6 +5,19 @@ import { isElementInViewport } from "@html_builder/utils/utils";
 import { isRemovable } from "./remove_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
+/**
+ * @typedef { Object } CloneShared
+ * @property { ClonePlugin['cloneElement'] } cloneElement
+ */
+
+/**
+ * @typedef {((arg: { cloneEl: HTMLElement, originalEl: HTMLElement }) => Promise<void>)[]} on_cloned_handlers
+ * Called after an element was cloned and inserted in the DOM.
+ *
+ * @typedef {((arg: { originalEl: HTMLElement }) => void)[]} on_will_clone_handlers
+ * Called on the original element before clone.
+ */
+
 const clonableSelector = "a.btn:not(.oe_unremovable)";
 
 export function isClonable(el) {
@@ -17,6 +30,7 @@ export class ClonePlugin extends Plugin {
     static dependencies = ["history", "builderOptions", "dom"];
     static shared = ["cloneElement"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             // Maybe rename cloneItem ?
@@ -25,17 +39,6 @@ export class ClonePlugin extends Plugin {
         get_overlay_buttons: withSequence(2, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        // Resource definitions:
-        on_will_clone_handlers: [
-            // ({ originalEl: el }) => {
-            //     called on the original element before clone
-            // }
-        ],
-        on_cloned_handlers: [
-            // async ({ cloneEl: cloneEl, originalEl: el }) => {
-            //     called after an element was cloned and inserted in the DOM
-            // }
-        ],
     };
 
     setup() {

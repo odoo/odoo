@@ -2,6 +2,18 @@ import { Plugin } from "@html_editor/plugin";
 import { getElementsWithOption, isMobileView } from "@html_builder/utils/utils";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef { Object } VisibilityShared
+ * @property { VisibilityPlugin['toggleTargetVisibility'] } toggleTargetVisibility
+ * @property { VisibilityPlugin['onOptionVisibilityUpdate'] } onOptionVisibilityUpdate
+ * @property { VisibilityPlugin['hideElement'] } hideElement
+ */
+
+/**
+ * @typedef {((targetEl: HTMLElement) => void)[]} target_hide
+ * @typedef {((targetEl: HTMLElement) => void)[]} target_show
+ */
+
 const invisibleElementsSelector =
     ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
 const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
@@ -10,6 +22,7 @@ export class VisibilityPlugin extends Plugin {
     static id = "visibility";
     static dependencies = ["builderOptions", "disableSnippets", "history"];
     static shared = ["toggleTargetVisibility", "onOptionVisibilityUpdate", "hideElement"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
         system_attributes: ["data-invisible"],

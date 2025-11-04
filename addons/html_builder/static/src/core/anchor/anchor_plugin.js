@@ -14,10 +14,15 @@ export function canHaveAnchor(element) {
     return element.matches(anchorSelector) && !element.matches(anchorExclude);
 }
 
+/**
+ * @typedef { Object } AnchorShared
+ * @property { AnchorPlugin['createOrEditAnchorLink'] } createOrEditAnchorLink
+ */
 export class AnchorPlugin extends Plugin {
     static id = "anchor";
     static dependencies = ["history"];
     static shared = ["createOrEditAnchorLink"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         on_cloned_handlers: this.onCloned.bind(this),
         get_options_container_top_buttons: withSequence(

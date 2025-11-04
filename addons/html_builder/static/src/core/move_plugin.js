@@ -10,6 +10,16 @@ import { isElementInViewport, isMobileView } from "@html_builder/utils/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { localization } from "@web/core/l10n/localization";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/**
+ * @typedef {{
+ *     selector: CSSSelector;
+ *     exclude?: CSSSelector;
+ *     direction: "horizontal" | "vertical";
+ *     noScroll?: boolean;
+ * }[]} is_movable_selector
+ */
+
 export function getVisibleSibling(target, direction) {
     const siblingEls = [...target.parentNode.children];
     const visibleSiblingEls = siblingEls.filter(
@@ -31,6 +41,7 @@ export function getVisibleSibling(target, direction) {
 
 export class MovePlugin extends Plugin {
     static id = "move";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         has_overlay_options: { hasOption: (el) => this.isMovable(el) },
         get_overlay_buttons: withSequence(0, {
