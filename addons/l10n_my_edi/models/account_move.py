@@ -180,7 +180,7 @@ class AccountMove(models.Model):
         myinvois_documents |= invoice_needing_new_document._create_myinvois_document()
 
         if myinvois_documents:
-            myinvois_documents._submit_to_myinvois()
+            myinvois_documents.action_submit_to_myinvois()
 
     def action_show_myinvois_documents(self):
         return self.l10n_my_edi_document_ids.action_show_myinvois_documents()
@@ -201,6 +201,9 @@ class AccountMove(models.Model):
                 'invoice_ids': [Command.link(move.id)],
                 'myinvois_exemption_reason': move.l10n_my_edi_exemption_reason,
                 'myinvois_custom_form_reference': move.l10n_my_edi_custom_form_reference,
+                'move_type': move.move_type,
+                "journal_id": move.journal_id.id,
+                "is_debit_note": self.env['myinvois.document']._myinvois_is_debit_notes_used() and bool(move.debit_origin_id),
             })
         return self.env['myinvois.document'].create(myinvois_documents_vals)
 

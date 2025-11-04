@@ -1,6 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
-
 from freezegun import freeze_time
 from lxml import etree
 
@@ -9,79 +7,16 @@ from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import file_open
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-
-NS_MAP = {
-    'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
-    'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
-    'ext': 'urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2',
-    'sig': 'urn:oasis:names:specification:ubl:schema:xsd:CommonSignatureComponents-2',
-    'sac': 'urn:oasis:names:specification:ubl:schema:xsd:SignatureAggregateComponents-2',
-    'sbc': 'urn:oasis:names:specification:ubl:schema:xsd:SignatureBasicComponents-2',
-    'ds': 'http://www.w3.org/2000/09/xmldsig#',
-    'xades': 'http://uri.etsi.org/01903/v1.3.2#',
-    'inv': 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
-}
+from odoo.addons.l10n_my_edi.tests.test_file_generation_common import (
+    NS_MAP,
+    L10nMyEDITestFileGenerationCommon,
+)
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
+class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
 
-    @classmethod
-    @AccountTestInvoicingCommon.setup_country('my')
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.other_currency = cls.setup_other_currency('EUR')
-
-        # TIN number is required
-        cls.company_data['company'].write({
-            'vat': 'C2584563200',
-            'l10n_my_edi_mode': 'test',
-            'l10n_my_edi_industrial_classification': cls.env['l10n_my_edi.industry_classification'].search([('code', '=', '01111')]).id,
-            'l10n_my_identification_type': 'BRN',
-            'l10n_my_identification_number': '202001234567',
-            'state_id': cls.env.ref('base.state_my_jhr').id,
-            'street': 'that one street, 5',
-            'city': 'Main city',
-            'phone': '+60123456789',
-        })
-        cls.partner_a.write({
-            'vat': 'C2584563201',
-            'l10n_my_identification_type': 'BRN',
-            'l10n_my_identification_number': '202001234568',
-            'country_id': cls.env.ref('base.my').id,
-            'state_id': cls.env.ref('base.state_my_jhr').id,
-            'street': 'that other street, 3',
-            'city': 'Main city',
-            'phone': '+60123456786',
-            'l10n_my_edi_industrial_classification': cls.env['l10n_my_edi.industry_classification'].search([('code', '=', '01111')]).id,
-            'ref': "MY-REF",
-        })
-        cls.partner_b.write({
-            'vat': 'EI00000000020',
-            'l10n_my_identification_type': 'BRN',
-            'l10n_my_identification_number': 'NA',
-            'country_id': cls.env.ref('base.us').id,
-            'state_id': cls.env.ref('base.state_us_1'),
-            'street': 'that other street, 3',
-            'city': 'Main city',
-            'phone': '+60123456785',
-            'l10n_my_edi_industrial_classification': cls.env.ref('l10n_my_edi.class_00000', raise_if_not_found=False).id,
-        })
-        cls.product_a.l10n_my_edi_classification_code = "001"
-
-        cls.purchase_tax = cls.env['account.tax'].create({
-            'name': 'tax_10',
-            'amount_type': 'percent',
-            'amount': 10,
-            'type_tax_use': 'purchase',
-            'country_id': cls.env.ref('base.my').id,
-        })
-
-        cls.fakenow = datetime(2024, 7, 15, 10, 00, 00)
-        cls.startClassPatcher(freeze_time(cls.fakenow))
-
+    @freeze_time("2024-07-15 10:00:00")
     def test_01_can_generate_file(self):
         """
         Simply test that with a valid configuration, we can generate the file.
@@ -167,6 +102,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_02_multicurrency(self):
         """
         Simply ensure that in a multi currency environment, the rate is found in the file and is the expected one.
@@ -210,6 +146,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_03_optional_fields(self):
         """
         Set a few optional fields, and ensure that they appear as expecting in the file.
@@ -276,6 +213,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_04_credit_note(self):
         """
         Ensure that the type is correctly set for another move type, as well as that the original
@@ -329,6 +267,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_05_invoice_with_so(self):
         """
         Ensure that an invoice linked to an SO will not contain this information in the xml.
@@ -373,6 +312,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_06_foreigner(self):
         """
         Check that the file is correct with a foreign customer.
@@ -404,6 +344,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_07_tax_exempt(self):
         """
         Check that the file is correct with an exempt tax.
@@ -454,6 +395,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_08_self_billing(self):
         bill = self.init_invoice(
             'in_invoice', partner=self.partner_b, products=self.product_a, taxes=self.purchase_tax, post=True
@@ -488,6 +430,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_09_refund_note(self):
         """ A refund note is issued when an invoice has received a credit note, and that credit note was paid to the customer. """
         # Create the original invoice, and receive the payment.
@@ -534,6 +477,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_10_credit_note(self):
         """ A credit note is issued when an invoice has received a credit note, and that credit note was not paid to the customer. """
         # Create the original invoice, don't receive a payment.
@@ -577,6 +521,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_11_bill_imports_form(self):
         """
         Ensure that when a bill contains a customs number; it is treated as an importation and not exportation.
@@ -612,6 +557,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_12_partner_ref_not_in_party_id(self):
         """
         Ensure that when an invoice contains a customs number; it is treated as an importation and not exportation.
@@ -635,6 +581,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_13_prepaid_amount_present(self):
         """
         Ensure the prepaid amount is present in the UBL XML under <cac:PrepaidPayment>
@@ -656,6 +603,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             attributes={'currencyID': self.other_currency.name}
         )
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_14_prioritize_invoice_line_classification_code(self):
         """
         Check if the classification code of invoice line is prioritized over the classification code of product
@@ -682,6 +630,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             invoice.line_ids[0].l10n_my_edi_classification_code,
         )
 
+    @freeze_time("2024-07-15 10:00:00")
     def test_15_none_tax(self):
         invoice = self.init_invoice(
             'out_invoice',
@@ -775,23 +724,3 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
             'Initial Reference',
         )
-
-    def _assert_node_values(self, root, node_path, text, attributes=None):
-        node = root.xpath(node_path, namespaces=NS_MAP)
-
-        assert node, f'The requested node has not been found: {node_path}'
-
-        # Ensure that we don't have duplicated nodes. As of writing, all tested nodes are expected to exist only once in the result.
-        node = root.xpath(node_path, namespaces=NS_MAP)
-        self.assertEqual(len(node), 1, f"The node {node[0].tag} has been found {len(node)} time in the file")
-
-        self.assertEqual(
-            node[0].text,
-            text,
-        )
-        if attributes:
-            for attribute, value in attributes.items():
-                self.assertEqual(
-                    node[0].attrib[attribute],
-                    value,
-                )

@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="myinvois_document_pos_form_view" model="ir.ui.view">
-            <field name="name">myinvois.document.pos.form.view</field>
+        <record id="myinvois_document_form_view" model="ir.ui.view">
+            <field name="name">myinvois.document.form.view.inherit.pos</field>
             <field name="model">myinvois.document</field>
             <field name="inherit_id" ref="l10n_my_edi.myinvois_document_form_view"/>
-            <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button name="action_view_linked_orders" type="object" icon="fa-shopping-basket" class="oe_stat_button" invisible="linked_order_count == 0">
                          <field name="linked_order_count" string="PoS Orders" widget="statinfo"/>
                     </button>
                 </div>
+            </field>
+        </record>
+
+        <record id="myinvois_document_pos_form_view" model="ir.ui.view">
+            <field name="name">myinvois.document.pos.form.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="inherit_id" ref="l10n_my_edi.myinvois_document_form_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
                 <field name="myinvois_issuance_date" position="before">
                     <field name="linked_order_count" invisible="1"/>
                     <field name="pos_config_id"/>
@@ -27,12 +35,28 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <header position="inside">
-                    <button name="action_open_consolidate_invoice_wizard" string="Consolidate Orders" type="object" display="always" class="btn-primary"/>
+                    <button name="action_open_consolidate_invoice_wizard" string="Consolidate Orders" type="object" display="always" class="btn-primary" context="{'default_consolidation_type': 'pos'}"/>
                 </header>
                 <field name="myinvois_state" position="after">
                     <field name="pos_config_id"/>
                     <field name="pos_order_date_range"/>
                 </field>
+                <!-- Not relevant to PoS orders -->
+                <field name="move_type" position="replace"/>
+                <field name="is_debit_note" position="replace"/>
+            </field>
+        </record>
+
+        <record id="myinvois_document_pos_search_view" model="ir.ui.view">
+            <field name="name">myinvois.document.pos.search.view</field>
+            <field name="model">myinvois.document</field>
+            <field name="inherit_id" ref="l10n_my_edi.myinvois_document_search_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <!-- Not relevant to PoS orders -->
+                <xpath expr="//filter[@name='filter_is_consolidated_invoice']" position="replace"/>
+                <xpath expr="//filter[@name='filter_is_debit_note']" position="replace"/>
+                <xpath expr="//filter[@name='groupby_move_type']" position="replace"/>
             </field>
         </record>
 
@@ -43,6 +67,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">myinvois.document</field>
             <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="myinvois_document_pos_search_view"/>
             <field name="view_ids" eval="[
                 (5, 0, 0),
                 (0, 0, {'view_mode': 'list', 'view_id': ref('myinvois_document_pos_list_view')}),

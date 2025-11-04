@@ -1,0 +1,15 @@
+<odoo>
+    <record id="account_journal_dashboard_kanban_view_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit.l10n_my_myinvois</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <div id="sale_purchase_refund" position="after">
+                <div invisible="country_code != 'MY'">
+                    <a t-if="journal_type == 'sale'" type="object" name="open_myinvois_document">MyInvois Documents</a>
+                    <a t-if="journal_type == 'purchase'" type="object" name="open_myinvois_document">MyInvois Documents</a>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

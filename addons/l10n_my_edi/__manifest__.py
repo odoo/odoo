@@ -13,10 +13,12 @@
     'data': [
         'data/ir_cron.xml',
         'data/l10n_my_edi.industry_classification.csv',
+        "data/res_partner.xml",
 
         'security/ir.model.access.csv',
         'security/myinvois_security.xml',
 
+        'views/account_journal_dashboard_view.xml',
         'views/account_move_view.xml',
         'views/account_tax_view.xml',
         'views/l10n_my_edi_industrial_classification_views.xml',

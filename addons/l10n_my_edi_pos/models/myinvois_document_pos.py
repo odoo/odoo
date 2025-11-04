@@ -1,10 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models
-from odoo.tools import date_utils
 
 
 class MyInvoisDocumentPoS(models.Model):
@@ -65,18 +62,6 @@ class MyInvoisDocumentPoS(models.Model):
             latest_order = consolidated_invoice.pos_order_ids[0]
             consolidated_invoice.pos_order_date_range = f"{first_order.date_order.date()} to {latest_order.date_order.date()}"
 
-    # -----------------------
-    # CRUD, inherited methods
-    # -----------------------
-
-    def _get_starting_sequence(self):
-        """ In the PoS, a document represents a Consolidated INVoice. """
-        self.ensure_one()
-        if not self.pos_order_ids:
-            return super()._get_starting_sequence()
-
-        return "CINV/%04d/00000" % self.myinvois_issuance_date.year
-
     # --------------
     # Action methods
     # --------------
@@ -103,36 +88,6 @@ class MyInvoisDocumentPoS(models.Model):
             }
 
         return action_vals
-
-    def action_open_consolidate_invoice_wizard(self):
-        """
-        Open the wizard, and set a default date_from/date_to based on the current date as well as already existing
-        consolidated invoices.
-        """
-        latest_consolidated_invoice = self.env['myinvois.document'].search([
-            ('company_id', '=', self.env.company.id),
-            ('myinvois_state', 'in', ['in_progress', 'valid']),
-            ('pos_order_ids', '!=', False),
-        ], limit=1)
-        if latest_consolidated_invoice:
-            default_date_from = latest_consolidated_invoice.myinvois_issuance_date + relativedelta(days=1)
-        else:
-            default_date_from = date_utils.start_of(fields.Date.context_today(self) - relativedelta(months=1), 'month')
-        default_date_to = date_utils.end_of(default_date_from, 'month')
-
-        return {
-            'name': self.env._('Create Consolidated Invoice'),
-            'res_model': 'myinvois.consolidate.invoice.wizard',
-            'view_mode': 'form',
-            'views': [[False, 'form']],
-            'target': 'new',
-            'context': {
-                'default_date_from': default_date_from,
-                'default_date_to': default_date_to,
-                'default_consolidation_type': 'pos',
-            },
-            'type': 'ir.actions.act_window',
-        }
 
     def action_show_myinvois_documents(self):
         """
@@ -258,3 +213,12 @@ class MyInvoisDocumentPoS(models.Model):
             AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
             return base_lines
         return super()._get_record_rounded_base_lines(record)
+
+    def _base_line_should_be_negated(self, base_line):
+        """
+        In the PoS, we will merge refunds and their original orders in a single line, in which case the
+        refund should reduce the amount of the merged line.
+        """
+        if base_line["record"] and base_line["record"]._name == 'pos.order.line':
+            return base_line["is_refund"]
+        return super()._base_line_should_be_negated(base_line)
