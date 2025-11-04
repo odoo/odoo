@@ -34,6 +34,10 @@ import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
+/**
+ * @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors
+ */
+
 export const fontItems = [
     {
         name: _t("Header 1 Display 1"),
@@ -118,6 +122,7 @@ const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 export class FontPlugin extends Plugin {
     static id = "font";
     static dependencies = ["baseContainer", "input", "split", "selection", "dom", "format"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

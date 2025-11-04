@@ -18,6 +18,7 @@ export class TableOfContentPlugin extends Plugin {
         "history",
         "baseContainer",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

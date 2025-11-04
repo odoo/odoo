@@ -13,6 +13,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 export class TableUIPlugin extends Plugin {
     static id = "tableUi";
     static dependencies = ["history", "overlay", "table"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

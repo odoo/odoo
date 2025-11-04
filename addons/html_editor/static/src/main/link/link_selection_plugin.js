@@ -31,11 +31,17 @@ import { isProtected, isProtecting, isZwnbsp } from "@html_editor/utils/dom_info
  * @property { LinkSelectionPlugin['padLinkWithZwnbsp'] } padLinkWithZwnbsp
  */
 
+/**
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} ineligible_link_for_selection_indication_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} ineligible_link_for_zwnbsp_predicates
+ */
+
 export class LinkSelectionPlugin extends Plugin {
     static id = "linkSelection";
     static dependencies = ["selection", "feff"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing padLinkWithZwnbsp.
     static shared = ["padLinkWithZwnbsp"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         selectionchange_handlers: this.resetLinkInSelection.bind(this),

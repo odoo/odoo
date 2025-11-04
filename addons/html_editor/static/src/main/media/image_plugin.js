@@ -34,10 +34,23 @@ const IMAGE_SIZE = [
     { name: "25%", value: "25%" },
 ];
 
+/**
+ * @typedef { Object } ImageShared
+ * @property { ImagePlugin['getTargetedImage'] } getTargetedImage
+ * @property { ImagePlugin['previewImage'] } previewImage
+ * @property { ImagePlugin['resetImageTransformation'] } resetImageTransformation
+ */
+
+/**
+ * @typedef {((img: HTMLImageElement) => void | true)[]} delete_image_overrides
+ * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_predicates
+ */
+
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
     static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

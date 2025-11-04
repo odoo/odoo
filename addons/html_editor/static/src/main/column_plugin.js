@@ -32,6 +32,7 @@ function columnIsAvailable(numberOfColumns) {
 export class ColumnPlugin extends Plugin {
     static id = "column";
     static dependencies = ["baseContainer", "selection", "history", "dom"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

@@ -4,9 +4,25 @@ import { removeClass } from "@html_editor/utils/dom";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 
+/**
+ * @typedef {import("@html_editor/editor").EditorContext} EditorContext
+ * @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData
+ * @typedef {import("plugins").CSSSelector} CSSSelector
+ * @typedef {import("plugins").TranslatedString} TranslatedString
+ */
+
+/**
+ * @typedef {((
+ *   selectionData: SelectionData,
+ *   editable: EditorContext["editable"]
+ * ) => HTMLElement[] | NodeList)[]} hint_targets_providers
+ * @typedef {{ selector: CSSSelector; text: TranslatedString; }[]} hints
+ */
+
 export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         selectionchange_handlers: this.updateHints.bind(this),

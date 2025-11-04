@@ -26,6 +26,23 @@ import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 /**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['savePendingImages'] } savePendingImages
+ * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
+ */
+
+/**
+ * @typedef {((mediaEl: HTMLElement) => void)[]} after_save_media_dialog_handlers
+ * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_added_media_handlers
+ * @typedef {((elements: HTMLElement[], params: { node: Node }) => Promise<void>)[]} on_media_dialog_saved_handlers
+ * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_replaced_media_handlers
+ *
+ * @typedef {((el: HTMLElement) => HTMLElement)[]} closest_savable_providers
+ *
+ * @typedef {{
+ *      id: "DOCUMENTS" | "ICONS" | "IMAGES" | "VIDEOS";
+ *      title: import("plugins").TranslatedString;
+ *      Component: import("@odoo/owl").Component;
+ *      sequence: number;
+ *  }[]} media_dialog_extra_tabs
  */
 
 export class MediaPlugin extends Plugin {
@@ -36,6 +53,7 @@ export class MediaPlugin extends Plugin {
         allowImage: true,
         allowMediaDialogVideo: true,
     };
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

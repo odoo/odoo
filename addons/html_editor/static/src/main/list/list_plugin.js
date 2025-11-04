@@ -73,6 +73,7 @@ export class ListPlugin extends Plugin {
         "color",
     ];
     toolbarListSelectorKey = reactive({ value: 0 });
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

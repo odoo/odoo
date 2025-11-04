@@ -14,6 +14,7 @@ const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 export class ProtectedNodePlugin extends Plugin {
     static id = "protectedNode";
     static shared = ["setProtectingNode"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),

@@ -8,6 +8,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 export class IconPlugin extends Plugin {
     static id = "icon";
     static dependencies = ["history", "selection", "color", "dialog"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

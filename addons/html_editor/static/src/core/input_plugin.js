@@ -1,5 +1,10 @@
 import { Plugin } from "../plugin";
 
+/**
+ * @typedef {((ev: InputEvent) => void)[]} beforeinput_handlers
+ * @typedef {((ev: InputEvent) => void)[]} input_handlers
+ */
+
 export class InputPlugin extends Plugin {
     static id = "input";
     static dependencies = ["history"];

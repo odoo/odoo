@@ -17,6 +17,7 @@ const alignmentItems = [
 export class AlignPlugin extends Plugin {
     static id = "align";
     static dependencies = ["history", "selection"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
