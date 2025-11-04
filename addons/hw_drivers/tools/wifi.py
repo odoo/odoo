@@ -204,12 +204,13 @@ def _validate_configuration(ssid):
     if source_path.is_dir():
         source_path = f"{source_path}/"
 
-    # Copy the configuration file to the root filesystem
-    if subprocess.run(['sudo', 'rsync', '--dirs', '--delete', source_path, destination_path], check=False).returncode == 0:
-        return True
-    else:
-        _logger.error('Failed to apply the network configuration to /root_bypass_ramdisks.')
-        return False
+    with writable():
+        # Copy the configuration file to the root filesystem
+        if subprocess.run(['sudo', 'rsync', '--dirs', '--delete', source_path, destination_path], check=False).returncode == 0:
+            return True
+        else:
+            _logger.error('Failed to apply the network configuration to /root_bypass_ramdisks.')
+            return False
 
 
 # -------------------------- #
