@@ -71,6 +71,28 @@ class TestIntervals(TransactionCase):
             [(0, 5), (12, 13), (20, 22), (23, 24)],
         )
 
+    def test_keep_distinct(self):
+        """ Test merge operations between two Intervals
+            instances with different _keep_distinct flags.
+        """
+
+        A = Intervals(self.ints([(0, 10)]), keep_distinct=False)
+        B = Intervals(self.ints([(-5, 5), (5, 15)]), keep_distinct=True)
+
+        C = A & B
+        # The _keep_distinct flag must be the same as the left one
+        self.assertFalse(C._keep_distinct)
+        self.assertEqual(len(C), 1)
+        self.assertEqual(list(C), self.ints([(0, 10)]))
+
+        # If, as a result of the above operation, C has _keep_distinct = False
+        # but is not preserving its _items, the following operation must raise
+        # an error
+        D = Intervals()
+        C = C - D
+        self.assertFalse(C._keep_distinct)
+        self.assertEqual(C._items, self.ints([(0, 10)]))
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUtils(TransactionCase):
