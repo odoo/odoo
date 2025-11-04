@@ -16,11 +16,13 @@
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.ph'),
+                         ref('base.tw'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
                          ref('base.PHP'),
+                         ref('base.TWD'),
                      ])]"
         />
     </record>
@@ -336,7 +338,7 @@
                          ref('base.USD'),
                      ])]"
         />
-    </record>    
+    </record>
 
     <record id="payment_method_appota" model="payment.method">
         <field name="name">Appota</field>
@@ -1508,11 +1510,13 @@
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.cn'),
+                         ref('base.tw'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
                          ref('base.CNY'),
+                         ref('base.TWD'),
                      ])]"
         />
     </record>
@@ -3594,6 +3598,28 @@
         />
     </record>
 
+    <record id="payment_method_twqr" model="payment.method">
+        <field name="name">TWQR</field>
+        <field name="code">twqr</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/twqr.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.tw'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.TWD'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_uatp" model="payment.method">
         <field name="name">Universal Air Travel Plan</field>
         <field name="code">uatp</field>
@@ -3909,6 +3935,7 @@
                          ref('base.USD'),
                          ref('base.SGD'),
                          ref('base.THB'),
+                         ref('base.TWD'),
                      ])]"
         />
     </record>
