@@ -288,7 +288,7 @@
                                     groups="hr_holidays.group_hr_holidays_user">
                                     Refuse
                                 </button>
-                                <button t-if="record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link btn-sm ps-0 text-danger">
+                                <button t-if="record.attachment_is_visible and record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link btn-sm ps-0 text-danger">
                                     <i class="fa fa-paperclip"> <field name="supported_attachment_ids_count" nolabel="1"/></i>
                                 </button>
                             </bottom>
@@ -406,7 +406,7 @@
                             <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
                         </group>
                         <group>
-                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state != 'confirm'" />
+                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="not attachment_is_visible or state != 'confirm'" />
                         </group>
                     </div>
                     <div class="o_hr_leave_column col_right col-md-6 col-12">
