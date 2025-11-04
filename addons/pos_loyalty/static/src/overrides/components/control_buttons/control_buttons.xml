@@ -8,7 +8,7 @@
                 <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.get_order())" />
                 <button t-att-class="buttonClass"
                     t-on-click="onClickWallet"
-                    t-attf-class="{{(_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? 'highlight text-action': ''}}">
+                    t-attf-class="{{(_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? 'highlight text-action': 'disabled'}}">
                     <i class="fa fa-credit-card me-1" />
                     <t t-if="_orderTotal lt 0 and _eWalletPrograms.length">eWallet Refund</t>
                     <t t-elif="_eWalletRewards.length">eWallet Pay</t>
