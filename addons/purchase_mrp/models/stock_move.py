@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models, fields
-from odoo.tools.float_utils import float_is_zero, float_round
-from odoo.exceptions import UserError
+from odoo import Command, api, models
 
 
 class StockMove(models.Model):
@@ -50,3 +48,11 @@ class StockMove(models.Model):
             if kit_bom:
                 return line._compute_kit_quantities_from_moves(line.move_ids - self, kit_bom)
         return super()._get_qty_received_without_self()
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft_or_cancel(self):
+        for move in self.filtered(lambda m: m.raw_material_production_id):
+            purchase_moves = move.move_orig_ids.filtered(lambda m: m.purchase_line_id)
+            if purchase_moves:
+                move.move_orig_ids = [Command.unlink(m.id) for m in purchase_moves]
+        return super()._unlink_if_draft_or_cancel()
