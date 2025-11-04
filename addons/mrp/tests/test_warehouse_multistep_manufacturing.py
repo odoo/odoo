@@ -949,3 +949,51 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             {'product_id': self.product_1.id, 'product_uom_qty': 0, 'product_qty_available': 0},
             {'product_id': self.product_3.id, 'product_uom_qty': 5, 'product_qty_available': 20},
         ])
+
+    def test_consumed_move_line_are_unlinked_after_scrap(self):
+        """
+            Scrap a product(with lot) of a consumed move line.
+            Check that move line is correctly deleted
+        """
+        # setup
+        self.warehouse.manufacture_steps = 'pbm_sam'
+        self.product_4.tracking = 'serial'
+        self.product_2.tracking = 'lot'
+        bom = self.bom_1
+        bom.bom_line_ids.filtered(lambda l: l.product_id == self.product_1).unlink()
+        stock_loc = self.warehouse.lot_stock_id
+        lots = self.env['stock.lot'].create([
+            {'name': f'lot{i}', 'product_id': self.product_2.id, 'company_id': self.env.company.id}
+            for i in range(3)
+        ])
+        for lot in lots:
+            self.env['stock.quant']._update_available_quantity(self.product_2, stock_loc, 2, lot_id=lot)
+        # operation
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'picking_type_id': self.warehouse.manu_type_id.id,
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
+        mo.action_confirm()
+        mo.action_assign()
+        move_raw = mo.move_raw_ids
+        picking = mo.picking_ids.filtered(lambda p: p.state == 'assigned')
+        picking.button_validate()
+        self.assertEqual(move_raw.lot_ids, picking.move_ids.lot_ids)
+
+        # Consider the move as consumed
+        move_raw.picked = True
+        self.assertTrue(move_raw.move_line_ids.picked)
+
+        scrap = self.env['stock.scrap'].create({
+            'lot_id': move_raw.lot_ids[0].id,
+            'location_id': move_raw.location_id.id,
+            'product_id': self.product_2.id,
+            'product_uom_id': self.uom_unit.id,
+            'scrap_qty': 2.0,
+            'should_replenish': True,
+            'production_id': mo.id,
+        })
+        scrap.do_scrap()
+        self.assertFalse(move_raw.move_line_ids.exists())
