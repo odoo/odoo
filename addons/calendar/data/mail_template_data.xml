@@ -96,8 +96,9 @@
         </table>
     </div>
     <div style="margin: 32px 0 0;">
+        <t t-set="max_shown_attendees" t-value="20"/>
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
-        <div t-foreach="object.event_id.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+        <div t-foreach="object.event_id.attendee_ids[:max_shown_attendees]" t-as="attendee" style="margin-bottom: 5px;">
             <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
             <t t-if="attendee != object">
                 <span style="margin-left: 5px;" t-out="attendee.common_name or ''">Mitchell Admin</span>
@@ -105,6 +106,9 @@
             <t t-else="">
                 <span style="margin-left: 5px;">You</span>
             </t>
+        </div>
+        <div t-if="len(object.event_id.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
+            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees"/> more
         </div>
     </div>
     <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
@@ -226,8 +230,9 @@
         </table>
     </div>
     <div style="margin: 32px 0 0;">
+        <t t-set="max_shown_attendees" t-value="20"/>
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
-        <div t-foreach="object.event_id.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+        <div t-foreach="object.event_id.attendee_ids[:max_shown_attendees]" t-as="attendee" style="margin-bottom: 5px;">
             <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
             <t t-if="attendee != object">
                 <span style="margin-left: 5px;" t-out="attendee.common_name or ''">Mitchell Admin</span>
@@ -235,6 +240,9 @@
             <t t-else="">
                 <span style="margin-left: 5px;">You</span>
             </t>
+        </div>
+        <div t-if="len(object.event_id.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
+            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees"/> more
         </div>
     </div>
     <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
@@ -337,8 +345,9 @@
         </table>
     </div>
     <div style="margin: 32px 0 0;">
+        <t t-set="max_shown_attendees" t-value="20"/>
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
-        <div t-foreach="object.event_id.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+        <div t-foreach="object.event_id.attendee_ids[:max_shown_attendees]" t-as="attendee" style="margin-bottom: 5px;">
             <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
             <t t-if="attendee != object">
                 <span style="margin-left: 5px;" t-out="attendee.common_name or ''">Mitchell Admin</span>
@@ -346,6 +355,9 @@
             <t t-else="">
                 <span style="margin-left: 5px;">You</span>
             </t>
+        </div>
+        <div t-if="len(object.event_id.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
+            ... and <t t-out="len(object.event_id.attendee_ids) - max_shown_attendees"/> more
         </div>
     </div>
     <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
@@ -433,8 +445,9 @@
         </table>
     </div>
     <div style="margin: 32px 0 0;">
+        <t t-set="max_shown_attendees" t-value="20"/>
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
-        <div t-foreach="object.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+        <div t-foreach="object.attendee_ids[:max_shown_attendees]" t-as="attendee" style="margin-bottom: 5px;">
             <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
             <t t-if="attendee.common_name">
                 <span style="margin-left: 5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
@@ -442,6 +455,9 @@
             <t t-else="">
                 <span style="margin-left: 5px;">You</span>
             </t>
+        </div>
+        <div t-if="len(object.attendee_ids) > max_shown_attendees" style="margin-bottom: 5px;">
+            ... and <t t-out="len(object.attendee_ids) - max_shown_attendees"/> more
         </div>
     </div>
     <div t-if="not is_html_empty(object.description)" style="margin: 32px 0 0;">
