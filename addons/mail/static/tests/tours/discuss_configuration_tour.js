@@ -74,5 +74,21 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
         {
             trigger: "label:contains('Edge blur intensity')",
         },
+        {
+            trigger: ".modal-header button[aria-label='Close']",
+            run: "click",
+        },
+        {
+            trigger: ".o_main_navbar button:contains('Configuration')",
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-menu a:contains('Settings')",
+            expectUnloadPage: true,
+            run: "click",
+        },
+        {
+            trigger: "#discuss_setting",
+        },
     ],
 });
