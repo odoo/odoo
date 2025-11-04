@@ -5,6 +5,8 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { PartnerList } from "../../partner_list/partner_list";
+import { RPCError } from "@web/core/network/rpc";
+import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
 
 export class InvoiceButton extends Component {
     static template = "point_of_sale.InvoiceButton";
@@ -97,8 +99,15 @@ export class InvoiceButton extends Component {
 
         // Part 2: Invoice the order.
         // FIXME POSREF timeout
-        await this.pos.data.silentCall("pos.order", "action_pos_order_invoice", [orderId]);
-
+        try {
+            await this.pos.data.call("pos.order", "action_pos_order_invoice", [orderId]);
+        } catch (error) {
+            if (error instanceof RPCError) {
+                handleRPCError(error, this.dialog);
+            } else {
+                console.warn("call action_pos_order_invoice failed:", error);
+            }
+        }
         // Part 3: Download invoice.
         await this._downloadInvoice(orderId);
         this.props.onInvoiceOrder(orderId);
