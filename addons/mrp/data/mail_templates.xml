@@ -17,10 +17,13 @@
                             <t t-set="uom" t-value="move_raw_id.uom_id if 'uom_id' in move_raw_id else move_raw_id.uom_id"/>
                             <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-out="production_order.name"/></a>:
                             <t t-out="new_qty"/> <t t-out="uom.name"/> of <t t-out="move_raw_id.product_id.name"/>
-                            <t t-if="cancel">
+                            <t t-if="is_child_mo_unlink">
+                                unlinked from the source manufacturing order
+                            </t>
+                            <t t-elif="cancel">
                                 cancelled
                             </t>
-                            <t t-if="not cancel">
+                            <t t-else="">
                                 ordered instead of <t t-out="old_qty"/> <t t-out="uom.name"/>
                             </t>
                       </li>
@@ -49,6 +52,26 @@
         <div>
             <t t-call="mrp.production_message"/>
             <t t-call="stock.message_body"/>
+        </div>
+    </template>
+
+    <template id="exception_on_picking_from_mo">
+        <div class="alert alert-warning" role="alert">
+            Exception(s) occurred on the picking based on Manufacturing Order
+            <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="origin_mo.id"><t t-out="origin_mo.name"/></a>.
+            Manual actions may be needed.
+            <div class="mt16">
+                <p>Exception(s):</p>
+                <ul t-foreach="moves_information" t-as="exception">
+                    <li>
+                        <t t-set="move" t-value="exception[0]"/>
+                        <t t-set="qty" t-value="exception[1][1]"/>
+                        <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="origin_mo.id"><t t-out="origin_mo.name"/></a>:
+                        <t t-out="qty"/> <t t-out="move.uom_id.name"/> of <t t-out="move.product_id.display_name"/>
+                        unlinked from the source manufacturing order
+                    </li>
+                </ul>
+            </div>
         </div>
     </template>
 </odoo>

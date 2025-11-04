@@ -2462,10 +2462,20 @@ class MrpProduction(models.Model):
         def _render_note_exception_quantity_mo(rendering_context):
             visited_objects = []
             order_exceptions = {}
+            exception_on_picking = self.env.context.get('exception_on_picking')
             for exception in rendering_context:
+                if exception_on_picking:
+                    order_exceptions.update(exception)
+                    continue
                 order_exception, visited = exception
                 order_exceptions.update(order_exception)
                 visited_objects += visited
+            if exception_on_picking:
+                values = {
+                    'origin_mo': self,
+                    'moves_information': [(move, info[1]) for move, info in order_exceptions.items()],
+                }
+                return self.env['ir.qweb']._render('mrp.exception_on_picking_from_mo', values)
             visited_objects = [sm for sm in visited_objects if sm._name == 'stock.move']
             impacted_object = []
             if visited_objects:
@@ -2476,7 +2486,8 @@ class MrpProduction(models.Model):
                 'production_order': self,
                 'order_exceptions': order_exceptions,
                 'impacted_object': impacted_object,
-                'cancel': cancel
+                'cancel': cancel,
+                'is_child_mo_unlink': self.env.context.get('is_child_mo_unlink', False),
             }
             return self.env['ir.qweb']._render('mrp.exception_on_mo', values)
 
