@@ -79,6 +79,7 @@ class MailActivity(models.Model):
     automated = fields.Boolean(
         'Automated activity', readonly=True,
         help='Indicates this activity has been created automatically and not by any user.')
+    technical_usage = fields.Selection(selection=[('none', 'Non Technical')], default='none', readonly=True, help="Technical identifier")
     # Attachments are linked to a document through model / res_id and to the activity through this field.
     attachment_ids = fields.Many2many(
         'ir.attachment', 'activity_attachment_rel',
