@@ -19,6 +19,10 @@ import { Plugin } from "../plugin";
  * @property { UserCommandPlugin['getCommand'] } getCommand
  */
 
+/**
+ * @typedef {UserCommand[]} user_commands
+ */
+
 export class UserCommandPlugin extends Plugin {
     static id = "userCommand";
     static shared = ["getCommand"];

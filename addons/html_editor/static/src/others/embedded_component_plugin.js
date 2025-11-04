@@ -5,6 +5,16 @@ import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 
 /**
+ * @typedef { Object } EmbeddedComponentShared
+ * @property { EmbeddedComponentPlugin['renderBlueprintToElement'] } renderBlueprintToElement
+ */
+
+/**
+ * @typedef {((arg: { name, env, props }) => void)[]} mount_component_handlers
+ * @typedef {(() => void)[]} post_mount_component_handlers
+ */
+
+/**
  * This plugin is responsible with providing the API to manipulate/insert
  * sub components in an editor.
  */
@@ -12,6 +22,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
     static dependencies = ["history", "protectedNode", "selection"];
     static shared = ["renderBlueprintToElement"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         normalize_handlers: withSequence(0, this.normalize.bind(this)),

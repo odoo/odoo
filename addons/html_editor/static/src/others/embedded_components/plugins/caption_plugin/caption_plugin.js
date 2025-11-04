@@ -19,6 +19,7 @@ export class CaptionPlugin extends Plugin {
         "selection",
         "baseContainer",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

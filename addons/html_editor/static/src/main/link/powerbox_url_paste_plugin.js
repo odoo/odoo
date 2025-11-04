@@ -1,8 +1,15 @@
 import { Plugin } from "@html_editor/plugin";
 
+/**
+ * @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand
+ *
+ * @typedef {((url: string) => UserCommand)[]} paste_media_url_command_providers
+ */
+
 export class MediaUrlPastePlugin extends Plugin {
     static id = "mediaUrlPaste";
     static dependencies = ["link", "dom", "history", "powerbox"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         paste_url_overrides: this.openPowerboxOnUrlPaste.bind(this),
     };

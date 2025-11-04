@@ -35,6 +35,7 @@ export const isUnremovableQWebElement = (node) =>
 export class QWebPlugin extends Plugin {
     static id = "qweb";
     static dependencies = ["overlay", "protectedNode", "selection"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),

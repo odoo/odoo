@@ -13,6 +13,7 @@ export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
     static dependencies = ["selection", "history", "imagePostProcess"];
     static shared = ["openCropImage"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
