@@ -6,9 +6,12 @@ import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 import { setElementContent } from "@web/core/utils/html";
 
+/** @typedef {import("plugins").EditorResources} EditorResources */
+/** @typedef {import("plugins").GlobalResources} GlobalResources */
+/** @typedef {keyof GlobalResources} GlobalResourcesId */
 /**
- * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
- * @typedef {typeof import("./plugin").Plugin} PluginConstructor
+ * @typedef {import("plugins").SharedMethods} SharedMethods
+ * @typedef {import("plugins").PluginConstructor} PluginConstructor
  **/
 
 /**
@@ -42,12 +45,27 @@ import { setElementContent } from "@web/core/utils/html";
  * @property { HTMLElement } editable
  * @property { SharedMethods } dependencies
  * @property { import("./editor").EditorConfig } config
- * @property { * } services
+ * @property { import("services").ServiceFactories } services
  * @property { Editor['getResource'] } getResource
  * @property { Editor['dispatchTo'] } dispatchTo
  * @property { Editor['delegateTo'] } delegateTo
  */
 
+/**
+ * @typedef {((arg: {root: EditorContext["editable"]}) => void)[]} clean_for_save_handlers
+ * @typedef {(() => void)[]} start_edition_handlers
+ */
+
+/**
+ * Clean up DOM before taking into account for next history step remaining in
+ * edit mode
+ * @typedef {((root: EditorContext["editable"] | HTMLElement) => void)[]} normalize_handlers
+ */
+
+/**
+ * @param {PluginConstructor[]} plugins
+ * @returns {PluginConstructor[]}
+ */
 function sortPlugins(plugins) {
     const initialPlugins = new Set(plugins);
     const inResult = new Set();
@@ -90,6 +108,7 @@ export class Editor {
         this.isDestroyed = false;
         this.config = config;
         this.services = services;
+        /** @type { EditorResources } */
         this.resources = null;
         this.plugins = [];
         /** @type { HTMLElement } **/
@@ -248,8 +267,9 @@ export class Editor {
     }
 
     /**
-     * @param {string} resourceId
-     * @returns {Array}
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @returns {GlobalResources[R]}
      */
     getResource(resourceId) {
         return this.resources[resourceId] || [];
@@ -270,8 +290,9 @@ export class Editor {
      * this.dispatchTo("my_event_handlers", arg1, arg2);
      * ```
      *
-     * @param {string} resourceId
-     * @param  {...any} args The arguments to pass to the handlers.
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @param {Parameters<GlobalResources[R][0]>} args The arguments to pass to the handlers.
      */
     dispatchTo(resourceId, ...args) {
         this.getResource(resourceId).forEach((handler) => handler(...args));
@@ -295,8 +316,9 @@ export class Editor {
      * }
      * ```
      *
-     * @param {string} resourceId
-     * @param  {...any} args The arguments to pass to the overrides.
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @param {Parameters<GlobalResources[R][0]>} args The arguments to pass to the overrides.
      * @returns {boolean} Whether one of the overrides returned a truthy value.
      */
     delegateTo(resourceId, ...args) {

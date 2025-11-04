@@ -66,6 +66,10 @@ function isUnremovableTableComponent(node, root) {
  */
 
 /**
+ * @typedef {((el: HTMLElement) => void)[]} deselect_custom_selected_nodes_handlers
+ */
+
+/**
  * This plugin only contains the table manipulation and selection features. All UI overlay
  * code is located in the table_ui plugin
  */
@@ -96,6 +100,7 @@ export class TablePlugin extends Plugin {
         "clearColumnContent",
         "clearRowContent",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

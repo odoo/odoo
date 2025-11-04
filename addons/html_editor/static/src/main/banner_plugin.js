@@ -26,6 +26,7 @@ export class BannerPlugin extends Plugin {
     // sanitize plugin is required to handle `contenteditable` attribute.
     static dependencies = ["baseContainer", "history", "dom", "emoji", "selection", "sanitize"];
     static shared = ["insertBanner"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

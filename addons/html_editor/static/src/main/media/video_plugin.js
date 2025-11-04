@@ -7,6 +7,7 @@ export class VideoPlugin extends Plugin {
     static defaultConfig = {
         allowVideo: true,
     };
+    /** @type {import("plugins").EditorResources} */
     resources = {
         ...(this.config.allowVideo && {
             media_dialog_extra_tabs: {

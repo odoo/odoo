@@ -6,6 +6,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/objects";
 
 /** @typedef {import("./powerbox/powerbox_plugin").PowerboxCommand} PowerboxCommand */
+/** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
 /**
  * @typedef {Object} PowerButton
@@ -16,29 +17,36 @@ import { omit, pick } from "@web/core/utils/objects";
  * @property {string} [text] Mandatory if `icon` is not provided
  * @property {string} [isAvailable] Can be inferred from the user command
  */
+
 /**
+ * @typedef {((selection: EditorSelection) => boolean)[]} power_buttons_visibility_predicates
+ */
+
+/**
+ * @typedef {{ commandId: string }[]} power_buttons
+ *
  * A power button is added by referencing an existing user command.
  *
  * Example:
  *
- * resources = {
- *      user_commands: [
- *          {
- *              id: myCommand,
- *              run: myCommandFunction,
- *              description: _t("Apply my command"),
- *              icon: "fa-bug",
- *          },
- *      ],
- *      power_buttons: [
- *          {
- *              commandId: "myCommand",
- *              commandParams: { myParam: "myValue" },
- *              description: _t("Do powerfull stuff"), // overrides the user command's `description`
- *              // `icon` is derived from the user command
- *          }
- *      ],
- * };
+ *     resources = {
+ *          user_commands: [
+ *              {
+ *                  id: myCommand,
+ *                  run: myCommandFunction,
+ *                  description: _t("Apply my command"),
+ *                  icon: "fa-bug",
+ *              },
+ *          ],
+ *          power_buttons: [
+ *              {
+ *                  commandId: "myCommand",
+ *                  commandParams: { myParam: "myValue" },
+ *                  description: _t("Do powerfull stuff"), // overrides the user command's `description`
+ *                  // `icon` is derived from the user command
+ *              }
+ *          ],
+ *     };
  */
 
 export class PowerButtonsPlugin extends Plugin {
@@ -52,6 +60,7 @@ export class PowerButtonsPlugin extends Plugin {
         "userCommand",
         "history",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
         selectionchange_handlers: this.updatePowerButtons.bind(this),

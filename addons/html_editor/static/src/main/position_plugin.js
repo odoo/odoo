@@ -4,11 +4,15 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
 
 /**
+ * @typedef {(() => void)[]} layout_geometry_change_handlers
+ */
+/**
  * This plugins provides a way to create a "local" overlays so that their
  * visibility is relative to the overflow of their ancestors.
  */
 export class PositionPlugin extends Plugin {
     static id = "position";
+    /** @type {import("plugins").EditorResources} */
     resources = {
         // todo: it is strange that the position plugin is aware of external_history_step_handlers and history_reset_from_steps_handlers.
         external_history_step_handlers: this.layoutGeometryChange.bind(this),

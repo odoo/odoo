@@ -7,6 +7,7 @@ import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
     static dependencies = ["selection", "history", "input", "split", "feff"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         input_handlers: this.onInput.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),

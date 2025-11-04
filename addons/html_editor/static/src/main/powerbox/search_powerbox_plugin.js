@@ -9,6 +9,7 @@ import { Plugin } from "../../plugin";
 export class SearchPowerboxPlugin extends Plugin {
     static id = "searchPowerbox";
     static dependencies = ["powerbox", "selection", "history", "input"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
         input_handlers: this.onInput.bind(this),

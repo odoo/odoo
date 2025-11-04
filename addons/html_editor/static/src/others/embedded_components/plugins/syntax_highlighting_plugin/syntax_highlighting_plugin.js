@@ -41,6 +41,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
         "protectedNode",
         "embeddedComponents",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         mount_component_handlers: this.setupNewCodeBlock.bind(this),
         normalize_handlers: (root) => this.addCodeBlocks(root, true),
