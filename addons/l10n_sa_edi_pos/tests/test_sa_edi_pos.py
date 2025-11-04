@@ -28,3 +28,10 @@ class TestGenericSAEdi(TestGenericLocalization):
             'zip': '42317',
             'l10n_sa_edi_building_number': '1234',
         })
+
+    def test_generic_localization(self):
+        self.main_pos_config.l10n_gcc_dual_language_receipt = True
+        order, html = super().test_generic_localization()
+        self.assertTrue(order.company_id.l10n_sa_edi_building_number in html)
+        self.assertTrue("THIS IS NOT A LEGAL DOCUMENT" in html)
+        self.assertTrue("هذا المستند ليس مستنداً قانونياً" in html)

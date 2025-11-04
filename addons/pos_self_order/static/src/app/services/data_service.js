@@ -2,13 +2,22 @@ import { PosData } from "@point_of_sale/app/services/data_service";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
+import { registerPythonTemplate } from "@point_of_sale/app/utils/convert_python_template";
 
 export const unpatchSelf = patch(PosData.prototype, {
     async loadInitialData() {
         const configId = session.data.config_id;
+        await this.fetchReceiptTemplate();
         return await rpc(`/pos-self/data/${parseInt(configId)}`, {
             access_token: odoo.access_token,
         });
+    },
+    async fetchReceiptTemplate() {
+        const configId = session.data.config_id;
+        const data = await rpc(`/pos-self/receipt-template/${parseInt(configId)}`);
+        for (const [name, string] of data) {
+            registerPythonTemplate(name, "", string);
+        }
     },
     async loadFieldsAndRelations() {
         const configId = session.data.config_id;

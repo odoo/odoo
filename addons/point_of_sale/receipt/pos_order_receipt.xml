@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="point_of_sale.pos_order_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <div style="padding-left: 3px; padding-right: 3px;">
+                    <div class="w-100 text-normal mb-3">
+                        <t t-call="point_of_sale.pos_order_receipt_header" />
+                        <div class="w-100 mt-3">
+                            <table t-foreach="lines" t-as="line" style="width:100%" t-att-class="{'mt-2': not line['combo_parent_id'], 'mt-1': line['combo_parent_id']}">
+                                <tbody>
+                                    <t t-call="point_of_sale.pos_orderline_receipt" />
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="w-100 text-normal mb-3" name="prices" t-if="not conditions['basic_receipt']">
+                        <table class="w-100">
+                            <tbody>
+                                <tr class="text-normal">
+                                    <td class="text-start w-70" name="subtotal">Subtotal:</td>
+                                    <td class="text-end w-30"><t t-out="extra_data['prices']['subtotal_amount']" /></td>
+                                </tr>
+                                <t t-foreach="extra_data['prices']['taxes']" t-as="tax">
+                                    <tr name="taxes_line" class="text-normal">
+                                        <td class="text-start w-70">
+                                            <span><t t-out="tax['name']" /></span>
+                                        </td>
+                                        <td class="text-end w-30 text-break">
+                                            <span class="font-monospace"><t t-out="tax['amount']" /></span>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="not extra_data['prices']['same_tax_base']" class="text-normal">
+                                        <td class="text-start w-70">
+                                            <span>Base <t t-out="tax['name']" /></span>
+                                        </td>
+                                        <td class="text-end w-30 text-break">
+                                            <span class="font-monospace"><t t-out="tax['amount_base']" /></span>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="text-bold text-normal" t-if="extra_data['prices'].get('rounding_amount')">
+                                    <td class="text-start w-70" name="rounding">Rounding:</td>
+                                    <td class="text-end w-30 rounding-amount font-monospace" t-out="extra_data['prices']['rounding_amount']" />
+                                </tr>
+                                <tr class="text-bold text-normal">
+                                    <td class="text-start w-70" name="total">Total:</td>
+                                    <td class="text-end w-30"><span class="total-amount font-monospace" t-out="extra_data['prices']['total_amount']" /></td>
+                                </tr>
+                                <tr class="text-bold text-normal" t-if="extra_data['prices'].get('discount_amount')">
+                                    <td class="text-start w-70" name="discount">Discount:</td>
+                                    <td class="text-end w-30 discount-amount font-monospace" t-out="extra_data['prices']['discount_amount']" />
+                                </tr>
+                                <t t-foreach="payments" t-as="payment" name="payments">
+                                    <tr class="payment-line">
+                                        <td class="text-start w-70 text-normal" t-out="payment['payment_method_data']['name']" />
+                                        <td class="text-end w-30 text-normal font-monospace" t-out="payment['amount']" />
+                                    </tr>
+                                </t>
+                                <tr class="text-bold text-normal" t-if="order.get('amount_return') != 0">
+                                    <td class="text-start w-70" name="change">Change:</td>
+                                    <td class="text-end w-30 change-amount font-monospace" t-out="order['amount_return']" />
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="w-100" t-if="conditions['use_self_invoicing']">
+                        <table class="w-100">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25" t-if="conditions['display_qr_code']">
+                                        <img class="invoice-qr-code" t-att-src="image['invoice_qr_code']" />
+                                    </td>
+                                    <td class="text-start top w-75 ps-1" t-if="conditions['display_url']">
+                                        <p class="text-bold text-normal">Need an invoice?</p>
+                                        <div class="text-small" t-out="extra_data['self_invoicing_url']" />
+                                        <div class="text-small">Code: <t t-out="order['ticket_code']"/></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div t-if="extra_data.get('tips_configuration')" class="w-100 text-center mt-3 mb-3 ">
+                        <span class="mb-2">For convenience, we are providing the following gratuity calculations:</span>
+                        <table class="w-100 mt-2 mb-1">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start w-33 text-center text-normal">
+                                        <span class="mb-1">15%</span><br/>
+                                        <span class="font-monospace" t-out="extra_data['tips_configuration']['15']" />
+                                    </td>
+                                    <td class="text-center w-33 text-center text-normal">
+                                        <span class="mb-1">20% </span><br/>
+                                        <span class="font-monospace" t-out="extra_data['tips_configuration']['20']" />
+                                    </td>
+                                    <td class="text-end w-33 text-center text-normal">
+                                        <span class="mb-1">25%</span><br/>
+                                        <span class="font-monospace" t-out="extra_data['tips_configuration']['25']" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div name="before-footer" />
+                    <t t-call="point_of_sale.pos_order_receipt_footer" />
+                </div>
+            </html>
+        </template>
+
+        <template id="point_of_sale.pos_order_receipt_header">
+            <div class="w-100 text-center mb-3" name="logo">
+                <img t-if="image['logo']" t-att-src="image['logo']" style="max-height: 75px" />
+            </div>
+            <div class="w-100 text-center">
+                <div name="ticket_reference">
+                    <span name="ticket">Ticket</span> <t t-if="conditions['display_vat']">VAT </t>
+                    <t t-out="order['pos_reference']" />
+                </div>
+                <span t-out="extra_data['formated_date_order']" />
+            </div>
+            <div class="w-100 text-center mb-2" t-if="extra_data['cashier_name']" name="cashier_name">
+                <span name="served_by">Served by:</span> <span class="cashier-name" t-out="extra_data['cashier_name']" />
+            </div>
+            <div class="w-100 text-center" t-if="partner" name="partner_info">
+                <div t-out="partner['name']" />
+                <div t-if="partner['pos_contact_address']" t-out="partner['pos_contact_address']" />
+                <div t-if="partner['vat']">
+                    <t t-out="extra_data['partner_vat_label']"/> <t t-out="partner['vat']" />
+                </div>
+                <div t-if="partner['phone']">
+                    Tel: <t t-out="partner['phone']" />
+                </div>
+            </div>
+            <div class="w-100 text-center" t-if="preset">
+                <span t-out="preset['name']" />
+                <span t-if="extra_data['preset_datetime']">: <t t-out="extra_data['preset_datetime']" /></span>
+            </div>
+            <div class="w-100 text-center" t-if="order['tracking_number'] and conditions['module_pos_restaurant']" name="tracking-number">
+                <span class="text-insane" t-out="order['tracking_number']" />
+            </div>
+            <div name="header" />
+            <div t-if="order['state'] == 'draft'" class="text-center fs-2 mb-1">Pro forma receipt</div>
+            <div t-if="config['receipt_header']" class="text-center mb-1" t-out="config['receipt_header']" />
+        </template>
+
+        <template id="point_of_sale.pos_orderline_receipt">
+            <tr t-if="not line['combo_parent_id']" name="standard-line" class="lines">
+                <td class="text-start w-10 top">
+                    <span class="qty text-normal"><t t-out="line['qty']" /></span>
+                </td>
+                <td class="text-start w-60 top">
+                    <t t-call="point_of_sale.pos_orderline_receipt_information" />
+                </td>
+                <td t-if="not conditions['basic_receipt']" class="text-end w-30 text-normal top price-incl font-monospace" t-out="line['price_subtotal_incl']" />
+            </tr>
+            <tr t-else="" name="combo-child-line" class="lines">
+                <td class="text-start w-5 top"/>
+                <td class="text-start w-10 top">
+                    <span><t t-out="line['qty']" /></span>
+                </td>
+                <td class="text-start w-80 top">
+                    <t t-call="point_of_sale.pos_orderline_receipt_information" />
+                </td>
+            </tr>
+        </template>
+
+        <template id="point_of_sale.pos_orderline_receipt_information">
+            <div class="name text-normal" t-out="line['product_data']['display_name']" />
+            <span class="text-small price-unit font-monospace" name="standard-unit-price" t-if="not conditions['basic_receipt'] and not len(line['combo_line_ids'])">
+                <t t-out="line['unit_price']" /> / <t t-out="line['product_uom_name']" />
+            </span>
+            <div t-if="line['customer_note']" class="text-small">
+                <strong>Note: </strong>
+                <span class="line-note" t-out="line['customer_note']" />
+            </div>
+            <div t-if="line['lot_names']" class="text-small">
+                <strong>Lot number: </strong>
+                <span t-foreach="line['lot_names']" t-as="lot_name">
+                    <t t-out="lot_name" />
+                </span>
+            </div>
+            <div name="extra-info" />
+        </template>
+
+        <template id="point_of_sale.pos_order_receipt_footer">
+            <div class="w-100 text-center mt-3">
+                <div class="w-100 mt-2" name="footer" />
+                <div class="mt-2 mb-2" t-if="order['shipping_date']">
+                    Expected delivery: <span class="shipping-date" t-out="order['shipping_date']" />
+                </div>
+                <table class="w-100 text-small">
+                    <tbody name="company_info">
+                        <tr>
+                            <td class="text-start" t-out="company['name']" />
+                            <td class="text-end">
+                                Tel. <t t-out="company['phone']" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-start">
+                                <t t-out="company['street']" />
+                                <t t-if="company['street2']" t-out="company['street2']" />
+                            </td>
+                            <td class="text-end" t-out="company['email']" />
+                        </tr>
+                        <tr>
+                            <td class="text-start">
+                                <t t-out="company['zip']" /> <t t-out="company['city']" />,
+                                <t t-out="extra_data['company_state_name']" />
+                            </td>
+                            <td class="text-end" t-out="company['website']" />
+                        </tr>
+                        <tr>
+                            <td class="text-start" t-if="company.get('vat')" name="company_info_vat">
+                                VAT: <t t-out="company['vat']" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div t-if="config['receipt_footer']" class="w-100 text-center mt-2 mb-2" t-out="config['receipt_footer']" />
+                <div class="w-100 text-center mt-3">
+                    Powered by <strong>Odoo</strong>
+                </div>
+            </div>
+        </template>
+
+        <template id="point_of_sale.pos_order_receipt_style">
+            <style>
+                /** We don't import full bootstrap classes to improve rendering time */
+                #pos-receipt * { box-sizing: border-box; background: #ffffff; }
+                #pos-receipt { line-height: 1.5 !important; width: 512px !important; color: #000000 !important; font-size: 22px !important; box-sizing: border-box; font-family: Arial, sans-serif !important; }
+                #pos-receipt .top { vertical-align: top !important; }
+                #pos-receipt .overflow-hidden { overflow: hidden !important; }
+
+                /** Width classes **/
+                #pos-receipt .w-100 { width: 100% !important }
+                #pos-receipt .w-80 { width: 80% !important }
+                #pos-receipt .w-75 { width: 75% !important }
+                #pos-receipt .w-70 { width: 70% !important }
+                #pos-receipt .w-60 { width: 60% !important }
+                #pos-receipt .w-50 { width: 50% !important }
+                #pos-receipt .w-33 { width: 33% !important }
+                #pos-receipt .w-30 { width: 30% !important }
+                #pos-receipt .w-25 { width: 25% !important }
+                #pos-receipt .w-10 { width: 10% !important }
+                #pos-receipt .w-5 { width: 5% !important }
+                #pos-receipt .mw-50 { max-width: 50% !important }
+                #pos-receipt .mw-100 { max-width: 100% !important }
+
+                /** Margin classes **/
+                #pos-receipt .mb-1 { margin-bottom: 4px !important; }
+                #pos-receipt .mb-2 { margin-bottom: 8px !important; }
+                #pos-receipt .mb-3 { margin-bottom: 16px !important; }
+                #pos-receipt .mt-1 { margin-top: 4px !important; }
+                #pos-receipt .mt-2 { margin-top: 8px !important; }
+                #pos-receipt .mt-3 { margin-top: 16px !important; }
+                #pos-receipt .me-1 { margin-left: 4px !important; }
+                #pos-receipt .me-2 { margin-left: 8px !important; }
+                #pos-receipt .me-3 { margin-left: 16px !important; }
+                #pos-receipt .ms-1 { margin-right: 4px !important; }
+                #pos-receipt .ms-2 { margin-right: 8px !important; }
+                #pos-receipt .ms-3 { margin-right: 16px !important; }
+                #pos-receipt .mx-1 { margin-left: 4px !important; margin-right: 4px !important; }
+                #pos-receipt .mx-2 { margin-left: 8px !important; margin-right: 8px !important; }
+                #pos-receipt .mx-3 { margin-left: 16px !important; margin-right: 16px !important; }
+                #pos-receipt .my-1 { margin-top: 4px !important; margin-bottom: 4px !important; }
+                #pos-receipt .my-2 { margin-top: 8px !important; margin-bottom: 8px !important; }
+                #pos-receipt .my-3 { margin-top: 16px !important; margin-bottom: 16px !important; }
+
+                /** Padding classes **/
+                #pos-receipt .pb-1 { padding-bottom: 4px !important; }
+                #pos-receipt .pb-2 { padding-bottom: 8px !important; }
+                #pos-receipt .pb-3 { padding-bottom: 16px !important; }
+                #pos-receipt .pt-1 { padding-top: 4px !important; }
+                #pos-receipt .pt-2 { padding-top: 8px !important; }
+                #pos-receipt .pt-3 { padding-top: 16px !important; }
+                #pos-receipt .pe-1 { padding-left: 4px !important; }
+                #pos-receipt .pe-2 { padding-left: 8px !important; }
+                #pos-receipt .pe-3 { padding-left: 16px !important; }
+                #pos-receipt .ps-1 { padding-right: 4px !important; }
+                #pos-receipt .ps-2 { padding-right: 8px !important; }
+                #pos-receipt .ps-3 { padding-right: 16px !important; }
+                #pos-receipt .px-1 { padding-left: 4px !important; padding-right: 4px !important; }
+                #pos-receipt .px-2 { padding-left: 8px !important; padding-right: 8px !important; }
+                #pos-receipt .px-3 { padding-left: 16px !important; padding-right: 16px !important; }
+                #pos-receipt .py-1 { padding-top: 4px !important; padding-bottom: 4px !important; }
+                #pos-receipt .py-2 { padding-top: 8px !important; padding-bottom: 8px !important; }
+                #pos-receipt .py-3 { padding-top: 16px !important; padding-bottom: 16px !important; }
+
+                /** Text classes **/
+                #pos-receipt .text-break{ word-wrap: break-word !important; word-break: break-word !important; }
+                #pos-receipt .font-monospace  { font-variant-numeric: tabular-nums !important; }
+                #pos-receipt .text-center { text-align: center !important; }
+                #pos-receipt .text-start { text-align: left !important; }
+                #pos-receipt .text-end { text-align: right !important; }
+                #pos-receipt .text-small { font-size: 18px !important; line-height: 26px !important; }
+                #pos-receipt .text-normal { font-size: 22px !important; line-height: 32px !important; }
+                #pos-receipt .text-large { font-size: 26px !important; line-height: 38px !important; }
+                #pos-receipt .text-insane { font-size: 50px !important; line-height: 74px !important; }
+                #pos-receipt .text-bold { font-weight: bold !important; }
+                #pos-receipt .text-break { word-break: break-word !important; word-wrap: break-word !important; }
+            </style>
+        </template>
+    </data>
+</odoo>

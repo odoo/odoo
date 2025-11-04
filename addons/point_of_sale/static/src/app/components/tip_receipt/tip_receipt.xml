@@ -3,7 +3,9 @@
 
     <t t-name="point_of_sale.TipReceipt">
         <div class="pos-receipt">
-            <ReceiptHeader order="props.order" />
+            <div class="text-insane text-center">
+                <strong>Tip Receipt</strong>
+            </div>
             <div class="pos-payment-terminal-receipt">
                 <pre t-esc="data" />
             </div>

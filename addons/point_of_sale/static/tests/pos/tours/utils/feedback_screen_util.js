@@ -95,72 +95,68 @@ export function checkTicketData(data, basic = false) {
     //   }],
     // }
     const check = async (data, basic) => {
-        const ticket = await posmodel.printer.renderer.toHtml(posmodel.orderReceiptComponent, {
-            order: posmodel.getOrder(),
-            basic_receipt: basic,
-        });
+        const generator = posmodel.getOrderReceiptGenerator(posmodel.getOrder(), basic);
+        const ticket = await generator.generateHtml();
 
         if (!ticket && !Object.keys(data).length) {
             return true;
         }
 
         if (data.total_amount) {
-            ticket
-                .querySelector(".pos-receipt-amount.receipt-total .pos-receipt-right-align")
-                .innerHTML.includes(data.total_amount);
+            ticket.querySelector(".total-amount").innerHTML.includes(data.total_amount);
         }
 
         if (data.is_rounding || data.rounding_amount) {
-            if (!ticket.querySelector(".receipt-rounding")) {
+            if (!ticket.querySelector(".rounding-amount")) {
                 throw new Error("No rounding amount has been found in receipt.");
             }
             if (data.rounding_amount) {
-                ticket.querySelector(".receipt-rounding").innerHTML.includes(data.rounding_amount);
+                ticket.querySelector(".rounding-amount").innerHTML.includes(data.rounding_amount);
             }
         } else if (data.is_rounding === false) {
-            if (ticket.querySelector(".receipt-rounding")) {
+            if (ticket.querySelector(".rounding-amount")) {
                 throw new Error("A rounding amount has been found in receipt.");
             }
         }
 
         if (data.is_to_pay || data.to_pay_amount) {
-            if (!ticket.querySelector(".receipt-to-pay")) {
+            if (!ticket.querySelector(".total-amount")) {
                 throw new Error("No amount to pay has been found in receipt.");
             }
             if (data.to_pay_amount) {
-                ticket.querySelector(".receipt-to-pay").innerHTML.includes(data.to_pay_amount);
+                ticket.querySelector(".total-amount").innerHTML.includes(data.to_pay_amount);
             }
         } else if (data.is_to_pay === false) {
-            if (ticket.querySelector(".receipt-to-pay")) {
+            if (ticket.querySelector(".total-amount")) {
                 throw new Error("An amount to pay has been found in receipt.");
             }
         }
 
         if (data.is_change || data.change_amount) {
-            if (!ticket.querySelector(".receipt-change")) {
+            if (!ticket.querySelector(".change-amount")) {
                 throw new Error("No change amount has been found in receipt.");
             }
             if (data.change_amount) {
-                ticket.querySelector(".receipt-change").innerHTML.includes(data.change_amount);
+                ticket.querySelector(".change-amount").innerHTML.includes(data.change_amount);
             }
         } else if (data.is_change === false) {
-            if (ticket.querySelector(".receipt-change")) {
+            if (ticket.querySelector(".change-amount")) {
                 throw new Error("A change amount has been found in receipt.");
             }
         }
 
         if (data.is_discount) {
-            if (!ticket.querySelector(".receipt-discount")) {
+            if (!ticket.querySelector(".discount-amount")) {
                 throw new Error("No discount amount has been found in receipt.");
             }
         } else if (data.is_discount === false) {
-            if (ticket.querySelector(".receipt-discount")) {
+            if (ticket.querySelector(".discount-amount")) {
                 throw new Error("A discount amount has been found in receipt.");
             }
         }
 
         if (data.is_shipping_date || data.is_shipping_date_today) {
-            if (!ticket.querySelector(".receipt-shipping-date")) {
+            if (!ticket.querySelector(".shipping-date")) {
                 throw new Error("No shipping date has been found in receipt.");
             }
             if (data.is_shipping_date_today) {
@@ -168,43 +164,39 @@ export function checkTicketData(data, basic = false) {
                     "en-US",
                     luxon.DateTime.DATE_SHORT
                 );
-                ticket
-                    .querySelector(".receipt-shipping-date > div")
-                    .innerHTML.includes(expectedDelivery);
+                ticket.querySelector(".shipping-date").innerHTML.includes(expectedDelivery);
             }
         } else if (data.is_shipping_date === false) {
-            if (ticket.querySelector(".receipt-shipping-date")) {
+            if (ticket.querySelector(".shipping-date")) {
                 throw new Error("A shipping date has been found in receipt.");
             }
         }
 
         if (data.is_cashier || data.cashier_name) {
-            if (!ticket.querySelector(".pos-receipt-contact .cashier")) {
+            if (!ticket.querySelector(".cashier-name")) {
                 throw new Error("No cashier name has been found in receipt.");
             }
             if (data.cashier_name) {
-                ticket
-                    .querySelector(".pos-receipt-contact .cashier")
-                    .innerHTML.includes(data.cashier_name);
+                ticket.querySelector(".cashier-name").innerHTML.includes(data.cashier_name);
             }
         } else if (data.is_cashier === false) {
-            if (ticket.querySelector(".pos-receipt-contact .cashier")) {
+            if (ticket.querySelector(".cashier-name")) {
                 throw new Error("A cashier name has been found in receipt.");
             }
         }
 
         if (data.is_qr_code) {
-            if (!ticket.querySelector(".pos-receipt #posqrcode")) {
+            if (!ticket.querySelector(".invoice-qr-code")) {
                 throw new Error("No QR code has been found in receipt.");
             }
         } else if (data.is_qr_code === false) {
-            if (ticket.querySelector(".pos-receipt #posqrcode")) {
+            if (ticket.querySelector(".invoice-qr-code")) {
                 throw new Error("A QR code has been found in receipt.");
             }
         }
 
         if (data.payment_lines) {
-            const paymentLines = ticket.querySelectorAll(".paymentlines");
+            const paymentLines = ticket.querySelectorAll(".payment-line");
 
             for (const [index, line] of data.payment_lines.entries()) {
                 const paymentLine = paymentLines[index];
@@ -219,7 +211,7 @@ export function checkTicketData(data, basic = false) {
                 }
 
                 if (line.amount) {
-                    const amount = paymentLine.children[0].textContent;
+                    const amount = paymentLine.lastChild.textContent;
                     if (!amount.includes(line.amount)) {
                         throw new Error(
                             `Payment line amount mismatch for ${line.name}: expected ${line.amount}, got ${amount}`
@@ -230,14 +222,14 @@ export function checkTicketData(data, basic = false) {
         }
 
         if (data.orderlines) {
-            const lines = ticket.querySelectorAll(".orderline");
+            const lines = ticket.querySelectorAll(".lines");
 
             for (const [index, line] of data.orderlines.entries()) {
                 const orderline = lines[index];
                 if (!orderline) {
                     throw new Error(`No order line found for ${line.name}`);
                 }
-                const name = orderline.querySelector(".product-name").textContent;
+                const name = orderline.querySelector(".name").textContent;
                 if (!name.includes(line.name)) {
                     throw new Error(
                         `Order line name mismatch: expected ${line.name}, got ${name}.`
@@ -255,14 +247,14 @@ export function checkTicketData(data, basic = false) {
 
                 if (basic) {
                     if (
-                        orderline.querySelector(".price-per-unit") ||
-                        orderline.querySelector(".product-price")
+                        orderline.querySelector(".price-unit") ||
+                        orderline.querySelector(".price-incl")
                     ) {
                         throw new Error("The price should not be included on a basic receipt");
                     }
                 } else {
                     if (line.price_unit) {
-                        const price_unit = orderline.querySelectorAll(".price-per-unit");
+                        const price_unit = orderline.querySelectorAll(".price-unit");
                         if (price_unit.length === 0) {
                             throw new Error(
                                 `No price per unit found for order line ${name} in receipt.`
@@ -279,7 +271,7 @@ export function checkTicketData(data, basic = false) {
                     }
 
                     if (line.line_price) {
-                        const line_price = orderline.querySelector(".product-price").textContent;
+                        const line_price = orderline.querySelector(".price-incl").textContent;
                         if (!line_price.includes(line.line_price)) {
                             throw new Error(
                                 `Order line price mismatch for ${name}: expected ${line.line_price}, got ${line_price}.`

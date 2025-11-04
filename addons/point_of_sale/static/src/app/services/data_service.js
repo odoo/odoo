@@ -12,6 +12,7 @@ import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { registerPythonTemplate } from "../utils/convert_python_template";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
@@ -94,6 +95,13 @@ export class PosData extends Reactive {
                     );
                 }
             }
+        }
+    }
+
+    async fetchReceiptTemplate() {
+        const data = await this.orm.call("pos.order", "get_receipt_template_for_pos_frontend");
+        for (const [name, string] of data) {
+            registerPythonTemplate(name, "", string);
         }
     }
 
@@ -268,6 +276,7 @@ export class PosData extends Reactive {
     async loadInitialData() {
         let localData = await this.getCachedServerDataFromIndexedDB();
         const session = localData?.["pos.session"]?.[0];
+        await this.fetchReceiptTemplate();
 
         if (
             (!this.network.offline && session?.state !== "opened") ||

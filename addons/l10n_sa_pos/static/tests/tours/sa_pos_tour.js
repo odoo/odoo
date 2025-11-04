@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add("test_sa_qr_is_shown", {
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
-                cssRules: [{ css: "#qrcode.pos-receipt-qrcode" }],
+                cssRules: [{ css: ".sa-qr-code" }],
             }),
         ].flat(),
 });

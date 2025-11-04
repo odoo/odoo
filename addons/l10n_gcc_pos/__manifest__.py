@@ -10,6 +10,7 @@ Adds Arabic as a secondary language on your receipt
     'depends': ['point_of_sale', 'l10n_gcc_invoice'],
     'data': [
         'views/res_config_settings_views.xml',
+        'receipt/pos_order_receipt.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [

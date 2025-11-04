@@ -11,6 +11,9 @@ United Arab Emirates POS Localization
         'l10n_gcc_pos',
         'l10n_ae',
     ],
+    'data': [
+        'receipt/pos_order_receipt.xml',
+    ],
     'assets': {
         'point_of_sale._assets_pos': [
             'l10n_ae_pos/static/src/**/*',

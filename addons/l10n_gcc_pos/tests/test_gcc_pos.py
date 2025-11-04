@@ -22,7 +22,20 @@ class TestGenericGCC(TestGenericLocalization):
                 'code': 'RYA',
                 'country_id': cls.company.country_id.id
             }),
-            'street': 'Al Amir Mohammed Bin Abdul Aziz Street',
+            'street': 'Al Amir Mohammed Bin '
+            'Abdul Aziz Street',
             'city': 'المدينة المنورة',
             'zip': '42317',
         })
+
+    def test_generic_localization(self):
+        self.main_pos_config.l10n_gcc_dual_language_receipt = True
+        _, html = super().test_generic_localization()
+        self.assertTrue("Served by / خدم بواسطة" in html)
+        self.assertTrue("Ticket / تذكرة" in html)
+        self.assertTrue(" / الفاتورة الضريبية" in html)
+        self.assertTrue("Subtotal / الإجمالي الفرعي" in html)
+        self.assertTrue("Rounding / التقريب" in html)
+        self.assertTrue("Total / اﻹجمالي" in html)
+        self.assertTrue("Discount / الخصومات" in html)
+        self.assertTrue("Change / الباقي" in html)

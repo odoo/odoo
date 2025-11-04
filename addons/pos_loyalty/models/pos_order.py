@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -158,7 +159,6 @@ class PosOrder(models.Model):
             for coupon in all_coupons
         ]
         self.add_loyalty_history_lines(loyalty_points, coupon_updates)
-
         return {
             'coupon_updates': [{
                 'old_id': coupon_new_id_map[coupon.id],
@@ -176,6 +176,7 @@ class PosOrder(models.Model):
                 'program_name': coupon.program_id.name,
                 'expiration_date': coupon.expiration_date,
                 'code': coupon.code,
+                'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', coupon.code)).decode('utf-8'),
             } for coupon in new_coupons if (
                 coupon.program_id.applies_on == 'future'
                 # Don't send the coupon code for the gift card and ewallet programs.

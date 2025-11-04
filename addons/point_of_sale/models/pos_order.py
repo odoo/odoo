@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import json
+import base64
 from datetime import datetime, UTC
 from itertools import groupby
 from collections import defaultdict
@@ -22,7 +23,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = 'pos.order'
-    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
+    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.order.receipt", "pos.load.mixin", "mail.thread"]
     _description = "Point of Sale Order"
     _order = "date_order desc, name desc, id desc"
     _mailing_enabled = True
@@ -391,6 +392,9 @@ class PosOrder(models.Model):
 
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
+    def ask_for_ticket_printing(self):
+        self.config_id._notify("TICKET_PRINTING_REQUESTED", self.ids)
+
     def get_preparation_change(self):
         self.ensure_one()
         return {
@@ -511,32 +515,34 @@ class PosOrder(models.Model):
     def _onchange_amount_all(self):
         self._compute_prices()
 
+    def _get_order_tax_totals(self):
+        self.ensure_one()
+        self.amount_paid = sum(payment.amount for payment in self.payment_ids)
+        self.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in self.payment_ids)
+        base_lines = self.lines._prepare_tax_base_line_values()
+        self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
+        self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
+
+        cash_rounding = None
+        if (
+            self.config_id.cash_rounding
+            and not self.config_id.only_round_cash_method
+            and self.config_id.rounding_method
+        ):
+            cash_rounding = self.config_id.rounding_method
+
+        return self.env['account.tax']._get_tax_totals_summary(
+            base_lines=base_lines,
+            currency=self.currency_id,
+            company=self.company_id,
+            cash_rounding=cash_rounding,
+        )
+
     def _compute_prices(self):
-        AccountTax = self.env['account.tax']
         for order in self:
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
-            order.amount_paid = sum(payment.amount for payment in order.payment_ids)
-            order.amount_return = -sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
-
-            base_lines = order.lines._prepare_tax_base_line_values()
-            AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
-            AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
-
-            cash_rounding = None
-            if (
-                order.config_id.cash_rounding
-                and not order.config_id.only_round_cash_method
-                and order.config_id.rounding_method
-            ):
-                cash_rounding = order.config_id.rounding_method
-
-            tax_totals = AccountTax._get_tax_totals_summary(
-                base_lines=base_lines,
-                currency=order.currency_id,
-                company=order.company_id,
-                cash_rounding=cash_rounding,
-            )
+            tax_totals = order._get_order_tax_totals()
             refund_factor = -1 if (order.amount_total < 0.0) else 1
             order.amount_tax = refund_factor * tax_totals['tax_amount_currency']
             order.amount_total = refund_factor * tax_totals['total_amount_currency']
@@ -1097,6 +1103,19 @@ class PosOrder(models.Model):
         for line in lines_to_reconcile.values():
             line.filtered(lambda l: not l.reconciled).reconcile()
 
+    @api.model
+    def get_example_order_data(self):
+        last_order = self.env['pos.order'].search([], order='id desc', limit=1)
+        return last_order.order_receipt_generate_data()
+
+    def action_pos_order_receipt(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_url",
+            "url": f"/pos/receipt/{self.id}?company_id={self.company_id.id}",
+            "target": "new",
+        }
+
     def action_pos_order_invoice(self):
         self.ensure_one()
         if not (move := self.account_move):
@@ -1388,33 +1407,42 @@ class PosOrder(models.Model):
             'target': 'new'
         }
 
-    def action_send_receipt(self, email, ticket_image, basic_image):
+    def action_send_receipt(self, email):
         self.ensure_one()
         self.email = email
         mail_template_id = 'point_of_sale.email_template_pos_receipt'
         mail_template = self.env.ref(mail_template_id, raise_if_not_found=False)
+        ticket_image = self.order_receipt_generate_image()
+        basic_image = self.order_receipt_generate_image(True)
         if not mail_template:
             raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
-        mail_template.send_mail(self.id, force_send=True, email_values={'email_to': email,
-                                                                        'attachment_ids': self._get_mail_attachments(self.name, ticket_image, basic_image)})
+        mail_template.send_mail(
+            self.id,
+            force_send=True,
+            email_values={
+                'email_to': email,
+                'attachment_ids': self._get_mail_attachments(self.name, ticket_image, basic_image)
+            })
 
     def _get_mail_attachments(self, name, ticket, basic_ticket):
         attachments = []
-        receipt = self.env['ir.attachment'].create({
-            'name': 'Receipt-' + name + '.jpg',
-            'type': 'binary',
-            'datas': ticket,
-            'res_model': 'pos.order',
-            'res_id': self.ids[0],
-            'mimetype': 'image/jpeg',
-        })
-        attachments += [(4, receipt.id)]
+
+        if ticket:
+            receipt = self.env['ir.attachment'].create({
+                'name': 'Receipt-' + name + '.jpg',
+                'type': 'binary',
+                'datas': base64.b64encode(ticket),
+                'res_model': 'pos.order',
+                'res_id': self.ids[0],
+                'mimetype': 'image/jpeg',
+            })
+            attachments += [(4, receipt.id)]
 
         if basic_ticket:
             basic_receipt = self.env['ir.attachment'].create({
                 'name': 'Receipt-' + name + '-1' + '.jpg',
                 'type': 'binary',
-                'datas': basic_ticket,
+                'datas': base64.b64encode(basic_ticket),
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'image/jpeg',
@@ -1667,12 +1695,13 @@ class PosOrderLine(models.Model):
             res = line._compute_amount_line_all()
             line.update(res)
 
-    def _compute_amount_line_all(self):
+    def _compute_amount_line_all(self, qty=None):
         self.ensure_one()
         fpos = self.order_id.fiscal_position_id
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
+        line_qty = qty or self.qty
+        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, line_qty, product=self.product_id, partner=self.order_id.partner_id)
         return {
             'price_subtotal_incl': taxes['total_included'],
             'price_subtotal': taxes['total_excluded'],

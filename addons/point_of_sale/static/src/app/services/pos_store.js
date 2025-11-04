@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { random5Chars, uuidv4, Counter, orderUsageUTCtoLocalUtil } from "@point_of_sale/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
 import { SelectLotPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
@@ -45,6 +44,7 @@ import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { uuid } from "@web/core/utils/strings";
+import { GeneratePrinterData } from "../utils/generate_printer_data";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -52,7 +52,6 @@ export const CONSOLE_COLOR = "#F5B427";
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
-    orderReceiptComponent = OrderReceipt;
     feedbackScreenAutoSkipDelay = 5000;
 
     static serviceDependencies = [
@@ -1832,19 +1831,18 @@ export class PosStore extends WithLazyGetterTrap {
             true
         );
     }
+    getOrderReceiptGenerator(order = this.getOrder(), basicReceipt = false) {
+        return new GeneratePrinterData(order, basicReceipt);
+    }
     async printReceipt({
         basic = false,
         order = this.getOrder(),
         printBillActionTriggered = false,
     } = {}) {
-        const result = await this.printer.print(
-            OrderReceipt,
-            {
-                order,
-                basic_receipt: basic,
-            },
-            this.printOptions
-        );
+        const generator = this.getOrderReceiptGenerator(order, basic);
+        const data = generator.generateHtml();
+        const result = await this.printer.printHtml(data, this.printOptions);
+
         if (!printBillActionTriggered) {
             if (result) {
                 const count = order.nb_print ? order.nb_print + 1 : 1;

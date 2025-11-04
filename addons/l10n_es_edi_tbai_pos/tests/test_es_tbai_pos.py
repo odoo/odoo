@@ -10,3 +10,7 @@ class TestGenericESTbai(TestGenericLocalization):
     def setUpClass(cls):
         super().setUpClass()
         cls.company.l10n_es_tbai_tax_agency = 'bizkaia'
+
+    def test_generic_localization(self):
+        _, html = super().test_generic_localization()
+        self.assertTrue("TicketBai QR Code" in html)

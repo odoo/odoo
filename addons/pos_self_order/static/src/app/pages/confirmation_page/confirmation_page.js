@@ -2,9 +2,9 @@ import { Component, onMounted, onWillUnmount, useState, useEffect } from "@odoo/
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
-import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { rpc } from "@web/core/network/rpc";
 import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
+import { GeneratePrinterData } from "@point_of_sale/app/utils/generate_printer_data";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -97,13 +97,10 @@ export class ConfirmationPage extends Component {
             try {
                 this.isPrinting = true;
                 const order = this.confirmedOrder;
-                const result = await this.printer.print(
-                    OrderReceipt,
-                    {
-                        order: order,
-                    },
-                    this.printOptions
-                );
+                const generator = new GeneratePrinterData(order);
+                const data = generator.generateHtml();
+                const result = await this.printer.printHtml(data, this.printOptions);
+
                 if (!this.selfOrder.has_paper) {
                     this.updateHasPaper(true);
                 }

@@ -58,6 +58,10 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         # Mobile, meal, table
         self.start_tour(self_route, "self_mobile_meal_table_takeaway_in")
+        last_order = self.env['pos.order'].search([], order="id desc", limit=1)
+        html = last_order.order_receipt_generate_html()
+        self.assertTrue("Service at Table" in html)
+
         self.start_tour(self_route, "self_mobile_meal_table_takeaway_out")
 
         self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
@@ -68,6 +72,10 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         # Mobile, meal, counter
         self.start_tour(self_route, "self_mobile_meal_counter_takeaway_in")
         self.start_tour(self_route, "self_mobile_meal_counter_takeaway_out")
+
+        last_order = self.env['pos.order'].search([], order="id desc", limit=1)
+        html = last_order.order_receipt_generate_html()
+        self.assertTrue("Pickup At Counter" in html)
 
         # Cancel in meal
         self.start_tour(self_route, "self_order_mobile_meal_cancel")

@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
-import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { NetworkConnectionLostPopup } from "@pos_self_order/app/components/network_connectionLost_popup/network_connectionLost_popup";
@@ -24,6 +23,7 @@ import {
 } from "@point_of_sale/app/models/utils/order_change";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
+import { GeneratePrinterData } from "@point_of_sale/app/utils/generate_printer_data";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -892,14 +892,9 @@ export class SelfOrder extends Reactive {
         });
         const companyName = this.company.name.replaceAll(" ", "_");
         link.download = `${companyName}-${currentDate}.png`;
-        const png = await this.renderer.toCanvas(
-            OrderReceipt,
-            {
-                order: order,
-            },
-            {}
-        );
-        link.href = png.toDataURL().replace("data:image/jpeg;base64,", "");
+        const renderer = new GeneratePrinterData(order);
+        const data = await renderer.generateImage();
+        link.href = data.toDataURL().replace("data:image/jpeg;base64,", "");
         link.click();
     }
 

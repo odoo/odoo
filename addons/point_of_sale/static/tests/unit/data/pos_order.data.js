@@ -40,6 +40,10 @@ export class PosOrder extends models.ServerModel {
         return orderId;
     }
 
+    get_receipt_template_for_pos_frontend() {
+        return [];
+    }
+
     sync_from_ui(data) {
         const orderIds = [];
         for (const record of data) {

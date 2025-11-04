@@ -20,3 +20,16 @@ class TestGenericIN(TestGenericLocalization):
             'city': "Amreli",
             'zip': "365220",
         })
+        cls.whiteboard_pen.write({
+            'l10n_in_hsn_code': '1111',
+        })
+
+        cls.wall_shelf.write({
+            'l10n_in_hsn_code': '2222',
+        })
+
+    def test_generic_localization(self):
+        self.main_pos_config.l10n_gcc_dual_language_receipt = True
+        _, html = super().test_generic_localization()
+        self.assertTrue("HSN Code" in html)
+        self.assertTrue("Tax Invoice" in html)

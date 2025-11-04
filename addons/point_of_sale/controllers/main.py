@@ -15,6 +15,19 @@ _logger = logging.getLogger(__name__)
 
 class PosController(PortalAccount):
 
+    @http.route('/pos/receipt/<order_id>', type='http', auth='user', sitemap=False, website=True)
+    def pos_receipt_download(self, order_id=None):
+        pos_order = request.env['pos.order'].browse(int(order_id))
+        if not pos_order.exists():
+            return request.not_found()
+
+        image = pos_order.sudo().order_receipt_generate_image()
+        return request.make_response(image, [
+            ('Content-Type', 'image/png'),
+            ('Content-Length', len(image)),
+            ('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"),
+        ])
+
     @http.route('/pos/service-worker.js', type='http', auth='user')
     def pos_web_service_worker(self):
         response = request.make_response(
