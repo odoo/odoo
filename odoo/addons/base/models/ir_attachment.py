@@ -598,6 +598,7 @@ class IrAttachment(models.Model):
         if (
             not self.env.context.get('skip_res_field_check')
             and not any(d.field_expr in ('id', 'res_field') for d in domain.iter_conditions())
+            and not bypass_access
         ):
             disable_binary_fields_attachments = True
             domain &= Domain('res_field', '=', False)
