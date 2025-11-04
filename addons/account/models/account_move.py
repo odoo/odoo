@@ -340,6 +340,11 @@ class AccountMove(models.Model):
         copy=False,
         domain=[('display_type', 'in', ('product', 'line_section', 'line_note'))],
     )
+    invoice_sent_status = fields.Selection(
+        selection=[('sent', 'Sent'), ('not_sent', 'Not sent')],
+        compute="_compute_is_sent",
+        copy=False
+    )
 
     # === Date fields === #
     invoice_date = fields.Date(
@@ -780,6 +785,11 @@ class AccountMove(models.Model):
                     )
             else:
                 move.invoice_user_id = False
+
+    @api.depends('is_move_sent')
+    def _compute_is_sent(self):
+        for move in self:
+            move.invoice_sent_status = 'sent' if move.is_move_sent else 'not_sent'
 
     @api.depends('sending_data')
     def _compute_is_being_sent(self):

@@ -550,6 +550,7 @@
                            invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
                            optional="show"
                     />
+                    <field name="invoice_sent_status" string="Sent" optional="hide" widget="badge" decoration-success="is_move_sent" decoration-warning="not is_move_sent"/>
                     <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
                     <field name="abnormal_amount_warning" column_invisible="1"/>
                     <field name="abnormal_date_warning" column_invisible="1"/>
