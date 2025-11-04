@@ -1243,6 +1243,15 @@ class TestOrmAttachmentHost(models.Model):
         'test_orm.attachment', bypass_search_access=True,
     )
 
+    real_binary = fields.Binary(attachment=True)
+    real_attachment_ids = fields.One2many(
+        'ir.attachment', 'res_id', bypass_search_access=True,
+        domain=lambda self: [('res_model', '=', self._name)],
+    )
+    real_m2m_attachment_ids = fields.Many2many(
+        'ir.attachment', bypass_search_access=True,
+    )
+
 
 class DecimalPrecisionTest(models.Model):
     _name = 'decimal.precision.test'
