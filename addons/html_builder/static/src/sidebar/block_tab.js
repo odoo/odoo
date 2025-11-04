@@ -11,6 +11,10 @@ import { scrollTo } from "@html_builder/utils/scrolling";
 import { Snippet } from "./snippet";
 import { CustomInnerSnippet } from "./custom_inner_snippet";
 
+/**
+ * @typedef {((arg: { snippetEl: HTMLElement }) => void)[]} on_snippet_dropped_handlers
+ */
+
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
     static components = { Snippet, CustomInnerSnippet };

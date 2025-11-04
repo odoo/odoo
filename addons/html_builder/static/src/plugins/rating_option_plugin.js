@@ -12,6 +12,7 @@ class RatingOptionPlugin extends Plugin {
     static id = "ratingOption";
     static dependencies = ["history", "media"];
     selector = ".s_rating";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: RatingOption,
         so_content_addition_selector: [".s_rating"],

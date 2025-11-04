@@ -5,6 +5,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class Many2OneOptionPlugin extends Plugin {
     static id = "many2OneOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [Many2OneOption],
         builder_actions: {

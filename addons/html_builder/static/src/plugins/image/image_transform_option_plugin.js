@@ -6,6 +6,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 
 export class ImageTransformOptionPlugin extends Plugin {
     static id = "imageTransformOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             TransformImageAction,

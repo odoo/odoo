@@ -6,6 +6,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
     static id = "fieldChangeReplication";
     static dependencies = ["dom"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         handleNewRecords: this.handleMutations.bind(this),
         normalize_handlers: withSequence(9000, this.normalizeHandler.bind(this)),

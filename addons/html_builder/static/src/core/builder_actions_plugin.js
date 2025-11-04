@@ -3,7 +3,13 @@ import { Plugin } from "@html_editor/plugin";
 /**
  * @typedef { import("./builder_action").BuilderAction } BuilderAction
  * @typedef {} BuilderActionConstructor
+ *
+ * @typedef { Object } BuilderActionsShared
+ * @property { BuilderActionsPlugin['getAction'] } getAction
+ * @property { BuilderActionsPlugin['applyAction'] } applyAction
  */
+
+/** @typedef {BuilderAction[]} builder_actions */
 
 export class BuilderActionsPlugin extends Plugin {
     static id = "builderActions";

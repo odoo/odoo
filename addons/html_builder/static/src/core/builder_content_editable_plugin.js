@@ -2,8 +2,15 @@ import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/**
+ * @typedef {CSSSelector[]} content_editable_selectors
+ * @typedef {CSSSelector[]} content_not_editable_selectors
+ */
+
 export class BuilderContentEditablePlugin extends Plugin {
     static id = "builderContentEditablePlugin";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         content_not_editable_selectors: [
             "section:has(> .o_container_small, > .container, > .container-fluid)",

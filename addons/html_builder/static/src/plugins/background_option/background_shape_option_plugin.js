@@ -12,9 +12,14 @@ import { getBgImageURLFromURL } from "@html_editor/utils/image";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 
+/**
+ * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_shape_target_providers
+ */
+
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
     static dependencies = ["customizeTab"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SetBackgroundShapeAction,

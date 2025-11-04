@@ -8,6 +8,11 @@ import { getFirstAndLastTabableElements } from "@web/core/ui/ui_service";
 import { useChildRef } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
+/**
+ * @typedef {((arg: { iframe: HTMLIFrameElement }) => void)[]} snippet_preview_dialog_stylesheets_handlers
+ * @typedef {string[]} snippet_preview_dialog_bundles
+ */
+
 export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
     static components = { Dialog };
