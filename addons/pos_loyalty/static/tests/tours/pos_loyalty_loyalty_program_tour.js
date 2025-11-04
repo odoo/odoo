@@ -55,12 +55,12 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             // because there is not enough points to purchase it. Unfortunately, we
             // can't check that here.
             PosLoyalty.orderTotalIs("0.00"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1.00"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2.00"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "4"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "4.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
 
             PosLoyalty.orderTotalIs("12.80"),
