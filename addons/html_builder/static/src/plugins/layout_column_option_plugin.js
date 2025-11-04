@@ -10,6 +10,7 @@ import { LAYOUT_COLUMN } from "@html_builder/utils/option_sequence";
 class LayoutColumnOptionPlugin extends Plugin {
     static id = "LayoutColumnOption";
     static dependencies = ["clone", "selection"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(LAYOUT_COLUMN, LayoutColumnOption)],
         on_cloned_handlers: this.onCloned.bind(this),

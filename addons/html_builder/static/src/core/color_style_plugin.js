@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 class ColorStylePlugin extends Plugin {
     static id = "colorStyle";
     static dependencies = ["color"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         apply_style: withSequence(5, (element, cssProp, color) => {
             applyNeededCss(element, cssProp, color);

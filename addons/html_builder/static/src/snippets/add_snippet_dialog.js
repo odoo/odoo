@@ -5,6 +5,10 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
 import { SnippetViewer } from "./snippet_viewer";
 
+/**
+ * @typedef {((arg: { iframe: HTMLIFrameElement }) => void)[]} snippet_preview_dialog_stylesheets_handlers
+ */
+
 export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
     static components = { Dialog };

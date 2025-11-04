@@ -6,6 +6,22 @@ import { unremovableNodePredicates as deletePluginPredicates } from "@html_edito
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+
+/**
+ * @typedef { Object } RemoveShared
+ * @property { RemovePlugin['removeElement'] } removeElement
+ */
+
+/**
+ * @typedef {((arg: { removedEl: HTMLElement, nextTargetEl: HTMLElement }) => void)[]} on_removed_handlers
+ * @typedef {((toRemoveEl: HTMLElement) => void)[]} on_will_remove_handlers
+ *
+ * @typedef {((el: HTMLElement) => boolean)[]} empty_node_predicates
+ *
+ * @typedef {CSSSelector[]} is_unremovable_selector
+ */
+
 const unremovableNodePredicates = [
     (node) => !isEditable(node.parentNode),
     ...deletePluginPredicates,
@@ -28,6 +44,7 @@ const layoutElementsSelector = [
 export class RemovePlugin extends Plugin {
     static id = "remove";
     static dependencies = ["builderOptions"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         get_overlay_buttons: withSequence(3, {
             getButtons: this.getActiveOverlayButtons.bind(this),

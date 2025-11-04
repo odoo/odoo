@@ -12,6 +12,7 @@ export class BadgeOption extends BaseOptionComponent {
 
 class BadgeOptionPlugin extends Plugin {
     static id = "badgeOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(before(ANIMATE), BadgeOption)],
         so_content_addition_selector: [".s_badge"],

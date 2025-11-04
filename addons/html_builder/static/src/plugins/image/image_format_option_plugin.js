@@ -12,6 +12,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 class ImageFormatOptionPlugin extends Plugin {
     static id = "imageFormatOption";
     static shared = ["computeAvailableFormats"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SetImageFormatAction,
