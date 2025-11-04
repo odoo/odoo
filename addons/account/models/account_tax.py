@@ -4337,6 +4337,341 @@ class AccountTax(models.Model):
         )
 
     # -------------------------------------------------------------------------
+    # EDI HELPERS
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _get_delta_amount_to_reach_target(
+        self,
+        target_amount,
+        target_currency,
+        raw_current_amount,
+        raw_current_amount_precision_digits,
+    ):
+        """ Get the minimum missing amount having 'raw_current_amount_precision_digits' as precision
+        to be added to 'raw_current_amount' to give 'target_amount' after rounding using 'target_currency'.
+
+        :param target_amount:                       The amount to reach after rounding the raw amount using 'target_currency'.
+        :param target_currency:                     The currency used to round 'target_amount'.
+        :param raw_current_amount:                  The raw amount that needs to reach 'target_amount'.
+        :param raw_current_amount_precision_digits: The precision of the delta returned by this method.
+        :return:
+            Suppose 'raw_current_amount' is expressed with 'raw_current_amount_precision_digits'.
+            Then, the delta returned by this method will be expressed with 'raw_current_amount_precision_digits'
+            such as target_currency.round(raw_current_amount + delta) == target_amount
+        """
+        target_amount_sign = -1 if target_amount < 0.0 else 1
+        raw_current_amount_rounding = math.pow(10, -raw_current_amount_precision_digits)
+        tolerance_bounds = (
+            float_round(
+                abs(target_amount) + (target_currency.rounding / 2) - raw_current_amount_rounding,
+                precision_digits=raw_current_amount_precision_digits,
+            ),
+            float_round(
+                abs(target_amount) - (target_currency.rounding / 2),
+                precision_digits=raw_current_amount_precision_digits,
+            ),
+        )
+
+        signed_raw_current_amount = target_amount_sign * raw_current_amount
+        if signed_raw_current_amount > tolerance_bounds[0]:
+            delta_raw_amount = tolerance_bounds[0] - signed_raw_current_amount
+        elif signed_raw_current_amount < tolerance_bounds[1]:
+            delta_raw_amount = tolerance_bounds[1] - signed_raw_current_amount
+        else:
+            return 0.0
+
+        return target_amount_sign * delta_raw_amount
+
+    @api.model
+    def _round_raw_total_excluded(
+        self,
+        base_lines,
+        company,
+        precision_digits=6,
+        apply_strict_tolerance=False,
+        in_foreign_currency=True,
+    ):
+        """ Round 'raw_total_excluded[_currency]' according 'precision_digits'.
+
+        :param base_lines:              A list of python dictionaries created using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:                 The company owning the base lines.
+        :param precision_digits:        The precision to be used to round.
+        :param apply_strict_tolerance:  A flag ensuring a strict equality between rounded and raw amounts such as
+                                            ROUND(SUM(raw_total_excluded FOREACH base_line), precision_digits)
+                                            and SUM(total_excluded FOREACH base_line)
+                                        If specified, the difference will be spread into the raw amounts to satisfy the equality.
+        :param in_foreign_currency:     True if to be applied on amounts expressed in foreign currency,
+                                        False for amounts expressed in company currency.
+        """
+        if not base_lines:
+            return
+
+        suffix_currency = base_lines[0]['currency_id'] if in_foreign_currency else company.currency_id
+        suffix = '_currency' if in_foreign_currency else ''
+        raw_field = f'raw_total_excluded{suffix}'
+
+        for base_line in base_lines:
+            tax_details = base_line['tax_details']
+            tax_details[raw_field] = float_round(tax_details[raw_field], precision_digits=precision_digits)
+
+        # Tolerance.
+        if not apply_strict_tolerance:
+            return
+
+        def grouping_function(base_line, tax_data):
+            return True
+
+        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        expected_total_excluded = sum(
+            values[f'total_excluded{suffix}']
+            for values in values_per_grouping_key.values()
+        )
+        current_raw_total_excluded = sum(
+            base_line['tax_details'][raw_field]
+            for base_line in base_lines
+        )
+
+        delta_raw_amount = self._get_delta_amount_to_reach_target(
+            target_amount=expected_total_excluded,
+            target_currency=suffix_currency,
+            raw_current_amount=current_raw_total_excluded,
+            raw_current_amount_precision_digits=precision_digits,
+        )
+        target_factors = [
+            {
+                'factor': base_line['tax_details'][raw_field],
+                'base_line': base_line,
+            }
+            for base_line in base_lines
+        ]
+        amounts_to_distribute = self._distribute_delta_amount_smoothly(
+            precision_digits=precision_digits,
+            delta_amount=delta_raw_amount,
+            target_factors=target_factors,
+        )
+        for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+            base_line = target_factor['base_line']
+            base_line['tax_details'][raw_field] += amount_to_distribute
+
+    @api.model
+    def _add_and_round_raw_gross_total_excluded_and_discount(
+        self,
+        base_lines,
+        company,
+        precision_digits=6,
+        apply_strict_tolerance=False,
+        in_foreign_currency=True,
+        account_discount_base_lines=False,
+    ):
+        """ Compute and add 'raw_gross_total_excluded[_currency]' / 'raw_gross_price_unit[_currency]' / 'raw_discount_amount[_currency]'
+        to the tax details according 'precision_digits' / 'in_foreign_currency'.
+
+        :param base_lines:                  A list of python dictionaries created using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:                     The company owning the base lines.
+        :param precision_digits:            The precision to be used to round.
+        :param apply_strict_tolerance:      A flag ensuring a strict equality between rounded and raw amounts such as
+                                                ROUND(SUM(raw_total_excluded + raw_discount_amount FOREACH base_line), precision_digits)
+                                                and SUM(total_excluded FOREACH base_line) + ROUND(SUM(raw_discount_amount FOREACH base_line))
+                                            If specified, the difference will be spread into the 'raw_gross_total_excluded' to satisfy the
+                                            equality.
+        :param in_foreign_currency:         True if to be applied on amounts expressed in foreign currency,
+                                            False for amounts expressed in company currency.
+        :param account_discount_base_lines: Account the distributed global discount in 'discount_base_lines'
+                                            using '_dispatch_global_discount_lines' in 'raw_discount_amount'.
+        """
+        if not base_lines:
+            return
+
+        suffix_currency = base_lines[0]['currency_id'] if in_foreign_currency else company.currency_id
+        suffix = '_currency' if in_foreign_currency else ''
+        raw_field = f'raw_total_excluded{suffix}'
+
+        for base_line in base_lines:
+            tax_details = base_line['tax_details']
+            raw_total_excluded = tax_details[raw_field]
+
+            discount_factor = 1 - (base_line['discount'] / 100.0)
+            if discount_factor:
+                raw_gross_total_excluded = raw_total_excluded / discount_factor
+            elif suffix == '_currency':
+                raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity']
+            elif base_line['rate']:
+                raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity'] / base_line['rate']
+            else:
+                raw_gross_total_excluded = 0.0
+            if account_discount_base_lines:
+                raw_gross_total_excluded -= sum(
+                    discount_base_line['tax_details'][raw_field]
+                    for discount_base_line in base_line.get('discount_base_lines', [])
+                )
+            tax_details[f'raw_gross_total_excluded{suffix}'] = float_round(raw_gross_total_excluded, precision_digits=precision_digits)
+
+            # Same as before but per unit.
+            if float_is_zero(raw_gross_total_excluded, precision_digits=precision_digits):
+                raw_gross_price_unit = base_line['price_unit']
+                if not suffix:
+                    if base_line['rate']:
+                        raw_gross_price_unit /= base_line['rate']
+                    else:
+                        raw_gross_price_unit = 0.0
+            else:
+                raw_gross_price_unit = raw_gross_total_excluded / base_line['quantity']
+            tax_details[f'raw_gross_price_unit{suffix}'] = float_round(raw_gross_price_unit, precision_digits=precision_digits)
+
+            # Compute the amount of the discount due to the 'discount' value set on 'base_line'.
+            raw_discount_amount = raw_gross_total_excluded - raw_total_excluded
+            tax_details[f'raw_discount_amount{suffix}'] = float_round(raw_discount_amount, precision_digits=precision_digits)
+
+        # Tolerance.
+        if not apply_strict_tolerance:
+            return
+
+        def grouping_function(base_line, tax_data):
+            return True
+
+        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        expected_total_excluded = sum(
+            values[f'total_excluded{suffix}']
+            for values in values_per_grouping_key.values()
+        )
+        raw_total_discount_amount = sum(
+            base_line['tax_details'][f'raw_discount_amount{suffix}']
+            for values in values_per_grouping_key.values()
+            for base_line, _taxes_data in values['base_line_x_taxes_data']
+        )
+        raw_total_gross_amount = sum(
+            base_line['tax_details'][f'raw_gross_total_excluded{suffix}']
+            for values in values_per_grouping_key.values()
+            for base_line, _taxes_data in values['base_line_x_taxes_data']
+        )
+        total_discount_amount = suffix_currency.round(raw_total_discount_amount)
+        expected_total_gross_amount = expected_total_excluded + total_discount_amount
+
+        delta_raw_amount = self._get_delta_amount_to_reach_target(
+            target_amount=expected_total_gross_amount,
+            target_currency=suffix_currency,
+            raw_current_amount=raw_total_gross_amount,
+            raw_current_amount_precision_digits=precision_digits,
+        )
+        target_factors = [
+            {
+                'factor': base_line['tax_details'][f'raw_total_excluded{suffix}'],
+                'base_line': base_line,
+            }
+            for values in values_per_grouping_key.values()
+            for base_line, _taxes_data in values['base_line_x_taxes_data']
+        ]
+        amounts_to_distribute = self._distribute_delta_amount_smoothly(
+            precision_digits=precision_digits,
+            delta_amount=delta_raw_amount,
+            target_factors=target_factors,
+        )
+        for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+            base_line = target_factor['base_line']
+            base_line['tax_details'][f'raw_gross_total_excluded{suffix}'] += amount_to_distribute
+
+    @api.model
+    def _round_raw_tax_amounts(
+        self,
+        base_lines_aggregated_values,
+        company,
+        precision_digits=6,
+        apply_strict_tolerance=False,
+        in_foreign_currency=True,
+    ):
+        """ Round 'raw_tax_amount[_currency]'/'raw_base_amount[_currency]' according 'precision_digits' / 'in_foreign_currency'.
+
+        :param base_lines_aggregated_values:    The result of '_aggregate_base_lines_tax_details'.
+        :param company:                         The company owning the base lines.
+        :param precision_digits:                The precision to be used to round.
+        :param apply_strict_tolerance:          A flag ensuring a strict equality between rounded and raw amounts such as
+                                                    ROUND(SUM(raw_tax_amount FOREACH base_line), precision_digits)
+                                                    and SUM(tax_amount FOREACH base_line)
+                                                If specified, the difference will be spread into the raw amounts to satisfy the equality.
+                                                Regarding the base amounts, we keep a consistency between the tax rate between
+                                                each raw_base_amount and raw_tax_amount but also globally with rounded amounts.
+        :param in_foreign_currency:             True if to be applied on amounts expressed in foreign currency,
+                                                False for amounts expressed in company currency.
+        """
+        if not base_lines_aggregated_values:
+            return
+
+        suffix_currency = base_lines_aggregated_values[0][0]['currency_id'] if in_foreign_currency else company.currency_id
+        suffix = '_currency' if in_foreign_currency else ''
+
+        for _base_line, aggregated_values in base_lines_aggregated_values:
+            for values in aggregated_values.values():
+                values[f'raw_tax_amount{suffix}'] = float_round(values[f'raw_tax_amount{suffix}'], precision_digits=precision_digits)
+                values[f'raw_base_amount{suffix}'] = float_round(values[f'raw_base_amount{suffix}'], precision_digits=precision_digits)
+
+        # Tolerance.
+        if not apply_strict_tolerance:
+            return
+
+        tax_field = f'tax_amount{suffix}'
+        raw_tax_field = f'raw_{tax_field}'
+        base_field = f'base_amount{suffix}'
+        raw_base_field = f'raw_{base_field}'
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            tax_rate = (values[raw_tax_field] / values[raw_base_field]) if values[raw_base_field] else 0.0
+
+            target_factors = [
+                {
+                    'factor': aggregated_values[grouping_key][raw_tax_field],
+                    'aggregated_values': aggregated_values[grouping_key],
+                }
+                for base_line, aggregated_values in base_lines_aggregated_values
+                if grouping_key in aggregated_values
+            ]
+
+            # Tax amount.
+            expected_tax_amount = values[tax_field]
+            current_raw_tax_amount = values[raw_tax_field]
+            delta_raw_amount = self._get_delta_amount_to_reach_target(
+                target_amount=expected_tax_amount,
+                target_currency=suffix_currency,
+                raw_current_amount=current_raw_tax_amount,
+                raw_current_amount_precision_digits=precision_digits,
+            )
+            amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                precision_digits=precision_digits,
+                delta_amount=delta_raw_amount,
+                target_factors=target_factors,
+            )
+            for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                aggregated_values = target_factor['aggregated_values']
+                aggregated_values[raw_tax_field] += amount_to_distribute
+                values[raw_tax_field] += amount_to_distribute
+                if amount_to_distribute and tax_rate:
+                    new_raw_base_amount = aggregated_values[raw_tax_field] / tax_rate
+                    rounded_new_raw_base_amount = float_round(new_raw_base_amount, precision_digits=precision_digits)
+                    values[raw_base_field] += rounded_new_raw_base_amount - aggregated_values[raw_base_field]
+                    aggregated_values[raw_base_field] = rounded_new_raw_base_amount
+
+            # Base amount.
+            if tax_rate:
+                current_tax_raw_base_amount = (current_raw_tax_amount + delta_raw_amount) / tax_rate
+                delta_raw_amount = self._get_delta_amount_to_reach_target(
+                    target_amount=current_tax_raw_base_amount,
+                    target_currency=suffix_currency,
+                    raw_current_amount=values[raw_base_field],
+                    raw_current_amount_precision_digits=precision_digits,
+                )
+                amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                    precision_digits=precision_digits,
+                    delta_amount=delta_raw_amount,
+                    target_factors=target_factors,
+                )
+                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                    aggregated_values = target_factor['aggregated_values']
+                    aggregated_values[raw_base_field] += amount_to_distribute
+                    values[raw_base_field] += amount_to_distribute
+
+    # -------------------------------------------------------------------------
     # END HELPERS IN BOTH PYTHON/JAVASCRIPT (account_tax.js)
     # -------------------------------------------------------------------------
 
