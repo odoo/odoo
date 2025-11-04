@@ -1256,6 +1256,27 @@ test("no content helper after update", async () => {
     expect(".abc").toHaveCount(0);
 });
 
+test("display the provided no content helper when search has no matching data", async () => {
+    Foo._records = [];
+
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        noContentHelp: /* xml */ `
+            <p class="abc">This helper should be displayed</p>
+        `,
+    });
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    expect(".o_view_nocontent").toHaveCount(0);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("color");
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(0);
+    expect(".o_nocontent_help:contains(This helper should be displayed)").toHaveCount(1);
+});
+
 test("can reload with other group by", async () => {
     const view = await mountView({
         type: "graph",
