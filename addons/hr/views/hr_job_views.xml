@@ -26,7 +26,7 @@
                                         <label name="no_of_recruitment_label" for="no_of_recruitment"/>
                                         <div class="o_row" name="recruitment_target">
                                             <field name="no_of_recruitment" class="o_hr_narrow_field"/>
-                                            <span>new employees</span>
+                                            <span>employees</span>
                                         </div>
                                     </group>
                                     <group name="job" string="Job">
@@ -91,7 +91,7 @@
                     <group>
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Employment Type" name="employment_type" domain="[]" context="{'group_by': 'contract_type_id'}"/>
+                        <filter string="Contract Type" name="contract_type" domain="[]" context="{'group_by': 'contract_type_id'}"/>
                     </group>
                 </search>
             </field>
