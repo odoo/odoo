@@ -7,10 +7,15 @@ import { loadCSS } from "@web/core/assets";
 import { BuilderFontSizeSelector } from "./font_size_selector";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {string[]} fontCssVariables
+ */
+
 export class BuilderFontPlugin extends Plugin {
     static id = "builderFont";
     static shared = ["getFontsCache", "getFontsData"];
     static dependencies = ["toolbar"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         // Lists CSS variables that will be reset when a font is deleted if
         // they refer to that font.

@@ -35,6 +35,7 @@ class ImageToolOptionPlugin extends Plugin {
         "builderOptions",
     ];
     static shared = ["getCSSColorValue"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [
             withSequence(REPLACE_MEDIA, ReplaceMediaOption),

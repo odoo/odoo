@@ -7,6 +7,7 @@ const shadowClass = "shadow";
 
 export class ShadowOptionPlugin extends Plugin {
     static id = "shadowOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SetShadowModeAction,
