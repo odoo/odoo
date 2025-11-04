@@ -70,6 +70,18 @@ function getConnectedParents(nodes) {
  * @property { DomPlugin['removeSystemProperties'] } removeSystemProperties
  */
 
+/**
+ * @typedef {((insertedNodes: Node[]) => void)[]} after_insert_handlers
+ * @typedef {((el: HTMLElement) => void)[]} before_set_tag_handlers
+ *
+ * @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_processors
+ * @typedef {((arg: { nodeToInsert: Node, container: HTMLElement }) => nodeToInsert)[]} node_to_insert_processors
+ *
+ * @typedef {string[]} system_attributes
+ * @typedef {string[]} system_classes
+ * @typedef {string[]} system_style_properties
+ */
+
 export class DomPlugin extends Plugin {
     static id = "dom";
     static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
@@ -81,6 +93,7 @@ export class DomPlugin extends Plugin {
         "setTagName",
         "removeSystemProperties",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

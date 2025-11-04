@@ -13,6 +13,7 @@ import { memoize } from "@web/core/utils/functions";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
+/** @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
 /** @typedef { import("@web/core/l10n/translation.js")._t} _t */
 /** @typedef { ReturnType<_t> } TranslatedString */
@@ -62,48 +63,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /**
- * A ToolbarCommandItem must derive from a user command ( @see UserCommand )
- * specified by commandId. Properties defined in a toolbar item override those
- * from a user command.
- *
- * Example:
- *
- * resources = {
- *     user_commands: [
- *         @type {UserCommand}
- *         {
- *             id: myCommand,
- *             run: myCommandFunction,
- *             description: _t("My Command"),
- *             icon: "fa-bug",
- *         },
- *     ],
- *     toolbar_groups: [
- *         @type {ToolbarGroup}
- *         { id: "myGroup" },
- *     ],
- *     toolbar_items: [
- *         @type {ToolbarCommandItem}
- *         {
- *             id: "myButton",
- *             groupId: "myGroup",
- *             commandId: "myCommand",
- *             description: _t("My Toolbar Command Button"), // overrides the user command's `description`
- *             // `icon` is inferred from the user command
- *         },
- *         @type {ToolbarComponentItem}
- *         {
- *             id: "myComponentButton",
- *             groupId: "myGroup",
- *             description: _t("My Toolbar Component Button"),
- *             Component: MyComponent,
- *             props: { myProp: "myValue" },
- *         },
- *     ],
- * };
- */
-
-/**
  * Types after conversion to renderable toolbar buttons:
  *
  * @typedef {Object} ToolbarCommandButton
@@ -140,10 +99,64 @@ const MIN_SIZE_FOR_COMPACT = 7;
  * @property { ToolbarPlugin['getToolbarInfo'] } getToolbarInfo
  */
 
+/**
+ * @typedef {((namespace: string) => boolean)[]} can_display_toolbar
+ * @typedef {((selectionData: SelectionData) => boolean)[]} collapsed_selection_toolbar_predicate
+ *
+ * @typedef {ToolbarGroup[]} toolbar_groups
+ * @typedef {ToolbarNamespace[]} toolbar_namespaces
+ */
+
+/**
+ * @see UserCommand
+ * @typedef {(ToolbarCommandItem | ToolbarComponentItem)[]} toolbar_items
+ *
+ * A ToolbarCommandItem must derive from a user command (see UserCommand)
+ * specified by commandId. Properties defined in a toolbar item override those
+ * from a user command.
+ *
+ * Example:
+ *
+ *     resources = {
+ *         // see UserCommand
+ *         user_commands: [
+ *             {
+ *                 id: myCommand,
+ *                 run: myCommandFunction,
+ *                 description: _t("My Command"),
+ *                 icon: "fa-bug",
+ *             },
+ *         ],
+ *         // see ToolbarGroup
+ *         toolbar_groups: [
+ *             { id: "myGroup" },
+ *         ],
+ *         toolbar_items: [
+ *             // See ToolbarCommandItem
+ *             {
+ *                 id: "myButton",
+ *                 groupId: "myGroup",
+ *                 commandId: "myCommand",
+ *                 description: _t("My Toolbar Command Button"), // overrides the user command's `description`
+ *                 // `icon` is inferred from the user command
+ *             },
+ *             // See ToolbarComponentItem
+ *             {
+ *                 id: "myComponentButton",
+ *                 groupId: "myGroup",
+ *                 description: _t("My Toolbar Component Button"),
+ *                 Component: MyComponent,
+ *                 props: { myProp: "myValue" },
+ *             },
+ *         ],
+ *     };
+ */
+
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
     static dependencies = ["overlay", "selection", "userCommand"];
     static shared = ["getToolbarInfo"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         selection_leave_handlers: () => this.closeToolbar(),

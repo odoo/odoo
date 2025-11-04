@@ -13,6 +13,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
     static id = "dynamicPlaceholder";
     static dependencies = ["overlay", "selection", "history", "dom"];
     static shared = ["updateDphDefaultModel"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

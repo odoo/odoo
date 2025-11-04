@@ -6,6 +6,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 export class StarPlugin extends Plugin {
     static id = "star";
     static dependencies = ["dom", "history"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

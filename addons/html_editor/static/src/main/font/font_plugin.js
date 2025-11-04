@@ -36,6 +36,13 @@ import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
+/** @typedef {import("plugins").TranslatedString} TranslatedString */
+
+/**
+ * @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors
+ * @typedef {{ name: TranslatedString; tagName: string; extraClass?: string; }[]} font_items
+ */
+
 export const fontSizeItems = [
     { variableName: "display-1-font-size", className: "display-1-fs" },
     { variableName: "display-2-font-size", className: "display-2-fs" },
@@ -71,6 +78,7 @@ export class FontPlugin extends Plugin {
         "format",
         "lineBreak",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         font_items: [
             withSequence(10, {

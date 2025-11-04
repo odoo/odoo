@@ -35,10 +35,16 @@ function isIndentationTab(tab) {
  * @property { TabulationPlugin['outdentBlocks'] } outdentBlocks
  */
 
+/**
+ * @typedef {(() => void | true)[]} shift_tab_overrides
+ * @typedef {(() => void | true)[]} tab_overrides
+ */
+
 export class TabulationPlugin extends Plugin {
     static id = "tabulation";
     static dependencies = ["dom", "selection", "history", "delete"];
     static shared = ["indentBlocks", "outdentBlocks"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

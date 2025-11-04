@@ -9,6 +9,7 @@ export const YOUTUBE_URL_GET_VIDEO_ID =
 export class YoutubePlugin extends Plugin {
     static id = "youtube";
     static dependencies = ["history", "dom"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         ...(this.config.allowVideo && {
             paste_media_url_command_providers: this.getCommandForVideoUrlPaste.bind(this),
