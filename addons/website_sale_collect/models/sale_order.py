@@ -11,8 +11,8 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def _compute_warehouse_id(self):
-        """ Override of `website_sale_stock` to avoid recomputations for in_store orders
-        when the warehouse was set by the pickup_location_data"""
+        """Override of `website_sale_stock` to avoid recomputations for in_store orders
+        when the warehouse was set by the pickup_location_data."""
         in_store_orders_with_pickup_data = self.filtered(
             lambda so: (
                 so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
@@ -36,9 +36,8 @@ class SaleOrder(models.Model):
         super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
 
     def _set_delivery_method(self, delivery_method, rate=None):
-        """ Override of `website_sale` to recompute warehouse and fiscal position when a new
+        """Override of `website_sale` to recompute warehouse and fiscal position when a new
         delivery method is not in-store anymore. """
-
         self.ensure_one()
         was_in_store_order = (
             self.carrier_id.delivery_type == 'in_store'
@@ -50,7 +49,7 @@ class SaleOrder(models.Model):
             self._compute_fiscal_position_id()
 
     def _set_pickup_location(self, pickup_location_data):
-        """ Override `website_sale` to set the pickup location for in-store delivery methods.
+        """Override `website_sale` to set the pickup location for in-store delivery methods.
         Set account fiscal position depending on selected pickup location to correctly calculate
         taxes.
         """
@@ -66,7 +65,7 @@ class SaleOrder(models.Model):
             self._compute_warehouse_id()
 
     def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
-        """ Override of `website_sale` to ensure that a country is provided when there is a zip
+        """Override of `website_sale` to ensure that a country is provided when there is a zip
         code.
 
         If the country cannot be found (e.g., the GeoIP request fails), the zip code is cleared to
@@ -91,7 +90,7 @@ class SaleOrder(models.Model):
         return super()._get_shop_warehouse_id()
 
     def _check_cart_is_ready_to_be_paid(self):
-        """ Override of `website_sale` to check if all products are in stock in the selected
+        """Override of `website_sale` to check if all products are in stock in the selected
         warehouse. """
         if (
             self._has_deliverable_products()
@@ -106,7 +105,7 @@ class SaleOrder(models.Model):
     # === TOOLING ===#
 
     def _prepare_in_store_default_location_data(self):
-        """ Prepare the default pickup location values for each in-store delivery method available
+        """Prepare the default pickup location values for each in-store delivery method available
         for the order. """
         default_pickup_locations = {}
         for dm in self._get_delivery_methods():
@@ -127,7 +126,7 @@ class SaleOrder(models.Model):
         return {'default_pickup_locations': default_pickup_locations}
 
     def _is_in_stock(self, wh_id):
-        """ Check whether all storable products of the cart are in stock in the given warehouse.
+        """Check whether all storable products of the cart are in stock in the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
         :return: Whether all storable products are in stock.
@@ -166,7 +165,7 @@ class SaleOrder(models.Model):
         return insufficient_stock_data
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
-        """ Override of `website_sale_stock` to skip the verification when click and collect
+        """Override of `website_sale_stock` to skip the verification when click and collect
         is activated. The quantity is verified later. """
         product = self.env['product.product'].browse(product_id)
         if (
