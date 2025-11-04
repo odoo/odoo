@@ -420,7 +420,7 @@ class configmanager:
                               "- replica: simulate a deployment with readonly replica "
                               "- werkzeug: open a html debugger on http request error "
                               "- xml: read views from the source code, and not the db ")
-        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False, file_loadable=False,
+        group.add_option("--stop", "--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False, file_loadable=False,
                          help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=0,
                          help="Force a limit on the maximum number of records kept in the virtual "
