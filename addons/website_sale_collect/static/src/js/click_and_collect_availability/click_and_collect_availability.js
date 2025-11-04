@@ -50,6 +50,7 @@ export class ClickAndCollectAvailability extends Component {
         this.state.inStoreStockData = combinationInfo.in_store_stock_data;
         this.state.deliveryStockData = combinationInfo.delivery_stock_data;
         this.state.active = combinationInfo.is_combination_possible;
+        this.state.uomId = combinationInfo.uom_id;
     }
 
     /**
@@ -66,6 +67,7 @@ export class ClickAndCollectAvailability extends Component {
             isProductPage: true,
             isFrontend: true,
             productId: this.state.productId,
+            uomId: this.state.uomId,
             zipCode: zip_code || this.props.zipCode,
             selectedLocationId: String(id),
             save: async location => {
