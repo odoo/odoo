@@ -176,7 +176,6 @@
                                 </tr>
                             </thead>
                             <tbody class="invoice_tbody">
-                                <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
                                 <t t-set="lines_to_report" t-value="o._get_move_lines_to_report()"/>
                                 <t t-set="current_section" t-value="None"/>
                                 <t t-set="current_subsection" t-value="None"/>
