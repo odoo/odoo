@@ -1430,18 +1430,7 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
-        let valueList = JSON.parse(value);
-        if (getSelect(fieldEl)) {
-            valueList = valueList.filter((value) => value.id !== "" || value.display_name !== "");
-            const hasDefault = valueList.some((value) => value.selected);
-            if (valueList.length && !hasDefault) {
-                valueList.unshift({
-                    id: "",
-                    display_name: "",
-                    selected: true,
-                });
-            }
-        }
+        const valueList = JSON.parse(value);
         const field = getActiveField(fieldEl, { fields });
         field.records = valueList;
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
