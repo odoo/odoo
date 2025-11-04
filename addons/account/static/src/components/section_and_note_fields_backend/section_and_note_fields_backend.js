@@ -49,7 +49,7 @@ function getRecordsUntilSection(list, record, asc, subSection) {
     }
 
     const sectionRecords = [];
-    let index = list.records.indexOf(record);
+    let index = list.records.findIndex(listRecord => listRecord.id === record.id);
     if (asc) {
         sectionRecords.push(list.records[index]);
         index++;
