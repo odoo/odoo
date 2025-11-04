@@ -7,7 +7,7 @@ import {
     startServer,
     click,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Store } from "@mail/core/common/store_service";
 import { Thread } from "@mail/core/common/thread";
@@ -54,19 +54,19 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
         guest_id: guestId,
         im_status: "offline",
     });
-    await contains(".o-livechat-VisitorDisconnected", {
-        text: "Visitor is disconnected since 1:00 PM",
-    });
+    await waitFor(
+        ".o-livechat-VisitorDisconnected:contains(/^Visitor is disconnected since 1:00 PM$/)"
+    );
     mockDate("2025-01-02 12:00:00", +1);
     await click("button[title*='Fold']");
     await click(".o-mail-ChatBubble");
-    await contains(".o-livechat-VisitorDisconnected", {
-        text: "Visitor is disconnected since yesterday at 1:00 PM",
-    });
+    await waitFor(
+        ".o-livechat-VisitorDisconnected:contains(/^Visitor is disconnected since yesterday at 1:00 PM$/)"
+    );
     mockDate("2025-01-05 12:00:00", +1);
     await click("button[title*='Fold']");
     await click(".o-mail-ChatBubble");
-    await contains(".o-livechat-VisitorDisconnected", { text: `Visitor is disconnected` });
+    await waitFor(".o-livechat-VisitorDisconnected:contains(/^Visitor is disconnected$/)");
     pyEnv["bus.bus"]._sendone(guestId, "bus.bus/im_status_updated", {
         partner_id: false,
         guest_id: guestId,

@@ -19,7 +19,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
@@ -978,5 +978,5 @@ test("Update unread counter when receiving new message", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-discuss-badge", { text: "2" });
+    await waitFor(".o-discuss-badge:contains(/^2$/)");
 });
