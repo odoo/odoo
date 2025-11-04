@@ -863,3 +863,23 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'debit': 0.0,
             },
         ])
+
+    def test_set_move_line_quantity_to_zero(self):
+        """Test set move line quantity to zero which not affect product standard price"""
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.test_product_order.id,
+            })],
+        })
+        po.button_confirm()
+
+        po.picking_ids.button_validate()
+        move_line = po.picking_ids.move_ids.move_line_ids
+        old_price = move_line.product_id.standard_price
+
+        move_line.quantity = 0
+
+        self.assertEqual(move_line.quantity, 0.0)
+        self.assertEqual(po.picking_ids.move_ids.quantity, 0.0)
+        self.assertEqual(move_line.product_id.standard_price, old_price)
