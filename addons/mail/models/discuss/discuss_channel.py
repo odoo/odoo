@@ -52,7 +52,7 @@ class DiscussChannel(models.Model):
     _description = 'Discussion Channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ["mail.thread"]
+    _inherit = ["mail.thread", "bus.sync.mixin"]
 
     MAX_BOUNCE_LIMIT = 10
 
@@ -457,55 +457,14 @@ class DiscussChannel(models.Model):
                         channels=failing_channels.mapped("name"),
                     )
                 )
-
-        def get_field_name(field_description):
-            if isinstance(field_description, Store.Attr):
-                return field_description.field_name
-            return field_description
-
-        def get_field_value(channel, field_description):
-            if isinstance(field_description, Store.Attr):
-                if field_description.predicate and not field_description.predicate(channel):
-                    return None
-            if isinstance(field_description, Store.Relation):
-                return field_description._get_value(channel).records
-            if isinstance(field_description, Store.Attr):
-                return field_description._get_value(channel)
-            return channel[field_description]
-
-        def get_vals(channel):
-            return {
-                subchannel: {
-                    get_field_name(field_description): (
-                        get_field_value(channel, field_description),
-                        field_description,
-                    )
-                    for field_description in field_descriptions
-                }
-                for subchannel, field_descriptions in self._sync_field_names().items()
-            }
-
-        old_vals = {channel: get_vals(channel) for channel in self}
         result = super().write(vals)
-        for channel in self:
-            new_subchannel_vals = get_vals(channel)
-            for subchannel, values in new_subchannel_vals.items():
-                diff = []
-                for field_name, (value, field_description) in values.items():
-                    if value != old_vals[channel][subchannel][field_name][0]:
-                        diff.append(field_description)
-                if diff:
-                    Store(
-                        bus_channel=channel,
-                        bus_subchannel=subchannel,
-                    ).add(channel, diff).bus_send()
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
 
     def _sync_field_names(self):
         # keys are bus subchannel names, values are lists of field names to sync
-        res = defaultdict(list)
+        res = super()._sync_field_names()
         res[None] += [
             Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
             Store.One("discuss_category_id", ["name"], sudo=True),  # sudo: discuss.category - reading name is acceptable
