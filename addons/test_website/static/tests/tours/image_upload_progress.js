@@ -114,15 +114,15 @@ registerWebsitePreviewTour(
         },
         {
             content: "check upload progress bar is correctly shown (2)",
-            trigger: ".o_we_progressbar:contains('image.webp'):contains('File has been uploaded')",
+            trigger: ".o_we_progressbar:contains('image.webp') .o_notification_indicator_success",
         },
         {
             content: "check upload progress bar is correctly shown (3)",
-            trigger: ".o_we_progressbar:contains('image.png'):contains('File has been uploaded')",
+            trigger: ".o_we_progressbar:contains('image.png') .o_notification_indicator_success",
         },
         {
             content: "check upload progress bar is correctly shown (4)",
-            trigger: ".o_we_progressbar:contains('image.jpeg'):contains('File has been uploaded')",
+            trigger: ".o_we_progressbar:contains('image.jpeg') .o_notification_indicator_success",
         },
         {
             trigger: ".o_notification",
@@ -138,11 +138,6 @@ registerWebsitePreviewTour(
                     );
                 }
             },
-        },
-        {
-            content: "close notification",
-            trigger: ".o_notification_close",
-            run: "click",
         },
         {
             content: "close media dialog",
@@ -193,7 +188,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "the upload progress toast was updated",
-            trigger: ".o_we_progressbar:contains('image.png'):contains('File has been uploaded')",
+            trigger: ".o_we_progressbar:contains('image.png') .o_notification_indicator_success",
         },
         {
             content:
@@ -276,16 +271,13 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ".o_notification_close",
-        },
-        {
             content: "check that the upload progress bar is correctly shown",
             // ensure it is there so we are sure next step actually test something
-            trigger: ".o_we_progressbar:contains('fox'):contains('File has been uploaded')",
+            trigger: ".o_we_progressbar:contains('fox') .o_notification_indicator_success",
         },
         {
             content: "notification should close after 3 seconds",
-            trigger: "body:not(:has(.o_notification_close))",
+            trigger: "body:not(:has(.o_we_progressbar))",
             run: "click",
         },
         {
