@@ -19,6 +19,7 @@ export class ColorUIPlugin extends Plugin {
     static id = "colorUi";
     static dependencies = ["color", "history", "selection"];
     static shared = ["getPropsForColorSelector"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_items: [
             {

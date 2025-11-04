@@ -11,10 +11,15 @@ import { rpc } from "@web/core/network/rpc";
  * @property { ImageSavePlugin['savePendingImages'] } savePendingImages
  */
 
+/**
+ * @typedef {((el: HTMLElement) => HTMLElement)[]} closest_savable_providers
+ */
+
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
     static shared = ["savePendingImages"];
 
+    /** @type {import("plugins").EditorResources} */
     resources = {
         before_save_handlers: this.savePendingImages.bind(this),
 

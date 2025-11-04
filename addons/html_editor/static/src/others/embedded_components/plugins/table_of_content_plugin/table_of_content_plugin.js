@@ -10,6 +10,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 export class TableOfContentPlugin extends Plugin {
     static id = "tableOfContent";
     static dependencies = ["dom", "selection", "embeddedComponents", "link", "history"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
