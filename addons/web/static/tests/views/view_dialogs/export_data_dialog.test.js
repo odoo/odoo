@@ -1068,6 +1068,41 @@ test("Export dialog: search in debug", async () => {
     );
 });
 
+test("Export dialog: search with display names containing slashes", async () => {
+    onRpc("/web/export/formats", () => {
+        return [{ tag: "csv", label: "CSV" }];
+    });
+    onRpc("/web/export/get_fields", async (request) => {
+        const { params } = await request.json();
+        if (!params.parent_field) {
+            return fetchedFields.root;
+        }
+        return fetchedFields[params.prefix];
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list export_xlsx="1"><field name="foo"/></list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    await contains(".o_left_field_panel .o_export_tree_item:first-child").click();
+
+    // Search using display name format (with spaces and slashes).
+    // Both pattern and field.string must be reversed for this to match.
+    await contains(".o_export_search_input").edit("Activities/Email templates");
+    expect(".o_export_tree_item[data-field_id='activity_ids/mail_template_ids']").toHaveCount(1, {
+        message: "field should be found when searching with display name containing slashes",
+    });
+
+    await contains(".o_export_search_input").edit("Email templates");
+    expect(".o_export_tree_item[data-field_id='activity_ids/mail_template_ids']").toHaveCount(1, {
+        message: "field should be found when searching with partial display name",
+    });
+});
+
 test("Export dialog: disable button during export", async () => {
     let def;
     patchWithCleanup(download, {
