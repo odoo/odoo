@@ -200,6 +200,7 @@ class HrLeave(models.Model):
         'ir.attachment', string="Attach File", compute='_compute_supported_attachment_ids',
         inverse='_inverse_supported_attachment_ids')
     supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids')
+    attachment_is_visible = fields.Boolean(compute='_compute_attachment_is_visible', compute_sudo=True)
     # UX fields
     work_entry_type_request_unit = fields.Selection(related='work_entry_type_id.request_unit', readonly=True)
     work_entry_type_support_document = fields.Boolean(related="work_entry_type_id.support_document")
@@ -718,6 +719,16 @@ class HrLeave(models.Model):
         for holiday in self:
             holiday.supported_attachment_ids = holiday.attachment_ids
             holiday.supported_attachment_ids_count = len(holiday.attachment_ids.ids)
+
+    @api.depends_context('uid')
+    @api.depends('work_entry_type_support_document')
+    def _compute_attachment_is_visible(self):
+        is_privileged_user = self.env.user.has_groups('hr_holidays.group_hr_holidays_user,hr_holidays.group_hr_holidays_manager')
+        for leave in self:
+            if leave.work_entry_type_support_document and (is_privileged_user or self.env.uid in (leave.user_id.id, leave.create_uid.id)):
+                leave.attachment_is_visible = True
+            else:
+                leave.attachment_is_visible = False
 
     @api.depends('employee_id', 'work_entry_type_id')
     def _compute_leaves(self):
