@@ -615,6 +615,179 @@ test("RamCache (no update): consecutive calls and rejected promise", async () =>
     expect.verifySteps(["first prom rejected boom", "second prom rejected boom"]);
 });
 
+test("RamCache: pending request and call to invalidate", async () => {
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    const def = new Deferred();
+    rpcCache
+        .read("table", "key", () => {
+            expect.step("fallback first call");
+            return def;
+        })
+        .then((r) => {
+            expect.step(`first prom resolved with ${r}`);
+        });
+    rpcCache.invalidate();
+    rpcCache
+        .read("table", "key", () => {
+            expect.step("fallback second call");
+            return Promise.resolve("another value");
+        })
+        .then((r) => {
+            expect.step(`second prom resolved with ${r}`);
+        });
+
+    def.resolve("some value");
+    await tick();
+    expect.verifySteps([
+        "fallback first call",
+        "fallback second call",
+        "second prom resolved with another value",
+        "first prom resolved with some value",
+    ]);
+
+    // call again to ensure that the correct value is stored in the cache
+    rpcCache
+        .read("table", "key", () => expect.step("should not be called"))
+        .then((r) => {
+            expect.step(`third prom resolved with ${r}`);
+        });
+    await tick();
+    expect.verifySteps(["third prom resolved with another value"]);
+});
+
+test("RamCache: pending request and call to invalidate, update callbacks", async () => {
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    // populate the cache
+    rpcCache.read("table", "key", () => {
+        expect.step("first call: fallback");
+        return Promise.resolve("initial value");
+    });
+    await tick();
+    expect.verifySteps(["first call: fallback"]);
+
+    // read cache again, with update callback
+    const def = new Deferred();
+    rpcCache
+        .read(
+            "table",
+            "key",
+            () => {
+                expect.step("second call: fallback");
+                return def;
+            },
+            {
+                callback: (newValue) => expect.step(`second call: callback ${newValue}`),
+                update: "always",
+            }
+        )
+        .then((r) => expect.step(`second call: resolved with ${r}`));
+    // read it twice, s.t. there's a pending request
+    rpcCache
+        .read(
+            "table",
+            "key",
+            () => {
+                expect.step("should not be called as there's a pending request");
+            },
+            {
+                callback: (newValue) => expect.step(`third call: callback ${newValue}`),
+                update: "always",
+            }
+        )
+        .then((r) => {
+            expect.step(`third call: resolved with ${r}`);
+        });
+    await tick();
+
+    expect.verifySteps([
+        "second call: fallback",
+        "second call: resolved with initial value",
+        "third call: resolved with initial value",
+    ]);
+
+    rpcCache.invalidate();
+    // sanity check to ensure that cache has been invalidated
+    rpcCache.read("table", "key", () => {
+        expect.step("fourth call: fallback");
+        return Promise.resolve("value after invalidation");
+    });
+    expect.verifySteps(["fourth call: fallback"]);
+
+    // resolve def => update callbacks of requests 2 and 3 must be called
+    def.resolve("updated value");
+    await tick();
+    expect.verifySteps([
+        "second call: callback updated value",
+        "third call: callback updated value",
+    ]);
+});
+
+test("RamCache: pending request and call to invalidate, update callbacks in error", async () => {
+    const rpcCache = new RPCCache(
+        "mockRpc",
+        1,
+        "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+    );
+
+    const defs = [new Deferred(), new Deferred()];
+    rpcCache
+        .read("table", "key", () => {
+            expect.step("first call: fallback (error)");
+            return defs[0]; // will be rejected
+        })
+        .catch((e) => expect.step(`first call: rejected with ${e}`));
+
+    // invalidate cache and read again
+    rpcCache.invalidate();
+    rpcCache
+        .read("table", "key", () => {
+            expect.step("second call: fallback");
+            return defs[1];
+        })
+        .then((r) => expect.step(`second call: resolved with ${r}`));
+    await tick();
+
+    expect.verifySteps(["first call: fallback (error)", "second call: fallback"]);
+
+    // reject first def
+    defs[0].reject("my_error");
+    await tick();
+    expect.verifySteps(["first call: rejected with my_error"]);
+
+    // read again, should retrieve same prom as second call which is still pending
+    rpcCache
+        .read("table", "key", () => expect.step("should not be called"))
+        .then((r) => expect.step(`third call: resolved with ${r}`));
+    await tick();
+    expect.verifySteps([]);
+
+    // read again, should retrieve same prom as second call which is still pending (update "always")
+    rpcCache
+        .read("table", "key", () => expect.step("should not be called"), { update: "always" })
+        .then((r) => expect.step(`fourth call: resolved with ${r}`));
+    await tick();
+    expect.verifySteps([]);
+
+    // resolve second def
+    defs[1].resolve("updated value");
+    await tick();
+    expect.verifySteps([
+        "second call: resolved with updated value",
+        "third call: resolved with updated value",
+        "fourth call: resolved with updated value",
+    ]);
+});
+
 test("DiskCache: multiple consecutive calls, empty cache", async () => {
     // The fist call to rpcCache.read saves the promise to the RAM cache.
     // Each next call (before the end of the first call) retrieves the same result as the first call
