@@ -56,8 +56,8 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1.00"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2.00"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3.00"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.isRewardButtonHighlighted(false),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.selectedOrderlineHas("Whiteboard Pen", "4.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
 
