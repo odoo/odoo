@@ -1292,7 +1292,92 @@ class BaseModel(metaclass=MetaModel):
         info = {'rows': {'to': -1}}
         for id, xid, record, info in converted:
             if self.env.context.get('import_file') and self.env.context.get('import_skip_records'):
-                if any([record.get(field) is None for field in self.env.context['import_skip_records']]):
+                skip_fields = self.env.context['import_skip_records']
+                has_none_fields = False
+
+                # Separate relational fields (One2many/Many2many) from other fields
+                relational_skip_fields = []
+                non_relational_skip_fields = []
+
+                for field_name in skip_fields:
+                    # Handle nested field notation like 'order_line/product_id'
+                    base_field = field_name.split('/')[0] if '/' in field_name else field_name
+                    if base_field in self._fields:
+                        field_type = self._fields[base_field].type
+                        if field_type in ('one2many', 'many2many'):
+                            if '/' in field_name:  # It's a subfield of relational field
+                                relational_skip_fields.append(field_name)
+                            else:  # It's the relational field itself
+                                if record.get(base_field) is None:
+                                    has_none_fields = True
+                        else:
+                            non_relational_skip_fields.append(field_name)
+
+                # For non-relational fields, keep the original behavior (skip entire record)
+                if any(record.get(field) is None for field in non_relational_skip_fields):
+                    continue
+
+                # For relational fields with subfield errors, filter out invalid lines
+                for field_path in relational_skip_fields:
+                    if '/' not in field_path:
+                        continue
+
+                    base_field, subfield = field_path.split('/', 1)
+                    if base_field not in self._fields:
+                        continue
+
+                    field = self._fields[base_field]
+                    field_value = record.get(base_field)
+
+                    if field_value is None:
+                        # If entire relational field is None, set to empty to avoid skipping parent
+                        if field.type == 'one2many':
+                            record[base_field] = []
+                            messages.append({
+                                'type': 'warning',
+                                'message': _("Field '%(field)s' contains invalid data and was skipped. Parent record will be created without these lines.", field=base_field),
+                                'record': info.get('record', 0),
+                                'rows': info.get('rows', {}),
+                            })
+                        elif field.type == 'many2many':
+                            record[base_field] = [(6, 0, [])]
+                            messages.append({
+                                'type': 'warning',
+                                'message': _("Field '%(field)s' contains invalid references and was cleared. Parent record will be created without these relations.", field=base_field),
+                                'record': info.get('record', 0),
+                                'rows': info.get('rows', {}),
+                            })
+                        continue
+
+                    # For One2many: filter out command tuples that have None values
+                    if field.type == 'one2many' and isinstance(field_value, list):
+                        valid_commands = []
+                        skipped_count = 0
+                        for cmd in field_value:
+                            # Command format: (0, 0, vals_dict) for create
+                            if isinstance(cmd, (list, tuple)) and len(cmd) == 3 and cmd[0] == 0:
+                                vals_dict = cmd[2]
+                                # Check if the problematic subfield is None in this line
+                                if isinstance(vals_dict, dict) and vals_dict.get(subfield) is not None:
+                                    valid_commands.append(cmd)
+                                else:
+                                    skipped_count += 1
+                            else:
+                                # Keep other commands (update, link, etc.)
+                                valid_commands.append(cmd)
+
+                        record[base_field] = valid_commands
+                        if skipped_count > 0:
+                            messages.append({
+                                'type': 'warning',
+                                'message': _("%(count)s line(s) in '%(field)s' were skipped due to invalid '%(subfield)s'. Parent record will be created with remaining valid lines.",
+                                           count=skipped_count, field=base_field, subfield=subfield),
+                                'record': info.get('record', 0),
+                                'rows': info.get('rows', {}),
+                            })
+
+                # Skip record only if it has None in non-relational fields or if marked
+                if has_none_fields and not relational_skip_fields:
                     continue
             if xid:
                 xid = xid if '.' in xid else "%s.%s" % (current_module, xid)
