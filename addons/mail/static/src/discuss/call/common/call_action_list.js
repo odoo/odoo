@@ -11,7 +11,7 @@ import { ACTION_TAGS } from "@mail/core/common/action";
 
 export class CallActionList extends Component {
     static components = { ActionList };
-    static props = ["thread", "compact?"];
+    static props = ["channel", "compact?"];
     static template = "discuss.CallActionList";
 
     setup() {
@@ -19,7 +19,7 @@ export class CallActionList extends Component {
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
-        this.callActions = useCallActions({ thread: () => this.props.thread });
+        this.callActions = useCallActions({ thread: () => this.props.channel.thread });
         this.more = useRef("more");
         this.root = useRef("root");
         this.popover = usePopover(Tooltip, {
@@ -62,7 +62,7 @@ export class CallActionList extends Component {
     }
 
     get isOfActiveCall() {
-        return Boolean(this.props.thread.channel?.eq(this.rtc.channel));
+        return Boolean(this.props.channel.eq(this.rtc.channel));
     }
 
     get isSmall() {

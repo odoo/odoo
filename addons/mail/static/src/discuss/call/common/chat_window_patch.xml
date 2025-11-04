@@ -3,7 +3,7 @@
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//Thread" position="before">
             <PipBanner t-if="rtc.isPipMode and channel.eq(rtc.channel)" compact="true"/>
-            <Call t-elif="channel.showCallView" thread="channel.thread" compact="true"/>
+            <Call t-elif="channel.showCallView" channel="channel" compact="true"/>
         </xpath>
     </t>
 </templates>
