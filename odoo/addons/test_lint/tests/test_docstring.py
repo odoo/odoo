@@ -95,6 +95,7 @@ CLASSES_TO_LINT = {
         for toolname in dir(odoo.tools)
         if (tool := getattr(odoo.tools, toolname))
         if inspect.isclass(tool)
+        if toolname not in {'DotDict', 'frozendict', 'mute_logger'}
     ],
 }
 FUNCTIONS_TO_LINT = {
