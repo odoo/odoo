@@ -7,7 +7,8 @@ import { registry } from "@web/core/registry";
 
 export class BorderOption1 extends BaseOptionComponent {
     static template = "mass_mailing.BorderOption";
-    static selector = ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div";
+    static selector =
+        ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div";
     static applyTo = ".card";
     static components = { BorderConfigurator };
 }

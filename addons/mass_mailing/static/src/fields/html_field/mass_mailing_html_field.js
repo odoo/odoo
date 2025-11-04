@@ -139,15 +139,15 @@ export class MassMailingHtmlField extends HtmlField {
         const state = toRaw(this.state);
         const getThemeName = () => {
             const value = record.data[this.props.name];
-            if (!value) {
+            if (!value || !value.toString()) {
                 return;
             }
             const fragment = parseHTML(document, value);
             const layout = fragment.querySelector(".o_layout");
             if (!layout) {
-                return;
+                return "unknown";
             }
-            return this.themeService.getThemeName(layout.classList);
+            return this.themeService.getThemeName(layout.classList) || "unknown";
         };
         const activeTheme = getThemeName();
         if (state.activeTheme !== activeTheme) {
@@ -162,8 +162,8 @@ export class MassMailingHtmlField extends HtmlField {
         // dependencies to that effect, so it is used raw.
         const state = toRaw(this.state);
         if (!state.activeTheme && !state.showThemeSelector && !props.readonly) {
-            // Show the ThemeSelector when the theme is unknown and the content can be
-            // changed (invalid value).
+            // Show the ThemeSelector when the theme is undefined and the content can be
+            // changed.
             state.showThemeSelector = true;
         } else if ((state.activeTheme && state.showThemeSelector) || props.readonly) {
             state.showThemeSelector = false;
@@ -305,7 +305,7 @@ export class MassMailingHtmlField extends HtmlField {
                 return;
             }
         }
-        if (this.editor?.isDestroyed) {
+        if (!this.state.showCodeView && this.editor?.isDestroyed) {
             return;
         }
         return super._commitChanges({ urgent });
