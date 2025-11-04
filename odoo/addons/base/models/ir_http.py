@@ -155,12 +155,10 @@ class IrHttp(models.AbstractModel):
         uni = unicodedata.normalize('NFKD', value)
         slugified_segments = []
         for slug in re.split('-|_| ', uni):
-            slug = re.sub(r'([^\w-])+', '', slug)
-            slug = re.sub(r'--+', '-', slug)
-            slug = slug.strip('-')
+            slug = re.sub(r'([^\w])+', '', slug)
             if slug:
                 slugified_segments.append(slug.lower())
-        slugified_str = '-'.join(slugified_segments)
+        slugified_str = unicodedata.normalize('NFC', '-'.join(slugified_segments))
         return slugified_str[:max_length]
 
     @classmethod
