@@ -88,6 +88,7 @@ export const uploadService = {
                         id,
                         name: file.name,
                         size: fileSize,
+                        mimetype: file.type,
                     });
                 }
 
