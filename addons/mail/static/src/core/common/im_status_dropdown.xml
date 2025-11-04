@@ -6,7 +6,7 @@
             <t t-set-slot="content">
                 <DropdownItem class="{ 'active': this.store.self.im_status.includes('online') }" onSelected="() => this.setManualImStatus('online')"><i class="fa fa-circle text-success me-1" title="Online" role="img"/> Online</DropdownItem>
                 <hr class="my-1"/>
-                <DropdownItem class="{ 'active': this.store.self.im_status.includes('away') }" onSelected="() => this.setManualImStatus('away')"><i class="fa fa-circle o-yellow me-1" title="Away" role="img"/> Away</DropdownItem>
+                <DropdownItem class="{ 'active': this.store.self.im_status.includes('away') }" onSelected="() => this.setManualImStatus('away')"><i class="fa fa-adjust o-yellow me-1" title="Away" role="img"/> Away</DropdownItem>
                 <DropdownItem class="{ 'active': this.store.self.im_status.includes('busy') }" onSelected="() => this.setManualImStatus('busy')">
                     <i class="fa fa-minus-circle text-danger me-1" title="Busy" role="img"/> Do Not Disturb
                     <div class="small text-muted">You will not receive any notifications</div>
