@@ -22,6 +22,13 @@ class TestMailMessage(common.MailCommon):
         self.env["mail.message"].unstar_all()
         self.assertNotIn(self.env.user.partner_id, message.starred_partner_ids)
 
+    def test_mail_message_inexisting_access(self):
+        user = new_test_user(self.env, login="Bob", email="bob@test.com")
+        inexisting_message = self.env['mail.message'].with_user(user).browse(-434264)
+        self.assertFalse(inexisting_message.exists())
+        self.assertTrue(inexisting_message.browse().has_access('read'))
+        self.assertFalse(inexisting_message.has_access('read'))
+
     def test_unlink_failure_message_notify_author(self):
         recipient = new_test_user(self.env, login="Bob", email="invalid_email_addr")
         with self.mock_mail_gateway():

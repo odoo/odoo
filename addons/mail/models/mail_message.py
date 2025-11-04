@@ -502,15 +502,8 @@ class MailMessage(models.Model):
         """ Return the subset of ``self`` that does not satisfy the specific
         conditions for messages.
         """
-        forbidden = self.browse()
-
-        # Non employees see only messages with a subtype (aka, not internal logs)
-        if domain_share := self._get_search_domain_share():
-            internal = self.sudo().search(~domain_share & Domain('id', 'in', self.ids), order='id')
-            forbidden += internal
-            self -= internal  # noqa: PLW0642
         if not self:
-            return forbidden
+            return self
 
         # Read the value of messages in order to determine their accessibility.
         # The values are put in 'messages_to_check', and entries are popped
@@ -520,37 +513,38 @@ class MailMessage(models.Model):
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         pid = self.env.user.partner_id.id
 
+        # Non internal users see only non-private messages
+        query = self.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', self.ids), active_test=False)
+        table = query.table
         if operation in ('read', 'write'):
+            id_sql = table.id
+            query.groupby = id_sql
             # notified: partner_ids or needaction
-            query = SQL(
-                """ SELECT m.id, m.model, m.res_id, m.author_id, m.create_uid, m.parent_id,
-                        bool_or(partner_rel.res_partner_id IS NOT NULL OR needaction_rel.res_partner_id IS NOT NULL) AS notified,
-                        m.message_type
-                    FROM "mail_message" m
-                    LEFT JOIN "mail_message_res_partner_rel" partner_rel
-                        ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %(pid)s
-                    LEFT JOIN "mail_notification" needaction_rel
-                        ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %(pid)s
-                    WHERE m.id = ANY(%(ids)s)
-                    GROUP BY m.id
-                """,
-                pid=pid, ids=self.ids,
-            )
+            query.add_join('LEFT JOIN', 'partner_rel', 'mail_message_res_partner_rel',
+                SQL('partner_rel.mail_message_id = %s AND partner_rel.res_partner_id = %s', id_sql, pid))
+            query.add_join('LEFT JOIN', 'needaction_rel', 'mail_notification',
+                SQL('needaction_rel.mail_message_id = %s AND needaction_rel.res_partner_id = %s', id_sql, pid))
+            query = query.select(*(
+                table[fname]
+                for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type', 'create_uid')
+            ), SQL('bool_or(partner_rel.res_partner_id IS NOT NULL OR needaction_rel.res_partner_id IS NOT NULL) AS notified'))
         elif operation in ('create', 'unlink'):
-            query = SQL(
-                """ SELECT id, model, res_id, author_id, parent_id, message_type
-                    FROM "mail_message"
-                    WHERE id = ANY(%s)
-                """, self.ids,
-            )
+            query = query.select(*(
+                table[fname]
+                for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type')
+            ))
         else:
             raise ValueError(_('Wrong operation name (%s)', operation))
-
-        # trick: messages_to_check doesn't contain missing records from messages
+        # skip flush which is already done
+        self.env.cr.execute(query)
         messages_to_check = {
             values['id']: values
-            for values in self.env.execute_query_dict(query)
+            for values in self.env.cr.dictfetchall()
         }
+        # Not found messages are forbidden
+        forbidden = self - self.browse(messages_to_check)
+        if not messages_to_check:
+            return forbidden
 
         # Author condition (READ, WRITE, CREATE (private))
         if operation == 'read':
