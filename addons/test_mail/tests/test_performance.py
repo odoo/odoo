@@ -304,7 +304,6 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             _category = activity.activity_type_id.category
 
         with self.assertQueryCount(admin=9, employee=8):  # tm: 6 / 6
-
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
