@@ -49,6 +49,7 @@ export class ChatHub extends Component {
             }
         });
         useMovable({
+            enable: () => this.chatHub.compact || !this.chatHub.opened.length,
             cursor: "grabbing",
             ref: this.ref,
             elements: ".o-mail-ChatHub-bubbles",
@@ -60,6 +61,9 @@ export class ChatHub extends Component {
             },
             onDragEnd: () => (this.position.isDragging = false),
             onDrop: this.onDrop.bind(this),
+        });
+        this.env.bus.addEventListener("ChatWindow:will-open", () => {
+            this.resetPosition();
         });
     }
 
@@ -122,6 +126,9 @@ export class ChatHub extends Component {
     expand() {
         this.chatHub.compact = false;
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
+        if (this.chatHub.opened.length > 0) {
+            this.resetPosition();
+        }
     }
 }
 

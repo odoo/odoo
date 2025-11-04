@@ -88,6 +88,7 @@ export class ChatWindow extends Record {
 
     async open({ focus = false, notifyState = true, jumpToNewMessage = false } = {}) {
         await this.store.chatHub.initPromise;
+        this.store.env.bus.trigger("ChatWindow:will-open");
         this.store.chatHub.folded.delete(this);
         this.store.chatHub.opened.delete(this);
         this.store.chatHub.opened.unshift(this);
