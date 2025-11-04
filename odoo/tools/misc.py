@@ -517,20 +517,25 @@ def str2bool(s: str, default: bool | None = None) -> bool:
     return bool(default)
 
 
-def human_size(sz: float | str) -> str | typing.Literal[False]:
+def human_size(nb: int) -> str:
     """
-    Return the size in a human readable format
+    Get a pretty human string for a number of bytes (e.g. a file size).
+
+    >>> human_size(12)
+    "12 bytes"
+    >>> human_size(1000)
+    "0.977 kiB"
+    >>> human_size(-2048)
+    "-2 kiB"
+    >>> human_size(1 << 40)  # 1 TiB, numbers this big are unlikely
+    "1024 GiB"
     """
-    if not sz:
-        return False
-    units = ('bytes', 'Kb', 'Mb', 'Gb', 'Tb')
-    if isinstance(sz, str):
-        sz=len(sz)
-    s, i = float(sz), 0
-    while s >= 1024 and i < len(units)-1:
-        s /= 1024
-        i += 1
-    return "%0.2f %s" % (s, units[i])
+    units = ('bytes', 'kiB', 'MiB', 'GiB')
+    for unit in units:
+        if abs(nb) < 1000 or unit == units[-1]:  # 1000 to get 0.999 GiB instead of 1023 MiB
+            break
+        nb /= 1024
+    return f'{nb:.3g} {unit}'
 
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
