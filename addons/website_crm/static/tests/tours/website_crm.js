@@ -9,7 +9,7 @@ registerWebsitePreviewTour('website_crm_pre_tour', {
     edition: true,
 }, () => [{
     content: "Select contact form",
-    trigger: ":iframe #wrap.o_editable section.s_website_form",
+    trigger: ":iframe #wrap.o_savable section.s_website_form",
     run: "click",
 },
 {

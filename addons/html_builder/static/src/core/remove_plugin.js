@@ -134,9 +134,9 @@ export class RemovePlugin extends Plugin {
             "prev"
         );
         const nextSiblingEl = this.dependencies.visibility.getVisibleSibling(toRemoveEl, "next");
-        if (parentEl.matches(".o_editable:not(body)")) {
-            // If we target the editable, we want to reset the selection to the
-            // body. If the editable has options, we do not want to show them.
+        if (parentEl.matches(".o_savable:not(body)")) {
+            // If we target the savable, we want to reset the selection to the
+            // body. If the savable has options, we do not want to show them.
             parentEl = parentEl.closest("body");
         }
 

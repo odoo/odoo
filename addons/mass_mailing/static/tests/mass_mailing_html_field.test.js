@@ -68,7 +68,7 @@ class Mailing extends models.Model {
                 <div data_name="Mailing" class="o_layout oe_unremovable oe_unmovable o_empty_theme">
                     <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
                         <div class="row">
-                            <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable oe_empty" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true">
+                            <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_savable oe_empty" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true">
                                 This element <t t-out="'should be inline'"/>
                             </div>
                         </div>

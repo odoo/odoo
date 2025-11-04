@@ -21,7 +21,7 @@ export class BuilderContentEditablePlugin extends Plugin {
             "section > .o_container_small",
             "section > .container",
             "section > .container-fluid",
-            ".o_editable",
+            ".o_savable",
         ],
         valid_contenteditable_predicates: this.isValidContentEditable.bind(this),
         content_editable_providers: this.getContentEditableEls.bind(this),
@@ -58,7 +58,7 @@ export class BuilderContentEditablePlugin extends Plugin {
         };
         return (
             !contentEditableEl.matches("input, [data-oe-readonly]") &&
-            contentEditableEl.closest(".o_editable") &&
+            contentEditableEl.closest(".o_savable") &&
             !isDescendantOfNotEditableNotSnippet(contentEditableEl)
         );
     }
