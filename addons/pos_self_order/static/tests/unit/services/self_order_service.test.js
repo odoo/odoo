@@ -169,6 +169,30 @@ test("verifyCart", async () => {
     }
 });
 
+test("getProductPriceInfo", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+
+    const models = store.models;
+    const product5 = models["product.template"].get(5);
+    const pricelist = models["product.pricelist"].get(3);
+    const inPreset = models["pos.preset"].get(1);
+    const outPreset = store.models["pos.preset"].get(2);
+
+    expect(store.getProductPriceInfo(product5).pricelist_price).toBe(100);
+
+    store.config.pricelist_id = pricelist;
+    expect(store.getProductPriceInfo(product5).pricelist_price).toBe(10);
+
+    order.setPreset(outPreset);
+    expect(store.getProductPriceInfo(product5).pricelist_price).toBe(10);
+
+    pricelist.item_ids[0].percent_price = 80;
+    inPreset.pricelist_id = pricelist;
+    order.setPreset(inPreset);
+    expect(store.getProductPriceInfo(product5).pricelist_price).toBe(20);
+});
+
 describe("addToCart", () => {
     test("simple flow", async () => {
         const store = await setupSelfPosEnv();

@@ -834,9 +834,7 @@ export class SelfOrder extends Reactive {
     }
 
     getProductPriceInfo(productTemplate, product) {
-        const pricelist = this.config.use_presets
-            ? this.currentOrder.preset_id?.pricelist_id
-            : this.config.pricelist_id;
+        const pricelist = this.currentOrder.preset_id?.pricelist_id || this.config.pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
 
         if (!product) {
@@ -846,9 +844,10 @@ export class SelfOrder extends Reactive {
         // Taxes computation.
         const order = this.currentOrder;
         const taxesData = product.getTaxDetails({
-            price_unit: price,
-            quantity: 1,
-            fiscalPosition: order?.fiscal_position_id || false,
+            overridedValues: {
+                price,
+                fiscalPosition: order?.fiscal_position_id || false,
+            },
         });
         return { pricelist_price: price, ...taxesData };
     }
