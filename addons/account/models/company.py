@@ -164,7 +164,7 @@ class ResCompany(models.Model):
             'padding': 5,
             'use_date_range': True,
             'company_id': self.id,
-            'prefix': 'BATCH/%(year)s/',
+            'prefix': 'PAY/%(year)s/',
         }),
     )
 
