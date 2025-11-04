@@ -9,6 +9,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
@@ -532,6 +533,20 @@ export class Store extends BaseStore {
             (lastMessageId, message) => Math.max(lastMessageId, message.id),
             0
         );
+    }
+
+    handleValidChannelMention(channelLinks) {
+        for (const linkEl of channelLinks.filter(
+            (el) => !el.querySelector(".fa-comments-o, .fa-hashtag")
+        )) {
+            const text = linkEl.textContent.substring(1); // remove '#' prefix
+            const icon = linkEl.classList.contains("o_channel_redirect_asThread")
+                ? "fa fa-comments-o"
+                : "fa fa-hashtag";
+            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
+            linkEl.replaceChildren(iconEl);
+            linkEl.insertAdjacentText("beforeend", ` ${text}`);
+        }
     }
 
     getMentionsFromText(
