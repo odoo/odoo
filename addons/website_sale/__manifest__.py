@@ -26,6 +26,7 @@
         "data/mail_template_data.xml",
         "data/data.xml",  # Needs mail_template_data
         "data/digest_data.xml",  # Needs mail_template_data
+        "data/ir_actions_server_data.xml",
         "data/ir_cron_data.xml",
         "data/product_ribbon_data.xml",
         "data/tour.xml",

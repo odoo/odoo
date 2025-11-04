@@ -19,6 +19,11 @@ class ResConfigSettings(models.TransientModel):
         implied_group="website_sale.group_product_feed",
         group="base.group_user",
     )
+    group_automate_suggested_products = fields.Boolean(
+        string="Automate suggested products",
+        implied_group="website_sale.group_automate_suggested_products",
+        group="website.group_website_restricted_editor",
+    )
 
     # Modules
     module_website_sale_autocomplete = fields.Boolean("Address Autocomplete")
@@ -88,6 +93,9 @@ class ResConfigSettings(models.TransientModel):
     # === CRUD METHODS === #
 
     def set_values(self):
+        had_group_asp = self.default_get(["group_automate_suggested_products"])[
+            "group_automate_suggested_products"
+        ]
         super().set_values()
         if self.website_id:
             website = self.with_context(website_id=self.website_id.id).website_id
@@ -100,6 +108,16 @@ class ResConfigSettings(models.TransientModel):
             view = self.env.ref("website_sale.product_comment", raise_if_not_found=False)
             if view and not view.active:
                 view.active = True
+
+        # Activate / deactivate the automation of suggested products
+        suggested_products_cron_sudo = self.sudo().env.ref(
+            "website_sale.update_suggested_products_cron"
+        )
+        if self.group_automate_suggested_products and not had_group_asp:  # Enable the feature
+            suggested_products_cron_sudo.active = True
+            suggested_products_cron_sudo._trigger()
+        elif not self.group_automate_suggested_products and had_group_asp:  # Disable the feature
+            suggested_products_cron_sudo.active = False
 
     # === ACTION METHODS === #
 
