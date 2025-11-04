@@ -182,8 +182,8 @@ export class Product extends PosModel {
         let attribute_custom_values = {};
         let extras = {};
 
-        if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
-            quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
+        if (code && this._getPackagingQty(code) !== undefined) {
+            quantity = this._getPackagingQty(code);
         }
 
         if (this.isConfigurable()) {
@@ -269,6 +269,11 @@ export class Product extends PosModel {
             attribute_value_ids,
             extras,
         };
+    }
+    _getPackagingQty(code) {
+        if (this.pos.db.product_packaging_by_barcode[code.code]) {
+            return this.pos.db.product_packaging_by_barcode[code.code].qty;
+        }
     }
     isPricelistItemUsable(item, date) {
         const categories = this.parent_category_ids.concat(this.categ.id);

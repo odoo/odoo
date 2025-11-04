@@ -938,6 +938,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_07_pos_combo(self):
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 50})
+        # Archive a product to test that combo lines with archived products do not appear
+        self.office_combo.combo_ids.combo_line_ids.product_id.filtered(lambda p: p.name == 'Combo Product 1').active = False
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboPriceTaxIncludedTour', login="pos_user")
         order = self.env['pos.order'].search([])
@@ -1021,7 +1023,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'nomenclature_id': barcodes_gs1_nomenclature.id
         })
 
-        self.env['product.product'].create({
+        product_1 = self.env['product.product'].create({
             'name': 'Product 1',
             'available_in_pos': True,
             'list_price': 10,
@@ -1044,6 +1046,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'list_price': 10,
             'taxes_id': False,
             'barcode': '3760171283370',
+        })
+
+        self.env['product.packaging'].create({
+            'name': 'Product Packaging 10 Products',
+            'qty': 10,
+            'product_id': product_1.id,
+            'barcode': '08431673020132',
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()

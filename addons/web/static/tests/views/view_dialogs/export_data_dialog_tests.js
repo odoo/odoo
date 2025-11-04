@@ -1295,6 +1295,54 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
+    QUnit.test("Export dialog: search with display names containing slashes", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        // Expand activities to load subfields
+        const firstField = target.querySelector(
+            ".o_left_field_panel .o_export_tree_item:first-child"
+        );
+        await click(firstField);
+
+        // Search using display name format (with spaces and slashes)
+        // This tests that both pattern and field.string are reversed correctly
+        await editInput(target, ".o_export_search_input", "Activities/Email templates");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/mail_template_ids']",
+            "field should be found when searching with display name containing slashes"
+        );
+
+        // Clear and test another search with partial display name
+        await editInput(target, ".o_export_search_input", "");
+        await editInput(target, ".o_export_search_input", "Email templates");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/mail_template_ids']",
+            "field should be found when searching with partial display name"
+        );
+    });
+
     QUnit.test(
         "Direct export list take optional fields into account",
         async function (assert) {

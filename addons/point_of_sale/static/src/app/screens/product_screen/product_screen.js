@@ -330,6 +330,11 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         ) {
             customProductOptions.quantity = qty.value;
         }
+        if (product?._getPackagingQty(productBarcode)) {
+            customProductOptions.quantity = customProductOptions.quantity
+                ? customProductOptions.quantity * product._getPackagingQty(productBarcode)
+                : product._getPackagingQty(productBarcode);
+        }
         return { product, lotBarcode, customProductOptions };
     }
     /**
