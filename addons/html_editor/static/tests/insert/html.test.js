@@ -162,6 +162,16 @@ describe("collapsed selection", () => {
             },
             contentAfter: "<p>abcdefgh</p><p>[]<br></p>",
         });
+        await testEditor({
+            contentBefore: "<ul><li>abcd[]</li></ul>",
+            stepFunction: async (editor) => {
+                editor.shared.dom.insert(
+                    parseHTML(editor.document, "<li>ef</li><li>gh</li><li><p></p></li>")
+                );
+                editor.shared.history.addStep();
+            },
+            contentAfter: "<ul><li>abcd</li><li>ef</li><li>gh</li><li>[]<br></li></ul>",
+        });
     });
 
     test("never unwrap tables in breakable paragrap", async () => {
@@ -175,7 +185,7 @@ describe("collapsed selection", () => {
             parseHTML(editor.document, "<table><tbody><tr><td/></tr></tbody></table>")
         );
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><table><tbody><tr><td></td></tr></tbody></table><p>[]ent</p>`
+            `<p>cont</p><table><tbody><tr><td><br></td></tr></tbody></table><p>[]ent</p>`
         );
     });
 
@@ -190,7 +200,7 @@ describe("collapsed selection", () => {
             parseHTML(editor.document, "<table><tbody><tr><td/></tr></tbody></table>")
         );
         expect(getContent(editor.editable)).toBe(
-            `<p class="oe_unbreakable">content[]</p><table><tbody><tr><td></td></tr></tbody></table>`
+            `<p class="oe_unbreakable">content</p><table><tbody><tr><td>[]<br></td></tr></tbody></table>`
         );
     });
 
@@ -208,7 +218,7 @@ describe("collapsed selection", () => {
             parseHTML(editor.document, "<table><tbody><tr><td/></tr></tbody></table>")
         );
         expect(getContent(editor.editable)).toBe(
-            `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content[]</b><table><tbody><tr><td></td></tr></tbody></table></p></div>`
+            `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content</b><table><tbody><tr><td>[]<br></td></tr></tbody></table></p></div>`
         );
     });
 
@@ -384,12 +394,10 @@ describe("not collapsed selection", () => {
     test("should delete selection and insert html in its place (3)", async () => {
         await testEditor({
             contentBefore: "<h1>[abc</h1><p>def]</p>",
-            stepFunction: async editor => {
+            stepFunction: async (editor) => {
                 // There's an empty text node after the paragraph:
                 editor.editable.lastChild.after(editor.document.createTextNode(""));
-                editor.shared.dom.insert(
-                    parseHTML(editor.document, "<p>ghi</p><p>jkl</p>")
-                );
+                editor.shared.dom.insert(parseHTML(editor.document, "<p>ghi</p><p>jkl</p>"));
                 editor.shared.history.addStep();
             },
             contentAfter: "<p>ghi</p><p>jkl[]</p>",

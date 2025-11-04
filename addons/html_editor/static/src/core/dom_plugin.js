@@ -182,12 +182,10 @@ export class DomPlugin extends Plugin {
             !this.isEditionBoundary(selection.anchorNode);
 
         // Empty block must contain a br element to allow cursor placement.
-        if (
-            container.lastElementChild &&
-            isBlock(container.lastElementChild) &&
-            !container.lastElementChild.hasChildNodes()
-        ) {
-            fillEmpty(container.lastElementChild);
+        const leafBlock =
+            container.lastElementChild && closestBlock(lastLeaf(container.lastElementChild));
+        if (leafBlock?.childNodes.length === 0) {
+            fillEmpty(leafBlock);
         }
 
         // In case the html inserted is all contained in a single root <p> or <li>
