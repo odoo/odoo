@@ -1,13 +1,12 @@
 import contextlib
+import importlib
 import inspect
 import io
 import logging
 
 import docutils.nodes
-import docutils.parsers.rst.directives
-import docutils.parsers.rst.directives.admonitions
-import docutils.parsers.rst.roles
 
+import odoo.tools
 from odoo.modules.registry import Registry
 from odoo.tests.common import BaseCase, get_db_name, tagged
 
@@ -89,6 +88,24 @@ MODULES_TO_LINT = (
 )
 MODULES_TO_LINT_ONLY_PUBLIC_METHODS = (
 )
+CLASSES_TO_LINT = {
+    # 'fully qualified module name': ['class name 1', 'class name 2', ...]
+    'odoo.tools': [
+        toolname
+        for toolname in dir(odoo.tools)
+        if (tool := getattr(odoo.tools, toolname))
+        if inspect.isclass(tool)
+    ],
+}
+FUNCTIONS_TO_LINT = {
+    # 'fully qualified module name': ['func name 1', 'func name 2', ...]
+    'odoo.tools': [
+        toolname
+        for toolname in dir(odoo.tools)
+        if (tool := getattr(odoo.tools, toolname))
+        if inspect.isfunction(tool)
+    ],
+}
 
 POSITIONAL_ONLY = inspect.Parameter.POSITIONAL_ONLY
 POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
@@ -237,7 +254,7 @@ class TestDocstring(BaseCase):
         })
         cls.doctree_settings_verbose = doctree.settings
 
-    def test_docstring(self):
+    def test_docstring_modules(self):
         """ Verify that the function signature and its docstring match. """
         registry = Registry(get_db_name())
         seen_methods = set()
@@ -293,6 +310,53 @@ class TestDocstring(BaseCase):
                             ))
 
                     self._test_docstring_params(method, doctree)
+
+    def test_docstring_classes(self):
+        for modname, clsnames in CLASSES_TO_LINT.items():
+            module = importlib.import_module(modname)
+
+            for clsname in clsnames:
+                cls = getattr(module, clsname)
+
+                for methname, method in inspect.getmembers(cls, inspect.isroutine):
+                    if methname.startswith('_'):
+                        continue
+                    if not getattr(method, '__doc__', None):
+                        continue
+                    with self.subTest(cls=f'{modname}.{clsname}'):
+                        with contextlib.redirect_stderr(io.StringIO()) as stderr:
+                            doctree = docutils.core.publish_doctree(
+                                inspect.cleandoc(method.__doc__),
+                                settings=self.doctree_settings_verbose,
+                            )
+                            if stderr.tell():
+                                self.fail(PARSE_ERROR.format(
+                                    doc=inspect.cleandoc(method.__doc__).strip(),
+                                    error=stderr.getvalue(),
+                                ))
+
+                        self._test_docstring_params(method, doctree)
+
+    def test_docstring_functions(self):
+        for modname, funcnames in FUNCTIONS_TO_LINT.items():
+            module = importlib.import_module(modname)
+            for funcname in funcnames:
+                function = getattr(module, funcname)
+
+                with self.subTest(function=f'{modname}.{funcname}'):
+                    self.assertTrue(getattr(function, '__doc__'), None)
+                    with contextlib.redirect_stderr(io.StringIO()) as stderr:
+                        doctree = docutils.core.publish_doctree(
+                            inspect.cleandoc(function.__doc__),
+                            settings=self.doctree_settings_verbose,
+                        )
+                        if stderr.tell():
+                            self.fail(PARSE_ERROR.format(
+                                doc=inspect.cleandoc(function.__doc__).strip(),
+                                error=stderr.getvalue(),
+                            ))
+
+                    self._test_docstring_params(function, doctree)
 
     def _test_docstring_params(self, method, doctree):
         doc_params, doc_types, doc_rtype = extract_docstring_params(doctree)
