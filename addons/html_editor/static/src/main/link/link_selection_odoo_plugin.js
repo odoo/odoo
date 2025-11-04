@@ -3,6 +3,7 @@ import { isBlock } from "@html_editor/utils/blocks";
 
 export class OdooLinkSelectionPlugin extends Plugin {
     static id = "odooLinkSelection";
+    /** @type {import("plugins").EditorResources} */
     resources = {
         ineligible_link_for_zwnbsp_predicates: [
             (link) =>

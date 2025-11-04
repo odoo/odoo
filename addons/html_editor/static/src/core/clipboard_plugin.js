@@ -97,6 +97,19 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  * @property {ClipboardPlugin['pasteText']} pasteText
  */
 
+/**
+ * @typedef {(() => void)[]} after_paste_handlers
+ * @typedef {(() => void)[]} before_paste_handlers
+ *
+ * @typedef {((selection: EditorSelection, text: string) => boolean)[]} paste_text_overrides
+ *
+ * @typedef {((
+ *     clonedContents: DocumentFragment,
+ *     selection: EditorSelection
+ *   ) => void | clonedContents)[]} clipboard_content_processors
+ * @typedef {((textContent: string) => string)[]} clipboard_text_processors
+ */
+
 export class ClipboardPlugin extends Plugin {
     static id = "clipboard";
     static dependencies = [

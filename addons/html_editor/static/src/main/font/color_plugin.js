@@ -33,7 +33,17 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @typedef { Object } ColorShared
  * @property { ColorPlugin['colorElement'] } colorElement
  * @property { ColorPlugin['getPropsForColorSelector'] } getPropsForColorSelector
+ * @property { ColorPlugin['removeAllColor'] } removeAllColor
+ * @property { ColorPlugin['getElementColors'] } getElementColors
+ * @property { ColorPlugin['getColorCombination'] } getColorCombination
  */
+
+/**
+ * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} color_apply_overrides
+ *
+ * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_getters
+ */
+
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
@@ -44,6 +54,7 @@ export class ColorPlugin extends Plugin {
         "getElementColors",
         "getColorCombination",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

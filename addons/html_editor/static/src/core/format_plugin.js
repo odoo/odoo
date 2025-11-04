@@ -44,6 +44,16 @@ function isFormatted(formatPlugin, format) {
  * @property { FormatPlugin['formatSelection'] } formatSelection
  */
 
+/**
+ * @typedef {((formatName: string, options: {
+ *      formatProps: object,
+ *      applyStyle: boolean,
+ * }) => void | boolean)[]} format_selection_handlers
+ *
+ * @typedef {((className: string) => boolean)[]} format_class_predicates
+ * @typedef {((node: Node) => boolean)[]} has_format_predicates
+ */
+
 export class FormatPlugin extends Plugin {
     static id = "format";
     static dependencies = ["selection", "history", "input", "split"];
@@ -54,6 +64,7 @@ export class FormatPlugin extends Plugin {
         "mergeAdjacentInlines",
         "formatSelection",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

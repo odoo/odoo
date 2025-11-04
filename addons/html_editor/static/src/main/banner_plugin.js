@@ -15,11 +15,17 @@ function isAvailable(selection) {
         !closestElement(selection.anchorNode, ".o_editor_banner")
     );
 }
+
+/**
+ * @typedef { Object } BannerShared
+ * @property { BannerPlugin['insertBanner'] } insertBanner
+ */
 export class BannerPlugin extends Plugin {
     static id = "banner";
     // sanitize plugin is required to handle `contenteditable` attribute.
     static dependencies = ["baseContainer", "history", "dom", "emoji", "selection", "sanitize"];
     static shared = ["insertBanner"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

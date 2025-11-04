@@ -8,6 +8,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 export class TextDirectionPlugin extends Plugin {
     static id = "textDirection";
     static dependencies = ["selection", "history", "split", "format"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

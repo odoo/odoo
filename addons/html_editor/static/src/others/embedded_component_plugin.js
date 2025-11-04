@@ -2,12 +2,18 @@ import { Plugin } from "@html_editor/plugin";
 import { memoize } from "@web/core/utils/functions";
 
 /**
+ * @typedef {((arg: { name, env, props }) => void)[]} mount_component_handlers
+ * @typedef {(() => void)[]} post_mount_component_handlers
+ */
+
+/**
  * This plugin is responsible with providing the API to manipulate/insert
  * sub components in an editor.
  */
 export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
     static dependencies = ["history", "protectedNode"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         normalize_handlers: this.normalize.bind(this),

@@ -6,6 +6,13 @@ import { closestElement } from "../utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+
+/**
+ * @typedef {CSSSelector[]} move_node_blacklist_selectors
+ * @typedef {CSSSelector[]} move_node_whitelist_selectors
+ */
+
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
 
@@ -14,6 +21,7 @@ const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote, li";
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
     static dependencies = ["baseContainer", "selection", "history", "position", "localOverlay"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {

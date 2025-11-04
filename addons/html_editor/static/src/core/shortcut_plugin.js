@@ -5,17 +5,30 @@ import { Plugin } from "../plugin";
  * @property {string} hotkey
  * @property {string} commandId
  * @property {Object} [commandParams]
+ * @property {boolean} [global]
+ *
+ * @typedef {Shortcut[]} shortcuts
  *
  * Example:
  *
  *     resources = {
+ *         // See UserCommand
  *         user_commands: [
  *             { id: "myCommands", run: myCommandFunction },
  *         ],
+ *         // See Shortcut
  *         shortcuts: [
  *             { hotkey: "control+shift+q", commandId: "myCommands" },
  *         ],
  *     }
+ */
+
+/**
+ * @typedef {{
+ *     pattern: RegExp;
+ *     commandId: string;
+ *     commandParams?: object;
+ * }[]} shorthands
  */
 
 export class ShortCutPlugin extends Plugin {
