@@ -122,6 +122,18 @@ export function renderField(field, resetId = false) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
+    if (field.records && (field.type === "many2one" || field.type === "selection")) {
+        const hasDefault =
+            field.records[0]?.["display_name"] === "" ||
+            field.records.some((value) => value.selected);
+        if (!hasDefault) {
+            field.records.unshift({
+                id: "",
+                display_name: "",
+                selected: true,
+            });
+        }
+    }
     const params = { field: { ...field } };
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
