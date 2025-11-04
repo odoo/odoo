@@ -8,7 +8,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import { dispatch } from "@odoo/hoot-dom";
 import { insertText, setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { setSelection } from "../_helpers/selection";
 
 describe("ensureFocus", () => {
     // TODO @phoenix: unskipped when ensureFocus is add in the code base
@@ -155,11 +154,25 @@ describe("getCursorDirection", () => {
 
 describe("getAdjacentCharacter", () => {
     test("should return the ZWS character before the cursor", async () => {
-        const { editor, el } = await setupEditor("<p><span>abc</span>\u200b</p>");
+        const { el } = await setupEditor("<p><span>abc</span>\u200b</p>");
         const p = el.firstChild;
-        // Place the cursor at the end of the P (not in a leaf node)
-        setSelection({ anchorNode: p, anchorOffset: nodeSize(p) });
-        const selection = editor.document.getSelection();
-        expect(getAdjacentCharacter(selection, "previous", el)).toBe("\u200b");
+        // From the end of the P (not from the leaf node)
+        expect(getAdjacentCharacter(p, nodeSize(p), "previous", el)).toBe("\u200b");
+    });
+
+    test("should return the correct previous character for multiple nodes", async () => {
+        const { el } = await setupEditor("<p>abc</p>");
+        const p = el.firstChild;
+        const def = document.createTextNode("def");
+        p.appendChild(def);
+        expect(getAdjacentCharacter(def, 0, "previous", el)).toBe("c");
+    });
+
+    test("should return the correct next character for multiple nodes", async () => {
+        const { el } = await setupEditor("<p>abc</p>");
+        const p = el.firstChild;
+        const def = document.createTextNode("def");
+        p.appendChild(def);
+        expect(getAdjacentCharacter(p.firstChild, 3, "next", el)).toBe("d");
     });
 });

@@ -18,6 +18,7 @@ import { Plugin } from "../plugin";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
+    getCursorDirection,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
     normalizeNotEditableNode,
@@ -966,12 +967,27 @@ export class SelectionPlugin extends Plugin {
             const screenDirection = ev.key === "ArrowLeft" ? "left" : "right";
             const isRtl = closestElement(selection.focusNode, "[dir]")?.dir === "rtl";
             const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
+            const selectionDirection = getCursorDirection(
+                selection.anchorNode,
+                selection.anchorOffset,
+                selection.focusNode,
+                selection.focusOffset
+            );
+            const [edgeNode, edgeOffset] =
+                mode === "move" &&
+                (domDirection === "previous") ^ (selectionDirection === DIRECTIONS.LEFT)
+                    ? ["anchorNode", "anchorOffset"]
+                    : ["focusNode", "focusOffset"];
 
             // Whether the character next to the cursor should be skipped.
             const shouldSkipCallbacks = this.getResource(
                 "intangible_char_for_keyboard_navigation_predicates"
             );
-            let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+            let adjacentCharacter = getAdjacentCharacter(
+                selection[edgeNode],
+                selection[edgeOffset],
+                domDirection
+            );
             let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
             while (shouldSkip) {
@@ -982,7 +998,11 @@ export class SelectionPlugin extends Plugin {
                 const hasSelectionChanged =
                     nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
                 const lastSkippedChar = adjacentCharacter;
-                adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+                adjacentCharacter = getAdjacentCharacter(
+                    selection[edgeNode],
+                    selection[edgeOffset],
+                    domDirection
+                );
 
                 shouldSkip =
                     hasSelectionChanged &&
