@@ -10,3 +10,7 @@ class TestGenericCO(TestGenericLocalization):
     def setUpClass(cls):
         super().setUpClass()
         cls.partner_a.vat = '/'  # So that we don't sent actual request as company
+
+    def test_generic_localization(self):
+        order, html_data = super().test_generic_localization()
+        self.assertTrue(order.name in html_data)

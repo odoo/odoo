@@ -5,6 +5,9 @@
     'description': """Colombian - Point of Sale""",
     'category': 'Accounting/Localizations/Point of Sale',
     'auto_install': True,
+    'data': [
+        'receipt/pos_order_receipt.xml',
+    ],
     'depends': [
         'l10n_co',
         'point_of_sale'

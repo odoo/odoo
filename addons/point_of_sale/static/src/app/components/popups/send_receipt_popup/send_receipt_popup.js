@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useState, Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -50,17 +49,6 @@ export class SendReceiptPopup extends Component {
         return this.state.phone && /^\+?[()\d\s-.]{8,18}$/.test(this.state.phone);
     }
 
-    async generateTicketImage(basicReceipt = false) {
-        return await this.renderer.toJpeg(
-            OrderReceipt,
-            {
-                order: this.order,
-                basic_receipt: basicReceipt,
-            },
-            { addClass: "pos-receipt-print p-3" }
-        );
-    }
-
     async _sendReceiptToCustomer({ action, destination }) {
         if (!this.order.isSynced) {
             this.dialog.add(ConfirmationDialog, {
@@ -71,16 +59,7 @@ export class SendReceiptPopup extends Component {
             });
             return Promise.reject();
         }
-        const fullTicketImage = await this.generateTicketImage();
-        const basicTicketImage = this.pos.config.basic_receipt
-            ? await this.generateTicketImage(true)
-            : null;
-        await this.pos.data.call("pos.order", action, [
-            [this.order.id],
-            destination,
-            fullTicketImage,
-            basicTicketImage,
-        ]);
+        await this.pos.data.call("pos.order", action, [[this.order.id], destination]);
     }
 
     get sendList() {

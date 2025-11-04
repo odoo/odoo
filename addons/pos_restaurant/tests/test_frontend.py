@@ -294,6 +294,13 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(tip_line_order1.price_subtotal, 5.0)
         self.assertEqual(tip_line_order1.price_subtotal_incl, 5.0)
 
+        order5 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000005')], limit=1, order='id desc')
+        html = order5.order_receipt_generate_html()
+        self.assertTrue(f"Table {order5.table_id.table_number}" in html)
+        self.assertTrue("15%" in html)
+        self.assertTrue("20%" in html)
+        self.assertTrue("25%" in html)
+
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour2')

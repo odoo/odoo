@@ -14,6 +14,7 @@
         'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
         'data/pos_bill_data.xml',
+        'receipt/pos_order_receipt.xml',
     ],
     'demo': [
         'data/product_demo.xml',

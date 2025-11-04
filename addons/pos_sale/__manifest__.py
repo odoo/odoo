@@ -22,6 +22,7 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         'views/sales_team_views.xml',
         'views/res_config_settings_views.xml',
         'views/stock_template.xml',
+        'receipt/pos_order_receipt.xml',
     ],
     'auto_install': True,
     'assets': {

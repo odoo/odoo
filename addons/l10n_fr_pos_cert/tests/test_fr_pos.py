@@ -9,3 +9,7 @@ class TestGenericFR(TestGenericLocalization):
     @AccountTestInvoicingCommon.setup_country('fr')
     def setUpClass(cls):
         super().setUpClass()
+
+    def test_generic_localization(self):
+        order, html = super().test_generic_localization()
+        self.assertTrue(order.l10n_fr_hash in html)

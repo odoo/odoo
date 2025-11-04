@@ -33,11 +33,15 @@ class PosSelfKiosk(http.Controller):
         data['pos.config'][0]['access_token'] = config_access_token
         return data
 
+    @http.route("/pos-self/receipt-template/<config_id>", type='jsonrpc', auth='public')
+    def get_self_ordering_receipt_template(self, config_id=None, access_token=None, table_identifier=None):
+        pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
+        return pos_config.env['pos.order'].get_receipt_template_for_pos_frontend()
+
     @http.route("/pos-self/relations/<config_id>", type='jsonrpc', auth='public')
     def get_self_ordering_relations(self, config_id=None, access_token=None, table_identifier=None):
         pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
-        data = pos_config.load_data_params()
-        return data
+        return pos_config.load_data_params()
 
     def _verify_entry_access(self, config_id=None, access_token=None, table_identifier=None):
         table_sudo = False

@@ -20,6 +20,7 @@ export function initMockRpc() {
     onRpc("/pos-self/data/1", () =>
         MockServer.env["pos.session"].load_data({ self_ordering: true })
     );
+    onRpc("/pos-self/receipt-template/1", () => []);
 
     const mockProcssOrder = async (request) => {
         const { params } = await request.json();

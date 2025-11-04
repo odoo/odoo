@@ -240,6 +240,12 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
             'l10n_es_edi_verifactu_document_ids': [],
             'l10n_es_edi_verifactu_qr_code': invoice.l10n_es_edi_verifactu_qr_code,
         }])
+
+        # Test receipt generation
+        html = order.order_receipt_generate_html()
+        self.assertTrue("QR tributario:" in html)
+        self.assertTrue("VERI*FACTU" in html)
+
         self.assertRecordValues(invoice.l10n_es_edi_verifactu_document_ids, [{
             'pos_order_id': False,
             'move_id': invoice.id,

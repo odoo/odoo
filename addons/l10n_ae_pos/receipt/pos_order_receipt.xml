@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_ae_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <t t-set="show_title" position="after">
+                <t t-set="show_title" t-if="conditions.get('code_ae')" t-value="order['state'] != 'draft'"/>
+            </t>
+            <t t-set="show_simplified_title" position="after">
+                <t t-set="show_simplified_title"
+                    t-if="conditions.get('code_ae')"
+                    t-value="not partner or not partner['is_company']"/>
+            </t>
+        </template>
+    </data>
+</odoo>

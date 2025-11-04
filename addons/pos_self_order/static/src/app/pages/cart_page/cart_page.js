@@ -5,8 +5,6 @@ import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_tab
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
-import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
-import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { _t } from "@web/core/l10n/translation";
 
@@ -29,7 +27,6 @@ export class CartPage extends Component {
 
         this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
         this.renderer = useService("renderer");
-        this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
     }
 
     get showCancelButton() {
@@ -128,31 +125,6 @@ export class CartPage extends Component {
                 this.selfOrder.currentOrder.partner_id?.email || state.email;
             await this.pay();
         }
-    }
-
-    generateTicketImage = async (basicReceipt = false) =>
-        await this.renderer.toJpeg(
-            OrderReceipt,
-            {
-                order: this.selfOrder.currentOrder,
-                basic_receipt: basicReceipt,
-            },
-            { addClass: "pos-receipt-print p-3" }
-        );
-
-    async _sendReceiptToCustomer({ action, destination, mail_template_id }) {
-        const order = this.selfOrder.currentOrder;
-        const fullTicketImage = await this.generateTicketImage();
-        const basicTicketImage = this.selfOrder.config.basic_receipt
-            ? await this.generateTicketImage(true)
-            : null;
-        await this.selfOrder.data.call("pos.order", action, [
-            [order.id],
-            destination,
-            mail_template_id,
-            fullTicketImage,
-            basicTicketImage,
-        ]);
     }
 
     selectTableDependingOnMode(table) {

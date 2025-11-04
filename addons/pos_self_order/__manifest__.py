@@ -20,6 +20,7 @@
         "data/init_access.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
+        'receipt/pos_order_receipt.xml',
     ],
     "demo": [
         "data/kiosk_demo_data.xml",
@@ -36,7 +37,6 @@
             # Remove CSS files since we're not testing the UI with hoot in PoS self order
             # CSS files make html_editor tests fail
             ('remove', 'pos_self_order/static/src/**/*.scss'),
-            ('remove', 'point_of_sale/static/src/css/pos_receipts.css'),
 
             # Re-include debug and router files that were removed in point_of_sale.base_app
             # but are required for running unit tests
@@ -61,6 +61,7 @@
             'web/static/src/core/currency.js',
             'barcodes/static/src/barcode_service.js',
             'point_of_sale/static/src/utils.js',
+            'point_of_sale/static/src/app/utils/convert_python_template.js',
             'point_of_sale/static/src/proxy_trap.js',
             'point_of_sale/static/src/lazy_getter.js',
             'point_of_sale/static/src/app/utils/init_lna.js',
@@ -83,8 +84,8 @@
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/app/components/epos_templates.xml",
             "point_of_sale/static/src/css/pos_receipts.css",
-            "point_of_sale/static/src/app/components/receipt/**/*",
-            "pos_self_order/static/src/overrides/components/receipt_header/*",
+            "pos_self_order/static/src/overrides/utils/generate_printer_data.js",
+            "point_of_sale/static/src/app/utils/generate_printer_data.js",
             "point_of_sale/static/src/app/utils/printer/*",
             "point_of_sale/static/src/app/services/printer_service.js",
             'point_of_sale/static/src/app/utils/html-to-image.js',

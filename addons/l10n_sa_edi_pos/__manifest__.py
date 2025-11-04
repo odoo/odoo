@@ -9,6 +9,9 @@
         'l10n_sa_pos',
         'l10n_sa_edi',
     ],
+    'data': [
+        'receipt/pos_order_receipt.xml',
+    ],
     'summary': "ZATCA E-Invoicing, support for PoS",
     'description': """
 E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)

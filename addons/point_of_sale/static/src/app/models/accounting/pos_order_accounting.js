@@ -229,6 +229,7 @@ export class PosOrderAccounting extends Base {
 
             Object.assign(data.baseLineByLineUuids[key].tax_details, {
                 discount_amount: currency.round(ndData.total_included - dData.total_included),
+                no_discount_price_unit: ndData.price_unit_currency,
                 no_discount_total_excluded: ndData.total_excluded,
                 no_discount_total_included: ndData.total_included,
                 no_discount_total_included_currency: ndData.total_included_currency,

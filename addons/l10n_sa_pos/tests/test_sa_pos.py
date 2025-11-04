@@ -30,6 +30,11 @@ class TestGenericSA(TestGenericLocalization):
             'zip': '42317',
         })
 
+    def test_generic_localization(self):
+        self.main_pos_config.l10n_gcc_dual_language_receipt = True
+        _, html = super().test_generic_localization()
+        self.assertTrue("Tax Invoice" in html)
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):

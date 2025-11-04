@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_sale.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
+            <div name="extra-info" position="inside">
+                <t t-if="line.get('sale_order_name')">
+                    <div class="text-small mt-1">
+                        <strong>Sale Order: </strong><span t-out="line.get('sale_order_name')" />
+                    </div>
+                </t>
+            </div>
+        </template>
+    </data>
+</odoo>

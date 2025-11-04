@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_fr_pos_cert.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <div name="before-footer" position="before">
+                <div t-if="order.get('l10n_fr_hash')" class="w-100 text-break text-center pt-2">
+                    <span t-out="order['l10n_fr_hash']" />
+                </div>
+            </div>
+        </template>
+
+        <template id="l10n_fr_pos_cert.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
+            <span name="standard-unit-price" position="after">
+                <t t-if="order['l10n_fr_hash'] and line['price_type'] != 'original' and not conditions['basic_receipt']">
+                    <div class="text-small" name="combo-unit-price">
+                        <span>Old unit price </span>
+                        <s><span class="font-monospace" t-out="line['product_unit_price']" /></s> / <span class="font-monospace" t-out="line['product_uom_name']" />
+                    </div>
+                </t>
+            </span>
+            <span name="standard-unit-price" position="attributes">
+                <attribute name="t-if">not conditions['basic_receipt'] and (not order['l10n_fr_hash'] or line['price_type'] != 'original')</attribute>
+            </span>
+        </template>
+    </data>
+</odoo>

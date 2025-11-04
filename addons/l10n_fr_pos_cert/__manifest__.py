@@ -31,6 +31,7 @@ The module adds following features:
         'data/account_sale_closure_cron.xml',
         'security/ir.model.access.csv',
         'security/account_closing_intercompany.xml',
+        'receipt/pos_order_receipt.xml',
     ],
     'post_init_hook': '_setup_inalterability',
     'assets': {

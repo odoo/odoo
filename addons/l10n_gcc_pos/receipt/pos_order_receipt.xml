@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_gcc_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <span name="served_by" position="after">
+                <span t-if="conditions.get('gcc_country') and conditions.get('l10n_gcc_dual_language_receipt')">Served by / خدم بواسطة</span>
+            </span>
+            <span name="served_by" position="attributes">
+                <attribute name="t-if">not conditions.get('gcc_country') or not conditions.get('l10n_gcc_dual_language_receipt')</attribute>
+            </span>
+            <span name="ticket" position="after">
+                <span t-if="conditions.get('gcc_country') and conditions.get('l10n_gcc_dual_language_receipt')">Ticket / تذكرة</span>
+            </span>
+            <span name="ticket" position="attributes">
+                <attribute name="t-if">not conditions.get('gcc_country') or not conditions.get('l10n_gcc_dual_language_receipt')</attribute>
+            </span>
+            <div name="cashier_name" position="after">
+                <t t-set="show_title" t-value="false"/>
+                <t t-set="show_simplified_title" t-value="false"/>
+                <t t-if="conditions.get('l10n_gcc_dual_language_receipt') and show_title">
+                    <div class="text-center">
+                        <t t-if="not show_simplified_title">
+                            <t t-if="conditions.get('l10n_gcc_dual_language_receipt')">
+                                <span id="title_en">Tax Invoice</span>
+                                <span id="title_ar"> / الفاتورة الضريبية</span>
+                            </t>
+                            <t t-else="">
+                                <span name="title_simplified">Simplified Tax Invoice</span>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-if="conditions.get('l10n_gcc_dual_language_receipt')">
+                                <span name="title_simplified_en">Simplified Tax Invoice</span>
+                                <span name="title_simplified_ar"> / فاتورة ضريبية مبسطة</span>
+                            </t>
+                            <t t-else="">
+                                <span name="title_simplified">Simplified Tax Invoice</span>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </template>
+
+        <template id="l10n_gcc_pos.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <td name="subtotal" position="after">
+                <td class="text-start w-70 pb-1" t-if="conditions.get('gcc_country') and conditions.get('l10n_gcc_dual_language_receipt')">
+                    <span>Subtotal / الإجمالي الفرعي</span>
+                </td>
+            </td>
+            <td name="subtotal" position="attributes">
+                <attribute name="t-if">not conditions.get('gcc_country') or not conditions.get('l10n_gcc_dual_language_receipt')</attribute>
+            </td>
+            <td name="rounding" position="after">
+                <td class="text-start w-70 pb-1" t-if="conditions.get('gcc_country') and conditions.get('l10n_gcc_dual_language_receipt')">
+                    <span>Rounding / التقريب</span>
+                </td>
+            </td>
+            <td name="rounding" position="attributes">
+                <attribute name="t-if">not conditions.get('gcc_country') or not conditions.get('l10n_gcc_dual_language_receipt')</attribute>
+            </td>
+            <td name="total" position="after">
+                <td class="text-start w-70 pb-1" t-if="conditions.get('gcc_country') and conditions.get('l10n_gcc_dual_language_receipt')">
+                    <span>Total / اﻹجمالي</span>
+                </td>
+            </td>
+            <td name="total" position="attributes">
+                <attribute name="t-if">not conditions.get('gcc_country') or not conditions.get('l10n_gcc_dual_language_receipt')</attribute>
+            </td>
+            <td name="discount" position="after">
+                <td class="text-start w-70 pb-1" t-if="conditions.get('gcc_country') and conditions.get('l10n_gcc_dual_language_receipt')">
+                    <span>Discount / الخصومات</span>
+                </td>
+            </td>
+            <td name="discount" position="attributes">
+                <attribute name="t-if">not conditions.get('gcc_country') or not conditions.get('l10n_gcc_dual_language_receipt')</attribute>
+            </td>
+            <td name="change" position="after">
+                <td class="text-start w-70 pb-1" t-if="conditions.get('gcc_country') and conditions.get('l10n_gcc_dual_language_receipt')">
+                    <span>Change / الباقي</span>
+                </td>
+            </td>
+            <td name="change" position="attributes">
+                <attribute name="t-if">not conditions.get('gcc_country') or not conditions.get('l10n_gcc_dual_language_receipt')</attribute>
+            </td>
+        </template>
+    </data>
+</odoo>

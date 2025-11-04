@@ -12,6 +12,9 @@ Saudi Arabia POS Localization
         'l10n_gcc_pos',
         'l10n_sa',
     ],
+    'data': [
+        'receipt/pos_order_receipt.xml',
+    ],
     'assets': {
         'point_of_sale._assets_pos': [
             'web/static/lib/zxing-library/zxing-library.js',

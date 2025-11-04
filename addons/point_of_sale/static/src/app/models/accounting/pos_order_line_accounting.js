@@ -158,7 +158,6 @@ export class PosOrderlineAccounting extends Base {
         const currency = this.config.currency_id;
         const extraValues = { currency_id: currency };
         const product = this.getProduct();
-        const productUom = this.getUnit();
         const priceUnit = this.price_unit || 0;
         const discount = this.getDiscount();
         const values = {
@@ -167,8 +166,8 @@ export class PosOrderlineAccounting extends Base {
             price_unit: priceUnit,
             discount: discount,
             tax_ids: this.tax_ids,
+            product_uom_id: product.uom_id,
             product_id: product,
-            product_uom_id: productUom,
             rate: 1.0,
             is_refund: this.qty * priceUnit < 0,
             ...customValues,

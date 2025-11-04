@@ -8,6 +8,7 @@
     ],
     'data': [
         'views/pos_order_view.xml',
+        'receipt/pos_order_receipt.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
