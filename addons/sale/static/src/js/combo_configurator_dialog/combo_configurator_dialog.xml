@@ -90,7 +90,7 @@
                                 btnClasses="'d-inline-block w-auto'"
                             />
                         </div>
-                        <div class="w-100 w-md-auto">
+                        <div t-if="props.options?.showPrice ?? true" class="w-100 w-md-auto">
                             <span
                                 name="sale_combo_configurator_total"
                                 class="h6 mb-0"
