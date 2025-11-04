@@ -1,5 +1,6 @@
 import { Composer } from "@mail/core/common/composer";
 
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
 import { useState } from "@odoo/owl";
@@ -55,10 +56,20 @@ patch(Composer.prototype, {
         this.portalState.ratingValue = this.portalState.starValue;
     },
 
+    onMouseLeaveStar() {
+        if (!isMobileOS()) {
+            this.portalState.starValue = this.portalState.ratingValue;
+        }
+    },
+
     get postData() {
         const postData = super.postData;
         if (this.env.displayRating && !this.message) {
-            postData.rating_value = this.portalState.ratingValue;
+            if (isMobileOS()) {
+                postData.rating_value = this.portalState.ratingValue;
+            } else {
+                postData.rating_value = this.portalState.starValue;
+            }
         }
         return postData;
     },
