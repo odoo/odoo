@@ -66,14 +66,14 @@ export class TranslationPlugin extends Plugin {
                 translationSavableEl.classList.add("o_editable_attribute");
             }
             // Apply data-oe-readonly on wrapping editor
-            const editableElSelector = ".o_editable, .o_editable_attribute";
+            const editableElSelector = ".o_savable, .o_editable_attribute";
             const editableEls = [
-                ...this.services.website.pageDocument.querySelectorAll(".o_editable"),
+                ...this.services.website.pageDocument.querySelectorAll(".o_savable"),
             ];
             for (const editableEl of editableEls) {
                 if (editableEl.querySelector(editableElSelector)) {
                     editableEl.setAttribute("data-oe-readonly", "true");
-                    editableEl.classList.remove("o_editable");
+                    editableEl.classList.remove("o_savable");
                 }
             }
             return true;
@@ -106,7 +106,7 @@ export class TranslationPlugin extends Plugin {
         const menuEls = this.websiteService.pageDocument.querySelectorAll(".dropdown-menu");
         for (const menuEl of menuEls) {
             this.addDomListener(menuEl, "click", (ev) => {
-                const editableEl = ev.target.closest(".o_editable");
+                const editableEl = ev.target.closest(".o_savable");
                 if (editableEl && menuEl.contains(editableEl)) {
                     ev.stopPropagation();
                     ev.preventDefault();
@@ -138,7 +138,7 @@ export class TranslationPlugin extends Plugin {
             this.handleToC(translateEl);
         }
         const savableInsideNotEditableEls = this.editable.querySelectorAll(
-            ".o_not_editable .o_editable, .o_not_editable .o_editable_attribute"
+            ".o_not_editable .o_savable, .o_not_editable .o_editable_attribute"
         );
         for (const savableInsideNotEditableEl of savableInsideNotEditableEls) {
             this.addDomListener(savableInsideNotEditableEl, "click", showNotification);

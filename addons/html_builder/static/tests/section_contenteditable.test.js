@@ -3,7 +3,7 @@ import { expect, test, describe } from "@odoo/hoot";
 
 describe.current.tags("desktop");
 
-test("section with containers should not be contenteditable, but there containers should, unless outside o_editable", async () => {
+test("section with containers should not be contenteditable, but there containers should, unless outside o_savable", async () => {
     await setupHTMLBuilder(
         `<section><div class="container"><span class="inside">in</span></div></section>`,
         {

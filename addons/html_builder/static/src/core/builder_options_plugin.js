@@ -204,7 +204,7 @@ export class BuilderOptionsPlugin extends Plugin {
      */
     checkElement(el, { editableOnly = true, exclude = "" }) {
         // Unless specified otherwise, the element should be in an editable.
-        if (editableOnly && !(el.closest(".o_editable") || el.closest(".o_editable_attribute"))) {
+        if (editableOnly && !(el.closest(".o_savable") || el.closest(".o_editable_attribute"))) {
             return false;
         }
         // Check that the element is not to be excluded.

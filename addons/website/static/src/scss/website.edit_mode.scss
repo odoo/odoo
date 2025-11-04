@@ -36,7 +36,7 @@ $-editor-messages-margin-x: 2%;
     }
 }
 
-.o_editable {
+.o_savable {
     &:not(:empty), &[data-oe-type] {
         &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):not([data-oe-type="image"]):hover,
         &.o_editable_date_field_linked {
@@ -158,7 +158,7 @@ $-editor-messages-margin-x: 2%;
 }
 
 .editor_enable .css_non_editable_mode_hidden,
-.o_editable .media_iframe_video .css_editable_mode_display {
+.o_savable .media_iframe_video .css_editable_mode_display {
     display: block!important;
 }
 
@@ -187,7 +187,7 @@ $-editor-messages-margin-x: 2%;
 }
 
 // fontawesome
-#wrap.o_editable .fa {
+#wrap.o_savable .fa {
     cursor: pointer;
 }
 

@@ -46,7 +46,7 @@ test("basic save", async () => {
         '<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><h1 class="title">H1ello</h1></div>'
     );
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('H1ello')").toHaveCount(1);
 });
 
@@ -59,7 +59,7 @@ test("nothing to save", async () => {
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(0);
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 
@@ -96,7 +96,7 @@ test("discard modified elements", async () => {
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".modal-content button.btn-primary").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 
@@ -109,7 +109,7 @@ test("discard without any modifications", async () => {
     await setupWebsiteBuilder(exampleContent);
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    expect(":iframe #wrap").not.toHaveClass("o_editable");
+    expect(":iframe #wrap").not.toHaveClass("o_savable");
     expect(":iframe #wrap .title:contains('Hello')").toHaveCount(1);
 });
 
@@ -283,7 +283,7 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
     await dragUtils.drop(getDragHelper());
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_2 p").toHaveCount(2);
-    expect(":iframe .view.o_editable").toHaveClass("o_dirty");
+    expect(":iframe .view.o_savable").toHaveClass("o_dirty");
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(1);
     // Undo
@@ -299,7 +299,7 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
     await dragUtils.drop(getDragHelper());
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_1 p").toHaveCount(2);
-    expect(":iframe .view.o_editable").not.toHaveClass("o_dirty");
+    expect(":iframe .view.o_savable").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(1);
     // Undo
@@ -365,8 +365,8 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_1 .s_alert:nth-child(1)").toHaveCount(1);
     expect(":iframe #wrap").toHaveClass("o_dirty");
-    expect(":iframe .view_1.o_editable").not.toHaveClass("o_dirty");
-    expect(":iframe .view_2.o_editable").not.toHaveClass("o_dirty");
+    expect(":iframe .view_1.o_savable").not.toHaveClass("o_dirty");
+    expect(":iframe .view_2.o_savable").not.toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(1);
     // Undo
     await contains(".o-website-builder_sidebar .fa-undo").click();
@@ -382,8 +382,8 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     await waitForEndOfOperation();
     expect(":iframe .s_dummy_snippet_3 .s_alert:nth-child(1)").toHaveCount(1);
     expect(":iframe #wrap").toHaveClass("o_dirty");
-    expect(":iframe .view_1.o_editable").not.toHaveClass("o_dirty");
-    expect(":iframe .view_2.o_editable").toHaveClass("o_dirty");
+    expect(":iframe .view_1.o_savable").not.toHaveClass("o_dirty");
+    expect(":iframe .view_2.o_savable").toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(2);
     // Undo
     await contains(".o-website-builder_sidebar .fa-undo").click();

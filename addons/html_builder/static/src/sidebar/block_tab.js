@@ -219,7 +219,7 @@ export class BlockTab extends Component {
             let scrollingElement =
                 this.shared.dropzone.getDropRootElement() ||
                 getScrollingElement(this.document) ||
-                this.editable.querySelector(".o_editable");
+                this.editable.querySelector(".o_savable");
             if (!isScrollableY(scrollingElement)) {
                 scrollingElement =
                     closestScrollableY(this.document.defaultView.frameElement) ?? scrollingElement;

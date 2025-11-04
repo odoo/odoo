@@ -133,7 +133,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         h4 {
             width: 60%;
             // only apply ellipsis when in non-edit mode, that way the editor can see the full value
-            &:not(.o_editable) {
+            &:not(.o_savable) {
                 @include o-text-overflow();
             }
             margin-bottom: 0 !important;
