@@ -36,13 +36,11 @@ const removeImg = [
         trigger: ".o_customize_tab [data-container-title='Image'] button[data-action-id='removeMedia']",
         run: "click",
     },
+    // If the snippet editor is not visible, the remove process is considered as
+    // finished.
     {
         content: "Check that the snippet editor is not visible",
         trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
-    },
-    {
-        content: "Wait until the the image removal is saved",
-        trigger: ':iframe #o-carousel-product div:not(.o_dirty) > img',
     },
 ];
 
