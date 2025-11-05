@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MeetingChat">
-        <ActionPanel t-if="thread" title.translate="Chat" resizable="true" minWidth="300" initialWidth="400" icon="'fa fa-comments'" contentRef="panelContentRef">
-            <Thread thread="thread" jumpPresent="state.jumpPresent"/>
-            <t t-call="mail.ChatWindow.memberTyping">
-                <t t-set="channel" t-value="thread.channel"/>
-            </t>
+        <ActionPanel t-if="channel" title.translate="Chat" resizable="true" minWidth="300" initialWidth="400" icon="'fa fa-comments'" contentRef="panelContentRef">
+            <Thread thread="channel.thread" jumpPresent="state.jumpPresent"/>
+            <t t-call="mail.ChatWindow.memberTyping"/>
             <Composer
-                composer="thread.composer"
+                composer="channel.composer"
                 autofocus="!isMobileOS"
-                onDiscardCallback="() => (thread.composer.replyToMessage = undefined)"
+                onDiscardCallback="() => (channel.composer.replyToMessage = undefined)"
                 onPostCallback.bind="() => this.state.jumpPresent++"
                 dropzoneRef="panelContentRef"
            />

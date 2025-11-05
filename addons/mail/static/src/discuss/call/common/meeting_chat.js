@@ -10,7 +10,6 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
- * @property {import("models").Thread} [thread]
  * @extends {Component<Props, Env>}
  */
 export class MeetingChat extends Component {
@@ -33,7 +32,7 @@ export class MeetingChat extends Component {
         useSubEnv({ inMeetingChat: true });
     }
 
-    get thread() {
-        return this.store.rtc.channel?.thread;
+    get channel() {
+        return this.store.rtc.channel;
     }
 }
