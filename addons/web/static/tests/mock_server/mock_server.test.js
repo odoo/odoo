@@ -298,8 +298,8 @@ test("onRpc: JSON-RPC error handling", async () => {
 });
 
 test("rpc: calls on mock server", async () => {
-    onRpc("/route", () => true);
-    onRpc("/pure/route", () => true);
+    onRpc("/route", () => "pure route response");
+    onRpc("http://pure.route.com/", () => "external route response");
     onRpc("/boom", () => {
         throw new Error("Boom");
     });
@@ -312,8 +312,8 @@ test("rpc: calls on mock server", async () => {
     );
     await makeMockServer();
 
-    await expect(rpc("/pure/route")).resolves.toBe(true);
-    await expect(rpc("/route")).resolves.toBe(true);
+    await expect(rpc("/route")).resolves.toBe("pure route response");
+    await expect(rpc("http://pure.route.com/")).resolves.toBe("external route response");
 
     await expect(rpc("/boom")).rejects.toThrow("RPC_ERROR: Boom");
     await expect(rpc("/boom/pure")).rejects.toThrow(ConnectionLostError);
@@ -321,6 +321,9 @@ test("rpc: calls on mock server", async () => {
     // MockServer error handling with 'rpc'
     await expect(rpc("/unknown/route")).rejects.toThrow(
         "Unimplemented server route: /unknown/route"
+    );
+    await expect(rpc("https://unknown.route")).rejects.toThrow(
+        "Unimplemented server external URL: https://unknown.route"
     );
     await expect(
         rpc("/web/dataset/call_kw/fake.model/fake_method", {
