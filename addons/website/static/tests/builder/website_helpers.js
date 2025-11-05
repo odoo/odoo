@@ -300,8 +300,7 @@ export function addPlugin(...Plugin) {
     patchWithCleanup(WebsiteBuilder.prototype, {
         get builderProps() {
             const props = super.builderProps;
-            props.Plugins.push(...Plugin);
-            return props;
+            return { ...props, Plugins: [...props.Plugins, ...Plugin] };
         },
     });
 }
