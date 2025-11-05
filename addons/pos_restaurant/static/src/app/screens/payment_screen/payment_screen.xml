@@ -23,8 +23,16 @@
     </t>
     <t t-name="pos_restaurant.PaymentScreenDue" t-inherit="point_of_sale.PaymentScreenDue" t-inherit-mode="extension">
         <xpath expr="//section[hasclass('paymentlines-container')]" position="inside">
-            <div t-if="currentOrder.getCustomerCount() > 1" class="message text-center fs-2">
+            <div t-if="currentOrder.getCustomerCount() > 1" class="message text-center fs-1">
                 <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest())" /> / Guest
+                <button class="btn rounded-lg p" t-on-click="clickTableGuests" style="background-color: #ced4da;">
+                    <span class="text-black fs-4 fw-bolder" t-esc="currentOrder?.getCustomerCount() || 0"/>
+                </button>
+            </div>
+            <div class="fs-2 text-center">
+            2: <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest(2))" /> <span class="me-4">/ Guest</span>
+            3: <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest(3))" /> <span class="me-4">/ Guest</span>
+            4: <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest(4))" /> <span class="me-4">/ Guest</span>
             </div>
         </xpath>
     </t>
