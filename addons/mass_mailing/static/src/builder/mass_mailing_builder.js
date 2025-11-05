@@ -6,6 +6,8 @@ import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { registry } from "@web/core/registry";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { OptionsContainerWithSnippetVersionControl } from "./options/options_container";
+import { massMailingSnippetModelPatch } from "./snippet_model_patch";
+import { useService } from "@web/core/utils/hooks";
 
 class CustomizeTabWithSnippetVersionControl extends CustomizeTab {
     static components = {
@@ -30,6 +32,14 @@ export class MassMailingBuilder extends Component {
         toggleFullScreen: { type: Function },
     };
 
+    setup() {
+        this.snippetsService = useService("html_builder.snippets");
+        this.snippetsService.patchSnippetModel(
+            this.props.builderProps.snippetsName,
+            massMailingSnippetModelPatch
+        );
+    }
+
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);
         const massMailingPlugins = [
@@ -39,7 +49,6 @@ export class MassMailingBuilder extends Component {
         const pluginsToRemove = [
             "BuilderFontPlugin", // Makes call to Google API (can't be used for emails)
             "SavePlugin",
-            "SaveSnippetPlugin",
             "AnchorPlugin",
             "ColorUIPlugin",
             "EmbeddedFilePlugin",

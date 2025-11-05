@@ -35,6 +35,7 @@
     <t id="default_snippets">
         <t t-set="company_id" t-value="res_company"/>
         <snippets id="snippet_groups" string="Categories">
+            <t snippet-group="custom" t-snippet="mass_mailing.s_snippet_group" string="Custom" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_media_list.svg"/>
             <t snippet-group="headers" t-snippet="mass_mailing.s_snippet_group" string="Headers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
             <t snippet-group="footers" t-snippet="mass_mailing.s_snippet_group" string="Footers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_footer_social.png"/>
             <t snippet-group="images" t-snippet="mass_mailing.s_snippet_group" string="Images" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_picture.svg"/>
