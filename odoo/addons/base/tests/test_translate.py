@@ -814,7 +814,7 @@ class TestTranslationWrite(TransactionCase):
 
         langs = self.env['res.lang'].get_installed()
         self.assertEqual([('nl_NL', 'Dutch / Nederlands'), ('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
-                         "Test did not started with expected languages")
+                         "Test did not start with expected languages")
 
         belgium = self.env.ref('base.be')
         # vat_label is translatable and not required

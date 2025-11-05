@@ -409,7 +409,7 @@ class IrHttp(models.AbstractModel):
     def _get_translations_for_webclient(self, modules, lang):
         if not lang:
             lang = self.env.context.get("lang")
-        lang_data = self.env['res.lang']._get_data(code=lang)
+        lang_data = self.env['res.lang'].sudo()._lang_get(lang)
         lang_params = {
             "name": lang_data.name,
             "code": lang_data.code,

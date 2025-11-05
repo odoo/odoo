@@ -312,7 +312,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             clean_records = records.filtered(lambda rec: rec.id not in dirty_ids)
             clean_records.invalidate_recordset([self.name])
             self._update_cache(records, cache_value, dirty=True)
-            if lang != 'en_US' and not records.env['res.lang']._get_data(code='en_US'):
+            if lang != 'en_US' and not records.env['res.lang']._lang_get('en_US'):
                 # if 'en_US' is not active, we always write en_US to make sure value_en is meaningful
                 self._update_cache(records.with_context(lang='en_US'), cache_value, dirty=True)
             return
@@ -377,7 +377,7 @@ class BaseString(Field[str | typing.Literal[False]]):
                 new_store_translations = new_translations
             new_store_translations[lang] = cache_value
 
-            if not records.env['res.lang']._get_data(code='en_US'):
+            if not records.env['res.lang']._lang_get('en_US'):
                 new_store_translations['en_US'] = cache_value
                 new_store_translations.pop('_en_US', None)
             new_translations_list.append(new_store_translations)
