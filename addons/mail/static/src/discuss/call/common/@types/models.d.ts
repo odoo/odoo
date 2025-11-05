@@ -26,7 +26,7 @@ declare module "models" {
         fullscreenChannel: DiscussChannel;
         meetingViewOpened: boolean;
         nextTalkingTime: number;
-        ringingThreads: Thread[];
+        ringingChannels: DiscussChannel[];
         rtc: Rtc;
         Rtc: StaticMailRecord<Rtc, typeof RtcClass>;
     }
