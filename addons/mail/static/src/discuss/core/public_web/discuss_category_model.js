@@ -21,6 +21,8 @@ export class DiscussCategory extends Record {
     id;
     /** @type {string} */
     name;
+    /** @type {number} */
+    sequence;
 
     delete() {
         this.appCategory?.delete();

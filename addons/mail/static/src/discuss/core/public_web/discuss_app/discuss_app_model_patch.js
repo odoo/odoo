@@ -9,10 +9,24 @@ const discussAppPatch = {
         super.setup(...arguments);
         this.allCategories = fields.Many("DiscussAppCategory", {
             inverse: "app",
-            sort: (c1, c2) =>
-                c1.sequence !== c2.sequence
-                    ? c1.sequence - c2.sequence
-                    : c1.name.localeCompare(c2.name),
+            sort: (c1, c2) => {
+                // Favorites category always first
+                if (c1.id === "favorites" || c2.id === "favorites") {
+                    return c1.id === "favorites" ? -1 : 1;
+                }
+                // Categories linked to discuss.category come before others
+                const c1HasDiscussCategory = !!c1.discussCategoryAsAppCategory;
+                const c2HasDiscussCategory = !!c2.discussCategoryAsAppCategory;
+                if (c1HasDiscussCategory !== c2HasDiscussCategory) {
+                    return c1HasDiscussCategory ? -1 : 1;
+                }
+                // Finally sort by sequence then name if they are both linked or both not linked to discuss.category
+                const c1Sequence = c1.discussCategoryAsAppCategory?.sequence ?? c1.sequence;
+                const c2Sequence = c2.discussCategoryAsAppCategory?.sequence ?? c2.sequence;
+                return c1Sequence !== c2Sequence
+                    ? c1Sequence - c2Sequence
+                    : c1.name.localeCompare(c2.name);
+            },
         });
         this.channelCategory = fields.One("DiscussAppCategory", {
             compute() {

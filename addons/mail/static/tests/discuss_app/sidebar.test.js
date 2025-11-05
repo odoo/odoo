@@ -56,17 +56,17 @@ test("Display discuss categories", async () => {
     await contains(".o-mail-DiscussSidebarCategory", { text: "rd" });
     await contains(".o-mail-DiscussSidebarCategory", { text: "services" });
     await contains(".o-mail-DiscussSidebarChannel", {
-        text: "general",
-        after: [".o-mail-DiscussSidebarCategory", { text: "Channels" }],
-        before: [".o-mail-DiscussSidebarCategory", { text: "rd" }],
-    });
-    await contains(".o-mail-DiscussSidebarChannel", {
         text: "rd-Discuss",
         after: [".o-mail-DiscussSidebarCategory", { text: "rd" }],
         before: [".o-mail-DiscussSidebarCategory", { text: "services" }],
     });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "office",
+        after: [".o-mail-DiscussSidebarCategory", { text: "rd" }],
+        before: [".o-mail-DiscussSidebarCategory", { text: "Channels" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "general",
         after: [".o-mail-DiscussSidebarCategory", { text: "services" }],
     });
 });

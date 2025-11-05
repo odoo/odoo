@@ -80,6 +80,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_ice_server_views.xml',
+        'views/discuss_category_views.xml',
         'views/discuss_channel_member_views.xml',
         'views/discuss_channel_rtc_session_views.xml',
         'views/mail_link_preview_views.xml',
