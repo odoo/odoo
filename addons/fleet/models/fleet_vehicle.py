@@ -145,6 +145,11 @@ class FleetVehicle(models.Model):
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
         compute='_compute_range_unit', store=True, readonly=False, default="km", required=True)
 
+    _unique_license_plate = models.Constraint(
+        'UNIQUE(license_plate)',
+        'The license plate must be unique',
+    )
+
     @api.depends('log_services')
     def _compute_service_activity(self):
         for vehicle in self:
