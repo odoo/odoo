@@ -41,35 +41,26 @@ export class ActivityWatchTimesheet extends Component {
 
     extractBrowserWatcherActivityName(event) {
         const url = event.data.url;
-        // only for test, this should be a config, and the user can adapt it to his need
-        if (/^https?:\/\/localhost/.test(url)) {
-            event.name = "Programming (testing on browser)";
-            return true;
-        } else if (/^https:\/\/github\.com/.test(url)) {
-            event.name = "Programming (reading code on github)";
-            return true;
-        } else if (/^https:\/\/app\.excalidraw\.com/.test(url)) {
-            event.name = "Reading spec (Excalidraw)";
-            return true;
-        } else if (/chatgpt/i.test(url)) {
-            event.name = "Discussing with ChatGPT";
-            return true;
-        }
+        const odooUrl = RegExp.escape(window.location.origin);
+
         // in the config, we should have a sequence field, because order is important
         // like the example of overlap in calendar and planning apps
         // project and task in odoo url
-        let match = url.match(/^https:\/\/www\.odoo\.com\/odoo\/project\/(\d+)\/tasks\/(\d+)$/);
+        let match = url.match(
+            new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:tasks|project\\.task)/(\\d+)$`)
+        );
         if (match) {
             event.name = "Working on project"; // should come from config
-            event.project_id = match[1];
-            event.task_id = match[2];
+            event.task_id = Number(match[1]);
             return true;
         }
 
         // only project in odoo url
-        match = url.match(/^https:\/\/www\.odoo\.com\/odoo\/project\/(\d+)$/);
+        match = url.match(
+            new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:project|project\\.project)/(\\d+)$`)
+        );
         if (match) {
-            event.project_id = match[1];
+            event.project_id = Number(match[1]);
             return true;
         }
 
@@ -87,6 +78,21 @@ export class ActivityWatchTimesheet extends Component {
                 event.name = "composing email";
                 return true;
             }
+        }
+
+        // only for test, this should be a config, and the user can adapt it to his need
+        if (/^https?:\/\/localhost/.test(url)) {
+            event.name = "Programming (testing on browser)";
+            return true;
+        } else if (/^https:\/\/github\.com/.test(url)) {
+            event.name = "Programming (reading code on github)";
+            return true;
+        } else if (/^https:\/\/app\.excalidraw\.com/.test(url)) {
+            event.name = "Reading spec (Excalidraw)";
+            return true;
+        } else if (/chatgpt/i.test(url)) {
+            event.name = "Discussing with ChatGPT";
+            return true;
         }
 
         return false;
@@ -209,7 +215,7 @@ export class ActivityWatchTimesheet extends Component {
         this.state.loading = true;
 
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
-        const baseUrl = "http://localhost:5700";
+        const baseUrl = "http://localhost:5600";
         const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
         const todayEnd = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
 
@@ -264,20 +270,47 @@ export class ActivityWatchTimesheet extends Component {
         const tasksIds = new Set();
         const projectsIds = new Set();
 
+        ranges.forEach((range) => {
+            if (range.project_id != null) {
+                projectsIds.add(range.project_id);
+            }
+            if (range.task_id != null) {
+                tasksIds.add(range.task_id);
+            }
+        });
+
+        // get projects and tasks names
+        // loading this data in can be in // ( to fix later )
+        // we need to verify that the module is installed
+        const projects = await this.orm.searchRead(
+            "project.project",
+            [["id", "in", Array.from(projectsIds)]],
+            ["id", "name"]
+        );
+        const tasks = await this.orm.searchRead(
+            "project.task",
+            [["id", "in", Array.from(tasksIds)]],
+            ["id", "name", "project_id"]
+        );
+
+        // Add missing project ids
+        const taskToProject = Object.fromEntries(
+            tasks
+                .filter((task) => task.project_id && task.project_id[0] != null)
+                .map((task) => [task.id, task.project_id[0]])
+        );
+        ranges.forEach((range) => (range.project_id ??= taskToProject[range.task_id]));
+
+        this.state.project_by_id = Object.fromEntries([
+            ...projects.map(({ id, name }) => [id, name]),
+            ...tasks.filter((task) => task.project_id).map((task) => task.project_id),
+        ]);
+        this.state.task_by_id = Object.fromEntries(tasks.map(({ id, name }) => [id, name]));
+
         for (const range of ranges) {
             if (range.project_id || range.task_id) {
-                range.project_id = 1;
-                range.task_id = 30;
                 prevProjectId = range.project_id;
                 prevTaskId = range.task_id;
-                const pId = this.parseId(range.project_id);
-                const tId = this.parseId(range.task_id);
-                if (pId) {
-                    projectsIds.add(pId);
-                }
-                if (tId) {
-                    tasksIds.add(tId);
-                }
             }
             const duration = (range.stop - range.start) / 1000;
             const project = `${prevProjectId}_${prevTaskId}`;
@@ -293,18 +326,6 @@ export class ActivityWatchTimesheet extends Component {
         }
 
         await this.loadTimesheets(todayStart);
-        // get projects and tasks names
-        // loading this data in can be in // ( to fix later )
-        // we need to verify that the module is installed
-        const projects = await this.orm.searchRead("project.project", [["id", 'in', Array.from(projectsIds)]], ["id", "name"]);
-        const tasks = await this.orm.searchRead("project.task", [["id", 'in', Array.from(tasksIds)]], ["id", "name"]);
-
-        this.state.project_by_id = Object.fromEntries(
-            projects.map(({ id, name }) => [id, name])
-        );
-        this.state.task_by_id = Object.fromEntries(
-            tasks.map(({ id, name }) => [id, name])
-        );
         this.state.loading = false;
     }
 
@@ -386,7 +407,7 @@ export class ActivityWatchTimesheet extends Component {
             }
 
             // intersect interval with gap
-            while(j < intervalsToInclude.length && intervalsToInclude[j].start < gap[1]) {
+            while (j < intervalsToInclude.length && intervalsToInclude[j].start < gap[1]) {
                 const interval = { ...intervalsToInclude[j] };
                 interval.start = Math.max(gap[0], interval.start);
                 interval.stop = Math.min(gap[1], interval.stop);
@@ -411,7 +432,7 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     projectName(id) {
-        return this.state.project_by_id[id] || "unmatched";  // manage if the project is wrong (not a valid key)
+        return this.state.project_by_id[id] || "unmatched"; // manage if the project is wrong (not a valid key)
     }
 
     taskName(id) {
