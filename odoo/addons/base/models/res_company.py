@@ -9,23 +9,19 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, file_open, ormcache
 from odoo.tools.image import image_process
+from odoo.tools.sql import table_columns
 
 _logger = logging.getLogger(__name__)
 
 
-class ResCompany(models.Model):
+class ResCompany(models.CachedModel):
     _name = 'res.company'
     _description = 'Company'
     _order = 'sequence, name'
     _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
-    _clear_cache_name = 'default'
-    _clear_cache_on_fields = {
-        # This list is not well defined and tests should be improved
-        'active',  # user._get_company_ids and other potential cached search
-        'sequence',  # user._get_company_ids and other potential cached search
-    }
     _clear_asset_cache_on_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
+    _cached_data_fields = ('name', 'active', 'sequence', 'currency_id', 'parent_id', 'partner_id')
 
     def copy(self, default=None):
         raise UserError(self.env._('Duplicating a company is not allowed. Please create a new company instead.'))
@@ -35,6 +31,10 @@ class ResCompany(models.Model):
             return base64.b64encode(file.read())
 
     def _default_currency_id(self):
+        if self.env.registry._init and not (set(self._cached_data_fields) <= table_columns(self.env.cr, self._table).keys()):
+            # The database is being initialized, _init_column calls and tries to
+            # access the cache.
+            return None
         return self.env.user.company_id.currency_id
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)

@@ -62,7 +62,7 @@ class ProductTemplate(models.Model):
                 product_template.categ_id.with_company(
                     product_template.company_id
                 ).property_cost_method
-                or (product_template.company_id or self.env.company).cost_method
+                or (product_template.company_id or self.env.company).sudo().cost_method
             )
 
     @api.depends_context('company')

@@ -311,7 +311,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def lang(self) -> str | None:
         """Return the current language code."""
         lang = self.context.get('lang')
-        if lang and lang != 'en_US' and not self['res.lang']._get_data(code=lang):
+        if lang and lang != 'en_US' and not self['res.lang']._lang_get(lang):
             # cannot translate here because we do not have a valid language
             raise UserError(f'Invalid language code: {lang}')  # pylint: disable=missing-gettext
         return lang or None

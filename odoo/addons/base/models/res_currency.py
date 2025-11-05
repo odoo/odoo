@@ -18,14 +18,14 @@ except ImportError:
     num2words = None
 
 
-class ResCurrency(models.Model):
+class ResCurrency(models.CachedModel):
     _name = 'res.currency'
     _description = "Currency"
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
     # invalidate cache for get_all_currencies
-    _clear_cache_name = 'stable'
-    _clear_cache_on_fields = {'active', 'digits', 'name', 'position', 'symbol'}
+    _cached_data_domain = [('active', '=', True)]
+    _cached_data_fields = ('name', 'symbol', 'position', 'decimal_places', 'active')
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
@@ -282,7 +282,7 @@ class ResCurrency(models.Model):
     @ormcache(cache='stable')
     @api.model
     def get_all_currencies(self):
-        currencies = self.sudo().search_fetch([('active', '=', True)], ['name', 'symbol', 'position', 'decimal_places'])
+        currencies = self.sudo().browse(self._cached_data()['id'])
         return {
             c.id: {'name': c.name, 'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
             for c in currencies
