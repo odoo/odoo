@@ -13104,15 +13104,34 @@ function generateDataConsumerRemoteParameters({ id, } = {}) {
  * Compatible in both Node.js and Browser environments.
  */
 class Bus {
+    /**
+     * Environment type identifier to avoid ID collisions between client and server
+     * This class is used in both server (Node.js) and client (browser) environments
+     */
+    static _type = typeof window !== "undefined" && typeof window.document !== "undefined" ? "c" : "s";
+    /** Global ID counter for Bus instances */
+    static _idCount = 0;
+    /** Message handler for incoming messages */
+    onMessage;
+    /** Request handler for incoming requests */
+    onRequest;
+    /** Unique bus instance identifier */
+    id = Bus._idCount++;
+    /** Request counter for generating unique request IDs */
+    _requestCount = 0;
+    /** WebSocket connection */
+    _websocket;
+    /** Whether the websocket is an EventEmitter (Node.js ws) vs EventTarget (browser) */
+    _isWebsocketEmitter;
+    /** Map of pending requests awaiting responses */
+    _pendingRequests = new Map();
+    /** Queue of messages waiting to be batched */
+    _messageQueue = [];
+    /** Current batch timeout handle */
+    _batchTimeout;
+    /** Delay between batch sends in milliseconds */
+    _batchDelay;
     constructor(websocket, options = {}) {
-        /** Unique bus instance identifier */
-        this.id = Bus._idCount++;
-        /** Request counter for generating unique request IDs */
-        this._requestCount = 0;
-        /** Map of pending requests awaiting responses */
-        this._pendingRequests = new Map();
-        /** Queue of messages waiting to be batched */
-        this._messageQueue = [];
         const { batchDelay = 200 } = options;
         this._batchDelay = batchDelay;
         this._websocket = websocket;
@@ -13138,7 +13157,6 @@ class Bus {
     /**
      * Sends a request and waits for a response
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request(message, options = {}) {
         const { timeout = 5000, batch } = options;
         const requestId = this._getNextRequestId();
@@ -13147,7 +13165,11 @@ class Bus {
                 reject(new Error("bus request timed out"));
                 this._pendingRequests.delete(requestId);
             }, timeout);
-            this._pendingRequests.set(requestId, { resolve, reject, timeout: timeoutId });
+            this._pendingRequests.set(requestId, {
+                resolve,
+                reject,
+                timeout: timeoutId
+            });
             this._sendPayload(message, { needResponse: requestId, batch });
         });
     }
@@ -13176,9 +13198,7 @@ class Bus {
     _getNextRequestId() {
         return `${Bus._type}_${this.id}_${this._requestCount++}`;
     }
-    _sendPayload(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    message, options = {}) {
+    _sendPayload(message, options = {}) {
         const { needResponse, responseTo, batch } = options;
         if (batch) {
             this._batch({ message, needResponse, responseTo });
@@ -13221,7 +13241,16 @@ class Bus {
         const payloads = JSON.parse(normalizedMessage);
         // Handle each payload in parallel (not awaited)
         for (const payload of payloads) {
-            this._handlePayload(payload);
+            void this._handlePayload(payload).catch(() => {
+                if (payload.needResponse) {
+                    try {
+                        this._sendPayload({}, { responseTo: payload.needResponse });
+                    }
+                    catch {
+                        return;
+                    }
+                }
+            });
         }
     }
     /**
@@ -13229,7 +13258,6 @@ class Bus {
      * Determines whether they are requests, responses, or plain messages
      */
     async _handlePayload(payload) {
-        var _a, _b;
         const { message, needResponse, responseTo } = payload;
         if (responseTo) {
             // This is a response to a previous request
@@ -13242,22 +13270,15 @@ class Bus {
         }
         else if (needResponse) {
             // This is a request that expects a response
-            const response = await ((_a = this.onRequest) === null || _a === void 0 ? void 0 : _a.call(this, message));
-            this._sendPayload(response, { responseTo: needResponse });
+            const response = await this.onRequest?.(message);
+            this._sendPayload(response ?? {}, { responseTo: needResponse });
         }
         else {
             // This is a plain message
-            (_b = this.onMessage) === null || _b === void 0 ? void 0 : _b.call(this, message);
+            this.onMessage?.(message);
         }
     }
 }
-/**
- * Environment type identifier to avoid ID collisions between client and server
- * This class is used in both server (Node.js) and client (browser) environments
- */
-Bus._type = typeof window !== "undefined" && typeof window.document !== "undefined" ? "c" : "s";
-/** Global ID counter for Bus instances */
-Bus._idCount = 0;
 
 var WS_CLOSE_CODE;
 (function (WS_CLOSE_CODE) {
@@ -13287,6 +13308,8 @@ var SERVER_MESSAGE;
     SERVER_MESSAGE["SESSION_LEAVE"] = "SESSION_LEAVE";
     /** Signals the clients that the info (talking, mute,...) of one of the session in their channel has changed */
     SERVER_MESSAGE["INFO_CHANGE"] = "S_INFO_CHANGE";
+    /** Signals the clients that the info of the channel (isRecording,...) has changed */
+    SERVER_MESSAGE["CHANNEL_INFO_CHANGE"] = "CH_INFO_CHANGE";
 })(SERVER_MESSAGE || (SERVER_MESSAGE = {}));
 var CLIENT_REQUEST;
 (function (CLIENT_REQUEST) {
@@ -13296,6 +13319,10 @@ var CLIENT_REQUEST;
     CLIENT_REQUEST["CONNECT_STC_TRANSPORT"] = "CONNECT_STC_TRANSPORT";
     /** Requests the creation of a consumer that is used to upload a track to the server */
     CLIENT_REQUEST["INIT_PRODUCER"] = "INIT_PRODUCER";
+    /** Requests to start recording of the call */
+    CLIENT_REQUEST["START_RECORDING"] = "START_RECORDING";
+    /** Requests to stop recording of the call */
+    CLIENT_REQUEST["STOP_RECORDING"] = "STOP_RECORDING";
 })(CLIENT_REQUEST || (CLIENT_REQUEST = {}));
 var CLIENT_MESSAGE;
 (function (CLIENT_MESSAGE) {
@@ -13326,11 +13353,12 @@ var CLIENT_UPDATE;
     CLIENT_UPDATE["DISCONNECT"] = "disconnect";
     /** Session info has changed */
     CLIENT_UPDATE["INFO_CHANGE"] = "info_change";
+    CLIENT_UPDATE["CHANNEL_INFO_CHANGE"] = "channel_info_change";
 })(CLIENT_UPDATE || (CLIENT_UPDATE = {}));
-const INITIAL_RECONNECT_DELAY = 1000;
-const MAXIMUM_RECONNECT_DELAY = 30000;
+const INITIAL_RECONNECT_DELAY = 1_000;
+const MAXIMUM_RECONNECT_DELAY = 30_000;
 const MAX_ERRORS = 6;
-const RECOVERY_DELAY = 1000;
+const RECOVERY_DELAY = 1_000;
 const SUPPORTED_TYPES = new Set(["audio", "camera", "screen"]);
 // https://mediasoup.org/documentation/v3/mediasoup-client/api/#ProducerOptions
 const DEFAULT_PRODUCER_OPTIONS = {
@@ -13386,31 +13414,59 @@ const ACTIVE_STATES = new Set([
  * @fires SfuClient#update
  */
 class SfuClient extends EventTarget {
+    /** Connection errors encountered */
+    errors = [];
+    availableFeatures = {
+        rtc: false,
+        transcription: false,
+        audioRecording: false,
+        videoRecording: false
+    };
+    recordingState = {
+        recording: false,
+        audio: false,
+        transcription: false,
+        video: false
+    };
+    /** Current client state */
+    _state = SfuClientState.DISCONNECTED;
+    /** Communication bus */
+    _bus;
+    /** JWT token for authentication */
+    _jsonWebToken;
+    /** Connection URL */
+    _url;
+    /** Channel UUID */
+    _channelUUID;
+    /** ICE servers configuration */
+    _iceServers;
+    /** mediasoup Device */
+    _device;
+    /** Producer recovery timeouts */
+    _recoverProducerTimeouts = {};
+    /** Client-to-server transport */
+    _ctsTransport;
+    /** Server-to-client transport */
+    _stcTransport;
+    /** Reconnection delay */
+    _connectRetryDelay = INITIAL_RECONNECT_DELAY;
+    /** Consumer instances by session ID */
+    _consumers = new Map();
+    /** Producer instances */
+    _producers = {
+        audio: null,
+        camera: null,
+        screen: null
+    };
+    /** Producer options by media kind */
+    _producerOptionsByKind = {
+        audio: DEFAULT_PRODUCER_OPTIONS,
+        video: DEFAULT_PRODUCER_OPTIONS
+    };
+    /** Cleanup functions to call on disconnect */
+    _cleanups = [];
     constructor() {
         super();
-        /** Connection errors encountered */
-        this.errors = [];
-        /** Current client state */
-        this._state = SfuClientState.DISCONNECTED;
-        /** Producer recovery timeouts */
-        this._recoverProducerTimeouts = {};
-        /** Reconnection delay */
-        this._connectRetryDelay = INITIAL_RECONNECT_DELAY;
-        /** Consumer instances by session ID */
-        this._consumers = new Map();
-        /** Producer instances */
-        this._producers = {
-            audio: null,
-            camera: null,
-            screen: null
-        };
-        /** Producer options by media kind */
-        this._producerOptionsByKind = {
-            audio: DEFAULT_PRODUCER_OPTIONS,
-            video: DEFAULT_PRODUCER_OPTIONS
-        };
-        /** Cleanup functions to call on disconnect */
-        this._cleanups = [];
         this._handleMessage = this._handleMessage.bind(this);
         this._handleRequest = this._handleRequest.bind(this);
         this._handleConnectionEnd = this._handleConnectionEnd.bind(this);
@@ -13428,8 +13484,7 @@ class SfuClient extends EventTarget {
      * @param message - Any JSON serializable object
      */
     broadcast(message) {
-        var _a;
-        (_a = this._bus) === null || _a === void 0 ? void 0 : _a.send({
+        this._bus?.send({
             name: CLIENT_MESSAGE.BROADCAST,
             payload: message
         }, { batch: true });
@@ -13455,11 +13510,10 @@ class SfuClient extends EventTarget {
         this.state = SfuClientState.DISCONNECTED;
     }
     async getStats() {
-        var _a, _b;
         const stats = {};
         const [uploadStats, downloadStats] = await Promise.all([
-            (_a = this._ctsTransport) === null || _a === void 0 ? void 0 : _a.getStats(),
-            (_b = this._stcTransport) === null || _b === void 0 ? void 0 : _b.getStats()
+            this._ctsTransport?.getStats(),
+            this._stcTransport?.getStats()
         ]);
         stats.uploadStats = uploadStats;
         stats.downloadStats = downloadStats;
@@ -13474,14 +13528,31 @@ class SfuClient extends EventTarget {
         await Promise.all(proms);
         return stats;
     }
+    async startRecording(options = {}) {
+        if (this.state !== SfuClientState.CONNECTED) {
+            return false;
+        }
+        // TODO: If not allowed, return false too, no need to contact server
+        return this._bus.request({
+            name: CLIENT_REQUEST.START_RECORDING,
+            payload: options
+        }, { batch: true });
+    }
+    async stopRecording() {
+        if (this.state !== SfuClientState.CONNECTED) {
+            return false;
+        }
+        return this._bus.request({
+            name: CLIENT_REQUEST.STOP_RECORDING
+        }, { batch: true });
+    }
     /**
      * Updates the server with the info of the session (isTalking, isCameraOn,...) so that it can broadcast it to the
      * other call participants.
      */
     updateInfo(info, options = {}) {
-        var _a;
         const { needRefresh } = options;
-        (_a = this._bus) === null || _a === void 0 ? void 0 : _a.send({
+        this._bus?.send({
             name: CLIENT_MESSAGE.INFO_CHANGE,
             payload: { info, needRefresh }
         }, { batch: true });
@@ -13490,7 +13561,6 @@ class SfuClient extends EventTarget {
      * Stop or resume the consumption of tracks from the other call participants.
      */
     updateDownload(sessionId, states) {
-        var _a;
         const consumers = this._consumers.get(sessionId);
         if (!consumers) {
             return;
@@ -13518,7 +13588,7 @@ class SfuClient extends EventTarget {
         if (!hasChanged) {
             return;
         }
-        (_a = this._bus) === null || _a === void 0 ? void 0 : _a.send({
+        this._bus?.send({
             name: CLIENT_MESSAGE.CONSUMPTION_CHANGE,
             payload: { sessionId, states }
         }, { batch: true });
@@ -13528,7 +13598,6 @@ class SfuClient extends EventTarget {
      * @param track - MediaStreamTrack to upload (null removes the track)
      */
     async updateUpload(type, track) {
-        var _a;
         if (!SUPPORTED_TYPES.has(type)) {
             throw new Error(`Unsupported media type ${type}`);
         }
@@ -13538,7 +13607,7 @@ class SfuClient extends EventTarget {
             if (track) {
                 await existingProducer.replaceTrack({ track });
             }
-            (_a = this._bus) === null || _a === void 0 ? void 0 : _a.send({
+            this._bus?.send({
                 name: CLIENT_MESSAGE.PRODUCTION_CHANGE,
                 payload: { type, active: Boolean(track) }
             }, { batch: true });
@@ -13555,11 +13624,8 @@ class SfuClient extends EventTarget {
             });
         }
         catch (error) {
-            this.errors.push(error);
-            // if we reach the max error count, we restart the whole connection from scratch
-            if (this.errors.length > MAX_ERRORS) {
-                // not awaited
-                this._handleConnectionEnd();
+            const exit = this._handleError(error);
+            if (exit) {
                 return;
             }
             // retry after some delay
@@ -13569,8 +13635,7 @@ class SfuClient extends EventTarget {
             return;
         }
         this._onCleanup(() => {
-            var _a;
-            (_a = this._producers[type]) === null || _a === void 0 ? void 0 : _a.close();
+            this._producers[type]?.close();
             this._producers[type] = null;
             clearTimeout(this._recoverProducerTimeouts[type]);
         });
@@ -13603,6 +13668,22 @@ class SfuClient extends EventTarget {
         }
         this._bus.onMessage = this._handleMessage;
         this._bus.onRequest = this._handleRequest;
+    }
+    /**
+     * Handles an error and returns true if the connection should be closed.
+     */
+    _handleError(error) {
+        this.errors.push(error);
+        this.dispatchEvent(new CustomEvent("handledError", {
+            detail: { error }
+        }));
+        // if we reach the max error count, we restart the whole connection from scratch
+        if (this.errors.length > MAX_ERRORS) {
+            // not awaited
+            this._handleConnectionEnd();
+            return true;
+        }
+        return false;
     }
     _close(cause) {
         this._clear();
@@ -13642,9 +13723,19 @@ class SfuClient extends EventTarget {
                 }));
             }, { once: true });
             /**
-             * Receiving a message means that the server has authenticated the client and is ready to receive messages.
+             * Receiving a message means that the server has authenticated the client and is ready to receive messages,
+             * this contains initialization data.
              */
-            webSocket.addEventListener("message", () => {
+            webSocket.addEventListener("message", (message) => {
+                /**
+                 * the old API does not use the data of the first message,
+                 * so we check for backward compatibility.
+                 */
+                if (message.data) {
+                    const { availableFeatures, recordingState } = JSON.parse(message.data);
+                    this.availableFeatures = availableFeatures;
+                    this.recordingState = recordingState;
+                }
                 resolve(new Bus(webSocket));
             }, { once: true });
         });
@@ -13659,7 +13750,7 @@ class SfuClient extends EventTarget {
         this.errors = [];
         for (const consumers of this._consumers.values()) {
             for (const consumer of Object.values(consumers)) {
-                consumer === null || consumer === void 0 ? void 0 : consumer.close();
+                consumer?.close();
             }
         }
         this._consumers.clear();
@@ -13683,10 +13774,10 @@ class SfuClient extends EventTarget {
         });
         transport.on("produce", async ({ kind, rtpParameters, appData }, callback, errback) => {
             try {
-                const result = (await this._bus.request({
+                const result = await this._bus.request({
                     name: CLIENT_REQUEST.INIT_PRODUCER,
                     payload: { type: appData.type, kind, rtpParameters }
-                }));
+                });
                 callback({ id: result.id });
             }
             catch (error) {
@@ -13722,7 +13813,7 @@ class SfuClient extends EventTarget {
             return;
         }
         for (const consumer of Object.values(consumers)) {
-            consumer === null || consumer === void 0 ? void 0 : consumer.close();
+            consumer?.close();
         }
         this._consumers.delete(sessionId);
     }
@@ -13735,7 +13826,7 @@ class SfuClient extends EventTarget {
         if (this.state === SfuClientState.DISCONNECTED) {
             return; // Intentional disconnect
         }
-        const closeCode = event === null || event === void 0 ? void 0 : event.code;
+        const closeCode = event?.code;
         switch (closeCode) {
             case WS_CLOSE_CODE.CHANNEL_FULL:
                 this._close("full");
@@ -13749,7 +13840,7 @@ class SfuClient extends EventTarget {
         // Retry connecting with an exponential backoff.
         this._connectRetryDelay =
             Math.min(this._connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + 1000 * Math.random();
-        const timeout = window.setTimeout(() => this._connect(), this._connectRetryDelay);
+        const timeout = setTimeout(() => this._connect(), this._connectRetryDelay);
         this._onCleanup(() => clearTimeout(timeout));
     }
     async _handleMessage({ name, payload }) {
@@ -13766,10 +13857,13 @@ class SfuClient extends EventTarget {
             case SERVER_MESSAGE.INFO_CHANGE:
                 this._updateClient(CLIENT_UPDATE.INFO_CHANGE, payload);
                 break;
+            case SERVER_MESSAGE.CHANNEL_INFO_CHANGE:
+                this.recordingState = payload.state;
+                this._updateClient(CLIENT_UPDATE.CHANNEL_INFO_CHANGE, payload);
+                break;
         }
     }
     async _handleRequest({ name, payload }) {
-        var _a;
         switch (name) {
             case SERVER_REQUEST.INIT_CONSUMER: {
                 const { id, kind, producerId, rtpParameters, sessionId, type, active } = payload;
@@ -13779,7 +13873,7 @@ class SfuClient extends EventTarget {
                     this._consumers.set(sessionId, consumers);
                 }
                 else {
-                    (_a = consumers[type]) === null || _a === void 0 ? void 0 : _a.close();
+                    consumers[type]?.close();
                 }
                 const consumer = await this._stcTransport.consume({
                     id,
@@ -13825,8 +13919,8 @@ export { CLIENT_UPDATE, SFU_CLIENT_STATE, SfuClient, SfuClientState };
 
 
 export const __info__ = {
-    date: '2026-01-21T10:42:59.327Z',
-    hash: '297c767',
+    date: '2026-02-15T06:48:41.597Z',
+    hash: 'e25a2ba',
     url: 'https://github.com/odoo/sfu',
-    version: '1.3.3',
+    version: '1.4.0',
 };

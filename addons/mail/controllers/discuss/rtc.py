@@ -1,15 +1,40 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+import logging
 
-from werkzeug.exceptions import NotFound
+from collections import defaultdict
+from datetime import datetime
+
+from werkzeug.exceptions import NotFound, BadRequest
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE
 from odoo.tools import file_open
 
-from odoo.addons.mail.tools.discuss import add_guest_to_context, mail_route, Store
+from odoo.addons.mail.tools.discuss import Store, add_guest_to_context, get_derived_sfu_key, mail_route
+from odoo.addons.mail.tools.jwt import Algorithm, verify
+
+_logger = logging.getLogger(__name__)
+
+
+def _check_jwt(request, channel):
+    if not channel:
+        raise NotFound()
+    auth_header = request.httprequest.headers.get("Authorization")
+    if not auth_header:
+        raise NotFound()
+    try:
+        jwt = auth_header.split(" ")[1]
+    except IndexError:
+        raise NotFound()
+    if not jwt:
+        raise NotFound()
+    sfu_key = get_derived_sfu_key(request.env, channel.id)
+    try:
+        return verify(jwt, sfu_key, algorithm=Algorithm.HS256)
+    except ValueError:
+        raise NotFound()
 
 
 class RtcController(Controller):
@@ -165,3 +190,65 @@ class RtcController(Controller):
             "_store_rtc_update_fields",
             fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
         )
+
+    ##########
+    # Recording / Transcription
+    ##########
+
+    def _get_recording_destination(self, call_history):
+        """Save the recording, to be overriden by (cloud) storage modules"""
+
+    def _handleAudioFile(self, call_history, start_dt, end_dt, transcribe=False, main_media=False):
+        """
+        TODO move to call_history model
+        Handle the audio file received from the SFU, to be overriden by the AI for transcription"""
+        file_data = request.httprequest.get_data()
+        if not file_data:
+            raise BadRequest()
+        content_type = request.httprequest.content_type or "audio/ogg"
+        # TODO: once https://github.com/odoo/odoo/pull/233836 is merged,
+        # this should be a call artifact.
+        attachment = request.env["ir.attachment"].sudo().create({
+            "name": f"audio_{call_history.id}",
+            "type": "binary",
+            "raw": file_data,
+            "res_model": "discuss.call.history",
+            "res_id": call_history.id,
+            "mimetype": content_type,
+        })
+        _logger.warning("Attachment created: %s", attachment.name)
+        if main_media:
+            # TODO: field not availaible until merge of PR #233836
+            call_history.media_id = attachment
+            _logger.warning("Attachment set as main media: %s", call_history.media_id.name)
+        return attachment, call_history
+
+    @route(
+        '/mail/rtc/recording/<model("discuss.call.history"):call_history>/audio',
+        type="http",
+        auth="public",
+        methods=["POST"],
+        cors="*",
+        csrf=False,
+        max_content_length=30 * 1024 * 1024,  # 30MB decent margin, expecting 1h of 32k audio (~15MB)
+    )
+    def audio_recording(self, call_history, start, end, transcribe=False, main_media=False):
+        _check_jwt(request, call_history.channel_id)
+        if not start or not end:
+            raise BadRequest()
+        start_dt = datetime.fromtimestamp(int(start) / 1000)
+        end_dt = datetime.fromtimestamp(int(end) / 1000)
+        attachment, call_history = self._handleAudioFile(call_history, start_dt, end_dt, transcribe, main_media)
+        return request.make_json_response({"status": "OK", "channel_id": call_history.channel_id.id, "attachment_id": attachment.id, "call_history_id": call_history.id}, status=200)
+
+    @route(
+        '/mail/rtc/recording/<model("discuss.call.history"):call_history>/routing',
+        type="http",
+        auth="public",
+        cors="*",
+    )
+    def get_routing(self, call_history):
+        _check_jwt(request, call_history.channel_id)
+        return request.make_json_response({
+            "destination": self._get_recording_destination(call_history),
+        }, status=200)
