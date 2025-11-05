@@ -4,6 +4,7 @@
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 import json
+import textwrap
 import werkzeug.urls
 
 from markupsafe import Markup
@@ -37,7 +38,10 @@ class Event(models.Model):
         return res
 
     # description
-    subtitle = fields.Char('Event Subtitle', translate=True)
+    subtitle = fields.Char(
+        'Event Subtitle', translate=True,
+        help="Displayed on website and used as description when the event is added to a third-party calendar.",
+    )
     # registration
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating",
                                       search="_search_is_participating")
@@ -462,10 +466,10 @@ class Event(models.Model):
         return super(Event, self)._track_subtype(init_values)
 
     def _get_external_description(self):
-        """ Adding the URL of the event into the description """
+        """When website is installed we use the subtitle instead as description will likely be cluttered."""
         self.ensure_one()
         event_url = f'<a href="{self.event_register_url}">{self.name}</a>'
-        description = event_url + '\n' + super()._get_external_description()
+        description = event_url + (('\n' + textwrap.shorten(self.subtitle, 1900)) if self.subtitle else '')
         return description
 
     def _get_event_resource_urls(self):

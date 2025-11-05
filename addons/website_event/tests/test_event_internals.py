@@ -45,7 +45,7 @@ class TestEventData(EventCase, MockVisitor):
         event.write({
             'date_begin': FieldsDatetime.to_string(datetime(2022, 12, 31, 10, 0, 0)),
             'date_end': FieldsDatetime.to_string(datetime(2022, 12, 31, 12, 0, 0)),
-            'description': '<p>This is <b>HTML</b> description</p>',
+            'subtitle': 'This is a plaintext description',
             'event_register_url': 'https://www.example.com',
         })
 
@@ -57,7 +57,7 @@ class TestEventData(EventCase, MockVisitor):
         vevent = cal.vevent
 
         external_description = event._get_external_description()
-        self.assertIn('This is HTML description', external_description)
+        self.assertIn('This is a plaintext description', external_description)
         self.assertEqual(vevent.description.value, external_description)
 
         self.assertIn('x-alt-desc', vevent.contents)
