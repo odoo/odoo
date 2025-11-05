@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: ".o-mail-Message:has(.o-mail-Poll) [title='Reply']", run: "click" },
         {
             trigger:
-                ".o-mail-Composer:contains('Replying to internal (base.group_user)') .o-mail-Composer-input",
+                ".o-mail-Composer:contains('Replying to Ernest Employee') .o-mail-Composer-input",
             run: "edit Reply to the poll",
         },
         {

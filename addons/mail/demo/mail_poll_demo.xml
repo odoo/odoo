@@ -4,7 +4,7 @@
         <record id="mail.favorite_food_poll_message_demo" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="mail.channel_public_community_demo"/>
-            <field name="message_type">mail_poll</field>
+            <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="create_uid" ref="base.user_admin"/>

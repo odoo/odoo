@@ -58,7 +58,7 @@ class MailPoll(models.Model):
         for poll in self:
             thread = thread_by_message[poll.start_message_id]
             poll.end_message_id = thread.message_post(
-                body="", message_type="mail_poll", subtype_xmlid="mail.mt_comment"
+                body="", message_type="comment", subtype_xmlid="mail.mt_comment",
             )
             Store(**thread._get_store_target()).add(poll).bus_send()
 
