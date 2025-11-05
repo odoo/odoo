@@ -570,6 +570,9 @@ class StockQuant(models.Model):
     def _compute_display_name(self):
         """name that will be displayed in the detailed operation"""
         for record in self:
+            if not record.ids:
+                record.display_name = ''
+                continue
             name = [record.location_id.display_name]
             if record.lot_id:
                 name.append(record.lot_id.name)
