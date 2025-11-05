@@ -43,8 +43,6 @@ if typing.TYPE_CHECKING:
 
     from odoo.orm.environments import Transaction
 
-    T = typing.TypeVar('T')
-
     # when type checking, the BaseCursor exposes methods of the psycopg cursor
     _CursorProtocol = psycopg2.extensions.cursor
 else:

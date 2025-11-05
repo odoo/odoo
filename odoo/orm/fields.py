@@ -34,8 +34,6 @@ if typing.TYPE_CHECKING:
     from .query import FieldSQL, TableSQL
     from .registry import Registry
     from .types import BaseModel, DomainType, ModelType, ValuesType
-    M = typing.TypeVar("M", bound=BaseModel)
-T = typing.TypeVar("T")
 
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
@@ -92,7 +90,7 @@ def determine(needle, records: BaseModel, *args):
 _global_seq = itertools.count()
 
 
-class Field(typing.Generic[T]):
+class Field[T]:
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
     attributes may be provided when instantiating a field:
@@ -1439,7 +1437,7 @@ class Field(typing.Generic[T]):
             return self.__get__
         raise ValueError(f"Expression not supported on {self}: {field_expr!r}")
 
-    def filter_function(self, records: M, field_expr: str, operator: str, value) -> Callable[[M], M]:
+    def filter_function[M: BaseModel](self, records: M, field_expr: str, operator: str, value) -> Callable[[M], M]:
         assert operator not in Domain.NEGATIVE_OPERATORS, "only positive operators are implemented"
         getter = self.expression_getter(field_expr)
         # assert not isinstance(value, (SQL, Query))

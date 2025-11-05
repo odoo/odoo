@@ -5,7 +5,7 @@ Store database-specific configuration parameters
 
 import uuid
 import logging
-from typing import Any, Literal, TypeVar
+from typing import Any, Literal
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -13,7 +13,6 @@ from odoo.tools import config, ormcache, mute_logger, str2bool
 
 _logger = logging.getLogger(__name__)
 
-T = TypeVar('T')
 Type_ = Literal['bool', 'int', 'float', 'str']
 
 INVALID_VALUE = object()
@@ -98,7 +97,7 @@ class IrConfig_Parameter(models.Model):
         )
 
     @api.model
-    def get_bool(self, key: str, default: T = False) -> bool | T:
+    def get_bool[T](self, key: str, default: T = False) -> bool | T:
         self.browse().check_access('read')
         value = self._get(key, 'bool')[0]
         if value is None or value is INVALID_VALUE:
@@ -106,7 +105,7 @@ class IrConfig_Parameter(models.Model):
         return value
 
     @api.model
-    def get_int(self, key: str, default: T = 0) -> int | T:
+    def get_int[T](self, key: str, default: T = 0) -> int | T:
         self.browse().check_access('read')
         value = self._get(key, 'int')[0]
         if value is None or value is INVALID_VALUE:
@@ -114,7 +113,7 @@ class IrConfig_Parameter(models.Model):
         return value
 
     @api.model
-    def get_float(self, key: str, default: T = 0.0) -> float | T:
+    def get_float[T](self, key: str, default: T = 0.0) -> float | T:
         self.browse().check_access('read')
         value = self._get(key, 'float')[0]
         if value is None or value is INVALID_VALUE:
@@ -122,7 +121,7 @@ class IrConfig_Parameter(models.Model):
         return value
 
     @api.model
-    def get_str(self, key: str, default: T = '') -> str | T:
+    def get_str[T](self, key: str, default: T = '') -> str | T:
         self.browse().check_access('read')
         value = self._get(key, 'str')[0]
         if value is None or value is INVALID_VALUE:

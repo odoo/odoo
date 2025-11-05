@@ -32,8 +32,6 @@ if typing.TYPE_CHECKING:
     from .identifiers import IdType
     from .types import BaseModel, Field
 
-    M = typing.TypeVar('M', bound=BaseModel)
-
 _logger = logging.getLogger('odoo.api')
 
 MAX_FIXPOINT_ITERATIONS = 10

@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import base64
 import collections
-import csv
 import datetime
 import enum
 import hashlib
@@ -46,14 +45,10 @@ from .config import config
 from .float_utils import float_round
 from .which import which
 
-K = typing.TypeVar('K')
-T = typing.TypeVar('T')
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Sequence
     from odoo.api import Environment
     from odoo.addons.base.models.res_lang import LangData
-
-    P = typing.TypeVar('P')
 
 __all__ = [
     'DEFAULT_SERVER_DATETIME_FORMAT',
@@ -84,9 +79,8 @@ __all__ = [
     'get_iso_codes',
     'get_lang',
     'groupby',
-    'hmac',
     'hash_sign',
-    'verify_hash_signed',
+    'hmac',
     'html_escape',
     'human_size',
     'is_list_of',
@@ -96,6 +90,7 @@ __all__ = [
     'parse_date',
     'partition',
     'posix_to_ldml',
+    'real_time',
     'remove_accents',
     'replace_exceptions',
     'reverse_enumerate',
@@ -104,7 +99,7 @@ __all__ = [
     'street_split',
     'topological_sort',
     'unique',
-    'real_time',
+    'verify_hash_signed',
 ]
 
 _logger = logging.getLogger(__name__)
@@ -313,7 +308,7 @@ def file_open_temporary_directory(env: Environment):
 #----------------------------------------------------------
 # iterables
 #----------------------------------------------------------
-def reverse_enumerate(lst: Sequence[T]) -> Iterator[tuple[int, T]]:
+def reverse_enumerate[T](lst: Sequence[T]) -> Iterator[tuple[int, T]]:
     """Like enumerate but in the other direction
 
     Usage::
@@ -334,7 +329,7 @@ def reverse_enumerate(lst: Sequence[T]) -> Iterator[tuple[int, T]]:
     return zip(range(len(lst) - 1, -1, -1), reversed(lst))
 
 
-def partition(pred: Callable[[T], bool], elems: Iterable[T]) -> tuple[list[T], list[T]]:
+def partition[T](pred: Callable[[T], bool], elems: Iterable[T]) -> tuple[list[T], list[T]]:
     """ Return a pair equivalent to:
     ``filter(pred, elems), filter(lambda x: not pred(x), elems)`` """
     yes: list[T] = []
@@ -344,7 +339,7 @@ def partition(pred: Callable[[T], bool], elems: Iterable[T]) -> tuple[list[T], l
     return yes, nos
 
 
-def topological_sort(elems: Mapping[T, Collection[T]]) -> list[T]:
+def topological_sort[T](elems: Mapping[T, Collection[T]]) -> list[T]:
     """ Return a list of elements sorted so that their dependencies are listed
     before them in the result.
 
@@ -377,7 +372,7 @@ def topological_sort(elems: Mapping[T, Collection[T]]) -> list[T]:
     return result
 
 
-def merge_sequences(*iterables: Iterable[T]) -> list[T]:
+def merge_sequences[T](*iterables: Iterable[T]) -> list[T]:
     """ Merge several iterables into a list. The result is the union of the
         iterables, ordered following the partial order given by the iterables,
         with a bias towards the end for the last iterable::
@@ -607,21 +602,21 @@ def posix_to_ldml(fmt: str, locale: babel.Locale) -> str:
 
 
 @typing.overload
-def split_every(n: int, iterable: Iterable[T]) -> Iterator[tuple[T, ...]]:
+def split_every[T](n: int, iterable: Iterable[T]) -> Iterator[tuple[T, ...]]:
     ...
 
 
 @typing.overload
-def split_every(n: int, iterable: Iterable[T], piece_maker: type[Collection[T]]) -> Iterator[Collection[T]]:
+def split_every[T](n: int, iterable: Iterable[T], piece_maker: type[Collection[T]]) -> Iterator[Collection[T]]:
     ...
 
 
 @typing.overload
-def split_every(n: int, iterable: Iterable[T], piece_maker: Callable[[Iterable[T]], P]) -> Iterator[P]:
+def split_every[T, P](n: int, iterable: Iterable[T], piece_maker: Callable[[Iterable[T]], P]) -> Iterator[P]:
     ...
 
 
-def split_every(n: int, iterable: Iterable[T], piece_maker=tuple):
+def split_every[T](n: int, iterable: Iterable[T], piece_maker=tuple):
     """Splits an iterable into length-n pieces. The last piece will be shorter
        if ``n`` does not evenly divide the iterable length.
 
@@ -790,7 +785,7 @@ def stripped_sys_argv(*strip_args):
     return [x for i, x in enumerate(args) if not strip(args, i)]
 
 
-class ConstantMapping(Mapping[typing.Any, T], typing.Generic[T]):
+class ConstantMapping[T](Mapping[typing.Any, T]):
     """
     An immutable mapping returning the provided value for every single key.
 
@@ -927,7 +922,7 @@ def clean_context(context: dict[str, typing.Any]) -> dict[str, typing.Any]:
     return {k: v for k, v in context.items() if not k.startswith('default_')}
 
 
-class Collector(dict[K, tuple[T, ...]], typing.Generic[K, T]):
+class Collector[K, T](dict[K, tuple[T, ...]]):  # noqa: FURB189
     """ A mapping from keys to tuples.  This implements a relation, and can be
         seen as a space optimization for ``defaultdict(tuple)``.
     """
@@ -955,7 +950,7 @@ class Collector(dict[K, tuple[T, ...]], typing.Generic[K, T]):
             self[key] = tuple(val for val in vals if val not in excludes)  # type: ignore
 
 
-class StackMap(MutableMapping[K, T], typing.Generic[K, T]):
+class StackMap[K, T](MutableMapping[K, T]):
     """ A stack of mappings behaving as a single mapping, and used to implement
         nested scopes. The lookups search the stack from top to bottom, and
         returns the first value found. Mutable operations modify the topmost
@@ -996,7 +991,7 @@ class StackMap(MutableMapping[K, T], typing.Generic[K, T]):
         return self._maps.pop()
 
 
-class OrderedSet(MutableSet[T], typing.Generic[T]):
+class OrderedSet[T](MutableSet[T]):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
 
@@ -1032,7 +1027,7 @@ class OrderedSet(MutableSet[T], typing.Generic[T]):
         return reduce(OrderedSet.__and__, others, self)
 
 
-class LastOrderedSet(OrderedSet[T], typing.Generic[T]):
+class LastOrderedSet[T](OrderedSet[T]):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
         self.discard(elem)
@@ -1113,7 +1108,7 @@ class Callbacks:
         self.data.clear()
 
 
-class ReversedIterable(Reversible[T], typing.Generic[T]):
+class ReversedIterable[T](Reversible[T]):
     """ An iterable implementing the reversal of another iterable. """
     __slots__ = ['iterable']
 
@@ -1127,7 +1122,7 @@ class ReversedIterable(Reversible[T], typing.Generic[T]):
         return iter(self.iterable)
 
 
-def groupby(iterable: Iterable[T], key: Callable[[T], K] = lambda arg: arg) -> Iterable[tuple[K, list[T]]]:
+def groupby[K, T](iterable: Iterable[T], key: Callable[[T], K] = lambda arg: arg) -> Iterable[tuple[K, list[T]]]:
     """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
         ``key`` is a function computing a key value for each element. This
         function is similar to ``itertools.groupby``, but aggregates all
@@ -1139,7 +1134,7 @@ def groupby(iterable: Iterable[T], key: Callable[[T], K] = lambda arg: arg) -> I
     return groups.items()
 
 
-def unique(it: Iterable[T]) -> Iterator[T]:
+def unique[T](it: Iterable[T]) -> Iterator[T]:
     """ "Uniquifier" for the provided iterable: will output each element of
     the iterable once.
 
@@ -1155,7 +1150,7 @@ def unique(it: Iterable[T]) -> Iterator[T]:
             yield e
 
 
-def submap(mapping: Mapping[K, T], keys: Iterable[K]) -> Mapping[K, T]:
+def submap[K, T](mapping: Mapping[K, T], keys: Iterable[K]) -> Mapping[K, T]:
     """
     Get a filtered copy of the mapping where only some keys are present.
 
@@ -1603,13 +1598,18 @@ class _HashDict[K, V](dict[K, V]):
         return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 
-def frozendict[K, V](mapping: Iterable[tuple[K, V]] | Mapping[K, V] = (), /, **kw: V) -> MappingProxyType[K, V]:
-    """ Return an immutable copy of a mapping.
-        This allows the returned proxy mapping to be hashed.
-        The reference to the newly created internal dictionary is not
-        accessible, which guarantees immutability
-    """
-    return MappingProxyType(_HashDict(mapping, **kw))
+class frozendict[K, V]:
+    "Immutable dict."
+    def __new__(cls, mapping: Iterable[tuple[K, V]] | Mapping[K, V] = (), /, **kw: V):
+        """ Return an immutable copy of a mapping.
+            This allows the returned proxy mapping to be hashed.
+            The reference to the newly created internal dictionary is not
+            accessible, which guarantees immutability
+        """
+        return MappingProxyType(_HashDict(mapping, **kw))
+
+    def __subclasscheck__(self, subclass):
+        assert False, "cannot subclass frozendict"  # not a real class
 
 
 def ReadonlyDict(mapping=(), /, **kw) -> MappingProxyType:
@@ -1621,14 +1621,14 @@ def ReadonlyDict(mapping=(), /, **kw) -> MappingProxyType:
     return frozendict(mapping, **kw)
 
 
-class DotDict(dict):
+class DotDict[T](dict[str, T]):
     """Helper for dot.notation access to dictionary attributes
 
         E.g.
           foo = DotDict({'bar': False})
           return foo.bar
     """
-    def __getattr__(self, attrib):
+    def __getattr__(self, attrib) -> DotDict | T | None:
         val = self.get(attrib)
         return DotDict(val) if isinstance(val, dict) else val
 

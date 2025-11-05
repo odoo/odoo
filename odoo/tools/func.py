@@ -14,9 +14,6 @@ __all__ = [
     'reset_cached_properties',
 ]
 
-T = typing.TypeVar("T")
-P = typing.ParamSpec("P")
-
 
 def reset_cached_properties(obj) -> None:
     """ Reset all cached properties on the instance `obj`. """
@@ -27,7 +24,7 @@ def reset_cached_properties(obj) -> None:
             del obj_dict[name]
 
 
-def conditional(condition: typing.Any, decorator: Callable[[T], T]) -> Callable[[T], T]:
+def conditional[T](condition: typing.Any, decorator: Callable[[T], T]) -> Callable[[T], T]:
     """ Decorator for a conditionally applied decorator.
 
         Example::
@@ -60,7 +57,7 @@ def filter_kwargs(func: Callable, kwargs: dict[str, typing.Any]) -> dict[str, ty
     return {key: kwargs[key] for key in kwargs if key not in leftovers}
 
 
-def synchronized(lock_attr: str = '_lock') -> Callable[[Callable[P, T]], Callable[P, T]]:
+def synchronized[**P, T](lock_attr: str = '_lock') -> Callable[[Callable[P, T]], Callable[P, T]]:
     def synchronized_lock(func, /):
         @functools.wraps(func)
         def locked(inst, *args, **kwargs):
@@ -92,7 +89,7 @@ def frame_codeinfo(fframe, back=0):
         return "<unknown>", ''
 
 
-class classproperty(typing.Generic[T]):
+class classproperty[T]:
     def __init__(self, fget: Callable[[typing.Any], T]) -> None:
         self.fget = classmethod(fget)
 
@@ -104,7 +101,7 @@ class classproperty(typing.Generic[T]):
         return self.fget.__doc__
 
 
-class lazy_classproperty(classproperty[T], typing.Generic[T]):
+class lazy_classproperty[T](classproperty[T]):
     """ Similar to ``functools.cached_property``, but for classes. """
     def __get__(self, cls, owner: type | None = None, /) -> T:
         val = super().__get__(cls, owner)
@@ -112,7 +109,7 @@ class lazy_classproperty(classproperty[T], typing.Generic[T]):
         return val
 
 
-class lazy(object):
+class lazy:
     """ A proxy to the (memoized) result of a lazy evaluation:
 
     .. code-block::

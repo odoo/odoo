@@ -22,13 +22,11 @@ if typing.TYPE_CHECKING:
     from .models import BaseModel
     from .query import FieldSQL
 
-T = typing.TypeVar("T")
-
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 
-class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
+class BaseDate[T](Field[T | typing.Literal[False]]):
     """ Common field properties for Date and Datetime. """
 
     start_of = staticmethod(date_utils.start_of)
