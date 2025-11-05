@@ -248,10 +248,15 @@ class Monetary(Field[float]):
             # sudo and only fetch the currency record in case the user doesn't
             # have the read permission of the currency field.
             currency = record.sudo().with_context(prefetch_fields=False)[currency_field]
+            currency = currency.with_env(record.env)
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
-                value = currency.with_env(record.env).round(value)
+                value = currency.round(value)
+                # convert the rounded value to ``str`` and then to ``float`` to mimic the data flow of flushing and
+                # fetching, which promises ``value_written_to_cache == value_fetched_from_database`` even if the
+                # ``round`` method is not perfect.
+                value = float(float_repr(value, currency.decimal_places))
         return value
 
     def convert_to_record(self, value, record):
