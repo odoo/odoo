@@ -61,7 +61,7 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
-        this.callActions = useCallActions({ thread: () => this.channel?.thread });
+        this.callActions = useCallActions({ channel: () => this.channel });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             this.resizeObserver.observe(this.grid.el);

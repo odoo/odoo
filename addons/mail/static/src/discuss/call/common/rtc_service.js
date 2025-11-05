@@ -17,7 +17,7 @@ import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
-import { CallAction } from "./call_actions";
+import { CallAction } from "@mail/discuss/call/common/call_actions";
 
 let sequence = 1;
 const getSequence = () => sequence++;
