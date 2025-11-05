@@ -2969,6 +2969,69 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.start_pos_tour("test_sync_from_ui_one_by_one", login="pos_user")
             self.assertEqual(sync_counter['count'], 6)
 
+<<<<<<< 71ec357ee70f1d3c7d63a639acd4fdcbcadd7e19
+||||||| 6c9ef521da8d73ea0a0ece24b00d4e3378520e51
+    def test_product_ref_displayed(self):
+        self.env['product.product'].create({
+            'name': 'Test name',
+            'available_in_pos': True,
+            'default_code': 'Test ref',
+            'list_price': 10,
+        })
+        # Need to log as admin to be able to edit the product info
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_ref_displayed', login="pos_admin")
+
+=======
+    def test_product_ref_displayed(self):
+        self.env['product.product'].create({
+            'name': 'Test name',
+            'available_in_pos': True,
+            'default_code': 'Test ref',
+            'list_price': 10,
+        })
+        # Need to log as admin to be able to edit the product info
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_ref_displayed', login="pos_admin")
+
+    def test_dynamic_product_price(self):
+        """ Test that dynamic product price is correctly handled in the POS frontend. """
+        product_attribute = self.env['product.attribute'].create({
+            'name': "Dynamic Attribute",
+            'create_variant': 'dynamic',
+            'value_ids': [
+                Command.create({'name': "Dynamic Value 1"}),
+                Command.create({'name': "Dynamic Value 2"}),
+            ]
+        })
+
+        product_template = self.env['product.template'].create({
+            'name': 'Dynamic Product',
+            'list_price': 0,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': product_attribute.id,
+                    'value_ids': [Command.set(product_attribute.value_ids.ids)]
+                })
+            ]
+        })
+
+        # Set the price extra for each attribute value
+        product_template_attribute_values = self.env['product.template.attribute.value'].search([
+            ('product_tmpl_id', '=', product_template.id),
+        ])
+
+        for ptav in product_template_attribute_values:
+            if ptav.name == "Dynamic Value 1":
+                ptav.price_extra = 10
+            else:
+                ptav.price_extra = 20
+
+        product_template._create_product_variant(product_template_attribute_values[0])
+        product_template._create_product_variant(product_template_attribute_values[1])
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_dynamic_product_price', login="pos_user")
+
+>>>>>>> 5b6f1f67c3ebe3b14cdd44010355b7e8625652c7
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

@@ -692,7 +692,7 @@ export class PosStore extends WithLazyGetterTrap {
             attribute_value_ids: attributeLinesValues.map((values) => values[0].id),
             attribute_custom_values: [],
             price_extra: attributeLinesValues
-                .filter((attr) => attr[0].attribute_id.create_variant !== "always")
+                .filter((attr) => attr[0].attribute_id.create_variant === "no_variant")
                 .reduce((acc, values) => acc + values[0].price_extra, 0),
             quantity: 1,
         };
@@ -794,6 +794,7 @@ export class PosStore extends WithLazyGetterTrap {
         // We assign the payload to the current values object.
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
+<<<<<<< 71ec357ee70f1d3c7d63a639acd4fdcbcadd7e19:addons/point_of_sale/static/src/app/services/pos_store.js
         let keepGoing = await this.handleConfigurableProduct(
             values,
             productTemplate,
@@ -802,6 +803,112 @@ export class PosStore extends WithLazyGetterTrap {
         );
         if (keepGoing === false) {
             return;
+||||||| 6c9ef521da8d73ea0a0ece24b00d4e3378520e51:addons/point_of_sale/static/src/app/store/pos_store.js
+        if (values.product_id.isConfigurable() && configure) {
+            const payload = await this.openConfigurator(values.product_id, opts);
+
+            if (payload) {
+                const productFound = this.models["product.product"]
+                    .filter((p) => p.raw?.product_template_variant_value_ids?.length > 0)
+                    .find((p) =>
+                        p.raw.product_template_variant_value_ids.every((v) =>
+                            payload.attribute_value_ids.includes(v)
+                        )
+                    );
+
+                Object.assign(values, {
+                    attribute_value_ids: payload.attribute_value_ids
+                        .filter((a) => {
+                            if (productFound) {
+                                const attr =
+                                    this.data.models["product.template.attribute.value"].get(a);
+                                return (
+                                    attr.is_custom || attr.attribute_id.create_variant !== "always"
+                                );
+                            }
+                            return true;
+                        })
+                        .map((id) => [
+                            "link",
+                            this.data.models["product.template.attribute.value"].get(id),
+                        ]),
+                    custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
+                        ([id, cus]) => [
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.data.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]
+                    ),
+                    price_extra: values.price_extra + payload.price_extra,
+                    qty: payload.qty || values.qty,
+                    product_id: productFound || values.product_id,
+                });
+            } else {
+                return;
+            }
+        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
+            // Verify price extra of variant products
+            const priceExtra = values.product_id.product_template_variant_value_ids
+                .filter((attr) => attr.attribute_id.create_variant !== "always")
+                .reduce((acc, attr) => acc + attr.price_extra, 0);
+            values.price_extra += priceExtra;
+=======
+        if (values.product_id.isConfigurable() && configure) {
+            const payload = await this.openConfigurator(values.product_id, opts);
+
+            if (payload) {
+                const productFound = this.models["product.product"]
+                    .filter((p) => p.raw?.product_template_variant_value_ids?.length > 0)
+                    .find((p) =>
+                        p.raw.product_template_variant_value_ids.every((v) =>
+                            payload.attribute_value_ids.includes(v)
+                        )
+                    );
+
+                Object.assign(values, {
+                    attribute_value_ids: payload.attribute_value_ids
+                        .filter((a) => {
+                            if (productFound) {
+                                const attr =
+                                    this.data.models["product.template.attribute.value"].get(a);
+                                return (
+                                    attr.is_custom ||
+                                    attr.attribute_id.create_variant === "no_variant"
+                                );
+                            }
+                            return true;
+                        })
+                        .map((id) => [
+                            "link",
+                            this.data.models["product.template.attribute.value"].get(id),
+                        ]),
+                    custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
+                        ([id, cus]) => [
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.data.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]
+                    ),
+                    price_extra: values.price_extra + payload.price_extra,
+                    qty: payload.qty || values.qty,
+                    product_id: productFound || values.product_id,
+                });
+            } else {
+                return;
+            }
+        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
+            // Verify price extra of variant products
+            const priceExtra = values.product_id.product_template_variant_value_ids
+                .filter((attr) => attr.attribute_id.create_variant === "no_variant")
+                .reduce((acc, attr) => acc + attr.price_extra, 0);
+            values.price_extra += priceExtra;
+>>>>>>> 5b6f1f67c3ebe3b14cdd44010355b7e8625652c7:addons/point_of_sale/static/src/app/store/pos_store.js
         }
 
         // In case of clicking a combo product a popup will be shown to the user
