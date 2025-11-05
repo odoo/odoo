@@ -8,8 +8,8 @@ threadCompareRegistry.add(
      * @param {import("models").Thread thread2}
      */
     (thread1, thread2) => {
-        const aUnread = thread1.self_member_id?.message_unread_counter;
-        const bUnread = thread2.self_member_id?.message_unread_counter;
+        const aUnread = thread1.channel?.self_member_id?.message_unread_counter;
+        const bUnread = thread2.channel?.self_member_id?.message_unread_counter;
         if (aUnread > 0 && bUnread === 0) {
             return -1;
         }
