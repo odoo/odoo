@@ -57,9 +57,9 @@ export class Meeting extends Component {
                         ?.actionPanelOpen(),
             },
         });
-        this.threadActions = useThreadActions({ thread: () => this.thread });
+        this.threadActions = useThreadActions({ thread: () => this.channel.thread });
         this.messageHighlight = useMessageScrolling();
-        this.messageSearch = useMessageSearch(this.thread);
+        this.messageSearch = useMessageSearch(this.channel.thread);
         useChildSubEnv({
             closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
             messageHighlight: this.messageHighlight,
@@ -69,7 +69,7 @@ export class Meeting extends Component {
         onWillUnmount(() => (this.store.meetingViewOpened = false));
     }
 
-    get thread() {
-        return this.store.rtc.channel?.thread;
+    get channel() {
+        return this.store.rtc.channel;
     }
 }

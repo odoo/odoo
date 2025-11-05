@@ -7,12 +7,12 @@
                     <Call hasOverlay="false" isPip="props.isPip"/>
                 </div>
                 <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0 rounded-2" t-att-class="{ 'w-100': ui.isSmall }">
-                    <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps" thread="thread"/>
+                    <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps" thread="channel.thread"/>
                 </div>
             </div>
             <div class="pt-2 d-flex justify-content-between overflow-x-auto flex-shrink-0" t-att-class="{'p-2 pb-3': ui.isSmall}">
                 <div/>
-                <CallActionList channel="store.rtc.channel"/>
+                <CallActionList channel="channel"/>
                 <MeetingSideActions threadActions="threadActions"/>
             </div>
         </div>
