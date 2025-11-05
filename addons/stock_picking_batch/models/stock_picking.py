@@ -225,6 +225,7 @@ class StockPicking(models.Model):
                 return new_batch
 
         # If nothing was found after those two steps, then create a batch with the current picking alone
+        new_batch_data['user_id'] = self.user_id.id
         new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
         if self.picking_type_id.batch_auto_confirm:
             new_batch.action_confirm()
