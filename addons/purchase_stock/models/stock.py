@@ -260,7 +260,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_default_supplier(self):
         self.ensure_one()
-        if self.show_supplier:
+        if self.show_supplier and self.product_id:
             return self._get_default_rule()._get_matching_supplier(
                 self.product_id, self.qty_to_order, self.product_uom, self.company_id, {}
             )
@@ -304,7 +304,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_replenishment_multiple_alternative(self, qty_to_order):
         self.ensure_one()
         routes = self.effective_route_id or self.product_id.route_ids
-        if not any(r.action == 'buy' for r in routes.rule_ids):
+        if not (self.product_id and any(r.action == 'buy' for r in routes.rule_ids)):
             return super()._get_replenishment_multiple_alternative(qty_to_order)
         planned_date = self._get_orderpoint_procurement_date()
         global_horizon_days = self.get_horizon_days()
