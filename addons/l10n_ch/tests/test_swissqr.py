@@ -10,6 +10,24 @@ CH_IBAN = 'CH15 3881 5158 3845 3843 7'
 QR_IBAN = 'CH21 3080 8001 2345 6782 7'
 
 
+ADDRESS = [
+    ("Route de Berne 41", "", "1000", "Lausanne"),
+    ("Im Zollgebäude", "", "8233", "Bargen"),
+    ("Route de Berne 88", "", "2000", "Neuchâtel"),
+    ("EPFL Innovation Park - Bât. A", "", "1015", "Lausanne"),
+]
+ADDRESS = [
+    dict(zip(("street", "street2", "zip", "city"), address))
+    for address in ADDRESS
+]
+PAYLOAD_ADDR = [
+    "Route de Berne\n41\n1000\nLausanne\nCH",
+    "Im Zollgebäude\n\n8233\nBargen\nCH",
+    "Route de Berne\n88\n2000\nNeuchâtel\nCH",
+    "EPFL Innovation Park\nBât. A\n1015\nLausanne\nCH",
+]
+
+
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSwissQR(AccountTestInvoicingCommon):
 
@@ -25,28 +43,12 @@ class TestSwissQR(AccountTestInvoicingCommon):
             {'key': 'l10n_ch.print_qrcode', 'value': '1'}
         )
         self.customer = self.env['res.partner'].create(
-            {
-                "name": "Partner",
-                "street": "Route de Berne 41",
-                "street2": "",
-                "zip": "1000",
-                "city": "Lausanne",
-                "country_id": self.env.ref("base.ch").id,
-            }
+            {"name": "Partner", **ADDRESS[1]}
         )
-        self.env.user.company_id.partner_id.write(
-            {
-                "street": "Route de Berne 88",
-                "street2": "",
-                "zip": "2000",
-                "city": "Neuchâtel",
-                "country_id": self.env.ref('base.ch').id,
-            }
-        )
+        self.env.user.company_id.partner_id.write(ADDRESS[0])
         self.product = self.env['product.product'].create({
             'name': 'Customizable Desk',
         })
-        self.invoice1 = self.create_invoice('base.CHF')
         sale_journal = self.env['account.journal'].search([("type", "=", "sale")])
         sale_journal.invoice_reference_model = "ch"
 
@@ -99,7 +101,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             'No Swiss QR should be generated for this invoice',
         )
 
-    def swissqr_generated(self, invoice, ref_type='NON'):
+    def swissqr_generated(self, invoice, creditor, debtor, ref_type='NON'):
         """ Ensure correct params for Swiss QR generation. """
 
         self.assertFalse(
@@ -120,27 +122,23 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "0200\n"
             "1\n"
             "{iban}\n"
-            "K\n"
+            "S\n"
             "company_1_data\n"
-            "Route de Berne 88\n"
-            "2000 Neuchâtel\n"
-            "\n\n"
-            "CH\n"
+            "{creditor_address}\n"
             "\n\n\n\n\n\n\n"
             "42.00\n"
             "CHF\n"
-            "K\n"
+            "S\n"
             "Partner\n"
-            "Route de Berne 41\n"
-            "1000 Lausanne\n"
-            "\n\n"
-            "CH\n"
+            "{debtor_address}\n"
             "{ref_type}\n"
             "{struct_ref}\n"
             "{unstr_msg}\n"
             "EPD"
         ).format(
             iban=invoice.partner_bank_id.sanitized_acc_number,
+            creditor_address=creditor,
+            debtor_address=debtor,
             ref_type=ref_type,
             struct_ref=struct_ref or '',
             unstr_msg=unstr_msg,
@@ -163,24 +161,32 @@ class TestSwissQR(AccountTestInvoicingCommon):
         self.assertEqual(params, expected_params)
 
     def test_swissQR_missing_bank(self):
-        self.invoice1.action_post()
-        self.swissqr_not_generated(self.invoice1)
+        invoice1 = self.create_invoice('base.CHF')
+        invoice1.action_post()
+        self.swissqr_not_generated(invoice1)
 
     def test_swissQR_iban(self):
         # Now we add an account for payment to our invoice
         # Here we don't use a structured reference
         iban_account = self.create_account(CH_IBAN)
-        self.invoice1.partner_bank_id = iban_account
-        self.invoice1.action_post()
-        self.swissqr_generated(self.invoice1, ref_type="NON")
+        invoice1 = self.create_invoice('base.CHF')
+        invoice1.partner_bank_id = iban_account
+        invoice1.action_post()
+        addr1, addr2 = PAYLOAD_ADDR[:2]
+        self.swissqr_generated(invoice1, addr1, addr2, ref_type="NON")
 
     def test_swissQR_qriban(self):
         # Now use a proper QR-IBAN, we are good to print a QR Bill
         qriban_account = self.create_account(QR_IBAN)
         self.assertTrue(qriban_account.l10n_ch_qr_iban)
-        self.invoice1.partner_bank_id = qriban_account
-        self.invoice1.action_post()
-        self.swissqr_generated(self.invoice1, ref_type="QRR")
+        # Test with different addresses
+        self.customer.write(ADDRESS[3])
+        self.env.user.company_id.partner_id.write(ADDRESS[2])
+        addr1, addr2 = PAYLOAD_ADDR[2:4]
+        invoice2 = self.create_invoice('base.CHF')
+        invoice2.partner_bank_id = qriban_account
+        invoice2.action_post()
+        self.swissqr_generated(invoice2, addr1, addr2, ref_type="QRR")
 
     def test_swiss_order_reference_qrr_for_qr_code(self):
         """
