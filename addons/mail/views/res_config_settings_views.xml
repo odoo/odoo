@@ -61,29 +61,40 @@
                     </block>
                     <div id="discuss_setting">
                         <block title="Discuss" id="discuss">
-                            <setting id="activities_setting" string="Activities" help="Configure your activity types">
+                            <setting id="activities_setting" string="Activities" help="Set up activity types and use activity plans to assign multiple activities">
                                 <div class="content-group">
                                     <div class="mt8">
                                         <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link" icon="oi-arrow-right"/>
                                     </div>
-                                </div>
-                            </setting>
-                            <setting string="Custom ICE Server with Twilio"
-                                    help="Set up your own server for small group calls using peer-to-peer connections"
-                                    documentation="https://www.odoo.com/documentation/latest/applications/productivity/discuss/ice_servers.html">
-                                <field name="use_twilio_rtc_servers"/>
-                                <div class="content-group" invisible="not use_twilio_rtc_servers">
-                                    <div class="row mt16" id="mail_twilio_sid">
-                                        <label for="twilio_account_sid" class="col-lg-3"/>
-                                        <field name="twilio_account_sid" string="Account SID" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
-                                    </div>
-                                    <div class="row mt16" id="mail_twilio_auth_token">
-                                        <label for="twilio_account_token" class="col-lg-3"/>
-                                        <field name="twilio_account_token" string="Account Auth Token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
+                                    <div class="mt8">
+                                        <button name="%(mail.mail_activity_plan_action)d" string="Activity Plans" type="action" class="oe_link" icon="oi-arrow-right"/>
                                     </div>
                                 </div>
                             </setting>
-                            <setting string="Custom SFU Server" help="Set up your own server for large group calls by routing connections centrally">
+                            <setting id="tenor_api_key" string="Send GIFs" help="Share GIFs in your conversations using the Tenor API" documentation="https://developers.google.com/tenor/guides/quickstart#setup">
+                                <field name="use_tenor_api"/>
+                                <label for="tenor_api_key" string="API Key:" invisible="not use_tenor_api" class="col-lg-2 o_light_label"/>
+                                <field name="tenor_api_key" invisible="not use_tenor_api" placeholder="e.g. AIabCd5543a0b450ar4c7t95f1b6e8" required="1"/>
+                            </setting>
+                            <setting id="message_translation_setting" string="Translate Messages" help="Translate customer messages using the Google Translate API" documentation="https://cloud.google.com/translate/docs/setup">
+                                <field name="use_google_translate_api"/>
+                                <label for="google_translate_api_key" string="API Key:" invisible="not use_google_translate_api" class="col-lg-2 o_light_label"/>
+                                <field name="google_translate_api_key" invisible="not use_google_translate_api" placeholder="e.g. ACzb1d3455b0aar4c7t95f1b6e8" required="1"/>
+                            </setting>
+                            <setting string="Custom Call Servers" help="Use your own SFU or ICE servers for video calls">
+                                <field name="use_call_server"/>
+                            </setting>
+                            <setting
+                                string="Custom ICE Servers"
+                                help="Use your own servers for calls to manage heavy traffic and ensure reliability if Twilio is unavailable"
+                                documentation="https://www.odoo.com/documentation/latest/applications/productivity/discuss/ice_servers.html#define-a-list-of-custom-ice-servers"
+                                invisible="not use_call_server"
+                            >
+                                <div class="content-group">
+                                    <button type="action" name="%(mail.action_ice_servers)d" string="Configure ICE Servers" icon="oi-arrow-right" class="btn-link"/>
+                                </div>
+                            </setting>
+                            <setting string="Custom SFU Server" help="Set up your own server for large group calls by routing connections centrally" invisible="not use_call_server">
                                 <field name="use_sfu_server"/>
                                 <div class="content-group" invisible="not use_sfu_server">
                                     <div class="row mt16">
@@ -96,17 +107,23 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting string="Custom ICE Servers" help="Use your own servers for calls to manage heavy traffic and ensure reliability if Twilio is unavailable"
-                                    documentation="https://www.odoo.com/documentation/latest/applications/productivity/discuss/ice_servers.html#define-a-list-of-custom-ice-servers">
-                                    <div class="content-group">
-                                            <button type="action" name="%(mail.action_ice_servers)d" string="Configure ICE Servers" icon="oi-arrow-right" class="btn-link"/>
+                            <setting
+                                string="Custom ICE Server with Twilio"
+                                help="Set up your own server for small group calls using peer-to-peer connections"
+                                documentation="https://www.odoo.com/documentation/latest/applications/productivity/discuss/ice_servers.html"
+                                invisible="not use_call_server"
+                            >
+                                <field name="use_twilio_rtc_servers"/>
+                                <div class="content-group" invisible="not use_twilio_rtc_servers">
+                                    <div class="row mt16" id="mail_twilio_sid">
+                                        <label for="twilio_account_sid" class="col-lg-3"/>
+                                        <field name="twilio_account_sid" string="Account SID" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
                                     </div>
-                            </setting>
-                            <setting id="tenor_api_key" string="Tenor GIF API key" help="Add a Tenor GIF API key to enable GIFs support." documentation="https://developers.google.com/tenor/guides/quickstart#setup">
-                                <field name="tenor_api_key" placeholder="Paste your API key"/>
-                            </setting>
-                            <setting string="Message Translation" help="Google Translate Integration" id="message_translation_setting" documentation="https://cloud.google.com/translate/docs/setup">
-                                <field name="google_translate_api_key" placeholder="Paste your API key"/>
+                                    <div class="row mt16" id="mail_twilio_auth_token">
+                                        <label for="twilio_account_token" class="col-lg-3"/>
+                                        <field name="twilio_account_token" string="Account Auth Token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
+                                    </div>
+                                </div>
                             </setting>
                         </block>
                     </div>

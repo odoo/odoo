@@ -44,7 +44,7 @@ def get_twilio_credentials(env) -> tuple[str | None, str | None]:
     :return: tuple(account_sid: str, auth_token: str) or (None, None) if Twilio is disabled
     """
     params = env["ir.config_parameter"].sudo()
-    if not params.get_bool("mail.use_twilio_rtc_servers"):
+    if not params.get_bool("mail.use_call_server") or not params.get_bool("mail.use_twilio_rtc_servers"):
         return None, None
     account_sid = params.get_str("mail.twilio_account_sid")
     auth_token = params.get_str("mail.twilio_account_token")
@@ -53,7 +53,9 @@ def get_twilio_credentials(env) -> tuple[str | None, str | None]:
 
 def get_sfu_url(env) -> str | None:
     params = env["ir.config_parameter"].sudo()
-    sfu_url = params.get_str("mail.sfu_server_url") if params.get_bool("mail.use_sfu_server") else None
+    if not params.get_bool("mail.use_call_server") or not params.get_bool("mail.use_sfu_server"):
+        return None
+    sfu_url = params.get_str("mail.sfu_server_url")
     if not sfu_url:
         sfu_url = os.getenv("ODOO_SFU_URL")
     if sfu_url:

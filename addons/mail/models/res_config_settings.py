@@ -27,6 +27,11 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='mail.restrict.template.rendering',
         help='Users will still be able to render templates.\n'
         'However only Mail Template Editors will be able to create new dynamic templates or modify existing ones.')
+    use_call_server = fields.Boolean(
+        "Use Call Server",
+        help="If you want to use your own SFU or ICE servers for video calls.",
+        config_parameter="mail.use_call_server",
+    )
     use_twilio_rtc_servers = fields.Boolean(
         'Use Twilio ICE servers',
         help="If you want to use twilio as TURN/STUN server provider",
@@ -50,10 +55,20 @@ class ResConfigSettings(models.TransientModel):
     email_primary_color = fields.Char(related='company_id.email_primary_color', readonly=False)
     email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
 
+    use_tenor_api = fields.Boolean(
+        "Use Tenor API",
+        help="If you want to use Tenor API to share GIFs in conversations.",
+        config_parameter='discuss.use_tenor_api',
+    )
     tenor_api_key = fields.Char(
         'Tenor API key',
         config_parameter='discuss.tenor_api_key',
         help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup",
+    )
+    use_google_translate_api = fields.Boolean(
+        "Use Google Translate API",
+        help="If you want to use Google Translate API to enable message translation.",
+        config_parameter='mail.use_google_translate_api',
     )
     google_translate_api_key = fields.Char(
         "Message Translation API Key",

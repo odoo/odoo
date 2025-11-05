@@ -48,6 +48,7 @@ class TestTranslationController(HttpCaseWithUserDemo):
         cls.env["res.lang"]._activate_lang("en_US")
         cls.env.ref("base.user_admin").write({"lang": "fr_FR"})
         cls.api_key = "VALIDKEY"
+        cls.env["ir.config_parameter"].set_bool("mail.use_google_translate_api", True)
         cls.env["ir.config_parameter"].set_str("mail.google_translate_api_key", cls.api_key)
         cls.message = cls.env["mail.message"].create(
             {

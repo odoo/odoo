@@ -9,6 +9,10 @@ from odoo.http import request, route, Controller
 class GoogleTranslateController(Controller):
     @route("/mail/message/translate", type="jsonrpc", auth="user")
     def translate(self, message_id):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
+        ir_config = request.env["ir.config_parameter"].sudo()
+        if not ir_config.get_bool("mail.use_google_translate_api"):
+            return
         message = request.env["mail.message"].search([("id", "=", message_id)])
         if not message:
             raise request.not_found()
