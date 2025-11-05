@@ -143,7 +143,7 @@ class ProductProduct(models.Model):
         self.company_currency_id = company_id.currency_id
 
         for product in self:
-            at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
+            at_date = product.env.context.get('to_date')
             if at_date:
                 product = product.with_context(at_date=at_date)
             qty_available = product.sudo(False)._with_valuation_context().qty_available
