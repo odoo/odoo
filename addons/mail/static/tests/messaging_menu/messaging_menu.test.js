@@ -1287,3 +1287,25 @@ test("ensure messaging menu shows standalone inbox messages", async () => {
     await contains(".o-mail-Message-author", { text: "Partner1" });
     await contains(".o-mail-Message-textContent", { text: "Message with needaction" });
 });
+
+test("user notification from inbox redirect to discuss inbox", async () => {
+    const pyEnv = await startServer();
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world!",
+        message_type: "user_notification",
+        model: "res.partner",
+        needaction: true,
+        res_id: serverState.partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem .o-mail-NotificationItem-text:text('You: Hello world!')");
+    await contains(".o-mail-Discuss-threadName[title='Inbox']");
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-body:text('Hello world!')");
+});
