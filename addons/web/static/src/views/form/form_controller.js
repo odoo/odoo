@@ -128,7 +128,7 @@ export class FormController extends Component {
         this.archInfo = this.props.archInfo;
         const { create, edit } = this.archInfo.activeActions;
         this.canCreate = create && !this.props.preventCreate;
-        this.canEdit = edit && !this.props.preventEdit;
+        this.canEdit = (edit || !this.props.resId) && !this.props.preventEdit;
         this.duplicateId = false;
 
         this.display = { ...this.props.display };
