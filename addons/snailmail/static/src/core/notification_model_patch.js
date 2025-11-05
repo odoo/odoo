@@ -14,6 +14,8 @@ const notificationPatch = {
     get statusIcon() {
         if (this.notification_type === "snail") {
             switch (this.notification_status) {
+                case "process":
+                    return "fa fa-truck";
                 case "sent":
                     return "fa fa-check";
                 case "ready":
@@ -40,6 +42,8 @@ const notificationPatch = {
                 return _t("Format Error");
             case "sn_error":
                 return _t("Unknown Error");
+            case "sn_undeliverable":
+                return _t("Letter Undeliverable");
             default:
                 return super.failureMessage;
         }
@@ -47,12 +51,16 @@ const notificationPatch = {
     get statusTitle() {
         if (this.notification_type === "snail") {
             switch (this.notification_status) {
+                case "process":
+                    return _t("Dispatched");
                 case "sent":
                     return _t("Sent");
                 case "ready":
                     return _t("Awaiting Dispatch");
                 case "canceled":
                     return _t("Cancelled");
+                case "bounce":
+                    return _t("Bounced");
                 default:
                     return _t("Error");
             }

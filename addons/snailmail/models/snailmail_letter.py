@@ -28,6 +28,7 @@ ERROR_CODES = [
     'FORMAT_ERROR',
     'UNKNOWN_ERROR',
     'ATTACHMENT_ERROR',
+    'LETTER_UNDELIVERABLE',
 ]
 
 
@@ -51,16 +52,19 @@ class SnailmailLetter(models.Model):
     duplex = fields.Boolean(string='Both side', default=lambda self: self.env.company.snailmail_duplex)
     state = fields.Selection([
         ('pending', 'In Queue'),
+        ('process', 'Processing'),
         ('sent', 'Sent'),
         ('error', 'Error'),
         ('canceled', 'Cancelled')
         ], 'Status', readonly=True, copy=False, default='pending', required=True,
         help="When a letter is created, the status is 'Pending'.\n"
-             "If the letter is correctly sent, the status goes in 'Sent',\n"
-             "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.")
+             "If the letter is correctly sent to provider, the status goes in 'process',\n"
+             "If the provider confirms the letter is delivered, the status goes in 'Sent'.\n"
+             "If not sent or delivered, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.")
     error_code = fields.Selection([(err_code, err_code) for err_code in ERROR_CODES], string="Error")
     info_msg = fields.Html('Information')
 
+    document_id = fields.Char('Snailmail letter ID')
     reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
 
     message_id = fields.Many2one('mail.message', string="Snailmail Status Message", index='btree_not_null')
@@ -192,6 +196,9 @@ class SnailmailLetter(models.Model):
             pages = int(match.group(1))
         return pages
 
+    def _get_webhook_path(self):
+        return "/webhook/snailmail/1"
+
     def _snailmail_create(self, route):
         """
         Create a dictionnary object to send to snailmail server.
@@ -232,6 +239,7 @@ class SnailmailLetter(models.Model):
         """
         account_token = self.env['iap.account'].sudo().get('snailmail').account_token
         dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+        webhook_path = self._get_webhook_path()
         documents = []
 
         for letter in self:
@@ -301,6 +309,7 @@ class SnailmailLetter(models.Model):
             'account_token': account_token,
             'dbuuid': dbuuid,
             'documents': documents,
+            'webhook_path': webhook_path,
             'options': {
                 'color': self and self[0].color,
                 'cover': self and self[0].cover,
@@ -397,10 +406,11 @@ class SnailmailLetter(models.Model):
             if doc.get('sent') and response['request_code'] == 200:
                 self.env['iap.account']._send_success_notification(
                     message=_("Snail Mails are successfully sent"))
-                note = _('The document was correctly sent by post.<br>The tracking id is %s', doc['send_id'])
-                letter_data = {'info_msg': note, 'state': 'sent', 'error_code': False}
+                note = _("The document has been accepted by postal service provider and is being processed.<br>"
+                         "The tracking id is %s", doc['send_id'])
+                letter_data = {'info_msg': note, 'document_id': doc['send_id'], 'state': 'process', 'error_code': False}
                 notification_data = {
-                    'notification_status': 'sent',
+                    'notification_status': 'process',
                     'failure_type': False,
                     'failure_reason': False,
                 }

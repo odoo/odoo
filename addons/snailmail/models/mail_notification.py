@@ -15,4 +15,5 @@ class MailNotification(models.Model):
         ('sn_fields', "Snailmail Missing Required Fields"),
         ('sn_format', "Snailmail Format Error"),
         ('sn_error', "Snailmail Unknown Error"),
+        ('sn_undeliverable', "Snailmail Undeliverable")
     ])
