@@ -390,7 +390,7 @@ test("Delete all link previews at once", async () => {
 test("link preview request is only made when message contains URL", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
-    onRpcBefore("/mail/link_preview$", () => asyncStep("/mail/link_preview"));
+    onRpcBefore("/mail/link_preview", () => asyncStep("/mail/link_preview"));
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
