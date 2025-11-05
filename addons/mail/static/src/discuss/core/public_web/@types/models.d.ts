@@ -1,26 +1,22 @@
 declare module "models" {
-    import { DiscussAppCategory as DiscussAppCategoryClass } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
+    import { DiscussCategory as DiscussCategoryClass } from "@mail/discuss/core/public_web/discuss_category_model";
 
-    export interface DiscussAppCategory extends DiscussAppCategoryClass {}
+    export interface DiscussCategory extends DiscussCategoryClass {}
 
-    export interface DiscussApp {
-        allCategories: DiscussAppCategory[];
-        channelCategory: DiscussAppCategory;
-        chatCategory: DiscussAppCategory;
-        computeChatCategory: () => object;
-        unreadChannels: Thread[];
+    export interface DiscussChannel {
+        discuss_category_id: DiscussCategory;
     }
     export interface Message {
         linkedSubChannel: Thread;
     }
     export interface Store {
         channels: ReturnType<Store['makeCachedFetchData']>;
-        DiscussAppCategory: StaticMailRecord<DiscussAppCategory, typeof DiscussAppCategoryClass>;
+        "discuss.category": StaticMailRecord<DiscussCategory, typeof DiscussCategoryClass>;
         fetchSsearchConversationsSequential: () => Promise<any>;
         searchConversations: (searchValue: string) => Promise<void>;
     }
     export interface Thread {
-        _computeDiscussAppCategory: () => undefined|unknown;
+        _computeDiscussAppCategory: () => unknown;
         appAsUnreadChannels: DiscussApp;
         categoryAsThreadWithCounter: DiscussAppCategory;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
@@ -37,6 +33,6 @@ declare module "models" {
     }
 
     export interface Models {
-        DiscussAppCategory: DiscussAppCategory;
+        "discuss.category": DiscussCategory;
     }
 }
