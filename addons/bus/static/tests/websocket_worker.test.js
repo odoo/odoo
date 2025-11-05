@@ -1,5 +1,5 @@
 import { getWebSocketWorker } from "@bus/../tests/mock_websocket";
-import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { runAllTimers } from "@odoo/hoot-dom";
 import {
     asyncStep,
@@ -9,7 +9,7 @@ import {
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
-import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+import { WEBSOCKET_CLOSE_CODES, WebsocketWorker } from "@bus/workers/websocket_worker";
 
 describe.current.tags("headless");
 
@@ -104,4 +104,49 @@ test("disconnect event is sent when stopping the worker", async () => {
     worker._stop();
     await runAllTimers();
     await expect.waitForSteps(["broadcast BUS:DISCONNECT"]);
+});
+
+test("check connection health during inactivity", async () => {
+    const ogSocket = window.WebSocket;
+    let waitingForCheck = true;
+    patchWithCleanup(window, {
+        WebSocket: function () {
+            const ws = new ogSocket(...arguments);
+            ws.send = (message) => {
+                if (waitingForCheck && message instanceof Uint8Array) {
+                    expect.step("check_connection_health_sent");
+                    waitingForCheck = false;
+                }
+            };
+            return ws;
+        },
+    });
+    patchWithCleanup(WebsocketWorker.prototype, {
+        enableCheckInterval: true,
+        _restartConnectionCheckInterval() {
+            expect.step("_restartConnectionCheckInterval");
+            super._restartConnectionCheckInterval();
+        },
+        _sendToServer(payload) {
+            if (payload.event_name === "foo") {
+                super._sendToServer(payload);
+            }
+        },
+    });
+    const worker = await startWebSocketWorker((type) => {
+        if (type === "BUS:CONNECT") {
+            expect.step(`broadcast ${type}`);
+        }
+    });
+    await expect.waitForSteps(["broadcast BUS:CONNECT", "_restartConnectionCheckInterval"]);
+    worker.websocket.dispatchEvent(
+        new MessageEvent("message", {
+            data: JSON.stringify([{ id: 70, message: { type: "foo" } }]),
+        })
+    );
+    await expect.waitForSteps(["_restartConnectionCheckInterval"]);
+    worker._sendToServer({ event_name: "foo" });
+    await expect.waitForSteps(["_restartConnectionCheckInterval"]);
+    await advanceTime(worker.CONNECTION_CHECK_DELAY + 1000);
+    await expect.waitForSteps(["check_connection_health_sent"]);
 });
