@@ -141,6 +141,8 @@ test("Search a message in history", async () => {
     await insertText(".o_searchview_input", "message");
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
+    await click(".o-mail-SearchMessagesPanel .o-mail-MessageCard-jump");
+    await contains(".o-mail-Thread .o-mail-Message.o-highlighted");
 });
 
 test("Should close the search panel when search button is clicked again", async () => {
