@@ -70,13 +70,13 @@ class IrConfig_Parameter(models.Model):
     #   * 'mail.chat_from_token': allow chat from token;
 
     # Configuration keys
-    #   * 'mail.google_translate_api_key': key used to fetch translations using
-    #     google translate;
+    #   * 'mail.use_google_translate_api', 'mail.google_translate_api_key':
+    #     used to fetch translations using google translate;
     #   * 'mail.web_push_vapid_private_key' and 'mail.web_push_vapid_public_key':
     #     configuration parameters when using web push notifications;
-    #   * 'mail.use_twilio_rtc_servers', 'mail.use_sfu_server', 'mail.sfu_server_url' and 'mail.
-    #     sfu_server_key': rtc server usage and configuration;
-    #   * 'discuss.tenor_api_key': used for gif fetch service;
+    #   * 'mail.use_call_server', 'mail.use_twilio_rtc_servers', 'mail.use_sfu_server',
+    #     'mail.sfu_server_url' and 'mail.sfu_server_key': rtc server usage and configuration;
+    #   * 'discuss.use_tenor_api', 'discuss.tenor_api_key': used for gif fetch service;
     #   * 'mail.server.outlook.iap.endpoint': URL of the IAP endpoint
     #     for outlook oauth server
     #   * 'mail.server.gmail.iap.endpoint': URL of the IAP endpoint

@@ -45,11 +45,11 @@ class ResUsers(models.Model):
 
     def _store_init_global_fields(self, res: Store.FieldList):
         super()._store_init_global_fields(res)
-        # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
+        # sudo: ir.config_parameter - reading hard-coded config params to check their existence, safe to
         # return whether the features are enabled
-        get_str = self.env["ir.config_parameter"].sudo().get_str
-        res.attr("hasGifPickerFeature", bool(get_str("discuss.tenor_api_key")))
-        res.attr("hasMessageTranslationFeature", bool(get_str("mail.google_translate_api_key")))
+        get_bool = self.env["ir.config_parameter"].sudo().get_bool
+        res.attr("hasGifPickerFeature", get_bool("discuss.use_tenor_api"))
+        res.attr("hasMessageTranslationFeature", get_bool("mail.use_google_translate_api"))
         res.attr(
             "hasCannedResponses",
             self.env["mail.canned.response"].sudo().search_count(

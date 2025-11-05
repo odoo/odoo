@@ -33,6 +33,8 @@ class DiscussGifController(Controller):
     def search(self, search_term, locale="en", country="US", position=None, readonly=True):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
+        if not ir_config.get_bool("discuss.use_tenor_api"):
+            return
         query_string = werkzeug.urls.url_encode(
             {
                 "q": search_term,
@@ -54,6 +56,8 @@ class DiscussGifController(Controller):
     def categories(self, locale="en", country="US"):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
+        if not ir_config.get_bool("discuss.use_tenor_api"):
+            return
         query_string = werkzeug.urls.url_encode(
             {
                 "key": ir_config.get_str("discuss.tenor_api_key"),
@@ -70,6 +74,10 @@ class DiscussGifController(Controller):
 
     @route("/discuss/gif/add_favorite", type="jsonrpc", auth="user")
     def add_favorite(self, tenor_gif_id):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
+        ir_config = request.env["ir.config_parameter"].sudo()
+        if not ir_config.get_bool("discuss.use_tenor_api"):
+            return
         request.env["discuss.gif.favorite"].create({"tenor_gif_id": tenor_gif_id})
 
     def _gif_posts(self, ids):
@@ -89,6 +97,10 @@ class DiscussGifController(Controller):
 
     @route("/discuss/gif/favorites", type="jsonrpc", auth="user", readonly=True)
     def get_favorites(self, offset=0):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
+        ir_config = request.env["ir.config_parameter"].sudo()
+        if not ir_config.get_bool("discuss.use_tenor_api"):
+            return
         tenor_gif_ids = request.env["discuss.gif.favorite"].search(
             [("create_uid", "=", request.env.user.id)], limit=20, offset=offset
         )
@@ -96,6 +108,10 @@ class DiscussGifController(Controller):
 
     @route("/discuss/gif/remove_favorite", type="jsonrpc", auth="user")
     def remove_favorite(self, tenor_gif_id):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
+        ir_config = request.env["ir.config_parameter"].sudo()
+        if not ir_config.get_bool("discuss.use_tenor_api"):
+            return
         request.env["discuss.gif.favorite"].search(
             [
                 ("create_uid", "=", request.env.user.id),
