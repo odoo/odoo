@@ -1141,6 +1141,27 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         return f"call_{self.id}"
 
+    def _get_recording_address(self):
+        """Return the recording callback URL for this channel's active call or None."""
+        self.ensure_one()
+        # sudo: discuss.call.history - SFU provisioning needs the current call of this accessible channel.
+        call_history = (
+            self.env["discuss.call.history"]
+            .sudo()
+            .search(
+                [
+                    ("channel_id", "=", self.id),
+                    ("end_dt", "=", False),
+                ],
+                limit=1,
+            )
+        )
+        return (
+            f"{self.get_base_url()}/mail/rtc/recording/{call_history.id}"
+            if call_history
+            else None
+        )
+
     def _rtc_cancel_invitations(self, member_ids=None):
         """ Cancels the invitations of the RTC call from all invited members,
             if member_ids is provided, only the invitations of the specified members are canceled.
@@ -1710,6 +1731,23 @@ class DiscussChannel(models.Model):
             )
 
     # User methods
+
+    def action_view_recordings(self):
+        self.ensure_one()
+        domain = [
+            ("channel_id", "=", self.id),
+            ("artifact_ids", "any", [("recording_upload_pending", "=", False)]),
+        ]
+        call_histories = self.env["discuss.call.history"].search(domain, limit=2)
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "mail.discuss_call_history_action",
+        )
+        action["domain"] = domain
+        if len(call_histories) == 1:
+            action["res_id"] = call_histories.id
+            action["view_mode"] = "form"
+            action["views"] = [view for view in action["views"] if view[1] == "form"]
+        return action
 
     @api.model
     def _get_or_create_chat(self, partners_to):

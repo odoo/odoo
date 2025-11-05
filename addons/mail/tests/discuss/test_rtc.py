@@ -1,28 +1,35 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import UTC
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from werkzeug.exceptions import NotFound
 
 from odoo import fields
 from odoo.tests.common import HttpCase, new_test_user, tagged, users
 from odoo.tools.misc import mute_logger
 
 from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.controllers.discuss.rtc import _check_jwt
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.addons.mail.tools import discuss
+from odoo.addons.mail.tools import discuss, jwt
 from odoo.addons.mail.tools.discuss import Store
 
 
 @tagged("RTC")
 class TestChannelRTC(MailCommon, HttpCase):
+    sfu_key = "u6bsUQEWrHdKIuYplirRnbBmLbrKV5PxKG7DtA71mng="
+
     @classmethod
     @freeze_time("2023-03-15 12:34:56")
     def setUpClass(cls):
         super().setUpClass()
         # clean up before test to avoid unexpected side effects
         cls.env["discuss.channel.rtc.session"].sudo().search([]).unlink()
+        cls.env["ir.config_parameter"].set_str("mail.sfu_server_key", cls.sfu_key)
         cls.env["mail.presence"]._update_presence(cls.guest)
         # ensure the pre-created records have the right env because all tests
         # are executed as employee and setUpClass as admin
@@ -205,12 +212,257 @@ class TestChannelRTC(MailCommon, HttpCase):
                     self._res_for_user(self.user_employee, internal=True),
                 ),
                 "Rtc": {
+                    "can_record_audio": False,
+                    "can_record_transcription": False,
+                    "can_record_video": False,
                     "iceServers": False,
                     "localSession": rtc_session.id,
                     "serverInfo": None,
                 },
             },
         )
+
+    def test_02_recording_permissions_internal_only(self):
+        portal_user = new_test_user(
+            self.env,
+            "recording_portal_user",
+            groups="base.group_portal",
+            email="recording_portal_user@example.com",
+            partner_id=self.partner_employee.id,
+        )
+        expected_permissions = {
+            "audioRecording": True,
+            "transcription": "ai" in self.env["ir.module.module"]._installed(),
+            "videoRecording": True,
+        }
+        self.assertEqual(
+            self.member_of_employee_in_group_a._get_recording_permissions(
+                self.user_employee,
+            ),
+            expected_permissions,
+        )
+        expected_permissions = dict.fromkeys(expected_permissions, False)
+        self.assertEqual(
+            self.member_of_employee_in_group_a._get_recording_permissions(
+                self.user_employee,
+                False,
+            ),
+            expected_permissions,
+        )
+        self.assertEqual(
+            self.member_of_employee_in_group_a._get_recording_permissions(portal_user),
+            expected_permissions,
+        )
+        self.assertEqual(
+            self.member_of_employee_in_group_a._get_recording_permissions(
+                self.env["res.users"],
+            ),
+            expected_permissions,
+        )
+        self.assertFalse(portal_user.partner_id.partner_share)
+
+    def test_03_transcription_route_is_unavailable_without_ai(self):
+        if "ai" in self.env["ir.module.module"]._installed():
+            self.skipTest("The AI module provides the transcription route.")
+        call_start = fields.Datetime.now()
+        call = self.env["discuss.call.history"].create(
+            {
+                "channel_id": self.channel_group_a.id,
+                "start_dt": call_start,
+            },
+        )
+        call_start_ms = int(call_start.replace(tzinfo=UTC).timestamp() * 1000)
+        token = jwt.sign(
+            {"iat": int(call_start.replace(tzinfo=UTC).timestamp())},
+            discuss.get_derived_sfu_key(self.env, call.channel_id.id),
+            ttl=60,
+            algorithm=jwt.Algorithm.HS256,
+        )
+        response = self.url_open(
+            f"/mail/rtc/recording/{call.id}/transcribe",
+            data=b"audio",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "audio/ogg",
+            },
+            params={
+                "start_ms": call_start_ms + 1_000,
+                "end_ms": call_start_ms + 3_000,
+            },
+        )
+        self.assertEqual(response.status_code, 404)
+        call.invalidate_recordset(["artifact_ids"])
+        self.assertFalse(call.artifact_ids)
+
+    def test_04_recording_routing_rejects_session_token(self):
+        call_start = fields.Datetime.now()
+        call = self.env["discuss.call.history"].create(
+            {
+                "channel_id": self.channel_group_a.id,
+                "start_dt": call_start,
+            },
+        )
+        token = jwt.sign(
+            {"session_id": 1},
+            discuss.get_derived_sfu_key(self.env, call.channel_id.id),
+            ttl=60,
+            algorithm=jwt.Algorithm.HS256,
+        )
+        routing_response = self.url_open(
+            f"/mail/rtc/recording/{call.id}/routing",
+            method="POST",
+            headers={"Authorization": f"Bearer {token}"},
+            params={"start_ms": 1_000, "end_ms": 3_000},
+        )
+        self.assertEqual(routing_response.status_code, 404)
+
+    def test_05_recording_jwt_returns_user(self):
+        now = fields.Datetime.now()
+        request = SimpleNamespace(
+            env=self.env,
+            httprequest=SimpleNamespace(headers={}),
+        )
+        for user_claims, valid in (
+            ({"user_id": self.user_employee.id}, True),
+            ({}, True),
+            ({"user_id": True}, False),
+            ({"user_id": "1"}, False),
+            ({"user_id": None}, False),
+            ({"user_id": 0}, False),
+            ({"user_id": -1}, False),
+            ({"partner_id": self.partner_employee.id}, False),
+        ):
+            with self.subTest(user_claims=user_claims):
+                claims = {
+                    "iat": int(now.replace(tzinfo=UTC).timestamp()),
+                    **user_claims,
+                }
+                token = jwt.sign(
+                    claims,
+                    discuss.get_derived_sfu_key(self.env, self.channel_group_a.id),
+                    ttl=60,
+                    algorithm=jwt.Algorithm.HS256,
+                )
+                request.httprequest.headers["Authorization"] = f"Bearer {token}"
+                if valid:
+                    self.assertEqual(_check_jwt(request, self.channel_group_a), claims)
+                    with self.assertRaises(NotFound):
+                        _check_jwt(request, self.channel_group_b)
+                else:
+                    with self.assertRaises(NotFound):
+                        _check_jwt(request, self.channel_group_a)
+
+    @users("employee")
+    def test_06_sfu_provisioning_preserves_recording_identity(self):
+        rtc_sessions = self.env["discuss.channel.rtc.session"].sudo()
+        for member, user in (
+            (self.member_of_employee_in_group_a, self.user_employee),
+            (self.member_of_test_user_in_group_a, self.test_user),
+            (self.member_of_guest_in_group_a, self.env.ref("base.public_user")),
+        ):
+            rtc_sessions += (
+                rtc_sessions.with_user(user)
+                .sudo()
+                .create(
+                    {
+                        "channel_member_id": member.id,
+                    },
+                )
+            )
+        params = self.env["ir.config_parameter"].sudo()
+        params.set_bool("mail.use_call_server", True)
+        params.set_bool("mail.use_sfu_server", True)
+        params.set_str("mail.sfu_server_url", "https://sfu.example.com")
+        with patch(
+            "odoo.addons.mail.models.discuss.discuss_channel_member.requests.get",
+        ) as get_channel:
+            get_channel.return_value.json.return_value = {
+                "uuid": "sfu-channel-uuid",
+                "url": "https://sfu.example.com",
+            }
+            self.member_of_employee_in_group_a.sudo()._join_sfu()
+        authorization = get_channel.call_args.kwargs["headers"]["Authorization"]
+        claims = jwt.verify(
+            authorization.removeprefix("Bearer "),
+            self.sfu_key,
+            algorithm=jwt.Algorithm.HS256,
+        )
+        channel_key = discuss.get_derived_sfu_key(self.env, self.channel_group_a.id)
+        self.assertEqual(claims["key"], channel_key)
+        for rtc_session, user, label in (
+            (rtc_sessions[0], self.user_employee, self.partner_employee.name),
+            (rtc_sessions[1], self.test_user, self.test_partner.name),
+            (rtc_sessions[2], self.env["res.users"], self.guest.name),
+        ):
+            with self.subTest(session=rtc_session.id):
+                server_info = (
+                    self.member_of_employee_in_group_a.sudo()._get_rtc_server_info(
+                        rtc_session,
+                    )
+                )
+                client_claims = jwt.verify(
+                    server_info["jsonWebToken"],
+                    channel_key,
+                    algorithm=jwt.Algorithm.HS256,
+                )
+                self.assertEqual(client_claims["session_id"], rtc_session.id)
+                self.assertEqual(
+                    client_claims.get("user_id"),
+                    user.id if user else None,
+                )
+                self.assertEqual("user_id" in client_claims, bool(user))
+                self.assertNotIn("partner_id", client_claims)
+                self.assertEqual(client_claims["label"], label)
+
+    @users("employee")
+    def test_07_force_sfu_for_solo_recording(self):
+        member = self.member_of_employee_in_group_b.sudo()
+        member._rtc_join_call()
+        params = self.env["ir.config_parameter"].sudo()
+        params.set_bool("mail.use_call_server", True)
+        params.set_bool("mail.use_sfu_server", True)
+        params.set_str("mail.sfu_server_url", "https://sfu.example.com")
+        with patch(
+            "odoo.addons.mail.models.discuss.discuss_channel_member.requests.get",
+        ) as get_channel:
+            get_channel.return_value.json.return_value = {
+                "uuid": "solo-recording-channel",
+                "url": "https://sfu.example.com",
+            }
+            member._join_sfu()
+            get_channel.assert_not_called()
+            member._join_sfu(force=True)
+        get_channel.assert_called_once()
+        self.assertEqual(member.channel_id.sfu_channel_uuid, "solo-recording-channel")
+        self.assertEqual(member.channel_id.sfu_server_url, "https://sfu.example.com")
+        self.assertTrue(member._get_rtc_server_info(member.rtc_session_ids))
+
+    @users("employee")
+    def test_08_sfu_identity_uses_joining_user(self):
+        other_user = new_test_user(
+            self.env,
+            "recording_other_user",
+            partner_id=self.partner_employee.id,
+        )
+        member = self.member_of_employee_in_group_b.with_user(other_user).sudo()
+        member._rtc_join_call()
+        member.channel_id.write(
+            {
+                "sfu_channel_uuid": "recording-channel",
+                "sfu_server_url": "https://sfu.example.com",
+            },
+        )
+        session = member.rtc_session_ids
+        server_info = (
+            member.with_user(self.user_employee).sudo()._get_rtc_server_info(session)
+        )
+        claims = jwt.verify(
+            server_info["jsonWebToken"],
+            discuss.get_derived_sfu_key(self.env, member.channel_id.id),
+            algorithm=jwt.Algorithm.HS256,
+        )
+        self.assertEqual(session.partner_id, self.partner_employee)
+        self.assertEqual(claims["user_id"], other_user.id)
 
     @users("employee")
     @mute_logger("odoo.models.unlink")

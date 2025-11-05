@@ -528,24 +528,44 @@ class DiscussChannelMember(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
             )
+            sfu_url = discuss.get_sfu_url(self.env)
+            user = (
+                rtc_session.create_uid
+                if rtc_session.partner_id
+                else self.env["res.users"]
+            )
+            permissions = self._get_recording_permissions(user, sfu_url)
             store.add_model_values(
                 "Rtc",
                 lambda res: (
+                    res.attr("can_record_audio", permissions["audioRecording"]),
+                    res.attr("can_record_transcription", permissions["transcription"]),
+                    res.attr("can_record_video", permissions["videoRecording"]),
                     res.attr("iceServers", ice_servers or False),
-                    res.one("localSession", "_store_rtc_session_fields", value=rtc_session),
-                    res.attr("serverInfo", self._get_rtc_server_info(rtc_session, ice_servers)),
+                    res.one(
+                        "localSession",
+                        "_store_rtc_session_fields",
+                        value=rtc_session,
+                    ),
+                    res.attr(
+                        "serverInfo",
+                        self._get_rtc_server_info(rtc_session, ice_servers),
+                    ),
                 ),
             )
         if self.channel_id._should_invite_members_to_join_call():
             self._rtc_invite_members()
 
     def _join_sfu(self, ice_servers=None, force=False):
-        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
+        session_count = len(self.channel_id.rtc_session_ids)
+        if not session_count or (session_count < 2 and not force):
+            return
+        if session_count < SFU_MODE_THRESHOLD and not force:
             if self.channel_id.sfu_channel_uuid:
                 self.channel_id.sfu_channel_uuid = None
                 self.channel_id.sfu_server_url = None
             return
-        elif self.channel_id.sfu_channel_uuid and self.channel_id.sfu_server_url:
+        if self.channel_id.sfu_channel_uuid and self.channel_id.sfu_server_url:
             return
         sfu_server_url = discuss.get_sfu_url(self.env)
         if not sfu_server_url:
@@ -560,7 +580,8 @@ class DiscussChannelMember(models.Model):
         try:
             response = requests.get(
                 sfu_server_url + "/v1/channel",
-                headers={"Authorization": "jwt " + json_web_token},
+                headers={"Authorization": "Bearer " + json_web_token},
+                params={"recordingAddress": self.channel_id._get_recording_address()},
                 timeout=3,
             )
             response.raise_for_status()
@@ -576,19 +597,44 @@ class DiscussChannelMember(models.Model):
                 {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=channel_key)},
             )
 
+    def _get_recording_permissions(self, user, sfu_url=True):
+        can_record = bool(user and user._is_internal() and sfu_url)
+        return {
+            "audioRecording": can_record,
+            "transcription": False,
+            "videoRecording": can_record,
+        }
+
     def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):
+        """Return SFU credentials for the session's joining user or guest.
+
+        The session creator identifies its user even when another participant
+        promotes the call to the SFU. Guest sessions omit the user identity.
+        """
         sfu_channel_uuid = self.channel_id.sfu_channel_uuid
         sfu_server_url = self.channel_id.sfu_server_url
         if not sfu_channel_uuid or not sfu_server_url:
             return None
         if not key:
             key = discuss.get_derived_sfu_key(self.env, self.channel_id.id)
+        user = (
+            rtc_session.create_uid if rtc_session.partner_id else self.env["res.users"]
+        )
         claims = {
             "sfu_channel_uuid": sfu_channel_uuid,
             "session_id": rtc_session.id,
+            "label": rtc_session.channel_member_id._get_html_link_title(),
             "ice_servers": ice_servers,
+            "permissions": self._get_recording_permissions(user),
         }
-        json_web_token = jwt.sign(claims, key=key, ttl=60 * 60 * 8, algorithm=jwt.Algorithm.HS256)  # 8 hours
+        if user:
+            claims["user_id"] = user.id
+        json_web_token = jwt.sign(
+            claims,
+            key=key,
+            ttl=60 * 60 * 8,
+            algorithm=jwt.Algorithm.HS256,
+        )  # 8 hours
         return {"url": sfu_server_url, "channelUUID": sfu_channel_uuid, "jsonWebToken": json_web_token}
 
     def _rtc_leave_call(self, session_id=None):

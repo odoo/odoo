@@ -13138,7 +13138,6 @@ class Bus {
     /**
      * Sends a request and waits for a response
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request(message, options = {}) {
         const { timeout = 5000, batch } = options;
         const requestId = this._getNextRequestId();
@@ -13176,9 +13175,7 @@ class Bus {
     _getNextRequestId() {
         return `${Bus._type}_${this.id}_${this._requestCount++}`;
     }
-    _sendPayload(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    message, options = {}) {
+    _sendPayload(message, options = {}) {
         const { needResponse, responseTo, batch } = options;
         if (batch) {
             this._batch({ message, needResponse, responseTo });
@@ -13287,6 +13284,8 @@ var SERVER_MESSAGE;
     SERVER_MESSAGE["SESSION_LEAVE"] = "SESSION_LEAVE";
     /** Signals the clients that the info (talking, mute,...) of one of the session in their channel has changed */
     SERVER_MESSAGE["INFO_CHANGE"] = "S_INFO_CHANGE";
+    /** Reports channel recording state changes to clients */
+    SERVER_MESSAGE["CHANNEL_INFO_CHANGE"] = "CH_INFO_CHANGE";
 })(SERVER_MESSAGE || (SERVER_MESSAGE = {}));
 var CLIENT_REQUEST;
 (function (CLIENT_REQUEST) {
@@ -13296,6 +13295,8 @@ var CLIENT_REQUEST;
     CLIENT_REQUEST["CONNECT_STC_TRANSPORT"] = "CONNECT_STC_TRANSPORT";
     /** Requests the creation of a consumer that is used to upload a track to the server */
     CLIENT_REQUEST["INIT_PRODUCER"] = "INIT_PRODUCER";
+    /** Requests changes to the selected recording outputs */
+    CLIENT_REQUEST["SET_RECORDING"] = "SET_RECORDING";
 })(CLIENT_REQUEST || (CLIENT_REQUEST = {}));
 var CLIENT_MESSAGE;
 (function (CLIENT_MESSAGE) {
@@ -13326,6 +13327,8 @@ var CLIENT_UPDATE;
     CLIENT_UPDATE["DISCONNECT"] = "disconnect";
     /** Session info has changed */
     CLIENT_UPDATE["INFO_CHANGE"] = "info_change";
+    /** Recording state has changed */
+    CLIENT_UPDATE["CHANNEL_INFO_CHANGE"] = "channel_info_change";
 })(CLIENT_UPDATE || (CLIENT_UPDATE = {}));
 const INITIAL_RECONNECT_DELAY = 1000;
 const MAXIMUM_RECONNECT_DELAY = 30000;
@@ -13390,6 +13393,19 @@ class SfuClient extends EventTarget {
         super();
         /** Connection errors encountered */
         this.errors = [];
+        this.availableFeatures = {
+            rtc: true,
+            recording: {
+                audio: false,
+                transcription: false,
+                video: false
+            }
+        };
+        this.recordingState = {
+            audio: false,
+            transcription: false,
+            video: false
+        };
         /** Current client state */
         this._state = SfuClientState.DISCONNECTED;
         /** Producer recovery timeouts */
@@ -13473,6 +13489,24 @@ class SfuClient extends EventTarget {
         }
         await Promise.all(proms);
         return stats;
+    }
+    /**
+     * Requests changes to the selected recording outputs.
+     * Omitted flags keep their current values. Set all flags to false to stop recording.
+     * The channel_info_change update carries the resulting state.
+     *
+     * @param options - Recording outputs to enable or disable
+     * @returns Whether the server accepted the request
+     * @throws {Error} If disconnected, the request times out or the Bus closes
+     */
+    async setRecording(options) {
+        if (this.state !== SfuClientState.CONNECTED) {
+            throw new Error("SFU client is not connected");
+        }
+        return this._bus.request({
+            name: CLIENT_REQUEST.SET_RECORDING,
+            payload: options
+        }, { batch: true });
     }
     /**
      * Updates the server with the info of the session (isTalking, isCameraOn,...) so that it can broadcast it to the
@@ -13644,7 +13678,18 @@ class SfuClient extends EventTarget {
             /**
              * Receiving a message means that the server has authenticated the client and is ready to receive messages.
              */
-            webSocket.addEventListener("message", () => {
+            webSocket.addEventListener("message", ({ data }) => {
+                if (data) {
+                    try {
+                        const { availableFeatures, recordingState } = JSON.parse(data);
+                        this.availableFeatures = availableFeatures;
+                        this.recordingState = recordingState;
+                    }
+                    catch (error) {
+                        reject(error);
+                        return;
+                    }
+                }
                 resolve(new Bus(webSocket));
             }, { once: true });
         });
@@ -13683,10 +13728,10 @@ class SfuClient extends EventTarget {
         });
         transport.on("produce", async ({ kind, rtpParameters, appData }, callback, errback) => {
             try {
-                const result = (await this._bus.request({
+                const result = await this._bus.request({
                     name: CLIENT_REQUEST.INIT_PRODUCER,
                     payload: { type: appData.type, kind, rtpParameters }
-                }));
+                });
                 callback({ id: result.id });
             }
             catch (error) {
@@ -13766,6 +13811,10 @@ class SfuClient extends EventTarget {
             case SERVER_MESSAGE.INFO_CHANGE:
                 this._updateClient(CLIENT_UPDATE.INFO_CHANGE, payload);
                 break;
+            case SERVER_MESSAGE.CHANNEL_INFO_CHANGE:
+                this.recordingState = payload.state;
+                this._updateClient(CLIENT_UPDATE.CHANNEL_INFO_CHANGE, payload);
+                break;
         }
     }
     async _handleRequest({ name, payload }) {
@@ -13825,8 +13874,8 @@ export { CLIENT_UPDATE, SFU_CLIENT_STATE, SfuClient, SfuClientState };
 
 
 export const __info__ = {
-    date: '2026-01-21T10:42:59.327Z',
-    hash: '297c767',
+    date: '2026-09-09T12:47:58.657Z',
+    hash: '120df21',
     url: 'https://github.com/odoo/sfu',
     version: '1.3.3',
 };
