@@ -5,7 +5,6 @@ import functools
 import os
 from collections import deque
 from contextlib import ExitStack
-from typing import Optional
 
 from astroid import nodes
 
@@ -35,7 +34,7 @@ FUNCTION_WHITELIST = {
 
 function_definitions = collections.defaultdict(list)
 callsites_for_queries = collections.defaultdict(list)
-root_call: contextvars.ContextVar[Optional[nodes.Call]] =\
+root_call: contextvars.ContextVar[nodes.Call | None] =\
     contextvars.ContextVar('root_call', default=None)
 @contextlib.contextmanager
 def push_call(node: nodes.Call):
@@ -379,7 +378,7 @@ class OdooBaseChecker(BaseChecker):
                 )
 
     @functools.lru_cache(None)
-    def _is_const_def(self, node: nodes.FunctionDef, /, *, position: Optional[int], const_args: bool = False) -> bool:
+    def _is_const_def(self, node: nodes.FunctionDef, /, *, position: int | None, const_args: bool = False) -> bool:
         if node.name.startswith('__') or node.name in FUNCTION_WHITELIST:
             return True
 

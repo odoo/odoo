@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import importlib
 import io
 import re
 import unicodedata
-import sys
+import typing
 from datetime import datetime
 from hashlib import md5
 from logging import getLogger
@@ -12,7 +11,6 @@ from zlib import compress, decompress, decompressobj
 
 from PIL import Image, PdfImagePlugin
 
-from odoo import modules
 from odoo.tools.arabic_reshaper import reshape
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import file_open, SENTINEL
@@ -35,20 +33,21 @@ try:
 except ImportError:
     pass  # no fix required
 
-
-# might be a good case for exception groups
-error = None
-# keep pypdf2 2.x first so noble uses that rather than pypdf 4.0
-for SUBMOD in ['._pypdf2_2', '._pypdf', '._pypdf2_1']:
-    try:
-        pypdf = importlib.import_module(SUBMOD, __spec__.name)
-        break
-    except ImportError as e:
-        if error is None:
-            error = e
+if typing.TYPE_CHECKING:
+    # for type checking, default to the newest version
+    from . import _pypdf2_2 as pypdf
 else:
-    raise ImportError("pypdf implementation not found") from error
-del error
+    errors = []
+    # keep pypdf2 2.x first so noble uses that rather than pypdf 4.0
+    for SUBMOD in ['._pypdf2_2', '._pypdf', '._pypdf2_1']:
+        try:
+            pypdf = importlib.import_module(SUBMOD, __spec__.name)
+            break
+        except ImportError as e:
+            errors.append(e)
+    else:
+        raise ImportError("pypdf implementation not found") from errors[0]
+    del errors
 
 PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object =\
     pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object

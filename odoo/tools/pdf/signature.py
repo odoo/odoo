@@ -2,7 +2,6 @@ import base64
 import datetime
 import hashlib
 import io
-from typing import Optional
 from asn1crypto import cms, algos, core, x509
 import logging
 
@@ -22,12 +21,12 @@ except ImportError:
     Certificate = None
     load_pem_x509_certificate = None
 
-from odoo import _
 from odoo.addons.base.models.res_company import ResCompany
 from odoo.addons.base.models.res_users import ResUsers
 from odoo.tools.pdf import PdfReader, PdfWriter, ArrayObject, ByteStringObject, DictionaryObject, NameObject, NumberObject, create_string_object, DecodedStreamObject as StreamObject
 
 _logger = logging.getLogger(__name__)
+
 
 class PdfSigner:
     """Class that defines methods uses in the signing process of pdf documents
@@ -42,7 +41,7 @@ class PdfSigner:
     for the structure of the signature in a PDF.
     """
 
-    def __init__(self, stream: io.BytesIO, company: Optional[ResCompany] = None, signing_time=None) -> None:
+    def __init__(self, stream: io.BytesIO, company: ResCompany | None = None, signing_time=None) -> None:
         self.signing_time = signing_time
         self.company = company
         if not 'clone_document_from_reader' in dir(PdfWriter):
@@ -52,9 +51,7 @@ class PdfSigner:
         self.writer = PdfWriter()
         self.writer.clone_document_from_reader(reader)
 
-
-
-    def sign_pdf(self, visible_signature: bool = False, field_name: str = "Odoo Signature", signer: Optional[ResUsers] = None) -> Optional[io.BytesIO]:
+    def sign_pdf(self, visible_signature: bool = False, field_name: str = "Odoo Signature", signer: ResUsers | None = None) -> io.BytesIO | None:
         """Signs the pdf document using a PdfWriter object
 
         Returns:
@@ -72,7 +69,7 @@ class PdfSigner:
         self.writer.write_stream(out_stream)
         return out_stream
 
-    def _load_key_and_certificate(self) -> tuple[Optional[PrivateKeyTypes], Optional[Certificate]]:
+    def _load_key_and_certificate(self) -> tuple[PrivateKeyTypes | None, Certificate | None]:
         """Loads the private key
 
         Returns:
@@ -87,7 +84,7 @@ class PdfSigner:
         private_key_bytes = base64.decodebytes(certificate.private_key_id.content)
         return load_pem_private_key(private_key_bytes, None), load_pem_x509_certificate(cert_bytes)
 
-    def _setup_form(self, visible_signature: bool, field_name: str, signer: Optional[ResUsers] = None) -> tuple[DictionaryObject, DictionaryObject] | None:
+    def _setup_form(self, visible_signature: bool, field_name: str, signer: ResUsers | None = None) -> tuple[DictionaryObject, DictionaryObject] | None:
         """Creates the /AcroForm and populates it with the appropriate field for the signature
 
         Args:
@@ -269,7 +266,7 @@ class PdfSigner:
 
         return signature_field, signature_field_value
 
-    def _get_cms_object(self, digest: bytes) -> Optional[cms.ContentInfo]:
+    def _get_cms_object(self, digest: bytes) -> cms.ContentInfo | None:
         """Creates an object that follows the Cryptographic Message Syntax(CMS)
 
         RFC: https://datatracker.ietf.org/doc/html/rfc5652
