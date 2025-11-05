@@ -1212,6 +1212,7 @@ class SessionStore:
                 os.mkdir(session_dir, mode=0o755)
                 os.replace(tmp, session_path)
             os.chmod(session_path, 0o644)
+        session.is_dirty = False
 
     def delete(self, session: Session) -> None:
         """ Delete a session. """
@@ -2173,6 +2174,8 @@ class Request:
         if not sess.can_save:
             return
 
+        was_dirty = sess.is_dirty
+
         if sess.should_rotate:
             root.session_store.rotate(sess, env)  # it saves
         elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
@@ -2181,7 +2184,8 @@ class Request:
             root.session_store.save(sess)
 
         cookie_sid = self.cookies.get('session_id')
-        if sess.is_dirty or cookie_sid != sess.sid:
+        # If a session has been touched, the cookie lifetime must be refreshed.
+        if was_dirty or cookie_sid != sess.sid:
             self.future_response.set_cookie(
                 'session_id',
                 sess.sid,

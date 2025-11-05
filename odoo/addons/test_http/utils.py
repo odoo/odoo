@@ -54,6 +54,7 @@ class MemorySessionStore(SessionStore):
 
     def save(self, session):
         self.store[session.sid] = session
+        session.is_dirty = False
 
     def delete(self, session):
         self.store.pop(session.sid, None)

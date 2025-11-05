@@ -408,6 +408,13 @@ class TestSessionStore(HttpCaseWithUserDemo):
             session_from_store = odoo.http.root.session_store.get(session)
             self.assertNotEqual(session, session_from_store.sid, "the old session as been removed")
 
+    def test05_session_not_dirty_after_save(self):
+        session = self.authenticate('admin', 'admin')
+        session.touch()
+        self.assertTrue(session.is_dirty)
+        odoo.http.root.session_store.save(session)
+        self.assertFalse(session.is_dirty)
+
 
 # HttpCase because session rotation needs to be tested on the file store instead of memory store
 @tagged('at_install', '-post_install')  # LEGACY at_install
