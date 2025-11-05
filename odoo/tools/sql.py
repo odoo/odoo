@@ -6,11 +6,11 @@ import enum
 import json
 import logging
 import re
+import typing
 from binascii import crc32
 from collections import defaultdict
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from odoo.fields import Field
     from collections.abc import Iterable
 
@@ -85,7 +85,7 @@ class SQL:
     __to_flush: tuple[Field, ...]
 
     # pylint: disable=keyword-arg-before-vararg
-    def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
+    def __init__(self, code: (typing.LiteralString | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
         if isinstance(code, SQL):
             if args or kwargs or to_flush:
                 raise TypeError("SQL() unexpected arguments when code has type SQL")

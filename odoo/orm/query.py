@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
+    from typing import LiteralString
     from .models import BaseModel
 
 from odoo.tools.sql import SQL, make_identifier
@@ -103,7 +104,7 @@ class Query:
             self._joins[alias] = (sql_kind, table, condition)
             self._ids = self._ids and None
 
-    def add_where(self, where_clause: str | SQL, where_params=()):
+    def add_where(self, where_clause: LiteralString | SQL, where_params=()):
         """ Add a condition to the where clause. """
         self._where_clauses.append(SQL(where_clause, *where_params))  # pylint: disable = sql-injection
         self._ids = self._ids and None
@@ -145,7 +146,7 @@ class Query:
         return self._order
 
     @order.setter
-    def order(self, value: SQL | str | None):
+    def order(self, value: SQL | LiteralString | None):
         self._order = SQL(value) if value is not None else None  # pylint: disable = sql-injection
 
     @property
@@ -171,7 +172,7 @@ class Query:
         """ Return whether the query is known to return nothing. """
         return self._ids == ()
 
-    def select(self, *args: str | SQL) -> SQL:
+    def select(self, *args: SQL | LiteralString) -> SQL:
         """ Return the SELECT query as an ``SQL`` object. """
         select_clause = SQL(", ").join(map(SQL, args)) if args else SQL.identifier(self.table, 'id')
         return SQL(
@@ -186,7 +187,7 @@ class Query:
             SQL(f" OFFSET {int(self.offset)}") if self.offset else _SQL_EMPTY,
         )
 
-    def subselect(self, *args: str | SQL) -> SQL:
+    def subselect(self, *args: SQL | LiteralString) -> SQL:
         """ Similar to :meth:`.select`, but for sub-queries.
             This one avoids the ORDER BY clause when possible,
             and includes parentheses around the subquery.
