@@ -357,7 +357,7 @@ class SaleOrder(models.Model):
         self = self.with_company(self.company_id)
 
         if not uom_id:
-            uom_id = self.env['product.product'].browse(product_id).uom_id.id  # type: ignore
+            uom_id = self.env['product.product'].browse(product_id)._get_main_uom().id  # type: ignore
         if existing_sol := self._cart_find_product_line(product_id, uom_id=uom_id, **kwargs)[:1]:
             # If a matching line is found, update the existing line instead.
             return self._cart_update_line_quantity(

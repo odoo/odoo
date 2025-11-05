@@ -23,7 +23,7 @@
         <t t-set="is_50_pc" t-value="website.product_page_image_width == '50_pc'"/>
 
         <t t-call="website.layout" additional_title="product.name">
-            <div id="wrap" class="o_wsale_product_page">
+            <div id="wrap" class="o_wsale_product_page" t-att-data-has-available-uoms="has_available_uoms">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
                 <section id="product_detail"
                          t-attf-class="oe_website_sale mt-1 mt-lg-2 mb-5 #{'discount'
@@ -440,7 +440,7 @@
                 <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
                     <t t-set="product_uoms" t-value="product._get_available_uoms()"/>
                     <t t-foreach="product_uoms" t-as="uom">
-                        <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
+                        <t t-set="is_main_uom" t-value="uom.id == product._get_main_uom().id"/>
                         <li t-attf-class="o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">
                             <input
                                 class="position-absolute opacity-0 cursor-pointer"

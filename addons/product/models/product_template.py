@@ -1619,6 +1619,14 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.uom_id | self.uom_ids
 
+    def _get_main_uom(self):
+        """Return the default uom configured on the product.
+
+        :returns: the main uom of the product
+        :rtype: `uom.uom` recordset
+        """
+        return self.uom_id
+
     ###################
     # DEMO DATA SETUP #
     ###################
