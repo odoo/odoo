@@ -54,6 +54,15 @@
             <field name="tag_ids" position="after">
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_quick_create': True}" invisible="website_id"></field>
             </field>
+            <xpath expr="//page[@name='event_notes']//group[./label[@for='ticket_instructions']]" position="before">
+                <group>
+                    <label for="subtitle"/>
+                    <br/>
+                    <field name="subtitle" nolabel="1" colspan="2" widget="text" options="{'line_breaks': False}"
+                        placeholder="Short description for website and calendars."/>
+                </group>
+            </xpath>
+            
         </field>
     </record>
 
