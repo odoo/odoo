@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 The module :mod:`odoo.tests.common` provides unittest test cases and a few
 helpers and classes to write tests.
@@ -30,6 +29,7 @@ import tempfile
 import threading
 import time
 import traceback
+import typing
 import unittest
 import warnings
 from collections import defaultdict, deque
@@ -40,7 +40,6 @@ from datetime import datetime
 from functools import lru_cache, partial, wraps
 from itertools import islice, zip_longest
 from textwrap import shorten
-from typing import Optional, Iterable, cast
 from unittest import TestResult
 from unittest.mock import patch, _patch, Mock
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
@@ -71,7 +70,9 @@ from odoo.tools.xml_utils import _validate_xml
 from odoo.addons.base.models import ir_actions_report
 
 from . import case, test_cursor
-from .result import OdooTestResult
+if typing.TYPE_CHECKING:
+    from collections.abc import Iterable
+    from .result import OdooTestResult
 
 try:
     import websocket
@@ -376,11 +377,11 @@ class BaseCase(case.TestCase):
                 with warnings.catch_warnings(), \
                         result.soft_fail(), \
                         lower_logging(25, logging.INFO) as quiet_log:
-                    super().run(cast(TestResult, result))
+                    super().run(typing.cast('TestResult', result))
                 if not (result.had_failure or quiet_log.had_error_log):
                     break
             else:  # last try
-                super().run(cast(TestResult, result))
+                super().run(typing.cast('TestResult', result))
                 if not result.wasSuccessful() and BaseCase._tests_run_count != 1:
                     _logger.runbot('Disabling auto-retry after a failed test')
                     BaseCase._tests_run_count = 1
@@ -701,7 +702,7 @@ class BaseCase(case.TestCase):
             records: odoo.models.BaseModel,
             expected_values: list[dict],
             *,
-            field_names: Optional[Iterable[str]] = None,
+            field_names: Iterable[str] | None = None,
     ) -> None:
         ''' Compare a recordset with a list of dictionaries representing the expected results.
         This method performs a comparison element by element based on their index.
@@ -1110,7 +1111,7 @@ class TransactionCase(BaseCase):
         cls.startClassPatcher(cls._signal_changes_patcher)
 
         cls.cr = cls.registry.cursor()
-        cls.addClassCleanup(cast(Cursor, cls.cr).close)
+        cls.addClassCleanup(typing.cast('Cursor', cls.cr).close)
 
         def check_cursor_stack():
             for cursor in test_cursor.TestCursor._cursors_stack:
@@ -1248,7 +1249,7 @@ class SingleTransactionCase(BaseCase):
         cls.addClassCleanup(cls.registry.clear_all_caches)
 
         cls.cr = cls.registry.cursor()
-        cls.addClassCleanup(cast(Cursor, cls.cr).close)
+        cls.addClassCleanup(typing.cast('Cursor', cls.cr).close)
 
         cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
 

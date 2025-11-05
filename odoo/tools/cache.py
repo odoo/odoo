@@ -301,7 +301,7 @@ def get_cache_size(
         *,
         cache_info: str = '',
         seen_ids: set[int] | None = None,
-        class_slots: dict[type, Iterable[str]] | None = None
+        class_slots: dict[int, Iterable[str]] | None = None
     ) -> int:
     """ A non-thread-safe recursive object size estimator """
     from odoo.models import BaseModel  # noqa: PLC0415

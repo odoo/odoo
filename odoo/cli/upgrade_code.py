@@ -33,10 +33,10 @@ import argparse
 import functools
 import sys
 
+from collections.abc import Iterator
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 from types import ModuleType
-from typing import Iterator
 
 ROOT = Path(__file__).parent.parent
 UPGRADE = ROOT / 'upgrade_code'

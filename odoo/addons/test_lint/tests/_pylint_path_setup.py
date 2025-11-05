@@ -3,13 +3,17 @@ from __future__ import annotations
 import inspect
 import os
 import sys
-from typing import Sequence
+import typing
 
 from astroid import modutils
 from astroid.interpreter._import import spec
 from pylint.lint import utils
 
 import odoo.addons
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Sequence
+
 
 def register(linter):
     # very old pylint (/ astroid) versions not compatible with this plugin but

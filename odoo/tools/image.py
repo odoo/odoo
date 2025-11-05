@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import binascii
 import io
-from typing import Tuple, Union
 
 from PIL import Image, ImageOps
 # We can preload Ico too because it is considered safe
@@ -424,7 +422,8 @@ def binary_to_image(source):
     except (OSError, binascii.Error):
         raise UserError(_lt("This file could not be decoded as an image file."))
 
-def base64_to_image(base64_source: Union[str, bytes]) -> Image:
+
+def base64_to_image(base64_source: str | bytes) -> Image:
     """Return a PIL image from the given `base64_source`.
 
     :param base64_source: the image base64 encoded
@@ -529,7 +528,7 @@ def is_image_size_above(base64_source_1, base64_source_2):
     return image_source.width > image_target.width or image_source.height > image_target.height
 
 
-def image_guess_size_from_field_name(field_name: str) -> Tuple[int, int]:
+def image_guess_size_from_field_name(field_name: str) -> tuple[int, int]:
     """Attempt to guess the image size based on `field_name`.
 
     If it can't be guessed or if it is a custom field: return (0, 0) instead.
