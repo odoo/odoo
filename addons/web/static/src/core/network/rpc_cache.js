@@ -75,6 +75,7 @@ class Crypto {
 class RamCache {
     constructor() {
         this.ram = {};
+        setInterval(() => this.cleanUpExpiredEntries(), 30 * 60 * 1000);
     }
 
     write(table, key, value) {
@@ -104,14 +105,32 @@ class RamCache {
             this.ram = {};
         }
     }
+
+    cleanUpExpiredEntries() {
+        const now = Date.now();
+        for (const table in this.ram) {
+            for (const key of Object.keys(this.ram[table])) {
+                const entry = this.ram[table][key];
+                if (entry?.expiresAt && entry.expiresAt < now) {
+                    this.delete(table, key);
+                }
+            }
+        }
+    }
 }
 
 export class RPCCache {
+    static _cleanUpInterval = false;
     constructor(name, version, secret) {
         this.crypto = new Crypto(secret);
         this.indexedDB = new IndexedDB(name, version + CRYPTO_ALGO);
         this.ramCache = new RamCache();
         this.pendingRequests = {};
+        this.cleanUpExpiredEntries();
+        if (!RPCCache._cleanUpInterval) {
+            setInterval(() => this.cleanUpExpiredEntries(), 8 * 60 * 60 * 1000);
+            RPCCache._cleanUpInterval = true;
+        }
     }
 
     /**
@@ -213,5 +232,9 @@ export class RPCCache {
     invalidate(tables) {
         this.indexedDB.invalidate(tables);
         this.ramCache.invalidate(tables);
+    }
+
+    cleanUpExpiredEntries() {
+        this.indexedDB.cleanUpExpiredEntries();
     }
 }

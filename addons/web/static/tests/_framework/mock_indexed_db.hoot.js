@@ -40,6 +40,18 @@ export function mockIndexedDB(_name, { fn }) {
                     this.mockIndexedDB = {};
                 }
             }
+
+            cleanUpExpiredEntries() {
+                const now = Date.now();
+                for (const table in this.mockIndexedDB) {
+                    for (const key of Object.keys(this.mockIndexedDB[table])) {
+                        const entry = this.mockIndexedDB[table][key];
+                        if (entry?.expiresAt && entry.expiresAt < now) {
+                            delete this.mockIndexedDB[table][key];
+                        }
+                    }
+                }
+            }
         }
 
         return Object.assign(indexedDBModule, {

@@ -63,6 +63,19 @@ export class IndexedDB {
     }
 
     /**
+     * Clean up expired entries in the database.
+     * 
+     * @returns Promise
+     */
+    async cleanUpExpiredEntries() {
+        return this.execute((db) => {
+            if (db) {
+                return this._cleanUpExpiredEntries(db);
+            }
+        });
+    }
+
+    /**
      * Delete the whole database
      *
      * @returns Promise
@@ -133,7 +146,10 @@ export class IndexedDB {
                 const db = event.target.result;
                 const dbTables = new Set(db.objectStoreNames);
                 const newTables = this._tables.difference(dbTables);
-                newTables.forEach((table) => db.createObjectStore(table));
+                newTables.forEach((table) => {
+                    const store = db.createObjectStore(table);
+                    store.createIndex("expires", "expires", { unique: false });
+                });
             };
             request.onsuccess = (event) => {
                 const db = event.target.result;
@@ -211,6 +227,55 @@ export class IndexedDB {
             const r = objectStore.get(key);
             r.onsuccess = () => resolve(r.result);
             transaction.onerror = () => reject(transaction.error);
+        });
+    }
+
+    async _cleanUpExpiredEntries(db) {
+        return new Promise((resolve, reject) => {
+            const objectStoreNames = [...db.objectStoreNames].filter(
+                (table) => table !== VERSION_TABLE
+            );
+            if (objectStoreNames.length === 0) {
+                return resolve();
+            }
+
+            // Relaxed durability improves the write performances
+            // https://nolanlawson.com/2021/08/22/speeding-up-indexeddb-reads-and-writes/
+            // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/durability
+            const transaction = db.transaction(objectStoreNames, "readwrite", { durability: "relaxed" });
+            const now = Date.now();
+            const proms = objectStoreNames.map(
+                (table) =>
+                    new Promise((resolveTable) => {
+                        const objectStore = transaction.objectStore(table);
+                        const request = objectStore
+                            .index("expires")
+                            .openCursor(IDBKeyRange.upperBound(now));
+
+                        request.onsuccess = (event) => {
+                            const cursor = event.target.result;
+                            if (cursor) {
+                                cursor.delete();
+                                cursor.continue();
+                            } else {
+                                resolveTable();
+                            }
+                        };
+
+                        request.onerror = () => {
+                            console.error(`IndexedDB delete error: ${request.error}`);
+                            resolveTable();
+                        }
+                    })
+            );
+
+            transaction.onerror = () => reject(transaction.error);
+            Promise.all(proms).then(() => {
+                // Force the changes to be committed to the database asap
+                // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/commit
+                transaction.commit();
+                resolve();
+            });
         });
     }
 }
