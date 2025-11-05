@@ -296,6 +296,214 @@ class TestMessageController(HttpCaseWithUserDemo):
             self.env["res.partner"].search_count([('email', '=', "john@test.be")]),
             "guest should not be allowed to create a partner from an email from message_post",
         )
+<<<<<<< 7dcdb58e10563fcddbf912c5cdaa27ae22ba0668
+||||||| 52fb0e5ac75c5d84650dcfc0966b1717b678246f
+        demo = self.authenticate("demo", "demo")
+        res3 = self.url_open(
+            url="/mail/partner/from_email",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "emails": ["john@test.be"],
+                        'additional_values': {"john@test.be": {'phone': '123456789'}},
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res3.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john@test.be"), ('phone', '=', "123456789")]),
+            "authenticated users can create a partner from an email",
+        )
+        # should not create another partner with same email
+        res4 = self.url_open(
+            url="/mail/partner/from_email",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "emails": ["john@test.be"],
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res4.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john@test.be")]),
+            "'mail/partner/from_email' does not create another user if there's already a user with matching email",
+        )
+        self.channel.add_members(
+            self.env["res.users"].browse(demo.uid).partner_id.ids # so demo can post message
+        )
+        res5 = self.url_open(
+            url="/mail/message/post",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "post_data": {
+                            "body": "test",
+                        },
+                        "partner_emails": ["john2@test.be", "john3@test.be"],  # Both emails in one request
+                        "partner_additional_values": {
+                            "john2@test.be": {'phone': '123456789'},  # Original partner
+                            "john3 <john3@test.be>": {'phone': '987654321'}  # Name-Addr formatted partner
+                        },
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res5.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('phone', '=', "123456789")]),
+            "authenticated users can create a partner from an email from message_post",
+        )
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john3@test.be"), ('phone', '=', "987654321")]),
+            "additional_values should be handled correctly when using keys in name_addr format",
+        )
+        # should not create another partner with same email
+        res6 = self.url_open(
+            url="/mail/message/post",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "post_data": {
+                            "body": "test",
+                        },
+                        "partner_emails": ["john2@test.be"],
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res6.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john2@test.be")]),
+            "'mail/message/post' does not create another user if there's already a user with matching email",
+        )
+=======
+        self.assertEqual(0, self.env["res.partner"].search_count([('email', '=', "bob@test.be")], limit=1))
+        demo = self.authenticate("demo", "demo")
+        res3 = self.url_open(
+            url="/mail/partner/from_email",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "emails": ["john@test.be", "bob@test.be"],
+                        'additional_values': {
+                            "john@test.be": {'phone': '123456789'},
+                            '"bob" <bob@test.be>': {'phone': '987654321'},
+                        },
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res3.status_code, 200)
+        self.assertEqual(
+            2,
+            self.env["res.partner"].search_count([
+                '|',
+                '&', ('email', '=', 'john@test.be'), ('phone', '=', '123456789'),
+                '&', ('email', '=', 'bob@test.be'), ('phone', '=', '987654321'),
+            ], limit=2),
+            "authenticated users can create partners from emails",
+        )
+        # should not create another partner with same email
+        res4 = self.url_open(
+            url="/mail/partner/from_email",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "emails": ["john@test.be"],
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res4.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john@test.be")]),
+            "'mail/partner/from_email' does not create another user if there's already a user with matching email",
+        )
+        self.channel.add_members(
+            self.env["res.users"].browse(demo.uid).partner_id.ids # so demo can post message
+        )
+        res5 = self.url_open(
+            url="/mail/message/post",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "post_data": {
+                            "body": "test",
+                        },
+                        "partner_emails": ["john2@test.be", "john3@test.be"],  # Both emails in one request
+                        "partner_additional_values": {
+                            "john2@test.be": {'phone': '123456789'},  # Original partner
+                            "john3 <john3@test.be>": {'phone': '987654321'}  # Name-Addr formatted partner
+                        },
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res5.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('phone', '=', "123456789")]),
+            "authenticated users can create a partner from an email from message_post",
+        )
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john3@test.be"), ('phone', '=', "987654321")]),
+            "additional_values should be handled correctly when using keys in name_addr format",
+        )
+        # should not create another partner with same email
+        res6 = self.url_open(
+            url="/mail/message/post",
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_model": "discuss.channel",
+                        "thread_id": self.channel.id,
+                        "post_data": {
+                            "body": "test",
+                        },
+                        "partner_emails": ["john2@test.be"],
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(res6.status_code, 200)
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john2@test.be")]),
+            "'mail/message/post' does not create another user if there's already a user with matching email",
+        )
+>>>>>>> 3cce21784986fa35a5e42363fdfb59991b443d61
 
     def test_mail_cache_control_header(self):
         testuser = self.env['res.users'].create({

@@ -2022,7 +2022,65 @@ class CrmLead(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
                 ]).write({'partner_id': new_partner[0].id})
+<<<<<<< 7dcdb58e10563fcddbf912c5cdaa27ae22ba0668
         return super()._message_post_after_hook(message, msg_vals)
+||||||| 52fb0e5ac75c5d84650dcfc0966b1717b678246f
+        return super(Lead, self)._message_post_after_hook(message, msg_vals)
+
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
+        """ Try to propose a better recipient when having only an email by populating
+        it with the partner_name / contact_name field of the lead e.g. if lead
+        contact_name is "Raoul" and email is "raoul@raoul.fr", suggest
+        "Raoul" <raoul@raoul.fr> as recipient. """
+        result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
+        if not (self.partner_name or self.contact_name) or not self.email_from:
+            return result
+        for email, partner_info in zip(emails, result):
+            if partner_info.get('partner_id') or not email:
+                continue
+            # reformat email if no name information
+            name_emails = tools.mail.email_split_tuples(email)
+            name_from_email = name_emails[0][0] if name_emails else False
+            if name_from_email:
+                continue  # already containing name + email
+            name_from_email = self.partner_name or self.contact_name
+            emails_normalized = tools.email_normalize_all(email)
+            email_normalized = emails_normalized[0] if emails_normalized else False
+            if email.lower() == self.email_from.lower() or (email_normalized and self.email_normalized == email_normalized):
+                partner_info['full_name'] = tools.formataddr((
+                    name_from_email,
+                    ','.join(emails_normalized) if emails_normalized else email))
+                break
+        return result
+=======
+        return super(Lead, self)._message_post_after_hook(message, msg_vals)
+
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
+        """ Try to propose a better recipient when having only an email by populating
+        it with the partner_name / contact_name field of the lead e.g. if lead
+        contact_name is "Raoul" and email is "raoul@raoul.fr", suggest
+        "Raoul" <raoul@raoul.fr> as recipient. """
+        result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
+        if not (self.partner_name or self.contact_name) or not self.email_from:
+            return result
+        for email, partner_info in zip(emails, result):
+            if partner_info.get('partner_id') or not email:
+                continue
+            # reformat email if no name information
+            name_emails = tools.mail.email_split_tuples(email)
+            name_from_email = name_emails[0][0] if name_emails else False
+            if name_from_email:
+                continue  # already containing name + email
+            name_from_email = self.contact_name or self.partner_name
+            emails_normalized = tools.email_normalize_all(email)
+            email_normalized = emails_normalized[0] if emails_normalized else False
+            if email.lower() == self.email_from.lower() or (email_normalized and self.email_normalized == email_normalized):
+                partner_info['full_name'] = tools.formataddr((
+                    name_from_email,
+                    ','.join(emails_normalized) if emails_normalized else email))
+                break
+        return result
+>>>>>>> 3cce21784986fa35a5e42363fdfb59991b443d61
 
     @api.model
     def get_import_templates(self):

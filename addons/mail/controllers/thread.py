@@ -62,6 +62,7 @@ class ThreadController(http.Controller):
             "messages": messages.ids,
         }
 
+<<<<<<< 7dcdb58e10563fcddbf912c5cdaa27ae22ba0668
     @http.route("/mail/thread/recipients", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_recipients(self, thread_model, thread_id, message_id=None):
         """ Fetch discussion-based suggested recipients, creating partners on the fly """
@@ -105,6 +106,17 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_partner_from_email(self, thread_model, thread_id, emails):
+||||||| 52fb0e5ac75c5d84650dcfc0966b1717b678246f
+    @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
+    def mail_thread_partner_from_email(self, emails, additional_values=None):
+=======
+    @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
+    def mail_thread_partner_from_email(self, emails, additional_values=None):
+        additional_values = {
+            email_normalize(email, strict=False) or email: values
+            for email, values in (additional_values if additional_values else {}).items()
+        }
+>>>>>>> 3cce21784986fa35a5e42363fdfb59991b443d61
         partners = [
             {"id": partner.id, "name": partner.name, "email": partner.email}
             for partner in request.env[thread_model].browse(thread_id)._partner_find_from_emails_single(
