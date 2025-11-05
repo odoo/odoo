@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="discuss_category_view_tree" model="ir.ui.view">
+            <field name="name">discuss.category.list</field>
+            <field name="model">discuss.category</field>
+            <field name="arch" type="xml">
+                <list string="Discuss Categories" editable="bottom" sample="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" placeholder="e.g. Service"/>
+                    <field name="channel_ids" widget="many2many_tags" domain="[('discuss_category_id', '=', False), ('channel_type', '=', 'channel')]"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="discuss_category_view_form" model="ir.ui.view">
+            <field name="name">discuss.category.form</field>
+            <field name="model">discuss.category</field>
+            <field name="arch" type="xml">
+                <form string="Discuss Categories">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="e.g. Service"/>
+                            <field name="channel_ids" widget="many2many_tags" domain="[('discuss_category_id', '=', False), ('channel_type', '=', 'channel')]"/>
+                            <field name="sequence"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="discuss_category_settings_action" model="ir.actions.act_window">
+            <field name="name">Discuss Categories</field>
+            <field name="res_model">discuss.category</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No discuss category found. Let's create one!
+                </p><p>
+                    Use discuss categories to organize the channels.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
