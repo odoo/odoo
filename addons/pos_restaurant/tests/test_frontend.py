@@ -616,6 +616,8 @@ class TestFrontend(TestFrontendCommon):
             'resource_calendar_id': resource_calendar
         })
         self.start_pos_tour('test_preset_timing_restaurant')
+        self.main_pos_config.write({'default_preset_id': self.preset_takeaway.id})
+        self.start_pos_tour('test_open_register_with_preset_takeaway')
 
     def test_restaurant_preset_eatin_tour(self):
         self.pos_config.write({
