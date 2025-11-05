@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.SelectMany2X">
     <SelectMenu
-        choices="this.filteredSearchResult().map(e => ({ value: e, label: e.display_name  }))"
+        choices="this.filteredSearchResult().map(e => ({ value: e, heading: props.formatHeading?.(e), label: props.formatLabel(e) }))"
         onSelect="props.select"
         onNavigated.bind="onNavigated"
         menuRef="menuRef"

@@ -3,15 +3,18 @@
 
 <t t-name="html_builder.BuilderMany2Many">
     <BuilderComponent>
-	    <BasicMany2Many
-	        model="state.searchModel"
-	        limit="props.limit"
-	        domain="props.domain"
-	        fields="props.fields"
-	        selection="domState.selection"
-	        setSelection="setSelection.bind(this)"
-	    />
-	</BuilderComponent>
+        <BasicMany2Many
+            model="state.searchModel"
+            limit="props.limit"
+            domain="props.domain"
+            fields="props.fields"
+            selection="domState.selection"
+            setSelection="setSelection.bind(this)"
+            formatSelection="props.formatSelection"
+            formatDropdownLabel="props.formatDropdownLabel"
+            formatDropdownHeading="props.formatDropdownHeading"
+        />
+    </BuilderComponent>
 </t>
 
 </templates>
