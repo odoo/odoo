@@ -32,7 +32,7 @@ class StockMove(models.Model):
                 desc = self.env._("+ %(value)s (Landed Cost: %(landed_cost)s)",
                     value=self.company_currency_id.format(value), landed_cost=landed_cost.display_name)
             lcs_desc.append(desc)
-        description = self.env._("including landed costs:\n%(landed_cost)s", landed_cost='\n'.join(lcs_desc))
+        description = self.env._("Additional landed costs:\n%(landed_cost)s", landed_cost='\n'.join(lcs_desc))
         if not accounting_data['description']:
             accounting_data['description'] = description
         else:
