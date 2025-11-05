@@ -574,6 +574,9 @@ class StockQuant(models.Model):
                     name += (' ' if record.package_id else '\t') + f"--{record.lot_id.name}--"
                 record.display_name = name
             else:
+                if not record.ids:
+                    record.display_name = ''
+                    continue
                 name = [record.location_id.display_name]
                 if record.lot_id:
                     name.append(record.lot_id.name)
