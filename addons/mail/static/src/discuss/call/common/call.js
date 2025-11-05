@@ -4,6 +4,7 @@ import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation_bar";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
+import { CallRecordingIndicator } from "@mail/discuss/call/common/call_recording_indicator";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
 import {
@@ -22,7 +23,6 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { useCallActions } from "@mail/discuss/call/common/call_actions";
 
 /** @typedef {import("@mail/discuss/call/common/call_layout").CallLayout} CallLayout */
 
@@ -47,6 +47,7 @@ export class Call extends Component {
         CallActionList,
         CallPresentationBar,
         CallParticipantCard,
+        CallRecordingIndicator,
         PttAdBanner,
     };
     static template = "discuss.Call";
@@ -78,7 +79,6 @@ export class Call extends Component {
             hasOverlay: t.boolean().optional(true),
             isPip: t.boolean().optional(),
         });
-        this.callActions = useCallActions({ channel: () => this.channel });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             const gridEl = this.gridRef();

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussCallHistoryIndicatorsField">
+        <t t-foreach="this.icons" t-as="icon" t-key="icon.name">
+            <i class="oi text-muted" t-att-class="{ 'ms-1': !icon_first }" t-att-data-icon="icon.name" t-att-title="icon.label" t-att-aria-label="icon.label"/>
+        </t>
+    </t>
+</templates>

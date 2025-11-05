@@ -14,6 +14,9 @@
                 <span class="o-mail-NotificationMessage-author d-inline text-muted" t-if="!this.message.richBody.includes(this.htmlEscape(this.message.authorName))" t-out="this.message.authorName"/> <span class="text-muted" t-out="this.message.richBody"/>
             </t>
             <span class="o-mail-Message-date o-xsmaller ms-1" t-out="this.message.dateSimpleWithDay"/>
+            <div t-if="this.message.notificationType === 'call' &amp;&amp; this.callHistory?.has_recording" class="text-muted">
+                A recording is being processed and will be available <a href="#" data-oe-model="discuss.call.history" t-att-data-oe-id="this.callHistory.id">here</a>.
+            </div>
         </div>
     </t>
 </templates>

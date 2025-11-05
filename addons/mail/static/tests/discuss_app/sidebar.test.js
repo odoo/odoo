@@ -17,7 +17,13 @@ import {
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, press, rightClick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    mockService,
+    onRpc,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -100,9 +106,52 @@ test("sidebar: basic chat rendering", async () => {
     await waitFor(`${group[2]} .o-dropdown-item:count(2)`);
     await waitFor(`${group[2]} .o-dropdown-item:eq(0):text('Mute Conversation')`);
     await waitFor(`${group[2]} .o-dropdown-item:eq(1):text('Advanced Settings')`);
+    await contains(".o-dropdown-item:text('View Recordings')", { count: 0 });
     await waitFor(`${group[3]} .o-dropdown-item:count(1)`);
     await waitFor(`${group[3]} .o-dropdown-item:text('Hide Until New Message')`);
     await contains(".o-mail-MessagingMenuItem .badge", { count: 0 });
+});
+
+test("sidebar: dispatch recording action", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+        recording_count: 1,
+    });
+    const expectedAction = {
+        type: "ir.actions.act_window",
+        res_model: "discuss.call.history",
+        views: [[false, "form"]],
+        res_id: 42,
+    };
+    onRpc("discuss.channel", "action_view_recordings", ({ args }) => {
+        expect(args).toEqual([[channelId]]);
+        expect.step("action_view_recordings");
+        return expectedAction;
+    });
+    mockService("action", {
+        doAction(action) {
+            if (action.res_model !== "discuss.call.history") {
+                return super.doAction(...arguments);
+            }
+            expect(action).toEqual(expectedAction);
+            expect.step("doAction");
+        },
+    });
+    await start();
+    await openDiscuss();
+    await click("[title='Chat Actions']");
+    const recordingGroup = ".o-mail-ActionList-group:eq(2)";
+    await waitFor(`${recordingGroup} .o-dropdown-item:eq(0):text('Mute Conversation')`);
+    await waitFor(`${recordingGroup} .o-dropdown-item:eq(1):text('View Recordings')`);
+    await waitFor(`${recordingGroup} .o-dropdown-item:eq(2):text('Advanced Settings')`);
+    await click(`${recordingGroup} .o-dropdown-item:eq(1)`);
+    await expect.waitForSteps(["action_view_recordings", "doAction"]);
 });
 
 test("sidebar: open pinned channel", async () => {

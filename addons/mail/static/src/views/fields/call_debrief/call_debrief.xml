@@ -21,7 +21,7 @@
                     />
                     <div class="o_feedback_indicator position-absolute top-50 start-50 translate-middle text-center pe-none" t-if="this.state.feedback" t-key="this.state.feedback.id">
                         <span class="o_feedback_indicator_animate d-block rounded-pill text-bg-900">
-                            <i t-if="this.state.feedback.icon" class="oi fs-1" t-att-data-icon="this.state.feedback.icon" role="img"/>
+                            <i t-if="this.state.feedback.icon" class="oi oi-stack fs-1" t-att-data-icon="this.state.feedback.icon" role="img"/>
                             <span class="d-block py-2 px-3 fs-2" t-if="this.state.feedback.text" t-out="this.state.feedback.text"/>
                         </span>
                     </div>

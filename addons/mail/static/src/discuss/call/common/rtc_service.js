@@ -369,6 +369,24 @@ export class Rtc extends Record {
      * @type {ViewToRestore}
      */
     viewToRestore = VIEW_TO_RESTORE.NONE;
+    canRecordTranscription = false;
+    canRecordAudio = false;
+    canRecordVideo = false;
+    /** @type {{audio?: boolean, video?: boolean, transcription?: boolean} | null} */
+    recordingRequest = null;
+    recordingState = fields.Attr(
+        { recording: false, audio: false, transcription: false, video: false },
+        {
+            onUpdate() {
+                if (this.recordingState.recording) {
+                    this.addCallNotification({
+                        id: "recording_started",
+                        text: _t("Recording has started"),
+                    });
+                }
+            },
+        }
+    );
     /** @type {RtcLog} */
     logs = {};
     /** @type {Map<any, {id: any, position: "bottom"|"top", text: string}>} call notifications by id */
@@ -489,6 +507,13 @@ export class Rtc extends Record {
         return this.isFullscreen && this.fullscreen.isBrowserFullscreen;
     }
 
+    get canRecord() {
+        if (this.recordingState.recording) {
+            return this.canRecordAudio || this.canRecordVideo || this.canRecordTranscription;
+        }
+        return this.canRecordTranscription || (this.canRecordAudio && this.canRecordVideo);
+    }
+
     get showMicrophonePermissionWarning() {
         return (
             !this.isMicrophonePermissionWarningDismissed && this.microphonePermission !== "granted"
@@ -498,6 +523,12 @@ export class Rtc extends Record {
     get showMicrophoneSilentWarning() {
         return !this.selfSession?.isMute && this.isMicAudioTrackMuted;
     }
+
+    isInternal = fields.Attr(false, {
+        compute() {
+            return this.store.self_user?.share === false;
+        },
+    });
 
     /** @type {CallAction[]} */
     callActions = fields.Attr([], {
@@ -563,6 +594,8 @@ export class Rtc extends Record {
         this.soundEffectsService = undefined;
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
         this.upgradeConnectionDebounce = debounce(this._upgradeConnection, 15000, true);
+        this.startRecordingDebounce = debounce(this.startRecording, 1000, true);
+        this.stopRecordingDebounce = debounce(this.stopRecording, 1000, true);
         this.blurManager = undefined;
     }
 
@@ -1099,6 +1132,73 @@ export class Rtc extends Record {
     }
 
     /**
+     * @param {Object} [options]
+     * @param {boolean} [options.audio]
+     * @param {boolean} [options.video]
+     * @param {boolean} [options.transcription]
+     */
+    async startRecording(options = {}) {
+        if (!this.sfuClient || this.sfuClient.state !== this.SFU_CLIENT_STATE.CONNECTED) {
+            if (this.recordingRequest) {
+                return;
+            }
+            this.recordingRequest = options;
+            if (!this.serverInfo) {
+                this.upgradeConnectionDebounce();
+            }
+            return;
+        }
+        await this._startRecording(options);
+    }
+
+    async _startRecording(options) {
+        this.recordingRequest = null;
+        let allowed;
+        try {
+            allowed = await this.sfuClient.startRecording(options);
+        } catch {
+            this.addCallNotification({
+                id: "recording_failed",
+                text: _t("Could not start the recording"),
+            });
+            return;
+        }
+        if (!allowed) {
+            this.addCallNotification({
+                id: "recording_not_allowed",
+                text: _t("Recording is not allowed"),
+            });
+        }
+    }
+
+    async stopRecording() {
+        this.recordingRequest = null;
+        if (!this.sfuClient || this.sfuClient.state !== this.SFU_CLIENT_STATE.CONNECTED) {
+            this.addCallNotification({
+                id: "stop_recording_failed",
+                text: _t("Could not stop the recording"),
+            });
+            return;
+        }
+        let allowed;
+        try {
+            allowed = await this.sfuClient.stopRecording();
+        } catch {
+            this.addCallNotification({
+                id: "stop_recording_failed",
+                text: _t("Could not stop the recording"),
+            });
+            return;
+        }
+        if (!allowed) {
+            this.addCallNotification({
+                id: "stop_recording_not_allowed",
+                text: _t("You are not allowed to stop the recording"),
+            });
+        }
+    }
+
+    /**
      * @param {"microphone" | "camera"} media
      * @param {Object} [configuration]
      * @param {Object} [configuration.props]
@@ -1587,6 +1687,29 @@ export class Rtc extends Record {
             case "info_change":
                 this.updateSessionInfo(payload);
                 return;
+            case "channel_info_change": {
+                if (payload.stopCode === "recording_timeout") {
+                    this.addCallNotification({
+                        id: "recording_timeout",
+                        text: _t("Recording stopped due to timeout"),
+                        delay: 3000,
+                    });
+                } else if (payload.stopCode === "disk_space_exhausted") {
+                    this.addCallNotification({
+                        id: "recording_disk_space_exhausted",
+                        text: _t("Recording cannot start due to insufficient disk space"),
+                        delay: 3000,
+                    });
+                } else if (payload.stopCode === "recording_failed") {
+                    this.addCallNotification({
+                        id: "recording_failed",
+                        text: _t("Recording stopped due to an internal error"),
+                        delay: 3000,
+                    });
+                }
+                this.recordingState = payload.state;
+                return;
+            }
             case "track":
                 {
                     const { sessionId, type, track, active, sequence } = payload;
@@ -1656,12 +1779,28 @@ export class Rtc extends Record {
                 this.sfuClient.updateUpload("audio", this.audioTrack);
                 this.sfuClient.updateUpload("camera", this.cameraTrack);
                 this.sfuClient.updateUpload("screen", this.screenTrack);
+                this.recordingState = this.sfuClient.recordingState;
+                this.canRecordAudio = this.sfuClient.availableFeatures.audioRecording;
+                this.canRecordVideo = this.sfuClient.availableFeatures.videoRecording;
+                this.canRecordTranscription = this.sfuClient.availableFeatures.transcription;
+                if (this.recordingRequest) {
+                    this._startRecording(this.recordingRequest);
+                }
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
                     if (!this.localChannel) {
                         return;
                     }
+                    this.canRecordAudio = false;
+                    this.canRecordVideo = false;
+                    this.canRecordTranscription = false;
+                    this.recordingState = {
+                        recording: false,
+                        audio: false,
+                        transcription: false,
+                        video: false,
+                    };
                     let text;
                     if (cause === "full") {
                         text = _t("Channel full");
@@ -2027,7 +2166,17 @@ export class Rtc extends Record {
         browser.clearTimeout(this.sfuTimeout);
         this.sfuClient = undefined;
         this.network = undefined;
+        this.canRecordAudio = false;
+        this.canRecordVideo = false;
+        this.canRecordTranscription = false;
+        this.recordingRequest = null;
         this.audioContext?.close();
+        this.recordingState = {
+            recording: false,
+            audio: false,
+            transcription: false,
+            video: false,
+        };
         this.audioContext = undefined;
         this._p2pRecoveryCount = 0;
         this.closeCallPermissionDialog?.();

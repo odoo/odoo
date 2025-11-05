@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { expect, describe, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { startServer, start, openFormView, mailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -77,6 +77,24 @@ test("CallDebrief: basic render without artifacts", async () => {
     expect(".text-danger").toHaveCount(0);
 });
 
+test("CallDebrief: active call uses the current time", async () => {
+    mockDate("2023-01-01 10:02:00", 0);
+    _setupCallDebriefPatch();
+    const pyEnv = await startServer();
+    const artifactId = _createRecording(pyEnv, { start: 60 });
+    const discussCallHistoryId = pyEnv["discuss.call.history"].create({
+        start_date: "2023-01-01 10:00:00",
+        artifact_ids: [artifactId],
+    });
+
+    await start();
+    await _openDebriefView(pyEnv, discussCallHistoryId);
+
+    expect(".text-danger").toHaveCount(0);
+    const segment = queryOne(".o-CallDebriefTimeline-media-segment");
+    expect(parseFloat(segment.style.width)).toBeCloseTo(50, { margin: 0.1 });
+});
+
 test("CallDebrief: renders video with playback", async () => {
     _setupCallDebriefPatch();
 
@@ -107,9 +125,12 @@ test("CallDebrief: renders video with playback", async () => {
     await click("[data-icon='play_arrow']");
     await animationFrame();
     expect("[data-icon='pause']").toHaveCount(1);
+    expect(".o_feedback_indicator [data-icon='play_arrow']").toHaveClass("oi-stack");
 
     // Wait for actual playback to start before pausing
     await playingPromise;
+    const { width, height } = video.getBoundingClientRect();
+    expect(width / height).toBeCloseTo(video.videoWidth / video.videoHeight, { margin: 0.01 });
 
     // Stop playback to avoid AbortError when the test destroys the video element
     await click("[data-icon='pause']");

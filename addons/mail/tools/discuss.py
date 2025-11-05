@@ -7,6 +7,7 @@ from collections import UserList, defaultdict
 from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
+from hmac import digest as hmac_digest
 from itertools import product
 from typing import Generic, TypeVar
 
@@ -17,8 +18,10 @@ from odoo import models
 from odoo.exceptions import MissingError
 from odoo.http import request, route
 from odoo.tools import OrderedSet
+from odoo.tools.misc import hmac
 
 from odoo.addons.bus.websocket import wsrequest
+from odoo.addons.mail.tools.jwt import base64_decode_with_padding
 
 T = TypeVar("T")
 
@@ -162,6 +165,26 @@ def get_sfu_key(env) -> str | None:
     if not sfu_key:
         return os.getenv("ODOO_SFU_KEY")
     return sfu_key
+
+
+def get_sfu_channel_seed(env, unique_id) -> str:
+    seed = hmac(env(su=True), "odoo_sfu", unique_id).encode()
+    return base64.b64encode(seed).decode()
+
+
+def derive_sfu_channel_key(sfu_key: str, channel_seed: str) -> str:
+    key = hmac_digest(
+        base64_decode_with_padding(sfu_key),
+        base64_decode_with_padding(channel_seed),
+        "sha256",
+    )
+    return base64.b64encode(key).decode()
+
+
+def get_sfu_channel_key(env, unique_id) -> str | None:
+    if not (sfu_key := get_sfu_key(env)):
+        return None
+    return derive_sfu_channel_key(sfu_key, get_sfu_channel_seed(env, unique_id))
 
 
 ids_by_model = defaultdict(lambda: ("id",))

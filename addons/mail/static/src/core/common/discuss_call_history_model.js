@@ -8,5 +8,6 @@ export class DiscussCallHistory extends Record {
     end_dt = fields.Datetime();
     /** @type {number|undefined} */
     duration_hour;
+    has_recording = false;
 }
 DiscussCallHistory.register();

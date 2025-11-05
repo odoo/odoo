@@ -98,6 +98,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/mail_message_subtype_data.xml',
         'data/mail_templates_email_layouts.xml',
         'data/mail_templates_mailgateway.xml',
+        'data/mail_templates_recording.xml',
         'data/discuss_channel_data.xml',
         'data/mail_activity_type_data.xml',
         'data/security_notifications_templates.xml',

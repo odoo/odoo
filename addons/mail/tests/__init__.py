@@ -2,6 +2,7 @@
 
 from . import test_discuss_tools
 from . import test_call_artifact
+from . import test_call_recording
 from . import test_fetchmail
 from . import test_font_to_img
 from . import test_ir_mail_server
@@ -13,6 +14,7 @@ from . import test_mail_activity
 from . import test_mail_blacklist
 from . import test_mail_canned_response
 from . import test_mail_composer
+from . import test_mail_jwt
 from . import test_mail_mail
 from . import test_mail_message
 from . import test_mail_message_translate

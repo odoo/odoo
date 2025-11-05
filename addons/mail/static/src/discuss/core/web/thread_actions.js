@@ -64,3 +64,20 @@ registerThreadAction("advanced-settings", {
     sequence: 20,
     sequenceGroup: 30,
 });
+registerThreadAction("view-recordings", {
+    condition: ({ channel, owner }) => channel?.recording_count > 0 && !owner.isDiscussContent,
+    async onSelected({ channel, store }) {
+        const action = await store.env.services.orm.call(
+            "discuss.channel",
+            "action_view_recordings",
+            [[channel.id]]
+        );
+        if (action) {
+            await store.env.services.action.doAction(action);
+        }
+    },
+    icon: "movie",
+    name: _t("View Recordings"),
+    sequence: 15,
+    sequenceGroup: 30,
+});
