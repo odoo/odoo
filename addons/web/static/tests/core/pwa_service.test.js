@@ -1,6 +1,5 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { mockFetch } from "@odoo/hoot-mock";
-import { getService, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
 
@@ -17,8 +16,8 @@ const mountManifestLink = (href) => {
 test("PWA service fetches the manifest found in the page", async () => {
     await makeMockEnv();
     mountManifestLink("/web/manifest.webmanifest");
-    mockFetch((route) => {
-        expect.step(route);
+    onRpc("/*", (request) => {
+        expect.step(new URL(request.url).pathname);
         return { name: "Odoo PWA" };
     });
     const pwaService = await getService("pwa");
@@ -38,8 +37,8 @@ test("PWA installation process", async () => {
     browser.BeforeInstallPromptEvent = beforeInstallPromptEvent;
     await makeMockEnv();
     mountManifestLink("/web/manifest.scoped_app_manifest");
-    mockFetch((route) => {
-        expect.step(route);
+    onRpc("/*", (request) => {
+        expect.step(new URL(request.url).pathname);
         return { name: "My App", scope: "/scoped_app/myApp", start_url: "/scoped_app/myApp" };
     });
     patchWithCleanup(browser.localStorage, {
