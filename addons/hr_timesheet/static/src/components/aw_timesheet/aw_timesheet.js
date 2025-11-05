@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { TimesheetTimer } from "@timesheet_grid/components/static_timesheet_form/static_timesheet_timer";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 
 const { DateTime, Duration } = luxon;
 
@@ -29,6 +29,8 @@ export class ActivityWatchTimesheet extends Component {
             nonBillableTime: 0.0,
             billablePercentage: 0.0,
             nonBillablePercentage: 0.0,
+            project_by_id: {},
+            task_by_id: {},
         });
 
         onWillStart(async () => {
@@ -40,8 +42,17 @@ export class ActivityWatchTimesheet extends Component {
     extractBrowserWatcherActivityName(event) {
         const url = event.data.url;
         // only for test, this should be a config, and the user can adapt it to his need
-        if (/^https?:\/\/(localhost|github\.com)/.test(url)) {
-            event.name = "Coding (browser)";
+        if (/^https?:\/\/localhost/.test(url)) {
+            event.name = "Programming (testing on browser)";
+            return true;
+        } else if (/^https:\/\/github\.com/.test(url)) {
+            event.name = "Programming (reading code on github)";
+            return true;
+        } else if (/^https:\/\/app\.excalidraw\.com/.test(url)) {
+            event.name = "Reading spec (Excalidraw)";
+            return true;
+        } else if (/chatgpt/i.test(url)) {
+            event.name = "Discussing with ChatGPT";
             return true;
         }
         // in the config, we should have a sequence field, because order is important
@@ -198,15 +209,12 @@ export class ActivityWatchTimesheet extends Component {
         this.state.loading = true;
 
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
-        const baseUrl = "http://localhost:5600";
+        const baseUrl = "http://localhost:5700";
         const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
         const todayEnd = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
 
         const watchers = await this.getWatchers(baseUrl);
         const events = await this.loadAwEvents(baseUrl, watchers, todayStart, todayEnd);
-        if (events.length === 0) {
-            return;
-        }
 
         // we get planning slot and calendar events from odoo
         // (intervals where the user should be doing a slot for a project or on a calendar event for a customer ..)
@@ -253,11 +261,23 @@ export class ActivityWatchTimesheet extends Component {
 
         let prevProjectId = false;
         let prevTaskId = false;
+        const tasksIds = new Set();
+        const projectsIds = new Set();
 
         for (const range of ranges) {
             if (range.project_id || range.task_id) {
+                range.project_id = 1;
+                range.task_id = 30;
                 prevProjectId = range.project_id;
                 prevTaskId = range.task_id;
+                const pId = this.parseId(range.project_id);
+                const tId = this.parseId(range.task_id);
+                if (pId) {
+                    projectsIds.add(pId);
+                }
+                if (tId) {
+                    tasksIds.add(tId);
+                }
             }
             const duration = (range.stop - range.start) / 1000;
             const project = `${prevProjectId}_${prevTaskId}`;
@@ -273,15 +293,28 @@ export class ActivityWatchTimesheet extends Component {
         }
 
         await this.loadTimesheets(todayStart);
+        // get projects and tasks names
+        // loading this data in can be in // ( to fix later )
+        // we need to verify that the module is installed
+        const projects = await this.orm.searchRead("project.project", [["id", 'in', Array.from(projectsIds)]], ["id", "name"]);
+        const tasks = await this.orm.searchRead("project.task", [["id", 'in', Array.from(tasksIds)]], ["id", "name"]);
+
+        this.state.project_by_id = Object.fromEntries(
+            projects.map(({ id, name }) => [id, name])
+        );
+        this.state.task_by_id = Object.fromEntries(
+            tasks.map(({ id, name }) => [id, name])
+        );
         this.state.loading = false;
     }
 
     async loadTimesheets(todayStart) {
         // get timesheets
+        // so_line, project_id, task_id should be added only if the right modules are installed
         const fields = ["id", "name", "date", "project_id", "task_id", "unit_amount", "so_line"];
         const domain = [
             ["date", "=", todayStart.split("T")[0]],
-            ["user_id", "=", session.user_id], // uid and user_id are both nor working to check the reason not working
+            ["user_id", "=", user.userId],
         ];
 
         const timesheets = await this.orm.searchRead("account.analytic.line", domain, fields);
@@ -317,7 +350,8 @@ export class ActivityWatchTimesheet extends Component {
             return intervalsToInclude;
         }
         const gaps = [];
-        ranges.sort((a, b) => a.start - b.start);
+        ranges.sort((a, b) => a.start - b.start); // this sort is maybe usefull, as each time we sort the result (last line of this method)
+        // except maybe the first time
         intervalsToInclude.sort((a, b) => a.start - b.start);
 
         // gap before first range
@@ -351,21 +385,14 @@ export class ActivityWatchTimesheet extends Component {
                 j++;
             }
 
-            if (j === intervalsToInclude.length) {
-                break;
-            }
-
-            // skip if interval starts after the gap
-            if (intervalsToInclude[j].start >= gap[1]) {
-                continue;
-            }
-
             // intersect interval with gap
-            const interval = { ...intervalsToInclude[j] };
-            interval.start = Math.max(gap[0], interval.start);
-            interval.stop = Math.min(gap[1], interval.stop);
-
-            res.push(interval);
+            while(j < intervalsToInclude.length && intervalsToInclude[j].start < gap[1]) {
+                const interval = { ...intervalsToInclude[j] };
+                interval.start = Math.max(gap[0], interval.start);
+                interval.stop = Math.min(gap[1], interval.stop);
+                res.push(interval);
+                j++;
+            }
         }
 
         // sort by start
@@ -383,17 +410,26 @@ export class ActivityWatchTimesheet extends Component {
         return this.state.selected?.groupKey === groupKey && this.state.selected?.title === title;
     }
 
+    projectName(id) {
+        return this.state.project_by_id[id] || "unmatched";  // manage if the project is wrong (not a valid key)
+    }
+
+    taskName(id) {
+        return this.state.task_by_id[id] || "unmatched"; // same
+    }
+
     getSuggestionParams(groupKey, title) {
         if (this.state.grouped[groupKey]?.[title] == null) {
             return false;
         }
         const ids = groupKey.split("_");
-        let project_id = this.parseId(ids[0]);
-        let task_id = this.parseId(ids[1]);
-        // to fix, i need to get projects by id (the one we get from odoo url)
-        // just for testing as i need  an array [id, name]
-        project_id = [8, "Internal"];
-        task_id = [86, "Meeting"];
+        const project_id = this.parseId(ids[0]);
+        const task_id = this.parseId(ids[1]);
+        const project_name = this.projectName(project_id);
+        const task_name = this.taskName[project_id];
+
+        const project = [project_id, project_name];
+        const task = [task_id, task_name];
         const unit_amount = this.state.grouped[groupKey][title] / 60; // seconds => minutes
         const name = title;
 
@@ -425,7 +461,7 @@ export class ActivityWatchTimesheet extends Component {
 
         const vals = {
             date,
-            user_id: session.user_id,
+            user_id: user.userId,
             ...params,
         };
 

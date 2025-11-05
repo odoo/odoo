@@ -13,43 +13,55 @@
             <div class="card mb-3 p-3 shadow-sm">
               <!-- group title -->
               <t t-set="ids" t-value="groupKey.split('_')"/>
-              <t t-set="project_id" t-value="parseId(ids[0])"/>
-              <t t-set="task_id" t-value="parseId(ids[1])"/>
-              <h6>
+              <t t-set="project_id" t-value="projectName(parseId(ids[0]))"/>
+              <t t-set="task_id" t-value="taskName(parseId(ids[1]))"/>
+              <h6 class="mb-2">
                 Project <t t-esc="project_id or 'Unknown Project'"/> /
                 Task <t t-esc="task_id or 'Unknown Task'"/>
               </h6>
 
-              <!-- list of activities inside this group -->
-              <ul class="list-group mb-2">
-                <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center py-1"
-                    t-att-class="{
-                      'bg-danger-subtle': this.isSuggestionClicked(groupKey, title),
-                    }"
-                    t-on-click.stop="() => this.onSelectSuggestion(groupKey, title)"
-                  >
-                    <span><t t-esc="title"/></span>
-                    <span class="badge bg-light text-dark">
-                      <t t-esc="(state.grouped[groupKey][title] / 60).toFixed(1)"/> min
-                    </span>
-                    <button
-                      class="btn btn-primary"
-                      t-on-click="() => this.onTake(groupKey, title)"
-                    >
-                      Take
-                    </button>
+              <!-- list of activities as a table -->
+              <div class="table-responsive mb-2">
+                <table class="table table-sm table-borderless align-middle mb-0">
+                  <tbody>
+                    <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
+                      <tr
+                        t-att-class="{
+                          'table-danger': this.isSuggestionClicked(groupKey, title),
+                        }"
+                        t-on-click.stop="() => this.onSelectSuggestion(groupKey, title)"
+                        style="cursor: pointer;"
+                      >
+                        <!-- Activity name -->
+                        <td class="w-50">
+                          <t t-esc="title"/>
+                        </td>
 
-                    <button
-                      class="btn btn-secondary"
-                      t-on-click="() => this.onDelete(groupKey, title)"
-                    >
-                      Delete
-                    </button>
-                  </li>
-                </t>
-              </ul>
+                        <!-- Minutes -->
+                        <td class="text-end text-muted">
+                          <t t-esc="(state.grouped[groupKey][title] / 60).toFixed(1)"/> min
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="text-end">
+                          <button
+                            class="btn btn-sm btn-primary me-1"
+                            t-on-click.stop="() => this.onTake(groupKey, title)"
+                          >
+                            Take
+                          </button>
+                          <button
+                            class="btn btn-sm btn-secondary"
+                            t-on-click.stop="() => this.onDelete(groupKey, title)"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    </t>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </t>
         </t>
@@ -68,12 +80,12 @@
           </t>
         </div>
 
-        <!-- Billable section
+        <!-- Billable section -->
         <div class="mb-4">
           <h6 class="fw-bold text-success mb-2">
             Billable -
             <t t-esc="state.billableTime.toFixed(2)"/>h
-            (<t t-esc="state.billablePercentage.toFixed(1)"/>%)
+            (<t t-esc="state.billablePercentage.toFixed(2)"/>%)
           </h6>
           <t t-if="state.billableTimesheets.length === 0">
             <p class="text-muted small mb-0">No billable timesheets today.</p>
@@ -92,11 +104,11 @@
               </t>
             </ul>
           </t>
-        </div> -->
+        </div>
 
         <!-- Non-Billable section -->
         <div class="d-flex flex-column flex-grow-1" style="min-height: 0;">
-          <h6 class="fw-bold text-secondary mb-2">
+          <h6 class="fw-bold text-success mb-2">
             Non-Billable -
             <t t-esc="state.nonBillableTime.toFixed(2)"/>h
             (<t t-esc="state.nonBillablePercentage.toFixed(1)"/>%)
