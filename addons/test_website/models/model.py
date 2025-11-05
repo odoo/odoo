@@ -28,6 +28,7 @@ class TestModel(models.Model):
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        default="""<div class="o_test_website_description"><p>A simple website description content.</p></div>""",
     )
     tag_id = fields.Many2one('test.tag')
 
