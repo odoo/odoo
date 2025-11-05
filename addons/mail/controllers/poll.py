@@ -24,7 +24,7 @@ class PollController(ThreadController):
         if not thread:
             return
         message = thread.message_post(
-            body="", message_type="mail_poll", subtype_xmlid="mail.mt_comment"
+            body="", message_type="comment", subtype_xmlid="mail.mt_comment",
         )
         end_dt = fields.Datetime.now() + timedelta(minutes=duration)
         poll_values = {
