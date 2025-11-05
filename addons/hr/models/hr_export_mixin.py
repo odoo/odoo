@@ -103,4 +103,9 @@ class HrExportEmployeeMixin(models.AbstractModel):
 
     export_id = fields.Many2one('hr.export.mixin', required=True, index=True, ondelete='cascade')
     company_id = fields.Many2one(related='export_id.company_id', store=True, readonly=True)
-    employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade', check_company=True)
+    employee_id = fields.Many2one('hr.employee', required=True, domain="[('company_id', '=', company_id)]", ondelete='cascade', check_company=True)
+
+    _uniq_employee = models.Constraint(
+        'unique (employee_id,export_id)',
+        "An Emplyee can be imported only once!",
+    )
