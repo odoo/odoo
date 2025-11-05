@@ -108,7 +108,7 @@ export class CalendarCommonRenderer extends Component {
             slotLabelFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
-            timeGridEventMinHeight : 15,
+            timeGridEventMinHeight: 15,
             unselectAuto: false,
             weekLabel: this.props.model.scale === "month" && this.env.isSmall ? "" : _t("Week"),
             weekends: this.props.isWeekendVisible,
@@ -351,6 +351,7 @@ export class CalendarCommonRenderer extends Component {
         });
     }
 }
+CalendarCommonRenderer.props = ["*"];
 CalendarCommonRenderer.components = {
     Popover: CalendarCommonPopover,
 };
