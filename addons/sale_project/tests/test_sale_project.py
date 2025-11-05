@@ -1876,3 +1876,18 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(sale_order.partner_id, self.partner)
         self.assertFalse(self.project_global.sale_line_id)
         self.assertEqual(self.project_global.reinvoiced_sale_order_id, sale_order)
+
+    def test_allocated_hours_manual_delivery_service(self):
+        """
+        Test that allocated_hours match the quantity ordered on creation
+        when the service product has 'delivered_manual' service policy.
+        """
+        self.product_service_delivered_manual.service_tracking = 'task_in_project'
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol = self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'product_id': self.product_service_delivered_manual.id,
+            'product_uom_qty': 10,
+        })
+        so.action_confirm()
+        self.assertEqual(sol.task_id.allocated_hours, 10, "The allocated hours should be 10.")
