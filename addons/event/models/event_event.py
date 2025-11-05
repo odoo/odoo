@@ -7,7 +7,6 @@ from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
-from markupsafe import escape
 from urllib.parse import urlparse
 
 from odoo import _, api, Command, fields, models, tools
@@ -799,24 +798,25 @@ class EventEvent(models.Model):
             return _('next month')
         return _('on %(date)s', date=format_date(self.env, datetime, lang_code=lang_code, date_format='medium'))
 
-    def _get_external_description(self):
+    def _get_ics_description(self):
         """
         Description of the event shortened to maximum 1900 characters to
         leave some space for addition by sub-modules.
         Meant to be used for external content (ics/icalc/Gcal).
 
         Reference Docs for URL limit -: https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        :return: a plain string, crucially not markup nor html-safe (expected sanitized by calendar clients)
         """
         self.ensure_one()
         description = ''
         if self.event_share_url:
-            description = f'<a href="{escape(self.event_share_url)}">{escape(self.name)}</a>\n'
+            description = f'<a href="{self.event_share_url}">{self.name}</a>\n'
         description += textwrap.shorten(html_to_inner_content(self.description), 1900)
         return description
 
     def _get_external_description_url_encoded(self):
         """Get a url-encoded version of the description for mail templates."""
-        return urllib.parse.quote_plus(self._get_external_description())
+        return urllib.parse.quote_plus(self._get_ics_description())
 
     def _get_ics_file(self, slot=False):
         """ Returns iCalendar file for the event invitation.
@@ -840,7 +840,7 @@ class EventEvent(models.Model):
             cal_event.add('dtstart').value = start.astimezone(ZoneInfo(event.date_tz))
             cal_event.add('dtend').value = end.astimezone(ZoneInfo(event.date_tz))
             cal_event.add('summary').value = event.name
-            external_description = event._get_external_description()
+            external_description = event._get_ics_description()
             cal_event.add('description').value = external_description
             xalt = cal_event.add('X-ALT-DESC')
             xalt.value = external_description

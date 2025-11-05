@@ -5,9 +5,9 @@ import json
 from datetime import UTC
 from zoneinfo import ZoneInfo
 
+import textwrap
 import werkzeug.urls
 from dateutil.relativedelta import relativedelta
-from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -38,7 +38,10 @@ class EventEvent(models.Model):
         return res
 
     # description
-    subtitle = fields.Char('Event Subtitle', translate=True)
+    subtitle = fields.Char(
+        'Event Subtitle', translate=True,
+        help="Displayed on website and used as description when the event is added to a third-party calendar.",
+    )
     # registration
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating",
                                       search="_search_is_participating")
@@ -495,7 +498,7 @@ class EventEvent(models.Model):
             'text': self.name,
             'dates': f'{url_date_start}/{url_date_stop}',
             'ctz': self.date_tz,
-            'details': self._get_external_description(),
+            'details': self._get_ics_description(),
         }
         if self.address_id:
             params.update(location=self.contact_address_inline)
@@ -505,6 +508,19 @@ class EventEvent(models.Model):
         if slot:
             iCal_url += '?' + werkzeug.urls.url_encode({'slot_id': slot.id})
         return {'google_url': google_url, 'iCal_url': iCal_url}
+
+    def _get_ics_description(self):
+        """Use subtitle as description is more front-end oriented when website is installed.
+
+        :return: a plain string, crucially not markup nor html-safe (expected sanitized by calendar clients)
+        """
+        self.ensure_one()
+        description = ''
+        if self.event_share_url:
+            description = f'<a href="{self.event_share_url}">{self.name}</a>\n'
+        if self.subtitle:
+            description += textwrap.shorten(self.subtitle, 1900)
+        return description
 
     def _default_website_meta(self):
         res = super()._default_website_meta()

@@ -45,7 +45,7 @@ class TestEventData(EventCase, MockVisitor):
         event.write({
             'date_begin': FieldsDatetime.to_string(datetime(2022, 12, 31, 10, 0, 0)),
             'date_end': FieldsDatetime.to_string(datetime(2022, 12, 31, 12, 0, 0)),
-            'description': '<p>This is <b>HTML</b> description</p>',
+            'subtitle': 'This is a plaintext description with a url for some reason <a href="/hello"/>',
             'event_register_url': 'https://www.example.com',
         })
 
@@ -56,8 +56,8 @@ class TestEventData(EventCase, MockVisitor):
         cal = vobject.readOne(ics_str)
         vevent = cal.vevent
 
-        external_description = event._get_external_description()
-        self.assertIn('This is HTML description', external_description)
+        external_description = event._get_ics_description()
+        self.assertIn('This is a plaintext description with a url for some reason <a href="/hello"/>', external_description)
         self.assertEqual(vevent.description.value, external_description)
 
         self.assertIn('x-alt-desc', vevent.contents)
