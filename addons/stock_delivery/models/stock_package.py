@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class StockPackage(models.Model):
     _inherit = "stock.package"
 
-    @api.depends('quant_ids', 'package_type_id')
+    @api.depends('contained_quant_ids', 'package_type_id')
     def _compute_weight(self):
         packages_weight = self.sudo()._get_weight(self.env.context.get('picking_id'))
         for package in self:
