@@ -40,8 +40,8 @@ export function addDownPayment(percentage, soNth, downPaymentType) {
         steps.push(clickDownPaymentNumpad(num));
     }
     steps.push({
-        content: "Select 'OK'",
-        trigger: ".modal-dialog button.btn-primary:contains('OK')",
+        content: "Select 'Confirm'",
+        trigger: ".modal-dialog button.btn-primary:contains('Confirm')",
         run: "click",
     });
     return steps;

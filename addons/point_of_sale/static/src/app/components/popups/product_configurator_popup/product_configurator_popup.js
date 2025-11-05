@@ -241,11 +241,7 @@ export class ProductConfiguratorPopup extends Component {
         const info = this.props.productTemplate.getTaxDetails();
         const name = this.props.productTemplate.display_name;
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
-        const taxName = info?.taxes_data[0]?.name || "";
-        const taxAmount = this.env.utils.formatCurrency(
-            info?.taxes_data[0]?.raw_tax_amount_currency || 0.0
-        );
-        return `${name} | ${total} | VAT: ${taxName} (= ${taxAmount})`;
+        return `${name} | ${total}`;
     }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;
