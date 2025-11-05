@@ -296,7 +296,9 @@ export class Thread extends Record {
     /** @type {integer|null} */
     highlightMessage = Record.one("mail.message", {
         onAdd(msg) {
-            msg.thread = this;
+            if (!msg.thread) {
+                msg.thread = this;
+            }
         },
     });
     /** @type {String|undefined} */
