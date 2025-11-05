@@ -4,7 +4,7 @@
         <field name="name">snailmail.letter.list</field>
         <field name="model">snailmail.letter</field>
         <field name="arch" type="xml">
-            <list decoration-danger="state=='error'" decoration-muted="state=='sent'" string="Letters">
+            <list decoration-danger="state in ('error','undeliverable')" decoration-muted="state=='sent'" string="Letters">
                 <field name="attachment_id" string="Document"/>
                 <field name="partner_id"/>
                 <field name="user_id"/>
@@ -23,7 +23,7 @@
                 <header>
                     <button name="snailmail_print" string="Send Now" type="object" invisible="state not in ('pending', 'error')" class="oe_highlight"/>
                     <button name="cancel" string="Cancel" type="object" invisible="state not in ('pending', 'error')"/>
-                    <field name="state" widget="statusbar" statusbar_visible="pending,sent,canceled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,sent,canceled,delivered"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -36,6 +36,7 @@
                         <field name="partner_id"/>
                         <field name="user_id"/>
                         <field name="info_msg" widget="html"/>
+                        <field name="document_id"/>
                     </group>
                     <group groups="base.group_no_one">
                         <field name="model"/>
