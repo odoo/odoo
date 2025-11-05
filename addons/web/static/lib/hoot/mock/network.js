@@ -7,10 +7,21 @@ import {
 } from "@web/../lib/hoot-dom/helpers/time";
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import { makeNetworkLogger } from "../core/logger";
-import { ensureArray, isNil, MIME_TYPE, MockEventTarget } from "../hoot_utils";
-import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
+import {
+    ensureArray,
+    getSyncValue,
+    isNil,
+    MIME_TYPE,
+    MockEventTarget,
+    setSyncValue,
+} from "../hoot_utils";
 
 /**
+ * @typedef {ResponseInit & {
+ *  type?: ResponseType;
+ *  url?: string;
+ * }} MockResponseInit
+ *
  * @typedef {AbortController
  *  | MockBroadcastChannel
  *  | MockMessageChannel
@@ -28,9 +39,11 @@ import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
 
 const {
     AbortController,
+    Blob,
     BroadcastChannel,
     document,
     fetch,
+    FormData,
     Headers,
     Map,
     Math: { floor: $floor, max: $max, min: $min, random: $random },
@@ -41,13 +54,17 @@ const {
         entries: $entries,
     },
     ProgressEvent,
+    ReadableStream,
     Request,
     Response,
     Set,
+    TextEncoder,
+    Uint8Array,
     URL,
     WebSocket,
 } = globalThis;
 const { parse: $parse, stringify: $stringify } = globalThis.JSON;
+const { revokeObjectURL: $revokeObjectURL } = URL;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -196,15 +213,51 @@ function parseNetworkDelay(min, max) {
     }
 }
 
+/**
+ * @param {Uint8Array<ArrayBuffer> | string} value
+ * @returns {Uint8Array<ArrayBuffer>}
+ */
+function toBytes(value) {
+    return isInstanceOf(value, Uint8Array) ? value : new TextEncoder().encode(value);
+}
+
 const DEFAULT_URL = "https://www.hoot.test/";
 const ENDLESS_PROMISE = new Promise(() => {});
 const HEADER = {
+    contentLength: "Content-Length",
     contentType: "Content-Type",
 };
 const R_EQUAL = /\s*=\s*/;
-const R_INTERNAL_URL = /^(blob|data|file):/;
+const R_INTERNAL_URL = /^(data|file):/;
 const R_SEMICOLON = /\s*;\s*/;
 
+const requestResponseMixin = {
+    async arrayBuffer() {
+        return toBytes(this._readValue("arrayBuffer", true)).buffer;
+    },
+    async blob() {
+        const value = this._readValue("blob", false);
+        return isInstanceOf(value, Blob) ? value : new MockBlob([value]);
+    },
+    async bytes() {
+        return toBytes(this._readValue("bytes", true));
+    },
+    async formData() {
+        const data = this._readValue("formData", false);
+        if (!isInstanceOf(data, FormData)) {
+            throw new TypeError("Failed to fetch");
+        }
+        return data;
+    },
+    async json() {
+        return $parse(this._readValue("json", true));
+    },
+    async text() {
+        return this._readValue("text", true);
+    },
+};
+/** @type {Map<string, Blob | MediaSource>} */
+const objectUrls = new Map();
 /** @type {Set<NetworkInstance>} */
 const openNetworkInstances = new Set();
 
@@ -256,11 +309,18 @@ export function cleanupNetwork() {
 
     // Location
     mockLocation.href = DEFAULT_URL;
+
+    // Revoke and clear remaining objct URLs
+    for (const url of objectUrls.keys()) {
+        $revokeObjectURL(url);
+    }
+    objectUrls.clear();
 }
 
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
-    if (R_INTERNAL_URL.test(input)) {
+    const strInput = String(input);
+    if (R_INTERNAL_URL.test(strInput)) {
         // Internal URL: directly handled by the browser
         return fetch(input, init);
     }
@@ -323,7 +383,7 @@ export async function mockedFetch(input, init) {
     if (result instanceof MockResponse) {
         // Mocked response
         logResponse(() => {
-            const textValue = getSyncValue(result);
+            const textValue = getSyncValue(result, true);
             return [
                 responseHeaders.get(HEADER.contentType) === MIME_TYPE.json
                     ? parseJsonRpcParams(textValue)
@@ -348,13 +408,33 @@ export async function mockedFetch(input, init) {
     if (responseHeaders.get(HEADER.contentType) === MIME_TYPE.json) {
         // JSON response
         const strBody = $stringify(result ?? null);
-        const response = new MockResponse(strBody, { headers: responseHeaders });
+        const response = new MockResponse(strBody, {
+            headers: responseHeaders,
+            statusText: "OK",
+            type: "basic",
+            url: strInput,
+        });
         logResponse(() => [parseJsonRpcParams(strBody), response]);
         return response;
     }
 
-    // Any other type (blob / text)
-    const response = new MockResponse(result, { headers: responseHeaders });
+    // With blob URLs: fallback to the actual registered blob object:
+    // - this will automatically set the content type & length of the headers
+    // - the response body will be the stringified content of the blob
+    if (isNil(result) && objectUrls.has(strInput)) {
+        const blob = objectUrls.get(strInput);
+        responseHeaders.set(HEADER.contentLength, blob.size);
+        responseHeaders.set(HEADER.contentType, blob.type);
+        result = getSyncValue(blob, true);
+    }
+
+    // Any other type
+    const response = new MockResponse(result, {
+        headers: responseHeaders,
+        statusText: "OK",
+        type: "basic",
+        url: strInput,
+    });
     logResponse(() => [result, response]);
     return response;
 }
@@ -422,6 +502,31 @@ export function mockWorker(onWorkerConnected) {
  */
 export function throttleNetwork(...args) {
     getNetworkDelay = parseNetworkDelay(...args);
+}
+
+export class MockBlob extends Blob {
+    constructor(blobParts, options) {
+        super(blobParts, options);
+
+        setSyncValue(this, blobParts);
+    }
+
+    async arrayBuffer() {
+        return toBytes(getSyncValue(this, true)).buffer;
+    }
+
+    async bytes() {
+        return toBytes(getSyncValue(this, true));
+    }
+
+    async stream() {
+        const value = getSyncValue(this, true);
+        return isInstanceOf(value, ReadableStream) ? value : new ReadableStream(value);
+    }
+
+    async text() {
+        return getSyncValue(this, true);
+    }
 }
 
 export class MockBroadcastChannel extends BroadcastChannel {
@@ -725,58 +830,91 @@ export class MockMessagePort extends MockEventTarget {
 }
 
 export class MockRequest extends Request {
+    static {
+        Object.assign(this.prototype, requestResponseMixin);
+    }
+
     /**
      * @param {RequestInfo} input
      * @param {RequestInit} [init]
      */
     constructor(input, init) {
-        super(input, init);
+        super(new MockURL(input), init);
 
         setSyncValue(this, init?.body ?? null);
     }
 
-    async arrayBuffer() {
-        return new TextEncoder().encode(getSyncValue(this));
+    clone() {
+        const request = new this.constructor(this.url, this);
+        setSyncValue(request, getSyncValue(this, false));
+        return request;
     }
 
-    async blob() {
-        return new MockBlob([getSyncValue(this)]);
-    }
-
-    async json() {
-        return $parse(getSyncValue(this));
-    }
-
-    async text() {
-        return getSyncValue(this);
+    /**
+     * In tests, requests objects are expected to be read by multiple network handlers.
+     * As such, their 'body' isn't consumed upon reading.
+     *
+     * @protected
+     * @param {string} reader
+     * @param {boolean} toStringValue
+     */
+    _readValue(reader, toStringValue) {
+        return getSyncValue(this, toStringValue);
     }
 }
 
 export class MockResponse extends Response {
+    static {
+        Object.assign(this.prototype, requestResponseMixin);
+    }
+
     /**
      * @param {BodyInit} body
-     * @param {ResponseInit} [init]
+     * @param {MockResponseInit} [init]
      */
     constructor(body, init) {
         super(body, init);
 
+        if (init?.type) {
+            $defineProperty(this, "type", {
+                value: init.type,
+                configurable: true,
+                enumerable: true,
+                writable: false,
+            });
+        }
+        if (init?.url) {
+            $defineProperty(this, "url", {
+                value: String(new MockURL(init.url)),
+                configurable: true,
+                enumerable: true,
+                writable: false,
+            });
+        }
+
         setSyncValue(this, body ?? null);
     }
 
-    async arrayBuffer() {
-        return new TextEncoder().encode(getSyncValue(this)).buffer;
+    clone() {
+        return new this.constructor(getSyncValue(this, false), this);
     }
 
-    async blob() {
-        return new MockBlob([getSyncValue(this)]);
-    }
-
-    async json() {
-        return $parse(getSyncValue(this));
-    }
-
-    async text() {
-        return getSyncValue(this);
+    /**
+     * Reading the 'body' of a response always consumes it, as opposed to the {@link MockRequest}
+     * body.
+     *
+     * @protected
+     * @param {string} reader
+     * @param {boolean} toStringValue
+     */
+    _readValue(reader, toStringValue) {
+        if (this.bodyUsed) {
+            throw new TypeError(
+                `Failed to execute '${reader}' on '${this.constructor.name}': body stream already read`
+            );
+        }
+        $defineProperty(this, "bodyUsed", { value: true, configurable: true, enumerable: true });
+        return getSyncValue(this, toStringValue);
     }
 }
 
@@ -814,6 +952,19 @@ export class MockSharedWorker extends MockEventTarget {
 export class MockURL extends URL {
     constructor(url, base) {
         super(url, base || mockLocation);
+    }
+
+    /** @type {typeof URL["createObjectURL"]} */
+    static createObjectURL(obj) {
+        const url = super.createObjectURL(obj);
+        objectUrls.set(url, obj);
+        return url;
+    }
+
+    /** @type {typeof URL["revokeObjectURL"]} */
+    static revokeObjectURL(url) {
+        objectUrls.delete(url);
+        return super.revokeObjectURL(url);
     }
 }
 
@@ -960,6 +1111,10 @@ export class MockXMLHttpRequest extends MockEventTarget {
     }
 
     upload = new MockXMLHttpRequestUpload();
+    /**
+     * @type {XMLHttpRequestResponseType}
+     */
+    responseType = "";
 
     get response() {
         return this._response;
@@ -998,11 +1153,7 @@ export class MockXMLHttpRequest extends MockEventTarget {
                 headers: this._headers,
             });
             this._status = response.status;
-            if (new URL(this._url, mockLocation.origin).protocol === "blob:") {
-                this._response = await response.arrayBuffer();
-            } else {
-                this._response = await response.text();
-            }
+            this._response = getSyncValue(response, false);
             this.dispatchEvent(new ProgressEvent("load"));
         } catch {
             this.dispatchEvent(new ProgressEvent("error"));

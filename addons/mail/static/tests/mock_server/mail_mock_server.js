@@ -115,7 +115,7 @@ async function mail_attachment_upload(request) {
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
 
-    const body = await request.text();
+    const body = await request.formData();
     const ufile = body.get("ufile");
     const is_pending = body.get("is_pending") === "true";
     const model = is_pending ? "mail.compose.message" : body.get("thread_model");
