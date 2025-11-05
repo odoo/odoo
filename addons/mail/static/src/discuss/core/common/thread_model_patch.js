@@ -26,11 +26,6 @@ const threadPatch = {
                 return this.model === "discuss.channel" ? this.id : undefined;
             },
         });
-        this.channel_member_ids = fields.Many("discuss.channel.member", {
-            inverse: "channel_id",
-            onDelete: (r) => r?.delete(),
-            sort: (m1, m2) => m1.id - m2.id,
-        });
         /** @type {string} */
         this.channel_type = undefined;
         this.correspondent = fields.One("discuss.channel.member", {

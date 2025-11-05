@@ -47,7 +47,6 @@ declare module "models" {
         canLeave: Readonly<boolean>;
         canUnpin: Readonly<boolean>;
         channel: DiscussChannel;
-        channel_member_ids: ChannelMember[];
         channel_name_member_ids: ChannelMember[];
         channel_type: string;
         computeCorrespondent: () => ChannelMember;
