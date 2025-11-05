@@ -2,27 +2,28 @@
 
 from pprint import pformat
 
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import HttpCase, JsonRpcException, new_test_user, tagged
 
 
-@tagged("post_install", "-at_install")
-class TestMailPoll(HttpCase):
+@tagged("mail_poll")
+class TestMailPoll(MailCommon, HttpCase):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.internal = new_test_user(cls.env, "internal", groups="base.group_user")
+        cls.test_record = cls.env["discuss.channel"].create({"name": "General"})
 
     def test_only_one_option_allowed_on_single_option_polls(self):
-        self.authenticate(self.internal.login, self.internal.login)
-        channel = self.env["discuss.channel"].create({"name": "General"})
+        self.authenticate(self.user_employee.login, self.user_employee.login)
         poll_id = self.make_jsonrpc_request(
             "/mail/poll/create",
             {
                 "duration": 1,
                 "option_labels": ["Burger", "Pizza", "Tacos"],
                 "question": "What is your favorite food?",
-                "thread_id": channel.id,
-                "thread_model": "discuss.channel",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
             },
         )
         poll = self.env["mail.poll"].search([("id", "=", poll_id)])
@@ -41,11 +42,10 @@ class TestMailPoll(HttpCase):
         self.make_jsonrpc_request(
             "/mail/poll/vote", {"poll_id": poll.id, "option_ids": poll.option_ids[0].ids}
         )
-        self.assertIn(self.internal, poll.option_ids[0].vote_ids.user_id)
+        self.assertIn(self.user_employee, poll.option_ids[0].vote_ids.user_id)
 
     def test_multiple_options_allowed_on_multi_option_polls(self):
-        self.authenticate(self.internal.login, self.internal.login)
-        channel = self.env["discuss.channel"].create({"name": "General"})
+        self.authenticate(self.user_employee.login, self.user_employee.login)
         poll_id = self.make_jsonrpc_request(
             "/mail/poll/create",
             {
@@ -53,20 +53,20 @@ class TestMailPoll(HttpCase):
                 "duration": 1,
                 "option_labels": ["Burger", "Pizza", "Tacos"],
                 "question": "What is your favorite food?",
-                "thread_id": channel.id,
-                "thread_model": "discuss.channel",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
             },
         )
         poll = self.env["mail.poll"].search([("id", "=", poll_id)])
         self.make_jsonrpc_request(
             "/mail/poll/vote", {"poll_id": poll.id, "option_ids": poll.option_ids.ids}
         )
-        self.assertIn(self.internal, poll.option_ids[0].vote_ids.user_id)
-        self.assertIn(self.internal, poll.option_ids[1].vote_ids.user_id)
-        self.assertIn(self.internal, poll.option_ids[2].vote_ids.user_id)
+        self.assertIn(self.user_employee, poll.option_ids[0].vote_ids.user_id)
+        self.assertIn(self.user_employee, poll.option_ids[1].vote_ids.user_id)
+        self.assertIn(self.user_employee, poll.option_ids[2].vote_ids.user_id)
 
     def test_vote_percentage_computation(self):
-        self.authenticate(self.internal.login, self.internal.login)
+        self.authenticate(self.user_employee.login, self.user_employee.login)
         channel = self.env["discuss.channel"].create({"name": "General"})
         poll_id = self.make_jsonrpc_request(
             "/mail/poll/create",
@@ -130,8 +130,8 @@ class TestMailPoll(HttpCase):
                     )
 
     def test_poll_ui(self):
-        self.authenticate(self.internal.login, self.internal.login)
-        channel = self.env["discuss.channel"].create({"name": "General"})
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        channel = self.test_record
         poll_id = self.make_jsonrpc_request(
             "/mail/poll/create",
             {
@@ -139,7 +139,7 @@ class TestMailPoll(HttpCase):
                 "option_labels": ["foo", "bar", "baz"],
                 "question": "???",
                 "thread_id": channel.id,
-                "thread_model": "discuss.channel",
+                "thread_model": channel._name,
             },
         )
         # Posting enough message so that the poll message isn't loaded when
@@ -149,20 +149,19 @@ class TestMailPoll(HttpCase):
         self.start_tour(
             f"/odoo/discuss?active_id={channel.id}&test_poll_id={poll_id}",
             "mail_poll_tour.js",
-            login=self.internal.login,
+            login=self.user_employee.login,
         )
 
     def test_do_not_end_expired_polls_twice(self):
-        self.authenticate(self.internal.login, self.internal.login)
-        channel = self.env["discuss.channel"].create({"name": "General"})
+        self.authenticate(self.user_employee.login, self.user_employee.login)
         poll_id = self.make_jsonrpc_request(
             "/mail/poll/create",
             {
                 "duration": 0,
                 "option_labels": ["Burger", "Pizza", "Tacos"],
                 "question": "What is your favorite food?",
-                "thread_id": channel.id,
-                "thread_model": "discuss.channel",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
             },
         )
         poll = self.env["mail.poll"].browse(poll_id)

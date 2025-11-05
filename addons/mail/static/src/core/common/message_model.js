@@ -208,7 +208,7 @@ export class Message extends Record {
     }
 
     get editable() {
-        if (this.isEmpty || !this.allowsEdition || this.message_type === "mail_poll") {
+        if (this.isEmpty || !this.allowsEdition || this.poll) {
             return false;
         }
         return this.message_type === "comment";
@@ -218,7 +218,7 @@ export class Message extends Record {
         if (this.isEmpty || !this.allowsEdition) {
             return false;
         }
-        return ["comment", "mail_poll"].includes(this.message_type);
+        return ["comment"].includes(this.message_type);
     }
 
     get dateDay() {

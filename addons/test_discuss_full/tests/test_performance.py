@@ -146,13 +146,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_call_history
     #       - fetch mail_message_reaction
     #       - fetch mail_message_subtype
+    #       - 'has_poll' computation: check if has mail_poll linked through o2m
     #       - fetch partner (_author_to_store)
     #       - search user (_author_to_store)
     #       - fetch user (_author_to_store)
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
