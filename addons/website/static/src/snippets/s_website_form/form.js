@@ -51,7 +51,17 @@ export class Form extends Interaction {
         },
         // Do not disable inputs that are required for the model.
         ".s_website_form_field:not(.s_website_form_model_required) .s_website_form_input": {
-            "t-att-disabled": (el) => !this.isInputVisible(el) || undefined,
+            "t-att-disabled": (el) => {
+                if (!this.isInputVisible(el)) {
+                    this.disabledInputEls.add(el);
+                    return true;
+                }
+                if (el.disabled && !this.disabledInputEls.has(el)) {
+                    return true;
+                }
+
+                this.disabledInputEls.delete(el);
+            },
         },
         ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date":
             {
@@ -69,6 +79,7 @@ export class Form extends Interaction {
         this.disabledStates = new Map();
         this.visibilityFunctionByFieldEl = new Map();
         this.visibilityFunctionByFieldName = new Map();
+        this.disabledInputEls = new Set();
         this.inputEls = this.el.querySelectorAll(
             ".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input"
         );
