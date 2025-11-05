@@ -25,11 +25,6 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "confirm and reload custom snippet",
-            trigger: ".modal-footer > .btn.btn-primary",
-            run: "click",
-        },
-        {
             content: "Hide the popup",
             trigger: ".o_we_invisible_entry i",
             run: "click",
