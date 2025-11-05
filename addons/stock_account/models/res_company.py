@@ -65,7 +65,7 @@ class ResCompany(models.Model):
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
         }
         account_move = self.env['account.move'].create(moves_vals)
-
+        self._save_closing_id(account_move.id)
         if auto_post:
             account_move._post()
 
@@ -163,7 +163,13 @@ class ResCompany(models.Model):
         location_domain = (location_domain or []) + [('valuation_account_id', '!=', False)]
         amls_vals_list = []
         valued_location = self.env['stock.location'].search(location_domain)
-        moves_base_domain = Domain([('product_id.is_storable', '=', True)])
+        last_closing_date = self._get_last_closing_date()
+        moves_base_domain = Domain([
+            ('product_id.is_storable', '=', True),
+            ('product_id.valuation', '=', 'periodic')
+        ])
+        if last_closing_date:
+            moves_base_domain &= Domain([('date', '>', last_closing_date)])
         if at_date:
             moves_base_domain &= Domain([('date', '<=', at_date)])
         moves_in_domain = Domain([
@@ -192,20 +198,7 @@ class ResCompany(models.Model):
             # TODO: It would be better to replay the period to get the exact correct value.
             inventory_value = incoming_value_by_location.get(location, 0.0) - outgoing_value_by_location.get(location, 0.0)
             account_balance[location.valuation_account_id] += inventory_value
-        amls_domain = Domain([
-            ('account_id', 'in', valued_location.valuation_account_id.ids),
-            ('company_id', '=', self.id),
-            ('parent_state', '=', 'posted'),
-        ])
-        if at_date:
-            amls_domain &= Domain([('date', '<=', at_date)])
-        current_valuation = self.env['account.move.line']._read_group(
-            amls_domain,
-            groupby=['account_id'],
-            aggregates=['balance:sum'],
-        )
-        for account, balance in current_valuation:
-            account_balance[account] -= balance
+
         for account, balance in account_balance.items():
             if balance == 0:
                 continue
@@ -325,6 +318,28 @@ class ResCompany(models.Model):
             'credit': 0,
             'product_id': product_id,
         }]
+
+    def _get_last_closing_date(self):
+        self.ensure_one()
+        key = f'{self.id}.stock_valuation_closing_ids'
+        closing_ids = self.env['ir.config_parameter'].sudo().get_param(key)
+        closing_ids = closing_ids.split(',') if closing_ids else []
+        closing = self.env['account.move']
+        while not closing and closing_ids:
+            closing_id = closing_ids.pop(-1)
+            closing_id = int(closing_id)
+            closing = self.env['account.move'].browse(closing_id).exists().filtered(lambda am: am.state == 'posted')
+        return closing.date if closing else False
+
+    def _save_closing_id(self, move_id):
+        self.ensure_one()
+        key = f'{self.id}.stock_valuation_closing_ids'
+        closing_ids = self.env['ir.config_parameter'].sudo().get_param(key)
+        ids = closing_ids.split(',') if closing_ids else []
+        ids.append(str(move_id))
+        if len(ids) > 10:
+            ids = ids[1:]
+        self.env['ir.config_parameter'].sudo().set_param(key, ','.join(ids))
 
     def _set_category_defaults(self):
         for company in self:
