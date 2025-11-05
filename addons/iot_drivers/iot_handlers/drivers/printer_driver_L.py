@@ -147,6 +147,8 @@ class PrinterDriver(PrinterDriverBase):
 
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         if self.escpos_device:
+            if not self.check_printer_status():
+                return
             try:
                 with EscposIO(self.escpos_device) as dev:
                     dev.printer.set(align='center', double_height=True, double_width=True)
@@ -154,6 +156,7 @@ class PrinterDriver(PrinterDriverBase):
                     dev.printer.set_with_default(align='center', double_height=False, double_width=False)
                     dev.writelines(body.decode())
                     dev.printer.qr(f"http://{helpers.get_ip()}", size=6)
+                self.send_status(status='success')
                 return
             except (escpos.exceptions.Error, OSError, AssertionError):
                 _logger.warning("Failed to print QR status receipt, falling back to simple receipt")
