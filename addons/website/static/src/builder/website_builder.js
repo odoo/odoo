@@ -44,6 +44,7 @@ import { CustomizeTranslationTab } from "@website/builder/plugins/translation_ta
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
 import { WebsiteSavePlugin } from "@website/builder/plugins/website_save_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { websiteSnippetModelPatch } from "./snippet_model";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -96,6 +97,11 @@ export class WebsiteBuilder extends Component {
     setup() {
         this.websiteService = useService("website");
         this.dialog = useService("dialog");
+        this.snippetsService = useService("html_builder.snippets");
+        this.snippetsService.patchSnippetModel(
+            this.props.builderProps.snippetsName,
+            websiteSnippetModelPatch
+        );
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),

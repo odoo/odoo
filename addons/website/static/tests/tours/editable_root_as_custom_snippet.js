@@ -19,11 +19,6 @@ registerWebsitePreviewTour(
             ".s_title.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]"
         ),
         changeOption("Block", ".oe_snippet_save"),
-        {
-            content: "Confirm modal",
-            trigger: ".modal-footer .btn-primary",
-            run: "click",
-        },
         goBackToBlocks(),
         {
             content: "Wait for the custom category to appear in the panel",
