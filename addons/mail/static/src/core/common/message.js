@@ -30,7 +30,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
@@ -39,6 +39,7 @@ import { NotificationMessage } from "./notification_message";
 import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
+import { MessageContextMenu } from "./message_context_menu";
 
 /**
  * @typedef {Object} Props
@@ -48,6 +49,7 @@ import { loadCssFromBundle } from "@mail/utils/common/misc";
  * @property {import("models").Message} message
  * @property {boolean} [squashed]
  * @property {import("models").Thread} [thread]
+ * @property {ReturnType<import('@mail/utils/common/hooks').useMessageSelection>} [messageSelection]
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
  * @property {String} [className]
  * @extends {Component<Props, Env>}
@@ -64,6 +66,7 @@ export class Message extends Component {
         Composer,
         Dropdown,
         ImStatus,
+        MessageContextMenu,
         MessageInReply,
         MessageLinkPreviewList,
         MessageReactions,
@@ -82,6 +85,7 @@ export class Message extends Component {
         "hasActions?",
         "onParentMessageClick?",
         "message",
+        "messageSelection?",
         "messageRefs?",
         "previousMessage?",
         "squashed?",
@@ -104,6 +108,10 @@ export class Message extends Component {
             expandOptions: false,
             emailHeaderOpen: false,
         });
+        this.rightClickDropdownState = useDropdownState({
+            onClose: () => (this.props.messageSelection.messageId = undefined),
+        });
+        this.rightClickAnchor = useChildRef("rightClickAnchor");
         /** @type {ShadowRoot} */
         this.shadowRoot;
         this.root = useRef("root");
@@ -257,7 +265,10 @@ export class Message extends Component {
             "pt-1": !this.props.asCard && !this.props.squashed,
             "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
-            "o-selected": this.props.thread?.composer?.replyToMessage?.eq(this.props.message),
+            "o-selected":
+                this.props.thread?.composer?.replyToMessage?.eq(this.props.message) ||
+                (this.props.messageSelection?.messageId &&
+                    this.props.messageSelection?.messageId === this.props.message.id),
             "o-squashed": this.props.squashed,
             "mt-1":
                 !this.props.squashed &&
@@ -265,7 +276,10 @@ export class Message extends Component {
                 !this.env.messageCard &&
                 !this.props.asCard,
             "px-1": this.env.inChatWindow,
-            "opacity-50": this.props.thread?.composer?.replyToMessage?.notEq(this.props.message),
+            "opacity-50":
+                this.props.thread?.composer?.replyToMessage?.notEq(this.props.message) ||
+                (this.props.messageSelection?.messageId &&
+                    this.props.messageSelection.messageId !== this.props.message.id),
             "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
         };
@@ -427,6 +441,22 @@ export class Message extends Component {
                 );
             }
         }
+    }
+
+    onContextMenu(ev) {
+        if (!document.getSelection()?.isCollapsed || isMobileOS()) {
+            // text selection by-passes message actions on right-click.
+            // Mobile OS long press is handled with useLongPress()
+            return;
+        }
+        const el = this.rightClickAnchor.el;
+        el.style.left = ev.clientX + "px";
+        el.style.top = ev.clientY + "px";
+        this.rightClickDropdownState.open();
+        if (this.props.messageSelection) {
+            this.props.messageSelection.messageId = this.props.message.id;
+        }
+        ev.preventDefault();
     }
 
     /** @param {HTMLElement} bodyEl */

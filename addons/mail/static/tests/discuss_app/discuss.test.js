@@ -24,7 +24,15 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, press, runAllTimers, tick, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    Deferred,
+    press,
+    rightClick,
+    runAllTimers,
+    tick,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { browser } from "@web/core/browser/browser";
@@ -780,6 +788,76 @@ test("rendering of inbox message", async () => {
     await click("[title='Expand']");
     await contains(".o-dropdown-item:contains('Reply')");
     await contains(".o-dropdown-item:contains('Translate')");
+});
+
+test("Can right-click on message to opens message actions dropdown", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
+        {
+            body: "message-body-1",
+            model: "res.partner",
+            needaction: true,
+            res_id: partnerId,
+        },
+        {
+            body: "msg-body-2",
+            model: "res.partner",
+            needaction: true,
+            res_id: partnerId,
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId_1,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+        {
+            mail_message_id: messageId_2,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await contains(".o-mail-Message", { count: 2 });
+    await rightClick(".o-mail-Message:eq(0)");
+    await contains(".o-dropdown-item", { count: 6 });
+    await contains(".o-dropdown-item:contains('Add a Reaction')");
+    await contains(".o-dropdown-item:contains('Add Star')");
+    await contains(".o-dropdown-item:contains('Mark as Read')");
+    await contains(".o-dropdown-item:contains('Reply')");
+    await contains(".o-dropdown-item:contains('Translate')");
+    await contains(".o-dropdown-item:contains('Copy Text')");
+    await contains(".o-mail-Message:eq(0).o-selected");
+    await contains(".o-mail-Message:eq(1):not(.o-selected)");
+});
+
+test("Can add reaction from right-click on message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "message-body-1",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await contains(".o-mail-Message");
+    await rightClick(".o-mail-Message");
+    await click(".o-dropdown-item:contains('Add a Reaction')");
+    await click(".o-Emoji:contains(😊)");
+    await contains(".o-mail-MessageReaction:contains(😊)");
 });
 
 test("Unfollow message", async function () {

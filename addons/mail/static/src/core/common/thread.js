@@ -2,7 +2,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/model/export";
-import { useChildRefs, useVisible } from "@mail/utils/common/hooks";
+import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -137,6 +137,7 @@ export class Thread extends Component {
             },
             { ready: false }
         );
+        this.messageSelection = useMessageSelection();
         this.presentThresholdState = useVisible("present-treshold", () =>
             this.updateShowJumpPresent()
         );
