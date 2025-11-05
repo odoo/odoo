@@ -420,6 +420,8 @@ class IrActionsServer(models.Model):
                 # if x2m field, assign to the first user found
                 # (same behavior as Field.traverse_related)
                 vals['user_id'] = user.ids[0]
+            else:
+                vals['user_id'] = self.env.user.id
             record.activity_schedule(**vals)
         return False
 
