@@ -16,9 +16,9 @@ const ChannelMemberPatch = {
                     return;
                 }
                 this.channel_id.rtc_session_ids.add(r);
-                this.store.ringingThreads.add(this.channel_id);
+                this.store.ringingThreads.add(this.channel_id.thread);
                 this.channel_id.cancelRtcInvitationTimeout = browser.setTimeout(() => {
-                    this.store.env.services["discuss.rtc"].leaveCall(this.channel_id.channel);
+                    this.store.env.services["discuss.rtc"].leaveCall(this.channel_id);
                 }, ChannelMember.CANCEL_CALL_INVITE_DELAY);
             },
             /** @this {import("models").ChannelMember} */
@@ -27,7 +27,7 @@ const ChannelMemberPatch = {
                     return;
                 }
                 browser.clearTimeout(this.channel_id.cancelRtcInvitationTimeout);
-                this.store.ringingThreads.delete(this.channel_id);
+                this.store.ringingThreads.delete(this.channel_id.thread);
             },
         });
         this.rtcSession = fields.One("discuss.channel.rtc.session");
