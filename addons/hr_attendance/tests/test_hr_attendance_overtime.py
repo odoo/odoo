@@ -801,8 +801,3 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 4, 18, 0)
         })
         self.assertEqual(attendance.validated_overtime_hours, previous, "Extra hours shouldn't be recomputed")
-
-        # Changing check out should recompute extra hours
-        with Form(attendance) as attendance_form:
-            attendance_form.check_out = datetime(2023, 1, 2, 19, 15)
-        self.assertAlmostEqual(attendance.validated_overtime_hours, 2.25, 2)

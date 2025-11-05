@@ -50,7 +50,7 @@ class HrAttendance(models.Model):
     overtime_status = fields.Selection(selection=[('to_approve', "To Approve"),
                                                   ('approved', "Approved"),
                                                   ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True, readonly=False)
-    validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', store=True, readonly=False, tracking=True)
+    validated_overtime_hours = fields.Float(string="Extra Hours", compute="_compute_overtime_hours", store=True, readonly=False, tracking=True)
     no_validated_overtime_hours = fields.Boolean(compute='_compute_no_validated_overtime_hours')
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
@@ -92,7 +92,7 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('worked_hours')
+    @api.depends('worked_hours', 'employee_id', 'overtime_status')
     def _compute_overtime_hours(self):
         day_starts = {
             att: self._get_day_start_and_day(att.employee_id, att.check_in)
@@ -111,12 +111,17 @@ class HrAttendance(models.Model):
                 ('employee_id', 'in', self.employee_id.ids),
                 ('check_in', '>=', datetime_min),
                 ('check_in', '<=', datetime_max + timedelta(days=1)),
+                ('check_out', '!=', False),
             ],
             order='check_in desc',
         )
+
+        # Build maps and detect manual overrides
         attendances_by_date_and_employee = defaultdict(list)
+        manual_override_map = {}
         for att in all_attendances:
             dummy, date = day_starts.get(att, att._get_day_start_and_day(att.employee_id, att.check_in))
+            manual_override_map[att.id] = (float_compare(att.overtime_hours, att.validated_overtime_hours, precision_digits=2) != 0)
             if date_min <= date <= date_max:
                 att.overtime_hours = 0  # reset affected attendance
                 attendances_by_date_and_employee[date, att.employee_id.id].append(att)
@@ -140,22 +145,23 @@ class HrAttendance(models.Model):
                 if att.overtime_hours != ot_hours:
                     att.overtime_hours = ot_hours
 
+        # Set validated_overtime_hours
+        for att in all_attendances:
+            # If user manually edited this field, preserve their value
+            if att.employee_id.company_id.attendance_overtime_validation == 'no_validation':
+                if not att.id or manual_override_map.get(att.id):
+                    continue
+                att.validated_overtime_hours = att.overtime_hours
+            else:
+                if att.overtime_status == 'to_approve':
+                    att.validated_overtime_hours = att.overtime_hours
+                elif att.overtime_status == 'refused':
+                    att.validated_overtime_hours = 0
+
     @api.depends('employee_id', 'overtime_status', 'overtime_hours')
     def _compute_validated_overtime_hours(self):
-        no_validation = self.filtered(lambda a: a.employee_id.company_id.attendance_overtime_validation == 'no_validation')
-        with_validation = self - no_validation
-
-        for attendance in with_validation:
-            if attendance.overtime_status == 'to_approve':
-                attendance.validated_overtime_hours = attendance.overtime_hours
-            elif attendance.overtime_status == 'refused':
-                attendance.validated_overtime_hours = 0
-
-        for attendance in no_validation:
-            if not attendance.id:
-                # We ignore NewId records here as we want to make sure a new value means it has been manually set by the user.
-                continue
-            attendance.validated_overtime_hours = attendance.overtime_hours
+        # TODO: remove me in master
+        return
 
     @api.depends('validated_overtime_hours')
     def _compute_no_validated_overtime_hours(self):
@@ -302,6 +308,7 @@ class HrAttendance(models.Model):
         overtime_to_unlink = self.env['hr.attendance.overtime']
         overtime_vals_list = []
         affected_employees = self.env['hr.employee']
+        all_dates = set()
         for emp, attendance_dates in employee_attendance_dates.items():
             # get_attendances_dates returns the date translated from the local timezone without tzinfo,
             # and contains all the date which we need to check for overtime
@@ -310,6 +317,7 @@ class HrAttendance(models.Model):
                 attendance_domain = OR([attendance_domain, [
                     ('check_in', '>=', attendance_date[0]), ('check_in', '<', attendance_date[0] + timedelta(hours=24)),
                 ]])
+                all_dates.add(attendance_date[1])
             attendance_domain = AND([[('employee_id', '=', emp.id)], attendance_domain])
 
             # Attendances per LOCAL day
@@ -393,21 +401,23 @@ class HrAttendance(models.Model):
                         affected_employees |= overtime.employee_id
                 elif overtime:
                     overtime_to_unlink |= overtime
-        created_overtimes = self.env['hr.attendance.overtime'].sudo().create(overtime_vals_list)
-        employees_worked_hours_to_compute = (affected_employees.ids +
-                                             created_overtimes.employee_id.ids +
-                                             overtime_to_unlink.employee_id.ids)
-        overtime_to_unlink.sudo().unlink()
-        to_recompute = self.search([('employee_id', 'in', employees_worked_hours_to_compute)])
-        # for automatically validated attendances, avoid recomputing extra hours if user has changed its value
-        validated_modified = to_recompute.filtered(lambda att: att.employee_id.company_id.attendance_overtime_validation == 'no_validation'
-                                                        and float_compare(att.overtime_hours, att.validated_overtime_hours, precision_digits=2))
-        self.env.add_to_compute(self._fields['overtime_hours'],
-                                to_recompute)
-        self.env.add_to_compute(self._fields['validated_overtime_hours'],
-                                to_recompute - validated_modified)
-        self.env.add_to_compute(self._fields['expected_hours'],
-                                to_recompute)
+
+        if all_dates:
+            created_overtimes = self.env['hr.attendance.overtime'].sudo().create(overtime_vals_list)
+            employees_worked_hours_to_compute = (affected_employees.ids +
+                                                created_overtimes.employee_id.ids +
+                                                overtime_to_unlink.employee_id.ids)
+            overtime_to_unlink.sudo().unlink()
+            to_recompute = self.search([('employee_id', 'in', employees_worked_hours_to_compute),
+                                        ('check_out', '!=', False),
+                                        ('check_in', '>=', datetime.combine(min(all_dates), datetime.min.time())),
+                                        ('check_in', '<=', datetime.combine(max(all_dates), datetime.max.time()))])
+            self.env.add_to_compute(self._fields['overtime_hours'],
+                                    to_recompute)
+            self.env.add_to_compute(self._fields['validated_overtime_hours'],
+                                    to_recompute)
+            self.env.add_to_compute(self._fields['expected_hours'],
+                                    to_recompute)
 
     def _get_pre_post_work_time(self, employee, working_times, attendance_date):
         pre_work_time, work_duration, post_work_time = 0, 0, 0
@@ -465,8 +475,6 @@ class HrAttendance(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         res._update_overtime()
-        no_validation = res.filtered(lambda att: att.employee_id.company_id.attendance_overtime_validation == 'no_validation')
-        self.env.add_to_compute(self._fields['validated_overtime_hours'], no_validation)
         return res
 
     def write(self, vals):
