@@ -84,3 +84,18 @@ test("Country selected should be updated when changing state", async () => {
     await animationFrame();
     expect(".s_website_form_input[name='country_id']").toHaveValue("2");
 });
+
+test("When the selected country has no states, the state field should be disabled", async () => {
+    const { core } = await startInteractions(formEl);
+
+    expect(core.interactions).toHaveLength(1);
+    const countryField = queryOne(".s_website_form_input[name='country_id']");
+
+    expect(".s_website_form_input[name='state_id']").not.toHaveAttribute("disabled", "disabled");
+
+    countryField.value = "3";
+    countryField.dispatchEvent(new Event("change"));
+    await animationFrame();
+
+    expect(".s_website_form_input[name='state_id']").toHaveAttribute("disabled");
+});
