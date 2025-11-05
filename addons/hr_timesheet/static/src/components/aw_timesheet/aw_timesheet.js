@@ -256,14 +256,14 @@ export class ActivityWatchTimesheet extends Component {
         // once the final ranges is ready
         // if the range contains project AND/OR task info, everything coming after belongs to that context
 
-        let ranges = await this.orm.call("account.analytic.line", "get_events", [[]]);
+        const ranges = await this.orm.call("account.analytic.line", "get_events", [[]]);
         for (const range of ranges) {
             range["start"] = deserializeDateTime(range["start"]);
             range["stop"] = deserializeDateTime(range["stop"]);
         }
 
-        ranges = this.merge(ranges, events["aw-watcher-vscode"]);
-        ranges = this.merge(ranges, events["aw-client-web"]);
+        this.merge(ranges, events["aw-watcher-vscode"]);
+        this.merge(ranges, events["aw-client-web"]);
 
         let prevProjectId = false;
         let prevTaskId = false;
@@ -364,62 +364,30 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     merge(ranges, intervalsToInclude) {
-        if (intervalsToInclude == null || intervalsToInclude.length === 0) {
-            return ranges;
+        if (!intervalsToInclude || intervalsToInclude.length === 0) {
+            return;
         }
         if (ranges.length === 0) {
-            return intervalsToInclude;
-        }
-        const gaps = [];
-        ranges.sort((a, b) => a.start - b.start); // this sort is maybe usefull, as each time we sort the result (last line of this method)
-        // except maybe the first time
-        intervalsToInclude.sort((a, b) => a.start - b.start);
-
-        // gap before first range
-        if (intervalsToInclude[0].start < ranges[0].start) {
-            gaps.push([intervalsToInclude[0].start, ranges[0].start]);
+            ranges.push(...intervalsToInclude);
+            return;
         }
 
-        // gaps between ranges
-        for (let i = 0; i < ranges.length - 1; i++) {
-            if (ranges[i].stop < ranges[i + 1].start) {
-                gaps.push([ranges[i].stop, ranges[i + 1].start]);
-            }
-        }
-
-        // gap after last range
-        if (
-            intervalsToInclude[intervalsToInclude.length - 1].stop > ranges[ranges.length - 1].stop
-        ) {
-            gaps.push([
-                ranges[ranges.length - 1].stop,
-                intervalsToInclude[intervalsToInclude.length - 1].stop,
-            ]);
-        }
-
-        const res = [...ranges];
         let j = 0;
-
-        for (const gap of gaps) {
-            // advance if intervalsToInclude[j] ends before the gap
-            while (j < intervalsToInclude.length && intervalsToInclude[j].stop <= gap[0]) {
+        for (let i = 0; i <= ranges.length; i++) {
+            const gapStart = i === 0 ? -Infinity : ranges[i - 1].stop;
+            const gapEnd = i === ranges.length ? Infinity : ranges[i].start;
+            while (j < intervalsToInclude.length && intervalsToInclude[j].stop <= gapStart) {
                 j++;
             }
-
-            // intersect interval with gap
-            while (j < intervalsToInclude.length && intervalsToInclude[j].start < gap[1]) {
+            while (j < intervalsToInclude.length && intervalsToInclude[j].start < gapEnd) {
                 const interval = { ...intervalsToInclude[j] };
-                interval.start = Math.max(gap[0], interval.start);
-                interval.stop = Math.min(gap[1], interval.stop);
-                res.push(interval);
+                interval.start = Math.max(gapStart, interval.start);
+                interval.stop = Math.min(gapEnd, interval.stop);
+                ranges.splice(i, 0, interval);
+                i++;
                 j++;
             }
         }
-
-        // sort by start
-        res.sort((a, b) => a.start - b.start);
-
-        return res;
     }
 
     parseId(id) {
