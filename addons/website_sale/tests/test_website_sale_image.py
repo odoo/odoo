@@ -11,7 +11,7 @@ from odoo.tests import HttpCase, tagged
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 
 
-def _create_image(color: int | str = 0, dims=(1920, 1080), format='JPEG'):
+def _create_image(color='black', dims=(1920, 1080), format='JPEG'):
     f = io.BytesIO()
     Image.new('RGB', dims, color).save(f, format)  # type: ignore
     f.seek(0)
