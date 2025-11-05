@@ -91,8 +91,9 @@ export class BlockTab extends Component {
                                         el.getBoundingClientRect().top >= viewPortCenterPoint.y / 2
                                 );
                                 const closestDropzoneEl =
-                                    closest(validDropzoneEls, viewPortCenterPoint) ||
-                                    dropzoneEls.at(-1);
+                                    validDropzoneEls.find((el) =>
+                                        el.classList.contains("o_dropzone_highlighted")
+                                    ) || dropzoneEls.at(-1);
 
                                 // Insert the selected snippet.
                                 closestDropzoneEl.after(snippetEl);
