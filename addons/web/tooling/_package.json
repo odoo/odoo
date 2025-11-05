@@ -11,6 +11,7 @@
         "format-diff": "echo '{\"extends\": [\"plugin:diff/diff\"]}' | eslint --fix --resolve-plugins-relative-to . -c /dev/stdin '**/*.js'"
     },
     "devDependencies": {
+        "discuss_pre_commit": "^1.0.34",
         "eslint": "^8.27.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-diff": "^2.0.1",
@@ -25,7 +26,9 @@
     },
     "lint-staged": {
         "*.js": [
-            "eslint --fix"
+            "eslint --fix",
+            "npx discuss-pre-commit-type-gen -f",
+            "git add '**/*.d.ts'"
         ]
     },
     "engines": {
