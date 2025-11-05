@@ -392,3 +392,65 @@ class TestPacking(TestPackingCommon):
         pack_wiz.action_put_in_pack()
         self.assertTrue(move_line_1.result_package_id, 'A package should have been created for the selected move line')
         self.assertFalse(move_line_2.result_package_id, 'The other move line should not be packed')
+
+    def test_multi_level_package_weight(self):
+        self.warehouse.delivery_steps = 'ship_only'
+        self.productA.weight = 2
+        self.productB.weight = 5
+        sbox_type, bbox_type, pallet_type = self.env['stock.package.type'].create([{
+            'name': name,
+            'base_weight': weight,
+        } for (name, weight) in [('Smol Box', 1), ('Big Box', 4), ('pallet', 10)]])
+        boxA, boxB, big_box, pallet = self.env['stock.package'].create([{
+            'package_type_id': pack_type.id
+        } for pack_type in [sbox_type, sbox_type, bbox_type, pallet_type]])
+
+        # Content of packages:
+        # Pallet              (base  10kg) -> 46kg
+        # └ 1x Product B      (1*5 =  5kg)
+        # └ Big Box           (base   4kg) -> 31kg
+        #   └ Box A           (base   1kg) -> 11kg
+        #     └ 5x Product A  (5*2 = 10kg)
+        #   └ Box B           (base   1kg) -> 16kg
+        #     └ 3x Product B  (3*5 = 15kg)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=boxA)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 3, package_id=boxB)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1, package_id=pallet)
+        (boxA | boxB).parent_package_id = big_box
+        big_box.parent_package_id = pallet
+
+        self.assertEqual(boxA.weight, 11)
+        self.assertEqual(boxB.weight, 16)
+        self.assertEqual(big_box.weight, 31)
+        self.assertEqual(pallet.weight, 46)
+
+        # Now check that the weight is correctly computed for ongoing pickings
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [
+                Command.create({
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 2,
+                }),
+                Command.create({
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 2,
+                }),
+            ],
+        })
+        delivery.action_confirm()
+        res_boxA = delivery.move_ids[0].move_line_ids.action_put_in_pack(package_type_id=sbox_type.id)
+        res_boxB = delivery.move_ids[1].move_line_ids.action_put_in_pack(package_type_id=sbox_type.id)
+        res_big_box = delivery.move_ids.move_line_ids.action_put_in_pack(package_type_id=bbox_type.id)
+        res_pallet = delivery.move_ids.move_line_ids.action_put_in_pack(package_type_id=pallet_type.id)
+
+        self.assertEqual(res_boxA.with_context(picking_id=delivery.id).weight, 5)      # 1 + 2 * 2 = 5kg
+        self.assertEqual(res_boxB.with_context(picking_id=delivery.id).weight, 11)     # 1 + 2 * 5 = 11kg
+        self.assertEqual(res_big_box.with_context(picking_id=delivery.id).weight, 20)  # 4 + 5 + 11 = 20kg
+        self.assertEqual(res_pallet.with_context(picking_id=delivery.id).weight, 30)   # 10 + 20 = 30kg
