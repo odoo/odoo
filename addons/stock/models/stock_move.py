@@ -619,7 +619,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         move_line = mls_without_lots[:1]
                         move_lines_commands.append(Command.update(move_line.id, {
                             'lot_id': lot.id,
-                            'product_uom_id': move.product_id.uom_id.id,
+                            'product_uom_id': move.product_id.uom_id.id if move.product_id.tracking == 'serial' else move.product_uom.id,
                             'quantity': 1 if move.product_id.tracking == 'serial' else move.quantity,
                         }))
                         mls_without_lots -= move_line
