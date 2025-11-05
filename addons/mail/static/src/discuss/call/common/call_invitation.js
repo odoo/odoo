@@ -61,21 +61,21 @@ export class CallInvitation extends Component {
                 definition: acceptWithCameraUpdated,
                 owner: this,
                 store: this.store,
-                thread: this.props.channel.thread,
+                channel: this.props.channel,
             }),
             new CallAction({
                 id: "join",
                 definition: joinUpdated,
                 owner: this,
                 store: this.store,
-                thread: this.props.channel.thread,
+                channel: this.props.channel,
             }),
             new CallAction({
                 id: "reject",
                 definition: rejectAction,
                 owner: this,
                 store: this.store,
-                thread: this.props.channel.thread,
+                channel: this.props.channel,
             }),
         ];
     }

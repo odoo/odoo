@@ -19,7 +19,7 @@ export class CallActionList extends Component {
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
-        this.callActions = useCallActions({ thread: () => this.props.channel.thread });
+        this.callActions = useCallActions({ channel: () => this.props.channel });
         this.more = useRef("more");
         this.root = useRef("root");
         this.popover = usePopover(Tooltip, {
