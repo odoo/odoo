@@ -1,10 +1,9 @@
-import { htmlEscape } from "@odoo/owl";
-
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
+import { generateVideoIframe } from "@website/js/content/generate_video_iframe";
 
 export class MediaVideo extends Interaction {
     static selector = ".media_iframe_video";
@@ -42,11 +41,15 @@ export class MediaVideo extends Interaction {
     start() {
         let iframeEl = this.el.querySelector(":scope > iframe");
 
-        // The following code is only there to ensure compatibility with
-        // videos added before bug fixes or new Odoo versions where the
-        // <iframe/> element is properly saved.
+        // Generate the video `<iframe/>` element when restarting interacions.
+        // In some cases (e.g., when adding a new video block), we don’t need
+        // to rebuild the same iframe while starting the widget.
         if (!iframeEl) {
-            iframeEl = this.generateIframe();
+            iframeEl = generateVideoIframe(this.el, this.services.website_cookies.manageIframeSrc);
+        }
+
+        if (iframeEl && !iframeEl.getAttribute("aria-label")) {
+            iframeEl.setAttribute("aria-label", _t("Media video"));
         }
 
         if (iframeEl?.hasAttribute("src")) {
@@ -60,59 +63,6 @@ export class MediaVideo extends Interaction {
                 );
             }
         }
-    }
-
-    generateIframe() {
-        // Bug fix / compatibility: empty the <div/> element as all information
-        // to rebuild the iframe should have been saved on the <div/> element
-        this.el.textContent = "";
-
-        // Add extra content for size / edition
-        const div1 = document.createElement("div");
-        div1.classList.add("css_editable_mode_display");
-        div1.innerHTML = "&nbsp;";
-        const div2 = document.createElement("div");
-        div2.classList.add("media_iframe_video_size");
-        div2.innerHTML = "&nbsp;";
-        this.insert(div1);
-        this.insert(div2);
-
-        // Rebuild the iframe. Depending on version / compatibility / instance,
-        // the src is saved in the 'data-src' attribute or the
-        // 'data-oe-expression' one (the latter is used as a workaround in 10.0
-        // system but should obviously be reviewed in master).
-
-        const src = htmlEscape(
-            this.el.getAttribute("data-oe-expression") || this.el.getAttribute("data-src")
-        );
-        // Validate the src to only accept supported domains we can trust
-
-        const m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
-        if (!m) {
-            return;
-        }
-
-        const domain = m[1].replace(/^www\./, "");
-        const supportedDomains = [
-            "youtu.be",
-            "youtube.com",
-            "youtube-nocookie.com",
-            "instagram.com",
-            "player.vimeo.com",
-            "vimeo.com",
-            "dailymotion.com",
-        ];
-        if (!supportedDomains.includes(domain)) {
-            return;
-        }
-
-        const iframeEl = document.createElement("iframe");
-        iframeEl.frameborder = "0";
-        iframeEl.allowFullscreen = "allowfullscreen";
-        iframeEl.ariaLabel = _t("Media video");
-        this.insert(iframeEl);
-        this.services.website_cookies.manageIframeSrc(iframeEl, src);
-        return iframeEl;
     }
 }
 
