@@ -27,7 +27,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                     if(event2.extendedProps.worklocation){
                         return 1;
                     } else {
-                        return event1.title.localeCompare(event2.title);
+                        return event1.start < event2.start ? -1 : 1;
                     }
                 }
             },
