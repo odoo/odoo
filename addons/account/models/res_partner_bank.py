@@ -281,12 +281,6 @@ class ResPartnerBank(models.Model):
                 # force the allow_out_payment field to False in order to prevent scam payments on newly created bank accounts
                 vals['allow_out_payment'] = False
 
-        for vals in vals_list:
-            if (partner_id := vals.get('partner_id')) and (acc_number := vals.get('acc_number')):
-                archived_res_partner_bank = self.env['res.partner.bank'].search([('active', '=', False), ('partner_id', '=', partner_id), ('acc_number', '=', acc_number)])
-                if archived_res_partner_bank:
-                    raise UserError(_("A bank account with Account Number %(number)s already exists for Partner %(partner)s, but is archived. Please unarchive it instead.", number=acc_number, partner=archived_res_partner_bank.partner_id.name))
-
         res = super().create(vals_list)
         res._check_allow_out_payment()
         for account in res:
