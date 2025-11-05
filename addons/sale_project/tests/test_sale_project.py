@@ -3,7 +3,6 @@
 from odoo import Command, SUPERUSER_ID, fields
 from odoo.fields import Datetime, Domain
 from odoo.tests import Form, new_test_user, tagged
-from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
 from .common import TestSaleProjectCommon
@@ -1334,15 +1333,6 @@ class TestSaleProject(TestSaleProjectCommon):
             "The project of the task of `sol_task_in_global_project` should be set to the project of the SO."
         )
 
-    def test_global_project_service_no_so_project_error(self):
-        self.product_order_service2.project_id = False
-        so = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [Command.create({'product_id': self.product_order_service2.id})],
-        })
-        with self.assertRaises(UserError, msg="The SOL has a product which creates a task on SO confirmation, but no project is configured on the product or SO."):
-            so.action_confirm()
-
     def test_so_confirmation_in_batch(self):
         so1, so2 = self.env['sale.order'].create([{
             'partner_id': self.partner.id,
@@ -2102,3 +2092,46 @@ class TestSaleProject(TestSaleProjectCommon):
         line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
         self.assertEqual(line_vendor_bill.category_report, 'costs')
         self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')
+
+    def test_compute_project_required(self):
+        """
+            Ensure a Sales Order doesn't require a project when any order line
+            already handles project/task creation.
+        """
+        # CASE A: single task_global_project -> project_required should be True
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        self.product_order_service2.project_id = False
+        self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service2.id,
+            'product_uom_qty': 1,
+        })
+        self.assertTrue(sale_order.project_required, "Project required on SO if line has service tracking task and no project is set")
+
+        # CASE B: task_global_project + project_only → project_required = False
+        sale_order_1 = self.env['sale.order'].create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].create([
+            {
+                'order_id': sale_order_1.id,
+                'product_id': self.product_order_service2.id,
+                'product_uom_qty': 2,
+            },
+            {
+                'order_id': sale_order_1.id,
+                'product_id': self.product_order_service4.id,
+                'product_uom_qty': 4,
+            }
+        ])
+        self.assertFalse(sale_order_1.project_required, "Project should not be required on SO if line has service tracking project")
+
+        # CASE C: task_global_project but product already has project -> project_required should be False
+        project = self.env['project.project'].create({'name': 'Product Project'})
+        self.product_order_service2.project_id = project.id
+
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service2.id,
+            'product_uom_qty': 1,
+        })
+        self.assertFalse(sale_order.project_required, "Project should not be required on SO if product in orderline already has project")
