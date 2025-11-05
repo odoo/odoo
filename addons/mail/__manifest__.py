@@ -120,7 +120,6 @@ For more specific needs, you may also assign custom-defined actions
         'views/res_partner_views.xml',
         'views/mail_blacklist_views.xml',
         'views/mail_menus.xml',
-        'views/discuss/discuss_menus.xml',
         'views/discuss/discuss_call_history_views.xml',
         'views/res_company_views.xml',
         "views/mail_scheduled_message_views.xml",

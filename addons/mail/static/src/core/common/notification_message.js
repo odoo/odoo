@@ -1,5 +1,5 @@
 import { useForwardRefsToParent } from "@mail/utils/common/hooks";
-import { Component, htmlEscape, signal, t, useProps } from "@odoo/owl";
+import { Component, htmlEscape, markup, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -41,8 +41,23 @@ export class NotificationMessage extends Component {
         return this.props.message;
     }
 
+    callHistory() {
+        return this.message.call_history_ids[0];
+    }
+
+    recordingInformation() {
+        const history = this.callHistory();
+        return _t(
+            "A recording is being processed and will be available %(anchor_start)shere%(anchor_end)s.",
+            {
+                anchor_start: markup`<a href="/odoo/discuss.call.history/${history.id}" data-oe-model="discuss.call.history" data-oe-id="${history.id}">`,
+                anchor_end: markup`</a>`,
+            }
+        );
+    }
+
     get callInformation() {
-        const history = this.message.call_history_ids[0];
+        const history = this.callHistory();
         if (history?.duration_hour === undefined || !history?.end_dt) {
             return _t("%(author)s started a call.", { author: this.message.authorName });
         }

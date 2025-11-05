@@ -1,15 +1,57 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from collections import defaultdict
+from datetime import UTC
 
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE
 from odoo.tools import file_open
 
-from odoo.addons.mail.tools.discuss import add_guest_to_context, mail_route, Store
+from odoo.addons.mail.tools.discuss import (
+    Store,
+    add_guest_to_context,
+    get_derived_sfu_key,
+    mail_route,
+)
+from odoo.addons.mail.tools.jwt import Algorithm, verify
+
+_logger = logging.getLogger(__name__)
+
+
+def _check_jwt(request, channel):
+    """Return authenticated SFU recording claims or raise NotFound.
+
+    Recording callbacks require expiration and issue-time claims and reject
+    browser-session claims even when signed with the same channel key.
+    """
+    if not channel:
+        raise NotFound()
+    auth_header = request.httprequest.headers.get("Authorization")
+    if not auth_header:
+        raise NotFound()
+    try:
+        jwt = auth_header.split(" ")[1]
+    except IndexError:
+        raise NotFound()
+    if not jwt:
+        raise NotFound()
+    channel_key = get_derived_sfu_key(request.env, channel.id)
+    try:
+        claims = verify(jwt, channel_key, algorithm=Algorithm.HS256)
+    except ValueError:
+        raise NotFound()
+    if not {"exp", "iat"} <= set(claims) <= {"exp", "iat", "user_id"}:
+        raise NotFound()
+    user_id = claims.get("user_id")
+    if "user_id" in claims and (
+        isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0
+    ):
+        raise NotFound()
+    return claims
 
 
 class RtcController(Controller):
@@ -116,6 +158,7 @@ class RtcController(Controller):
         member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
         if not member:
             raise NotFound()
+        # sudo: discuss.channel.member - the authenticated member may promote their channel's call.
         member.sudo()._join_sfu(force=True)
 
     @mail_route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="jsonrpc", auth="public")
@@ -164,4 +207,63 @@ class RtcController(Controller):
             member.channel_id,
             "_store_rtc_update_fields",
             fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
+        )
+
+    ##########
+    # Recording / Transcription
+    ##########
+
+    def _get_recording_destination(
+        self,
+        call_history,
+        start_ms,
+        end_ms,
+        mimetype="application/octet-stream",
+        user_id=None,
+    ):
+        """Return the recording upload contract or raise NotFound if unsupported."""
+        raise NotFound()
+
+    def _get_recording_offsets(self, call_history, start_ms, end_ms):
+        """Return offsets from the call start or raise BadRequest for invalid timestamps."""
+        try:
+            start_ms = int(start_ms)
+            end_ms = int(end_ms)
+        except (TypeError, ValueError):
+            raise BadRequest() from None
+        if start_ms >= end_ms:
+            raise BadRequest()
+        call_start_ms = int(
+            call_history.start_dt.replace(tzinfo=UTC).timestamp() * 1000,
+        )
+        return start_ms - call_start_ms, end_ms - call_start_ms
+
+    @route(
+        "/mail/rtc/recording/<int:call_history_id>/routing",
+        type="http",
+        auth="public",
+        cors="*",
+        methods=["POST"],
+        csrf=False,
+    )
+    def get_routing(
+        self,
+        call_history_id,
+        start_ms,
+        end_ms,
+        mimetype="application/octet-stream",
+    ):
+        # sudo: discuss.call.history - the channel JWT authenticates the SFU before allocating an upload.
+        call_history_sudo = self.env["discuss.call.history"].sudo().search(
+            [("id", "=", call_history_id)]
+        )
+        claims = _check_jwt(request, call_history_sudo.channel_id)
+        return request.make_json_response(
+            self._get_recording_destination(
+                call_history_sudo,
+                start_ms,
+                end_ms,
+                mimetype,
+                claims.get("user_id"),
+            ),
         )

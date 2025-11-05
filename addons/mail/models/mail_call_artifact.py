@@ -1,4 +1,6 @@
-from odoo import api, fields, models
+from markupsafe import Markup
+
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -16,6 +18,13 @@ class MailCallArtifact(models.Model):
         "discuss.call.history", string="Discuss Call History",
         ondelete="cascade", required=False, index=True,
     )
+    recording_started_by_id = fields.Many2one(
+        "res.users",
+        string="Recording Started By",
+        readonly=True,
+        ondelete="set null",
+    )
+    recording_upload_pending = fields.Boolean(copy=False)
     media_id = fields.Many2one(
         "ir.attachment", string="Media Attachment", compute="_compute_media_id",
     )
@@ -88,6 +97,64 @@ class MailCallArtifact(models.Model):
         """Return the parent call record (discuss.call.history, voip.call, etc.)"""
         self.ensure_one()
         return self.discuss_call_history_id
+
+    def _is_recording_media(self):
+        self.ensure_one()
+        return bool(
+            not self.recording_upload_pending
+            and self.media_id
+            and self.media_id.mimetype
+            and self.media_id.mimetype.startswith(("audio/", "video/")),
+        )
+
+    def _is_recording_available(self):
+        self.ensure_one()
+        return self._is_recording_media()
+
+    def _send_recording_available_email(self):
+        """Queue an email when upload and any requested transcription are ready.
+
+        Either completion callback can run first, so readiness is checked here.
+        Artifacts without a recording starter do not generate an email.
+        """
+        mail_values = []
+        for artifact in self:
+            starter = artifact.recording_started_by_id
+            partner = starter.partner_id
+            if not partner or not artifact._is_recording_available():
+                continue
+            artifact = artifact.with_context(lang=partner.lang)
+            call = artifact.discuss_call_history_id
+            subject = artifact.env._(
+                "Meeting recording from “%(channel)s”",
+                channel=call.channel_id.display_name,
+            )
+            body = Markup('<h2>%s</h2><p>%s</p><p><a href="%s">%s</a></p>') % (
+                subject,
+                artifact.env._("Your meeting recording is available in Odoo."),
+                f"{artifact.get_base_url()}/odoo/discuss.call.history/{call.id}",
+                artifact.env._("View recording"),
+            )
+            body = artifact.env["mail.render.mixin"]._render_encapsulate(
+                "mail.mail_notification_light",
+                body,
+                add_context={"company": starter.company_id, "record_name": subject},
+                context_record=artifact,
+            )
+            mail_values.append(
+                {
+                    "auto_delete": True,
+                    "body_html": body,
+                    "email_from": starter.company_id.email_formatted
+                    or starter.email_formatted,
+                    "model": artifact._name,
+                    "recipient_ids": [Command.link(partner.id)],
+                    "res_id": artifact.id,
+                    "subject": subject,
+                },
+            )
+        # sudo: mail.mail - recording callbacks queue mail for the authenticated starters.
+        self.env["mail.mail"].sudo().create(mail_values)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_cleanup_media_attachment(self):

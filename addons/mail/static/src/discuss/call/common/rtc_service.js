@@ -93,6 +93,7 @@ function subscribe(target, event, f) {
 }
 
 export const PTT_RELEASE_DURATION = 200;
+const RECORDING_CONNECTION_TIMEOUT = 15_000;
 const SW_MESSAGE_TYPE = {
     POST_RTC_LOGS: "POST_RTC_LOGS",
 };
@@ -369,6 +370,12 @@ export class Rtc extends Record {
      * @type {ViewToRestore}
      */
     viewToRestore = VIEW_TO_RESTORE.NONE;
+    can_record_audio = false;
+    can_record_transcription = false;
+    can_record_video = false;
+    /** @type {{audio?: boolean, video?: boolean, transcription?: boolean} | null} */
+    recordingRequest = null;
+    recordingState = fields.Attr({ audio: false, transcription: false, video: false });
     /** @type {RtcLog} */
     logs = {};
     /** @type {Map<any, {id: any, position: "bottom"|"top", text: TranslatedString}>} call notifications by id */
@@ -483,6 +490,22 @@ export class Rtc extends Record {
         return this.isFullscreen && this.fullscreen.isBrowserFullscreen;
     }
 
+    /**
+     * Starting requires transcription or video with audio. Any recording
+     * capability permits stopping an existing recording.
+     */
+    canRecord() {
+        if (this.isRecording()) {
+            return this.can_record_audio || this.can_record_transcription || this.can_record_video;
+        }
+        return this.can_record_transcription || (this.can_record_audio && this.can_record_video);
+    }
+
+    isRecording() {
+        const { audio, transcription, video } = this.recordingState;
+        return Boolean(audio || transcription || video);
+    }
+
     get showMicrophonePermissionWarning() {
         return (
             !this.isMicrophonePermissionWarningDismissed && this.microphonePermission !== "granted"
@@ -576,6 +599,35 @@ export class Rtc extends Record {
                 this.lastActions = Object.fromEntries(
                     callActions.map((action) => [action.id, action.isActive])
                 );
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.isRecording()],
+            function onChangeRecordingState(isRecording) {
+                if (isRecording) {
+                    this.addCallNotification({
+                        id: "recording_started",
+                        text: _t("Recording has started"),
+                    });
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.recordingRequest],
+            function onChangeRecordingRequest(recordingRequest) {
+                if (!recordingRequest) {
+                    return;
+                }
+                const timeout = browser.setTimeout(() => {
+                    this.recordingRequest = null;
+                    this.addCallNotification({
+                        id: "recording_failed",
+                        text: _t("Could not start the recording"),
+                    });
+                }, RECORDING_CONNECTION_TIMEOUT);
+                return () => browser.clearTimeout(timeout);
             },
             { immediate: true }
         );
@@ -1100,6 +1152,70 @@ export class Rtc extends Record {
         this.soundEffectsService.play("earphone-on");
     }
 
+    stopRecording() {
+        return this.setRecording({ audio: false, transcription: false, video: false });
+    }
+
+    /**
+     * Apply recording output changes or queue them until the SFU connects.
+     * Queued requests expire after 15 seconds without an SFU connection.
+     * Omitted outputs keep their current state. Disabling every output cancels
+     * a pending request and requires a connected SFU. Request failures appear
+     * in call notifications.
+     *
+     * @param {Object} [options]
+     * @param {boolean} [options.audio]
+     * @param {boolean} [options.video]
+     * @param {boolean} [options.transcription]
+     */
+    async setRecording(options = {}) {
+        const {
+            audio = this.recordingState.audio,
+            transcription = this.recordingState.transcription,
+            video = this.recordingState.video,
+        } = options;
+        const isStopping = !audio && !transcription && !video;
+        if (!this.sfuClient || this.sfuClient.state !== this.SFU_CLIENT_STATE.CONNECTED) {
+            if (isStopping) {
+                this.recordingRequest = null;
+                this.addCallNotification({
+                    id: "stop_recording_failed",
+                    text: _t("Could not stop the recording"),
+                });
+                return;
+            }
+            if (this.recordingRequest) {
+                return;
+            }
+            this.recordingRequest = options;
+            if (!this.serverInfo) {
+                this.upgradeConnectionDebounce();
+            }
+            return;
+        }
+        this.recordingRequest = null;
+        let allowed;
+        try {
+            allowed = await this.sfuClient.setRecording(options);
+        } catch {
+            this.addCallNotification({
+                id: isStopping ? "stop_recording_failed" : "recording_failed",
+                text: isStopping
+                    ? _t("Could not stop the recording")
+                    : _t("Could not start the recording"),
+            });
+            return;
+        }
+        if (!allowed) {
+            this.addCallNotification({
+                id: isStopping ? "stop_recording_not_allowed" : "recording_not_allowed",
+                text: isStopping
+                    ? _t("You are not allowed to stop the recording")
+                    : _t("Recording is not allowed"),
+            });
+        }
+    }
+
     /**
      * @param {"microphone" | "camera"} media
      * @param {Object} [configuration]
@@ -1591,6 +1707,26 @@ export class Rtc extends Record {
             case "info_change":
                 this.updateSessionInfo(payload);
                 return;
+            case "channel_info_change": {
+                if (payload.stopCode === "recording_timeout") {
+                    this.notification.add(_t("Recording stopped due to timeout"), {
+                        type: "warning",
+                        sticky: true,
+                    });
+                } else if (payload.stopCode === "disk_space_exhausted") {
+                    this.notification.add(
+                        _t("Recording cannot start due to insufficient disk space"),
+                        { type: "danger", sticky: true }
+                    );
+                } else if (payload.stopCode === "recording_failed") {
+                    this.notification.add(_t("Recording stopped due to an internal error"), {
+                        type: "danger",
+                        sticky: true,
+                    });
+                }
+                this.recordingState = payload.state;
+                return;
+            }
             case "track":
                 {
                     const { sessionId, type, track, active, sequence } = payload;
@@ -1660,12 +1796,28 @@ export class Rtc extends Record {
                 this.sfuClient.updateUpload("audio", this.audioTrack);
                 this.sfuClient.updateUpload("camera", this.cameraTrack);
                 this.sfuClient.updateUpload("screen", this.screenTrack);
+                this.recordingState = this.sfuClient.recordingState;
+                this.can_record_audio = this.sfuClient.availableFeatures.recording.audio;
+                this.can_record_transcription =
+                    this.sfuClient.availableFeatures.recording.transcription;
+                this.can_record_video = this.sfuClient.availableFeatures.recording.video;
+                if (this.recordingRequest) {
+                    this.setRecording(this.recordingRequest);
+                }
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
                     if (!this.localChannel) {
                         return;
                     }
+                    this.can_record_audio = false;
+                    this.can_record_transcription = false;
+                    this.can_record_video = false;
+                    this.recordingState = {
+                        audio: false,
+                        transcription: false,
+                        video: false,
+                    };
                     let text;
                     if (cause === "full") {
                         text = _t("Channel full");
@@ -2031,7 +2183,16 @@ export class Rtc extends Record {
         browser.clearTimeout(this.sfuTimeout);
         this.sfuClient = undefined;
         this.network = undefined;
+        this.can_record_audio = false;
+        this.can_record_transcription = false;
+        this.can_record_video = false;
+        this.recordingRequest = null;
         this.audioContext?.close();
+        this.recordingState = {
+            audio: false,
+            transcription: false,
+            video: false,
+        };
         this.audioContext = undefined;
         this._p2pRecoveryCount = 0;
         this.closeCallPermissionDialog?.();

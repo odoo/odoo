@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.mail.tests.common import MailCase
 from odoo.tests.common import new_test_user
+
 from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
+from odoo.addons.mail.tools.discuss import Store
 
 
 class TestDiscussTools(MailCase):

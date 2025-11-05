@@ -137,7 +137,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #   1: _get_last_messages
-    #   23: store add message:
+    #   24: store add message:
     #       - fetch mail_message
     #       - search mail_message (_compute_linked_message_ids)
     #       - fetch mail_message (_compute_linked_message_ids)
@@ -160,8 +160,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
+    #       - search_fetch mail_call_artifact (_compute_recording_media)
     #       - select the current db snapshot
-    _query_count_discuss_channels = 65
+    _query_count_discuss_channels = 66
 
     def setUp(self):
         super().setUp()
@@ -550,6 +551,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {
                     "duration_hour": self.channel_channel_group_1.call_history_ids.duration_hour,
                     "end_dt": False,
+                    "has_recording": False,
                     "id": self.channel_channel_group_1.call_history_ids.id,
                 },
             ],

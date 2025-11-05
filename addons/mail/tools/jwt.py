@@ -1,13 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import hashlib
-import json
 import binascii
-import time
 import enum
+import hashlib
 import hmac
+import json
+import math
+import time
 
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, utils
@@ -99,3 +101,78 @@ def sign(claims: dict, key: str, ttl: int, algorithm: Algorithm) -> str:
     assert ttl
     claims["exp"] = int(time.time()) + ttl
     return _generate_jwt(claims, non_padded_key, algorithm=algorithm)
+
+
+def verify(token: str, key: str, algorithm: Algorithm) -> dict:
+    """
+    Verify a JSON Web Token and its optional expiration claim.
+
+    :param token: the token to verify
+    :param key: the key to use to verify the token
+    :param algorithm: the algorithm to use to verify the token
+    :raise ValueError: if the token has invalid JSON objects, an unexpected algorithm,
+        an invalid signature or an invalid or elapsed expiration
+    :return: the payload of the token (claims)
+    """
+    parts = token.split(".")
+    if len(parts) != 3:
+        error = "Invalid token format"
+        raise ValueError(error)
+    header_part, payload_part, signature_part = parts
+    header = json.loads(base64_decode_with_padding(header_part))
+    payload = json.loads(base64_decode_with_padding(payload_part))
+    if not all(isinstance(part, dict) for part in (header, payload)):
+        error = "Invalid token format: header and payload must be JSON objects"
+        raise ValueError(error)
+    if header.get("alg") != algorithm.value:
+        raise ValueError(
+            f"Invalid algorithm. Expected {algorithm.value}, got {header.get('alg')}",
+        )
+    unsigned_token = f"{header_part}.{payload_part}"
+    key_decoded = base64_decode_with_padding(key)
+    signature_decoded = base64_decode_with_padding(signature_part)
+    match algorithm:
+        case Algorithm.HS256:
+            expected_signature = hmac.new(
+                key_decoded,
+                unsigned_token.encode(),
+                hashlib.sha256,
+            ).digest()
+            if not hmac.compare_digest(expected_signature, signature_decoded):
+                error = "Invalid signature"
+                raise ValueError(error)
+        case Algorithm.ES256:
+            if len(signature_decoded) != 64:
+                error = "Invalid signature length"
+                raise ValueError(error)
+            try:
+                public_key = ec.EllipticCurvePublicKey.from_encoded_point(
+                    ec.SECP256R1(),
+                    key_decoded,
+                )
+                r = int.from_bytes(signature_decoded[:32], "big")
+                s = int.from_bytes(signature_decoded[32:], "big")
+                der_signature = utils.encode_dss_signature(r, s)
+                public_key.verify(
+                    der_signature,
+                    unsigned_token.encode(),
+                    ec.ECDSA(hashes.SHA256()),
+                )
+            except (ValueError, InvalidSignature):
+                error = "Invalid signature"
+                raise ValueError(error)
+        case _:
+            raise ValueError(f"Unsupported algorithm: {algorithm}")
+    if "exp" in payload:
+        expiration = payload["exp"]
+        if (
+            isinstance(expiration, bool)
+            or not isinstance(expiration, (int, float))
+            or (isinstance(expiration, float) and not math.isfinite(expiration))
+        ):
+            error = "Invalid expiration"
+            raise ValueError(error)
+        if expiration <= time.time():
+            error = "Token expired"
+            raise ValueError(error)
+    return payload

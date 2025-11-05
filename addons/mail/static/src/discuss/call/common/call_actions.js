@@ -11,6 +11,7 @@ import { registry } from "@web/core/registry";
 import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dialog";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
+import { RecordingDialog } from "@mail/discuss/call/common/recording_dialog";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
@@ -216,6 +217,23 @@ registerCallAction("share-screen", {
         action.isActive ? ACTION_TAGS.SUCCESS : undefined,
     ],
 });
+registerCallAction("record-call", {
+    condition: ({ channel, store }) =>
+        Boolean(store.rtc?.channel) &&
+        channel?.eq(store.rtc.channel) &&
+        store.rtc.canRecord(),
+    name: ({ store }) => (store.rtc.isRecording() ? _t("Stop recording") : _t("Start recording")),
+    disabledCondition: ({ store }) => store.rtc?.recordingRequest,
+    isActive: ({ store }) => store.rtc?.isRecording(),
+    icon: ({ action }) => (action.isActive ? "radio_button_checked" : "circle"),
+    iconClass: ({ action }) => (action.isActive ? "" : "oi-filled text-danger"),
+    onSelected: ({ store }) => {
+        store.env.services.dialog.add(RecordingDialog, {});
+    },
+    sequence: 50,
+    tags: ACTION_TAGS.CALL_LAYOUT,
+});
+
 registerCallAction("fullscreen", {
     btnAttrs: { "data-available-offline": true },
     condition: ({ channel, owner, store }) =>
