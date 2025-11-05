@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 02:05+0000\n"
+"POT-Creation-Date: 2025-10-28 10:14+0000\n"
 "PO-Revision-Date: 2023-12-04 19:08+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -44,8 +44,8 @@ msgstr "04 DPP Nilai Lain (PPN 1%)"
 #. module: l10n_id_efaktur
 #: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__05
 #: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__05
-msgid "05 Specified Amount (Article 9A Paragraph (1) VAT Law)')"
-msgstr "05 Besaran Tertentu"
+msgid "05 Specified Amount (Article 9A Paragraph (1) VAT Law)"
+msgstr ""
 
 #. module: l10n_id_efaktur
 #: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__06
@@ -56,8 +56,7 @@ msgstr "06 Penyerahan Lainnya (Turis Asing)"
 #. module: l10n_id_efaktur
 #: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__07
 #: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__07
-msgid ""
-"07 Deliveries that the VAT is not Collected"
+msgid "07 Deliveries that the VAT is not Collected"
 msgstr ""
 "07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)"
 
@@ -74,24 +73,14 @@ msgid "09 Deliveries of Assets (Article 16D of VAT Law)"
 msgstr "09 Penyerahan Aktiva ( Pasal 16D UU PPN )"
 
 #. module: l10n_id_efaktur
-#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Nilai yang ditentukan di "
-"sini spesifik pada perusahaan.\" aria-label=\"Nilai yang ditentukan di sini "
-"spesifik pada perusahaan.\" groups=\"base.group_multi_company\" "
-"role=\"img\"/>"
-
-#. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "A tax number must begin by a valid Kode Transaksi"
 msgstr "Nomor pajak harus dimulai dengan Kode Transaksi yang valid"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "A tax number should have 16 digits"
@@ -115,6 +104,7 @@ msgid "CSV Created"
 msgstr "CSV Dibuat"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid ""
@@ -135,6 +125,7 @@ msgid "Config Settings"
 msgstr "Pengaturan Konfigurasi"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "Connect %(move_number)s with E-faktur to download this report"
@@ -146,6 +137,7 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "Could not download E-faktur in draft state"
@@ -188,11 +180,19 @@ msgid "E-faktur is not available for invoices without any taxes."
 msgstr "E-faktur tidak tersedia untuk faktur tanpa pajak apapun."
 
 #. module: l10n_id_efaktur
+#. odoo-python
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "Edit Customer Information"
+msgstr ""
+
+#. module: l10n_id_efaktur
 #: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.efaktur_tree_view
 msgid "Efaktur Number"
 msgstr "Nomor Efaktur"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/efaktur.py:0
 #, python-format
 msgid "Efaktur interleaving range detected"
@@ -204,6 +204,7 @@ msgid "Electronic Tax"
 msgstr "Pajak Elektronik"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/efaktur.py:0
 #, python-format
 msgid "First 5 digits should be same in Start Number and End Number."
@@ -282,19 +283,15 @@ msgid "L10N Id Need Kode Transaksi"
 msgstr "L10N Id Membutuhkan Kode Transaksi"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/efaktur.py:0
 #, python-format
 msgid ""
-"Last 8 digits of End Number should be greater than the last 8 digit of "
-"Start Number"
+"Last 8 digits of End Number should be greater than the last 8 digit of Start "
+"Number"
 msgstr ""
 "8 angka terakhir dari Nomor Akhir harus lebih besar dari 8 angka terakhir "
 "dari Nomor Awal"
-
-#. module: l10n_id_efaktur
-#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range____last_update
-msgid "Last Modified on"
-msgstr "Dimodifikasi Terakhir pada"
 
 #. module: l10n_id_efaktur
 #: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__write_uid
@@ -323,6 +320,15 @@ msgid "NIK"
 msgstr "NIK"
 
 #. module: l10n_id_efaktur
+#. odoo-python
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid ""
+"Please make sure that you've input the appropriate NPWP or NIK for the "
+"following customer"
+msgstr ""
+
+#. module: l10n_id_efaktur
 #: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_replace_invoice_id
 #: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_move__l10n_id_replace_invoice_id
 #: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_payment__l10n_id_replace_invoice_id
@@ -330,6 +336,7 @@ msgid "Replace Invoice"
 msgstr "Ganti Faktur"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid ""
@@ -342,12 +349,14 @@ msgid "Reset E-Faktur"
 msgstr "Reset E-Faktur"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "Some documents are not Customer Invoices"
 msgstr "Beberapa dokumen bukan merupakan Faktur Pelanggan"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "Some documents don't have a transaction code"
@@ -375,28 +384,32 @@ msgid "Tax Number"
 msgstr "Nomor Pajak"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/efaktur.py:0
 #, python-format
 msgid "The difference between the two numbers must not be greater than 10.000"
 msgstr "Perbedaan antara dua nomor tidak boleh lebih besar dari 10.000"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "The third digit of a tax number must be 0 or 1"
 msgstr "Angka ketiga dari nomor pajak harus 0 atau 1"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid ""
 "There is no Efaktur number available.  Please configure the range you get "
 "from the government in the e-Faktur menu. "
 msgstr ""
-"Tidak ada nomor Efaktur yang tersedia. Silakan konfigurasi rentang yang "
-"Anda dapat dari pemerintah di menu e-Faktur. "
+"Tidak ada nomor Efaktur yang tersedia. Silakan konfigurasi rentang yang Anda "
+"dapat dari pemerintah di menu e-Faktur. "
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/efaktur.py:0
 #, python-format
 msgid "There should be 13 digits in each number."
@@ -413,6 +426,7 @@ msgid "Total Available"
 msgstr "Total Tersedia"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid ""
@@ -422,12 +436,14 @@ msgstr ""
 "Kredit"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "You have already generated the tax report for this document: %s"
 msgstr "Anda sudah membuat laporan pajak untuk dokumen berikut: %s"
 
 #. module: l10n_id_efaktur
+#. odoo-python
 #: code:addons/l10n_id_efaktur/models/account_move.py:0
 #, python-format
 msgid "You need to put a Kode Transaksi for this partner."

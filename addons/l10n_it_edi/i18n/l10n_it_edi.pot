@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-16 11:45+0000\n"
-"PO-Revision-Date: 2024-01-16 11:45+0000\n"
+"POT-Creation-Date: 2025-10-28 10:14+0000\n"
+"PO-Revision-Date: 2025-10-28 10:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,21 @@ msgstr ""
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
 msgid "<b>Document Date: </b>"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "<b>Stamp Duty: </b>"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "<b>Transport Document: </b>"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "<br/><b>Payment Conditions:</b>"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -148,6 +163,15 @@ msgid "CIG"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"CIG/CUP fields of partner(s) are present, please fill out Origin Document "
+"Type field in the Electronic Invoicing tab."
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_cup
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_cup
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_cup
@@ -217,13 +241,6 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
-#, python-format
-msgid "Company/ies should have a Country when used for simplified invoices."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "Company/ies should have a Tax System"
@@ -231,25 +248,18 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
+#: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "Company/ies should have a VAT number or Codice Fiscale."
 msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
-#, python-format
-msgid "Company/ies should have a VAT number."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
+#: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid ""
-"Company/ies should have a complete address, verify their Street, City, Zipcode"
-" and Country."
+"Company/ies should have a complete address, verify their Street, City, "
+"Zipcode and Country."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -450,27 +460,6 @@ msgid "Invoices must have %s one %s tax set per line."
 msgstr ""
 
 #. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "VAT"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "at most"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "exactly"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__is_edi_proxy_active
 msgid "Is Edi Proxy Active"
 msgstr ""
@@ -481,16 +470,21 @@ msgid "Italian EDI"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_actionable_errors
-msgid "L10N It Edi Actionable Errors"
-msgstr ""
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 #, python-format
 msgid "Italian Electronic Invoicing"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_actionable_errors
+msgid "L10N It Edi Actionable Errors"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -665,6 +659,15 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Partner(s) belongs to the Public Administration, please fill out Origin "
+"Document Type field in the Electronic Invoicing tab."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 #, python-format
 msgid "Partner(s) should have a Country when used for simplified invoices."
@@ -724,6 +727,11 @@ msgstr ""
 #: code:addons/l10n_it_edi/wizard/account_move_send.py:0
 #, python-format
 msgid "Please upgrade the Italian EDI module to update this widget."
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:account.account.tag,name:l10n_it_edi.l10n_it_edi_professional_fees_tag
+msgid "Professional fees"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -832,6 +840,13 @@ msgid "Service momentarily unavailable"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+#, python-format
+msgid "Settings"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_share_capital
 msgid "Share capital actually paid up"
 msgstr ""
@@ -846,6 +861,15 @@ msgstr ""
 msgid "Socio unico"
 msgstr ""
 
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "TP01 pagamento a rate"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
+msgid "TP02 pagamento completo"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_tax_system
@@ -1150,6 +1174,13 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "VAT"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "View Company/ies"
@@ -1196,36 +1227,9 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_config_settings.py:0
-#, python-format
-msgid ""
-"You must explicitly allow Odoo to process invoices for this company before "
-"using Test or Official modes."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "You must select a tax representative."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid ""
-"Partner(s) belongs to the Public Administration, please fill out Origin "
-"Document Type field in the Electronic Invoicing tab."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid ""
-"CIG/CUP fields of partner(s) are present, please fill out Origin "
-"Document Type field in the Electronic Invoicing tab."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1349,6 +1353,20 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf19
 msgid "[RF19] Regime forfettario (art.1, c.54-89, L. 190/2014)"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "at most"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "exactly"
 msgstr ""
 
 #. module: l10n_it_edi

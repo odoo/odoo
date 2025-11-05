@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 15:18+0000\n"
-"PO-Revision-Date: 2022-01-10 15:18+0000\n"
+"POT-Creation-Date: 2025-10-28 10:15+0000\n"
+"PO-Revision-Date: 2025-10-28 10:15+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,6 +63,11 @@ msgstr ""
 
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
+msgid "<strong>Disc.%</strong>"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
+#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "<strong>Product</strong>"
 msgstr ""
 
@@ -92,11 +97,6 @@ msgid "Carrier Condition"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__l10n_it_country_code
-msgid "Country Code"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_method__courier
 msgid "Courier service"
 msgstr ""
@@ -122,13 +122,6 @@ msgid "DDTs"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Documento di Trasporto"
 msgstr ""
@@ -146,13 +139,6 @@ msgstr ""
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Gross Weight (kg)"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__id
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type__id
-msgid "ID"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
@@ -180,13 +166,12 @@ msgid "L10N It Ddt Sequence"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_account_move____last_update
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking____last_update
-#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking_type____last_update
-msgid "Last Modified on"
+#: model:ir.model.fields,field_description:l10n_it_stock_ddt.field_stock_picking__l10n_it_show_print_ddt_button
+msgid "L10N It Show Print Ddt Button"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
+#. odoo-python
 #: code:addons/l10n_it_stock_ddt/models/account_invoice.py:0
 #, python-format
 msgid "Linked deliveries"
@@ -239,6 +224,11 @@ msgid "Repair"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
+#: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__substitution
+msgid "Returned goods"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__sale
 msgid "Sale"
 msgstr ""
@@ -249,6 +239,7 @@ msgid "Sender"
 msgstr ""
 
 #. module: l10n_it_stock_ddt
+#. odoo-python
 #: code:addons/l10n_it_stock_ddt/models/stock_picking.py:0
 #: code:addons/l10n_it_stock_ddt/models/stock_picking.py:0
 #, python-format
@@ -258,18 +249,6 @@ msgstr ""
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Shipping Date"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
-#: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__substitution
-msgid "Returned goods"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
-#: model:ir.model.fields,help:l10n_it_stock_ddt.field_stock_picking__l10n_it_country_code
-msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
 msgstr ""
 
 #. module: l10n_it_stock_ddt
@@ -301,11 +280,6 @@ msgstr ""
 #. module: l10n_it_stock_ddt
 #: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
 msgid "Transportation Reason"
-msgstr ""
-
-#. module: l10n_it_stock_ddt
-#: model_terms:ir.ui.view,arch_db:l10n_it_stock_ddt.report_ddt_view
-msgid "VAT"
 msgstr ""
 
 #. module: l10n_it_stock_ddt

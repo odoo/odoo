@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-07 09:50+0000\n"
+"POT-Creation-Date: 2025-10-28 10:12+0000\n"
 "PO-Revision-Date: 2023-12-07 10:52+0100\n"
 "Last-Translator: Dylan Kiss <dyki@odoo.com>\n"
 "Language-Team: \n"
@@ -167,11 +167,11 @@ msgstr "Impuesto sobre Sociedades"
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 #, python-format
 msgid ""
-"Could not retrieve currency: %s. Did you enable the multicurrency option and"
-" activate the currency?"
+"Could not retrieve currency: %s. Did you enable the multicurrency option and "
+"activate the currency?"
 msgstr ""
-"No se pudo recuperar la moneda: %s. ¿Habilitó la opción multimoneda y activó"
-" la moneda?"
+"No se pudo recuperar la moneda: %s. ¿Habilitó la opción multimoneda y activó "
+"la moneda?"
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
@@ -242,6 +242,11 @@ msgstr "Nombre mostrado"
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__18
 msgid "Dozens"
 msgstr "Docenas"
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model,name:l10n_es_edi_facturae.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__31
@@ -337,8 +342,8 @@ msgstr "IE: Impuestos especiales"
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__10
 msgid "IECDPCAC: Excise duties on oil derivates in Canaries"
 msgstr ""
-"IECDPCAC: Impuesto especial sobre los combustibles derivados del petróleo en"
-" la Comunidad Autonoma Canaria"
+"IECDPCAC: Impuesto especial sobre los combustibles derivados del petróleo en "
+"la Comunidad Autonoma Canaria"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__27
@@ -354,16 +359,16 @@ msgstr "IGIC: Impuesto general indirecto de Canarias"
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__09
 msgid "IGTECM: Sales tax in Ceuta and Melilla"
 msgstr ""
-"IGTECM: Impuesto general sobre el tráfico de empresas que se aplica en Ceuta"
-" y Melilla"
+"IGTECM: Impuesto general sobre el tráfico de empresas que se aplica en Ceuta "
+"y Melilla"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__11
 msgid ""
 "IIIMAB: Tax on premises that affect the environment in the Balearic Islands"
 msgstr ""
-"IIIMAB: Impuesto sobre las instalaciones que inciden sobre el medio ambiente"
-" en las Baleares"
+"IIIMAB: Impuesto sobre las instalaciones que inciden sobre el medio ambiente "
+"en las Baleares"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__15
@@ -676,11 +681,6 @@ msgid "Spanish Tax Type"
 msgstr "Tipo de impuesto español"
 
 #. module: l10n_es_edi_facturae
-#: model:ir.model,name:l10n_es_edi_facturae.model_account_tax
-msgid "Tax"
-msgstr "Impuesto"
-
-#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__23
 msgid ""
 "Tax on the production of spent nuclear fuel and radioactive waste from the "
@@ -717,8 +717,7 @@ msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__82
-msgid ""
-"Taxable Base modified due to return of packages and packaging materials"
+msgid "Taxable Base modified due to return of packages and packaging materials"
 msgstr "Base imponible modificada por devolución de envases/embalajes"
 
 #. module: l10n_es_edi_facturae
@@ -761,9 +760,9 @@ msgstr ""
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 #, python-format
 msgid ""
-"The credit note/refund appears to have been issued manually. For the purpose"
-" of generating a Facturae document, it's necessary that the credit "
-"note/refund is created directly from the associated invoice/bill."
+"The credit note/refund appears to have been issued manually. For the purpose "
+"of generating a Facturae document, it's necessary that the credit note/"
+"refund is created directly from the associated invoice/bill."
 msgstr ""
 "Parece que la factura rectificativa o el reembolso se ha emitido "
 "manualmente. Para generar  un documento Facturae, es necesario que la "
@@ -817,7 +816,8 @@ msgid ""
 "\t- The password given or the certificate are not valid.\n"
 "\t- The certificate content is invalid."
 msgstr ""
-"Había un problema con el certificado, algunos problemas habituales pueden ser:\n"
+"Había un problema con el certificado, algunos problemas habituales pueden "
+"ser:\n"
 "\t- La contraseña proporcionada o el certificado no son válidos.\n"
 "\t- El contenido del certificado no es válido."
 
