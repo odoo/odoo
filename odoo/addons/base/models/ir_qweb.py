@@ -567,7 +567,7 @@ class QwebCallParameters(NamedTuple):
     def __repr__(self):
         # cleaning context and values in order to have a consistent log when debugging.
         context = {k: v for k, v in self.context.items() if not k.startswith('_')}
-        qweb_root_values = self.values.get('__qweb_root_values') or {}
+        qweb_root_values = self.values and self.values.get('__qweb_root_values') or {}
         values = self.values and {
             k: v for k, v in self.values.items()
             if k not in ('__qweb_root_values', '__qweb_attrs__')
@@ -820,7 +820,7 @@ class IrQweb(models.AbstractModel):
             raise
 
         except Exception as error:
-            qweb_error_info = self._get_error_info(error, stack, stack[-1])
+            qweb_error_info = self._get_error_info(error, stack[1:], stack[-1])
             if qweb_error_info.template is None and qweb_error_info.ref is None:
                 qweb_error_info.ref = view_ref
 
@@ -886,7 +886,7 @@ class IrQweb(models.AbstractModel):
         for error_line in reversed(trace.split('\n')):
             if f'File "<{ref}>"' in error_line or (ref is None and 'File "<' in error_line):
                 line_function = error_line.split(', line ')[1]
-                line_nb = int(line_function.split(',')[0])
+                line_nb = int(line_function.split(',')[0]) - 1
                 break
 
         source = [info.params.path_xml for info in stack if info.params.path_xml]
@@ -1120,6 +1120,10 @@ class IrQweb(models.AbstractModel):
 
         if options.get('profile'):
             options['ref_xml'] = compile_context['ref_xml']
+
+        # The compilation did not fail.
+        compile_context['_qweb_error_path_xml'][1] = None
+        compile_context['_qweb_error_path_xml'][2] = None
 
         return (code, options, def_name)
 
@@ -2142,7 +2146,9 @@ class IrQweb(models.AbstractModel):
             strip = ''  # remove technical spaces
         code = self._flush_text(compile_context, level)
 
+        _ref, path, xml = compile_context['_qweb_error_path_xml']
         code.append(indent_code(f"if {self._compile_expr(expr)}:", level))
+        code.append(indent_code(f'# element: {path!r} , {xml!r}', level + 1))
         body = []
         if strip:
             self._append_text(strip, compile_context)
@@ -2369,7 +2375,12 @@ class IrQweb(models.AbstractModel):
         is_slot = expr == T_CALL_SLOT and code_options != 'True'
 
         if is_slot:
-            code = [indent_code(f"yield values.get({T_CALL_SLOT}, '')", level)]
+            code = [indent_code(f"""
+                self.env.context['_qweb_error_path_xml'][0] = template_options['ref']
+                self.env.context['_qweb_error_path_xml'][1] = {path!r}
+                self.env.context['_qweb_error_path_xml'][2] = {xml!r}
+                yield values.get({T_CALL_SLOT}, '')
+            """, level)]
         elif ttype == 't-field':
             code = []
             record, field_name = expr.rsplit('.', 1)
@@ -2555,7 +2566,7 @@ class IrQweb(models.AbstractModel):
 
             code.append(indent_code(f"""
                 t_call_content_values = values.copy()
-                qwebContent = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, t_call_content_values, 'root', 'inner-content', (template_options['ref'], {path!r}, {xml!r})))
+                qwebContent = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, t_call_content_values, 'root', 't-call-content', (template_options['ref'], {path!r}, {xml!r})))
                 t_call_values = {{ {T_CALL_SLOT}: qwebContent}}
             """, level))
 
