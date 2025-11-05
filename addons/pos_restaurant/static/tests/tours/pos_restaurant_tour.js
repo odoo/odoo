@@ -638,6 +638,16 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("5"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("RestaurantPresetEatInTour", {
     steps: () =>
         [
