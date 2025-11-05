@@ -24,6 +24,7 @@ export class FeedbackScreen extends Component {
         this.state = useState({
             loading: true,
         });
+        this.error = false;
 
         onMounted(() => {
             this.scaleText();
@@ -36,11 +37,18 @@ export class FeedbackScreen extends Component {
                         if (this.props.waitFor) {
                             await this.props.waitFor;
                         }
+                    } catch (err) {
+                        this.error = true;
+                        throw err;
                     } finally {
                         this.state.loading = false;
-                        this.timeout = setTimeout(() => {
-                            this.pos.orderDone(this.currentOrder);
-                        }, 5000);
+                        if (!this.error) {
+                            this.timeout = setTimeout(() => {
+                                this.pos.orderDone(this.currentOrder);
+                            }, 5000);
+                        } else {
+                            this.pos.navigate("PaymentScreen", { orderUuid: this.props.orderUuid });
+                        }
                     }
                 };
 
@@ -50,7 +58,9 @@ export class FeedbackScreen extends Component {
         );
 
         onWillUnmount(() => {
-            clearTimeout(this.timeout);
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
         });
     }
 
