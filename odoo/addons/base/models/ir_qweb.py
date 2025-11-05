@@ -761,10 +761,14 @@ class IrQweb(models.AbstractModel):
 
                     # use QwebContent params or return already evaluated QwebContent
                     if is_content := isinstance(item, QwebContent):
+                        params = item.params__
+                        if params.directive == 't-log':
+                            path = OrderedSet(str(info.params.path_xml) for info in stack if info.params.path_xml)
+                            path.add(str(params.path_xml))
+                            _logger.warning("t-log is displayed in dev mode:\n    %s\n\n%s", '\n    '.join(path), item or "--EMPTY--")
                         if item.html is not None:
                             yield item.html
                             continue
-                        params = item.params__
 
                     else:  # isinstance(item, QwebCallParameters)
                         params = item
@@ -878,6 +882,7 @@ class IrQweb(models.AbstractModel):
 
         line_nb = 0
         trace = traceback.format_exc()
+
         for error_line in reversed(trace.split('\n')):
             if f'File "<{ref}>"' in error_line or (ref is None and 'File "<' in error_line):
                 line_function = error_line.split(', line ')[1]
@@ -1614,6 +1619,7 @@ class IrQweb(models.AbstractModel):
             'elif', # Must be the first because compiled by the previous if.
             'else', # Must be the first because compiled by the previous if.
             'debug',
+            'log',
             'groups',
             'as', 'foreach',
             'if',
@@ -2654,6 +2660,31 @@ class IrQweb(models.AbstractModel):
                     yield tagName
                     yield '>'
                 """, level))
+
+        return code
+
+    def _compile_directive_log(self, el, compile_context, level):
+        if 'qweb' not in tools.config['dev_mode']:
+            return []
+
+        el.attrib.pop('t-log')
+
+        code = self._flush_text(compile_context, level, rstrip=el.tag.lower() == 't')
+
+        # set the content as value
+        ref, path, xml = compile_context['_qweb_error_path_xml']
+
+        def_name = compile_context['make_name']('t_log')
+        def_code = [f"def {def_name}(self, values):"]
+        def_code.append(indent_code('attrs = None', 1))
+        def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
+        def_code.extend(self._compile_directives(el, dict(compile_context, qweb_attrs_created=False), 1))
+        def_code.extend(self._flush_text(compile_context, 1) or [indent_code('yield ""', 1)])
+        compile_context['template_functions'][def_name] = def_code
+
+        code.append(indent_code(f"""
+            yield QwebContent(self, QwebCallParameters(self.env.context, {ref!r}, {def_name!r}, values, False, 't-log', ({ref!r}, {path!r}, {xml!r})))
+        """, level))
 
         return code
 
