@@ -42,3 +42,24 @@ export class CalendarRenderer extends Component {
         };
     }
 }
+<<<<<<< afcbd98594c9f7007f03a343ea40ea122b955459
+||||||| 35ed88e2e6f66147c4c1582761df1e53011b3643
+CalendarRenderer.components = {
+    day: CalendarCommonRenderer,
+    week: CalendarCommonRenderer,
+    month: CalendarCommonRenderer,
+    year: CalendarYearRenderer,
+    ActionSwiper,
+};
+CalendarRenderer.template = "web.CalendarRenderer";
+=======
+CalendarRenderer.props = ["*"];
+CalendarRenderer.components = {
+    day: CalendarCommonRenderer,
+    week: CalendarCommonRenderer,
+    month: CalendarCommonRenderer,
+    year: CalendarYearRenderer,
+    ActionSwiper,
+};
+CalendarRenderer.template = "web.CalendarRenderer";
+>>>>>>> 7e873e0059c98861690b94bd45f489ca8dad586c

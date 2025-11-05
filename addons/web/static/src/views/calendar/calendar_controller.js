@@ -402,3 +402,32 @@ export class CalendarController extends Component {
         browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
     }
 }
+<<<<<<< afcbd98594c9f7007f03a343ea40ea122b955459
+||||||| 35ed88e2e6f66147c4c1582761df1e53011b3643
+CalendarController.components = {
+    DatePicker: DateTimePicker,
+    FilterPanel: CalendarFilterPanel,
+    MobileFilterPanel: CalendarMobileFilterPanel,
+    QuickCreate: CalendarQuickCreate,
+    QuickCreateFormView: FormViewDialog,
+    Layout,
+    SearchBar,
+    ViewScaleSelector,
+    CogMenu,
+};
+CalendarController.template = "web.CalendarController";
+=======
+CalendarController.props = ["*"];
+CalendarController.components = {
+    DatePicker: DateTimePicker,
+    FilterPanel: CalendarFilterPanel,
+    MobileFilterPanel: CalendarMobileFilterPanel,
+    QuickCreate: CalendarQuickCreate,
+    QuickCreateFormView: FormViewDialog,
+    Layout,
+    SearchBar,
+    ViewScaleSelector,
+    CogMenu,
+};
+CalendarController.template = "web.CalendarController";
+>>>>>>> 7e873e0059c98861690b94bd45f489ca8dad586c
