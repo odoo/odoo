@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools import Query, SQL
 from odoo.tools.barcode import check_barcode_encoding
 from odoo.tools.float_utils import float_compare
 from odoo.tools.mail import html2plaintext, is_html_empty
@@ -381,15 +382,17 @@ class ProductProduct(models.Model):
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
             dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
         elif locations:
-            paths_domain = Domain.OR(Domain('parent_path', '=like', loc.parent_path + '%') for loc in locations)
-            loc_domain = Domain('location_id', 'any', paths_domain)
+            alias = locations._table + '_inner'
+            paths_query = Query(locations.env, alias, SQL.identifier(locations._table))
+            paths_query.add_where(alias + '.parent_path LIKE ANY(%s)', [[loc.parent_path + '%' for loc in locations]])
+            loc_domain = Domain('location_id', 'in', paths_query)
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
-            dest_loc_domain_done = Domain('location_dest_id', 'any', paths_domain)
+            dest_loc_domain_done = Domain('location_dest_id', 'in', paths_query)
             dest_loc_domain_in_progress = Domain([
                 '|',
-                    '&', ('location_final_id', '!=', False), ('location_final_id', 'any', paths_domain),
-                    '&', ('location_final_id', '=', False), ('location_dest_id', 'any', paths_domain),
+                    '&', ('location_final_id', '!=', False), ('location_final_id', 'in', paths_query),
+                    '&', ('location_final_id', '=', False), ('location_dest_id', 'in', paths_query),
             ])
             dest_loc_domain = Domain([
                 '|',
