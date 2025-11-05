@@ -502,7 +502,21 @@ class AccountBankStatementLine(models.Model):
             ('acc_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
-        if not bank_account and not str2bool(
+
+        if bank_account:
+            return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
+
+        # Avoid creating a bank account during reconciliation if it already exists on another active partner
+        bank_account_on_other_partner = self.env['res.partner.bank'].sudo().search([
+            ('acc_number', '=', self.account_number),
+            ('partner_id', '!=', self.partner_id.id),
+            ('partner_id.active', '=', True),
+        ], limit=1)
+
+        if bank_account_on_other_partner:
+            return self.env['res.partner.bank']
+
+        if not str2bool(
                 self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
         ):
             bank_account = self.env['res.partner.bank'].create({
@@ -510,7 +524,8 @@ class AccountBankStatementLine(models.Model):
                 'partner_id': self.partner_id.id,
                 'journal_id': None,
             })
-        return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
+
+        return bank_account
 
     def _get_default_amls_matching_domain(self):
         self.ensure_one()
