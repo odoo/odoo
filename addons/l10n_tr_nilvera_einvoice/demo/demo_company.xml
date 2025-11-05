@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_tr_tag" model="res.partner.category">
+        <field name="name">0-123456780100019</field>
+        <field name="parent_id" ref="l10n_tr_nilvera_einvoice.res_partner_category_mersisno"/>
+        <field name="color" eval="3"/>
+    </record>
+
+    <record id="l10n_tr_res_partner_1_tag" model="res.partner.category">
+        <field name="name">0-123456780200020</field>
+        <field name="parent_id" ref="l10n_tr_nilvera_einvoice.res_partner_category_mersisno"/>
+        <field name="color" eval="4"/>
+    </record>
+
+    <record id="l10n_tr_res_partner_2_tag" model="res.partner.category">
+        <field name="name">0-424519348000017</field>
+        <field name="parent_id" ref="l10n_tr_nilvera_einvoice.res_partner_category_mersisno"/>
+        <field name="color" eval="5"/>
+    </record>
+
+    <record id="base.partner_demo_company_tr" model="res.partner">
+        <field eval="[Command.set([ref('partner_demo_company_tr_tag')])]" name="category_id"/>
+    </record>
+
+    <record id="l10n_tr.l10n_tr_res_partner_1" model="res.partner">
+        <field eval="[Command.set([ref('l10n_tr_res_partner_1_tag')])]" name="category_id"/>
+    </record>
+
+    <record id="l10n_tr.l10n_tr_res_partner_2" model="res.partner">
+        <field eval="[Command.set([ref('l10n_tr_res_partner_2_tag')])]" name="category_id"/>
+    </record>
+</odoo>
