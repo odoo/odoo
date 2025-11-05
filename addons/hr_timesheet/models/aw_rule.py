@@ -41,8 +41,8 @@ class AwRule(models.Model):
 
     @api.constrains("regex")
     def _check_regex(self):
-        for rec in self:
+        for record in self:
             try:
-                re.compile(rec.regex)
+                re.compile(record.regex)
             except re.error:
-                raise models.ValidationError(f"Invalid regex: {rec.regex}")
+                raise models.ValidationError(f"Invalid regex: {record.regex}")

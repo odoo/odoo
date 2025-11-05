@@ -40,9 +40,34 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     extractBrowserWatcherActivityName(event) {
-        const url = event.data.url;
-        const odooUrl = RegExp.escape(window.location.origin);
+        const url = event.data.url; // should concatenate and test
 
+        for (const rule of this.awRules.sort((a,b) => a.sequence - b.sequence)) {
+            const regex = new RegExp(rule.regex);
+            const match = url.match(regex);
+            if (match) {
+                if (rule.project_id) {
+                    event.project_id = rule.project_id[0];
+                }
+
+                if (rule.task_id) {
+                    event.task_id = rule.task_id[0];
+                }
+
+                if (rule.template) {
+                    let name = rule.template;
+                    for (let i = 1; i < match.length; i++) {
+                        name = name.replace(`$${i}`, match[i]);
+                    }
+                    event.name = name;
+                } else {
+                    event.name = rule.type;
+                }
+                return true;
+            }
+        }
+
+        const odooUrl = RegExp.escape(window.location.origin); // should be moved outside (this function is called many times)
         // in the config, we should have a sequence field, because order is important
         // like the example of overlap in calendar and planning apps
         // project and task in odoo url
@@ -61,37 +86,6 @@ export class ActivityWatchTimesheet extends Component {
         );
         if (match) {
             event.project_id = Number(match[1]);
-            return true;
-        }
-
-        if (url.includes("meet.google")) {
-            event.name = "In a meeting";
-            return true;
-        }
-
-        // Reading or composing email
-        if (url.startsWith("https://mail.google.com")) {
-            if (/#inbox/.test(url)) {
-                event.name = "Reading Emails";
-                return true;
-            } else if (/compose=/.test(url)) {
-                event.name = "composing email";
-                return true;
-            }
-        }
-
-        // only for test, this should be a config, and the user can adapt it to his need
-        if (/^https?:\/\/localhost/.test(url)) {
-            event.name = "Programming (testing on browser)";
-            return true;
-        } else if (/^https:\/\/github\.com/.test(url)) {
-            event.name = "Programming (reading code on github)";
-            return true;
-        } else if (/^https:\/\/app\.excalidraw\.com/.test(url)) {
-            event.name = "Reading spec (Excalidraw)";
-            return true;
-        } else if (/chatgpt/i.test(url)) {
-            event.name = "Discussing with ChatGPT";
             return true;
         }
 
@@ -213,7 +207,9 @@ export class ActivityWatchTimesheet extends Component {
 
     async loadData() {
         this.state.loading = true;
-
+        this.awRules = await this.orm.call("aw.rule", "search_read", [[], [
+            "regex", "type", "template", "project_id", "task_id", "always_active", "primary", "sequence"
+        ]]);
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
         const baseUrl = "http://localhost:5600";
         const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
