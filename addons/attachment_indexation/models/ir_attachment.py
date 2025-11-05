@@ -13,7 +13,7 @@ from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
-if not importlib.util.find_spec('pdfminer.high_level'):
+if not (importlib.util.find_spec('pdfminer') and importlib.util.find_spec('pdfminer.high_level')):
     _logger.warning("Attachment indexation of PDF documents is unavailable because the 'pdfminer.six' Python library cannot be found on the system. "
                     "You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`)")
 
