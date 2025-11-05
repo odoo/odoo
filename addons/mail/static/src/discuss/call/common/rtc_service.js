@@ -879,7 +879,11 @@ export class Rtc extends Record {
         } else if (microphone) {
             errorMessage = _t("Microphone access blocked. Enable in browser settings.");
         } else if (screen) {
-            errorMessage = _t("Screen sharing access blocked. Enable in browser settings.");
+            errorMessage = _t(
+                "Unable to start screen sharing. Please verify your browser permissions and try again."
+            );
+        } else {
+            return;
         }
         this.notification.add(errorMessage, { type: "warning" });
     }
@@ -2022,10 +2026,10 @@ export class Rtc extends Record {
                 }
                 this.soundEffectsService.play("screen-sharing");
             }
-        } catch {
+        } catch (e) {
             this.showMediaUnavailableWarning({
                 camera: type === "camera",
-                screen: type === "screen",
+                screen: type === "screen" && e.name !== "NotAllowedError",
             });
             stopVideo();
             return;
