@@ -564,7 +564,7 @@ async function discuss_inbox_messages(request) {
     };
 }
 
-registerRoute("/mail/link_preview$", mail_link_preview);
+registerRoute("/mail/link_preview", mail_link_preview);
 /** @type {RouteCallback} */
 async function mail_link_preview(request) {
     /** @type {import("mock_models").BusBus} */
@@ -603,7 +603,7 @@ async function mail_link_preview(request) {
     }
 }
 
-registerRoute("/mail/link_preview/hide$", mail_link_preview_hide);
+registerRoute("/mail/link_preview/hide", mail_link_preview_hide);
 /** @type {RouteCallback} */
 async function mail_link_preview_hide(request) {
     /** @type {import("mock_models").BusBus} */
