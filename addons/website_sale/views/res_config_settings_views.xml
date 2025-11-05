@@ -282,6 +282,13 @@
                 >
                     <field name="module_website_sale_collect"/>
                 </setting>
+                <setting
+                    id="restrict_packagings_setting"
+                    help="Prevent from selling the specified packagings"
+                    invisible="not group_uom"
+                >
+                    <field name="restricted_uom_ids" widget="many2many_tags"/>
+                </setting>
             </block>
             <setting id="google_analytics_setting" position="after">
                 <setting

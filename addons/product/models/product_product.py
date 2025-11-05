@@ -1272,3 +1272,6 @@ class ProductProduct(models.Model):
 
     def _get_available_uoms(self):
         return self.product_tmpl_id._get_available_uoms() | self.extra_uom_ids
+
+    def _get_main_uom(self):
+        return self.product_tmpl_id._get_main_uom()

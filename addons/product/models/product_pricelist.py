@@ -205,7 +205,7 @@ class ProductPricelist(models.Model):
             suitable_rule = self.env['product.pricelist.item']
 
             # If no uom is specified, fallback on the product uom
-            quantity_uom = uom or product.uom_id
+            quantity_uom = uom or product._get_main_uom()
 
             for rule in rules:
                 if rule._is_applicable_for(product, quantity, uom=quantity_uom, **kwargs):

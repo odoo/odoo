@@ -81,6 +81,8 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.filtered_domain(self.env["website"]._product_domain()):
             return False
+        if not self._get_available_uoms():
+            return False
         website = self.env["website"].get_current_website()
         return not (
             website.prevent_sale
@@ -229,3 +231,45 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.env["website"].image_url(self, "image_1024")
+
+    def _has_multiple_uoms(self) -> bool:
+        """Check if the product has multiple available uoms for the current website.
+
+        :return: True if the product has multiple available uoms for the current website
+                 or if the default uom is not available
+        """
+        res = super()._has_multiple_uoms()
+        if res:
+            return res
+        if self.env.context.get("website_id") and self.type != "combo":
+            uoms = self._get_available_uoms()
+            if uoms:
+                return self.uom_id not in uoms
+        return res
+
+    def _get_available_uoms(self):
+        """Return a recordset of uoms configured for the product that are available for the current
+        website.
+
+        :returns: uoms available on the product for the current website.
+        :rtype: recordset of `uom.uom`
+        """
+        all_uoms = super()._get_available_uoms()
+        if self.env["res.groups"]._is_feature_enabled("uom.group_uom") and self.env.context.get(
+            "website_id"
+        ):
+            return all_uoms - self.env["website"].get_current_website().restricted_uom_ids
+        return all_uoms
+
+    def _get_main_uom(self):
+        """Return the main uom for the product.
+        The main uom is always the first available uom on the current website, if no uom is
+        available, the default uom configured on the product is considered as the main uom.
+
+        :returns: the main uom of the product
+        :rtype: `uom.uom` recordset
+        """
+        self.ensure_one()
+        if self.env.context.get("website_id"):
+            return self._get_available_uoms()[:1] or self.uom_id
+        return super()._get_main_uom()

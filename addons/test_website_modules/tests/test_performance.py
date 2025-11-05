@@ -347,6 +347,10 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             query_count += 3
             queries['product_template_attribute_value'] += 3
 
+        if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            query_count += 1
+            queries['uom_uom'] = 1
+
         # To increase the query count you must ask the permission to al
         return query_count, queries
 
@@ -377,6 +381,10 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         query_count += 2
         queries['account_tax'] += 1
         queries['account_account_tag'] += 1
+
+        if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            query_count += 1
+            queries['uom_uom'] += 1
 
         if self._has_demo_data():
             query_count += 2

@@ -137,3 +137,51 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             date=Date.from_string("2020-01-01"),
         )
         self.assertAlmostEqual(result["price"], expected_price, places=2)
+
+    def test_get_available_uoms_no_restrictions(self):
+        self._enable_uom()
+        template = self.product.product_tmpl_id
+        template.uom_ids = [self.uom_dozen.id, self.uom_ton.id]
+
+        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+
+        self.assertEqual(len(uoms), 3)
+
+    def test_get_available_uoms_restricted_additional_uom(self):
+        self._enable_uom()
+        template = self.product.product_tmpl_id
+        template.uom_ids = [self.uom_dozen.id, self.uom_ton.id]
+        self.website.restricted_uom_ids = [self.uom_dozen.id]
+
+        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+
+        self.assertEqual(len(uoms), 2)
+        self.assertTrue(self.uom_dozen not in uoms)
+
+    def test_has_multiple_uoms_restricted_main_uom(self):
+        self._enable_uom()
+        template = self.product.product_tmpl_id
+        template.uom_ids = [self.uom_dozen.id]
+        self.website.restricted_uom_ids = [template.uom_id.id]
+
+        result = template.with_context({'website_id': self.website.id})._has_multiple_uoms()
+        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+        main_uom = template.with_context({'website_id': self.website.id})._get_main_uom()
+
+        self.assertEqual(len(uoms), 1)
+        self.assertTrue(result)
+        self.assertEqual(main_uom, self.uom_dozen)
+
+    def test_has_multiple_uoms_restricted_additional_uom(self):
+        self._enable_uom()
+        template = self.product.product_tmpl_id
+        template.uom_ids = [self.uom_dozen.id]
+        self.website.restricted_uom_ids = [self.uom_dozen.id]
+
+        result = template.with_context({'website_id': self.website.id})._has_multiple_uoms()
+        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+        main_uom = template.with_context({'website_id': self.website.id})._get_main_uom()
+
+        self.assertEqual(len(uoms), 1)
+        self.assertFalse(result)
+        self.assertEqual(main_uom, template.uom_id)

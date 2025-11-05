@@ -54,6 +54,9 @@ class ResConfigSettings(models.TransientModel):
     rating_email_template_id = fields.Many2one(
         related="website_id.rating_email_template_id", readonly=False
     )
+    restricted_uom_ids = fields.Many2many(
+        related="website_id.restricted_uom_ids", readonly=False
+    )
 
     # Additional settings
     account_on_checkout = fields.Selection(

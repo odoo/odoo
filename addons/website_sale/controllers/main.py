@@ -936,6 +936,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "category": category,
             'original_category': original_category,
             "combination_info": combination_info,
+            "has_available_uoms": len(product._get_available_uoms()) > 0,
             "keep": keep,
             "main_object": product,
             "product": product,

@@ -272,6 +272,7 @@ class Website(models.Model):
         domain=[("model", "=", "sale.order")],
         default=_default_confirmation_email_template,
     )
+    restricted_uom_ids = fields.Many2many(string="Restrict Packagings", comodel_name="uom.uom")
 
     # === COMPUTE METHODS ===#
 

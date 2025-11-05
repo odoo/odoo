@@ -71,7 +71,11 @@ class WebsiteSaleVariantController(Controller):
 
         combination_info["packaging_selector"] = request.env["ir.ui.view"]._render_template(
             "website_sale.product_packaging_selector",
-            values={"product": product_template, "product_variant": product},
+            values={
+                "product": product_template,
+                "product_variant": product,
+                "combination_info": combination_info,
+            },
         )
 
         return combination_info
