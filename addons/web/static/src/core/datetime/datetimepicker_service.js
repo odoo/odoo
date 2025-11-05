@@ -400,7 +400,7 @@ export const datetimePickerService = {
                         getInputs(),
                         ensureArray(pickerProps.value),
                         (el, currentValue) => {
-                            if (!el) {
+                            if (!el || el.tagName?.toLowerCase() !== "input") {
                                 return currentValue;
                             }
                             const [parsedValue, error] = safeConvert("parse", el.value);
