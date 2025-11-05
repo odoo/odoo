@@ -276,18 +276,37 @@ describe("restaurant pos_store.js", () => {
         });
     });
 
-    test("categoryCount", async () => {
-        const store = await setupPosEnv();
-        const order = await getFilledOrder(store);
-        order.lines[0].note = '[{"text":"Test Note","colorIndex":0}]';
-        order.lines[1].note = '[{"text":"Test 1","colorIndex":0},{"text":"Test 2","colorIndex":0}]';
-        order.general_customer_note = '[{"text":"General Note","colorIndex":0}]';
-        const changes = store.categoryCount;
-        expect(changes).toEqual([
-            { count: 3, name: "Category 1" },
-            { count: 2, name: "Category 2" },
-            { count: 1, name: "Message" },
-        ]);
+    describe("categoryCount", () => {
+        test("Normal flow", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            order.lines[0].note = '[{"text":"Test Note","colorIndex":0}]';
+            order.lines[1].note =
+                '[{"text":"Test 1","colorIndex":0},{"text":"Test 2","colorIndex":0}]';
+            order.general_customer_note = '[{"text":"General Note","colorIndex":0}]';
+            const changes = store.categoryCount;
+            expect(changes).toEqual([
+                { count: 3, name: "Category 1" },
+                { count: 2, name: "Category 2" },
+                { count: 1, name: "Message" },
+            ]);
+        });
+
+        test("Unselected order", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            order.general_customer_note = '[{"text":"General Note","colorIndex":0}]';
+            store.selectedOrderUuid = null;
+            // without a selected order, `categoryCount` throws
+            expect(() => store.categoryCount).toThrow();
+            // explicitly specify the order to compute the changes for
+            const changes = store.getCategoryCount(order);
+            expect(changes).toEqual([
+                { count: 3, name: "Category 1" },
+                { count: 2, name: "Category 2" },
+                { count: 1, name: "Message" },
+            ]);
+        });
     });
 
     test("getDefaultSearchDetails", async () => {
