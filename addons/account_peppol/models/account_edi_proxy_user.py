@@ -200,8 +200,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
-    def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
-        """Save new documents in an accounting journal, when one is specified on the company.
+    def _peppol_import_document(self, attachment, peppol_state, uuid, journal=None):
+        """ Import PEPPOL document as account.move
 
         :param attachment: the new document
         :param peppol_state: the state of the received Peppol document
@@ -211,6 +211,22 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         """
         self.ensure_one()
 
+        file_data = self.env['account.move']._to_files_data(attachment)[0]
+
+        if file_data['xml_tree'].findtext('.//{*}ProfileID') == 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0':
+            return self._peppol_import_invoice(attachment, peppol_state, uuid, journal)
+
+        return {}
+
+    def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
+        """Save new documents in an accounting journal, when one is specified on the company.
+
+        :param attachment: the new document
+        :param peppol_state: the state of the received Peppol document
+        :param uuid: the UUID of the Peppol document
+        :param journal: journal to use for the new move (otherwise the company's peppol journal will be used)
+        :return: the created move (if any)
+        """
         file_data = self.env['account.move']._to_files_data(attachment)[0]
 
         # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
@@ -314,7 +330,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     "type": "binary",
                     "mimetype": "application/xml",
                 })
-                vals_to_ack = edi_user._peppol_import_invoice(attachment, content["state"], uuid)
+                vals_to_ack = edi_user._peppol_import_document(attachment, content["state"], uuid)
                 if move_to_ack := vals_to_ack.get('move'):
                     created_moves |= move_to_ack
                 if uuid_to_ack := vals_to_ack.get('uuid'):
