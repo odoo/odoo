@@ -105,7 +105,7 @@ patch(PosStore.prototype, {
     async sendOrderInPreparation(order, opts = {}) {
         let categoryCount = [];
         if (!opts.cancelled) {
-            categoryCount = this.categoryCount;
+            categoryCount = this.getCategoryCount(order);
         }
         const result = await super.sendOrderInPreparation(order, opts);
 
@@ -396,7 +396,10 @@ patch(PosStore.prototype, {
         }
     },
     get categoryCount() {
-        const orderChanges = this.getOrderChanges();
+        return this.getCategoryCount();
+    },
+    getCategoryCount(order = this.getOrder()) {
+        const orderChanges = this.getOrderChanges(order);
         const linesChanges = orderChanges.orderlines;
 
         const categories = Object.values(linesChanges).reduce((acc, curr) => {
@@ -427,12 +430,11 @@ patch(PosStore.prototype, {
             categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
         }
         // Only send modeUpdate if there's already an older mode in progress.
-        const currentOrder = this.getOrder();
         if (
             orderChanges.modeUpdate &&
-            Object.keys(currentOrder.last_order_preparation_change.lines).length
+            Object.keys(order.last_order_preparation_change.lines).length
         ) {
-            const displayName = _t(currentOrder.preset_id?.name);
+            const displayName = _t(order.preset_id?.name);
             categories["modeUpdate"] = { count: 1, name: displayName };
         }
 
