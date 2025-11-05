@@ -92,7 +92,10 @@ patch(DiscussApp.prototype, {
         ) {
             this.lastThread.channel.isLocallyPinned = false;
         }
-        if (this.thread?.channel?.livechat_status === "need_help" && !this.thread.self_member_id) {
+        if (
+            this.thread?.channel?.livechat_status === "need_help" &&
+            !this.thread.channel?.self_member_id
+        ) {
             this.thread.channel.isLocallyPinned = true;
         }
         this.lastThread = this.thread;
