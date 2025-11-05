@@ -22,6 +22,7 @@ from . import test_purchase_stock_report
 from . import test_reordering_rule
 from . import test_replenish_wizard
 from . import test_routes
+from . import test_stock_orderpoint
 from . import test_stockvaluation
 from . import test_supplier
 from . import test_uninstall
