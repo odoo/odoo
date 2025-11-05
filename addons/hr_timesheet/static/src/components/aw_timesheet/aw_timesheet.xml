@@ -44,7 +44,9 @@
 
                         <!-- Actions -->
                         <td class="text-end">
+                          <!-- TODO: More robust table column width to remove t-att-style below -->
                           <button
+                            t-att-style="groupKey === 'false_false' ? 'visibility: hidden;' : ''"
                             class="btn btn-sm btn-primary me-1"
                             t-on-click.stop="() => this.onTake(groupKey, title)"
                           >
