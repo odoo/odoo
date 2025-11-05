@@ -73,9 +73,6 @@ if typing.TYPE_CHECKING:
     from .fields import Field
     from .models import BaseModel
 
-    M = typing.TypeVar('M', bound=BaseModel)
-
-
 _logger = logging.getLogger('odoo.domains')
 
 STANDARD_CONDITION_OPERATORS = frozenset([
@@ -407,7 +404,7 @@ class Domain:
         # just execute the optimization code that goes through all the fields
         self._optimize(model, OptimizationLevel.FULL)
 
-    def _as_predicate(self, records: M) -> Callable[[M], bool]:
+    def _as_predicate[M: BaseModel](self, records: M) -> Callable[[M], bool]:
         """Return a predicate function from the domain (bound to records).
         The predicate function return whether its argument (a single record)
         satisfies the domain.

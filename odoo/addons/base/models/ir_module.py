@@ -7,7 +7,6 @@ import logging
 import os
 import platform
 import shutil
-import typing
 
 from docutils import nodes
 from docutils.core import publish_string
@@ -28,7 +27,6 @@ from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile
 from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
 
-T = typing.TypeVar('T')
 _logger = logging.getLogger(__name__)
 
 ACTION_DICT = {
@@ -37,6 +35,7 @@ ACTION_DICT = {
     'target': 'new',
     'type': 'ir.actions.act_window',
 }
+
 
 def backup(path, raise_exception=True):
     path = os.path.normpath(path)
@@ -53,7 +52,7 @@ def backup(path, raise_exception=True):
         cnt += 1
 
 
-def assert_log_admin_access(method: T, /) -> T:
+def assert_log_admin_access[T](method: T, /) -> T:
     """Decorator checking that the calling user is an administrator, and logging the call.
 
     Raises an AccessDenied error if the user does not have administrator privileges, according

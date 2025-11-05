@@ -1,16 +1,12 @@
 import threading
-import typing
 from collections.abc import Iterable, Iterator, MutableMapping
 
 from .misc import SENTINEL
 
 __all__ = ['LRU']
 
-K = typing.TypeVar('K')
-V = typing.TypeVar('V')
 
-
-class LRU(MutableMapping[K, V], typing.Generic[K, V]):
+class LRU[K, V](MutableMapping[K, V]):
     """
     Implementation of a length-limited LRU map.
 

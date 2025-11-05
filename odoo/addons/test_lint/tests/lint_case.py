@@ -3,7 +3,6 @@ import fnmatch
 import os
 from collections.abc import Iterable
 from os.path import join as opj
-from typing import Generic, TypeVar
 
 from odoo.modules import Manifest
 from odoo.tests import BaseCase
@@ -29,8 +28,7 @@ class LintCase(BaseCase):
                 yield from fnames
 
 
-T = TypeVar('T')
-class NodeVisitor(Generic[T]):
+class NodeVisitor[T]:
     """An expanded NodeVisitor which yields / returns the result of its visits.
 
     WARNING: ``visit_$NODE`` methods *must* return an iterable, and the result
