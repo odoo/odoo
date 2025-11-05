@@ -52,8 +52,8 @@ WITH
         FROM stock_location sl
         LEFT JOIN stock_warehouse w ON sl.parent_path::text like concat('%%/', w.view_location_id, '/%%')
     ),
-    existing_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
-        SELECT m.id, m.product_id, pt.id, m.product_qty, m.date, m.state, m.company_id, source.w_id, dest.w_id
+    existing_sm (id, product_id, tmpl_id, product_qty, quantity, date, state, company_id, whs_id, whd_id) AS (
+        SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity, m.date, m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON dest.sl_id = CASE
@@ -69,13 +69,18 @@ WITH
             m.state NOT IN ('draft', 'cancel') AND
             (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
-    all_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
+    all_sm (id, product_id, tmpl_id, product_qty, quantity, date, state, company_id, whs_id, whd_id) AS (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
             CASE 
                 WHEN is_duplicated = 0 THEN sm.product_qty
                 WHEN sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id THEN sm.product_qty
                 ELSE 0
-            END, 
+            END,
+            CASE
+                WHEN is_duplicated = 0 THEN sm.quantity
+                WHEN sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id THEN sm.quantity
+                ELSE 0
+            END,
             sm.date, sm.state, sm.company_id,
             CASE WHEN is_duplicated = 0 THEN sm.whs_id END,
             CASE 
@@ -154,8 +159,8 @@ FROM (SELECT
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
-            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL AND m.state = 'done' THEN m.product_qty
-            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL AND m.state = 'done' THEN -m.product_qty
+            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL AND m.state = 'done' THEN m.quantity
+            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL AND m.state = 'done' THEN -m.quantity
             WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN -m.product_qty
             WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.product_qty
         END AS product_qty,
