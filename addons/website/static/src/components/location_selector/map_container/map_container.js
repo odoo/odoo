@@ -34,9 +34,23 @@ export class MapContainer extends Component {
                 },
             },
         },
+        pressControlToZoom: { type: Boolean, optional: true },
         selectedLocationId: [String, { value: false }],
         setSelectedLocation: Function,
+        setHiddenLocation: { type: Function, optional: true },
         validateSelection: Function,
+        showDetailsTooltip: { type: Boolean, optional: true },
+        showDetailsTextArea: { type: Boolean, optional: true },
+        mapZoom: { type: String, optional: true },
+        showIndexes: Boolean,
+        showEmail: Boolean,
+        showPhone: Boolean,
+        showLocationNameOnMarkerHover: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        showDetailsTooltip: false,
+        showDetailsTextArea: true,
+        mapZoom: "13",
     };
 
     setup() {

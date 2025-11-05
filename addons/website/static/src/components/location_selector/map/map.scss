@@ -11,5 +11,36 @@
 }
 
 .o_location_selector_map {
-    min-height: 25vh;
+    min-height: 20vh;
 }
+
+.leaflet-container {
+    &::before {
+        opacity: 0;
+        content: "";
+        transition: opacity 1s ease;
+        color: #FFFFFF;
+        font-size: 2rem;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        display: flex;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        pointer-events:none;
+
+        // Leaflet elements could take up to z-index 700,
+        // see leafletjs.com/reference.html#map-pane
+        z-index: 800;
+    }
+    &.map_zoom_disabled {
+        &::before {
+            opacity: 1;
+            content: attr(data-zoom-disabled-text);
+        }
+    }
+}
+

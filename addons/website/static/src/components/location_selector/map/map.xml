@@ -12,7 +12,7 @@
                 fill="var(--LocationSelectorMarker-background)"
                 stroke="var(--LocationSelectorMarker-border-color)"
             />
-            <text
+            <text t-if="number"
                 x="50%"
                 y="50%"
                 text-anchor="middle"
@@ -21,4 +21,17 @@
             />
         </svg>
     </t>
+
+    <t t-name="website.locationSelector.map.tooltip">
+        <b t-out="location.name"/><br/>
+        <t t-out="location.street"/><br/>
+        <t t-out="location.zip_code"/> <t t-out="location.city"/>
+        <t t-if="showPhone and location.phone">
+            <br/><i class="fa fa-phone fa-fw me-1"/> <t t-out="location.phone"/>
+        </t>
+        <t t-if="showEmail and location.email">
+            <br/><i class="fa fa-envelope fa-fw me-1"/> <t t-out="location.email"/>
+        </t>
+    </t>
+
 </templates>

@@ -315,6 +315,7 @@ class Website(models.CachedModel):
     def _get_blocked_iframe_containers_classes(self):
         return {
             's_map',
+            's_store_locator',
             's_instagram_page',
             'o_facebook_page',
             'o_background_video',
