@@ -235,7 +235,7 @@ class TestDocstring(BaseCase):
         sign_rtype = signature.return_annotation
 
         if sign_rtype != signature.empty and doc_rtype != signature.empty:
-            self.assertEqual(sign_rtype, doc_rtype)
+            self.assertEqual(self._stringify_annotation(sign_rtype), doc_rtype)
 
         try:
             m = "the docstring is documenting non-existing parameters"
@@ -258,6 +258,9 @@ class TestDocstring(BaseCase):
         for param, doc_type in doc_types.items():
             sign_type = sign_types.get(param, signature.empty)
             if sign_type != signature.empty:
-                if isinstance(sign_type, type):
-                    sign_type = sign_type.__name__
-                self.assertEqual(sign_type, doc_type)
+                self.assertEqual(self._stringify_annotation(sign_type), doc_type)
+
+    def _stringify_annotation(self, sign_type):
+        if isinstance(sign_type, type):
+            sign_type = sign_type.__name__
+        return str(sign_type)
