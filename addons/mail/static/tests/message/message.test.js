@@ -469,7 +469,7 @@ test("Update the link previews when a message is edited", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/link_preview$", (args) => expect.step("link_preview"));
+    onRpcBefore("/mail/link_preview", (args) => expect.step("link_preview"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
@@ -1368,7 +1368,9 @@ test("allow attachment delete on authored message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage");
     await click("button[title='Remove']");
-    await contains(".modal-dialog .modal-body", { text: 'Are you sure you want to delete "BLAH"?\nThis action cannot be undone.' });
+    await contains(".modal-dialog .modal-body", {
+        text: 'Are you sure you want to delete "BLAH"?\nThis action cannot be undone.',
+    });
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentImage", { count: 0 });
 });
