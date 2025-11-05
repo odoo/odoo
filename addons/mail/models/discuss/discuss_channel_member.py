@@ -2,7 +2,6 @@
 
 import logging
 import requests
-import uuid
 from datetime import timedelta
 from markupsafe import Markup
 
@@ -448,10 +447,15 @@ class DiscussChannelMember(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
             )
+            extra_predicate = discuss.get_sfu_url(self.env)
+            permissions = self._get_recording_permissions(rtc_session.partner_id, extra_predicate)
             store.add_singleton_values(
                 "Rtc",
                 lambda res: (
                     res.attr("iceServers", ice_servers or False),
+                    res.attr("canRecordTranscription", permissions["transcription"]),
+                    res.attr("canRecordAudio", permissions["audioRecording"]),
+                    res.attr("canRecordVideo", permissions["videoRecording"]),
                     res.one("localSession", "_store_rtc_session_fields", value=rtc_session),
                     res.attr("serverInfo", self._get_rtc_server_info(rtc_session, ice_servers)),
                 ),
@@ -460,22 +464,23 @@ class DiscussChannelMember(models.Model):
             self._rtc_invite_members()
 
     def _join_sfu(self, ice_servers=None, force=False):
-        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
+        session_count = len(self.channel_id.rtc_session_ids)
+        if session_count < 2:
+            return  # cant join a SFU when alone
+        if session_count < SFU_MODE_THRESHOLD and not force:
             if self.channel_id.sfu_channel_uuid:
                 self.channel_id.sfu_channel_uuid = None
                 self.channel_id.sfu_server_url = None
             return
-        elif self.channel_id.sfu_channel_uuid and self.channel_id.sfu_server_url:
+        if self.channel_id.sfu_channel_uuid and self.channel_id.sfu_server_url:
             return
         sfu_server_url = discuss.get_sfu_url(self.env)
         if not sfu_server_url:
             return
-        sfu_local_key = self.env["ir.config_parameter"].sudo().get_str("mail.sfu_local_key")
-        if not sfu_local_key:
-            sfu_local_key = str(uuid.uuid4())
-            self.env["ir.config_parameter"].sudo().set_str("mail.sfu_local_key", sfu_local_key)
+        channel_key = discuss.get_derived_sfu_key(self.env, self.channel_id.id)
+
         json_web_token = jwt.sign(
-            {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}", "key": sfu_local_key},
+            {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}", "key": channel_key},
             key=discuss.get_sfu_key(self.env),
             ttl=30,
             algorithm=jwt.Algorithm.HS256,
@@ -483,7 +488,8 @@ class DiscussChannelMember(models.Model):
         try:
             response = requests.get(
                 sfu_server_url + "/v1/channel",
-                headers={"Authorization": "jwt " + json_web_token},
+                headers={"Authorization": "Bearer " + json_web_token},
+                params={"recordingAddress": self._get_recording_address()},
                 timeout=3,
             )
             response.raise_for_status()
@@ -496,8 +502,20 @@ class DiscussChannelMember(models.Model):
         for session in self.channel_id.rtc_session_ids:
             session._bus_send(
                 "discuss.channel.rtc.session/sfu_hot_swap",
-                {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=sfu_local_key)},
+                {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=channel_key)},
             )
+
+    def _get_recording_permissions(self, partner_id, extra_predicate=True):
+        is_partner = bool(partner_id)
+        return {
+            "transcription": bool(is_partner and extra_predicate),
+            "audioRecording": bool(is_partner and extra_predicate),
+            "videoRecording": bool(is_partner and extra_predicate),
+        }
+
+    def _get_recording_address(self):
+        # return None (return route from the module that implements recording and transcription processing)
+        return f"{self.get_base_url()}/mail/rtc/recording/{self.channel_id.id}"
 
     def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):
         sfu_channel_uuid = self.channel_id.sfu_channel_uuid
@@ -505,10 +523,15 @@ class DiscussChannelMember(models.Model):
         if not sfu_channel_uuid or not sfu_server_url:
             return None
         if not key:
-            key = self.env["ir.config_parameter"].sudo().get_str("mail.sfu_local_key")
+            key = discuss.get_derived_sfu_key(self.env, self.channel_id.id)
+            if not key:
+                return None
+        partner = rtc_session.partner_id
         claims = {
             "session_id": rtc_session.id,
+            "label": partner.name if partner else rtc_session.guest_id.name,
             "ice_servers": ice_servers,
+            "permissions": self._get_recording_permissions(partner),
         }
         json_web_token = jwt.sign(claims, key=key, ttl=60 * 60 * 8, algorithm=jwt.Algorithm.HS256)  # 8 hours
         return {"url": sfu_server_url, "channelUUID": sfu_channel_uuid, "jsonWebToken": json_web_token}

@@ -1,0 +1,28 @@
+.o-discuss-CallRecordingIndicator {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+
+    &.o-hovered {
+        background-color: rgba(0, 0, 0, 0.8);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .o-discuss-CallRecordingIndicator-icons {
+        color: white;
+
+        .o-blinking {
+            animation: o-discuss-recording-blink 1.5s infinite;
+        }
+    }
+}
+
+@keyframes o-discuss-recording-blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0.3;
+    }
+}

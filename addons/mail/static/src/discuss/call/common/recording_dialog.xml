@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.RecordingDialog">
+        <Dialog size="'sm'" footer="false" title.translate="Recording">
+            <div class="o-discuss-RecordingDialog d-flex flex-column gap-1">
+                <t t-if="!isRecording">
+                    <!-- Not recording: show setup options -->
+                    <h3>Record the call</h3>
+                    <p class="mb-2">
+                    Recording will capture participants' audio, video, and screen shares. The recording file will be available in the chat once the call ends.
+                    </p>
+                    <div class="btn border-transparent d-flex gap-2" t-on-click="() => state.transcription = !state.transcription">
+                        <div class="pe-2 d-flex align-items-center">
+                            <input type="checkbox" role="switch" t-att-disabled="!store.rtc?.canRecordTranscription || !state.audio" t-att-checked="state.transcription ? 'checked' : ''"/>
+                        </div>
+                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                            <span class="text-truncate text-wrap">Generate transcription</span>
+                        </label>
+                    </div>
+                    <div class="btn border-transparent d-flex gap-2" t-on-click="() => state.audio = !state.audio">
+                        <div class="pe-2 d-flex align-items-center">
+                            <input type="checkbox" role="switch" t-att-disabled="!store.rtc?.canRecordAudio || !state.transcription" t-att-checked="state.audio ? 'checked' : ''"/>
+                        </div>
+                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                            <span class="text-truncate text-wrap">Save file</span>
+                        </label>
+                    </div>
+                    <div class="btn border-transparent d-flex gap-2 ps-4" t-on-click="() => state.video = !state.video">
+                        <div class="pe-2 d-flex align-items-center">
+                            <input type="checkbox" role="switch" t-att-disabled="!store.rtc?.canRecordVideo || !state.audio" t-att-checked="state.video ? 'checked' : ''"/>
+                        </div>
+                        <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                            <span class="text-truncate text-wrap">With video</span>
+                        </label>
+                    </div>
+                </t>
+                <t t-else="">
+                    <h3>Recording in progress</h3>
+                    <div class="d-flex flex-column gap-2 mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa fa-circle text-danger fa-xs" style="animation: blink 1s infinite;"/>
+                            <span t-if="store.rtc?.recordingState.video">Video recording</span>
+                            <span t-else="">Audio recording</span>
+                        </div>
+                    </div>
+                    <t t-if="canChangeTranscription">
+                        <div class="btn border-transparent d-flex gap-2" t-on-click="() => state.transcription = !state.transcription">
+                            <div class="pe-2 d-flex align-items-center">
+                                <input type="checkbox" role="switch" t-att-disabled="!store.rtc?.canRecordTranscription" t-att-checked="state.transcription ? 'checked' : ''"/>
+                            </div>
+                            <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
+                                <span class="text-truncate text-wrap">Generate transcription</span>
+                            </label>
+                        </div>
+                    </t>
+                </t>
+                <div class="d-flex justify-content-center gap-2 p-2">
+                    <t t-if="showUpdateButton">
+                        <button class="btn btn-secondary d-flex align-items-center justify-content-center gap-2" t-on-click="onClickUpdate" t-att-disabled="store.rtc?.recordingRequest">
+                            <span><t t-out="updateButtonText"/></span>
+                            <t t-if="store.rtc?.recordingRequest">
+                                <i class="fa fa-fw fa-spinner fa-spin"/>
+                            </t>
+                        </button>
+                    </t>
+                    <button class="btn d-flex align-items-center justify-content-center gap-2" t-att-class="isRecording ? 'btn-danger' : 'btn-primary'" t-on-click="onClickRecording" t-att-disabled="store.rtc?.recordingRequest">
+                        <span><t t-out="recordingButtonText"/></span>
+                        <t t-if="store.rtc?.recordingRequest">
+                            <i class="fa fa-fw fa-spinner fa-spin"/>
+                        </t>
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

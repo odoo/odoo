@@ -311,8 +311,22 @@ export class Rtc extends Record {
     fallbackMode = false;
     isPipMode = false;
     isFullscreen = false;
-    /** @type {RtcLog} */
-    logs = {};
+    canRecordTranscription = false;
+    canRecordAudio = false;
+    canRecordVideo = false;
+    recordingState = fields.Attr(
+        { recording: false, audio: false, transcription: false, video: false },
+        {
+            onUpdate() {
+                if (this.recordingState.recording) {
+                    this.addCallNotification({
+                        id: "recording_started",
+                        text: _t("Recording has started"),
+                    });
+                }
+            },
+        }
+    );
     notifications = reactive(new Map());
     /** @type {Map<string, number>} timeoutId by notificationId for call notifications */
     timeouts = new Map();
@@ -421,6 +435,12 @@ export class Rtc extends Record {
         return Boolean(this.localSession);
     }
 
+    isInternal = fields.Attr(false, {
+        compute() {
+            return this.store.self_user?.share === false;
+        },
+    });
+
     callActions = fields.Attr([], {
         compute() {
             const transformedActions = registry
@@ -459,8 +479,10 @@ export class Rtc extends Record {
     });
 
     setup() {
-        this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
         this.upgradeConnectionDebounce = debounce(this._upgradeConnection, 15000, true);
+        this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
+        this.startRecordingDebounce = debounce(this.startRecording, 1000, true);
+        this.stopRecordingDebounce = debounce(this.stopRecording, 1000, true);
         this.blurManager = undefined;
     }
 
@@ -850,6 +872,57 @@ export class Rtc extends Record {
         }
         await this.setDeaf(false);
         this.soundEffectsService.play("earphone-on");
+    }
+
+    /**
+     * @param {Object} [options]
+     * @param {boolean} [options.audio]
+     * @param {boolean} [options.video]
+     * @param {boolean} [options.transcription]
+     */
+    async startRecording(options = {}) {
+        if (!this.sfuClient || this.sfuClient.state !== this.SFU_CLIENT_STATE.CONNECTED) {
+            if (this.recordingRequest) {
+                return;
+            }
+            this.recordingRequest = options;
+            if (!this.serverInfo) {
+                this.upgradeConnectionDebounce();
+            }
+            return;
+        }
+        await this._startRecording(options);
+    }
+
+    /**
+     * TODO UX for selecting the options.
+     * TODO to allow users to change transcription flag during,
+     * can be called again with the transcription options.
+     * need UX for this feature.
+     */
+    async _startRecording(options) {
+        this.recordingRequest = null;
+        const allowed = await this.sfuClient.startRecording(options);
+        if (!allowed) {
+            this.addCallNotification({
+                id: "recording_not_allowed",
+                text: _t("Recording is not allowed"),
+            });
+        }
+    }
+
+    async stopRecording() {
+        this.recordingRequest = null;
+        if (!this.sfuClient) {
+            return;
+        }
+        const allowed = await this.sfuClient.stopRecording();
+        if (!allowed) {
+            this.addCallNotification({
+                id: "recording_not_allowed",
+                text: _t("Recording is not allowed"),
+            });
+        }
     }
 
     /** @param {"microphone" | "camera"} media */
@@ -1287,6 +1360,23 @@ export class Rtc extends Record {
             case "info_change":
                 this.updateSessionInfo(payload);
                 return;
+            case "channel_info_change": {
+                if (payload.stopCode === "recording_timeout") {
+                    this.addCallNotification({
+                        id: "recording_timeout",
+                        text: _t("Recording stopped due to timeout"),
+                        delay: 3000,
+                    });
+                } else if (payload.stopCode === "disk_space_exhausted") {
+                    this.addCallNotification({
+                        id: "recording_disk_space_exhausted",
+                        text: _t("Recording cannot start due to insufficient disk space"),
+                        delay: 3000,
+                    });
+                }
+                this.recordingState = payload.state;
+                return;
+            }
             case "track":
                 {
                     const { sessionId, type, track, active, sequence } = payload;
@@ -1356,12 +1446,23 @@ export class Rtc extends Record {
                 this.sfuClient.updateUpload("audio", this.audioTrack);
                 this.sfuClient.updateUpload("camera", this.cameraTrack);
                 this.sfuClient.updateUpload("screen", this.screenTrack);
+                this.recordingState = this.sfuClient.recordingState;
+                this.canRecordAudio = this.sfuClient.availableFeatures.audioRecording;
+                this.canRecordVideo = this.sfuClient.availableFeatures.videoRecording;
+                this.canRecordTranscription = this.sfuClient.availableFeatures.transcription;
+                if (this.recordingRequest) {
+                    this._startRecording(this.recordingRequest);
+                }
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
                     if (!this.localChannel) {
                         return;
                     }
+                    this.canRecordAudio = false;
+                    this.canRecordVideo = false;
+                    this.canRecordTranscription = false;
+                    this.recordingState = { recording: false, transcription: false, video: false };
                     let text;
                     if (cause === "full") {
                         text = _t("Channel full");
@@ -1511,6 +1612,7 @@ export class Rtc extends Record {
         this.clear();
         this.localChannel = channel;
         this.store.insert(data);
+        this.canTranscribe = this.isInternal;
         this.newLogs();
         this.updateAndBroadcastDebounce = debounce(
             async () => {
@@ -1708,7 +1810,17 @@ export class Rtc extends Record {
         browser.clearTimeout(this.sfuTimeout);
         this.sfuClient = undefined;
         this.network = undefined;
+        this.canRecordAudio = false;
+        this.canRecordVideo = false;
+        this.canRecordTranscription = false;
+        /**
+         * Contains the requested options of the recording when the recording
+         * is awaiting for the SFU to connect.
+         * @type {{video: boolean, transcription: boolean} | null}
+         */
+        this.recordingRequest = null;
         this.audioContext?.close();
+        this.recordingState = { recording: false, transcription: false, video: false };
         this.audioContext = undefined;
         this._p2pRecoveryCount = 0;
         this.closeCallPermissionDialog?.();
