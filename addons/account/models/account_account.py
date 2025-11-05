@@ -908,12 +908,12 @@ class AccountAccount(models.Model):
         for account in self:
             if formatted_display_name and account.code:
                 account.display_name = (
-                    f"""{account.code} {account.name}"""
+                    f"""{account.code if self.env.user.has_group('account.group_account_readonly') else ''} {account.name}"""
                     f"""{f' `{_("Suggested")}`' if account.id in preferred_account_ids else ''}"""
                     f"""{f'{new_line}--{account.description}--' if account.description else ''}"""
                 )
             else:
-                account.display_name = f"{account.code} {account.name}" if account.code else account.name
+                account.display_name = f"{account.code} {account.name}" if account.code and self.env.user.has_group('account.group_account_readonly') else account.name
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
