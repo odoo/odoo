@@ -293,6 +293,12 @@ export class DiscussChannel extends Record {
         inverse: "parent_channel_id",
         sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
     });
+    self_member_id = fields.One("discuss.channel.member", {
+        inverse: "channelAsSelf",
+        onDelete() {
+            this.onPinStateUpdated();
+        },
+    });
     thread = fields.One("mail.thread", {
         compute() {
             return { id: this.id, model: "discuss.channel" };

@@ -64,7 +64,7 @@ export class AvatarCardPopover extends Component {
             this.currentChannelRole !== "admin" &&
             (this.store.self_user?.is_admin ||
                 (this.selfChannelRole === "owner" && this.currentChannelRole !== "owner") ||
-                (this.selfChannelRole === "owner" && this.props.channelMember?.threadAsSelf))
+                (this.selfChannelRole === "owner" && this.props.channelMember?.channelAsSelf))
         );
     }
 
@@ -88,7 +88,7 @@ export class AvatarCardPopover extends Component {
         return (
             this.props.channelMember &&
             this.currentChannelRole === "owner" &&
-            (this.store.self_user?.is_admin || this.props.channelMember?.threadAsSelf)
+            (this.store.self_user?.is_admin || this.props.channelMember?.channelAsSelf)
         );
     }
 
@@ -166,10 +166,10 @@ export class AvatarCardPopover extends Component {
     setChannelRole(role) {
         if (
             !this.store.self_user?.is_admin &&
-            (this.props.channelMember.threadAsSelf || role === "owner")
+            (this.props.channelMember.channelAsSelf || role === "owner")
         ) {
             this.dialog.add(ConfirmationDialog, {
-                body: this.props.channelMember.threadAsSelf
+                body: this.props.channelMember.channelAsSelf
                     ? _t(
                           "Do you want to remove owner from yourself? You will no longer have full control over the channel and its settings."
                       )

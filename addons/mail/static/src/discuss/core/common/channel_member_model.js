@@ -52,10 +52,10 @@ export class ChannelMember extends Record {
      * @type {false|"owner"|"admin"}
      */
     channel_role;
-    threadAsSelf = fields.One("mail.thread", {
+    channelAsSelf = fields.One("discuss.channel", {
         compute() {
             if (this.store.self?.eq(this.persona)) {
-                return this.channel_id?.thread;
+                return this.channel_id;
             }
         },
     });

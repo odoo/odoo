@@ -69,7 +69,7 @@ const discussChannelPatch = {
             this.discussAppAsThread ||
             this.self_member_id?.is_pinned ||
             this.isLocallyPinned ||
-            this.sub_channel_ids.some((thread) => thread.channel?.isDisplayInSidebar)
+            this.sub_channel_ids.some((channel) => channel.isDisplayInSidebar)
         );
     },
     delete() {

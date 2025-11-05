@@ -34,7 +34,7 @@ patch(Thread.prototype, {
         return (
             (this.channel?.channel_type === "livechat" &&
                 !this.store.chatHub.compact &&
-                this.self_member_id) ||
+                this.channel.self_member_id) ||
             super.autoOpenChatWindowOnNewMessage
         );
     },
@@ -67,10 +67,13 @@ patch(Thread.prototype, {
         return super.getPersonaName(persona);
     },
     get displayName() {
-        if (this.channel?.channel_type !== "livechat" || this.self_member_id?.custom_channel_name) {
+        if (
+            this.channel?.channel_type !== "livechat" ||
+            this.channel?.self_member_id?.custom_channel_name
+        ) {
             return super.displayName;
         }
-        const memberType = this.self_member_id?.livechat_member_type;
+        const memberType = this.channel?.self_member_id?.livechat_member_type;
         if (memberType === "visitor") {
             const agents = this.correspondents.filter((c) => c.livechat_member_type === "agent");
             if (agents.length) {
