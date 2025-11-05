@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="delivery.locationSelector.component"
+        t-inherit="website.locationSelector.component">
+
+        <!-- Pass validateSelection function to mobile and desktop views -->
+        <xpath expr="//t[@t-component]" position="attributes">
+            <attribute name="validateSelection.bind">validateSelection</attribute>
+        </xpath>
+        <xpath expr="//MapContainer" position="attributes">
+            <attribute name="validateSelection.bind">validateSelection</attribute>
+        </xpath>
+
+        <!-- Add a validation button in mobile view -->
+        <xpath expr="." position="inside">
+            <t t-if="this.state.isSmall" t-set-slot="footer">
+                <div class="w-100 m-0 border-top p-3">
+                    <button
+                        type="button"
+                        id="submit_location_small"
+                        class="btn btn-primary w-100"
+                        t-att-disabled="!this.state.selectedLocationId"
+                        t-on-click="validateSelection"
+                        t-out="validationButtonLabel"
+                    />
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Show error message if the location list is empty -->
+        <xpath expr="//t[@t-component='mobileComponent']" position="after">
+            <t t-else="" t-call="delivery.locationSelector.listIsEmpty" />
+        </xpath>
+        <xpath expr="//LocationList" position="after">
+            <t t-else="" t-call="delivery.locationSelector.listIsEmpty" />
+        </xpath>
+
+        <!-- Show numerical indexes on locations -->
+        <xpath expr="//t[@t-component]" position="attributes">
+            <attribute name="showIndexes">true</attribute>
+        </xpath>
+        <xpath expr="//LocationList" position="attributes">
+            <attribute name="showIndexes">true</attribute>
+        </xpath>
+        <xpath expr="//MapContainer" position="attributes">
+            <attribute name="showIndexes">true</attribute>
+            <attribute name="showLocationNameOnMarkerHover">false</attribute>
+        </xpath>
+
+        <!-- Disable the "Press Control to Zoom" mechanics -->
+        <xpath expr="//MapContainer" position="attributes">
+            <attribute name="pressControlToZoom">false</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="delivery.locationSelector.listIsEmpty">
+        <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage" />
+        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden" t-out="loadingMessage" />
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -4,9 +4,11 @@ import logging
 from lxml import html
 from werkzeug.urls import url_encode
 
+import requests
 from odoo.tests import HttpCase, tagged
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tools import create_image_attachment
+from odoo.tools.misc import file_open
 
 _logger = logging.getLogger(__name__)
 
@@ -172,3 +174,37 @@ class TestSnippets(HttpCase):
         self.assertEqual(image_elem.attrib['width'], '100%')
         self.assertEqual(image_elem.attrib['height'], '100%')
         self.assertEqual(image_elem.attrib['preserveaspectratio'], 'xMidYMid slice')
+
+
+@tagged('post_install', '-at_install', 'external', '-standard')
+class TestSnippetsExternal(HttpCase):
+    def fetch_proxy(self, url):
+        if 'openstreetmap' in url:
+            _logger.info('External chrome request during tests: Sending dummy page for %s', url)
+            with file_open('base/tests/odoo.jpg', 'rb') as f:
+                content = f.read()
+            return self.make_fetch_proxy_response(content)
+        if 'unpkg' in url:
+            _logger.info('External request to unpkg during tests: %s', url)
+            response = requests.get(url, timeout=30)
+            return self.make_fetch_proxy_response(response.content)
+        return super().fetch_proxy(url)
+
+    def test_store_locator_snippet(self):
+        self.env['res.partner'].create({
+            'name': 'AAAAA',
+            'display_name': "AAAAA",
+            'is_company': True,
+            'street': 'Rue des Bourlottes 9',
+            'city': 'Ramillies',
+            'zip': '1367',
+            'partner_latitude': '50.6299867',
+            'partner_longitude': '4.8620372',
+            'phone': '+32123123123',
+            'email': 'email@example.com',
+            'type': 'contact',
+            'country_id': self.env.ref('base.be').id,
+            'vat': "US1234567",
+            'vat_label': "TIN",
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_store_locator', login='admin')

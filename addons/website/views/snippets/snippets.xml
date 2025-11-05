@@ -465,6 +465,10 @@
                 t-image-preview="/website/static/src/img/snippets_previews/s_facebook_preview.webp">
                 <keywords>social media, fb, feed</keywords>
             </t>
+            <t t-snippet="website.s_store_locator" string="Store Locator" group="social"
+                t-image-preview="/website/static/src/img/snippets_previews/s_store_locator_preview.webp">
+                <keywords>store locator, partner, locations, find us, map, stores</keywords>
+            </t>
             <t t-set="google_maps_api_key" t-value="env['website'].get_current_website().google_maps_api_key"/>
             <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map" group="social" label="Map"
                 t-image-preview="/website/static/src/img/snippets_previews/s_map_preview.png"/>

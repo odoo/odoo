@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website.locationSelector.component">
-            <!-- Mobile view -->
-            <t t-if="this.state.isSmall">
-                <!-- Search bar -->
-                <t t-call="website.locationSelector.searchbar"/>
+        <!-- Mobile view -->
+        <t t-if="this.state.isSmall">
+            <div class="map_container">
 
+                <!-- Search bar -->
+                <t t-if="this.props.showSearchbar and this.props.showSidebar" t-call="website.locationSelector.searchbar" />
+                
                 <!-- "List view / Map view" navigation -->
-                <div class="nav nav-tabs">
+                <div class="nav nav-tabs" t-if="this.props.showSidebar">
                     <button
                         class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
                         t-att-class="{'border-bottom active': this.state.viewMode === 'list'}"
@@ -21,84 +23,87 @@
                         t-out="mapViewButtonLabel"
                     />
                 </div>
-
+                
                 <!-- Component -->
                 <div class="flex-grow-1 overflow-x-auto">
                     <t
                         t-if="this.state.locations.length"
                         t-component="mobileComponent"
-                        locations="locations"
+                        locations="this.state.locations"
+                        showEmail="this.props.showEmail"
+                        showImage="this.props.showImage"
+                        showPhone="this.props.showPhone"
+                        showWebsite="this.props.showWebsite"
+                        showIndexes="false"
                         selectedLocationId="this.state.selectedLocationId.toString()"
                         setSelectedLocation.bind="setSelectedLocation"
-                        validateSelection.bind="validateSelection"
+                        showDetailsTextArea="this.props.showDetailsTextArea"
+                        showDetailsTooltip="this.props.showDetailsTooltip"
+                        showPinIndicator="false"
                     />
-                    <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
-                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden" t-out="loadingMessage"/>
-                            </div>
-                        </div>
-                    </t>
                 </div>
-            </t>
-
-            <!-- Desktop view -->
-            <div t-else="" class="d-flex h-100 mx-0 mx-md-n3 overflow-hidden">
-
-                <!-- List view -->
-                <section
-                    id="location_selector_list_view"
-                    class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column"
-                >
-
-                    <!-- Search bar -->
-                    <t t-call="website.locationSelector.searchbar">
-                        <t t-set="wrapClass" t-value="'d-flex'"/>
-                    </t>
-
-                    <!-- List group -->
-                    <LocationList
-                        t-if="locations.length"
-                        locations="locations"
-                        selectedLocationId="this.state.selectedLocationId.toString()"
-                        setSelectedLocation.bind="setSelectedLocation"
-                        validateSelection.bind="validateSelection"
-                    />
-                    <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
-                        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden" t-out="loadingMessage"/>
-                            </div>
-                        </div>
-                    </t>
-                </section>
-
-                <!-- Map view -->
-                <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
-                    <MapContainer
-                        locations="locations"
-                        selectedLocationId="this.state.selectedLocationId.toString()"
-                        setSelectedLocation.bind="setSelectedLocation"
-                        validateSelection.bind="validateSelection"
-                    />
-                </section>
             </div>
+        </t>
 
-            <!-- Validation button in mobile view -->
-            <t t-if="this.state.isSmall" t-set-slot="footer">
-                <div class="w-100 m-0 border-top p-3">
-                    <button
-                        type="button"
-                        id="submit_location_small"
-                        class="btn btn-primary w-100"
-                        t-att-disabled="!this.state.selectedLocationId"
-                        t-on-click="validateSelection"
-                        t-out="validationButtonLabel"
-                    />
-                </div>
-            </t>
+        <!-- Desktop view -->
+        <div t-else="" class="d-flex h-100 mx-0 mx-md-n3 overflow-hidden"
+            t-att-class="{'flex-row-reverse': this.props.sidebarLocation == 'right'}">
+
+            <!-- List view -->
+            <section
+                t-if="showListView"
+                id="location_selector_list_view"
+                class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column"
+            >
+
+                <!-- Search bar -->
+                <t t-if="this.props.showSearchbar" t-call="website.locationSelector.searchbar">
+                    <t t-set="wrapClass" t-value="'d-flex'" />
+                </t>
+
+                <!-- List group -->
+                <LocationList
+                    t-if="this.state.locations.length"
+                    locations="this.state.locations"
+                    hideOffscreenLocations="this.props.hideOffscreenLocations"
+                    visibleLocations="this.state.visibleLocations"
+                    selectedLocationId="this.state.selectedLocationId.toString()"
+                    setSelectedLocation.bind="setSelectedLocation"
+                    showIndexes="false"
+                    showPinIndicator="false"
+                />
+            </section>
+
+            <!-- Map view -->
+            <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
+                <MapContainer
+                    locations="this.state.locations"
+                    mapZoom="this.props.mapZoom"
+                    pressControlToZoom="true"
+                    selectedLocationId="this.state.selectedLocationId.toString()"
+                    setVisibleLocations.bind="setVisibleLocations"
+                    setSelectedLocation.bind="setSelectedLocation"
+                    showEmail="this.props.showEmail"
+                    showImage="this.props.showImage"
+                    showPhone="this.props.showPhone"
+                    showWebsite="this.props.showWebsite"
+                    showDetailsTextArea="this.props.showDetailsTextArea"
+                    showDetailsTooltip="this.props.showDetailsTooltip"
+                    showIndexes="false"
+                    showLocationNameOnMarkerHover="true"
+                />
+            </section>
+
+        </div>
+    </t>
+
+    <t t-name="website.locationSelector.listIsEmpty">
+        <div class="container mt-3">
+            <div role="dialog" class="alert alert-info mx-auto text-center">
+                <span>No store locations have been added yet.</span><br/>
+                <span>Add at least one location using the "Store Locations" selector in this block's options to display the map.</span>
+            </div>
+        </div>
     </t>
 
     <t t-name="website.locationSelector.searchbar">
@@ -115,7 +120,7 @@
                 title="Search"
                 class="btn btn-light"
             >
-                <i class="oi oi-search"/>
+                <i class="oi oi-search" />
             </button>
         </div>
     </t>

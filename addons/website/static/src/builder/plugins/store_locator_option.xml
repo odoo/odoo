@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.StoreLocatorOption">
+        <BuilderRow label.translate="Zoom">
+            <BuilderSelect dataAttributeAction="'mapZoom'" preview="false">
+                <t t-foreach="mapZoomOptions" t-as="zoomOption" t-key="zoomOption.value">
+                    <BuilderSelectItem dataAttributeActionValue="zoomOption.value">
+                    <t t-esc="zoomOption.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Display Sidebar" preview="false">
+        <BuilderCheckbox dataAttributeAction="'mapSidebar'" id="'sidebar_opt'"  dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Hide Offscreen" tooltip.translate="Hides elements outside the current map view" t-if="isActiveItem('sidebar_opt')" level="1" preview="false">
+        <BuilderCheckbox dataAttributeAction="'mapHideOffscreenLocations'" dataAttributeActionValue="'true'" action="'hideLocationsOffscreen'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Display Searchbar" t-if="isActiveItem('sidebar_opt')" level="1" preview="false">
+        <BuilderCheckbox dataAttributeAction="'mapSearchbar'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Sidebar Location" t-if="isActiveItem('sidebar_opt')">
+        <BuilderSelect dataAttributeAction="'mapSidebarLocation'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'left'">Left</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'right'">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Details">
+        <BuilderSelect dataAttributeAction="'mapDetails'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'area'" title.translate="Area" id="'details_area'">Area</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'tooltip'" title.translate="Tooltip">Tooltip</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Phone Number" preview="false" level="1">
+        <BuilderCheckbox dataAttributeAction="'mapShowPhone'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Email" preview="false" level="1">
+        <BuilderCheckbox dataAttributeAction="'mapShowEmail'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Website" preview="false" level="1">
+        <BuilderCheckbox dataAttributeAction="'mapShowWebsite'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Image" preview="false" level="1" t-if="isActiveItem('details_area')">
+        <BuilderCheckbox dataAttributeAction="'mapShowImage'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow>
+        <div class="d-flex flex-column w-100">
+            <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
+                <t t-out="'Store Locations'" />
+            </p>
+            <BuilderList
+                fullWidthDropdown="true"
+                action="'addLocationToStoreLocator'"
+                addItemTitle="Add"
+                itemShape="{ display_name: 'text' }"
+                default="{ display_name: 'default' }"
+                defaultNewValue="{ id: 'default' }"
+                forbidLastItemRemoval="false"
+                records="this.state.availableRecords"
+                alternativeChoiceItemTemplate="'website.StoreLocatorChoiceItemTemplate'"
+            />
+        </div>
+    </BuilderRow>
+    <BuilderRow label.translate="Refresh Locations" preview="false" t-if="this.state.hasLocations">
+        <BuilderButton
+        action="'refreshStoreLocator'"
+        title.translate="Refresh All Data For The Listed Locations">
+        Refresh Now
+    </BuilderButton>
+</BuilderRow>
+</t>
+
+<t t-name="website.StoreLocatorChoiceItemTemplate">
+    <b t-esc="choice.value.name"/><br/>
+    <div t-esc="choice.value.contact_address_inline"/>
+</t>
+
+</templates>

@@ -16,7 +16,7 @@
                 class="position-absolute top-0 start-0 h-100 ps-1 bg-primary transition-base"
                 t-attf-class="#{props.isSelected ? 'ms-0' : 'ms-n1' }"
             />
-            <span t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
+            <span t-if="props.showPinIndicator" t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
                 <t t-call="delivery.locationSelector.map.pinIndicator">
                     <t t-set="number" t-value="props.number"/>
                 </t>

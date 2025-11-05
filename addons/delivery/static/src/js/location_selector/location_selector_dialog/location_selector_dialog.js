@@ -12,12 +12,19 @@ export class LocationSelectorDialog extends Component {
     static template = 'delivery.locationSelector.dialog';
     static props = {
         zipCode: String,
-        selectedLocationId: { type: String, optional: true},
+        selectedLocationId: { type: String, optional: true },
         save: Function,
         close: Function, // This is the close from the env of the Dialog Component
+        showDetailsTooltip: { type: Boolean, optional: true },
+        showDetailsTextArea: { type: Boolean, optional: true },
+        showEmail: { type: Boolean, optional: true },
+        showPhone: { type: Boolean, optional: true },
+        showSearchbar: { type: String, optional: true },
     };
     static defaultProps = {
         selectedLocationId: false,
+        showDetailsTextArea: true,
+        showSearchbar: true,
     };
 
     setup() {
@@ -138,6 +145,15 @@ export class LocationSelectorDialog extends Component {
     setSelectedLocation(locationId) {
         this.state.selectedLocationId = String(locationId);
     }
+
+    /**
+     * This function is intentonally left empty. The template contains a
+     * reference to this function, but it is employed only in website, where
+     * LocationSelector is used as a snippet.
+     *
+     * @return {void}
+     */
+    setVisibleLocations(locationsIds) {}
 
     /**
      * Confirm the current selected location.

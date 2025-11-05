@@ -7,7 +7,7 @@ export class Location extends Component {
     static template = "website.locationSelector.location";
     static props = {
         id: String,
-        number: Number,
+        number: { type: String, optional: true },
         name: String,
         street: String,
         city: String,
@@ -19,10 +19,16 @@ export class Location extends Component {
                 element: String,
                 optional: true,
             },
+            optional: true,
         },
         additionalData: { type: Object, optional: true },
         isSelected: Boolean,
         setSelectedLocation: Function,
+        showPinIndicator: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        openingHours: {},
+        showPinIndicator: true,
     };
 
     /**

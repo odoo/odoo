@@ -1,0 +1,62 @@
+.s_store_locator {
+    position: relative;
+
+    .map_container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &.o_full_screen_height{
+        height: 1vh !important;
+    }
+
+    &.o_full_screen_height, &.o_half_screen_height{
+        .map_container {
+            @include o-position-absolute(0, 0, 0, 0);
+        }
+    }
+
+    .o_location_selector_view {
+        // Force tab-pane to be displayed on desktop.
+        @include media-breakpoint-up(md) {
+            opacity: 1;
+        }
+
+        // Remove border-start class for mobile
+        @include media-breakpoint-down(md) {
+            border-left: 0 !important;
+        }
+    }
+
+    &:not(.o_full_screen_height, .o_half_screen_height)  .o_location_selector_view{
+        // If the option "Height" is set on "Auto", this max-height prevents
+        // the component from growing without limit as entries are added
+        max-height: 80vh;
+    }
+
+    .collapsed i.o_location_selector_hours_caret {
+        transform: rotate(180deg) !important;
+    }
+
+    .o_location_selector_mobile_tab.active {
+        font-weight: $font-weight-bold;
+        --border-color: #{$primary};
+    }
+
+    .o_location_selector_schedule {
+        grid-template-columns: auto 1fr;
+    }
+
+    .o_location_selector_schedule_hours {
+        gap: 0 map-get($spacers, 3);
+    }
+
+    .o_store_locator_component{
+        padding-left: 0;
+        padding-right: 0;
+
+        // Required to have the map below the "scroll down" button (when present)
+        z-index: 0;
+    }
+
+}

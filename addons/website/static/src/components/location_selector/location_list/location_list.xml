@@ -9,8 +9,9 @@
                     t-key="location.id"
                 >
                     <Location
+                        t-if="!this.props.hideOffscreenLocations or this.props.visibleLocations.has((location_index + 1).toString())"
                         id="location.id.toString()"
-                        number="location_index + 1"
+                        number="this.props.showIndexes ? (location_index + 1).toString() : ''"
                         name="location.name"
                         street="location.street"
                         city="location.city"
@@ -19,6 +20,7 @@
                         additionalData="location.additional_data"
                         isSelected="this.props.selectedLocationId === location.id.toString()"
                         setSelectedLocation="this.props.setSelectedLocation"
+                        showPinIndicator="this.props.showPinIndicator"
                     />
                 </t>
             </div>

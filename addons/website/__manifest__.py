@@ -19,6 +19,7 @@
         'google_recaptcha',
         'utm',
         'html_builder',
+        'base_geolocalize',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
@@ -167,6 +168,7 @@
         'views/snippets/s_google_map.xml',
         'views/snippets/s_cta_mockups.xml',
         'views/snippets/s_map.xml',
+        'views/snippets/s_store_locator.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
