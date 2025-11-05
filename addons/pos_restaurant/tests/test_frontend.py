@@ -617,6 +617,8 @@ class TestFrontend(TestFrontendCommon):
             'use_guest': True,
         })
         self.start_pos_tour('test_guest_count_bank_payment')
+        self.main_pos_config.write({'default_preset_id': self.preset_takeaway.id})
+        self.start_pos_tour('test_open_register_with_preset_takeaway')
 
     def test_restaurant_preset_eatin_tour(self):
         self.pos_config.write({
