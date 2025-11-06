@@ -46,12 +46,17 @@ const configWithEmbeddings = {
     Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
     resources: { embedded_components: MAIN_EMBEDDINGS },
 };
+const testEditorWithHighlightedContent = async (config) =>
+    await testEditor({
+        ...config,
+        compareFunction: compareHighlightedContent,
+        config: configWithEmbeddings,
+    });
 
 beforeEach(patchPrism);
 
 test("starting edition with a pre activates syntax highlighting", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>some code</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -65,13 +70,11 @@ test("starting edition with a pre activates syntax highlighting", async () => {
             highlightedPre({ value: "some code" }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // Undo did nothing.
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">some code</pre>`,
-        config: configWithEmbeddings,
     });
 });
 
 test("starting edition with a pre activates syntax highlighting (with dataset values)", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: `<pre data-language-id="javascript">Hello world!</pre>`,
         // The DIV should now be filled with a highlighted pre and a textarea,
         // the respective values of which match the dataset.
@@ -114,13 +117,11 @@ test("starting edition with a pre activates syntax highlighting (with dataset va
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // Undo did nothing.
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">Hello world!</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("inserting a code block activates syntax highlighting plugin, typing triggers highlight", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<p>[]abc</p>",
         stepFunction: async (editor) => {
             await insertPre(editor);
@@ -139,13 +140,11 @@ test("inserting a code block activates syntax highlighting plugin, typing trigge
             highlightedPre({ value: "abcd", textareaRange: 4 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // The change of value in the textarea is reflected in the pre.
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("inserting an empty code block activates syntax highlighting plugin with an empty textarea", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<p><br>[]</p>",
         stepFunction: insertPre,
         contentAfterEdit:
@@ -153,13 +152,11 @@ test("inserting an empty code block activates syntax highlighting plugin with an
             highlightedPre({ value: "", textareaRange: 0 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("inserting a code block in an empty paragraph with a style placeholder activates syntax highlighting plugin with an empty textarea", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<p><br>[]</p>",
         stepFunction: async (editor) => {
             await pressAndWait(["ctrl", "b"]);
@@ -184,14 +181,12 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test.tags();
 test("changing languages in a code block changes its highlighting", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>some code</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -209,13 +204,11 @@ test("changing languages in a code block changes its highlighting", async () => 
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">some code</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("should fill an empty pre", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>abc</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -232,13 +225,11 @@ test("should fill an empty pre", async () => {
             highlightedPre({ value: "", textareaRange: 0 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // Note: the BR is outside the highlight.
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("the textarea should never contains zws", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>a\u200bb\ufeffc</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -253,7 +244,6 @@ test("the textarea should never contains zws", async () => {
             highlightedPre({ value: "abc", textareaRange: 3 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abc</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
@@ -264,8 +254,7 @@ test("can copy content with the copy button", async () => {
             expect.step(text);
         },
     });
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>abc</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -296,13 +285,11 @@ test("can copy content with the copy button", async () => {
             highlightedPre({ value: "abcd", textareaRange: 4 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("tab in code block inserts 4 spaces", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>code</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -322,14 +309,12 @@ test("tab in code block inserts 4 spaces", async () => {
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">co    de</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("tab in selection in code block indents each selected line", async () => {
     const valueAfter = "    a\n    b c\n     d";
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>a<br>b c<br> d</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -352,14 +337,12 @@ test("tab in selection in code block indents each selected line", async () => {
             "\n",
             "<br>"
         )}</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("shift+tab in code block outdents the current line", async () => {
     const valueAfter = "    some\nco    de\n    for you";
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>    some<br>       co    de<br>    for you</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -394,13 +377,11 @@ test("shift+tab in code block outdents the current line", async () => {
             "\n",
             "<br>"
         )}</pre>[]`,
-        config: configWithEmbeddings,
     });
 });
 
 test("shift+tab in selection in code block outdents each selected line", async () => {
-    await testEditor({
-        compareFunction: compareHighlightedContent,
+    await testEditorWithHighlightedContent({
         contentBefore: "<pre>    a<br>    b c<br>     d</pre>",
         contentBeforeEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -432,7 +413,6 @@ test("shift+tab in selection in code block outdents each selected line", async (
                 textareaRange: [1, 6], // "a[\nb c\n]d"
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        config: configWithEmbeddings,
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>b c<br>d</pre>[]`,
     });
 });
