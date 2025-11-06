@@ -1682,7 +1682,9 @@ class ProjectTask(models.Model):
             project_alias_address = project.alias_name + "@" + project.alias_domain_id.name
             # Removing project alias from unmatched_partner_emails as this will be added to cc_mail address and when
             # a mail is sent unnecessary partner is created in the name of project_alias
-            unmatched_partner_emails.remove(project_alias_address)
+            # Avoid ValueError if alias already removed elsewhere
+            if project_alias_address in unmatched_partner_emails:
+                unmatched_partner_emails.remove(project_alias_address)
 
         users = partners.user_ids
         internal_user_ids = users.filtered(lambda u: not u.share).ids
