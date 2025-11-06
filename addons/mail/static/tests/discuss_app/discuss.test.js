@@ -2568,3 +2568,28 @@ test("do not show control panel without breadcrumbs", async () => {
     await contains(".o-mail-Discuss");
     await contains(".o_control_panel .breadcrumb:has(:text('" + serverState.partnerName + "'))");
 });
+
+test("Show typing icon on group chat in sidebar", async () => {
+    const pyEnv = await startServer();
+    const marcPid = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const marcUid = pyEnv["res.users"].create({ partner_id: marcPid, name: "Marc Demo" });
+    const groupChatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: marcPid }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(groupChatId);
+    // simulate receive typing notification from Marc Demo "is typing"
+    withUser(marcUid, () =>
+        rpc("/discuss/channel/notify_typing", {
+            is_typing: true,
+            channel_id: groupChatId,
+        })
+    );
+    await contains(
+        ".o-mail-DiscussSidebar-item .o-discuss-Typing-icon[title='Marc Demo is typing...']"
+    );
+});

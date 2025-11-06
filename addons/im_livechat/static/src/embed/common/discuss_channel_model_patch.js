@@ -35,5 +35,8 @@ const discussChannelPatch = {
     get hasAttachmentPanel() {
         return this.channel_type !== "livechat" && super.hasAttachmentPanel;
     },
+    get showImStatus() {
+        return (this.channel_type === "livechat" && this.correspondent) || super.showImStatus;
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

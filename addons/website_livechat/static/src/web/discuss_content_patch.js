@@ -9,7 +9,4 @@ patch(DiscussContent.prototype, {
     get showThreadAvatar() {
         return this.isLivechatChannel || super.showThreadAvatar;
     },
-    get showImStatus() {
-        return this.isLivechatChannel || super.showImStatus;
-    },
 });

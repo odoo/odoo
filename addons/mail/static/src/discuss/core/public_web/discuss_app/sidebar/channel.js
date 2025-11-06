@@ -134,6 +134,14 @@ export class DiscussSidebarChannel extends Component {
         );
     }
 
+    get showThreadIcon() {
+        return (
+            this.channel.channel_type === "chat" ||
+            (this.channel.channel_type === "channel" && !this.channel.group_public_id) ||
+            (this.channel.channel_type === "group" && this.channel.hasOtherMembersTyping)
+        );
+    }
+
     get isSelfOrThreadActive() {
         return (
             this.channel.discussAppAsThread ||

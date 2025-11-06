@@ -686,7 +686,7 @@ test("[text composer] chat: correspondent is typing in chat window", async () =>
             is_typing: true,
         })
     );
-    await contains("[title='Demo is typing...']", { count: 2 }); // icon in header & text above composer
+    await contains("[title='Demo is typing...']");
     // simulate receive typing notification from demo "no longer is typing"
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -725,7 +725,7 @@ test("chat: correspondent is typing in chat window", async () => {
             is_typing: true,
         })
     );
-    await contains("[title='Demo is typing...']", { count: 2 });
+    await contains("[title='Demo is typing...']");
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
