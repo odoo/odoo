@@ -50,6 +50,7 @@ export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["history"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),

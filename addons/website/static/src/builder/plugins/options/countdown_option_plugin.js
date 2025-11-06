@@ -17,6 +17,7 @@ export class CountdownOption extends BaseOptionComponent {
 
 class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(before(SNIPPET_SPECIFIC_END), CountdownOption)],
         so_content_addition_selector: [".s_countdown"],

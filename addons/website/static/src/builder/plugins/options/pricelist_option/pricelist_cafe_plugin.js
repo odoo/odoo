@@ -35,6 +35,7 @@ export class AddProductPricelistCafeRowOption extends BaseAddProductOption {
 
 class PriceListCafePlugin extends Plugin {
     static id = "priceList";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(BEGIN, AddProductPricelistCafeOption),

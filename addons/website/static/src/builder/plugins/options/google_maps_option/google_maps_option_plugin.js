@@ -27,6 +27,18 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @typedef {{ isValid: boolean, message?: string }} ApiKeyValidation
  */
 
+/**
+ * @typedef { Object } GoogleMapsOptionShared
+ * @property { GoogleMapsOptionPlugin['configureGMapsAPI'] } configureGMapsAPI
+ * @property { GoogleMapsOptionPlugin['initializeGoogleMaps'] } initializeGoogleMaps
+ * @property { GoogleMapsOptionPlugin['failedToInitializeGoogleMaps'] } failedToInitializeGoogleMaps
+ * @property { GoogleMapsOptionPlugin['shouldRefetchApiKey'] } shouldRefetchApiKey
+ * @property { GoogleMapsOptionPlugin['shouldNotRefetchApiKey'] } shouldNotRefetchApiKey
+ * @property { GoogleMapsOptionPlugin['commitPlace'] } commitPlace
+ * @property { GoogleMapsOptionPlugin['getPlace'] } getPlace
+ * @property { GoogleMapsOptionPlugin['getMapsAPI'] } getMapsAPI
+ */
+
 export class GoogleMapsOptionPlugin extends Plugin {
     static id = "googleMapsOption";
     static dependencies = ["history", "edit_interaction"];
@@ -40,6 +52,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
         "getPlace",
         "getMapsAPI",
     ];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [GoogleMapsOption],
         so_content_addition_selector: [".s_google_map"],
