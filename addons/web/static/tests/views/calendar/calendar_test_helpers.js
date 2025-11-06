@@ -527,6 +527,10 @@ export async function moveEventToTime(eventId, dateTime) {
 }
 
 export async function selectHourOnPicker(selectedValue) {
+    if (getMockEnv().isSmall) {
+        const fromFormat = selectedValue.includes(":") ? "H:mm" : "H";
+        selectedValue = luxon.DateTime.fromFormat(selectedValue, fromFormat).toFormat("HH:mm");
+    }
     await click(".o_time_picker_input:eq(0)");
     await animationFrame();
     await edit(selectedValue, { confirm: "enter" });

@@ -266,7 +266,7 @@ beforeEach(() => {
             // avoid to change the range on the model between 'desktop' and 'mobile' tests
             params.loadSurroundings = false;
             return params;
-        }
+        },
     });
 });
 
@@ -279,7 +279,7 @@ function enableLoadSurroundingsInTest() {
                 params.loadSurroundings = true;
             }
             return params;
-        }
+        },
     });
 }
 
@@ -1688,7 +1688,10 @@ test(`create event with timezone in week mode with formViewDialog`, async () => 
     // use datepicker to enter a date: 12/13/2016 10:00:00
     await contains(`.o_field_widget[name='stop'] button`).click();
     await selectHourOnPicker("10");
-
+    if (getMockEnv().isSmall) {
+        // Close the timepicker
+        await click(".o_bottom_sheet_backdrop");
+    }
     await contains(`.modal-footer .o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
     expect(`.o_event[data-event-id="1"] .o_event_title`).toHaveText("new event");
@@ -3865,7 +3868,6 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
             </calendar>
         `,
     });
-
     await clickDate("2016-12-20");
     await contains(`.o_field_widget[name="name"] input`).edit("An event");
     await contains(`.o_field_widget[name="is_all_day"] input`).click();
@@ -3873,10 +3875,17 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
     // use datepicker to enter a date: 12/20/2016 07:00:00
     await contains(`.o_field_widget[name="start"] button`).click();
     await selectHourOnPicker("7:00");
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    }
 
     // use datepicker to enter a date: 12/20/2016 19:00:00
     await contains(`.o_field_widget[name="stop"] button`).click();
     await selectHourOnPicker("19:00");
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    }
+
     await contains(`.modal .o_form_button_save`).click();
     await moveEventToDate(8, "2016-12-19");
     await clickEvent(8);
@@ -5646,7 +5655,9 @@ test("calendar (year): tap on date switch to day scale", async () => {
     // Should display day view
     expect(".o_calendar_current .fc-dayGridYear-view").toHaveCount(0);
     expect(".o_calendar_current .fc-timeGridDay-view").toHaveCount(1);
-    expect(queryFirst(".o_calendar_current .fc-col-header-cell[data-date]").dataset.date).toBe("2016-02-05");
+    expect(queryFirst(".o_calendar_current .fc-col-header-cell[data-date]").dataset.date).toBe(
+        "2016-02-05"
+    );
 
     // Change scale to month
     await changeScale("month");
@@ -5769,11 +5780,11 @@ test(`calendar renderer is rendered again after search refresh`, async () => {
         `,
     });
     expect.verifySteps(["before load", "after load", "rendered"], {
-        message: "model trigger two notify before the initial render"
+        message: "model trigger two notify before the initial render",
     });
     await validateSearch();
     expect.verifySteps(["before load", "rendered", "after load", "rendered"], {
-        message: "model trigger two rerender, one the load"
+        message: "model trigger two rerender, one the load",
     });
 });
 
@@ -5859,7 +5870,7 @@ test(`three calendars are rendered in the ActionSwiper on touch devices`, async 
     expect.verifySteps(["event.search_read"]);
     expect(".o_calendar_widget").toHaveCount(3);
     expect(".o_actionswiper_left_swipe_area .fc-event").toHaveCount(2, {
-        message: "events are displayed on the following month"
+        message: "events are displayed on the following month",
     });
     expect(".o_actionswiper_left_swipe_area .fc-daygrid-body .fc-event").toHaveText("event 5");
 });

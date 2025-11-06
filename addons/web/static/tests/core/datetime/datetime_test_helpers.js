@@ -1,6 +1,9 @@
 import { expect } from "@odoo/hoot";
-import { click, edit, queryAll, queryAllTexts, queryText } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryAllTexts, queryFirst, queryText } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { getMockEnv } from "@web/../tests/web_test_helpers";
+
+const { DateTime } = luxon;
 
 const PICKER_COLS = 7;
 
@@ -42,10 +45,16 @@ export function assertDateTimePicker(expectedParams) {
     if (time) {
         expect(".o_time_picker").toHaveCount(time.length);
         for (let i = 0; i < time.length; i++) {
-            const expectedTime = time[i];
+            let expectedTime = time[i];
+            if (getMockEnv().isSmall) {
+                expectedTime = DateTime.fromFormat(time[i], "H:mm").toFormat("HH:mm");
+            }
+
             expect(
-                `.o_time_picker:nth-child(${i + 1} of .o_time_picker) .o_time_picker_input`
-            ).toHaveValue(expectedTime, {
+                queryFirst(
+                    `.o_time_picker:nth-child(${i + 1} of .o_time_picker) .o_time_picker_input`
+                ).value
+            ).toBe(expectedTime, {
                 message: `time values should be [${expectedTime}]`,
             });
         }
@@ -144,6 +153,12 @@ export async function zoomOut() {
 }
 
 export async function editTime(time, timepickerIndex = 0) {
+    if (getMockEnv().isSmall) {
+        time = DateTime.fromFormat(time, "H:mm", {
+            locale: "UTC",
+            numberingSystem: "latn",
+        }).toFormat("HH:mm");
+    }
     await click(`.o_time_picker_input:eq(${timepickerIndex})`);
     await animationFrame();
     await edit(time, { confirm: "enter" });

@@ -17,8 +17,9 @@
 }
 
 .o_datetime_picker .o_time_picker {
-    width: 4rem;
-
+    @include media-breakpoint-up(sm) {
+        width: 4rem;
+    }
     input {
         text-align: center;
     }
