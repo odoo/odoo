@@ -16,6 +16,7 @@ class PaymentProvider(models.Model):
     _description = 'Payment Provider'
     _order = 'module_state, state desc, sequence, name'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     def _valid_field_parameter(self, field, name):
         return name == 'required_if_provider' or super()._valid_field_parameter(field, name)
