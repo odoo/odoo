@@ -66,9 +66,7 @@ export class AttachmentUploadService {
                     return;
                 }
                 const { thread, composer } = this.targetsByTmpId.get(tmpId);
-                // FIXME: this should be only response. HOOT tests returns wrong data {result, error}
-                const attachmentData = response?.result ?? response;
-                this._processLoaded(thread, composer, attachmentData, tmpId, def);
+                this._processLoaded(thread, composer, response, tmpId, def);
             }
         );
         this.fileUploadService.bus.addEventListener(
