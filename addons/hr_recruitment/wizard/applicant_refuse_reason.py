@@ -16,7 +16,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', 'Refuse Reason', required=True, default=_default_refuse_reason_id)
     applicant_ids = fields.Many2many('hr.applicant')
-    send_mail = fields.Boolean("Send Email", default=False)
+    send_mail = fields.Boolean("Send Email", compute='_compute_send_mail', precompute=True, store=True, readonly=False)
     template_id = fields.Many2one('mail.template', string='Email Template',
         compute='_compute_template_id', precompute=True, store=True, readonly=False,
         domain="[('model', '=', 'hr.applicant')]")
@@ -41,6 +41,12 @@ class ApplicantGetRefuseReason(models.TransientModel):
         compute='_compute_from_template_id', readonly=False, store=True,
         help="send emails after that date. This date is considered as being in UTC timezone."
     )
+
+    @api.depends('refuse_reason_id', 'applicant_without_email')
+    def _compute_send_mail(self):
+        for wizard in self:
+            template = wizard.refuse_reason_id.template_id
+            wizard.send_mail = template and not wizard.applicant_without_email
 
     @api.depends('applicant_ids')
     def _compute_applicant_without_email(self):
