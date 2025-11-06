@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-13 12:35+0000\n"
-"PO-Revision-Date: 2025-10-13 12:35+0000\n"
+"POT-Creation-Date: 2025-11-04 13:36+0000\n"
+"PO-Revision-Date: 2025-11-04 13:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -376,6 +376,11 @@ msgid "Country"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model,website_form_label:l10n_sa_edi.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__create_uid
 msgid "Created by"
 msgstr ""
@@ -391,7 +396,21 @@ msgid "Determines whether or not a tax counts as a Withholding Tax"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_debit_note__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_format__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_xml_ubl_21_zatca__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -410,6 +429,11 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_account_edi_format
 msgid "EDI format"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model,name:l10n_sa_edi.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -461,7 +485,21 @@ msgid "ICV"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_debit_note__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_format__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_xml_ubl_21_zatca__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_ir_attachment__id
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -687,6 +725,14 @@ msgid ""
 "Once you change the submission mode to <strong>Production</strong>, you cannot change it anymore.\n"
 "                            Be very careful, as any invoice submitted to ZATCA in Production mode will be accounted for\n"
 "                            and might lead to <strong>Fines &amp; Penalties</strong>."
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/ir_attachment.py:0
+msgid ""
+"Oops! The invoice PDF(s) are linked to a validated EDI document and cannot "
+"be deleted according to ZATCA rules: %s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -923,11 +969,6 @@ msgid "Street 2..."
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model,name:l10n_sa_edi.model_account_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_tax__l10n_sa_exemption_reason_code
 msgid "Tax Exemption Reason Code (ZATCA)"
 msgstr ""
@@ -988,7 +1029,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "This invoice was already successfully reported to ZATCA. Please, check the "
 "response below:"
@@ -1002,7 +1042,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Unable to retrieve response from ZATCA. Please, check the response below:"
 msgstr ""
@@ -1131,14 +1170,12 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move.py:0
-#, python-format
 msgid "Warning: Invoice was already successfully reported to ZATCA"
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move.py:0
-#, python-format
 msgid "Warning: Unable to Retrieve a Response from ZATCA"
 msgstr ""
 
@@ -1184,7 +1221,6 @@ msgid "You need to request the CCSID first before you can proceed"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_send__l10n_sa_edi_enable_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid "ZATCA"
 msgstr ""
@@ -1221,6 +1257,12 @@ msgid "ZIP"
 msgstr ""
 
 #. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid "l10n_sa_additional_identification_scheme"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.export_sa_zatca_ubl_extensions
 msgid "not(//ancestor-or-self::cac:AdditionalDocumentReference[cbc:ID='QR'])"
 msgstr ""
@@ -1233,6 +1275,12 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.export_sa_zatca_ubl_extensions
 msgid "not(//ancestor-or-self::ext:UBLExtensions)"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid "street2"
 msgstr ""
 
 #. module: l10n_sa_edi
