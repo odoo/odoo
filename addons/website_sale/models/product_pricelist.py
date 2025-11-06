@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
-
 from odoo.addons.website.models import ir_http
+from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class ProductPricelist(models.Model):
@@ -65,7 +65,36 @@ class ProductPricelist(models.Model):
                 # YTI FIXME: The fix is not at the correct place
                 # It be set when we actually create the pricelist
                 self = self.with_context(default_company_id=vals['company_id'])
-        return super().create(vals_list)
+        pricelists = super().create(vals_list)
+        if pricelists:
+            pricelists._create_product_price()
+        return pricelists
+
+    def _create_product_price(self):
+        """Create product.price records for all products for given pricelists."""
+        ProductPrice = self.env['product.price']
+        if not ProductPrice._is_enabled() or self.env.context.get('install_module') == 'website_sale':
+            return
+        all_products = self.env['product.product'].search_read(fields=['id'])
+        ProductPrice.create(
+            [{
+                'product_product_id': product['id'],
+                'pricelist_id': pricelist_id.id,
+            } for product in all_products for pricelist_id in self]
+        )
+        ProductPrice._run_cron_calculate_price_for_pricelist_products()
+
+    def write(self, vals):
+        res = super().write(vals)
+        ProductPrice = self.env['product.price']
+        if ProductPrice._is_enabled() and 'currency_id' in vals:
+            # Recompute prices of products linked to the pricelist.
+            chained_items = self.env['product.pricelist.item'].search_read(
+                domain=Domain('base_pricelist_id', 'in', self.ids), fields=['pricelist_id']
+            )
+            pls_to_invalidate = self.ids + [item['pricelist_id'][0] for item in chained_items]
+            ProductPrice._recompute_prices_in_pricelists(pls_to_invalidate)
+        return res
 
     #=== BUSINESS METHODS ===#
 

@@ -6,6 +6,16 @@ from odoo import models
 class ProductTemplateAttributeValue(models.Model):
     _inherit = 'product.template.attribute.value'
 
+    def write(self, vals):
+        """Override to recompute prices of related products on extra price change."""
+        res = super().write(vals)
+        ProductPrice = self.env['product.price']
+        if ProductPrice._is_enabled() and 'price_extra' in vals:
+            ProductPrice._recompute_prices_based_on_sale_price(
+                self.ptav_product_variant_ids.ids
+            )
+        return res
+
     def _get_extra_price(self, combination_info):
         self.ensure_one()
         if not self.show_price_extra:

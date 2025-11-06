@@ -4,7 +4,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
@@ -167,9 +166,14 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
 
-        product_price = request.pricelist._get_product_price(
-            self, quantity=1, target_currency=website.currency_id
-        )
+        ProductPrice = self.env['product.price'].sudo()
+        if ProductPrice._is_enabled() and request.pricelist:
+            product_price = ProductPrice.search([
+                ('product_product_id', '=', self.id),
+                ('pricelist_id', '=', request.pricelist.id),
+            ]).price
+        else:
+            product_price = self.lst_price
         # Use sudo to access cross-company taxes.
         product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
         taxes = request.fiscal_position.map_tax(product_taxes_sudo)
@@ -226,6 +230,29 @@ class ProductProduct(models.Model):
             if extra_image.image_128  # only images, no video urls
         ]
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override to create the product price when creating the product."""
+        res = super().create(vals_list)
+        res._create_product_price()
+        return res
+
+    def _create_product_price(self):
+        """Create the product price when creating the product skipping installation."""
+        if not self:
+            return
+        ProductPrice = self.env['product.price']
+        if ProductPrice._is_enabled() and self.env.context.get('install_module') != 'website_sale':
+            pricelist_ids = self.env['product.pricelist'].search([]).ids
+            ProductPrice.create([
+                {
+                    'product_product_id': product.id,
+                    'pricelist_id': pricelist_id,
+                }
+                for product in self for pricelist_id in pricelist_ids
+            ])
+            ProductPrice._run_cron_calculate_price_for_pricelist_products()
+
     def write(self, vals):
         if 'active' in vals and not vals['active']:
             # unlink draft lines containing the archived product
@@ -234,4 +261,9 @@ class ProductProduct(models.Model):
                 ('product_id', 'in', self.ids),
                 ('order_id', 'any', [('website_id', '!=', False)]),
             ]).unlink()
-        return super().write(vals)
+        res = super().write(vals)
+        ProductPrice = self.env['product.price']
+        if ProductPrice._is_enabled() and 'standard_price' in vals:
+            # Recompute product price for pricelists that depends on cost price change.
+            ProductPrice._recompute_prices_based_on_cost(self.ids)
+        return res

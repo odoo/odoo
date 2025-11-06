@@ -25,6 +25,7 @@ from . import (
     test_product_filters,
     test_product_image,
     test_product_page,
+    test_product_price,
     test_product_public_category,
     test_product_ribbon,
     test_product_template,

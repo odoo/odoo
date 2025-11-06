@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_price_list_view" model="ir.ui.view">
+        <field name="name">product.price.view.list</field>
+        <field name="model">product.price</field>
+        <field name="arch" type="xml">
+            <list string="Product Prices">
+                <field
+                    name="product_product_id"
+                    options="{'no_create': True}"
+                />
+                <field
+                    name="pricelist_id"
+                    options="{'no_create': True}"
+                />
+                <field name="pricelist_item_id" options="{'no_create': True}"/>
+                <field name="price"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_price_search_view" model="ir.ui.view">
+        <field name="name">product.price.search</field>
+        <field name="model">product.price</field>
+        <field name="arch" type="xml">
+            <search string="Price">
+                <field
+                    name="product_product_id"
+                    string="Product"
+                    filter_domain="['|', ('product_product_id.default_code', 'ilike', self), ('product_product_id.name', 'ilike', self)]"
+                />
+                <field
+                    name="pricelist_id"
+                    string="Pricelist"
+                    filter_domain="[('pricelist_id.name', 'ilike', self)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="product_price_form_view" model="ir.ui.view">
+        <field name="name">product.price.view.form</field>
+        <field name="model">product.price</field>
+        <field name="arch" type="xml">
+            <form string="Product Price">
+                <sheet>
+                    <group>
+                        <field
+                            name="product_product_id"
+                            options="{'no_create': True}"
+                        />
+                        <field
+                            name="pricelist_id"
+                            options="{'no_create': True}"
+                        />
+                        <field name="pricelist_item_id"/>
+                        <field name="cache_expiry"/>
+                        <field name="price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_price_action" model="ir.actions.act_window">
+        <field name="name">Product prices</field>
+        <field name="res_model">product.price</field>
+        <field name="path">product-prices</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Here will be your prices
+            </p>
+        </field>
+    </record>
+
+</odoo>

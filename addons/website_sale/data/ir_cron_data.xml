@@ -10,4 +10,17 @@
         <field name="state">code</field>
     </record>
 
+    <record id="ir_cron_calculate_product_price" model="ir.cron">
+        <field name="name">eCommerce: precalculate pricelist prices</field>
+        <field name="model_id" ref="model_product_price"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_calculate_product_price()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field
+            name="nextcall"
+            eval="(DateTime.now().replace(hour=2, minute=0, second=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"
+        />
+    </record>
+
 </odoo>

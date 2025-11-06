@@ -120,6 +120,11 @@ class ResConfigSettings(models.TransientModel):
                 )
             ):
                 website._populate_product_feeds()
+        cron = self.env.ref(
+            'website_sale.ir_cron_calculate_product_price', raise_if_not_found=False
+        )
+        if cron:
+            cron.active = self.group_product_pricelist
 
     # === ACTION METHODS === #
 

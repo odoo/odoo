@@ -6,15 +6,14 @@ from collections import defaultdict
 from werkzeug import urls
 
 from odoo import _, api, fields, models
+from odoo.addons.website.models import ir_http
+from odoo.addons.website.tools import text_from_html
+from odoo.addons.website_sale.const import SHOP_PATH
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import html_translate
-
-from odoo.addons.website.models import ir_http
-from odoo.addons.website.tools import text_from_html
-from odoo.addons.website_sale.const import SHOP_PATH
 
 # A delimiter that users aren't likely to search for in product codes.
 RARE_DELIMITER = '\u241E'
@@ -262,9 +261,47 @@ class ProductTemplate(models.Model):
         # when there is no content to display anyway.
         if vals.get('description_ecommerce') and is_html_empty(vals['description_ecommerce']):
             vals['description_ecommerce'] = ''
+        ProductPrice = self.env['product.price']
+        if 'list_price' in vals and ProductPrice._is_enabled():
+            # Recompute product price for pricelists on price change.
+            ProductPrice._recompute_prices_based_on_sale_price(
+                self.product_variant_ids.ids
+            )
         return super().write(vals)
 
+    def unlink(self):
+        """Unlink corresponding product pricelist prices."""
+        ProductPrice = self.env['product.price']
+        if ProductPrice._is_enabled():
+            ProductPrice.search([('product_tmpl_id', 'in', self.ids)]).unlink()
+        return super().unlink()
+
     #=== BUSINESS METHODS ===#
+
+    def _order_to_sql(self, table, order, reverse=False):
+        """Sort by the price of the current pricelist.
+
+        When a `pricelist` is present in the context, products are ordered by the
+        corresponding row in `product_price`. If no pricelist is present,
+        fallback to the default implementation.
+        """
+        base_order = super()._order_to_sql(table, order, reverse=reverse)
+        is_published_sql = self._order_field_to_sql(table, 'is_published', SQL("DESC"), SQL(""))
+        id_sql = self._order_field_to_sql(table, 'id', SQL("DESC"), SQL(""))
+        if 'list_price' in order and (pricelist := self.env.context.get('product_price_pricelist')):
+            pricelist_id = int(pricelist)
+            base_order = SQL(
+                "("
+                "SELECT MIN(ppp.price) "
+                "FROM product_price ppp "
+                "WHERE ppp.product_tmpl_id = %(p_id)s "
+                "AND ppp.pricelist_id = %(pl_id)s"
+                ") %(direction)s",
+                p_id=table.id,
+                pl_id=pricelist_id,
+                direction=SQL("DESC") if 'list_price desc' in order else SQL("ASC")
+            )
+        return SQL(", ").join([is_published_sql, base_order, id_sql])
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
@@ -864,10 +901,20 @@ class ProductTemplate(models.Model):
                 Domain('product_tag_ids', 'in', tags),
                 Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
             ]))
-        if min_price:
-            domains.append([('list_price', '>=', min_price)])
-        if max_price:
-            domains.append([('list_price', '<=', max_price)])
+        if min_price or max_price:
+            if cur_pricelist := self.env.context.get('product_price_pricelist'):
+                price_domain = Domain('pricelist_id', 'in', cur_pricelist.id)
+                if min_price:
+                    price_domain &= Domain('price', '>=', min_price)
+                if max_price:
+                    price_domain &= Domain('price', '<=', max_price)
+                product_prices_query = self.env['product.price']._search(price_domain)
+                domains.append(Domain('id', 'in', product_prices_query.select('product_tmpl_id')))
+            else:
+                if min_price:
+                    domains.append([('list_price', '>=', min_price)])
+                if max_price:
+                    domains.append([('list_price', '<=', max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
         search_fields = ['name', 'default_code', 'variants_default_code']

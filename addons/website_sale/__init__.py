@@ -17,6 +17,8 @@ def _post_init_hook(env):
     existing_websites = env['website'].search([])
     for website in existing_websites:
         website._create_checkout_steps()
+    # Create product prices
+    env['product.pricelist'].search([])._create_product_price()
 
 def uninstall_hook(env):
     ''' Need to reenable the `product` pricelist multi-company rule that were

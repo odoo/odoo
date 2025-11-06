@@ -8,12 +8,11 @@ from unittest.mock import patch
 from PIL import Image
 
 import odoo
-from odoo.fields import Command
-from odoo.tests import tagged
-
 from odoo.addons.website.tests.test_performance import TestWebsitePerformanceCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale.tests.test_pricelist import TestWebsitePriceList
+from odoo.fields import Command
+from odoo.tests import tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -295,13 +294,14 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        query_count = 49  # To increase this number you must ask the permission to al
+        query_count = 51  # To increase this number you must ask the permission to al
         queries = {
             'orm_signaling_registry': 1,
             'website': 1,
             'res_company': 2,
             'product_pricelist': 4,
-            'product_template': 6,
+            'product_price': 1,
+            'product_template': 5,
             'product_tag': 1,
             'product_public_category': 4,
             'product_product': 1,
@@ -320,6 +320,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'product_image': 3,
             'product_template_attribute_value': 1,
             'ir_ui_view': 2,
+            'ir_cron': 2,
             'website_menu': 1,
             'website_page': 1,
         }

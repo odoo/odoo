@@ -11,6 +11,7 @@ from . import product_attribute
 from . import product_document
 from . import product_feed
 from . import product_image
+from . import product_price
 from . import product_pricelist
 from . import product_pricelist_item
 from . import product_product

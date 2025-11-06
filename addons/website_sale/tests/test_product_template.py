@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-
-from odoo.fields import Command
-from odoo.tests import tagged
+from unittest.mock import patch
 
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.fields import Command
+from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
@@ -55,7 +55,10 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
     def test_markup_data_uses_product_schema_when_single_variant(self):
         product_template = self.env['product.template'].create({'name': 'Test product'})
         website = self.website
-        with MockRequest(website.env, website=website):
+        with MockRequest(website.env, website=website), patch(
+            'odoo.addons.website_sale.models.product_price.ProductPrice._is_enabled',
+            return_value=False
+        ):
             markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'Product')
 
@@ -63,7 +66,10 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.env['res.config.settings'].create({
             'show_line_subtotals_tax_selection': 'tax_excluded'
         }).execute()
-        with MockRequest(self.website.env, website=self.website):
+        with MockRequest(self.website.env, website=self.website), patch(
+            'odoo.addons.website_sale.models.product_price.ProductPrice._is_enabled',
+            return_value=False
+        ):
             markup_data = self.product._to_markup_data(self.website)
             self.assertEqual(
                 markup_data['offers']['price'],
@@ -75,7 +81,10 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             'show_line_subtotals_tax_selection': 'tax_included'
         }).execute()
         self.product.price_extra = 10
-        with MockRequest(self.website.env, website=self.website):
+        with MockRequest(self.website.env, website=self.website), patch(
+            'odoo.addons.website_sale.models.product_price.ProductPrice._is_enabled',
+            return_value=False
+        ):
             product_tmpl = self.product.product_tmpl_id
             markup_data = self.product._to_markup_data(self.website)
             self.assertEqual(

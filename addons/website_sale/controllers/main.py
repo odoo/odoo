@@ -10,13 +10,6 @@ from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields
-from odoo.exceptions import ValidationError
-from odoo.fields import Command, Domain
-from odoo.http import request, route
-from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
-from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.translate import LazyTranslate, _
-
 from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
@@ -27,6 +20,12 @@ from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
 )
+from odoo.exceptions import ValidationError
+from odoo.fields import Command, Domain
+from odoo.http import request, route
+from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
+from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.tools.translate import LazyTranslate, _
 
 _lt = LazyTranslate(__name__)
 
@@ -145,12 +144,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         'state_id',
     ]
 
-    def _get_search_order(self, post):
-        # OrderBy will be parsed in orm and so no direct sql injection
-        # id is added to be sure that order is a unique sort key
-        order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
-        return 'is_published desc, %s, id desc' % order
-
     def _add_search_subdomains_hook(self, search):
         return []
 
@@ -222,7 +215,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         tags=None,
         min_price=0.0,
         max_price=0.0,
-        conversion_rate=1,
         **post,
     ):
         return {
@@ -234,18 +226,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'allowFuzzy': not post.get('noFuzzy'),
             'category': str(category.id) if category else None,
             'tags': tags,
-            'min_price': min_price / conversion_rate,
-            'max_price': max_price / conversion_rate,
+            'min_price': min_price,
+            'max_price': max_price,
             'attribute_value_dict': attribute_value_dict,
             'display_currency': post.get('display_currency'),
         }
 
     def _shop_lookup_products(self, options, post, search, website):
         # No limit because attributes are obtained from complete product list
-        product_count, details, fuzzy_search_term = website._search_with_fuzzy("products_only", search,
-                                                                               limit=None,
-                                                                               order=self._get_search_order(post),
-                                                                               options=options)
+        order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
+        product_count, details, fuzzy_search_term = website._search_with_fuzzy(
+            "products_only",
+            search,
+            limit=None,
+            order=order,
+            options=options,
+        )
         search_result = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
 
         return fuzzy_search_term, product_count, search_result
@@ -350,14 +346,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 # restart the counter
                 request.session['website_sale_pricelist_time'] = now
 
-        filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
-        if filter_by_price_enabled:
-            company_currency = website.company_id.sudo().currency_id
-            conversion_rate = request.env['res.currency']._get_conversion_rate(
-                company_currency, website.currency_id, request.website.company_id, fields.Date.today())
-        else:
-            conversion_rate = 1
-
         if search:
             post['search'] = search
 
@@ -366,10 +354,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attribute_value_dict=attribute_value_dict,
             min_price=min_price,
             max_price=max_price,
-            conversion_rate=conversion_rate,
             display_currency=website.currency_id,
             **post
         )
+        ProductPrice = request.env['product.price'].sudo()
+        product_price_is_enabled = request.pricelist and ProductPrice._is_enabled()
+        if product_price_is_enabled:
+            website=website.with_context(product_price_pricelist=request.pricelist)
         fuzzy_search_term, product_count, search_product = self._shop_lookup_products(
             options, post, search, website
         )
@@ -383,13 +374,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             query = Product._search(domain)
-            sql = query.select(
-                SQL(
-                    "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",
-                    conversion_rate=conversion_rate,
+            if not product_price_is_enabled:
+                sql = query.select(
+                    SQL("COALESCE(MIN(list_price), 0), COALESCE(MAX(list_price), 0)")
                 )
-            )
-            available_min_price, available_max_price = request.env.execute_query(sql)[0]
+                available_min_price, available_max_price = request.env.execute_query(sql)[0]
+            else:
+                available_min_price, available_max_price = ProductPrice._read_group(
+                    [
+                        Domain('product_tmpl_id', 'in', query.select(SQL('DISTINCT id')))
+                        & Domain('pricelist_id', '=', request.pricelist.id)
+                    ],
+                    groupby=[],
+                    aggregates=['price:min', 'price:max'],
+                )[0]
 
             if min_price or max_price:
                 # The if/else condition in the min_price / max_price value assignment
