@@ -338,7 +338,7 @@ class PosSelfOrderController(http.Controller):
         return amount_total, amount_untaxed
 
     # The first part will be the session_id of the order.
-    # The second part will be the table_id of the order.
+    # The second part will be the config_id of the order.
     # Last part the sequence number of the order.
     # INFO: This is allow a maximum of 999 tables and 9999 orders per table, so about ~1M orders per session.
     # Example: 'Self-Order 00001-001-0001'
