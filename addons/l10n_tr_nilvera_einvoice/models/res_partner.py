@@ -4,7 +4,7 @@ from odoo import _, api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    l10n_tr_tax_office_id = fields.Many2one("l10n_tr_nilvera_einvoice_extended.tax.office", string="Turkish Tax Office")
+    l10n_tr_tax_office_id = fields.Many2one("l10n_tr_nilvera_einvoice.tax.office", string="Turkish Tax Office")
 
     @api.depends('l10n_tr_tax_office_id')
     def _compute_display_name(self):
