@@ -12,7 +12,8 @@ class EventEvent(models.Model):
     sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
     # frontend menu management
     exhibitor_menu = fields.Boolean(
-        string='Showcase Exhibitors', compute='_compute_exhibitor_menu',
+        string='Exhibitors', compute='_compute_exhibitor_menu',
+        help='Display the "Exhibitors list" tab on website.',
         readonly=False, store=True)
     exhibitor_menu_ids = fields.One2many(
         'website.event.menu', 'event_id', string='Exhibitors Menus',

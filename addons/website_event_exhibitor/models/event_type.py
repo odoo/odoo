@@ -8,9 +8,9 @@ class EventType(models.Model):
     _inherit = "event.type"
 
     exhibitor_menu = fields.Boolean(
-        string='Showcase Exhibitors', compute='_compute_exhibitor_menu',
+        string='Exhibitors', compute='_compute_exhibitor_menu',
         readonly=False, store=True,
-        help='Display exhibitors on website, in the footer of every page of the event.')
+        help='Display the "Exhibitors list" tab on website.')
 
     @api.depends('website_menu')
     def _compute_exhibitor_menu(self):
