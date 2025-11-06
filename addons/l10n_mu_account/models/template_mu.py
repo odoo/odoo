@@ -38,5 +38,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'mu_tax_purchase_15',
                 'expense_account_id': 'mu_expense',
                 'income_account_id': 'mu_income',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'mu_stock_valuation',
+            },
+        }
+
+    @template('mu', 'account.account')
+    def _get_mu_account_account(self):
+        return {
+            'mu_stock_valuation': {
+                'account_stock_expense_id': 'mu_raw_materials',
+                'account_stock_variation_id': 'mu_change_stock',
             },
         }

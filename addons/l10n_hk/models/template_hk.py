@@ -30,5 +30,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_hk_4250',
                 'income_account_id': 'l10n_hk_41',
                 'expense_account_id': 'l10n_hk_51',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_hk_1270',
+            },
+        }
+
+    @template('hk', 'account.account')
+    def _get_hk_account_account(self):
+        return {
+            'l10n_hk_1270': {
+                'account_stock_variation_id': 'l10n_hk_51',
             },
         }

@@ -37,5 +37,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': '8001',
                 'deferred_expense_account_id': '1205',
                 'deferred_revenue_account_id': '1405',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': '3001',
+            },
+        }
+
+    @template('nl', 'account.account')
+    def _get_nl_account_account(self):
+        return {
+            '3001': {
+                'account_stock_expense_id': '7000',
+                'account_stock_variation_id': '7090',
             },
         }

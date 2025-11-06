@@ -33,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'account_tax_template_purchase_21',
                 'expense_account_id': 'account_account_template_6000',
                 'income_account_id': 'account_account_template_5000',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'account_account_template_2010',
             },
         }
     def _setup_utility_bank_accounts(self, template_code, company, template_data):
@@ -45,3 +47,12 @@ class AccountChartTemplate(models.AbstractModel):
             other_operating_results_tags = self.env.ref('l10n_lt.account_account_tag_6_other_operating_results')
             company.default_cash_difference_income_account_id.tag_ids |= other_operating_results_tags
             company.default_cash_difference_expense_account_id.tag_ids |= other_operating_results_tags
+
+    @template('lt', 'account.account')
+    def _get_lt_account_account(self):
+        return {
+            'account_account_template_2010': {
+                'account_stock_expense_id': 'account_account_template_6208',
+                'account_stock_variation_id': 'account_account_template_6005',
+            },
+        }

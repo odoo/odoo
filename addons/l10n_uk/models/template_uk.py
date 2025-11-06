@@ -32,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': '400000',
                 'deferred_expense_account_id': '110300',
                 'deferred_revenue_account_id': '210900',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': '100100',
             },
         }
 
@@ -51,3 +53,11 @@ class AccountChartTemplate(models.AbstractModel):
                 self.ref(xmlid).active = True
 
         return result
+
+    @template('uk', 'account.account')
+    def _get_uk_account_account(self):
+        return {
+            '100100': {
+                'account_stock_variation_id': '630000',
+            },
+        }

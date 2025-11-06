@@ -45,5 +45,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': default_purchase_tax,
                 'income_account_id': 'l10n_ca_411100',
                 'expense_account_id': 'l10n_ca_511210',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_ca_121120',
+            },
+        }
+
+    @template('ca_2023', 'account.account')
+    def _get_ca_account_account(self):
+        return {
+            'l10n_ca_121120': {
+                'account_stock_variation_id': 'l10n_ca_512207',
             },
         }

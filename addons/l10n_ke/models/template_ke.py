@@ -36,5 +36,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_exigibility': 'True',
                 'expense_account_id': 'ke5001',
                 'income_account_id': 'ke4001',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'ke1001',
+            },
+        }
+
+    @template('ke', 'account.account')
+    def _get_ke_account_account(self):
+        return {
+            'ke1001': {
+                'account_stock_expense_id': 'ke5001',
+                'account_stock_variation_id': 'ke500105',
             },
         }
