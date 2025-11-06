@@ -114,6 +114,7 @@ class TestConfigManager(TransactionCase):
             # advanced
             'dev_mode': [],
             'shell_interface': None,
+            'skip_auto_install': False,
             'stop_after_init': False,
             'osv_memory_count_limit': 0,
             'transient_age_limit': 1.0,
@@ -235,6 +236,7 @@ class TestConfigManager(TransactionCase):
             # advanced
             'dev_mode': [],  # blacklist for save, ignored from the config file
             'shell_interface': 'ipython',  # blacklist for save, read from the config file
+            'skip_auto_install': False,
             'stop_after_init': True,  # blacklist for save, read from the config file
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
@@ -355,6 +357,7 @@ class TestConfigManager(TransactionCase):
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'save': None,
             'shell_interface': None,
+            'skip_auto_install': False,
             'stop_after_init': False,
             'root_path': f'{ROOT_PATH}/odoo',
             'translate_in': '',
@@ -506,6 +509,7 @@ class TestConfigManager(TransactionCase):
             # advanced
             'dev_mode': ['xml', 'reload'],
             'shell_interface': 'ipython',
+            'skip_auto_install': False,
             'stop_after_init': True,
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
