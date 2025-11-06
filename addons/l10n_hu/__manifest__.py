@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['hu'],
-    'version': '3.0',
+    'version': '3.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Accounting chart and localization for Hungary
