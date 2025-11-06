@@ -4355,6 +4355,113 @@ class AccountTax(models.Model):
             return ''
         return html2plaintext(self.description)
 
+    @api.model
+    def _import_retrieve_tax_from_invoice_predictive(self, tax_values):
+        # Check if 'account_accountant' is installed.
+        if 'payment_state_before_switch' not in self.env['account.move']._fields:
+            return
+
+        invoice_predictive = tax_values.get('invoice_predictive')
+        if not invoice_predictive:
+            return
+
+        def search_predictive(values):
+            domain = values['static_domain']
+            predicted_tax_ids = self.env['account.move.line']._predict_specific_tax(
+                move=invoice_predictive['invoice'],
+                name=invoice_predictive['name'],
+                partner=invoice_predictive['partner'],
+                amount_type=tax_values['amount_type'],
+                amount=tax_values['amount'],
+                type_tax_use=tax_values['type_tax_use'],
+            )
+            return self.env['account.tax'].browse(predicted_tax_ids).filtered_domain(domain)[:1]
+
+        return {
+            'criteria': [{
+                'search_method': search_predictive,
+                'cache_key': frozendict(invoice_predictive),
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_tax_from_price_include_exclude(self, tax_values):
+        price_include = tax_values.get('price_include')
+        criteria = []
+        if not price_include:
+            criteria.append({'domain': [('price_include', '=', False)]})
+        elif price_include is None or price_include:
+            criteria.append({'domain': [('price_include', '=', True)]})
+
+        return {'criteria': criteria}
+
+    @api.model
+    def _import_retrieve_tax(self, search_plan, company, tax_values_list):
+        cache = {}
+
+        static_domain = expression.OR([
+            [*self._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ])
+        for tax_values in tax_values_list:
+            tax_domain = [
+               ('amount_type', '=', tax_values['amount_type']),
+               ('type_tax_use', '=', tax_values['type_tax_use']),
+               ('amount', '=', tax_values['amount']),
+            ]
+            orders = ['sequence', 'id']
+            if name := tax_values.get('name'):
+                tax_domain.append(('name', '=', name))
+            if tax_exigibility := tax_values.get('tax_exigibility'):
+                tax_domain.append(('tax_exigibility', '=', tax_exigibility))
+            if (
+                (ubl_cii_tax_category_code := tax_values.get('ubl_cii_tax_category_code'))
+                and 'ubl_cii_tax_category_code' in self._fields
+            ):
+                tax_domain.append(('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False)))
+                orders.insert(0, 'ubl_cii_tax_category_code')
+
+            for plan in search_plan:
+                tax = None
+                plan_values = plan(tax_values)
+                if not plan_values:
+                    continue
+
+                for criteria in plan_values['criteria']:
+                    domain = criteria.get('domain')
+                    search_method = criteria.get('search_method')
+                    if domain:
+                        domain = expression.AND([tax_domain, domain])
+                        cache_key = str(domain)
+                    else:
+                        cache_key = criteria.get('cache_key')
+
+                    # Look at the cache if the value has already been tested with this key.
+                    if cache_key in cache:
+                        if tax := cache[cache_key]:
+                            tax_values['tax'] = tax
+                            break
+                        else:
+                            continue
+
+                    if domain:
+                        full_domain = expression.AND([static_domain, domain])
+                        tax = self.search(full_domain, order=','.join(orders), limit=1)
+                    elif search_method:
+                        tax = search_method({
+                            **criteria,
+                            'static_domain': expression.AND([tax_domain, static_domain]),
+                        })
+
+                    if tax:
+                        if cache_key:
+                            cache[cache_key] = tax
+                        tax_values['tax'] = tax
+                        break
+
+                if tax:
+                    break
+
 
 class AccountTaxRepartitionLine(models.Model):
     _name = "account.tax.repartition.line"

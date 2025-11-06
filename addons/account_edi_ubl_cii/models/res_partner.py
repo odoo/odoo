@@ -305,3 +305,16 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.ubl_bis3']
         if invoice_edi_format == 'ubl_sg':
             return self.env['account.edi.xml.ubl_sg']
+
+    @api.model
+    def _import_retrieve_customer_from_eas_endpoint(self, customer_values):
+        peppol_eas = customer_values.get('peppol_eas')
+        peppol_endpoint = customer_values.get('peppol_endpoint')
+        if not peppol_eas or not peppol_endpoint:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)],
+            }],
+        }

@@ -913,78 +913,167 @@ class ResPartner(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _retrieve_partner_with_vat(self, vat, extra_domain):
+    def _import_retrieve_customer_from_vat(self, customer_values):
+        vat = customer_values.get('vat')
         if not vat:
-            return None
+            return
 
         # Sometimes, the vat is specified with some whitespaces or dots.
         normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
-        partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=2)
-
-        # Try to remove the country code prefix from the vat.
-        if not partner and country_prefix:
-            partner = self.env['res.partner'].search(extra_domain + [
-                ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                ('country_id.code', '=', country_prefix.upper()),
-            ], limit=2)
-
-            # The country could be not specified on the partner.
-            if not partner:
-                partner = self.env['res.partner'].search(extra_domain + [
+        criteria = [{'domain': [('vat', 'in', (normalized_vat, vat))]}]
+        if country_prefix:
+            criteria.append({
+                'domain': [
                     ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id', '=', False),
-                ], limit=2)
+                    ('country_id.code', '=', country_prefix.upper()),
+                ],
+            })
+            criteria.append({
+                'domain': [
+                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                    ('country_id.code', '=', False),
+                ],
+            })
 
-        # The vat could be a string of alphanumeric values without country code but with missing zeros at the
-        # beginning.
-        if not partner:
-            try:
-                vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
-            except ValueError:
-                vat_only_numeric = None
+        try:
+            vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
+        except ValueError:
+            vat_only_numeric = None
+        if vat_only_numeric:
 
-            if vat_only_numeric:
-                if country_prefix:
-                    vat_prefix_regex = f'({country_prefix})?'
-                else:
-                    vat_prefix_regex = '([A-z]{2})?'
-                Partner = self.env['res.partner']
-                query = Partner._search(extra_domain + [('active', '=', True)], limit=2)
+            def search_vat_regex(values):
+                static_domain = values['static_domain']
+                vat_prefix_regex = values['vat_prefix_regex']
+
+                query = self._search(static_domain + [('active', '=', True)], limit=2)
                 query.add_where(SQL(
                     "%s ~ %s",
-                    Partner._field_to_sql(Partner._table, 'vat'),
+                    self._field_to_sql(self._table, 'vat'),
                     f'^{vat_prefix_regex}0*{vat_only_numeric}$',
                 ))
                 partner_row = list(query)
                 if partner_row and len(partner_row) == 1:
-                    partner = Partner.browse(partner_row[0])
+                    return self.browse(partner_row[0])
 
-        return partner
+            if country_prefix:
+                vat_prefix_regex = f'({country_prefix})?'
+            else:
+                vat_prefix_regex = '([A-z]{2})?'
+
+            criteria.append({
+                'vat_prefix_regex': vat_prefix_regex,
+                'search_method': search_vat_regex,
+            })
+
+        return {
+            'criteria': criteria,
+        }
+
+    @api.model
+    def _import_retrieve_customer_from_phone(self, customer_values):
+        phone = customer_values.get('phone')
+        if not phone:
+            return
+
+        return {
+            'criteria': [{
+                'domain': ['|', ('phone', '=', phone), ('mobile', '=', phone)],
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_customer_from_email(self, customer_values):
+        email = customer_values.get('email')
+        if not email:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('phone', '=', email)],
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_customer_from_name(self, customer_values):
+        name = customer_values.get('name')
+        if not name:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('name', 'ilike', name)],
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_customer(self, search_plan, company, customer_values_list):
+        cache = {}
+
+        static_domain = expression.OR([
+            [*self._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ])
+        for customer_values in customer_values_list:
+            partner = None
+            for plan in search_plan:
+                plan_values = plan(customer_values)
+                if not plan_values:
+                    continue
+
+                for criteria in plan_values['criteria']:
+                    domain = criteria.get('domain')
+                    search_method = criteria.get('search_method')
+                    if domain:
+                        cache_key = str(domain)
+                    else:
+                        cache_key = criteria.get('cache_key')
+
+                    # Look at the cache if the value has already been tested with this key.
+                    if cache_key in cache:
+                        if partner := cache[cache_key]:
+                            customer_values['customer'] = partner
+                            break
+                        else:
+                            continue
+
+                    if domain:
+                        full_domain = expression.AND([static_domain, domain])
+                        partner = self.search(
+                            full_domain,
+                            order='company_id, id DESC',
+                            limit=1,
+                        )
+                    elif search_method:
+                        partner = search_method({
+                            **criteria,
+                            'static_domain': static_domain,
+                        })
+
+                    if partner:
+                        if cache_key:
+                            cache[cache_key] = partner
+                        customer_values['customer'] = partner
+                        break
+
+                if partner:
+                    break
+
+    @api.model
+    def _retrieve_partner_with_vat(self, vat, extra_domain):
+        # DEPRECATED: TO BE REMOVED IN MASTER
+        return self._retrieve_partner(vat=vat)
 
     @api.model
     def _retrieve_partner_with_phone_email(self, phone, email, extra_domain):
-        domains = []
-        if phone:
-            domains.append([('phone', '=', phone)])
-            domains.append([('mobile', '=', phone)])
-        if email:
-            domains.append([('email', '=', email)])
-
-        if not domains:
-            return None
-
-        domain = expression.OR(domains)
-        if extra_domain:
-            domain = expression.AND([domain, extra_domain])
-        return self.env['res.partner'].search(domain, limit=2)
+        # DEPRECATED: TO BE REMOVED IN MASTER
+        return self._retrieve_partner(phone=phone, email=email)
 
     @api.model
     def _retrieve_partner_with_name(self, name, extra_domain):
-        if not name:
-            return None
-        return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=2)
+        # DEPRECATED: TO BE REMOVED IN MASTER
+        return self._retrieve_partner(name=name)
 
     def _retrieve_partner(self, name=None, phone=None, email=None, vat=None, domain=None, company=None):
         '''Search all partners and find one that matches one of the parameters.
@@ -996,34 +1085,24 @@ class ResPartner(models.Model):
         :param company: The company of the partner.
         :returns:       A partner or an empty recordset if not found.
         '''
-
-        def search_with_vat(extra_domain):
-            return self._retrieve_partner_with_vat(vat, extra_domain)
-
-        def search_with_phone_mail(extra_domain):
-            return self._retrieve_partner_with_phone_email(phone, email, extra_domain)
-
-        def search_with_name(extra_domain):
-            return self._retrieve_partner_with_name(name, extra_domain)
-
-        def search_with_domain(extra_domain):
-            if not domain:
-                return None
-            return self.env['res.partner'].search(domain + extra_domain, limit=1)
-
-        for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
-            for extra_domain in (
-                [*self.env['res.partner']._check_company_domain(company or self.env.company), ('company_id', '!=', False)],
-                [('company_id', '=', False)],
-            ):
-                partner = search_method(extra_domain)
-
-                # The VAT should be a sufficiently distinctive criterion
-                if partner and search_method == search_with_vat:
-                    return partner[:1]
-                if partner and len(partner) == 1:
-                    return partner
-        return self.env['res.partner']
+        customer_values = {
+            'vat': vat,
+            'phone': phone,
+            'email': email,
+            'name': name,
+        }
+        self._import_retrieve_customer(
+            search_plan=[
+                self._import_retrieve_customer_from_vat,
+                lambda collected_values: {'criteria': [{'domain': domain}]} if domain else None,
+                self._import_retrieve_customer_from_email,
+                self._import_retrieve_customer_from_phone,
+                self._import_retrieve_customer_from_name,
+            ],
+            company=company or self.env.company,
+            customer_values_list=[customer_values],
+        )
+        return customer_values.get('customer') or self.env['res.partner']
 
     def _merge_method(self, destination, source):
         """

@@ -6,6 +6,7 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblBis3SelfBilling(TestUblBis3Common, TestUblCiiBECommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

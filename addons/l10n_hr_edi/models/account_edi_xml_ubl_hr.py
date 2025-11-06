@@ -381,47 +381,30 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             if base_line.get('record') and 'l10n_hr_kpd_category_id' in base_line['record']._fields:
                 base_line['cg_item_classification_code'] = base_line['record'].l10n_hr_kpd_category_id
 
-    def _import_fill_invoice(self, invoice, tree, qty_factor):
-        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
+    def _import_ubl_invoice_write_collected_values(self, collected_values):
+        # EXTENDS account.edi.xml.ubl_bis3
+        tree = collected_values['tree']
         profile_id = tree.findtext('./{*}ProfileID')
-        invoice_values = {
-            'l10n_hr_process_type': profile_id[:3] if profile_id[:3] == 'P99' else profile_id,
-            'l10n_hr_customer_defined_process_name': profile_id[4:] if profile_id[:3] == 'P99' else False,
-        }
-        invoice.write(invoice_values)
+        to_write = collected_values['to_write']
+        if profile_id:
+            if (l10n_hr_process_type := profile_id[:3]) == 'P99':
+                to_write['l10n_hr_process_type'] = l10n_hr_process_type
+                to_write['l10n_hr_customer_defined_process_name'] = profile_id[4:]
+            else:
+                to_write['l10n_hr_process_type'] = profile_id
+                to_write['l10n_hr_customer_defined_process_name'] = None
+
+        super()._import_ubl_invoice_write_collected_values(collected_values)
+
+        invoice = collected_values['invoice']
         invoice.l10n_hr_edi_addendum_id.write({'fiscalization_number': tree.findtext('./{*}ID')})
-        return logs
 
-    def _import_invoice_lines(self, invoice, tree, xpath, qty_factor):
-        # Override to work with Croatian tax exigibility flag
-        tax_exigibility = 'on_payment' if tree.find('.//{*}HRObracunPDVPoNaplati') is not None else 'on_invoice'
-        logs = []
-        lines_values = []
-        for line_tree in tree.iterfind(xpath):
-            line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
-            if line_values is None:
-                continue
-
-            line_values['tax_ids'], tax_logs = self._retrieve_taxes(
-                invoice, line_values, invoice.journal_id.type, tax_exigibility,
-            )
-            logs += tax_logs
-            if not line_values['product_uom_id']:
-                line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
-            lines_values.append(line_values)
-            lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
-        return lines_values, logs
-
-    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
-        line_values = super()._retrieve_line_vals(tree, document_type, qty_factor)
-        kpd_category_code = tree.findtext('./{*}Item/{*}CommodityClassification/{*}ItemClassificationCode')
-        if kpd_category_code:
-            line_kpd_category = self.env['l10n_hr.kpd.category'].search([('name', '=', kpd_category_code)], limit=1)
-            if line_kpd_category:
-                line_values.update({
-                    'l10n_hr_kpd_category_id': line_kpd_category.id,
-                })
-        return line_values
+    def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
+        # EXTENDS account.edi.xml.ubl_bis3
+        tax_values = super()._import_ubl_invoice_line_prepare_classified_tax_category_tax_values(collected_values, tax_category_tree)
+        if tax_values:
+            tax_values['tax_exigibility'] = 'on_payment' if tax_category_tree.find('.//{*}HRObracunPDVPoNaplati') is not None else 'on_invoice'
+        return tax_values
 
     def _retrieve_rejection_reference(self, attachment):
         string_to_find = b'Rejected</cbc:StatusReasonCode>'
