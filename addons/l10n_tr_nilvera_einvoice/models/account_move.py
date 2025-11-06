@@ -5,6 +5,7 @@ from urllib.parse import quote, urlencode, urlparse
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
+from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 MOVE_TYPE_CATEGORY_MAP = {
@@ -345,9 +346,12 @@ class AccountMove(models.Model):
         response_json = response.json()
         if errors := response_json.get('Errors'):
             msg += _("The invoice couldn't be sent due to the following errors:\n")
+
             for error in errors:
-                msg += "%s - %s: %s\n" % (error.get('Code'), error.get('Description'), error.get('Detail'))
-                error_codes.append(error.get('Code'))
+                code = error.get('Code')
+                description = NILVERA_ERROR_CODE_MESSAGES.get(code, error.get('Description'))
+                msg += "\n%s - %s:\n%s\n" % (code, description, error.get('Detail'))
+                error_codes.append(code)
 
         return msg, error_codes
 
