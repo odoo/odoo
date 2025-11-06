@@ -22,11 +22,8 @@
                 expectUnloadPage: true,
             },
             {
-                content: 'Select the booth',
-                trigger: ".o_wbooth_booths input[name=event_booth_ids]:not(:visible)",
-                run: function () {
-                    document.querySelector('.o_wbooth_booths input[name="event_booth_ids"]:nth-child(1)').click();
-                },
+                content: "Check that the first booth is selected by default",
+                trigger: ".o_wbooth_booths .form-check:first-child input[name=event_booth_ids]:not(:visible):checked",
             },
             {
                 content: "Verify Price displayed",

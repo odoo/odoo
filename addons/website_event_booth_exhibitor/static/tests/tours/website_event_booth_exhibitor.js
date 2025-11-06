@@ -21,9 +21,8 @@
         trigger: 'img[alt="Premium Booth"]',
         run: "click",
     }, {
-        content: 'Choose Booth',
-        trigger: ".o_wbooth_booths div:contains(OpenWood Demonstrator 2) input:not(:visible)",
-        run: "click",
+        content: "Check that the first booth is selected by default",
+        trigger: ".o_wbooth_booths .form-check:first-child input[name=event_booth_ids]:not(:visible):checked",
     }, {
         content: "Validate attendees details",
         trigger: 'button:enabled:contains("Book my Booth(s)")',
