@@ -37,12 +37,28 @@ class HRLeaveType(models.Model):
         deductible_time_off_types = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
             ('requires_allocation', '=', 'no')])
-        leave_type_names = deductible_time_off_types.mapped('name')
-        for employee in res:
-            for leave_data in res[employee]:
-                if leave_data[0] in leave_type_names:
-                    leave_data[1]['virtual_remaining_leaves'] = employee.sudo().total_overtime
-                    leave_data[1]['overtime_deductible'] = True
-                else:
-                    leave_data[1]['overtime_deductible'] = False
+        for employee in employees:
+            for leave_type in deductible_time_off_types:
+                if leave_type in self and employee.sudo().total_overtime > 0:
+                    lt_info = (
+                        leave_type.name,
+                        {
+                            'remaining_leaves': 0,
+                            'virtual_remaining_leaves': employee.sudo().total_overtime,
+                            'max_leaves': 0,
+                            'leaves_taken': 0,
+                            'virtual_leaves_taken': 0,
+                            'closest_allocation_remaining': 0,
+                            'closest_allocation_expire': False,
+                            'total_virtual_excess': 0,
+                            'virtual_excess_data': {},
+                            'request_unit': leave_type.request_unit,
+                            'icon': leave_type.sudo().icon_id.url,
+                            'allows_negative': leave_type.allows_negative,
+                            'max_allowed_negative': leave_type.max_allowed_negative,
+                            'overtime_deductible': True
+                        },
+                        leave_type.requires_allocation,
+                        leave_type.id)
+                    res[employee].append(lt_info)
         return res

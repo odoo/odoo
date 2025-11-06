@@ -158,7 +158,7 @@ export class ProductConfiguratorPopup extends Component {
                 attribute_custom_values[valueIds[0]] = custom_value;
             }
             const attr = this.pos.data.models["product.template.attribute.value"].get(valueIds[0]);
-            if (attr && attr.attribute_id.create_variant !== "always") {
+            if (attr && attr.attribute_id.create_variant === "no_variant") {
                 price_extra += extra;
             }
         });

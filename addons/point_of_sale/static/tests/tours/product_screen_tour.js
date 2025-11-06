@@ -773,3 +773,20 @@ registry.category("web_tour.tours").add("test_product_ref_displayed", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_dynamic_product_price", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Dynamic Product"),
+            ProductConfiguratorPopup.pickRadio("Dynamic Value 1"),
+            Chrome.clickBtn("Add"),
+            ProductScreen.selectedOrderlineHas("Dynamic Product (Dynamic Value 1)", "1.0", "10.00"),
+            ProductScreen.clickDisplayedProduct("Dynamic Product"),
+            ProductConfiguratorPopup.pickRadio("Dynamic Value 2"),
+            Chrome.clickBtn("Add"),
+            ProductScreen.selectedOrderlineHas("Dynamic Product (Dynamic Value 2)", "1.0", "20.00"),
+            Chrome.endTour(),
+        ].flat(),
+});

@@ -148,6 +148,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
             25.0,
         )
         with freeze_time(effective_date + timedelta(days=3)):
+            custom_delivery_date = fields.Date.today()
             picking_2 = (order.picking_ids - picking_1).ensure_one()
             picking_2.move_ids.write({'quantity': 25.0, 'picked': True})
             picking_2._action_done()
@@ -157,11 +158,16 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
             )
             product_line = invoice.line_ids[0]
             invoice.write({
-                'delivery_date': fields.Date.today(),
+                'delivery_date': custom_delivery_date,
                 'line_ids': [Command.update(product_line.id, {'quantity': 0.0})],
             })
             product_line.quantity += 75.0
             self.assertEqual(
-                invoice.delivery_date, fields.Date.today(),
+                invoice.delivery_date, custom_delivery_date,
                 "Custom invoice delivery shouldn't change after line change",
+            )
+            invoice.action_post()
+            self.assertEqual(
+                invoice.delivery_date, custom_delivery_date,
+                "Custom invoice delivery shouldn't change posting invoice",
             )
