@@ -53,7 +53,6 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'instagram.com', 'instagr.am', 'ig.me',
     'vimeo.com',  # 'player.vimeo.com', 'vimeo.com',
     'dailymotion.com', 'dai.ly',
-    'youku.com',  # 'player.youku.com', 'youku.com',
     'tudou.com',
     'facebook.com', 'facebook.net', 'fb.com', 'fb.me', 'fb.watch',
     'tiktok.com',

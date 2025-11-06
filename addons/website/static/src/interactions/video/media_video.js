@@ -101,8 +101,7 @@ export class MediaVideo extends Interaction {
             "player.vimeo.com",
             "vimeo.com",
             "dailymotion.com",
-            "player.youku.com",
-            "youku.com",
+            "facebook.com",
         ];
         if (!supportedDomains.includes(domain)) {
             return;
