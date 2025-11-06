@@ -2,6 +2,18 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageToolOption">
+    <t t-if="!state.isGridMode and !state.isSocialMediaImg">
+        <MediaSizeOption level="1"/>
+    </t>
+    <BuilderRow label.translate="Transform" level="1" preview="false">
+        <div class="btn-group o-hb-button-group">
+            <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
+            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
+        </div>
+        <ImageTransformOption t-if="!state.isImageAnimated and !state.isSocialMediaImg" />
+    </BuilderRow>
+    <ImageFilterOption level="1"/>
+    <ImageFormatOption level="1"/>
     <t t-if="!state.isSocialMediaImg">
         <ImageShapeOption />
         <BuilderRow label.translate="Description"
@@ -18,18 +30,6 @@
                 placeholder.translate="Title tag" />
         </BuilderRow>
     </t>
-    <BuilderRow label.translate="Transform" preview="false">
-        <div class="btn-group o-hb-button-group">
-            <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
-            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
-        </div>
-        <ImageTransformOption t-if="!state.isImageAnimated and !state.isSocialMediaImg" />
-    </BuilderRow>
-    <ImageFilterOption />
-    <t t-if="!state.isGridMode and !state.isSocialMediaImg">
-        <MediaSizeOption/>
-    </t>
-    <ImageFormatOption />
 </t>
 
 <t t-name="html_builder.ImageAndFaOption">

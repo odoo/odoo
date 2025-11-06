@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.MediaSizeOption">
-    <BuilderRow label.translate="Size">
+    <BuilderRow label.translate="Size" level="this.props.level">
         <div style="width: 45%;">
             <BuilderRange
                 action="'mediaSizeSlider'"
