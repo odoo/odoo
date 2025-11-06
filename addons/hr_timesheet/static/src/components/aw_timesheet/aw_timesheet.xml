@@ -28,9 +28,10 @@
                       <tr
                         t-if="state.grouped[groupKey][title] >= 120"
                         t-att-class="{
-                          'table-danger': this.isSuggestionClicked(groupKey, title),
+                          'table-danger': this.isSelected(groupKey, title),
                         }"
-                        t-on-click.stop="() => this.onSelectSuggestion(groupKey, title)"
+                        t-on-mousedown.stop="() => this.onMouseDown(groupKey, title)"
+                        t-on-mouseenter.stop="() => this.onMouseEnter(groupKey, title)"
                         style="cursor: pointer;"
                       >
                         <!-- Activity name -->

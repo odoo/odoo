@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -29,14 +29,53 @@ export class ActivityWatchTimesheet extends Component {
             nonBillableTime: 0.0,
             billablePercentage: 0.0,
             nonBillablePercentage: 0.0,
-            project_by_id: {},
-            task_by_id: {},
+            projectById: {},
+            taskById: {},
+            selectedRows: new Set(),
+            isSelecting: false,
         });
 
         onWillStart(async () => {
             await this.loadData();
             this.state.loading = false;
         });
+
+        this._onMouseUp = this.onMouseUp.bind(this);
+        onMounted(() => window.addEventListener("mouseup", this._onMouseUp));
+        onWillUnmount(() => window.removeEventListener("mouseup", this._onMouseUp));
+    }
+
+    keyFor(groupKey, title) {
+        return `${groupKey}|${title}`;
+    }
+
+    isSelected(groupKey, title) {
+        return this.state.selectedRows.has(this.keyFor(groupKey, title));
+    }
+
+    onMouseDown(groupKey, title) {
+        this.state.isSelecting = true;
+        this.toggleSelect(groupKey, title);
+    }
+
+    onMouseEnter(groupKey, title) {
+        const key = this.keyFor(groupKey, title);
+        if (this.state.isSelecting && !this.state.selectedRows.has(key)) {
+            this.state.selectedRows.add(key);
+        }
+    }
+
+    onMouseUp() {
+        this.state.isSelecting = false;
+    }
+
+    toggleSelect(groupKey, title) {
+        const key = this.keyFor(groupKey, title);
+        if (this.state.selectedRows.has(key)) {
+            this.state.selectedRows.delete(key);
+        } else {
+            this.state.selectedRows.add(key);
+        }
     }
 
     extractWatcherActivity(event) {
@@ -313,11 +352,11 @@ export class ActivityWatchTimesheet extends Component {
         );
         ranges.forEach((range) => (range.project_id ??= taskToProject[range.task_id]));
 
-        this.state.project_by_id = Object.fromEntries([
+        this.state.projectById = Object.fromEntries([
             ...projects.map(({ id, name }) => [id, name]),
             ...tasks.filter((task) => task.project_id).map((task) => task.project_id),
         ]);
-        this.state.task_by_id = Object.fromEntries(tasks.map(({ id, name }) => [id, name]));
+        this.state.taskById = Object.fromEntries(tasks.map(({ id, name }) => [id, name]));
 
         let prevKeyyEvent = null;
         let isLastEventPrimary = false;
@@ -442,11 +481,11 @@ export class ActivityWatchTimesheet extends Component {
     }
 
     projectName(id) {
-        return this.state.project_by_id[id] || "unmatched"; // manage if the project is wrong (not a valid key)
+        return this.state.projectById[id] || "unmatched"; // manage if the project is wrong (not a valid key)
     }
 
     taskName(id) {
-        return this.state.task_by_id[id] || "unmatched"; // same
+        return this.state.taskById[id] || "unmatched"; // same
     }
 
     getSuggestionParams(groupKey, title) {
@@ -458,8 +497,18 @@ export class ActivityWatchTimesheet extends Component {
         const task_id = this.parseId(ids[1]);
         const unit_amount = this.state.grouped[groupKey][title] / 60; // seconds => minutes
         const name = title;
+        const res = {
+            name: title,
+            unit_amount: this.state.grouped[groupKey][title] / 60,
+        };
+        if (project_id != null) {
+            res["project_id"] = project_id;
+        }
+        if (task_id != null) {
+            res["task_id"] = task_id;
+        }
 
-        return { project_id, task_id, unit_amount, name };
+        return res;
     }
 
     onClickLeftSide() {
@@ -491,9 +540,6 @@ export class ActivityWatchTimesheet extends Component {
             ...params,
         };
 
-        // to fix hardcoded
-        vals.project_id = vals.project_id[0];
-        vals.task_id = vals.task_id[0];
         await this.orm.call("account.analytic.line", "create", [vals]);
         this.notification.add("Timesheet entry created!", { type: "success" });
         this.onDelete(groupKey, title);
