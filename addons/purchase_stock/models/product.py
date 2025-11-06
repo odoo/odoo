@@ -219,6 +219,13 @@ class ProductProduct(models.Model):
 
         return start_date, limit_date
 
+    def get_total_routes(self):
+        routes = super().get_total_routes()
+        if self.seller_ids:
+            buy_routes = self.env['stock.rule'].search([('action', '=', 'buy')]).route_id
+            routes |= buy_routes
+        return routes
+
 
 class ProductSupplierinfo(models.Model):
     _inherit = 'product.supplierinfo'
