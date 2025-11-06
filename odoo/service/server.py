@@ -248,7 +248,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
 
     def server_bind(self):
         SD_LISTEN_FDS_START = 3
-        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
+        if config.http_socket_activation:
             self.reload_socket = True
             self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
             _logger.info('HTTP service (werkzeug) running through socket activation')
