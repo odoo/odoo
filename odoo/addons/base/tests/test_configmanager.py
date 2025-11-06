@@ -148,6 +148,7 @@ class TestConfigManager(TransactionCase):
 
             # advanced
             'dev_mode': [],
+            'skip_auto_install': False,
             'stop_after_init': False,
             'osv_memory_count_limit': 0,
             'transient_age_limit': 1.0,
@@ -264,6 +265,7 @@ class TestConfigManager(TransactionCase):
 
             # advanced
             'dev_mode': ['xml'],  # blacklist for save, read from the config file
+            'skip_auto_install': False,
             'stop_after_init': True,  # blacklist for save, read from the config file
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
@@ -379,6 +381,7 @@ class TestConfigManager(TransactionCase):
             'language': None,
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'save': False,
+            'skip_auto_install': False,
             'stop_after_init': False,
             'translate_in': '',
             'translate_out': '',
@@ -546,6 +549,7 @@ class TestConfigManager(TransactionCase):
 
             # advanced
             'dev_mode': ['xml', 'reload'],
+            'skip_auto_install': False,
             'stop_after_init': True,
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
