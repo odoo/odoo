@@ -4,7 +4,7 @@
     <t t-name="web.PhoneField">
         <div class="o_phone_content d-inline-flex w-100">
             <t t-if="props.readonly">
-                <a t-if="props.record.orecord.reactiveData[props.name]" class="o_form_uri" target="_blank" t-att-href="phoneHref" t-esc="props.record.orecord.reactiveData[props.name]"/>
+                <a t-if="props.record.data[props.name]" class="o_form_uri" target="_blank" t-att-href="phoneHref" t-esc="props.record.data[props.name]"/>
             </t>
             <t t-else="">
                 <input
@@ -22,7 +22,7 @@
     <t t-name="web.FormPhoneField" t-inherit="web.PhoneField" t-inherit-mode="primary">
         <xpath expr="//input" position="after">
             <a
-                t-if="props.record.orecord.reactiveData[props.name]"
+                t-if="props.record.data[props.name]"
                 t-att-href="phoneHref"
                 target="_blank"
                 class="o_phone_form_link ms-3 d-inline-flex align-items-center"

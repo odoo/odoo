@@ -14,11 +14,11 @@ export class PhoneField extends Component {
 
     setup() {
         useInputField({
-            getValue: () => this.props.record.orecord.reactiveData[this.props.name] || "",
+            getValue: () => this.props.record.data[this.props.name] || "",
         });
     }
     get phoneHref() {
-        return "tel:" + this.props.record.orecord.reactiveData[this.props.name].replace(/\s+/g, "");
+        return "tel:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
     }
 }
 

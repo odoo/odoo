@@ -463,7 +463,7 @@ export class FormController extends Component {
 
     displayName() {
         const r =
-            this.model.root.orecord.reactiveData.display_name ||
+            this.model.root.orecord.display_name ||
             // (this.model.root.isNew && _t("New")) ||
             "";
         return r;

@@ -20,10 +20,8 @@ export class ContactImageField extends ImageField {
                 );
             } else {
                 const magic =
-                    fileTypeMagicWordMap[
-                        this.props.record.orecord.reactiveData[imageFieldName][0]
-                    ] || "png";
-                this.lastURL = `data:image/${magic};base64,${this.props.record.orecord.reactiveData[imageFieldName]}`;
+                    fileTypeMagicWordMap[this.props.record.data[imageFieldName][0]] || "png";
+                this.lastURL = `data:image/${magic};base64,${this.props.record.data[imageFieldName]}`;
             }
             return this.lastURL;
         }

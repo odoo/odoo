@@ -11,7 +11,7 @@ export class SendSMSButton extends Component {
         this.title = _t("Send SMS");
     }
     get phoneHref() {
-        return "sms:" + this.props.record.orecord.reactiveData[this.props.name].replace(/\s+/g, "");
+        return "sms:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
     }
     async onClick() {
         await this.props.record.save();
