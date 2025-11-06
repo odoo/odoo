@@ -894,6 +894,62 @@ describe("Mount processing", () => {
         await animationFrame();
         expect(setSelection).toBe(simplePlugin.dependencies.selection.setSelection);
     });
+
+    test("Insert a component and execute a callback for its first mount", async () => {
+        const { el, editor, plugins } = await setupEditor(`<p>[]after</p>`, {
+            config: getConfig([embedding("counter", Counter)]),
+        });
+        const host = plugins
+            .get("embeddedComponents")
+            .renderBlueprintToElement(xml`<span data-embedded="counter"></span>`, {}, () =>
+                expect.step("onComponentInserted")
+            );
+        plugins.get("dom").insert(host);
+        addStep(editor);
+        await animationFrame();
+        // First mount
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span>[]after</p>`
+        );
+        expect.verifySteps(["onComponentInserted"]);
+        deleteBackward(editor);
+        addStep(editor);
+        expect(getContent(el)).toBe(`<p>[]after</p>`);
+        undo(editor);
+        await animationFrame();
+        // Second mount, onComponentInserted was discarded
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span>[]after</p>`
+        );
+        expect.verifySteps([]);
+    });
+
+    test("Discard onComponentInserted callback if a component is removed before finishing being mounted after insertion", async () => {
+        const { el, editor, plugins } = await setupEditor(`<p>[]after</p>`, {
+            config: getConfig([embedding("counter", Counter)]),
+        });
+        const host = plugins
+            .get("embeddedComponents")
+            .renderBlueprintToElement(xml`<span data-embedded="counter"></span>`, {}, () =>
+                expect.step("onComponentInserted")
+            );
+        plugins.get("dom").insert(host);
+        addStep(editor);
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"></span>[]after</p>`
+        );
+        // Don't wait for the component to mount, and remove the host
+        deleteBackward(editor);
+        addStep(editor);
+        expect(getContent(el)).toBe(`<p>[]after</p>`);
+        undo(editor);
+        await animationFrame();
+        // First mount, but onComponentInserted was discarded since the component was removed
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span>[]after</p>`
+        );
+        expect.verifySteps([]);
+    });
 });
 
 describe("In-editor manipulations", () => {
