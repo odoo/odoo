@@ -74,6 +74,33 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
 
+        cls.test_event_registration_not_mandatory = cls.env['event.event'].create({
+            'name': 'Event regitration not mandatory',
+            'user_id': cls.pos_admin.id,
+            'date_begin': datetime.datetime.now() + datetime.timedelta(days=1),
+            'date_end': datetime.datetime.now() + datetime.timedelta(days=2),
+            'seats_limited': True,
+            'seats_max': 10,
+            'event_ticket_ids': [(0, 0, {
+                'name': 'Ticket Basic',
+                'product_id': cls.product_event.id,
+                'seats_max': 10,
+                'price': 100,
+            })],
+            'question_ids': [
+                (0, 0, {
+                    'title': 'Name',
+                    'question_type': 'name',
+                    'once_per_order': False,
+                }),
+                (0, 0, {
+                    'title': 'Email',
+                    'question_type': 'email',
+                    'once_per_order': False,
+                }),
+            ]
+        })
+
     def test_selling_event_in_pos(self):
         self.pos_user.write({
             'groups_id': [
@@ -88,3 +115,46 @@ class TestUi(TestPointOfSaleHttpCommon):
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
+
+    def test_pos_event_registration_not_mandatory(self):
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+
+        event_partner = self.env['res.partner'].create([{
+            'name': 'Event Parter',
+            'email': "event@partner.com",
+            'is_company': False,
+        }])
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_pos_event_registration_not_mandatory', login="pos_user")
+
+        registrations = self.env['event.registration'].search([('event_id', "=", self.test_event_registration_not_mandatory.id)])
+        self.assertEqual(len(registrations), 4)
+
+        # No customer during order, filled registration information
+        no_partner_registration = registrations.filtered(lambda r: not r.partner_id)
+        self.assertEqual(len(no_partner_registration), 1)
+        self.assertEqual(no_partner_registration.name, "Name 1")
+        self.assertEqual(no_partner_registration.email, "1@test.com")
+
+        partner_registrations = registrations.filtered(lambda r: r.partner_id == event_partner)
+        self.assertEqual(len(partner_registrations), 3)
+
+        # Customer during order, filled registration information
+        r2 = partner_registrations.filtered(lambda r: r.name == "Name 2")
+        self.assertEqual(len(r2), 1)
+        self.assertEqual(r2.email, "2@test.com")
+
+        # Customer during order, partial registration information
+        r3 = partner_registrations.filtered(lambda r: r.name == "Name 3")
+        self.assertEqual(len(r3), 1)
+        self.assertEqual(r3.email, "event@partner.com")
+
+        # Customer during order, no registration information
+        r_empty = partner_registrations.filtered(lambda r: r.name == "Event Parter")
+        self.assertEqual(len(r_empty), 1)
+        self.assertEqual(r_empty.email, "event@partner.com")
