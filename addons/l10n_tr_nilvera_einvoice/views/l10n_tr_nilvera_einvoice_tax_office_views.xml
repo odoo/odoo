@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="l10n_tr_nilvera_einvoice_extended_tax_office_view_list" model="ir.ui.view">
-        <field name="name">l10n_tr_nilvera_einvoice_extended.tax.office.list</field>
-        <field name="model">l10n_tr_nilvera_einvoice_extended.tax.office</field>
+    <record id="l10n_tr_nilvera_einvoice_tax_office_view_list" model="ir.ui.view">
+        <field name="name">l10n_tr_nilvera_einvoice.tax.office.list</field>
+        <field name="model">l10n_tr_nilvera_einvoice.tax.office</field>
         <field name="arch" type="xml">
             <list string="Tax Offices" multi_edit="1">
                 <field name="code" optional="hide"/>
@@ -13,9 +13,9 @@
         </field>
     </record>
 
-    <record id="l10n_tr_nilvera_einvoice_extended_tax_office_view_form" model="ir.ui.view">
-        <field name="name">l10n_tr_nilvera_einvoice_extended.tax.office.form</field>
-        <field name="model">l10n_tr_nilvera_einvoice_extended.tax.office</field>
+    <record id="l10n_tr_nilvera_einvoice_tax_office_view_form" model="ir.ui.view">
+        <field name="name">l10n_tr_nilvera_einvoice.tax.office.form</field>
+        <field name="model">l10n_tr_nilvera_einvoice.tax.office</field>
         <field name="arch" type="xml">
             <form string="Tax Office">
                 <sheet>
@@ -34,10 +34,10 @@
         </field>
     </record>
 
-    <record id="action_l10n_tr_nilvera_einvoice_extended_tax_office_list" model="ir.actions.act_window">
+    <record id="action_l10n_tr_nilvera_einvoice_tax_office_list" model="ir.actions.act_window">
         <field name="name">GIB Tax Offices</field>
-        <field name="res_model">l10n_tr_nilvera_einvoice_extended.tax.office</field>
-        <field name="view_id" ref="l10n_tr_nilvera_einvoice_extended_tax_office_view_list"/>
+        <field name="res_model">l10n_tr_nilvera_einvoice.tax.office</field>
+        <field name="view_id" ref="l10n_tr_nilvera_einvoice_tax_office_view_list"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a Tax Office
@@ -45,5 +45,5 @@
         </field>
     </record>
 
-    <menuitem id="l10n_tr_menu_state_office_partner" action="action_l10n_tr_nilvera_einvoice_extended_tax_office_list" parent="contacts.menu_localisation" sequence="10"/>
+    <menuitem id="l10n_tr_menu_state_office_partner" action="action_l10n_tr_nilvera_einvoice_tax_office_list" parent="contacts.menu_localisation" sequence="10"/>
 </odoo>

@@ -3,7 +3,7 @@
 # enforce the order of nodes. The TR Invoice dict is a created as a seperate dict than the UBL 2.1
 # and cleaned, since Turkey follows UBL 1.2.
 
-import odoo.addons.l10n_tr_nilvera_einvoice_extended.tools.ubl_tr_common as cac
+import odoo.addons.l10n_tr_nilvera_einvoice.tools.ubl_tr_common as cac
 
 TrInvoiceLine = {
     'cbc:ID': {},
