@@ -32,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_expense_account_id': 'sa_account_104020',
                 'deferred_revenue_account_id': 'sa_account_201018',
                 'account_cash_basis_base_account_id': 'sa_account_201030',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'sa_account_131100',
             },
         }
 
@@ -60,4 +62,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
                 'sequence': 10,
             }
+        }
+
+    @template('sa', 'account.account')
+    def _get_sa_account_account(self):
+        return {
+            'sa_account_131100': {
+                'account_stock_variation_id': 'sa_account_400001',
+            },
         }

@@ -28,5 +28,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_input_vat',
                 'expense_account_id': 'a_exp_cogs',
                 'income_account_id': 'a_sales',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'a_invent',
+            },
+        }
+
+    @template('th', 'account.account')
+    def _get_th_account_account(self):
+        return {
+            'a_invent': {
+                'account_stock_expense_id': 'a_exp_cogs',
+                'account_stock_variation_id': 'a_stock_variation',
             },
         }

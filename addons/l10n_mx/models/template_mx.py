@@ -40,6 +40,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_cash_basis_base_account_id': 'cuenta801_01_99',
                 'l10n_mx_income_return_discount_account_id': 'cuenta402_01',
                 'l10n_mx_income_re_invoicing_account_id': 'cuenta402_04',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'cuenta115_01',
             },
         }
 
@@ -73,3 +75,12 @@ class AccountChartTemplate(models.AbstractModel):
                 }
             })
         return accounts_data
+
+    @template('mx', 'account.account')
+    def _get_mx_account_account(self):
+        return {
+            'cuenta115_01': {
+                'account_stock_expense_id': 'cuenta505_01',
+                'account_stock_variation_id': 'cuenta501_02',
+            },
+        }

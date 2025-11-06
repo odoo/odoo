@@ -36,5 +36,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'au_tax_purchase_10_service',
                 'income_account_id': 'au_41110',
                 'expense_account_id': 'au_51110',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'au_11310',
+            },
+        }
+
+    @template('au', 'account.account')
+    def _get_au_account_account(self):
+        return {
+            'au_11310': {
+                'account_stock_variation_id': 'au_51110',
             },
         }

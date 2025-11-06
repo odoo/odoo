@@ -12,8 +12,13 @@ class AccountChartTemplate(models.AbstractModel):
         """ Nigerian companies are fine with using the generic COA
         but we need to add Nigeria-specific taxes and a tax report
         """
+        generic_coa_account_data = {f'l10n_ng_{k}': v for k, v in self._parse_csv('generic_coa', 'account.account').items()}
+        generic_coa_account_data['l10n_ng_stock_valuation'].update({
+            'account_stock_expense_id': 'l10n_ng_expense',
+            'account_stock_variation_id': 'l10n_ng_stock_variation',
+        })
         return {
-            **{f'l10n_ng_{k}': v for k, v in self._parse_csv('generic_coa', 'account.account').items()},
+            **generic_coa_account_data,
             'l10n_ng_withholding': {
                 'name': _("Withholding Tax on Purchases"),
                 'code': '252001',
@@ -48,7 +53,11 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ng', 'res.company')
     def _get_ng_res_company(self):
         res_company_data = self._get_generic_coa_res_company()[self.env.company.id]
-        res_company_data['account_fiscal_country_id'] = 'base.ng'
+        res_company_data.update({
+            'account_fiscal_country_id': 'base.ng',
+            'account_stock_journal_id': 'inventory_valuation',
+            'account_stock_valuation_id': 'l10n_ng_stock_valuation',
+        })
 
         for field, value in res_company_data.items():
             if 'account_id' in field:
