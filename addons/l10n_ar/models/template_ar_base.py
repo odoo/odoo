@@ -30,6 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'base_compra_mercaderia',
                 'income_account_id': 'base_venta_de_mercaderia',
                 'display_invoice_tax_company_currency': False,
+                'account_stock_valuation_id': 'base_mercaderia_reventa',
             },
         }
 
@@ -44,5 +45,14 @@ class AccountChartTemplate(models.AbstractModel):
                 "l10n_ar_afip_pos_partner_id": self.env.company.partner_id.id,
                 "l10n_ar_afip_pos_system": 'II_IM',
                 "refund_sequence": False,
+            },
+        }
+
+    @template('ar_base', 'account.account')
+    def _get_ar_base_account_account(self):
+        return {
+            'base_mercaderia_reventa': {
+                'account_stock_expense_id': 'base_compra_mercaderia',
+                'account_stock_variation_id': 'base_variacion_mercaderia_reventa',
             },
         }

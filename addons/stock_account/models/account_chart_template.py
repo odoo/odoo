@@ -20,8 +20,10 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    @template()
-    def _get_stock_template_data(self, template_code):
+    @template(model='res.company')
+    def _get_stock_res_company(self, template_code):
         return {
-            'stock_journal': 'inventory_valuation',
+            self.env.company.id: {
+                'account_stock_journal_id': 'inventory_valuation',
+            },
         }

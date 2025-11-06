@@ -47,5 +47,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'expense',
                 'income_account_id': 'income',
                 'deferred_expense_account_id': 'prepayments',
-            }
+                'account_stock_valuation_id': 'stock_valuation',
+                'account_production_wip_account_id': 'wip',
+                'account_production_wip_overhead_account_id': 'cost_of_production',
+            },
+        }
+
+    @template('generic_coa', 'account.account')
+    def _get_generic_coa_account_account(self):
+        return {
+            'stock_valuation': {
+                'account_stock_expense_id': 'expense',
+                'account_stock_variation_id': 'stock_variation',
+            },
         }

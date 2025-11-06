@@ -31,6 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'iva_pt_purchase_normal',
                 'income_account_id': 'chart_711',
                 'expense_account_id': 'chart_311',
+                'account_stock_valuation_id': 'chart_331',
             },
         }
 
@@ -43,3 +44,12 @@ class AccountChartTemplate(models.AbstractModel):
             if 'bank' in vals:
                 vals['bank']['default_account_id'] = 'chart_12'
         return vals
+
+    @template('pt', 'account.account')
+    def _get_pt_account_account(self):
+        return {
+            'chart_331': {
+                'account_stock_expense_id': 'chart_612',
+                'account_stock_variation_id': 'chart_6228',
+            },
+        }
