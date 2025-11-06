@@ -1802,21 +1802,14 @@ class HrEmployee(models.Model):
 
     def _get_calendar_periods(self, start, stop):
         """
-        :param datetime start: the start of the period
-        :param datetime stop: the stop of the period
+        :param date start: the start of the period
+        :param date stop: the stop of the period
         """
         calendar_periods_by_employee = defaultdict(list)
-        versions = self.sudo()._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+        versions = self.sudo()._get_versions_with_contract_overlap_with_period(start, stop)
         for version in versions:
-            # if employee is under fully flexible contract, use timezone of the employee
-            calendar_tz = ZoneInfo(version.resource_calendar_id.tz) if version.resource_calendar_id else ZoneInfo(version.employee_id.resource_id.tz)
-            date_start = datetime.combine(version.contract_date_start, time(0, 0, 0), tzinfo=calendar_tz).astimezone(UTC)
-            if version.date_end:
-                date_end = datetime.combine(version.date_end + relativedelta(days=1), time(0, 0, 0), tzinfo=calendar_tz).astimezone(UTC)
-            else:
-                date_end = stop
             calendar_periods_by_employee[version.employee_id].append(
-                (max(date_start, start), min(date_end, stop), version.resource_calendar_id))
+                (max(version.contract_date_start, start), min(version.date_end or stop, stop), version.resource_calendar_id))
         return calendar_periods_by_employee
 
     @api.model
