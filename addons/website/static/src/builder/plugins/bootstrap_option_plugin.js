@@ -6,6 +6,7 @@ class BootstrapOptionPlugin extends Plugin {
     static id = "bootstrapOption";
     static dependencies = ["customizeWebsite"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         savable_mutation_record_predicates: this.filterBootstrapMutations.bind(this),
     };

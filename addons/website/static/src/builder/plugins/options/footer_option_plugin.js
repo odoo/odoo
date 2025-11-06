@@ -15,6 +15,20 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
+/** @typedef {import("@odoo/owl").Component} Component */
+
+/**
+ * @typedef { Object } FooterOptionShared
+ * @property { FooterOptionPlugin['getFooterTemplates'] } getFooterTemplates
+ */
+/**
+ * @typedef {(() => Promise<{
+ *     key: string,
+ *     Component: Component,
+ *     props: any,
+ * }[]>)[]} footer_templates_providers
+ */
+
 const [
     FOOTER_TEMPLATE,
     FOOTER_COLORS,
@@ -90,6 +104,7 @@ class FooterOptionPlugin extends Plugin {
     static dependencies = ["customizeWebsite", "builderActions"];
     static shared = ["getFooterTemplates"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(FOOTER_TEMPLATE, FooterTemplateOption),

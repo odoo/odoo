@@ -8,6 +8,7 @@ class HeaderNavigationOptionPlugin extends Plugin {
     static id = "HeaderNavigationOptionPlugin";
     static dependencies = ["customizeWebsite"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(HEADER_NAVIGATION, HeaderNavigationOption)],
     };

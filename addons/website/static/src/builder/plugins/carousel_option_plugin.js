@@ -10,6 +10,13 @@ import { WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW } from "@website/builder/
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef { Object } CarouselOptionShared
+ * @property { CarouselOptionPlugin['addSlide'] } addSlide
+ * @property { CarouselOptionPlugin['removeSlide'] } removeSlide
+ * @property { CarouselOptionPlugin['slideCarousel'] } slideCarousel
+ */
+
 export const CAROUSEL_CARDS_SEQUENCE = between(WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW);
 
 const carouselWrapperSelector =
@@ -45,6 +52,7 @@ export class CarouselOptionPlugin extends Plugin {
     static dependencies = ["clone", "builderOptions", "builderActions"];
     static shared = ["addSlide", "removeSlide", "slideCarousel"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             CarouselOption,

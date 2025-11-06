@@ -9,6 +9,11 @@ import { uniqueId } from "@web/core/utils/functions";
 import { TranslateWebpageOption } from "./translate_webpage_option";
 
 /**
+ * @typedef { Object } CustomizeTranslationTabShared
+ * @property { CustomizeTranslationTabPlugin['getTranslationState'] } getTranslationState
+ */
+
+/**
  * Action to translate the entire webpage using AI.
  */
 class TranslateToAction extends BuilderAction {
@@ -241,6 +246,7 @@ export class CustomizeTranslationTabPlugin extends Plugin {
         isTranslating: false,
     });
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             TranslateToAction,

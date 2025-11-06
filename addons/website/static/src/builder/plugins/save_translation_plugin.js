@@ -6,6 +6,7 @@ export class SaveTranslationPlugin extends Plugin {
     static id = "saveTranslation";
     static dependencies = ["savePlugin"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         save_elements_overrides: withSequence(20, this.saveTranslationElements.bind(this)),
     };
