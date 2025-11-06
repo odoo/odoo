@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-05 12:55+0000\n"
-"PO-Revision-Date: 2025-08-05 12:55+0000\n"
+"POT-Creation-Date: 2025-11-03 15:46+0000\n"
+"PO-Revision-Date: 2025-11-03 15:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ro_efactura_synchronize
-#: model:ir.model,name:l10n_ro_efactura_synchronize.model_account_move_send
-msgid "Account Move Send"
+#: model:ir.model,name:l10n_ro_efactura_synchronize.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
 msgstr ""
 
 #. module: l10n_ro_efactura_synchronize
@@ -36,13 +36,6 @@ msgid "Document object for tracking CIUS-RO XML sent to E-Factura"
 msgstr ""
 
 #. module: l10n_ro_efactura_synchronize
-#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_account_bank_statement_line__l10n_ro_edi_index
-#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_account_move__l10n_ro_edi_index
-#: model:ir.model.fields,field_description:l10n_ro_efactura_synchronize.field_account_payment__l10n_ro_edi_index
-msgid "E-Factura Index"
-msgstr ""
-
-#. module: l10n_ro_efactura_synchronize
 #: model:ir.actions.server,name:l10n_ro_efactura_synchronize.ir_cron_l10n_ro_edi_synchronize_invoices_ir_actions_server
 msgid "E-Factura: Synchronize with ANAF"
 msgstr ""
@@ -50,8 +43,6 @@ msgstr ""
 #. module: l10n_ro_efactura_synchronize
 #. odoo-python
 #: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
-#: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
-#, python-format
 msgid "Error when trying to download the E-Factura data from the SPV: %s"
 msgstr ""
 
@@ -74,28 +65,24 @@ msgstr ""
 #. module: l10n_ro_efactura_synchronize
 #. odoo-javascript
 #: code:addons/l10n_ro_efactura_synchronize/static/src/components/fetch_invoice.xml:0
-#, python-format
 msgid "Synchronize with ANAF"
 msgstr ""
 
 #. module: l10n_ro_efactura_synchronize
 #. odoo-python
 #: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
-#, python-format
 msgid "Synchronized with SPV from message %s"
 msgstr ""
 
 #. module: l10n_ro_efactura_synchronize
 #. odoo-python
 #: code:addons/l10n_ro_efactura_synchronize/models/ciusro_document.py:0
-#, python-format
 msgid "The SPV data could not be parsed."
 msgstr ""
 
 #. module: l10n_ro_efactura_synchronize
 #. odoo-python
 #: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
-#, python-format
 msgid ""
 "The invoice has probably been refused by the SPV. We were unable to recover "
 "the reason of the refusal because the invoice had not received its index. "
@@ -105,6 +92,5 @@ msgstr ""
 #. module: l10n_ro_efactura_synchronize
 #. odoo-python
 #: code:addons/l10n_ro_efactura_synchronize/models/account_move.py:0
-#, python-format
 msgid "This invoice has been accepted by the SPV."
 msgstr ""
