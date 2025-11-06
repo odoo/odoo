@@ -6,4 +6,4 @@ from odoo import fields, models
 class EventType(models.Model):
     _inherit = 'event.type'
 
-    website_menu = fields.Boolean('Display a dedicated menu on Website')
+    website_menu = fields.Boolean("Menu", help="Allows to display and manage event-specific menus on website.")

@@ -138,23 +138,15 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Notes &amp; Documents" name="event_notes">
+                        <page string="Ticket Instructions" name="ticket_instructions">
+                            <field nolabel="1" name="ticket_instructions"
+                                placeholder="e.g. How to get to your event, door closing time, ..." />
+                        </page>
+                        <page string="Misc" name="misc">
                             <group>
                                 <group>
                                     <field name="badge_format"/>
                                     <field name="badge_image"/>
-                                </group>
-                                <group>
-                                    <label for="ticket_instructions" string="Ticket Instructions" />
-                                    <br />
-                                    <field nolabel="1" colspan="2" name="ticket_instructions"
-                                        placeholder="e.g. How to get to your event, door closing time, ..." />
-                                </group>
-                                <group>
-                                    <label for="note" string="Note" />
-                                    <br />
-                                    <field nolabel="1" colspan="2" name="note"
-                                        placeholder="Add some internal notes (to do lists, contact info, ...)" />
                                 </group>
                             </group>
                         </page>

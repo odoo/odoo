@@ -15,6 +15,9 @@
                     }"
                 />
             </field>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Ticket name</attribute>
+            </xpath>
             <field name="description" position="after">
                 <field name="price"/>
             </field>
@@ -46,6 +49,9 @@
         <field name="model">event.event.ticket</field>
         <field name="inherit_id" ref="event.event_event_ticket_view_tree_from_event"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Ticket name</attribute>
+            </xpath>
             <field name="start_sale_datetime" position="attributes">
                 <attribute name="string">Sales Start</attribute>
             </field>

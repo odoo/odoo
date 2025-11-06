@@ -31,9 +31,6 @@ export class BoothRegistration extends Interaction {
                 "d-none": !this.inSigninError,
             }),
         },
-        "button.o_wbooth_registration_submit": {
-            "t-att-disabled": () => !this.isSelectionEmpty,
-        },
     };
 
     setup() {
@@ -183,11 +180,16 @@ export class BoothRegistration extends Interaction {
      */
     onBoothChange(ev, currentTargetEl) {
         currentTargetEl.closest(".form-check").classList.remove("text-danger");
+        this.el.querySelector(".o_website_event_booth_error").innerHTML = "";
         this.isSelectionEmpty = !!this.countSelectedBooths();
     }
 
     async onSubmitClick() {
         const selectedBoothEls = this.el.querySelectorAll("input[name=event_booth_ids]:checked");
+        if (selectedBoothEls.length == 0) {
+            this.el.querySelector(".o_website_event_booth_error").innerHTML = "<i class='fa fa-close me-1'></i>Choose a location first.";
+            return;
+        };
         const selectedBoothIds = [...selectedBoothEls].map((el) => parseInt(el.value));
         const data = await this.waitFor(this.checkBoothsAvailability(selectedBoothIds));
         if (data) {

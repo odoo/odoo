@@ -156,7 +156,7 @@ class EventEvent(models.Model):
         help='If ticketing is used, contains the earliest starting sale date of tickets.')
     # Date fields
     date_tz = fields.Selection(
-        _tz_get, string='Display Timezone', required=True,
+        _tz_get, string='Timezone', required=True,
         compute='_compute_date_tz', precompute=True, readonly=False, store=True,
         help="Indicates the timezone in which the event dates/times will be displayed on the website.")
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True,

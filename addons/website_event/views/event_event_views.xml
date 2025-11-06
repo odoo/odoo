@@ -37,11 +37,10 @@
             <xpath expr="//button[@name='%(event.event_registration_action_stats_from_event)d']" position="before">
                 <field name="is_published" widget="website_redirect_button"/>
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
-                <div name="event_menu_configuration" groups="base.group_no_one">
-                    <label for="website_menu" string="Website Submenu" class="me-1"/>
-                    <field name="website_menu" class="me-3"/>
-                </div>
+            <xpath expr="//page[@name='misc']/group/group" position="before">
+                <group>
+                    <field name="website_menu"/>
+                </group>
             </xpath>
             <field name="tag_ids" position="attributes">
                 <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>

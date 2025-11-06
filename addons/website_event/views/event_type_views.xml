@@ -6,12 +6,13 @@
         <field name="model">event.type</field>
         <field name="inherit_id" ref="event.view_event_type_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
-                    <span name="website_menu">
-                        <label for="website_menu" string="Website Submenu" class="me-1"/>
-                        <field name="website_menu" class="me-3"/>
-                    </span>
-            </xpath>
+            <notebook position="inside">
+                <page string="Misc" name="misc">
+                    <group>
+                        <field name="website_menu"/>
+                    </group>
+                </page>
+            </notebook>
         </field>
     </record>
 
