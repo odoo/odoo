@@ -69,11 +69,17 @@ class WebsiteHrRecruitment(WebsiteForm):
 
         def compute_filter_selection_counters(filtered_jobs, grouping_field, key_getter):
             jobs_grouped = filtered_jobs.grouped(grouping_field)
-            counter = OrderedDict({'all': len(filtered_jobs)} | {
-                key_getter(field_value): len(jobs_in_group) for field_value, jobs_in_group in jobs_grouped.items()
-            })
+            counter = defaultdict(int)
+            counter['all'] = len(filtered_jobs)
+
+            for field_value, jobs_in_group in jobs_grouped.items():
+                key = key_getter(field_value)
+                counter[key] += len(jobs_in_group)
+            counter = OrderedDict(counter)
+
             if None in counter:
                 counter.move_to_end(None)
+
             counter.move_to_end('all', last=False)
             return counter
 
@@ -114,9 +120,9 @@ class WebsiteHrRecruitment(WebsiteForm):
         if not (country or department or office or contract_type or all_countries) \
             and (code := request.geoip.country_code) \
                 and (country := env['res.country'].search([('code', '=', code)], limit=1)):
-            country_count = env['hr.job'].search_count(AND([
+            country_count = env['hr.job'].sudo().search_count(AND([
                 website.website_domain(),
-                [('address_id.country_id', '=', country.id)]
+                [('address_id.country_id', '=', country.id), ('is_published', '=', True)]
             ]))
             if not country_count:
                 country = False
