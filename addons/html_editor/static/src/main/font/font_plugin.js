@@ -77,6 +77,7 @@ export class FontPlugin extends Plugin {
         "dom",
         "format",
         "lineBreak",
+        "delete",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -565,7 +566,7 @@ export class FontPlugin extends Plugin {
             return;
         }
         // Check if unremovable.
-        if (this.getResource("unremovable_node_predicates").some((p) => p(closestHandledElement))) {
+        if (this.dependencies.delete.isUnremovable(closestHandledElement)) {
             return;
         }
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();

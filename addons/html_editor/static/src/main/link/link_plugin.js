@@ -152,6 +152,7 @@ export class LinkPlugin extends Plugin {
         "color",
         "baseContainer",
         "feff",
+        "delete",
     ];
     static defaultConfig = {
         allowStripDomain: true,
@@ -638,7 +639,7 @@ export class LinkPlugin extends Plugin {
             canRemove:
                 this.linkInDocument &&
                 this.linkInDocument.parentElement.isContentEditable &&
-                !this.isUnremovable(this.linkInDocument),
+                !this.dependencies.delete.isUnremovable(this.linkInDocument),
             canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
@@ -859,15 +860,11 @@ export class LinkPlugin extends Plugin {
         this.dependencies.selection.setCursorEnd(linkElement);
     }
 
-    isUnremovable(linkEl) {
-        return this.getResource("unremovable_node_predicates").some((p) => p(linkEl));
-    }
-
     /**
      * Remove the link from the collapsed selection
      */
     removeLinkInDocument(link = this.linkInDocument) {
-        if (!link.parentElement.isContentEditable || this.isUnremovable(link)) {
+        if (!link.parentElement.isContentEditable || this.dependencies.delete.isUnremovable(link)) {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
@@ -883,7 +880,11 @@ export class LinkPlugin extends Plugin {
     removeLinkFromSelectionIsDisabled(selection) {
         for (const node of this.dependencies.selection.getTargetedNodes()) {
             const linkEl = closestElement(node, "a");
-            if (linkEl && !this.isLinkImmutable(linkEl) && !this.isUnremovable(linkEl)) {
+            if (
+                linkEl &&
+                !this.isLinkImmutable(linkEl) &&
+                !this.dependencies.delete.isUnremovable(linkEl)
+            ) {
                 return false;
             }
         }
@@ -966,7 +967,7 @@ export class LinkPlugin extends Plugin {
             startLink &&
             startLink.isConnected &&
             startLink.parentElement.isContentEditable &&
-            !this.isUnremovable(startLink)
+            !this.dependencies.delete.isUnremovable(startLink)
         ) {
             anchorNode = this.dependencies.split.splitAroundUntil(anchorNode, startLink);
             anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
@@ -980,7 +981,7 @@ export class LinkPlugin extends Plugin {
             endLink &&
             endLink.isConnected &&
             endLink.parentElement.isContentEditable &&
-            !this.isUnremovable(endLink) &&
+            !this.dependencies.delete.isUnremovable(endLink) &&
             multipleLinks
         ) {
             focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
@@ -999,7 +1000,7 @@ export class LinkPlugin extends Plugin {
                         a &&
                         a.isContentEditable &&
                         a.parentElement.isContentEditable &&
-                        !this.isUnremovable(a)
+                        !this.dependencies.delete.isUnremovable(a)
                 )
         );
         if (links.size) {
@@ -1025,7 +1026,7 @@ export class LinkPlugin extends Plugin {
             for (const child of node.childNodes) {
                 remove(child);
             }
-            if (!this.isUnremovable(node)) {
+            if (!this.dependencies.delete.isUnremovable(node)) {
                 node.before(...node.childNodes);
                 node.remove();
             }
@@ -1035,7 +1036,7 @@ export class LinkPlugin extends Plugin {
             if (
                 [...link.childNodes].some(isVisible) ||
                 !link.parentElement.isContentEditable ||
-                this.isUnremovable(link) ||
+                this.dependencies.delete.isUnremovable(link) ||
                 this.getResource("legit_empty_link_predicates").some((p) => p(link))
             ) {
                 continue;
@@ -1116,7 +1117,7 @@ export class LinkPlugin extends Plugin {
     deleteImageLink(imageToDelete) {
         if (
             imageToDelete.parentElement.tagName === "A" &&
-            !this.isUnremovable(imageToDelete.parentElement) &&
+            !this.dependencies.delete.isUnremovable(imageToDelete.parentElement) &&
             imageToDelete.parentElement.parentElement.isContentEditable
         ) {
             // If the link is empty after removing the image, remove it.

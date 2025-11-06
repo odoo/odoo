@@ -57,7 +57,7 @@ function isFormatted(formatPlugin, format) {
 
 export class FormatPlugin extends Plugin {
     static id = "format";
-    static dependencies = ["selection", "history", "input", "split"];
+    static dependencies = ["selection", "history", "input", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "isSelectionFormat",
@@ -208,7 +208,7 @@ export class FormatPlugin extends Plugin {
         if (
             !emptyZWS ||
             !emptyZWS.parentElement.isContentEditable ||
-            this.getResource("unremovable_node_predicates").some((p) => p(emptyZWS))
+            this.dependencies.delete.isUnremovable(emptyZWS)
         ) {
             return insertedNode;
         }
@@ -549,7 +549,7 @@ export class FormatPlugin extends Plugin {
             this.cleanZWS(element, { preserveSelection });
             return;
         }
-        if (this.getResource("unremovable_node_predicates").some((p) => p(element))) {
+        if (this.dependencies.delete.isUnremovable(element)) {
             return;
         }
         if (
