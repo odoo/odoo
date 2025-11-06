@@ -528,13 +528,20 @@ class AccountChartTemplate(models.AbstractModel):
             if model in data:
                 data[model] = data.pop(model)
 
-        if data.get('res.company', {}).get(company.id):
-            # Filter out default values that we don't want to ignore if the field is not present, in any case.
-            company_data_to_filter = {'account_production_wip_account_id', 'account_production_wip_overhead_account_id'}
-            # Remove data of unknown fields present in the company template
-            for fname in list(data['res.company'][company.id]):
-                if fname not in company._fields and (not self.env.context.get('l10n_check_fields_complete') or fname in company_data_to_filter):
-                    del data['res.company'][company.id][fname]
+        # Exclude data of unknown fields present in the template
+        if not self.env.context.get('l10n_check_fields_complete'):
+            for model_name, records in data.items():
+                for record in records.values():
+                    keys_to_delete = []
+                    for key in record:
+                        if key == '__translation_module__':
+                            continue
+
+                        fname = key.split('@')[0] if '@' in key else key
+                        if fname not in self.env[model_name]._fields:
+                            keys_to_delete.append(key)
+                    for key in keys_to_delete:
+                        del record[key]
 
         # Translate the untranslatable fields we want to translate anyway
         untranslatable_model_fields = self._get_untranslatable_fields_to_translate()
@@ -786,6 +793,15 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'res.partner',
             'property_stock_journal': 'product.category',
         }
+
+    def _get_chart_template_model_data(self, template_code, model):
+        """Lightweight version of `_get_chart_template_data` targeting only one model."""
+        data = defaultdict(dict)
+        for code in [None] + self._get_parent_template(template_code):
+            for func in self._template_register[code].get(model, []):
+                for xmlid, values in func(self, template_code).items():
+                    data[xmlid].update(values)
+        return dict(data)
 
     def _get_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))
