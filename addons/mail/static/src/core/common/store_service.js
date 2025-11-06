@@ -80,30 +80,18 @@ export class Store extends BaseStore {
     // messaging menu
     menu = { counter: 0 };
     menuThreads = Record.many("Thread", {
-        /** @this {import("models").Store} */
-        compute() {
-            /** @type {import("models").Thread[]} */
-            let threads = Object.values(this.Thread.records).filter(
-                (thread) =>
-                    thread.displayToSelf ||
-                    (thread.needactionMessages.length > 0 && thread.type !== "mailbox")
-            );
-            const tab = this.discuss.activeTab;
-            if (tab !== "main") {
-                threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
-            } else if (tab === "main" && this.env.inDiscussApp) {
-                threads = threads.filter(({ type }) =>
-                    this.tabToThreadType("mailbox").includes(type)
-                );
-            }
-            return threads;
+        inverse: "storeAsMenuThreads",
+        onUpdate() {
+            this.sortMenuThreadsDebounced();
         },
+    });
+    sortMenuThreadsDebounced = debounce(() => {
         /**
          * @this {import("models").Store}
          * @param {import("models").Thread} a
          * @param {import("models").Thread} b
          */
-        sort(a, b) {
+        this.menuThreads.sort((a, b) => {
             /**
              * Ordering:
              * - threads with needaction
@@ -149,7 +137,7 @@ export class Store extends BaseStore {
                 return bMessageDateTime - aMessageDatetime;
             }
             return b.localId > a.localId ? 1 : -1;
-        },
+        });
     });
     discuss = Record.one("DiscussApp");
     failures = Record.many("Failure", {

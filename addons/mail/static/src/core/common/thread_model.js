@@ -298,6 +298,24 @@ export class Thread extends Record {
      */
     scrollTop = "bottom";
     showOnlyVideo = false;
+    storeAsMenuThreads = Record.one("Store", {
+        inverse: "menuThreads",
+        compute() {
+            if (
+                !this.displayToSelf &&
+                (this.needactionMessages.length <= 0 || this.type === "mailbox")
+            ) {
+                return;
+            }
+            const tab = this._store.discuss.activeTab;
+            if (
+                (tab === "main" && !this._store.env.inDiscussApp) ||
+                this._store.tabToThreadType(tab === "main" ? "mailbox" : tab).includes(this.type)
+            ) {
+                return this._store;
+            }
+        },
+    });
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
     type;
@@ -352,9 +370,7 @@ export class Thread extends Record {
         const attachments = this.attachments.filter(
             (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
         );
-        attachments.sort((a1, a2) => {
-            return a2.id - a1.id;
-        });
+        attachments.sort((a1, a2) => a2.id - a1.id);
         return attachments;
     }
 
@@ -544,9 +560,10 @@ export class Thread extends Record {
             return false;
         }
         const lastMessageSeenByAllId = Math.min(...otherLastSeenMessageIds);
-        const orderedSelfSeenMessages = this.persistentMessages.filter((message) => {
-            return message.author?.eq(this._store.self) && message.id <= lastMessageSeenByAllId;
-        });
+        const orderedSelfSeenMessages = this.persistentMessages.filter(
+            (message) =>
+                message.author?.eq(this._store.self) && message.id <= lastMessageSeenByAllId
+        );
         if (!orderedSelfSeenMessages || orderedSelfSeenMessages.length === 0) {
             return false;
         }
