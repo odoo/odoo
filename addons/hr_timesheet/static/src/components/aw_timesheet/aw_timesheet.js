@@ -39,22 +39,25 @@ export class ActivityWatchTimesheet extends Component {
         });
     }
 
-    extractBrowserWatcherActivityName(event) {
-        const url = event.data.url; // should concatenate and test
+    extractWatcherActivity(event) {
+        let data = event.data.title;
+        if (event.data.url) {
+            data += ' ' + event.data.url;
+        }
 
         for (const rule of this.awRules.sort((a,b) => a.sequence - b.sequence)) {
             const regex = new RegExp(rule.regex);
-            const match = url.match(regex);
+            const match = data.match(regex);
             if (match) {
-                if (rule.project_id) {
+                if (rule.project_id != null) {
                     event.project_id = rule.project_id[0];
                 }
 
-                if (rule.task_id) {
+                if (rule.task_id != null) {
                     event.task_id = rule.task_id[0];
                 }
 
-                if (rule.template) {
+                if (rule.template != null) {
                     let name = rule.template;
                     for (let i = 1; i < match.length; i++) {
                         name = name.replace(`$${i}`, match[i]);
@@ -63,21 +66,33 @@ export class ActivityWatchTimesheet extends Component {
                 } else {
                     event.name = rule.type;
                 }
-                return true;
+
+                if (rule.always_active) {
+                    event.always_active = true;
+                }
+
+                event.keyEvent = true;
+                return;
             }
         }
 
-        const odooUrl = RegExp.escape(window.location.origin); // should be moved outside (this function is called many times)
+        if (!event.data.url) {
+            return;
+        }
+
         // in the config, we should have a sequence field, because order is important
         // like the example of overlap in calendar and planning apps
         // project and task in odoo url
+        const url = event.data.url;
+        const odooUrl = RegExp.escape(window.location.origin); // should be moved outside (this function is called many times)
         let match = url.match(
             new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:tasks|project\\.task)/(\\d+)$`)
         );
         if (match) {
             event.name = "Working on project"; // should come from config
             event.task_id = Number(match[1]);
-            return true;
+            event.keyEvent = true;
+            return;
         }
 
         // only project in odoo url
@@ -86,7 +101,8 @@ export class ActivityWatchTimesheet extends Component {
         );
         if (match) {
             event.project_id = Number(match[1]);
-            return true;
+            event.keyEvent = true;
+            return;
         }
 
         return false;
@@ -104,7 +120,7 @@ export class ActivityWatchTimesheet extends Component {
         // - browser extension watcher (giving the url which is not returned by the previous watcher)
         return Object.keys(buckets)
             .filter((key) =>
-                ["aw-watcher-vscode", "aw-watcher-window", "aw-client-web"].includes(
+                ["aw-watcher-vscode", "aw-watcher-window", "aw-client-web", "aw-watcher-afk"].includes(
                     buckets[key].client
                 )
             )
@@ -130,30 +146,30 @@ export class ActivityWatchTimesheet extends Component {
                 if (responses[index].ok) {
                     // assuming that you have one watcher per client for the poc (one browser extension, no 2 browsers opened with the extension)
                     const events = await Promise.resolve(responses[index].json());
-                    const formatedEvents = [];
                     for (const event of events) {
+                        let eventType = watchers[index].client;
                         if (watchers[index].client === "aw-watcher-vscode") {
-                            event.name = "Programming In VS Code"; // should be done in config
-                        } else if (watchers[index].client === "aw-client-web") {
-                            const name = this.extractBrowserWatcherActivityName(event);
-                            if (name === false) {
-                                // skip event
+                            event.name = _t("Programming In VS Code"); // should be done in config
+                            event.keyEvent = true;
+                        } else if (["aw-watcher-window", "aw-client-web"].includes(watchers[index].client)) {
+                            this.extractWatcherActivity(event);
+                            if (event.always_active) {
+                                eventType = "always_active";
+                            }
+                        } else if (watchers[index].client === "aw-watcher-afk") {
+                            if (event?.data?.status === "not-afk") {
                                 continue;
                             }
-                        }
-
-                        if (event.duration === 0) {
-                            continue;
                         }
                         event.start = DateTime.fromISO(event.timestamp);
                         event.stop = event.start.plus(
                             Duration.fromObject({ seconds: event.duration })
                         );
-                        formatedEvents.push(event);
-                    }
-
-                    if (formatedEvents.length > 0) {
-                        res[watchers[index].client] = formatedEvents;
+                        // assuming you have one watcher per type, if you have 2 browsers (extension on each browser, we need to change it a bit)
+                        if (!res[eventType]) {
+                            res[eventType] = [];
+                        }
+                        res[eventType].push(event);
                     }
                 } else {
                     failed.push(responses[index]);
@@ -194,7 +210,7 @@ export class ActivityWatchTimesheet extends Component {
                 );
             }
             return res;
-        } catch {
+        } catch (e) {
             this.notification.add(
                 _t(
                     "Something went wrong getting data from Activity Watch, make sure to start the server with the right cors origins E.G ./aw-server --cors-origins http://localhost:8069"
@@ -211,7 +227,7 @@ export class ActivityWatchTimesheet extends Component {
             "regex", "type", "template", "project_id", "task_id", "always_active", "primary", "sequence"
         ]]);
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
-        const baseUrl = "http://localhost:5600";
+        const baseUrl = "http://localhost:5700";
         const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
         const todayEnd = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
 
@@ -256,10 +272,15 @@ export class ActivityWatchTimesheet extends Component {
         for (const range of ranges) {
             range["start"] = deserializeDateTime(range["start"]);
             range["stop"] = deserializeDateTime(range["stop"]);
+            range["keyEvent"] = true;
         }
 
+        // in a loop
+        this.merge(ranges, events["always_active"]);
         this.merge(ranges, events["aw-watcher-vscode"]);
-        this.merge(ranges, events["aw-client-web"]);
+        this.merge(ranges, events["aw-watcher-afk"]); // will work in the inverse way later
+        this.merge(ranges, events["aw-client-web"]); // assumin one browser => if 2 two, the 2 pointers algo will fail (no sorted non overlapping ranges)
+        this.merge(ranges, events["aw-watcher-window"]);
 
         let prevProjectId = false;
         let prevTaskId = false;
@@ -303,10 +324,18 @@ export class ActivityWatchTimesheet extends Component {
         ]);
         this.state.task_by_id = Object.fromEntries(tasks.map(({ id, name }) => [id, name]));
 
+        let prevKeyEvent = null;
         for (const range of ranges) {
-            if (range.project_id || range.task_id) {
-                prevProjectId = range.project_id;
-                prevTaskId = range.task_id;
+            if (range?.data?.status === "afk") {
+                continue;
+            }
+
+            if (range.keyEvent) {
+                prevKeyEvent = range.name;
+                if (range.project_id || range.task_id) {
+                    prevProjectId = range.project_id;
+                    prevTaskId = range.task_id;
+                }
             }
             const duration = (range.stop - range.start) / 1000;
             const project = `${prevProjectId}_${prevTaskId}`;
@@ -314,11 +343,15 @@ export class ActivityWatchTimesheet extends Component {
                 this.state.grouped[project] = {};
             }
 
-            if (range.name in this.state.grouped[project]) {
-                this.state.grouped[project][range.name] += duration;
-            } else {
-                this.state.grouped[project][range.name] = duration;
+            let name = prevKeyEvent;
+            if (name == null) {
+                name = "NO prev key event"; // to check later, if i start with a non key event, what to do, put in "Others" or skip it
             }
+
+            if (!this.state.grouped[project][name]) {
+                this.state.grouped[project][name] = 0.0;
+            }
+            this.state.grouped[project][name] += duration;
         }
 
         await this.loadTimesheets(todayStart);
@@ -363,12 +396,14 @@ export class ActivityWatchTimesheet extends Component {
         if (!intervalsToInclude || intervalsToInclude.length === 0) {
             return;
         }
+        intervalsToInclude.sort((a, b) => a.start - b.start);
         if (ranges.length === 0) {
             ranges.push(...intervalsToInclude);
             return;
         }
 
         let j = 0;
+        const res = [];
         for (let i = 0; i <= ranges.length; i++) {
             const gapStart = i === 0 ? -Infinity : ranges[i - 1].stop;
             const gapEnd = i === ranges.length ? Infinity : ranges[i].start;
@@ -379,11 +414,12 @@ export class ActivityWatchTimesheet extends Component {
                 const interval = { ...intervalsToInclude[j] };
                 interval.start = Math.max(gapStart, interval.start);
                 interval.stop = Math.min(gapEnd, interval.stop);
-                ranges.splice(i, 0, interval);
-                i++;
+                res.push(interval);
                 j++;
             }
         }
+        ranges.push(...res);
+        ranges.sort((a, b) => a.start - b.start);
     }
 
     parseId(id) {

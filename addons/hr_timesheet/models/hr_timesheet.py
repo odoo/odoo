@@ -113,18 +113,13 @@ class AccountAnalyticLine(models.Model):
                 while j < len(intervals_to_include) and intervals_to_include[j]['stop'] <= gap[0]:
                     j += 1
 
-                if j ==  len(intervals_to_include):
-                    break
-
                 # move to next gap if no ranges intersecting with the gap
-                if intervals_to_include[j]['start'] >= gap[1]:
-                    continue
-
-                interval = deepcopy(intervals_to_include[j])
-                interval['start'] = max(gap[0], interval['start'])
-                interval['stop'] = min(gap[1], interval['stop'])
-
-                res.append(interval)
+                while j < len(intervals_to_include) and intervals_to_include[j]['start'] < gap[1]:
+                    interval = deepcopy(intervals_to_include[j])
+                    interval['start'] = max(gap[0], interval['start'])
+                    interval['stop'] = min(gap[1], interval['stop'])
+                    res.append(interval)
+                    j += 1
 
             return sorted(res, key=lambda r: r['start'])
 

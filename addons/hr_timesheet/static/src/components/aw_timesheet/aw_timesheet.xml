@@ -26,6 +26,7 @@
                   <tbody>
                     <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
                       <tr
+                        t-if="state.grouped[groupKey][title] >= 120"
                         t-att-class="{
                           'table-danger': this.isSuggestionClicked(groupKey, title),
                         }"
