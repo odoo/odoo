@@ -247,6 +247,17 @@ class TestPaymentProvider(PaymentCommon):
         )
         self.assertNotIn(self.provider, compatible_providers)
 
+    def test_provider_compatible_with_branch_companies(self):
+        """ Test that the provider is compatible when it used for a branch company. """
+        branch_company = self.env['res.company'].create({
+            'name': "Branch Company",
+            'parent_id': self.provider.company_id.id,
+        })
+        compatible_providers = self.provider._get_compatible_providers(
+            branch_company.id, self.partner.id, self.amount,
+        )
+        self.assertIn(self.provider, compatible_providers)
+
     def test_validation_currency_is_supported(self):
         """ Test that only currencies supported by both the provider and the payment method can be
         used in validation operations. """
