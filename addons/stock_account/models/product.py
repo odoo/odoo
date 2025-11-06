@@ -188,7 +188,227 @@ class ProductProduct(models.Model):
 
     def _change_standard_price(self, old_price):
         for product in self:
+<<<<<<< c0f3e3900bb9fcf45e51801cf656c9909d57a8b1
             if product.cost_method == 'fifo' or product.standard_price == old_price.get(product):
+||||||| 0d4d828a63a9981c48cde7a887c3d7cd265cf210
+            aggregates = group_mapping.get(product._origin, (0, 0))
+            vals = product._prepare_valuation_layer_field_values(aggregates)
+            product.update(vals)
+
+    # -------------------------------------------------------------------------
+    # Actions
+    # -------------------------------------------------------------------------
+    def action_revaluation(self):
+        self.ensure_one()
+        ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id)
+        return {
+            'name': _("Product Revaluation"),
+            'view_mode': 'form',
+            'res_model': 'stock.valuation.layer.revaluation',
+            'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
+            'type': 'ir.actions.act_window',
+            'context': ctx,
+            'target': 'new'
+        }
+
+    # -------------------------------------------------------------------------
+    # SVL creation helpers
+    # -------------------------------------------------------------------------
+    def _prepare_in_svl_vals(self, quantity, unit_cost, lot=False):
+        """Prepare the values for a stock valuation layer created by a receipt.
+
+        :param quantity: the quantity to value, expressed in `self.uom_id`
+        :param unit_cost: the unit cost to value `quantity`
+        :return: values to use in a call to create
+        :rtype: dict
+        """
+        self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
+        value = company.currency_id.round(unit_cost * quantity)
+        return {
+            'product_id': self.id,
+            'value': value,
+            'unit_cost': unit_cost,
+            'quantity': quantity,
+            'remaining_qty': quantity,
+            'remaining_value': value,
+            'company_id': company_id,
+            'lot_id': lot.id if lot else False,
+        }
+
+    def _prepare_out_svl_vals(self, quantity, company, lot=False):
+        """Prepare the values for a stock valuation layer created by a delivery.
+
+        :param quantity: the quantity to value, expressed in `self.uom_id`
+        :return: values to use in a call to create
+        :rtype: dict
+        """
+        self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
+        currency = company.currency_id
+        # Quantity is negative for out valuation layers.
+        quantity = -1 * quantity
+        cost = self.standard_price
+        if lot and lot.standard_price:
+            cost = lot.standard_price
+        vals = {
+            'product_id': self.id,
+            'value': currency.round(quantity * cost),
+            'unit_cost': cost,
+            'quantity': quantity,
+            'lot_id': lot.id if lot else False,
+        }
+        fifo_vals = self._run_fifo(abs(quantity), company, lot=lot)
+        vals['remaining_qty'] = fifo_vals.get('remaining_qty')
+        # In case of AVCO, fix rounding issue of standard price when needed.
+        if self.product_tmpl_id.cost_method == 'average' and not float_is_zero(self.quantity_svl, precision_rounding=self.uom_id.rounding):
+            rounding_error = currency.round(
+                (cost * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
+            )
+
+            # If it is bigger than the (smallest number of the currency * quantity) / 2,
+            # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+            threshold = currency.round(max((abs(quantity) * currency.rounding) / 2, currency.rounding))
+            if rounding_error and abs(rounding_error) <= threshold:
+                vals['value'] += rounding_error
+                vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                    '+' if rounding_error > 0 else '',
+                    float_repr(rounding_error, precision_digits=currency.decimal_places),
+                    currency.symbol
+                )
+        if self.product_tmpl_id.cost_method == 'fifo':
+            vals.update(fifo_vals)
+        return vals
+
+    def _change_standard_price(self, new_price):
+        """Helper to create the stock valuation layers and the account moves
+        after an update of standard price.
+
+        :param new_price: new standard price
+        """
+        # Handle stock valuation layers.
+
+        if self.filtered(lambda p: p.valuation == 'real_time') and not self.env['stock.valuation.layer'].has_access('read'):
+            raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
+
+        svl_vals_list = []
+        company_id = self.env.company
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        rounded_new_price = float_round(new_price, precision_digits=price_unit_prec)
+        for product in self:
+            if product.cost_method not in ('standard', 'average'):
+=======
+            aggregates = group_mapping.get(product._origin, (0, 0))
+            vals = product._prepare_valuation_layer_field_values(aggregates)
+            product.update(vals)
+
+    # -------------------------------------------------------------------------
+    # Actions
+    # -------------------------------------------------------------------------
+    def action_revaluation(self):
+        self.ensure_one()
+        ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id)
+        return {
+            'name': _("Product Revaluation"),
+            'view_mode': 'form',
+            'res_model': 'stock.valuation.layer.revaluation',
+            'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
+            'type': 'ir.actions.act_window',
+            'context': ctx,
+            'target': 'new'
+        }
+
+    # -------------------------------------------------------------------------
+    # SVL creation helpers
+    # -------------------------------------------------------------------------
+    def _prepare_in_svl_vals(self, quantity, unit_cost, lot=False):
+        """Prepare the values for a stock valuation layer created by a receipt.
+
+        :param quantity: the quantity to value, expressed in `self.uom_id`
+        :param unit_cost: the unit cost to value `quantity`
+        :return: values to use in a call to create
+        :rtype: dict
+        """
+        self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
+        value = company.currency_id.round(unit_cost * quantity)
+        return {
+            'product_id': self.id,
+            'value': value,
+            'unit_cost': unit_cost,
+            'quantity': quantity,
+            'remaining_qty': quantity,
+            'remaining_value': value,
+            'company_id': company_id,
+            'lot_id': lot.id if lot else False,
+        }
+
+    def _prepare_out_svl_vals(self, quantity, company, lot=False):
+        """Prepare the values for a stock valuation layer created by a delivery.
+
+        :param quantity: the quantity to value, expressed in `self.uom_id`
+        :return: values to use in a call to create
+        :rtype: dict
+        """
+        self.ensure_one()
+        company_id = self.env.context.get('force_company', self.env.company.id)
+        company = self.env['res.company'].browse(company_id)
+        currency = company.currency_id
+        # Quantity is negative for out valuation layers.
+        quantity = -1 * quantity
+        cost = self.standard_price
+        if lot and lot.sudo().stock_valuation_layer_ids:
+            cost = lot.standard_price
+        vals = {
+            'product_id': self.id,
+            'value': currency.round(quantity * cost),
+            'unit_cost': cost,
+            'quantity': quantity,
+            'lot_id': lot.id if lot else False,
+        }
+        fifo_vals = self._run_fifo(abs(quantity), company, lot=lot)
+        vals['remaining_qty'] = fifo_vals.get('remaining_qty')
+        # In case of AVCO, fix rounding issue of standard price when needed.
+        if self.product_tmpl_id.cost_method == 'average' and not float_is_zero(self.quantity_svl, precision_rounding=self.uom_id.rounding):
+            rounding_error = currency.round(
+                (cost * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
+            )
+
+            # If it is bigger than the (smallest number of the currency * quantity) / 2,
+            # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+            threshold = currency.round(max((abs(quantity) * currency.rounding) / 2, currency.rounding))
+            if rounding_error and abs(rounding_error) <= threshold:
+                vals['value'] += rounding_error
+                vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                    '+' if rounding_error > 0 else '',
+                    float_repr(rounding_error, precision_digits=currency.decimal_places),
+                    currency.symbol
+                )
+        if self.product_tmpl_id.cost_method == 'fifo':
+            vals.update(fifo_vals)
+        return vals
+
+    def _change_standard_price(self, new_price):
+        """Helper to create the stock valuation layers and the account moves
+        after an update of standard price.
+
+        :param new_price: new standard price
+        """
+        # Handle stock valuation layers.
+
+        if self.filtered(lambda p: p.valuation == 'real_time') and not self.env['stock.valuation.layer'].has_access('read'):
+            raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
+
+        svl_vals_list = []
+        company_id = self.env.company
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        rounded_new_price = float_round(new_price, precision_digits=price_unit_prec)
+        for product in self:
+            if product.cost_method not in ('standard', 'average'):
+>>>>>>> 0442e6ace25191ac7b7f1495f2a06d7e1265a2c9
                 continue
             self.env['product.value'].sudo().create({
                 'product_id': product.id,
