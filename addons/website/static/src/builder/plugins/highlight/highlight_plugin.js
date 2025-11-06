@@ -18,6 +18,7 @@ import { nodeSize } from "@html_editor/utils/position";
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
     static dependencies = ["history", "selection", "split", "format", "edit_interaction"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
         toolbar_items: [

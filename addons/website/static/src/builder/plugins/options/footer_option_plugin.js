@@ -73,6 +73,7 @@ class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
     static dependencies = ["customizeWebsite", "builderActions"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(FOOTER_TEMPLATE, FooterTemplateOption),

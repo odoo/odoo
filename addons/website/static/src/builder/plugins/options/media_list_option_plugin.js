@@ -14,6 +14,7 @@ export class MediaListOption extends BaseOptionComponent {
 class MediaListOptionPlugin extends Plugin {
     static id = "mediaListOption";
     mediaListItemOptionSelector = ".s_media_list_item";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(BEGIN, MediaListOption),

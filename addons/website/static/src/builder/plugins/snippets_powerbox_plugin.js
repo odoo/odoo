@@ -7,6 +7,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 class SnippetsPowerboxPlugin extends Plugin {
     static id = "alert";
     static dependencies = ["dom", "history"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         user_commands: [
             {

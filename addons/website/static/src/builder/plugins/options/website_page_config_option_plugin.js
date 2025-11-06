@@ -9,6 +9,15 @@ import { TopMenuVisibilityOption } from "./website_page_config_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef { Object } WebsitePageConfigOptionShared
+ * @property { WebsitePageConfigOptionPlugin['setDirty'] } setDirty
+ * @property { WebsitePageConfigOptionPlugin['setFooterVisible'] } setFooterVisible
+ * @property { WebsitePageConfigOptionPlugin['getVisibilityItem'] } getVisibilityItem
+ * @property { WebsitePageConfigOptionPlugin['getFooterVisibility'] } getFooterVisibility
+ * @property { WebsitePageConfigOptionPlugin['doesPageOptionExist'] } doesPageOptionExist
+ */
+
 export const TOP_MENU_VISIBILITY = after(HEADER_SCROLL_EFFECT);
 export const HIDE_FOOTER = after(FOOTER_COPYRIGHT);
 
@@ -30,6 +39,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         "getFooterVisibility",
         "doesPageOptionExist",
     ];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetWebsiteHeaderVisibilityAction,

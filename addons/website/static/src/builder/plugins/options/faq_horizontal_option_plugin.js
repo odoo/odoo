@@ -11,6 +11,7 @@ export class FaqHorizontalOption extends BaseOptionComponent {
 
 class FaqHorizontalOptionPlugin extends Plugin {
     static id = "faqHorizontalOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(BEGIN, FaqHorizontalOption)],
     };

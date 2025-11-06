@@ -43,6 +43,21 @@ import { FormOption } from "./form_option";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef { Object } FormOptionShared
+ * @property { FormOptionPlugin['prepareFormModel'] } prepareFormModel
+ * @property { FormOptionPlugin['getModelsCache'] } getModelsCache
+ * @property { FormOptionPlugin['applyFormModel'] } applyFormModel
+ * @property { FormOptionPlugin['addHiddenField'] } addHiddenField
+ * @property { FormOptionPlugin['fetchAuthorizedFields'] } fetchAuthorizedFields
+ * @property { FormOptionPlugin['loadFieldOptionData'] } loadFieldOptionData
+ * @property { FormOptionPlugin['prepareFields'] } prepareFields
+ * @property { FormOptionPlugin['replaceField'] } replaceField
+ * @property { FormOptionPlugin['prepareConditionInputs'] } prepareConditionInputs
+ * @property { FormOptionPlugin['setLabelsMark'] } setLabelsMark
+ * @property { FormOptionPlugin['fetchModels'] } fetchModels
+ */
+
 export class WebsiteFormSubmitOption extends BaseOptionComponent {
     static template = "website.s_website_form_submit_option";
     static selector = ".s_website_form_submit";
@@ -65,8 +80,8 @@ export class FormOptionPlugin extends Plugin {
         "prepareConditionInputs",
         "setLabelsMark",
         "fetchModels",
-        "loadFieldOptionData",
     ];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_header_middle_buttons: [
             {

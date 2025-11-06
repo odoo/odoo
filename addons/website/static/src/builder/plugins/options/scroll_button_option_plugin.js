@@ -9,6 +9,7 @@ import { SCROLL_BUTTON } from "@website/builder/option_sequence";
 
 class ScrollButtonOptionPlugin extends Plugin {
     static id = "scrollButtonOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(SCROLL_BUTTON, ScrollButtonOption)],
         builder_actions: {

@@ -5,10 +5,16 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
+/**
+ * @typedef { Object } AddElementOptionShared
+ * @property { AddElementOptionPlugin['addGridElement'] } addGridElement
+ */
+
 export class AddElementOptionPlugin extends Plugin {
     static id = "addElementOption";
     static dependencies = ["builderOptions"];
     static shared = ["addGridElement"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             AddGridElementAction,

@@ -10,6 +10,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 class DynamicSvgOptionPlugin extends Plugin {
     static id = "DynamicSvgOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(DYNAMIC_SVG, DynamicSvgOption)],
         builder_actions: {

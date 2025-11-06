@@ -15,6 +15,7 @@ const sizeClasses = ["btn-sm", "btn-lg"];
 
 class ButtonOptionPlugin extends Plugin {
     static id = "buttonOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_preview_handlers: this.onSnippetPreview.bind(this),

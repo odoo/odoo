@@ -7,6 +7,7 @@ import { withSequence } from "@html_editor/utils/resource";
 export class MenuDataPlugin extends Plugin {
     static id = "menuDataPlugin";
     static dependencies = ["savePlugin"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         link_popovers: [
             withSequence(10, {

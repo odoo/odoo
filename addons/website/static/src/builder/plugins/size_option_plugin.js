@@ -11,6 +11,7 @@ export class SizeOption extends BaseOptionComponent {
 
 class SizeOptionPlugin extends Plugin {
     static id = "sizeOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(after(BLOCK_ALIGN), SizeOption)],
     };
