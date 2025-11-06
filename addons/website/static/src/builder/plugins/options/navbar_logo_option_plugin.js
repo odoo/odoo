@@ -15,6 +15,7 @@ export class NavbarLogoOption extends BaseOptionComponent {
 
 class NavbarLogoOptionPlugin extends Plugin {
     static id = "navbarLogoOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(SNIPPET_SPECIFIC_NEXT, NavbarLogoOption)],
     };

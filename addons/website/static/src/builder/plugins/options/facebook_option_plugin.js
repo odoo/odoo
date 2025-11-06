@@ -13,6 +13,7 @@ export class FacebookOption extends BaseOptionComponent {
 class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
     static dependencies = ["history"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [FacebookOption],
         so_content_addition_selector: [".o_facebook_page"],

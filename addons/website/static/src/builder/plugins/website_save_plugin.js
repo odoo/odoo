@@ -2,10 +2,16 @@ import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
+/**
+ * @typedef { Object } WebsiteSaveShared
+ * @property { WebsiteSavePlugin['saveView'] } saveView
+ */
+
 export class WebsiteSavePlugin extends Plugin {
     static id = "websiteSavePlugin";
     static shared = ["saveView"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         save_element_handlers: this.saveView.bind(this),
     };

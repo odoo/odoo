@@ -28,6 +28,7 @@ export class AddProductPricelistBoxedSectionOption extends BaseAddProductOption 
 
 class PriceListBoxedOptionPlugin extends Plugin {
     static id = "priceListBoxedOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(BEGIN, AddProductPricelistBoxedOption),

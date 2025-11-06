@@ -19,6 +19,7 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
     static dependencies = ["history", "selection", "split", "format", "edit_interaction"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
         toolbar_items: [

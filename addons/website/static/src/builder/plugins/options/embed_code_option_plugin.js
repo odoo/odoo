@@ -16,6 +16,7 @@ export class EmbedCodeOption extends BaseOptionComponent {
 class EmbedCodeOptionPlugin extends Plugin {
     static id = "embedCodeOption";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(BEGIN, EmbedCodeOption)],
         so_content_addition_selector: [".s_embed_code"],
