@@ -206,6 +206,8 @@ class configmanager:
                          help="install demo data in new databases")
         group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', nargs='?', const=True,
                          help="don't install demo data in new databases (default)")
+        group.add_option("--skip-auto-install", dest="skip_auto_install", action="store_true", my_default=False,
+                         help="skip the automatic installation of modules marked as auto_install")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
