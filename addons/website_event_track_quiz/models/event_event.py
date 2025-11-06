@@ -9,9 +9,9 @@ class EventEvent(models.Model):
 
     # frontend menu management
     community_menu = fields.Boolean(
-        "Community Menu", compute="_compute_community_menu",
+        "Community", compute="_compute_community_menu",
         readonly=False, store=True,
-        help="Display community tab on website")
+        help="Display the \"Rooms\" tab on website, redirecting to the leaderboard of the event.")
     community_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Event Community Menus",
         domain=[("menu_type", "=", "community")])

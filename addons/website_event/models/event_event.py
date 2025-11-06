@@ -44,7 +44,7 @@ class EventEvent(models.Model):
                                       search="_search_is_participating")
     # website
     is_visible_on_website = fields.Boolean(string="Visible On Website", compute='_compute_is_visible_on_website', search='_search_is_visible_on_website')
-    event_register_url = fields.Char('Event Registration Link', compute='_compute_event_register_url')
+    event_register_url = fields.Char('Registration Link', compute='_compute_event_register_url')
     website_visibility = fields.Selection(
         [('public', 'Public'), ('link', 'Via a Link'), ('logged_users', 'Logged Users')],
         string="Website Visibility", required=True, default='public', tracking=True,
@@ -54,7 +54,7 @@ class EventEvent(models.Model):
     is_published = fields.Boolean(tracking=True)
     publish_on = fields.Datetime(tracking=True)
     website_menu = fields.Boolean(
-        string='Website Menu',
+        string='Menu',
         compute='_compute_website_menu', precompute=True, readonly=False, store=True,
         help="Allows to display and manage event-specific menus on website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)

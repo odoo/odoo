@@ -10,7 +10,8 @@ class EventEvent(models.Model):
     exhibition_map = fields.Image(string='Exhibition Map', max_width=1024, max_height=1024)
     # frontend menu management
     booth_menu = fields.Boolean(
-        string='Booth Register', compute='_compute_booth_menu',
+        string='Booth Registration', compute='_compute_booth_menu',
+        help='Display the "Become exhibitor" tab on website, redirecting to the booth booking form.',
         readonly=False, store=True)
     booth_menu_ids = fields.One2many(
         'website.event.menu', 'event_id', string='Event Booths Menus',

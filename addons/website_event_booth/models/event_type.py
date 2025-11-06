@@ -8,7 +8,8 @@ class EventType(models.Model):
     _inherit = 'event.type'
 
     booth_menu = fields.Boolean(
-        string='Booths on Website', compute='_compute_booth_menu',
+        string='Booth Registration', compute='_compute_booth_menu',
+        help='Display the "Become exhibitor" tab on website, redirecting to the booth booking form.',
         readonly=False, store=True)
 
     @api.depends('website_menu')
