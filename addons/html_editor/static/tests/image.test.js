@@ -10,7 +10,7 @@ import {
     manuallyDispatchProgrammaticEvent,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent, moveSelectionOutsideEditor, setContent } from "./_helpers/selection";
 import { insertText, undo } from "./_helpers/user_actions";
@@ -482,6 +482,37 @@ test("Image transformation reset", async () => {
     expect(el.querySelector("img").style.getPropertyValue("transform")).toBe("");
     expect(transformButtonSelector).toHaveCount(1);
     expect(resetTransformButtonSelector).toHaveCount(0);
+});
+
+test("Reset image transformation on image replacement", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+    const { el } = await setupEditor(
+        `<p><img class="img-fluid" src="/web/static/img/logo.png"></p>`
+    );
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
+    el.querySelector("img").style.setProperty(
+        "transform",
+        "rotate(25deg) translateX(-0.2%) translateY(0.4%)"
+    );
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    expect("button[name='replace_image']").toHaveCount(1);
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await click(".o_existing_attachment_cell .o_button_area");
+    await animationFrame();
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+    expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
+    expect("img").not.toHaveStyle("transform", { inline: true });
 });
 
 test("Can delete an image", async () => {
