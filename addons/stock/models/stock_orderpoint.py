@@ -191,11 +191,12 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_rules(self):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
-        # Small cache mapping (location_id, route_id, product_id.route_ids | product_id.categ_id.total_route_ids) -> stock.rule.
+        # Small cache mapping (location_id, route_id, {all product routes}) -> stock.rule.
         # This reduces calls to _get_rules_from_location for products without routes and products with the same routes.
         rules_cache = {}
         for orderpoint in orderpoints_to_compute:
-            cache_key = (orderpoint.location_id, orderpoint.route_id, orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids)
+            all_product_routes = orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids | orderpoint.product_id.get_total_routes()
+            cache_key = (orderpoint.location_id, orderpoint.route_id, all_product_routes)
             rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
                 orderpoint.location_id, route_ids=orderpoint.route_id
             )
