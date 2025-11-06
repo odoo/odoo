@@ -95,3 +95,16 @@
 body:has(.o_builder_sidebar_open) .o_notification_manager {
     @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
 }
+
+body:has(.o_website_preview) {
+    .o-mail-ChatHub-bubbles {
+        transition: transform 400ms ease 0s;
+    }
+}
+
+body:has(.o-website-builder_sidebar.o_builder_sidebar_open) {
+    .o-mail-ChatHub-bubbles {
+        transform: translateX(-$o-we-sidebar-width);
+        transition-delay: 200ms;
+    }
+}
