@@ -345,7 +345,7 @@ will update the cost of every lot/serial number in stock."),
         # Quantity is negative for out valuation layers.
         quantity = -1 * quantity
         cost = self.standard_price
-        if lot and lot.standard_price:
+        if lot and lot.sudo().stock_valuation_layer_ids:
             cost = lot.standard_price
         vals = {
             'product_id': self.id,
