@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from markupsafe import Markup
 from typing import Literal
 
@@ -1258,3 +1257,11 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             order.message_post(body=Markup("<strong>%s</strong>") % _("Format used to import the document: %s", self._description))
             if logs:
                 order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs))
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        """
+        :param account.move invoice:
+        """
+        if invoice.invoice_line_ids:
+            return invoice._reason_cannot_decode_has_invoice_lines()
+        return self._ubl_import_invoice(invoice, file_data, new=new)
