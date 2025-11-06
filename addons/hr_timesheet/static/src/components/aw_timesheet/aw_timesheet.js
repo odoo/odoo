@@ -66,11 +66,8 @@ export class ActivityWatchTimesheet extends Component {
                 } else {
                     event.name = rule.type;
                 }
-
-                if (rule.always_active) {
-                    event.always_active = true;
-                }
-
+                event.always_active = rule.always_active
+                event.primary = rule.primary;
                 event.keyEvent = true;
                 return;
             }
@@ -89,7 +86,7 @@ export class ActivityWatchTimesheet extends Component {
             new RegExp(`^${odooUrl}(?:/[^?#]*)*/(?:tasks|project\\.task)/(\\d+)$`)
         );
         if (match) {
-            event.name = "Working on project"; // should come from config
+            event.name = _t("Odoo Project App")
             event.task_id = Number(match[1]);
             event.keyEvent = true;
             return;
@@ -282,8 +279,6 @@ export class ActivityWatchTimesheet extends Component {
         this.merge(ranges, events["aw-client-web"]); // assumin one browser => if 2 two, the 2 pointers algo will fail (no sorted non overlapping ranges)
         this.merge(ranges, events["aw-watcher-window"]);
 
-        let prevProjectId = false;
-        let prevTaskId = false;
         const tasksIds = new Set();
         const projectsIds = new Set();
 
@@ -324,17 +319,32 @@ export class ActivityWatchTimesheet extends Component {
         ]);
         this.state.task_by_id = Object.fromEntries(tasks.map(({ id, name }) => [id, name]));
 
-        let prevKeyEvent = null;
+        let prevKeyyEvent = null;
+        let isLastEventPrimary = false;
+        let prevProjectId = false;
+        let prevTaskId = false;
         for (const range of ranges) {
             if (range?.data?.status === "afk") {
                 continue;
             }
 
-            if (range.keyEvent) {
-                prevKeyEvent = range.name;
-                if (range.project_id || range.task_id) {
+            if (range.primary) {
+                // when rule is primary => we change project and task (to dicuss if we should have one of them mandatory)
+                // it doesn't make sens to set primary event without project and task
+                prevKeyyEvent = range.name;
+                isLastEventPrimary = true;
+                prevProjectId = range.project_id || false;
+                prevTaskId = range.task_id || false;
+            // non primary key event can only overide a previous non primary key event, but not primary events
+            } else if (range.keyEvent) {
+                // no primary key events preceed this event
+                if (!isLastEventPrimary) {
+                    prevKeyyEvent = range.name;
+                }
+                if ((!isLastEventPrimary || (!prevProjectId && !prevTaskId)) && (range.project_id || range.task_id)) {
                     prevProjectId = range.project_id;
                     prevTaskId = range.task_id;
+                    // no need to overide if both are null
                 }
             }
             const duration = (range.stop - range.start) / 1000;
@@ -343,7 +353,7 @@ export class ActivityWatchTimesheet extends Component {
                 this.state.grouped[project] = {};
             }
 
-            let name = prevKeyEvent;
+            let name = prevKeyyEvent;
             if (name == null) {
                 name = "NO prev key event"; // to check later, if i start with a non key event, what to do, put in "Others" or skip it
             }
@@ -446,11 +456,6 @@ export class ActivityWatchTimesheet extends Component {
         const ids = groupKey.split("_");
         const project_id = this.parseId(ids[0]);
         const task_id = this.parseId(ids[1]);
-        const project_name = this.projectName(project_id);
-        const task_name = this.taskName[project_id];
-
-        const project = [project_id, project_name];
-        const task = [task_id, task_name];
         const unit_amount = this.state.grouped[groupKey][title] / 60; // seconds => minutes
         const name = title;
 

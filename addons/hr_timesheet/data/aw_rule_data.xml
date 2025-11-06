@@ -3,7 +3,7 @@
     <record id="aw_rule_odoo_main" model="aw.rule">
         <field name="sequence">10</field>
         <field name="name">Odoo - Configuring DB</field>
-        <field name="regex">^https:\/\/([^\/.]+)\.odoo\.com(?:\/.*)?$</field>
+        <field name="regex">https:\/\/(?:www\.)?(?!www\.)([^\/.]+)\.odoo\.com(?:\/\S*)?</field>
         <field name="type">odoo</field>
         <field name="template">Configuring DB: $1</field>
         <field name="always_active" eval="0"/>
@@ -13,17 +13,17 @@
     <record id="aw_rule_gmail_inbox" model="aw.rule">
         <field name="sequence">20</field>
         <field name="name">Reading Emails</field>
-        <field name="regex">^https://mail\.google\.com/.+inbox</field>
+        <field name="regex">https:\/\/mail\.google\.com\/.+inbox</field>
         <field name="type">reading_emails</field>
         <field name="template">Reading Emails</field>
-        <field name="always_active" eval="1"/>
+        <field name="always_active" eval="0"/>
         <field name="primary" eval="0"/>
     </record>
 
     <record id="aw_rule_discord" model="aw.rule">
         <field name="sequence">30</field>
         <field name="name">Discord Communication</field>
-        <field name="regex">^(.*) - Discord$</field>
+        <field name="regex">(.*) - Discord</field>
         <field name="type">communication</field>
         <field name="template">Discussing with $1</field>
         <field name="always_active" eval="0"/>

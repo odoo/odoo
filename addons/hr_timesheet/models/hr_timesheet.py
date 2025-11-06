@@ -30,7 +30,7 @@ class AccountAnalyticLine(models.Model):
             if not self.env['ir.module.module']._get('planning').state == 'installed':
                 return res
 
-            fields = ['name', 'start_datetime', 'end_datetime']
+            fields = ['role_id', 'start_datetime', 'end_datetime']
             if self.env['ir.module.module']._get('project_forecast').state == 'installed':
                 fields.append('project_id')
 
@@ -48,7 +48,7 @@ class AccountAnalyticLine(models.Model):
                     del slot[field_name]
 
                 slot['type'] = 'planning_slot'
-                slot['name'] = self.env._("Planning Slot - %(name)s", name=slot['name'])
+                slot['name'] = self.env._("Planning Slot - %(role)s", role=slot['role_id'][1])
                 if project:=slot.get("project_id"):
                     slot["project_id"] = project[0]
                 res.append(slot)
