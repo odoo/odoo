@@ -5069,6 +5069,15 @@ class AccountMove(models.Model):
             if move.line_ids.account_id.filtered(lambda account: account.deprecated) and not self._context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a deprecated account, you cannot post it."))
 
+            account_companies = move.line_ids.account_id.company_ids
+
+            if len((move.journal_id.company_id.sudo().child_ids | move.journal_id.company_id) & account_companies) == 0:
+                validation_msgs.add(_(
+                    "The entry %(name)s (id %(id)s) is using accounts from a different company.",
+                    name=move.name,
+                    id=move.id
+                ))
+
             # If the field autocheck_on_post is set, we want the checked field on the move to be checked
             if move.journal_id.autocheck_on_post:
                 move.checked = move.journal_id.autocheck_on_post
