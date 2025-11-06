@@ -834,3 +834,10 @@ class TestLotValuation(TestStockValuationCommon):
         move.move_line_ids[1].lot_id = False
         move._action_done()
         self.assertEqual(move.quantity, 2)
+
+    def test_lot_svl_zero_standard_price(self):
+        self.product1.standard_price = 0
+        self._make_in_move(self.product1, 10, 0, lot_ids=[self.lot1])
+        self._make_in_move(self.product1, 10, 10, lot_ids=[self.lot2])
+        out_move = self._make_out_move(self.product1, 1, lot_ids=[self.lot1])
+        self.assertEqual(out_move.stock_valuation_layer_ids[0].value, 0)
