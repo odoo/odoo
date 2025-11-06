@@ -99,7 +99,14 @@ export const unremovableNodePredicates = [
 export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
     static id = "delete";
-    static shared = ["deleteBackward", "deleteForward", "deleteRange", "deleteSelection", "delete"];
+    static shared = [
+        "deleteBackward",
+        "deleteForward",
+        "deleteRange",
+        "deleteSelection",
+        "delete",
+        "isUnremovable",
+    ];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
