@@ -195,7 +195,15 @@ export class TimePicker extends Component {
 
         this.lastValue = newValue?.copy() ?? newValue;
         this.state.value = newValue;
-        this.state.inputValue = newValue ? newValue.toString(this.props.showSeconds) : "";
+        if (this.env.isSmall) {
+            // Force format as defined in the doc for ´<input type="time">´
+            const format = this.props.showSeconds ? "HH:mm:ss" : "HH:mm";
+            this.state.inputValue = newValue
+                ? newValue.toDateTime().setLocale("UTC").toFormat(format)
+                : "";
+        } else {
+            this.state.inputValue = newValue ? newValue.toString(this.props.showSeconds) : "";
+        }
         this.state.isValid = true;
     }
 

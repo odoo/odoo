@@ -11059,8 +11059,13 @@ test(`list daterange in form: open/close picker`, async () => {
     await contains(getPickerCell("15")).click();
     await contains(getPickerCell("20")).click();
 
-    // Close picker
-    await pointerDown(`.o_view_controller`);
+    if (getMockEnv().isSmall) {
+        // Close the bottom sheet
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        // Close picker
+        await pointerDown(`.o_view_controller`);
+    }
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(0);
 
@@ -17225,15 +17230,24 @@ test(`Properties: datetime`, async () => {
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
     await contains(`.o-dropdown--menu input[type='checkbox']`).click();
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    }
     expect(`.o_list_renderer th[data-name='properties.property_datetime']`).toHaveCount(1);
     expect(`.o_list_renderer th[data-name='properties.property_datetime']`).toHaveText(
         "Property datetime"
     );
     expect(`.o_field_cell.o_datetime_cell`).toHaveCount(3);
-
     await contains(`.o_field_cell.o_datetime_cell`).click();
-    await contains(`.o_field_datetime input`).click();
+
+    //FIXME: The picker should open with a single click, but it currently requires two in JS.
+    await runAllTimers();
+    await contains(`.o_field_datetime .o_input`).click();
+
     await contains(getPickerCell("19")).click();
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    }
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("Dec 19, 2022, 12:12 PM");
     expect.verifySteps(["web_save"]);

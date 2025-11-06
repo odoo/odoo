@@ -6,6 +6,7 @@
             t-att-class="cssClass"
         >
             <Dropdown
+                t-if="!env.isSmall"
                 state="dropdownState"
                 menuRef="menuRef"
                 manual="true"
@@ -40,6 +41,15 @@
                     </t>
                 </t>
             </Dropdown>
+            <input
+                t-if="env.isSmall"
+                type="time"
+                t-ref="inputRef"
+                class="o_time_picker_input form-control px-0"
+                t-att-class="inputCssClass"
+                t-model="state.inputValue"
+                t-on-change="onChange"
+            />
         </div>
     </t>
 </templates>

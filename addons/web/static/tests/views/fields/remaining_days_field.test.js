@@ -5,6 +5,7 @@ import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers
 import {
     defineModels,
     fields,
+    getMockEnv,
     models,
     mountView,
     onRpc,
@@ -262,6 +263,10 @@ test("RemainingDaysField on a datetime field in form view", async () => {
     expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
 
     await click(getPickerCell("9"));
+
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    }
     await animationFrame();
     await click(".o_form_button_save");
     await animationFrame();
