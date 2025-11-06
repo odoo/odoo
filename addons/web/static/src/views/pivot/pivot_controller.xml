@@ -31,8 +31,8 @@
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-				<t t-if="model.isReady and displayNoContent">
-    				<ActionHelper noContentHelp="props.info.noContentHelp" showRibbon="model.useSampleModel"/>
+                <t t-if="model.isReady and displayNoContent">
+                    <ActionHelper noContentHelp="props.info.noContentHelp"/>
                 </t>
                 <t t-if="model.isReady" t-component="props.Renderer" model="model" buttonTemplate="props.buttonTemplate"/>
             </Layout>
