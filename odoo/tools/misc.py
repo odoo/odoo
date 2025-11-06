@@ -1612,7 +1612,7 @@ def format_duration(value: float) -> str:
 consteq = hmac_lib.compare_digest
 
 
-class _HashDict(dict):
+class _HashDict[K, V](dict[K, V]):
     """ Simple extension of ``dict`` that provides a hash function.
         For the hash to be correct, one should not modify the dict's content.
     """
@@ -1623,7 +1623,7 @@ class _HashDict(dict):
         return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 
-def frozendict(mapping=(), /, **kw) -> MappingProxyType:
+def frozendict[K, V](mapping: Iterable[tuple[K, V]] | Mapping[K, V] = (), /, **kw: V) -> MappingProxyType[K, V]:
     """ Return an immutable copy of a mapping.
         This allows the returned proxy mapping to be hashed.
         The reference to the newly created internal dictionary is not
