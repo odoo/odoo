@@ -293,6 +293,16 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_date_closed(self):
+        # ensure a lead created directly in a won stage gets a date_closed
+        lead_in_won = self.env['crm.lead'].create({
+            'name': 'Created in Won',
+            'type': 'opportunity',
+            'stage_id': self.stage_team1_won.id,
+            'expected_revenue': 123.45,
+        })
+        # date_closed must be set at creation when stage is won
+        self.assertTrue(lead_in_won.date_closed, "Lead created in a won stage must have date_closed set")
+        self.assertIsInstance(lead_in_won.date_closed, datetime)
         # Test for one won lead
         stage_team1_won2 = self.env['crm.stage'].create({
             'name': 'Won2',
@@ -300,6 +310,10 @@ class TestCRMLead(TestCrmCommon):
             'team_ids': [self.sales_team_1.id],
             'is_won': True,
         })
+        old_date_closed = lead_in_won.date_closed
+        with freeze_time('2020-02-02 18:00'):
+            lead_in_won.stage_id = stage_team1_won2
+        self.assertEqual(lead_in_won.date_closed, old_date_closed, 'Moving between won stages should not change existing date_closed')
         won_lead = self.lead_team_1_won.with_env(self.env)
         other_lead = self.lead_1.with_env(self.env)
         old_date_closed = won_lead.date_closed
