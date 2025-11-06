@@ -4,7 +4,7 @@ import contextlib
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged, new_test_user
 from odoo import Command, fields
-from odoo.exceptions import UserError, RedirectWarning
+from odoo.exceptions import UserError, RedirectWarning, ValidationError
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -1299,3 +1299,55 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move_duplicate = move.copy()
         self.assertTrue(move_duplicate)
         self.assertFalse(move_duplicate.partner_id)
+
+    def test_confirm_entries_server_action_with_duplicate(self):
+        test_moves = self.env['account.move'].create([
+            {
+                'name': 'Test',
+                'move_type': 'entry',
+                'state': 'draft',
+                'line_ids': [
+                    Command.create({'account_id': self.company_data['default_account_revenue'].id}),
+                ],
+            },
+            {
+                'name': 'Test',
+                'move_type': 'entry',
+                'state': 'draft',
+                'line_ids': [
+                    Command.create({'account_id': self.company_data['default_account_revenue'].id}),
+                ],
+            },
+        ])
+        action = self.env.ref('account.action_validate_account_moves')
+        with self.assertRaises(ValidationError):
+            action.with_context(active_model='account.move', active_ids=test_moves.ids).run()
+
+        test_moves[0]._post()  # Post one of the moves and call the server action on the other one
+
+        with self.assertRaises(ValidationError):
+            action.with_context(active_model='account.move', active_ids=test_moves[1].ids).run()
+
+        test_moves += self.env['account.move'].create([
+            {
+                'name': 'Test',
+                'move_type': 'entry',
+                'state': 'draft',
+                'journal_id': self.company_data['default_journal_sale'].id,
+                'line_ids': [
+                    Command.create({'account_id': self.company_data['default_account_revenue'].id}),
+                ],
+            },
+            {
+                'name': 'Test',
+                'move_type': 'entry',
+                'state': 'draft',
+                'journal_id': self.company_data['default_journal_sale'].id,
+                'line_ids': [
+                    Command.create({'account_id': self.company_data['default_account_revenue'].id}),
+                ],
+            },
+        ])
+
+        with self.assertRaises(ValidationError):
+            action.with_context(active_model='account.move', active_ids=test_moves.ids).run()

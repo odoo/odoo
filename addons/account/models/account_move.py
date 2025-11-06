@@ -5898,6 +5898,37 @@ class AccountMove(models.Model):
 
         direct_validate_moves = draft_moves - need_confirmation_moves
         if direct_validate_moves:
+            duplicate_entries_info = set()
+
+            for move in direct_validate_moves:
+                if move.name in ('/', False):
+                    continue
+
+                if any(
+                    m.id != move.id
+                    and m.name == move.name
+                    and m.journal_id.id == move.journal_id.id
+                    for m in direct_validate_moves
+                ):
+                    duplicate_entries_info.add(f"- {move.name} ({move.journal_id.display_name})")
+
+            existing_posted_moves = self.env['account.move'].search([
+                ('name', 'in', direct_validate_moves.mapped('name')),
+                ('journal_id', 'in', direct_validate_moves.mapped('journal_id').ids),
+                ('state', '=', 'posted'),
+            ])
+
+            for move in existing_posted_moves:
+                duplicate_entries_info.add(f"- {move.name} ({move.journal_id.display_name})")
+
+            if duplicate_entries_info:
+                raise ValidationError(
+                    _(
+                        "Cannot post duplicate entries for the following records:\n%(entries)s",
+                        entries="\n".join(duplicate_entries_info),
+                    )
+                )
+
             direct_validate_moves._post(soft=False)
         if need_confirmation_moves:
             wizard = self.env['validate.account.move'].create({
