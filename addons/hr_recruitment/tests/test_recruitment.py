@@ -201,3 +201,14 @@ class TestRecruitment(TransactionCase):
         application2.action_archive()
         self.env.invalidate_all()
         self.assertEqual(candidate.application_count, 2, 'The applications_count should not change after archiving an application')
+
+    def test_candidate_related_partner_name(self):
+        """
+            Verify that the candidate's related partner's name is correctly set when
+            the email_from is not normalized e.g. it contains uppercase characters.
+        """
+        candidate = self.env['hr.candidate'].create({
+            'partner_name': 'Test Name',
+            'email_from': 'Test@test.com'
+        })
+        self.assertEqual(candidate.partner_id.name, 'Test Name')
