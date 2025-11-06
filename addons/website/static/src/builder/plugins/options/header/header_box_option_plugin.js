@@ -16,6 +16,7 @@ class HeaderBoxOptionPlugin extends Plugin {
     static id = "HeaderBoxOptionPlugin";
     static dependencies = ["customizeWebsite"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(HEADER_BOX, HeaderBoxOption)],
         builder_actions: {

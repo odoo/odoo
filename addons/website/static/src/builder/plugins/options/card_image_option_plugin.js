@@ -4,6 +4,11 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 
+/**
+ * @typedef { Object } CardImageOptionShared
+ * @property { CardImageOptionPlugin['adaptRatio'] } adaptRatio
+ */
+
 const ratiosOnlySupportedForTopImage = [
     "ratio ratio-4x3",
     "ratio ratio-16x9",
@@ -26,6 +31,7 @@ class CardImageOptionPlugin extends Plugin {
     static id = "cardImageOption";
     static dependencies = ["remove", "history", "builderOptions"];
     static shared = ["adaptRatio"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetCoverImagePositionAction,

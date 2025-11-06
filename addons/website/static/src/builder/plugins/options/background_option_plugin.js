@@ -5,6 +5,12 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { _t } from "@web/core/l10n/translation";
 import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 
+/**
+ * @typedef { Object } WebsiteBackgroundVideoShared
+ * @property { WebsiteBackgroundVideoPlugin['loadReplaceBackgroundVideo'] } loadReplaceBackgroundVideo
+ * @property { WebsiteBackgroundVideoPlugin['applyReplaceBackgroundVideo'] } applyReplaceBackgroundVideo
+ */
+
 function getBgVideoOrParallax(editingElement) {
     // Make sure parallax and video element are considered to be below the
     // color filters / shape
@@ -17,6 +23,7 @@ function getBgVideoOrParallax(editingElement) {
 
 class WebsiteBackgroundImageOptionPlugin extends Plugin {
     static id = "websiteBackgroundImageOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         background_filter_target_providers: withSequence(10, getBgVideoOrParallax),
     };
@@ -24,6 +31,7 @@ class WebsiteBackgroundImageOptionPlugin extends Plugin {
 
 class WebsiteBackgroundShapeOptionPlugin extends Plugin {
     static id = "websiteBackgroundShapeOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         background_shape_target_providers: withSequence(10, getBgVideoOrParallax),
     };
@@ -33,6 +41,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
     static id = "websiteBackgroundVideoPlugin";
     static dependencies = ["media"];
     static shared = ["loadReplaceBackgroundVideo", "applyReplaceBackgroundVideo"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             ToggleBgVideoAction,

@@ -33,6 +33,7 @@ export class TableOfContentNavbarOption extends BaseOptionComponent {
 class TableOfContentOptionPlugin extends Plugin {
     static id = "tableOfContentOption";
     static dependencies = ["remove"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [TableOfContentOption, TableOfContentNavbarOption],
         builder_actions: {

@@ -5,6 +5,18 @@ import { SNIPPET_SPECIFIC } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef {((
+ *      activeItemEl: HTMLElement,
+ *      optionName: string
+ * ) => HTMLElement[])[]} get_gallery_items_handlers
+ * @typedef {((
+ *      activeItemEl: HTMLElement,
+ *      itemEls: HTMLElement[],
+ *      optionName: string
+ * ) => void)[]} reorder_items_handlers
+ */
+
 export class GalleryElementOption extends BaseOptionComponent {
     static template = "website.GalleryElementOption";
     static selector =
@@ -14,6 +26,7 @@ export class GalleryElementOption extends BaseOptionComponent {
 export class GalleryElementOptionPlugin extends Plugin {
     static id = "galleryElementOption";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(SNIPPET_SPECIFIC, GalleryElementOption)],
         builder_actions: {

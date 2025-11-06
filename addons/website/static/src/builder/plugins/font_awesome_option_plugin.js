@@ -15,6 +15,7 @@ export class FontAwesomeOption extends BaseOptionComponent {
 
 class FontAwesomeOptionPlugin extends Plugin {
     static id = "fontAwesomeOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(FONT_AWESOME, FontAwesomeOption)],
         builder_actions: {

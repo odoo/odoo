@@ -21,6 +21,15 @@ import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef { Object } ThemeTabShared
+ * @property { ThemeTabPlugin['buildGray'] } buildGray
+ * @property { ThemeTabPlugin['getGrays'] } getGrays
+ * @property { ThemeTabPlugin['getGrayParams'] } getGrayParams
+ * @property { ThemeTabPlugin['setGrays'] } setGrays
+ * @property { ThemeTabPlugin['setGrayParams'] } setGrayParams
+ */
+
 export const GRAY_PARAMS = {
     EXTRA_SATURATION: "gray-extra-saturation",
     HUE: "gray-hue",
@@ -43,6 +52,7 @@ export class ThemeTabPlugin extends Plugin {
     grayParams = {};
     grays = reactive({});
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             CustomizeGrayAction,

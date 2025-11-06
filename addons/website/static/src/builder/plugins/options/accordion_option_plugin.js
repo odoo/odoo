@@ -17,6 +17,7 @@ export class AccordionItemOption extends BaseOptionComponent {
 
 class accordionOptionPlugin extends Plugin {
     static id = "accordionOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC, AccordionOption),

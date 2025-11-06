@@ -28,6 +28,7 @@ export class AddProductCatalogSectionOption extends BaseAddProductOption {
 
 class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(BEGIN, AddProductCatalogOption),

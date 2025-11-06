@@ -21,6 +21,7 @@ export class DotColorOption extends BaseOptionComponent {
 
 class TimelineListOptionPlugin extends Plugin {
     static id = "timelineListOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             // TODO AGAU: alignment option sequence doesn't match master, must split template

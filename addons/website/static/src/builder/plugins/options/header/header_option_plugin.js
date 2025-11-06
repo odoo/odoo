@@ -40,6 +40,7 @@ class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite", "menuDataPlugin"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_header_middle_buttons: [
             {

@@ -7,11 +7,18 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { DynamicSnippetBlogPostsOption } from "./dynamic_snippet_blog_posts_option";
 
+/**
+ * @typedef { Object } DynamicSnippetBlogPostsOptionShared
+ * @property { DynamicSnippetBlogPostsOptionPlugin['fetchBlogs'] } fetchBlogs
+ * @property { DynamicSnippetBlogPostsOptionPlugin['getModelNameFilter'] } getModelNameFilter
+ */
+
 class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     static id = "dynamicSnippetBlogPostsOption";
     static dependencies = ["dynamicSnippetOption"];
     static shared = ["fetchBlogs","getModelNameFilter"];
     modelNameFilter = "blog.post";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: withSequence(DYNAMIC_SNIPPET, DynamicSnippetBlogPostsOption),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),

@@ -40,6 +40,7 @@ class EcommCategoriesShowcaseOptionPlugin extends Plugin {
         "rounded-5",
     ];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC_BEFORE, EcommCategoriesShowcaseOption),

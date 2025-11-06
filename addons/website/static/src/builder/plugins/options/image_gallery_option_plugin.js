@@ -11,6 +11,15 @@ import { uniqueId } from "@web/core/utils/functions";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 
+/**
+ * @typedef { Object } ImageGalleryOptionShared
+ * @property { ImageGalleryOption['getColumns'] } getColumns
+ * @property { ImageGalleryOption['getMode'] } getMode
+ * @property { ImageGalleryOption['processImage'] } processImage
+ * @property { ImageGalleryOption['restoreSelection'] } restoreSelection
+ * @property { ImageGalleryOption['setImages'] } setImages
+ */
+
 export class ImageGalleryImagesOption extends BaseOptionComponent {
     static template = "website.ImageGalleryImagesOption";
     static selector = ".s_image_gallery";
@@ -28,6 +37,7 @@ class ImageGalleryOption extends Plugin {
         "imagePostProcess",
     ];
     static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC, ImageGalleryImagesOption),

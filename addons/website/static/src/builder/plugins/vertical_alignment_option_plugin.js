@@ -13,6 +13,7 @@ export class WebsiteVerticalAlignmentOption extends BaseVerticalAlignmentOption 
 
 class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "websiteVerticalAlignmentOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(BOX_BORDER_SHADOW, WebsiteVerticalAlignmentOption)],
     };

@@ -14,6 +14,7 @@ export class FloatingBlocksOption extends BaseOptionComponent {
 
 export class FloatingBlocksOptionPlugin extends Plugin {
     static id = "floatingBlocksOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(after(DEVICE_VISIBILITY), FloatingBlocksOption)],
         builder_actions: {

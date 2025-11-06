@@ -4,8 +4,58 @@ import { registry } from "@web/core/registry";
 import { SearchbarOption } from "./searchbar_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
+/** @typedef {import("plugins").TranslatedString} TranslatedString */
+
+/**
+ * @typedef {{
+ *      label: TranslatedString;
+ *      orderBy: string;
+ *      dependency?: string;
+ *      id?: string;
+ * }[]} searchbar_option_order_by_items
+ *
+ * Register orderBy options for the website searchbar.
+ * `orderBy` takes a string like `record_field_name` + `asc` or `desc`.
+ * `dependency` takes an id of another builder option. You can omit it if the
+ * orderBy option should always be visible.
+ * You can reference `id` if you need the new option to have an id (if another
+ * option depends on it being active).
+ *
+ * Example:
+ *
+ *      resources: {
+ *          searchbar_option_order_by_items: {
+ *              label: _t("Date (old to new)"),
+ *              orderBy: "published_date asc",
+ *              dependency: "search_blogs_opt",
+ *          },
+ *      };
+ */
+/**
+ * @typedef {{
+ *      label: TranslatedString;
+ *      dataAttribute: string;
+ *      dependency: string;
+ * }[]} searchbar_option_display_items
+ *
+ * Register display options for the website searchbar.
+ * `dataAttribute` is the attribute which will be used to display the data.
+ * `dependency` takes an id of another builder option.
+ *
+ * Example:
+ *
+ *      resources: {
+ *          searchbar_option_display_items: {
+ *              label: _t("Description"),
+ *              dataAttribute: "displayDescription",
+ *              dependency: "search_all_opt",
+ *          },
+ *      };
+ */
+
 class SearchbarOptionPlugin extends Plugin {
     static id = "searchbarOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [SearchbarOption],
         builder_actions: {

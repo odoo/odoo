@@ -4,6 +4,11 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 
+/**
+ * @typedef { Object } CookiesBarOptionShared
+ * @property { CookiesBarOptionPlugin['getSavedSelectors'] } getSavedSelectors
+ */
+
 export class CookiesBarOption extends BaseOptionComponent {
     static template = "website.CookiesBarOption";
     static selector = "#website_cookies_bar";
@@ -12,6 +17,7 @@ export class CookiesBarOption extends BaseOptionComponent {
 class CookiesBarOptionPlugin extends Plugin {
     static id = "CookiesBarOptionPlugin";
     static shared = ["getSavedSelectors"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [CookiesBarOption],
         builder_actions: {
