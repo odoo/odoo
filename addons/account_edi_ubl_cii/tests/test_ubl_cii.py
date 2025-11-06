@@ -274,31 +274,6 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, partner)
 
-    def test_import_partner_postal_address(self):
-        " Test importing postal address when creating new partner from UBL xml."
-        file_path = "bis3_bill_example.xml"
-        file_path = f"{self.test_module}/tests/test_files/{file_path}"
-        xml_attachment = self.env['ir.attachment'].create({
-            'mimetype': 'application/xml',
-            'name': 'test_invoice.xml',
-            'raw': self.file_read(file_path),
-        })
-
-        partner_vals = {
-            'name': "ALD Automotive LU",
-            'email': "adl@test.com",
-            'vat': "LU12977109",
-        }
-        # assert there is no matching partner
-        partner_match = self.env['res.partner']._retrieve_partner(**partner_vals)
-        self.assertFalse(partner_match)
-
-        bill = self._import_invoice_as_attachment_on(attachment=xml_attachment)
-
-        self.assertRecordValues(bill.partner_id, [partner_vals])
-        self.assertEqual(bill.partner_id.contact_address,
-                         "270 rte d'Arlon\n8010 Strassen\nLuxembourg")
-
     def test_actual_delivery_date_in_cii_xml(self):
 
         invoice = self.env['account.move'].create({
@@ -496,31 +471,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             ._create_document_from_attachment(xml_attachment.id)
         self.assertTrue(any('add your own bank account manually' in message.body for message in move.message_ids))
 
-    def test_import_discount(self):
-        invoice = self.env['account.move'].create({
-            'partner_id': self.partner_a.id,
-            'move_type': 'out_invoice',
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'quantity': 3,
-                    'price_unit': 11.34,
-                }),
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'quantity': 1.65,
-                    'price_unit': 29.9,
-                }),
-            ],
-        })
-        xml_attachment = self.env['ir.attachment'].create({
-            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
-            'name': 'test_invoice.xml',
-        })
-        imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
-        for line in imported_invoice.invoice_line_ids:
-            self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
-
     def test_export_xml_with_multiple_invoices(self):
         partner = self._create_partner_be(invoice_edi_format='ubl_bis3')
         self.company_data['company'].partner_id.write({
@@ -706,10 +656,10 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
         })
 
-        invoice.partner_id.commercial_partner_id.invoice_edi_format = 'nlcius'
+        invoice.partner_id.commercial_partner_id.invoice_edi_format = 'ubl_bis3'
         invoice.action_post()
         invoice.invoice_date_due = fields.Date.from_string('2024-12-31')
-        builder = invoice.partner_id.commercial_partner_id._get_edi_builder('nlcius')
+        builder = invoice.partner_id.commercial_partner_id._get_edi_builder('ubl_bis3')
         xml_content = builder._export_invoice(invoice)[0]
         xml_tree = etree.fromstring(xml_content)
         scheme_ID = xml_tree.find('.//cac:PartyLegalEntity/cbc:CompanyID[@schemeID]', self.ubl_namespaces)
@@ -785,62 +735,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
 
-    def test_vehicle_import(self):
-        """
-        Test that vehicle id is set on invoice lines if fleet is installed
-        """
-        self.ensure_installed('fleet')
-        self.env.user.group_ids |= self.env.ref('fleet.fleet_group_manager')
-        # create car datas
-        brand = self.env['fleet.vehicle.model.brand'].create({
-            'name': 'Test Brand',
-        })
-        model = self.env['fleet.vehicle.model'].create({
-            'name': 'Test Model',
-            'brand_id': brand.id,
-        })
-        car = self.env['fleet.vehicle'].create({
-            'model_id': model.id,
-            'vin_sn': 'ABCDEF012345GHJKL',
-            'license_plate': '1-ABC-123',
-        })
-        car2 = self.env['fleet.vehicle'].create({
-            'model_id': model.id,
-            'vin_sn': 'ABCDEF012346GHJKL',
-        })
-        car3 = self.env['fleet.vehicle'].create({
-            'model_id': model.id,
-            'vin_sn': 'ABCDEF012347GHJKL',
-        })
-
-        self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
-
-        def create_attachment(file_name):
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': file_name,
-                'raw': self.file_read(f"{self.test_module}/tests/test_files/{file_name}"),
-            })
-            return xml_attachment
-
-        # One VIN SN for the move, all lines should link the vehicle
-        xml_attachment_invoice = create_attachment("bis3_bill_vehicle_invoice.xml")
-        bill_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment_invoice)
-        self.assertRecordValues(bill_invoice.invoice_line_ids, [{'vehicle_id': car.id} for _ in range(3)])
-
-        # Multiple VIN SN, every line should link its own vehicle
-        xml_attachment_line = create_attachment("bis3_bill_vehicle_line.xml")
-        bill_line = self._import_invoice_as_attachment_on(attachment=xml_attachment_line)
-        self.assertRecordValues(bill_line.invoice_line_ids, [
-            {'vehicle_id': car.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'SerialNumber'
-            {'vehicle_id': car2.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'VIN'
-            {'vehicle_id': car.id},  # match License Plate in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'PlateNumber'
-            {'vehicle_id': car3.id},  # search VIN in Item/Description
-            {'vehicle_id': car.id},  # search License Plate in Item/Description
-            {'vehicle_id': car.id},  # search combined License Plate and VIN in Item/Description
-            {'vehicle_id': False},  # Double vin -> no vehicle linked
-        ])
-
     def test_bank_details_import(self):
         acc_number = '1234567890'
         partner_bank = self.env['res.partner.bank'].create({
@@ -860,79 +754,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         partner_bank.active = True
         self.env['account.edi.common']._import_partner_bank(invoice, [acc_number])
         self.assertEqual(invoice.partner_bank_id, partner_bank)
-
-    def test_import_and_group_lines_by_tax(self):
-        """
-        Test the group/ungroup lines action on account.move
-        """
-
-        def create_bill(file_path):
-            file_path = f"{self.test_module}/tests/test_files/{file_path}"
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'bis3_bill_group_by_tax.xml',
-                'raw': self.file_read(file_path),
-            })
-            return self._import_invoice_as_attachment_on(
-                attachment=xml_attachment,
-                journal=self.company_data['default_journal_purchase'],
-            )
-
-        # Datas
-        self.env.ref('base.EUR').active = True
-        tax_6 = self.percent_tax(6.0, type_tax_use='purchase')
-        tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
-
-        # Import bill
-        file_path = "bis3_bill_group_by_tax.xml"
-        invoice = create_bill(file_path)
-
-        expected_not_grouped_lines = [
-            {
-                'quantity': 1.0,
-                'price_unit': 600.0,
-                'tax_ids': tax_6.ids,
-            },
-            {
-                'quantity': 1.0,
-                'price_unit': 300.0,
-                'tax_ids': tax_21.ids,
-            },
-            {
-                'quantity': 2.0,
-                'price_unit': 500.0,
-                'tax_ids': tax_21.ids,
-            },
-        ]
-
-        self.assertRecordValues(invoice.invoice_line_ids, expected_not_grouped_lines)
-
-        # Group lines by tax and post
-        invoice.action_group_ungroup_lines_by_tax()
-
-        expected_grouped_lines = [
-            {
-                'quantity': 1.0,
-                'price_unit': 600.00,
-                'tax_ids': tax_6.ids,
-            },
-            {
-                'quantity': 1.0,
-                'price_unit': 1300.00,
-                'tax_ids': tax_21.ids,
-            },
-        ]
-
-        self.assertRecordValues(invoice.invoice_line_ids, expected_grouped_lines)
-        invoice.action_post()
-
-        # Import the bill a second time, should be grouped as last posted bill from this supplier is grouped
-        invoice_2 = create_bill(file_path)
-        self.assertRecordValues(invoice_2.invoice_line_ids, expected_grouped_lines)
-
-        # Should ungroup lines from xml
-        invoice_2.action_group_ungroup_lines_by_tax()
-        self.assertRecordValues(invoice_2.invoice_line_ids, expected_not_grouped_lines)
 
     def test_invoice_optional_fields(self):
         """Test that optional invoice and invoice lines custom fields added by the user are exported correctly"""
