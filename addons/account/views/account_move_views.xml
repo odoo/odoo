@@ -157,7 +157,7 @@
             <field name="model">account.move.line</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <list name="move_line_tree" string="Journal Items" decoration-info="parent_state == 'draft'" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                <list name="move_line_tree" string="Journal Items" decoration-info="parent_state == 'draft'" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1">
                     <field name="move_id" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide"/>
                     <field name="date" readonly="1"/>
