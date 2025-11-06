@@ -152,6 +152,7 @@ class TestConfigManager(TransactionCase):
 
             # advanced
             'dev_mode': [],
+            'skip_auto_install': False,
             'stop_after_init': False,
             'osv_memory_count_limit': 0,
             'transient_age_limit': 1.0,
@@ -270,6 +271,7 @@ class TestConfigManager(TransactionCase):
             # advanced
             'dev_mode': ['xml'],  # blacklist for save, read from the config file
             'stop_after_init': False,
+            'skip_auto_install': False,
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
@@ -390,6 +392,7 @@ class TestConfigManager(TransactionCase):
             'init': {},
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'save': False,
+            'skip_auto_install': False,
             'stop_after_init': False,
 
             # undocummented options
@@ -570,6 +573,7 @@ class TestConfigManager(TransactionCase):
 
             # advanced
             'dev_mode': ['xml', 'reload'],
+            'skip_auto_install': False,
             'stop_after_init': True,
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
@@ -629,6 +633,7 @@ class TestConfigManager(TransactionCase):
             'upgrade_path': [],
             'pre_upgrade_scripts': [],
             'server_wide_modules': ['web', 'base', 'mail'],
+            'skip_auto_install': False,
             'data_dir': '/tmp/data-dir',
 
             # HTTP
