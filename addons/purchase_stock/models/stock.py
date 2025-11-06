@@ -141,7 +141,6 @@ class StockReturnPicking(models.TransientModel):
 class StockWarehouseOrderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
-    vendor_ids = fields.One2many(related='product_id.seller_ids', string="Vendors")
     show_partner = fields.Boolean(compute='_compute_show_partner', help="Technical field used for the visibility of the partner column.")
     effective_supplier_id = fields.Many2one('product.supplierinfo', compute='_compute_effective_supplier_id',
         search='_search_effective_supplier_id')
@@ -247,7 +246,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _compute_show_supply_warning(self):
         for orderpoint in self:
             if 'buy' in orderpoint.rule_ids.mapped('action') and not orderpoint.show_supply_warning:
-                orderpoint.show_supply_warning = not orderpoint.vendor_ids
+                orderpoint.show_supply_warning = not orderpoint.allowed_partner_ids
                 continue
             super(StockWarehouseOrderpoint, orderpoint)._compute_show_supply_warning()
 

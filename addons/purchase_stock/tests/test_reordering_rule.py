@@ -1569,3 +1569,40 @@ class TestReorderingRule(TransactionCase):
         self.product_01.seller_ids = False
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertTrue(orderpoint.show_supply_warning)
+
+    def test_orderpoint_warning_purchase_stock_multicompany(self):
+        """ Check that the supply warning computes correctly per company in a multi-company setup.
+
+        If a vendor exists only in one company, the reordering rule in that company
+        should not show a warning, while the rule in the other company without any
+        supplier should show a warning (warning icon).
+        """
+        company_a, company_b = self.env['res.company'].create([{'name': 'Company A'}, {'name': 'Company B'}])
+        warehouse_a, warehouse_b = self.env['stock.warehouse'].search([('company_id', 'in', [company_a.id, company_b.id])])
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Product Supply Warning MultiCo'
+        product_form.is_storable = True
+        with product_form.seller_ids.new() as s:
+            s.partner_id = self.partner
+            s.min_qty = 1.0
+            s.price = 10.0
+            s.product_uom_id = uom_unit
+            s.company_id = company_a
+        product = product_form.save()
+
+        def _create_orderpoint(company, warehouse):
+            return self.env['stock.warehouse.orderpoint'].with_company(company).create({
+                'warehouse_id': warehouse.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'product_id': product.id,
+                'product_min_qty': 5.0,
+                'product_max_qty': 10.0,
+            })
+
+        orderpoint_a = _create_orderpoint(company_a, warehouse_a)
+        self.assertFalse(orderpoint_a.show_supply_warning, "Company A has vendor price rules → should display info icon (no warning).")
+
+        orderpoint_b = _create_orderpoint(company_b, warehouse_b)
+        self.assertTrue(orderpoint_b.show_supply_warning, "Company B has no vendor price rules → should display warning icon.")
