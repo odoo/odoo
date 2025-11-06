@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
 from odoo.fields import Date
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('work_entry')
@@ -42,6 +43,17 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'requires_allocation': False,
             'allow_request_on_top': True,
             'work_entry_type_id': cls.work_entry_type_remote.id,
+        })
+
+        cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
+        cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
+        cls.employee_external = cls.env['hr.employee'].create({
+            'name': 'external Employee',
+            'user_id': cls.external_user_employee.id,
+            'company_id': cls.external_company.id,
+            'date_version': cls.start.date() - relativedelta(days=5),
+            'contract_date_start': cls.start.date() - relativedelta(days=5),
+            'date_generated_from': cls.end.date() + relativedelta(days=5),
         })
 
     def test_time_week_leave_work_entry(self):
@@ -173,3 +185,26 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         sum_leave_hours = sum(leave_work_entry.mapped('duration'))
         self.assertEqual(sum_remote_hours, 35, "It should equal the number of hours richard worked in remote")  # 5 days * 8 hours - 5 hours for leave
         self.assertEqual(sum_leave_hours, 5.0, "It should equal the number of hours richard was on leave")
+
+    def test_reset_leave_work_entries(self):
+        """
+        This test ensures that when the employee's calendar_id.company_id is False,
+        resetting the leave's work entries keeps the same work entry type.
+        """
+        self.employee_external.resource_calendar_id.company_id = False
+        work_entries = self.employee_external.generate_work_entries(self.start.date(), self.end.date())
+        work_entries.action_validate()
+        leave = self.create_leave(datetime.today(), datetime.today(), employee_id=self.employee_external.id)
+        leave.with_user(self.env.user).action_approve()
+        leave_resource_calendar_leave = self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave.id)])
+
+        self.assertEqual(self.employee_external.company_id, leave_resource_calendar_leave.company_id)
+        leave_work_entry = self.env['hr.work.entry'].search([('employee_id', '=', self.employee_external.id), ('work_entry_type_id', '=', leave.holiday_status_id.work_entry_type_id.id)])
+        self.assertIsNotNone(leave_work_entry)
+
+        self.env["hr.work.entry.regeneration.wizard"].regenerate_work_entries(
+            slots=[{"date": datetime.today(), "employee_id": self.employee_external.id}],
+            record_ids=leave_work_entry.ids,
+        )
+        leave_work_entry = self.env['hr.work.entry'].search([('employee_id', '=', self.employee_external.id), ('work_entry_type_id', '=', leave.holiday_status_id.work_entry_type_id.id)])
+        self.assertIsNotNone(leave_work_entry, "Leave's work entry should have the same work entry type")
