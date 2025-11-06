@@ -34,3 +34,18 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             journal=self.company_data['default_journal_sale'],
         )
         self.assertRecordValues(invoice.partner_id, [{'id': partner.id}])
+
+    @freeze_time('2020-01-01')
+    def test_import_partner_retrieval_no_contact(self):
+        self.env['res.partner'].create({
+            'parent_id': self.partner_be.id,
+            'name': 'My contact',
+            'company_id': self.partner_be.company_id.id,
+        })
+
+        # Test the partner has been retrieved.
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_partner_creation',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertEqual(self.partner_be, invoice.partner_id, "We find the belgian partner, not his contact")

@@ -33,7 +33,7 @@ class TestPeppolMessageResponse(TestPeppolMessage):
         url = r.path_url.lower()
         if r.path_url.startswith('/api/peppol/1/lookup'):
             peppol_identifier = parse.parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0].lower()
-            if peppol_identifier in {'9932:9482348239847239874', '9932:gb1232434'}:
+            if peppol_identifier in {'0088:9482348239847239874', '9932:gb1232434'}:
                 url_quoted_peppol_identifier = parse.quote_plus(peppol_identifier)
                 response.status_code = 200
                 response.json = lambda: {"result": {
