@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import deque
+from datetime import datetime
 
 from odoo import api, Command, fields, models, _
+from odoo.fields import Date
 from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
@@ -149,6 +151,10 @@ class StockMove(models.Model):
         valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
         if not self.purchase_line_id:
             return valuation_data
+
+        if isinstance(at_date, datetime):
+            # Since aml.date are Date, we don't need the extra precision here.
+            at_date = Date.to_date(at_date)
 
         aml_quantity = 0
         value = 0
