@@ -18,6 +18,7 @@ export class ControllerPageListingLayoutOption extends BaseOptionComponent {
 class ControllerPageListingLayoutOptionPlugin extends Plugin {
     static id = "controllerPageListingLayoutOption";
     static dependencies = ["builderActions"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [ControllerPageListingLayoutOption],
         builder_actions: {

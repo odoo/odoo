@@ -8,6 +8,7 @@ import { BorderConfigurator } from "@html_builder/plugins/border_configurator_op
 
 class FontAwesomeOptionPlugin extends Plugin {
     static id = "fontAwesomeOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(FONT_AWESOME, FontAwesomeOptionComponent)],
         builder_actions: {

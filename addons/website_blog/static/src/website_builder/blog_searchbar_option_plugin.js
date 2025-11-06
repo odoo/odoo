@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 class BlogSearchbarOptionPlugin extends Plugin {
     static id = "blogSearchbarOption";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         searchbar_option_order_by_items: [
             {

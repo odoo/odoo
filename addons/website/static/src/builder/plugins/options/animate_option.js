@@ -1,6 +1,10 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
 
+/**
+ * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
+ */
+
 export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";
     static dependencies = ["animateOption"];

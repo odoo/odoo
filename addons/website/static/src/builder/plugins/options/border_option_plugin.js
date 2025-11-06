@@ -19,6 +19,7 @@ export class BorderOption extends BaseOptionComponent {
 
 class BorderOptionPlugin extends Plugin {
     static id = "borderOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(BOX_BORDER_SHADOW, BorderOption)],
     };

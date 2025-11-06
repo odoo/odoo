@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 export class IconSnippetOptionPlugin extends Plugin {
     static id = "iconSnippetOption";
     static dependencies = ["media"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         so_content_addition_selector: [".s_icon"],

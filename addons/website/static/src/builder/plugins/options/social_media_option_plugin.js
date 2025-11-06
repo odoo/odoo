@@ -13,6 +13,19 @@ import { AnimateOption } from "./animate_option";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /**
+ * @typedef { Object } SocialMediaOptionShared
+ * @property { SocialMediaOptionPlugin['newLinkElement'] } newLinkElement
+ * @property { SocialMediaOptionPlugin['getRecordedSocialMedia'] } getRecordedSocialMedia
+ * @property { SocialMediaOptionPlugin['setRecordedSocialMedia'] } setRecordedSocialMedia
+ * @property { SocialMediaOptionPlugin['setRecordedSocialMediaAreEdited'] } setRecordedSocialMediaAreEdited
+ * @property { SocialMediaOptionPlugin['getAssociatedSocialMedia'] } getAssociatedSocialMedia
+ * @property { SocialMediaOptionPlugin['removeSocialMediaClasses'] } removeSocialMediaClasses
+ * @property { SocialMediaOptionPlugin['removeIconClasses'] } removeIconClasses
+ * @property { SocialMediaOptionPlugin['getRecordedSocialMediaNames'] } getRecordedSocialMediaNames
+ * @property { SocialMediaOptionPlugin['reorderSocialMediaLink'] } reorderSocialMediaLink
+ */
+
+/**
  * @typedef { Object } SocialMediaInfo
  * @property { boolean } [recorded] whether the social media is one from the orm
  * @property { string|Markup|LazyTranslatedString } label
@@ -132,6 +145,7 @@ class SocialMediaOptionPlugin extends Plugin {
         "getRecordedSocialMediaNames",
         "reorderSocialMediaLink",
     ];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(TITLE_LAYOUT_SIZE, SocialMediaOption),

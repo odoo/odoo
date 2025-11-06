@@ -15,6 +15,7 @@ export class BentoBorderOption extends BaseOptionComponent {
 
 class BentoBorderOptionPlugin extends Plugin {
     static id = "BentoBorderOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(after(WEBSITE_BACKGROUND_OPTIONS), BentoBorderOption)],
     };

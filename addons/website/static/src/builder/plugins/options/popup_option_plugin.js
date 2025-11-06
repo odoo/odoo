@@ -25,6 +25,7 @@ class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
     static dependencies = ["anchor", "visibility", "history", "popupVisibilityPlugin"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(POPUP, PopupOption),
