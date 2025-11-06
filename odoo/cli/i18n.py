@@ -136,8 +136,18 @@ class I18n(Command):
         if active_test:
             if not_installed_languages := languages.filtered(lambda x: not x.active):
                 languages -= not_installed_languages
-                iso_code_str = ", ".join(not_installed_languages.mapped("iso_code"))
-                _logger.warning("Ignoring not installed languages: %s", iso_code_str)
+                iso_codes = not_installed_languages.mapped('iso_code')
+                _logger.warning(
+                    textwrap.dedent("""\
+                        Ignoring not installed languages: %s
+                        Install them running the below command, then run this command again.
+
+                        $ %s -l %s
+                    """),
+                    ', '.join(iso_codes),
+                    self.loadlang_parser.prog,
+                    ' '.join(iso_codes),
+                )
         return languages
 
     def _import(self, parsed_args):
