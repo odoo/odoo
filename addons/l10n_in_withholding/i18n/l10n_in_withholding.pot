@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-02 09:58+0000\n"
-"PO-Revision-Date: 2024-08-02 09:58+0000\n"
+"POT-Creation-Date: 2025-11-03 15:44+0000\n"
+"PO-Revision-Date: 2025-11-03 15:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,6 +22,7 @@ msgid "<span class=\"o_stat_text\">TDS</span>"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model,name:l10n_in_withholding.model_account_account
 #: model_terms:ir.ui.view,arch_db:l10n_in_withholding.res_config_settings_view_form_inherit_l10n_in_withholding
 msgid "Account"
 msgstr ""
@@ -29,6 +30,51 @@ msgstr ""
 #. module: l10n_in_withholding
 #: model:ir.model,name:l10n_in_withholding.model_account_chart_template
 msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__is_aggregate_limit
+msgid "Aggregate"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__aggregate_period
+msgid "Aggregate Period"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__aggregate_limit
+msgid "Aggregate limit"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.constraint,message:l10n_in_withholding.constraint_l10n_in_section_alert_aggregate_limit
+msgid "Aggregate limit must be positive"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_in_withholding.account_move_view_form_inherit_l10n_in_withholding
+msgid "Apply Higher TCS"
+msgstr ""
+
+#. module: l10n_in_withholding
+#. odoo-python
+#: code:addons/l10n_in_withholding/models/account_move.py:0
+msgid "As the Partner's PAN missing/invalid apply TCS at the higher rate."
+msgstr ""
+
+#. module: l10n_in_withholding
+#. odoo-python
+#: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
+msgid ""
+"As the Partner's PAN missing/invalid, it's advisable to apply TDS at the "
+"higher rate."
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.column,name:l10n_in_withholding.tcs_report_balance
+#: model:account.report.column,name:l10n_in_withholding.tds_report_balance
+msgid "Balance"
 msgstr ""
 
 #. module: l10n_in_withholding
@@ -62,17 +108,24 @@ msgid "Confirm"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__consider_amount
+msgid "Consider"
+msgstr ""
+
+#. module: l10n_in_withholding
 #: model:ir.actions.act_window,name:l10n_in_withholding.l10n_in_withholding_entry_form_action
 msgid "Create TDS Entry"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__create_uid
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__create_uid
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__create_date
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__create_date
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__create_date
 msgid "Created on"
@@ -82,6 +135,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__currency_id
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__currency_id
 msgid "Currency"
+msgstr ""
+
+#. module: l10n_in_withholding
+#. odoo-python
+#: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
+msgid "Customer Payment"
 msgstr ""
 
 #. module: l10n_in_withholding
@@ -95,12 +154,30 @@ msgid "Discard"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__display_name
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_bank_statement_line__l10n_in_display_higher_tcs_button
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_move__l10n_in_display_higher_tcs_button
+msgid "Display higher TCS button"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model,name:l10n_in_withholding.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_section_alert__aggregate_period__fiscal_yearly
+msgid "Financial Yearly"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__id
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__id
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__id
 msgid "ID"
@@ -112,23 +189,25 @@ msgid "India TDS Control:"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_payment__l10n_in_withhold_move_ids
+msgid "Indian Payment TDS Entries"
+msgstr ""
+
+#. module: l10n_in_withholding
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_bank_statement_line__l10n_in_withhold_move_ids
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_move__l10n_in_withhold_move_ids
-#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_payment__l10n_in_withhold_move_ids
 msgid "Indian TDS Entries"
 msgstr ""
 
 #. module: l10n_in_withholding
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_bank_statement_line__l10n_in_withholding_line_ids
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_move__l10n_in_withholding_line_ids
-#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_payment__l10n_in_withholding_line_ids
 msgid "Indian TDS Lines"
 msgstr ""
 
 #. module: l10n_in_withholding
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_bank_statement_line__l10n_in_withholding_ref_move_id
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_move__l10n_in_withholding_ref_move_id
-#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_payment__l10n_in_withholding_ref_move_id
 msgid "Indian TDS Ref Move"
 msgstr ""
 
@@ -146,8 +225,15 @@ msgstr ""
 #. module: l10n_in_withholding
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_bank_statement_line__l10n_in_is_withholding
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_move__l10n_in_is_withholding
-#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_payment__l10n_in_is_withholding
 msgid "Is Indian TDS Entry"
+msgstr ""
+
+#. module: l10n_in_withholding
+#. odoo-python
+#: code:addons/l10n_in_withholding/models/l10n_in_section_alert.py:0
+msgid ""
+"It's advisable to %(action)s %(section_type)s u/s %(warning)s on this "
+"transaction."
 msgstr ""
 
 #. module: l10n_in_withholding
@@ -167,28 +253,44 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: l10n_in_withholding
+#. odoo-python
+#: code:addons/l10n_in_withholding/models/account_move.py:0
+msgid "Journal Items(s)"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_payment__l10n_in_total_withholding_amount
+msgid "L10N In Total Withholding Amount"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__write_uid
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__write_uid
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__write_date
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__write_date
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_section_alert__aggregate_period__monthly
+msgid "Monthly"
+msgstr ""
+
+#. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "Negative or zero values are not allowed in amount for withhold lines"
 msgstr ""
 
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "Negative or zero values are not allowed in base for withhold lines"
 msgstr ""
 
@@ -203,28 +305,35 @@ msgid "Payments"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__is_per_transaction_limit
+msgid "Per Transaction"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__per_transaction_limit
+msgid "Per Transaction limit"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.constraint,message:l10n_in_withholding.constraint_l10n_in_section_alert_per_transaction_limit
+msgid "Per transaction limit must be positive"
+msgstr ""
+
+#. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "Please configure the withholding account from the settings"
 msgstr ""
 
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "Please set a partner on the %s before creating a withhold."
 msgstr ""
 
 #. module: l10n_in_withholding
 #: model:ir.model.fields.selection,name:l10n_in_withholding.selection__account_tax__l10n_in_tds_tax_type__purchase
-#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_withhold_wizard__withhold_type__in_withhold
 msgid "Purchase"
-msgstr ""
-
-#. module: l10n_in_withholding
-#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_withhold_wizard__withhold_type__in_refund_withhold
-msgid "Purchase Refund"
 msgstr ""
 
 #. module: l10n_in_withholding
@@ -235,19 +344,313 @@ msgstr ""
 #. module: l10n_in_withholding
 #: model:ir.model.fields,help:l10n_in_withholding.field_account_bank_statement_line__l10n_in_withholding_ref_move_id
 #: model:ir.model.fields,help:l10n_in_withholding.field_account_move__l10n_in_withholding_ref_move_id
-#: model:ir.model.fields,help:l10n_in_withholding.field_account_payment__l10n_in_withholding_ref_move_id
 msgid "Reference move for withholding entry"
 msgstr ""
 
 #. module: l10n_in_withholding
 #: model:ir.model.fields.selection,name:l10n_in_withholding.selection__account_tax__l10n_in_tds_tax_type__sale
-#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_withhold_wizard__withhold_type__out_withhold
 msgid "Sale"
 msgstr ""
 
 #. module: l10n_in_withholding
-#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_withhold_wizard__withhold_type__out_refund_withhold
-msgid "Sale Refund"
+#: model:ir.actions.act_window,name:l10n_in_withholding.l10n_in_section_alert_action
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_tax__l10n_in_section_id
+#: model_terms:ir.ui.view,arch_db:l10n_in_withholding.l10n_in_section_alert_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_in_withholding.l10n_in_section_alert_view_tree
+msgid "Section"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_192
+msgid "Section 192: Payment of salary"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_192a
+msgid ""
+"Section 192A: Payment of accumulated balance of provident fund which is "
+"taxable in the hands of an employee"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_193
+msgid "Section 193: Interest on securities"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194i
+msgid "Section 194-I: Rent"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194ia
+msgid ""
+"Section 194-IA: Payment on transfer of certain immovable property other than"
+" agricultural land"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194ib
+msgid ""
+"Section 194-IB: Payment of rent by individual or HUF not liable to tax audit"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194ic
+msgid ""
+"Section 194-IC: Payment of monetary consideration under Joint Development "
+"Agreements"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194o
+msgid ""
+"Section 194-O: Payment or credit of amount by the e-commerce operator to "
+"e-commerce participant"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194
+msgid "Section 194: Income by way of dividend"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194a
+msgid ""
+"Section 194A: Income by way of interest other than \"Interest on "
+"securities\""
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194b
+msgid ""
+"Section 194B: Income by way of winnings from lotteries, crossword puzzles, "
+"card games and other games of any sort"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194bb
+msgid "Section 194BB: Income by way of winnings from horse races"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194c
+msgid "Section 194C: Payment to contractor/sub-contractor"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194d
+msgid "Section 194D: Insurance commission"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194da
+msgid "Section 194DA: Payment in respect of life insurance policy"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194e
+msgid "Section 194E: Payment to non-resident sportsmen/sports association"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194ee
+msgid ""
+"Section 194EE: Payment in respect of deposit under National Savings scheme"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194f
+msgid ""
+"Section 194F: Payment on account of repurchase of unit by Mutual Fund or "
+"Unit Trust of India"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194g
+msgid "Section 194G: Commission, etc., on sale of lottery tickets"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194h
+msgid "Section 194H: Commission or brokerage"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194j
+msgid "Section 194J: Fees for professional or technical services"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194k
+msgid "Section 194K: Income in respect of units payable to resident person"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194la
+msgid ""
+"Section 194LA: Payment of compensation on acquisition of certain immovable "
+"property"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194lb
+msgid "Section 194LB: Payment of interest on infrastructure debt fund"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194lba
+msgid ""
+"Section 194LBA(1): Business trust shall deduct tax while distributing, any "
+"interest received or receivable by it from a SPV or any income received from"
+" renting or leasing or letting out any real estate asset owned directly by "
+"it, to its unit holders."
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194lbb
+msgid ""
+"Section 194LBB: Investment fund paying an income to a unit holder [other "
+"than income which is exempt under Section 10(23FBB)]"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194lbc
+msgid ""
+"Section 194LBC: Income in respect of investment made in a securitisation "
+"trust (specified in Explanation of section115TCA)"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194m
+msgid ""
+"Section 194M: Payment of commission (not being insurance commission), "
+"brokerage, contractual fee, professional fee to a resident person by an "
+"Individual or a HUF who are not liable to deduct TDS under section 194C, "
+"194H, or 194J."
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194n
+msgid ""
+"Section 194N: Cash withdrawal during the previous year from one or more "
+"account maintained by a person with a banking company, co-operative society "
+"engaged in business of banking or a post office"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_194q
+msgid "Section 194Q: Purchase of goods"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tds_report_line_section_195
+msgid "Section 195: Payment of any other sum to a Non -resident"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1_alfhc
+msgid "Section 206C(1): Alcoholic Liquor for human consumption"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1_aofpnbtotl
+msgid ""
+"Section 206C(1): Any other forest produce not being timber or tendu leaves"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1_mbcoloio
+msgid "Section 206C(1): Minrals, being coal or lignite or iron ore"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1_s
+msgid "Section 206C(1): Scrap"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1_tl
+msgid "Section 206C(1): Tendu leaves"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1_tobaotuafl
+msgid ""
+"Section 206C(1): Timber obtained by any mode other than under a forest lease"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1_touafl
+msgid "Section 206C(1): Timber obtained under a forest lease"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1c_maq
+msgid "Section 206C(1C): Mining and quarrying"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1c_pl
+msgid "Section 206C(1C): Parking lot"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1c_tp
+msgid "Section 206C(1C): Toll plaza"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1f_mv
+msgid "Section 206C(1F): Motor Vehicle"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1g_soaotpp
+msgid "Section 206C(1G): Seller of an overseas tour program package"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1g_som
+msgid ""
+"Section 206C(1G): Sum of money (above 7 lakhs) for remittance out of India"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report.line,name:l10n_in_withholding.tcs_report_line_section_206c_1h_sog
+msgid "Section 206C(1H): Sale of Goods"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__name
+#: model_terms:ir.ui.view,arch_db:l10n_in_withholding.l10n_in_section_alert_view_form
+msgid "Section Name"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_section_alert__tax_source_type__tcs
+msgid "TCS"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:account.report,name:l10n_in_withholding.tcs_report
+msgid "TCS Report"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_account__l10n_in_tds_tcs_section_id
+msgid "TCS/TDS Section"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_bank_statement_line__l10n_in_tcs_tds_warning
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_move__l10n_in_tcs_tds_warning
+msgid "TDC/TCS Warning"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_section_alert__tax_source_type__tds
+msgid "TDS"
 msgstr ""
 
 #. module: l10n_in_withholding
@@ -285,6 +688,11 @@ msgid "TDS Lines"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:account.report,name:l10n_in_withholding.tds_report
+msgid "TDS Report"
+msgstr ""
+
+#. module: l10n_in_withholding
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard_line__tax_id
 msgid "TDS Tax"
 msgstr ""
@@ -307,14 +715,12 @@ msgstr ""
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "TDS created from"
 msgstr ""
 
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid ""
 "TDS must be created from Posted Customer Invoices, Customer Credit Notes, "
 "Vendor Bills or Vendor Refunds."
@@ -323,28 +729,45 @@ msgstr ""
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "TDS must be created from an Invoice or a Payment."
 msgstr ""
 
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "TDS of %s"
 msgstr ""
 
 #. module: l10n_in_withholding
-#: model:ir.model,name:l10n_in_withholding.model_account_tax
 #: model_terms:ir.ui.view,arch_db:l10n_in_withholding.account_move_view_form_inherit_l10n_in_withholding
 msgid "Tax"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__tax_source_type
+msgid "Tax Source Type"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_section_alert__l10n_in_section_tax_ids
+msgid "Taxes"
+msgstr ""
+
+#. module: l10n_in_withholding
 #: model:ir.model.fields,help:l10n_in_withholding.field_account_bank_statement_line__l10n_in_is_withholding
 #: model:ir.model.fields,help:l10n_in_withholding.field_account_move__l10n_in_is_withholding
-#: model:ir.model.fields,help:l10n_in_withholding.field_account_payment__l10n_in_is_withholding
 msgid "Technical field to identify Indian withholding entry"
+msgstr ""
+
+#. module: l10n_in_withholding
+#. odoo-python
+#: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
+msgid "The base amount of TDS lines is greater than the amount of the %s"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model_terms:ir.ui.view,arch_db:l10n_in_withholding.l10n_in_section_alert_view_form
+msgid "Threshold limits"
 msgstr ""
 
 #. module: l10n_in_withholding
@@ -353,6 +776,7 @@ msgid "Total"
 msgstr ""
 
 #. module: l10n_in_withholding
+#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_section_alert__consider_amount__total_amount
 #: model_terms:ir.ui.view,arch_db:l10n_in_withholding.tds_entry_view_form
 msgid "Total Amount"
 msgstr ""
@@ -365,14 +789,12 @@ msgstr ""
 #. module: l10n_in_withholding
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_bank_statement_line__l10n_in_total_withholding_amount
 #: model:ir.model.fields,field_description:l10n_in_withholding.field_account_move__l10n_in_total_withholding_amount
-#: model:ir.model.fields,field_description:l10n_in_withholding.field_account_payment__l10n_in_total_withholding_amount
 msgid "Total Indian TDS Amount"
 msgstr ""
 
 #. module: l10n_in_withholding
 #: model:ir.model.fields,help:l10n_in_withholding.field_account_bank_statement_line__l10n_in_total_withholding_amount
 #: model:ir.model.fields,help:l10n_in_withholding.field_account_move__l10n_in_total_withholding_amount
-#: model:ir.model.fields,help:l10n_in_withholding.field_account_payment__l10n_in_total_withholding_amount
 msgid "Total withholding amount for the move"
 msgstr ""
 
@@ -382,16 +804,20 @@ msgid "Type"
 msgstr ""
 
 #. module: l10n_in_withholding
-#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__warning_message
-msgid "Warning Message"
+#: model:ir.model.fields.selection,name:l10n_in_withholding.selection__l10n_in_section_alert__consider_amount__untaxed_amount
+msgid "Untaxed Amount"
 msgstr ""
 
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
-msgid ""
-"Warning: The base amount of TDS lines is greater than the amount of the %s"
+msgid "Vendor Payment"
+msgstr ""
+
+#. module: l10n_in_withholding
+#. odoo-python
+#: code:addons/l10n_in_withholding/models/account_move.py:0
+msgid "View Journal Items(s)"
 msgstr ""
 
 #. module: l10n_in_withholding
@@ -410,20 +836,23 @@ msgid "Withhold Wizard Lines"
 msgstr ""
 
 #. module: l10n_in_withholding
-#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__withhold_type
-msgid "Withholding Type"
+#: model:ir.model.fields,field_description:l10n_in_withholding.field_l10n_in_withhold_wizard__l10n_in_withholding_warning
+msgid "Withholding warning"
 msgstr ""
 
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "You can only create a withhold for only one record at a time."
 msgstr ""
 
 #. module: l10n_in_withholding
 #. odoo-python
 #: code:addons/l10n_in_withholding/wizard/l10n_in_withhold_wizard.py:0
-#, python-format
 msgid "You must input at least one withhold line"
+msgstr ""
+
+#. module: l10n_in_withholding
+#: model:ir.model,name:l10n_in_withholding.model_l10n_in_section_alert
+msgid "indian section alert"
 msgstr ""

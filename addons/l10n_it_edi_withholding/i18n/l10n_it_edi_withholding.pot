@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-16 11:45+0000\n"
-"PO-Revision-Date: 2024-01-16 11:45+0000\n"
+"POT-Creation-Date: 2025-11-03 15:44+0000\n"
+"PO-Revision-Date: 2025-11-03 15:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,29 +26,8 @@ msgid "All Taxes Included"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
-#. odoo-python
-#: code:addons/l10n_it_edi_withholding/models/account_move.py:0
-msgid ""
-"Bad tax configuration for line %s, there must be one Withholding tax and one"
-" Pension Fund tax at max."
-msgstr ""
-
-#. module: l10n_it_edi_withholding
-#. odoo-python
-#: code:addons/l10n_it_edi_withholding/models/account_move.py:0
-msgid ""
-"Bad tax configuration for line %s, there must be one and only one VAT tax "
-"per line"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
 #: model:ir.model.fields.selection,name:l10n_it_edi_withholding.selection__account_tax__l10n_it_pension_fund_type__tc16
 msgid "CASAGIT Additional pension fund for journalists"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.account_invoice_line_it_FatturaPA_withholding
-msgid "CASSA-PREV"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
@@ -117,9 +96,13 @@ msgid "EPPI pension fund for industrial experts"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
+#: model:ir.model,name:l10n_it_edi_withholding.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_it_edi_withholding
 #. odoo-python
 #: code:addons/l10n_it_edi_withholding/models/account_move.py:0
-#, python-format
 msgid "Enasarco tax not found for line with description '%s'"
 msgstr ""
 
@@ -159,10 +142,10 @@ msgid "ONAOSI fund for sanitary orphans"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
+#. odoo-python
 #: code:addons/l10n_it_edi_withholding/models/account_move.py:0
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_bank_statement_line__l10n_it_amount_pension_fund_signed
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_move__l10n_it_amount_pension_fund_signed
-#: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_payment__l10n_it_amount_pension_fund_signed
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.view_invoice_tree_l10n_it_edi_extended
 msgid "Pension Fund"
 msgstr ""
@@ -204,17 +187,6 @@ msgid "Pension fund type (Italy)"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.account_invoice_it_FatturaPA_export_withholding
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.account_invoice_line_it_FatturaPA_withholding
-msgid "SI"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
-#: model:ir.model,name:l10n_it_edi_withholding.model_account_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_it_edi_withholding
 #. odoo-python
 #: code:addons/l10n_it_edi_withholding/models/account_tax.py:0
 msgid ""
@@ -237,6 +209,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi_withholding
+#. odoo-python
+#: code:addons/l10n_it_edi_withholding/models/account_tax.py:0
+msgid ""
+"Tax '%s' has one of withholding and pension fund types that do not relate to"
+" ENASARCO, and one that does."
+msgstr ""
+
+#. module: l10n_it_edi_withholding
+#. odoo-python
+#: code:addons/l10n_it_edi_withholding/models/account_tax.py:0
+msgid ""
+"Tax '%s' has withholding type ENASARCO, the withholding reason should be "
+"[ZO] - Other reason."
+msgstr ""
+
+#. module: l10n_it_edi_withholding
 #: model:account.report.column,name:l10n_it_edi_withholding.withh_tax_report_balance
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.view_invoice_tree_l10n_it_edi_extended
 msgid "Total"
@@ -245,23 +233,21 @@ msgstr ""
 #. module: l10n_it_edi_withholding
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_bank_statement_line__l10n_it_amount_before_withholding_signed
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_move__l10n_it_amount_before_withholding_signed
-#: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_payment__l10n_it_amount_before_withholding_signed
 msgid "Total Before Withholding"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_bank_statement_line__l10n_it_amount_vat_signed
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_move__l10n_it_amount_vat_signed
-#: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_payment__l10n_it_amount_vat_signed
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.view_invoice_tree_l10n_it_edi_extended
 msgid "VAT"
 msgstr ""
 
 #. module: l10n_it_edi_withholding
+#. odoo-python
 #: code:addons/l10n_it_edi_withholding/models/account_move.py:0
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_bank_statement_line__l10n_it_amount_withholding_signed
 #: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_move__l10n_it_amount_withholding_signed
-#: model:ir.model.fields,field_description:l10n_it_edi_withholding.field_account_payment__l10n_it_amount_withholding_signed
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_withholding.view_invoice_tree_l10n_it_edi_extended
 msgid "Withholding"
 msgstr ""

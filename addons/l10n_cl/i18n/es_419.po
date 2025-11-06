@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-07 07:43+0000\n"
+"POT-Creation-Date: 2025-11-03 15:40+0000\n"
 "PO-Revision-Date: 2023-09-07 07:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -49,10 +50,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
 msgid ""
 "<br/>\n"
-"                                            <span style=\"font-family:arial; line-height: 180%;\">RUT:</span>"
+"                                            <span style=\"font-family:arial; "
+"line-height: 180%;\">RUT:</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span style=\"font-family:arial; line-height: 180%;\">RUT:</span>"
+"                                            <span style=\"font-family:arial; "
+"line-height: 180%;\">RUT:</span>"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
@@ -177,8 +180,15 @@ msgstr "Monto sin impuestos"
 #: model:ir.model.fields,help:l10n_cl.field_account_bank_statement_line__l10n_latam_internal_type
 #: model:ir.model.fields,help:l10n_cl.field_account_move__l10n_latam_internal_type
 #: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__internal_type
-msgid "Analog to odoo account.move.move_type but with more options allowing to identify the kind of document we are working with. (not only related to account.move, could be for documents of other models like stock.picking)"
-msgstr "Análogo a account.move.type de Odoo pero con más opciones, permitiendo identificar el tipo de documento sobre el que estamos trabajando. (no solo relativo a account.move, podría ser relativo a otros modelos, por ejemplo a stock.picking)"
+msgid ""
+"Analog to odoo account.move.move_type but with more options allowing to "
+"identify the kind of document we are working with. (not only related to "
+"account.move, could be for documents of other models like stock.picking)"
+msgstr ""
+"Análogo a account.move.type de Odoo pero con más opciones, permitiendo "
+"identificar el tipo de documento sobre el que estamos trabajando. (no solo "
+"relativo a account.move, podría ser relativo a otros modelos, por ejemplo a "
+"stock.picking)"
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,report_name:l10n_cl.dc_bl_cemb
@@ -449,8 +459,19 @@ msgstr "Guía de Despacho"
 #. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
-msgid "Document types for foreign customers must be export type (codes 110, 111 or 112) or you should define the customer as an end consumer and use receipts (codes 39 or 41)"
-msgstr "Las clases de documentos para clientes extranjeros deben ser de tipo exportación (códigos 110, 111 o 112) o debe definir al cliente como consumidor final y utilizar recibos  (códigos 39 o 41)"
+msgid ""
+"Document types for foreign customers must be export type (codes 110, 111 or "
+"112) or you should define the customer as an end consumer and use receipts "
+"(codes 39 or 41)"
+msgstr ""
+"Las clases de documentos para clientes extranjeros deben ser de tipo "
+"exportación (códigos 110, 111 o 112) o debe definir al cliente como "
+"consumidor final y utilizar recibos  (códigos 39 o 41)"
+
+#. module: l10n_cl
+#: model:ir.model,name:l10n_cl.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_nc_f_dte
@@ -710,8 +731,11 @@ msgstr "Liquidación Factura"
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_ftf_f_dtn
-msgid "Invoice for sales to companies in the preferential territory ( Ex. Res. No. 1057"
-msgstr "Factura de ventas a empresas del territorio preferencial ( Res. Ex. N° 1057"
+msgid ""
+"Invoice for sales to companies in the preferential territory ( Ex. Res. No. "
+"1057"
+msgstr ""
+"Factura de ventas a empresas del territorio preferencial ( Res. Ex. N° 1057"
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_I_f_dtn
@@ -1001,6 +1025,11 @@ msgstr "Compras - Impuesto a Vehículos Automotores"
 #: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_no_rec
 msgid "Purchases - Non Recoverable VAT Amount"
 msgstr "Compras - Monto IVA No Recuperable"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iec
+msgid "Purchases - Specific Fuel Tax"
+msgstr ""
 
 #. module: l10n_cl
 #: model:account.account.tag,name:l10n_cl.tag_cl_purchase_imp_sin_cred
@@ -1332,6 +1361,11 @@ msgid "Source Document"
 msgstr "Documento origen"
 
 #. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_specific_fuel_tax
+msgid "Specific Fuel Tax"
+msgstr ""
+
+#. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__stock_picking
 msgid "Stock Delivery"
 msgstr "Entrega de existencias"
@@ -1367,7 +1401,6 @@ msgid "TMN"
 msgstr "TMN"
 
 #. module: l10n_cl
-#: model:ir.model,name:l10n_cl.model_account_tax
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Tax"
 msgstr "Impuesto"
@@ -1380,14 +1413,24 @@ msgstr "Informe fiscal"
 #. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
-msgid "Tax payer type and vat number are mandatory for this type of document. Please set the current tax payer type of this customer"
-msgstr "El tipo de contribuyente y el número de RUT son requeridos para este tipo de documento. Por favor establezca un valor para el tipo de contribuyente de este Cliente"
+msgid ""
+"Tax payer type and vat number are mandatory for this type of document. "
+"Please set the current tax payer type of this customer"
+msgstr ""
+"El tipo de contribuyente y el número de RUT son requeridos para este tipo de "
+"documento. Por favor establezca un valor para el tipo de contribuyente de "
+"este Cliente"
 
 #. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
-msgid "Tax payer type and vat number are mandatory for this type of document. Please set the current tax payer type of this supplier"
-msgstr "El tipo de contribuyente y el número de RUT son requeridos para este tipo de documento. Por favor establezca un valor para el tipo de contribuyente de este Proveedor"
+msgid ""
+"Tax payer type and vat number are mandatory for this type of document. "
+"Please set the current tax payer type of this supplier"
+msgstr ""
+"El tipo de contribuyente y el número de RUT son requeridos para este tipo de "
+"documento. Por favor establezca un valor para el tipo de contribuyente de "
+"este Proveedor"
 
 #. module: l10n_cl
 #: model:account.report.line,name:l10n_cl.tax_report_base_imponible_ventas
@@ -1408,8 +1451,12 @@ msgstr "Tipo de Contribuyente"
 #. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
-msgid "The DIN document is intended to be used only with RUT 60805000-0 (Tesorería General de La República)"
-msgstr "El documento “declaración de ingreso” (DIN) solo se debe usar para “Tesorería General de La República” (RUT 60805000-0)"
+msgid ""
+"The DIN document is intended to be used only with RUT 60805000-0 (Tesorería "
+"General de La República)"
+msgstr ""
+"El documento “declaración de ingreso” (DIN) solo se debe usar para "
+"“Tesorería General de La República” (RUT 60805000-0)"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document
@@ -1419,20 +1466,31 @@ msgstr "El IVA de esta boleta es:"
 #. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
-msgid "The tax payer type of this supplier is incorrect for the selected type of document."
-msgstr "El tipo de contribuyente de este proveedor es incorrecto para el tipo de documento seleccionado."
+msgid ""
+"The tax payer type of this supplier is incorrect for the selected type of "
+"document."
+msgstr ""
+"El tipo de contribuyente de este proveedor es incorrecto para el tipo de "
+"documento seleccionado."
 
 #. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
-msgid "The tax payer type of this supplier is not entitled to deliver fees documents"
-msgstr "El tipo de contribuyente para este proveedor no puede emitir boletas de honorarios"
+msgid ""
+"The tax payer type of this supplier is not entitled to deliver fees documents"
+msgstr ""
+"El tipo de contribuyente para este proveedor no puede emitir boletas de "
+"honorarios"
 
 #. module: l10n_cl
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
-msgid "The tax payer type of this supplier is not entitled to deliver imports documents"
-msgstr "El tipo de contribuyente para este proveedor no puede emitir documentos de importación"
+msgid ""
+"The tax payer type of this supplier is not entitled to deliver imports "
+"documents"
+msgstr ""
+"El tipo de contribuyente para este proveedor no puede emitir documentos de "
+"importación"
 
 #. module: l10n_cl
 #: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__l10n_cl_active
@@ -1549,7 +1607,9 @@ msgstr "Ventas - IVA Terceros"
 #. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 msgid "You need a journal without the use of documents for foreign suppliers"
-msgstr "Necesita un diario que no use documentos para registrar facturas de proveedores extranjeros"
+msgstr ""
+"Necesita un diario que no use documentos para registrar facturas de "
+"proveedores extranjeros"
 
 #. module: l10n_cl
 #: model:l10n_latam.document.type,name:l10n_cl.dc_bzf_f_dtn
