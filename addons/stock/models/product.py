@@ -294,6 +294,10 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return self.ids
 
+    def get_total_routes(self):
+        # Extend the total routes in other modules
+        return self.env['stock.route']
+
     def _get_description(self, picking_type_id):
         """
             Return product description based on the picking type:

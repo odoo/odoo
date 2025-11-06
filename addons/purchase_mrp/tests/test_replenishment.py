@@ -127,3 +127,37 @@ class TestReplenishment(TestStockCommon):
         })
         replenish_both = create_replenish_wizard(self.warehouse_1, self.productA)
         self.assertEqual(set(replenish_both.allowed_route_ids.ids), set((manufacture_route | buy_route).ids))
+
+    def test_replenishment_cache_route_placeholder(self):
+        """Test if route placeholders are calculated correctly regardless of the order of orderpoints"""
+        # Products themselves do not have any routes activated
+        self.assertFalse(self.productA.route_ids)
+        self.assertFalse(self.productB.route_ids)
+
+        # productA can be manufactured, productB can be bought
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
+            'product_qty': 1,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': self.productB.id,
+            'partner_id': self.partner_1.id,
+            'min_qty': 10,
+            'price': 50,
+        })
+        orderpointA, orderpointB = self.env['stock.warehouse.orderpoint'].create([{
+            'product_id': self.productA.id,
+        }, {
+            'product_id': self.productB.id,
+        }])
+
+        # Check if proper placeholders are calculated for a recordset with multiple records
+        (orderpointA | orderpointB)._compute_rules()
+        self.assertEqual(orderpointA.route_id_placeholder, 'Manufacture')
+        self.assertEqual(orderpointB.route_id_placeholder, 'Buy')
+
+        # Reverse the order of records: the results should be the same
+        (orderpointB | orderpointA)._compute_rules()
+
+        self.assertEqual(orderpointA.route_id_placeholder, 'Manufacture')
+        self.assertEqual(orderpointB.route_id_placeholder, 'Buy')
