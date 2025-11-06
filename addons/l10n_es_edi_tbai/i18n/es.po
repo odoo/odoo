@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-13 15:08+0000\n"
+"POT-Creation-Date: 2025-11-03 15:42+0000\n"
 "PO-Revision-Date: 2025-01-13 15:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -52,6 +52,16 @@ msgid ""
 msgstr ""
 "BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
 "Valor Añadido. Artículo 80. Modificación de la base imponible."
+
+#. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/account_move.py:0
+msgid ""
+"Be careful if you modified this vendor bill, because the official version is "
+"still the previous one sent. "
+msgstr ""
+"Ten cuidado aquí si modificaste esta factura del proveedor, porque la "
+"versión oficial sigue siendo la precedente que se envió."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_state__cancelled
@@ -172,10 +182,12 @@ msgstr "Identificador"
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid ""
-"In case of a foreign customer, you need to configure the tax scope on taxes:\n"
+"In case of a foreign customer, you need to configure the tax scope on "
+"taxes:\n"
 "%s"
 msgstr ""
-"En el caso de un cliente extranjero, es necesario configurar el ámbito fiscal en impuestos:\n"
+"En el caso de un cliente extranjero, es necesario configurar el ámbito "
+"fiscal en impuestos:\n"
 "%s"
 
 #. module: l10n_es_edi_tbai
@@ -200,8 +212,8 @@ msgid ""
 "In the case where a vendor refund has multiple original invoices, you can "
 "set them here. "
 msgstr ""
-"Para las facturas rectificativas de un proveedor que tenga diversas facturas"
-" reembolsadas, puede configurarlas aquí."
+"Para las facturas rectificativas de un proveedor que tenga diversas facturas "
+"reembolsadas, puede configurarlas aquí."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_refund_reason
@@ -214,11 +226,11 @@ msgstr "Código de motivo de reembolso de la factura (TicketBAI)"
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_chain_index
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_chain_index
 msgid ""
-"Invoice index in chain, set if and only if an in-chain XML was submitted and"
-" did not error"
+"Invoice index in chain, set if and only if an in-chain XML was submitted and "
+"did not error"
 msgstr ""
-"Índice de facturas en cadena que se establece si y solo si se envió un XML y"
-" no se produjo un error."
+"Índice de facturas en cadena que se establece si y solo si se envió un XML y "
+"no se produjo un error."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_l10n_es_edi_tbai_document__is_cancel
@@ -540,8 +552,8 @@ msgid ""
 "There should be at least one tax set on each line in order to send to "
 "TicketBAI."
 msgstr ""
-"Debería haber, como mínimo, un impuesto definido en cada línea para enviarlo"
-" a TicketBAI."
+"Debería haber, como mínimo, un impuesto definido en cada línea para enviarlo "
+"a TicketBAI."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -623,8 +635,8 @@ msgstr "Estado de TicketBAI"
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid ""
-"TicketBAI: Cannot post a reversal document while the source document has not"
-" been posted"
+"TicketBAI: Cannot post a reversal document while the source document has not "
+"been posted"
 msgstr ""
 "TicketBAI: No es posible publicar un documento de reversión mientras el "
 "documento original no haya sido publicado"
@@ -674,15 +686,6 @@ msgid ""
 msgstr ""
 "No puede reestablecer a borrador un asiento que se publicó en la cadena de "
 "TicketBai."
-
-#. module: l10n_es_edi_tbai
-#. odoo-python
-#: code:addons/l10n_es_edi_tbai/models/account_move.py:0
-msgid ""
-"Be careful if you modified this vendor bill, "
-"because the official version is still the previous one sent. "
-msgstr "Ten cuidado aquí si modificaste esta factura del proveedor, "
-"porque la versión oficial sigue siendo la precedente que se envió."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python

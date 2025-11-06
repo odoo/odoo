@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:22+0000\n"
+"POT-Creation-Date: 2025-11-03 15:40+0000\n"
 "PO-Revision-Date: 2023-12-12 12:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,12 +19,7 @@ msgstr ""
 #. module: l10n_ch
 #. odoo-python
 #: code:addons/l10n_ch/wizard/qr_invoice_wizard.py:0
-msgid "%s invoices could be printed in the %s format."
-msgstr ""
-
-#. module: l10n_ch
-#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_header_template
-msgid "&amp;nbsp;"
+msgid "%(amount)s invoices could be printed in the %(format)s format."
 msgstr ""
 
 #. module: l10n_ch
@@ -61,8 +57,8 @@ msgid ""
 "liability for tax (art. 107 para. 1 lit. a)"
 msgstr ""
 "220 - Prestations exonérées (p. ex. exportations, art. 23), prestations "
-"exonérées fournies à des institutions et à des personnes bénéficiaires (art."
-" 107, al. 1, let. a)"
+"exonérées fournies à des institutions et à des personnes bénéficiaires (art. "
+"107, al. 1, let. a)"
 
 #. module: l10n_ch
 #: model:account.report.line,name:l10n_ch.account_tax_report_line_chtax_221
@@ -72,8 +68,8 @@ msgstr "221 - Prestations fournies à l’étranger"
 #. module: l10n_ch
 #: model:account.report.line,name:l10n_ch.account_tax_report_line_chtax_225
 msgid ""
-"225 - Transfer of supplies according to the notification procedure (art. 38,"
-" please submit Form 764)"
+"225 - Transfer of supplies according to the notification procedure (art. 38, "
+"please submit Form 764)"
 msgstr "225 - Transferts avec la procédure de déclaration (art. 38)"
 
 #. module: l10n_ch
@@ -181,14 +177,12 @@ msgstr ""
 #. module: l10n_ch
 #: model:account.report.line,name:l10n_ch.account_tax_report_line_chtax_382a
 msgid "382a - Acquisition tax: Supplies CHF to 31.12.2023"
-msgstr ""
-"382a - Impôt sur les acquisitions: Prestations CHF jusqu'au 31.12.2023"
+msgstr "382a - Impôt sur les acquisitions: Prestations CHF jusqu'au 31.12.2023"
 
 #. module: l10n_ch
 #: model:account.report.line,name:l10n_ch.account_tax_report_line_chtax_382b
 msgid "382b - Acquisition tax: Tax amount CHF / cent. to 31.12.2023"
-msgstr ""
-"382b - Impôt sur les acquisitions: Impôt CHF / ct. jusqu'au 31.12.2023"
+msgstr "382b - Impôt sur les acquisitions: Impôt CHF / ct. jusqu'au 31.12.2023"
 
 #. module: l10n_ch
 #: model:account.report.line,name:l10n_ch.account_tax_report_line_chtax_383a
@@ -272,8 +266,8 @@ msgstr ""
 #. module: l10n_ch
 #: model:account.report.line,name:l10n_ch.account_tax_report_line_chtax_910
 msgid ""
-"910 - Donations, dividends, payments of damages etc. (art. 18 para. 2 lit. d"
-" to l)"
+"910 - Donations, dividends, payments of damages etc. (art. 18 para. 2 lit. d "
+"to l)"
 msgstr "910 - Les dons, les dividendes, les dédommagements, etc."
 
 #. module: l10n_ch
@@ -373,6 +367,11 @@ msgid "Classic Inv Text"
 msgstr ""
 
 #. module: l10n_ch
+#: model:account.cash.rounding,name:l10n_ch.cash_rounding_5_centime
+msgid "Coinage 0.05"
+msgstr ""
+
+#. module: l10n_ch
 #: model:ir.model.fields,field_description:l10n_ch.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
 msgstr "Standard de communication"
@@ -390,7 +389,6 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model.fields,help:l10n_ch.field_account_bank_statement_line__l10n_ch_is_qr_valid
 #: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_is_qr_valid
-#: model:ir.model.fields,help:l10n_ch.field_account_payment__l10n_ch_is_qr_valid
 msgid "Determines whether an invoice can be printed as a QR or not"
 msgstr ""
 
@@ -449,7 +447,6 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model.fields,field_description:l10n_ch.field_account_bank_statement_line__l10n_ch_is_qr_valid
 #: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_is_qr_valid
-#: model:ir.model.fields,field_description:l10n_ch.field_account_payment__l10n_ch_is_qr_valid
 msgid "L10N Ch Is Qr Valid"
 msgstr ""
 
@@ -543,23 +540,18 @@ msgstr ""
 #. module: l10n_ch
 #. odoo-python
 #: code:addons/l10n_ch/models/res_bank.py:0
-msgid "QR-IBAN %r is invalid."
+msgid "QR-IBAN numbers are only available in Switzerland."
 msgstr ""
 
 #. module: l10n_ch
 #. odoo-python
 #: code:addons/l10n_ch/models/res_bank.py:0
-msgid "QR-IBAN numbers are only available in Switzerland."
+msgid "QR-IBAN “%s” is invalid."
 msgstr ""
 
 #. module: l10n_ch
 #: model:ir.actions.report,name:l10n_ch.l10n_ch_qr_report
 msgid "QR-bill"
-msgstr ""
-
-#. module: l10n_ch
-#: model:ir.actions.report,name:l10n_ch.l10n_ch_qr_header
-msgid "QR-bill Header"
 msgstr ""
 
 #. module: l10n_ch
@@ -667,10 +659,13 @@ msgstr ""
 #. module: l10n_ch
 #: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_qr_invoice_wizard_form
 msgid ""
-"To be able to print all invoices in the QR format, you might need to : <br/>\n"
+"To be able to print all invoices in the QR format, you might need to : <br/"
+">\n"
 "                    - check the account is a valid QR-IBAN<br/>\n"
-"                    - or check your company and the partners are located in Switzerland.<br/>\n"
-"                    Press Check Invalid Invoices to see a list of the invoices that were printed without a QR."
+"                    - or check your company and the partners are located in "
+"Switzerland.<br/>\n"
+"                    Press Check Invalid Invoices to see a list of the "
+"invoices that were printed without a QR."
 msgstr ""
 
 #. module: l10n_ch

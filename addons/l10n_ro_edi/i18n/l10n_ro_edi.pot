@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 10:15+0000\n"
-"PO-Revision-Date: 2025-02-24 10:15+0000\n"
+"POT-Creation-Date: 2025-11-03 15:46+0000\n"
+"PO-Revision-Date: 2025-11-03 15:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,6 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_move__l10n_ro_edi_state
-#: model:ir.model.fields,help:l10n_ro_edi.field_account_payment__l10n_ro_edi_state
 msgid ""
 "- Sent: Successfully sent to the SPV, waiting for validation\n"
 "                - Validated: Sent & validated by the SPV\n"
@@ -30,14 +29,6 @@ msgstr ""
 msgid ""
 ".\n"
 "                                        Login or Sign Up if you don't have an account yet"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_send_inherit_l10n_ro_edi
-msgid ""
-"<i class=\"fa fa-question-circle\" role=\"img\" aria-label=\"Warning\" "
-"title=\"You can't send now. Some move(s) are waiting for an answer.\" "
-"invisible=\"not l10n_ro_edi_send_readonly\"/>"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -87,6 +78,11 @@ msgid "Account Move Send"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model,name:l10n_ro_edi.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Activate test environment for sending E-Factura to SPV"
 msgstr ""
@@ -108,20 +104,9 @@ msgid "CIUS-RO XML attachment not found."
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__res_partner__ubl_cii_format__ciusro
-msgid "CIUSRO"
-msgstr ""
-
-#. module: l10n_ro_edi
 #. odoo-python
-#: code:addons/l10n_ro_edi/wizard/account_move_send.py:0
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid "Check Invoice(s)"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_client_id
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_client_id
-msgid "eFactura Client ID"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -204,6 +189,8 @@ msgid "E-Factura"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_index
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_index
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_loading
 msgid "E-Factura Index"
 msgstr ""
@@ -211,7 +198,6 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_state
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_payment__l10n_ro_edi_state
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__state
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
 msgid "E-Factura Status"
@@ -242,7 +228,7 @@ msgstr ""
 
 #. module: l10n_ro_edi
 #. odoo-python
-#: code:addons/l10n_ro_edi/wizard/account_move_send.py:0
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid "Error when building the CIUS-RO E-Factura XML"
 msgstr ""
 
@@ -279,16 +265,8 @@ msgstr ""
 
 #. module: l10n_ro_edi
 #. odoo-python
-#: code:addons/l10n_ro_edi/wizard/account_move_send.py:0
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid "Error when sending CIUS-RO E-Factura to the SPV"
-msgstr ""
-
-#. module: l10n_ro_edi
-#. odoo-python
-#: code:addons/l10n_ro_edi/models/account_move.py:0
-msgid ""
-"Error when sending the document to the SPV:\n"
-"%s"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -330,12 +308,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid ""
 "Fill \"Denumire Aplicatie\" with any desired name for your registration data"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__ubl_cii_format
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_users__ubl_cii_format
-msgid "Format"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -384,10 +356,6 @@ msgid "Key Certificate"
 msgstr ""
 
 #. module: l10n_ro_edi
-msgid "Key Loading"
-msgstr ""
-
-#. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__key_signature
 msgid "Key Signature"
 msgstr ""
@@ -395,7 +363,6 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_attachment_id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_attachment_id
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_payment__l10n_ro_edi_attachment_id
 msgid "L10N Ro Edi Attachment"
 msgstr ""
 
@@ -408,7 +375,6 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_document_ids
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move__l10n_ro_edi_document_ids
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_payment__l10n_ro_edi_document_ids
 msgid "L10N Ro Edi Document"
 msgstr ""
 
@@ -416,16 +382,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_oauth_error
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_oauth_error
 msgid "L10N Ro Edi Oauth Error"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send__l10n_ro_edi_send_enable
-msgid "L10N Ro Edi Send Enable"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send__l10n_ro_edi_send_readonly
-msgid "L10N Ro Edi Send Readonly"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -482,6 +438,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__res_partner__invoice_edi_format__ciusro
+msgid "Romania (CIUS RO)"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Romanian E-Factura"
 msgstr ""
@@ -494,27 +455,15 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields,field_description:l10n_ro_edi.field_account_move_send__l10n_ro_edi_send_checkbox
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+#: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
 msgid "Send E-Factura to SPV"
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields,help:l10n_ro_edi.field_account_move_send__l10n_ro_edi_send_checkbox
-msgid "Send the CIUS-RO XML to the Romanian Government via the ANAF platform"
-msgstr ""
-
-#. module: l10n_ro_edi
-msgid "Sending"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
-msgid "Sending E-Factura"
-msgstr ""
-
-#. module: l10n_ro_edi
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sending
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sending
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sent
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sent
 msgid "Sent"
 msgstr ""
 
@@ -538,8 +487,10 @@ msgstr ""
 
 #. module: l10n_ro_edi
 #. odoo-python
-#: code:addons/l10n_ro_edi/wizard/account_move_send.py:0
-msgid "The following move(s) are waiting for answer from the Romanian SPV: %s"
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
+msgid ""
+"The following invoice(s) are waiting for answer from the Romanian SPV: %s.We"
+" won't send them again."
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -586,14 +537,19 @@ msgid "Use Test Environment"
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sent
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_sent
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_validated
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_validated
 msgid "Validated"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.l10n_ro_edi_view_account_invoice_filter
+msgid "Validated E-Factura"
+msgstr ""
+
+#. module: l10n_ro_edi
 #. odoo-python
-#: code:addons/l10n_ro_edi/wizard/account_move_send.py:0
+#: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid "View Invoice(s)"
 msgstr ""
 
@@ -606,8 +562,26 @@ msgstr ""
 
 #. module: l10n_ro_edi
 #. odoo-python
+#: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
+msgid "You can't send now. Invoice is waiting for an answer."
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
 #: code:addons/l10n_ro_edi/models/ciusro_document.py:0
 msgid "You reached the limit of requests. Please try again later."
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_client_id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_client_id
+msgid "eFactura Client ID"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__invoice_edi_format
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_users__invoice_edi_format
+msgid "eInvoice format"
 msgstr ""
 
 #. module: l10n_ro_edi
