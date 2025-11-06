@@ -1,6 +1,7 @@
 import { useOperation } from "@html_builder/core/operation_plugin";
 import { useDomState } from "@html_builder/core/utils";
 import { Component } from "@odoo/owl";
+import { getCarouselCenteringIndex } from "@website/utils/misc";
 
 export class CarouselItemHeaderMiddleButtons extends Component {
     static template = "website.CarouselItemHeaderMiddleButtons";
@@ -21,10 +22,27 @@ export class CarouselItemHeaderMiddleButtons extends Component {
     }
 
     slide(direction) {
+        const currentEl = this.env.getEditingElement().closest(".carousel-item");
+        const carouselEl = currentEl.closest(".carousel");
+        const isMultipleCarousel = carouselEl.classList.contains("s_carousel_multiple");
+        let nextTargetElement;
+        if (isMultipleCarousel) {
+            const slideEls = carouselEl.querySelectorAll(".carousel-item");
+            const currentIndex = Array.from(slideEls).indexOf(currentEl);
+            let newIndex;
+            if (direction === "next") {
+                newIndex = currentIndex + 1 < slideEls.length ? currentIndex + 1 : 0;
+            } else {
+                newIndex = currentIndex > 0 ? currentIndex - 1 : slideEls.length - 1;
+            }
+            nextTargetElement = slideEls[newIndex];
+            direction = getCarouselCenteringIndex(nextTargetElement) ?? direction;
+        }
         const applySpec = {
-            editingElement: this.env.getEditingElement().closest(".carousel"),
+            editingElement: carouselEl,
             params: {
                 direction: direction,
+                nextTargetElement,
             },
         };
 
