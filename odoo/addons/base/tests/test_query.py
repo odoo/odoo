@@ -173,12 +173,28 @@ class TestQuery(TransactionCase):
         self.assertEqual(code, '"res_partner"."company_id"')
         self.assertEqual(len(query._joins), 1, "not yet joined on company")
 
-        # there's nothing else beyond a many2one field
-        with self.assertRaisesRegex(ValueError, "Invalid field property 'name' on res.partner.company_id"):
-            field.name
+        company = field.id._table  # implicit join
+        self.assertIsInstance(company, SQL)
+        self.assertEqual(company._alias, 'res_partner__company_id')
+        self.assertEqual(company._model._name, 'res.company')
+        self.assertIs(company._query, query)
+        self.assertEqual(len(query._joins), 2, "joined on company")
+
+        company_field = field.name
+        self.assertEqual(company_field._table._alias, company._alias)
+        code, params, to_flush = company_field._sql_tuple
+        self.assertEqual(code, '"res_partner__company_id"."name"')
+
+        with self.assertQueries(['''
+            SELECT "res_partner__company_id"."name"
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id"
+                ON ("res_partner"."company_id" = "res_partner__company_id"."id")
+        ''']):
+            self.env.execute_query(query.select(company_field))
 
         # not for x2many fields, because they change the result's cardinality
-        with self.assertRaisesRegex(ValueError, "Cannot convert res.partner.child_ids to SQL because it is not stored"):
+        with self.assertRaisesRegex(ValueError, "Cannot generate SQL for multi-relational field res.partner.child_ids"):
             partner.child_ids
-        with self.assertRaisesRegex(ValueError, "Cannot convert res.partner.category_id to SQL because it is not stored"):
+        with self.assertRaisesRegex(ValueError, "Cannot generate SQL for multi-relational field res.partner.category_id"):
             partner.category_id
