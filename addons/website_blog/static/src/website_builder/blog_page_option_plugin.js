@@ -13,6 +13,7 @@ export class BlogPageOption extends BaseOptionComponent {
 
 export class BlogPageOptionPlugin extends Plugin {
     static id = "blogPageOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [BlogPageOption],
     };

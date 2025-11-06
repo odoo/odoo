@@ -6,6 +6,7 @@ export class TranslateAnnouncementScrollPlugin extends Plugin {
     static id = "translateAnnouncementScroll";
     static dependencies = ["history"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         mark_translatable_nodes: this.listenToAnnouncementScrollClick.bind(this),
     };

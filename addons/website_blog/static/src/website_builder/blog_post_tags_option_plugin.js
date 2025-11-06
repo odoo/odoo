@@ -4,6 +4,7 @@ import { BlogPostTagsOption } from "./blog_post_tags_option";
 
 class BlogPostTagsOptionPlugin extends Plugin {
     static id = "blogPostTagsOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [BlogPostTagsOption],
     };

@@ -60,6 +60,7 @@ export class WebsiteBackgroundOnlyBGImageOption extends BaseWebsiteBackgroundOpt
 class WebsiteBackgroundOptionPlugin extends Plugin {
     static id = "websiteOption";
     carouselApplyTo = ":scope > .carousel:not(.s_carousel_cards)";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC_BEFORE, WebsiteBackgroundCarouselOption),

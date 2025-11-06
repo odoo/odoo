@@ -20,6 +20,7 @@ export class WebsiteBackgroundProcessStepOption extends BaseWebsiteBackgroundOpt
 
 class ProcessStepsOptionPlugin extends Plugin {
     static id = "processStepsOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(after(CONTAINER_WIDTH), ProcessStepsOption),

@@ -4,10 +4,16 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
+/**
+ * @typedef { Object } AddElementOptionShared
+ * @property { AddElementOptionPlugin['addGridElement'] } addGridElement
+ */
+
 export class AddElementOptionPlugin extends Plugin {
     static id = "addElementOption";
     static dependencies = ["builderOptions"];
     static shared = ["addGridElement"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             AddGridElementAction,
