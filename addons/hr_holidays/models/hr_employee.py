@@ -119,20 +119,23 @@ class HrEmployee(models.Model):
         lookahead_days = [7, 30, 90, 180, 365, 730]
         work_intervals = None
         for lookahead_day in lookahead_days:
-            periods = self._get_calendar_periods(dt, dt + timedelta(days=lookahead_day))
+            periods = self._get_calendar_periods(dt.date(), dt.date() + timedelta(days=lookahead_day))
             if not periods:
                 calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
                 work_intervals = calendar._work_intervals_batch(
                     dt, dt + timedelta(days=lookahead_day), resources=self.resource_id)
             else:
-                for period in periods[self]:
-                    start, end, calendar = period
+                for start, end, calendar in periods[self]:
                     calendar = calendar or self.company_id.resource_calendar_id
+                    ctz = ZoneInfo(calendar.tz)
                     work_intervals = calendar._work_intervals_batch(
-                        start, end, resources=self.resource_id)
+                        datetime.combine(start, time.min, ctz),
+                        datetime.combine(end, time.max, ctz),
+                        resources=self.resource_id)
             if work_intervals.get(self.resource_id.id) and work_intervals[self.resource_id.id]._items:
                 # return start time of the earliest interval
                 return work_intervals[self.resource_id.id]._items[0][0]
+        return None
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule

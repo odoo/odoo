@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime, UTC
+from datetime import UTC, datetime, time
 from functools import reduce
 from zoneinfo import ZoneInfo
 
@@ -40,12 +40,11 @@ class ResPartner(models.Model):
         if not employees_by_partner:
             return {}
         interval_by_calendar = defaultdict()
-        calendar_periods_by_employee = defaultdict(list)
         resources_by_calendar = defaultdict(lambda: self.env['resource.resource'])
 
         # Compute employee's calendars's period and order employee by his involved calendars
         employees = sum(employees_by_partner.values(), start=self.env['hr.employee'])
-        calendar_periods_by_employee = employees._get_calendar_periods(start_period, stop_period)
+        calendar_periods_by_employee = employees._get_calendar_periods(start_period.date(), stop_period.date())
         for employee, calendar_periods in calendar_periods_by_employee.items():
             for _start, _stop, calendar in calendar_periods:
                 calendar = calendar or self.env.company.resource_calendar_id
@@ -67,7 +66,11 @@ class ResPartner(models.Model):
             employee_interval = Intervals([])
             for (start, stop, calendar) in calendar_periods:
                 calendar = calendar or self.env.company.resource_calendar_id # No calendar if fully flexible
-                interval = Intervals([(start, stop, self.env['resource.calendar'])])
+                tz = ZoneInfo(calendar.tz)
+                interval = Intervals([(
+                    datetime.combine(start, time.min, tz),
+                    datetime.combine(stop, time.max, tz),
+                    self.env['resource.calendar'])])
                 if merge:
                     calendar_interval = interval_by_calendar[calendar]
                 else:
