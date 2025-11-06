@@ -37,6 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'pcg_607_account',
                 'income_account_id': 'pcg_707_account',
                 'downpayment_account_id': 'pcg_4191',
+                'account_stock_valuation_id': 'pcg_31_account',
             },
         }
 
@@ -56,3 +57,12 @@ class AccountChartTemplate(models.AbstractModel):
             ('name', '=', 'Other expenses and commissions on services supplied'),
         ], limit=1)
         return fr_account or super()._get_bank_fees_reco_account(company)
+
+    @template('fr', 'account.account')
+    def _get_fr_account_account(self):
+        return {
+            'pcg_31_account': {
+                'account_stock_expense_id': 'pcg_601_account',
+                'account_stock_variation_id': 'pcg_6031',
+            },
+        }
