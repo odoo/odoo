@@ -9,7 +9,7 @@ export const computeComboItems = (
 ) => {
     const comboItems = [];
     const parentLstPrice = parentProduct.getPrice(pricelist, 1, 0, false, parentProduct);
-    const originalTotal = childLineConf.reduce((acc, conf) => {
+    let originalTotal = childLineConf.reduce((acc, conf) => {
         const originalPrice = conf.combo_item_id.combo_id.base_price * conf.qty;
         return acc + originalPrice;
     }, 0);
@@ -29,6 +29,7 @@ export const computeComboItems = (
 
         if (comboItem.id == childLineConf[childLineConf.length - 1].combo_item_id.id) {
             priceUnit += remainingTotal;
+            remainingTotal = 0;
         }
         const attribute_value_ids = conf.configuration?.attribute_value_ids?.map(
             (id) => productTemplateAttributeValueById[id]
@@ -45,10 +46,29 @@ export const computeComboItems = (
         });
     }
 
+    if (remainingTotal !== 0) {
+        originalTotal = childLineExtra.reduce((acc, conf) => {
+            const originalPrice = conf.combo_item_id.combo_id.base_price * conf.qty;
+            return acc + originalPrice;
+        }, 0);
+    }
+
     // Process extra child lines using combo 'base_price'
     for (const extra of childLineExtra) {
         const comboItem = extra.combo_item_id;
-        const priceUnit = ProductPrice.round(comboItem.combo_id.base_price);
+        const combo = comboItem.combo_id;
+        let priceUnit = ProductPrice.round(combo.base_price);
+        if (remainingTotal !== 0) {
+            const remaining = ProductPrice.round(
+                (combo.base_price * parentLstPrice) / originalTotal
+            );
+            priceUnit += remaining;
+            remainingTotal -= remaining * extra.qty;
+
+            if (comboItem.id == childLineExtra[childLineExtra.length - 1].combo_item_id.id) {
+                priceUnit += remainingTotal / extra.qty;
+            }
+        }
         const attribute_value_ids = extra.configuration?.attribute_value_ids.map(
             (id) => productTemplateAttributeValueById[id]
         );
