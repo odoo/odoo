@@ -55,7 +55,7 @@
 
                         <!-- Render dynamic component if provided -->
                         <t t-if="props.component">
-                            <t t-component="props.component" t-props="props.componentProps || {}"/>
+                            <t t-component="props.component" t-props="props.componentProps || {}" close="props.close"/>
                         </t>
 
                         <!-- Render slot content if provided -->
