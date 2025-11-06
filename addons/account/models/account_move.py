@@ -2241,7 +2241,7 @@ class AccountMove(models.Model):
         for move in self:
             move.highlight_send_button = not move.is_being_sent and not move.invoice_pdf_report_id
 
-    @api.depends('line_ids.matched_debit_ids', 'line_ids.matched_credit_ids', 'matched_payment_ids')
+    @api.depends('line_ids.matched_debit_ids', 'line_ids.matched_credit_ids', 'matched_payment_ids', 'matched_payment_ids.state')
     def _compute_reconciled_payment_ids(self):
         ''' Retrieve the payments reconciled to the invoices through the reconciliation (account.partial.reconcile) '''
         self.env['account.payment'].flush_model(fnames=['move_id'])
