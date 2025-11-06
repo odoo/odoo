@@ -161,7 +161,7 @@ export default class IndexedDB {
         return results;
     }
 
-    getNewTransaction(dbStore) {
+    async getNewTransaction(dbStore) {
         try {
             if (!this.db) {
                 return false;
@@ -177,6 +177,17 @@ export default class IndexedDB {
                 `Error creating transaction: ${e.message}`,
                 CONSOLE_COLOR
             );
+            try {
+                await this.reset();
+                window.location.reload();
+            } catch (err) {
+                logPosMessage(
+                    "IndexedDB",
+                    "getNewTransaction",
+                    `Reset failed: ${err}`,
+                    CONSOLE_COLOR
+                );
+            }
             return false;
         }
     }
