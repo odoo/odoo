@@ -54,10 +54,7 @@ export class SplitPlugin extends Plugin {
             // An unmergeable element is unsplittable and vice-versa (as
             // split and merge are reverse operations from one another).
             // Therefore, unremovable nodes are also unsplittable.
-            (node) =>
-                this.getResource("unremovable_node_predicates").some((predicate) =>
-                    predicate(node)
-                ),
+            (node) => this.dependencies.delete.isUnremovable(node),
             // "Unbreakable" is a legacy term that means unsplittable and
             // unmergeable.
             (node) => node.classList?.contains("oe_unbreakable"),

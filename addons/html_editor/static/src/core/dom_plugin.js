@@ -577,7 +577,7 @@ export class DomPlugin extends Plugin {
             (isParagraphRelatedElement(block) ||
                 isListItemElement(block) ||
                 isPhrasingContent(block)) &&
-            this.getResource("unremovable_node_predicates").some((predicate) => predicate(block))
+            this.dependencies.delete.isUnremovable(block)
         );
     }
 
