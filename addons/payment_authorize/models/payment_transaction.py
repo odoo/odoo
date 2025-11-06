@@ -2,7 +2,7 @@
 
 import pprint
 
-from odoo import _, models
+from odoo import _, api, models
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -170,6 +170,14 @@ class PaymentTransaction(models.Model):
             'amount': float(amount),
             'currency_code': currency.name,
         }
+
+    @api.model
+    def _extract_reference(self, provider_code, payment_data):
+        """Override of `payment` to extract the reference from Authorize.Net payment data."""
+        if provider_code != 'authorize':
+            return super()._extract_reference(provider_code, payment_data)
+
+        return payment_data.get('payload', {}).get('invoiceNumber')
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
