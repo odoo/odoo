@@ -14,20 +14,51 @@
                     <label for="authorize_client_key"/>
                     <div class="o_row" col="2">
                         <field name="authorize_client_key"/>
-                        <button class="oe_link" icon="fa-refresh" type="object"
-                                name="action_update_merchant_details"
-                                string="Generate Client Key"/>
+                        <button
+                            string="Generate Client Key"
+                            type="object"
+                            name="action_update_merchant_details"
+                            invisible="state == 'disabled'"
+                            class="oe_link"
+                            icon="fa-refresh"
+                        />
+                    </div>
+                    <label
+                        for="authorize_webhook_id"
+                        invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key)"
+                    />
+                    <div
+                        class="o_row"
+                        invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key)"
+                    >
+                        <field string="Webhook ID" name="authorize_webhook_id"/>
+                        <button
+                            string="Generate Your Webhook"
+                            name="action_authorize_create_webhook"
+                            type="object"
+                            class="btn-primary"
+                            invisible="authorize_webhook_id or state == 'disabled'"
+                        />
+                        <button
+                            string="Re-generate Your Webhook"
+                            name="action_authorize_create_webhook"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="not authorize_webhook_id or state == 'disabled'"
+                        />
                     </div>
                     <widget colspan="2" name="documentation_link" path="/applications/finance/payment_providers/authorize.html" label="How to get paid with Authorize.Net"/>
                 </group>
             </group>
             <div name="available_currencies" position="inside">
-                <button string="Set Account Currency"
-                        type="object"
-                        name="action_update_merchant_details"
-                        invisible="code != 'authorize'"
-                        icon="fa-refresh"
-                        class="oe_link"/>
+                <button
+                    string="Set Account Currency"
+                    type="object"
+                    name="action_update_merchant_details"
+                    invisible="code != 'authorize' or state == 'disabled'"
+                    icon="fa-refresh"
+                    class="oe_link"
+                />
             </div>
         </field>
     </record>

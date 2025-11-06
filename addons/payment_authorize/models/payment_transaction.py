@@ -2,7 +2,7 @@
 
 import pprint
 
-from odoo import _, models
+from odoo import _, api, models
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -178,6 +178,17 @@ class PaymentTransaction(models.Model):
         # Authorize supports only one currency per account.
         currency = self.provider_id.available_currency_ids  # The currency is still linked.
         return {"amount": float(amount), "currency_code": currency.name}
+
+    @api.model
+    def _extract_reference(self, provider_code, payment_data):
+        """Override of `payment` to extract the reference from the payment data.
+
+        This override only supports the webhook flow because server-to-server request responses
+        do not include the transaction reference.
+        """
+        if provider_code != "authorize":
+            return super()._extract_reference(provider_code, payment_data)
+        return payment_data.get("payload", {}).get("invoiceNumber")
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
