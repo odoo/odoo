@@ -1,0 +1,11 @@
+<odoo>
+  <data>
+    <record model="ir.actions.client" id="dashboard">
+      <field name="name"></field>
+      <field name="tag">task_manager.dashboard</field>
+    </record>
+
+    <menuitem name="Task Manager" id="task_manager.menu_root" groups="base.group_user" web_icon="task_manager,static/description/icon.png"/>
+    <menuitem name="Task Manager" id="task_manager.dashboard_menu" parent="task_manager.menu_root" action="task_manager.dashboard" sequence="1"/>
+  </data>
+</odoo>
