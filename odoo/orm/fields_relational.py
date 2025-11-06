@@ -17,7 +17,7 @@ from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
-from .query import Query
+from .query import Query, TableSQL
 from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
@@ -470,6 +470,12 @@ class Many2one(_Relational):
             )
         return sql_field
 
+    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
+        # accessing a property on a many2one traverses the model
+        # we can do this because it keeps the cardinality of the query the same
+        comodel, coalias = self.join(model, alias, query)
+        return TableSQL(coalias, comodel, query)[property_name]
+
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         if operator not in ('any', 'not any', 'any!', 'not any!') or field_expr != self.name:
             # for other operators than 'any', just generate condition based on column type
@@ -781,6 +787,10 @@ class _RelationalMulti(_Relational):
             # Then, disable sudo and reset the transaction origin user
             return comodel.sudo(False).with_user(comodel.env.transaction.default_env.uid)
         return comodel
+
+    def to_sql(self, model: BaseModel, alias: str, query: Query | None) -> SQL:
+        # not allowed, since using it changes the cardinality of the query
+        raise ValueError(f"Cannot generate SQL for multi-relational field {self}")
 
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         assert field_expr == self.name, "Supporting condition only to field"
