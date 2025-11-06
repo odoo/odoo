@@ -137,6 +137,10 @@
             'bus/static/src/workers/*',
             'iot_base/static/src/network_utils/*',
             'iot_base/static/src/device_controller.js',
+            "account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.*",
+            "product/static/src/product_name_and_description/*",
+            "account/static/src/components/many2x_tax_tags/many2x_tax_tags.js",
+            'pos_enterprise/static/src/backend/components/fields/duration_field.*',
         ],
 
         # Main PoS assets, they are loaded in the PoS UI
