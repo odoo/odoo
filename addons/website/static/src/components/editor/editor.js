@@ -77,7 +77,8 @@ export class WebsiteEditorComponent extends Component {
             this.state.reloading = false;
         }
         this.websiteService.unblockPreview();
-        document.body.classList.add("o_website_navbar_transition_hide");
+        // setTimeout ensure transition on Firefox
+        setTimeout(() => document.body.classList.add("o_website_navbar_transition_hide"));
         setTimeout(() => document.body.classList.add("o_website_navbar_hide"), 400);
     }
     /**
