@@ -40,3 +40,62 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_event_registration_not_mandatory", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // No customer, all information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerGlobalTextQuestion("Name", "Name 1"),
+            EventTourUtils.answerGlobalTextQuestion("Email", "1@test.com"),
+            Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+
+            // Customer given, all information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerGlobalTextQuestion("Name", "Name 2"),
+            EventTourUtils.answerGlobalTextQuestion("Email", "2@test.com"),
+            Dialog.confirm(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Event Parter"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+
+            // Customer given, partial information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerGlobalTextQuestion("Name", "Name 3"),
+            Dialog.confirm(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Event Parter"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+
+            // Customer given, partial information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            Dialog.confirm(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Event Parter"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
