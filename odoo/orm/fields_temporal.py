@@ -7,10 +7,15 @@ import pytz
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from odoo.tools import SQL, date_utils
+from odoo.tools import SQL, date_utils, get_lang
 
 from .fields import Field, _logger
-from .utils import parse_field_expr, READ_GROUP_NUMBER_GRANULARITY
+from .utils import (
+    READ_GROUP_ALL_TIME_GRANULARITY,
+    READ_GROUP_NUMBER_GRANULARITY,
+    READ_GROUP_TIME_GRANULARITY,
+    parse_field_expr,
+)
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -91,10 +96,26 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
         if property_name == 'tz':
             # set only the timezone
             return sql_expr
-        if property_name not in READ_GROUP_NUMBER_GRANULARITY:
-            raise ValueError(f'Error when processing the granularity {property_name} is not supported. Only {", ".join(READ_GROUP_NUMBER_GRANULARITY.keys())} are supported')
-        granularity = READ_GROUP_NUMBER_GRANULARITY[property_name]
-        sql_expr = SQL('date_part(%s, %s)', granularity, sql_expr)
+        if property_name in READ_GROUP_NUMBER_GRANULARITY:
+            granularity = READ_GROUP_NUMBER_GRANULARITY[property_name]
+            return SQL('date_part(%s, %s)', granularity, sql_expr)
+
+        if property_name == 'week':
+            # first_week_day: 0=Monday, 1=Tuesday, ...
+            first_week_day = int(get_lang(model.env).week_start) - 1
+            days_offset = first_week_day and 7 - first_week_day
+            interval = f"-{days_offset} DAY"
+            sql_expr = SQL(
+                "(date_trunc('week', %s::timestamp - INTERVAL %s) + INTERVAL %s)",
+                sql_expr, interval, interval,
+            )
+        elif property_name in READ_GROUP_TIME_GRANULARITY:
+            sql_expr = SQL("date_trunc(%s, %s::timestamp)", property_name, sql_expr)
+        else:
+            raise ValueError(f'Error when processing the granularity {property_name} is not supported. Only {", ".join(READ_GROUP_ALL_TIME_GRANULARITY.keys())} are supported')
+        if ftype == 'date':
+            # If the granularity uses date_trunc, we need to convert the timestamp back to a date.
+            sql_expr = SQL("%s::date", sql_expr)
         return sql_expr
 
     def convert_to_column(self, value, record, values=None, validate=True):

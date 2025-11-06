@@ -67,7 +67,6 @@ from .query import Query, TableSQL
 from .utils import (
     OriginIds, Prefetch, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
-    READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
     SUPERUSER_ID,
 )
 
@@ -2005,10 +2004,16 @@ class BaseModel(metaclass=MetaModel):
         if fname not in self._fields:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
         field = self._fields[fname]
-        field_type = field.type
 
         if field.type == 'properties':
-            sql_expr, field_type = self._read_group_groupby_properties(table[fname], seq_fnames)
+            sql_expr = table[fname][seq_fnames]
+            if granularity:
+                try:
+                    sql_expr = sql_expr[granularity]
+                except (TypeError, AttributeError, ValueError):
+                    raise ValueError(f"Invalid granularity in {groupby_spec!r}")
+
+            return sql_expr
 
         elif seq_fnames:
             if field.type != 'many2one':
@@ -2018,45 +2023,22 @@ class BaseModel(metaclass=MetaModel):
             return cotable._model._read_group_groupby(cotable, f"{seq_fnames}:{granularity}" if granularity else seq_fnames)
 
         elif field.type == 'many2many':
-            return field.join(table, only_ids=True).id
+            sql_expr = field.join(table, only_ids=True).id
+
+        elif field.type in ('datetime', 'date'):
+            if not granularity:
+                raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
+            sql_expr = table[fname][granularity]
+            granularity = None
+
+        elif field.type == 'boolean':
+            sql_expr = SQL("COALESCE(%s, FALSE)", table[fname])
 
         else:
             sql_expr = table[fname]
 
-        if field_type in ('datetime', 'date'):
-            if not granularity:
-                raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
-            if granularity not in READ_GROUP_ALL_TIME_GRANULARITY:
-                raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
-
-            if granularity in READ_GROUP_NUMBER_GRANULARITY:
-                sql_expr = sql_expr[granularity]
-            elif field.type == 'datetime':
-                # set the timezone only
-                sql_expr = sql_expr['tz']
-
-            if granularity == 'week':
-                # first_week_day: 0=Monday, 1=Tuesday, ...
-                first_week_day = int(get_lang(self.env).week_start) - 1
-                days_offset = first_week_day and 7 - first_week_day
-                interval = f"-{days_offset} DAY"
-                sql_expr = SQL(
-                    "(date_trunc('week', %s::timestamp - INTERVAL %s) + INTERVAL %s)",
-                    sql_expr, interval, interval,
-                )
-            elif granularity in READ_GROUP_TIME_GRANULARITY:
-                sql_expr = SQL("date_trunc(%s, %s::timestamp)", granularity, sql_expr)
-
-            # If the granularity is a part number, the result is a number (double) so no conversion is needed
-            if field.type == 'date' and granularity not in READ_GROUP_NUMBER_GRANULARITY:
-                # If the granularity uses date_trunc, we need to convert the timestamp back to a date.
-                sql_expr = SQL("%s::date", sql_expr)
-        elif granularity:
+        if granularity:
             raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
-
-        elif field.type == 'boolean':
-            sql_expr = SQL("COALESCE(%s, FALSE)", sql_expr)
-
         return sql_expr
 
     def _read_group_having(self, table: TableSQL, having_domain: list) -> SQL:
@@ -2269,116 +2251,6 @@ class BaseModel(metaclass=MetaModel):
         if property_name:
             sql = sql[property_name]
         return sql
-
-    def _read_group_groupby_properties(self, sql_property: SQL, property_name: str) -> tuple[SQL, str]:
-        table = sql_property._table
-        field = sql_property._field
-        fname = field.name
-        definition = self.get_property_definition(f"{fname}.{property_name}")
-        property_type = definition.get('type')
-
-        # JOIN on the JSON array
-        if property_type in ('tags', 'many2many'):
-            property_alias = table._make_alias(f'{fname}_{property_name}')
-            sql_property = SQL(
-                """ CASE
-                        WHEN jsonb_typeof(%(property)s) = 'array'
-                        THEN %(property)s
-                        ELSE '[]'::jsonb
-                     END """,
-                property=sql_property,
-            )
-            if property_type == 'tags':
-                # ignore invalid tags
-                tags = [tag[0] for tag in definition.get('tags') or []]
-                # `->>0 : convert "JSON string" into string
-                condition = SQL(
-                    "%s->>0 = ANY(%s::text[])",
-                    SQL.identifier(property_alias), tags,
-                )
-            else:
-                comodel = self.env.get(definition.get('comodel'))
-                if comodel is None or comodel._transient or comodel._abstract:
-                    raise UserError(_(
-                        "You cannot use “%(property_name)s” because the linked “%(model_name)s” model doesn't exist or is invalid",
-                        property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
-                    ))
-
-                # check the existences of the many2many
-                condition = SQL(
-                    "%s::int IN (SELECT id FROM %s)",
-                    SQL.identifier(property_alias), SQL.identifier(comodel._table),
-                )
-
-            table._query.add_join(
-                "LEFT JOIN",
-                property_alias,
-                SQL("jsonb_array_elements(%s)", sql_property),
-                condition,
-            )
-
-            sql = SQL.identifier(property_alias)
-
-        elif property_type == 'selection':
-            options = [option[0] for option in definition.get('selection') or ()]
-
-            # check the existence of the option
-            property_alias = table._make_alias(f'{fname}_{property_name}')
-            table._query.add_join(
-                "LEFT JOIN",
-                property_alias,
-                SQL("(SELECT unnest(%s::text[]) %s)", options, SQL.identifier(property_alias)),
-                SQL("%s->>0 = %s", sql_property, SQL.identifier(property_alias)),
-            )
-
-            sql = SQL.identifier(property_alias)
-
-        elif property_type == 'many2one':
-            comodel = self.env.get(definition.get('comodel'))
-            if comodel is None or comodel._transient or comodel._abstract:
-                raise UserError(_(
-                    "You cannot use “%(property_name)s” because the linked “%(model_name)s” model doesn't exist or is invalid",
-                    property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
-                ))
-
-            sql = SQL(
-                """ CASE
-                        WHEN jsonb_typeof(%(property)s) = 'number'
-                         AND (%(property)s)::int IN (SELECT id FROM %(table)s)
-                        THEN %(property)s
-                        ELSE NULL
-                     END """,
-                property=sql_property,
-                table=SQL.identifier(comodel._table),
-            )
-
-        elif property_type == 'date':
-            sql = SQL(
-                """ CASE
-                        WHEN jsonb_typeof(%(property)s) = 'string'
-                        THEN (%(property)s->>0)::DATE
-                        ELSE NULL
-                     END """,
-                property=sql_property,
-            )
-
-        elif property_type == 'datetime':
-            sql = SQL(
-                """ CASE
-                        WHEN jsonb_typeof(%(property)s) = 'string'
-                        THEN to_timestamp(%(property)s->>0, 'YYYY-MM-DD HH24:MI:SS')
-                        ELSE NULL
-                     END """,
-                property=sql_property,
-            )
-
-        elif property_type == 'html':
-            raise UserError(_('Grouping by HTML properties is not supported.'))
-
-        else:
-            # if the key is not present in the dict, fallback to false instead of none
-            sql = SQL("COALESCE(%s, 'false')", sql_property)
-        return sql, property_type
 
     @api.model
     def get_property_definition(self, full_name: str) -> dict:
