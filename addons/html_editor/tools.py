@@ -120,15 +120,6 @@ def get_video_url_data(video_url, autoplay=False, loop=False,
         if start_from:
             embed_url = f"{embed_url}#t={start_from}"
     elif platform == 'dailymotion':
-        params['autoplay'] = autoplay and 1 or 0
-        if autoplay:
-            params['mute'] = 1
-        if hide_controls:
-            params['controls'] = 0
-        if hide_dm_logo:
-            params['ui-logo'] = 0
-        if hide_dm_share:
-            params['sharing-enable'] = 0
         if start_from:
             params["startTime"] = start_from.rstrip("s")
         embed_url = f"//geo.dailymotion.com/player.html?video={video_id}&{url_encode(params)}"
