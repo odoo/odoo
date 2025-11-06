@@ -37,11 +37,6 @@ test("Value of text filter", () => {
 
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-    });
-    expect(result.isSuccessful).toBe(true);
-
-    result = setGlobalFilterValueWithoutReload(model, {
-        id: "1",
         value: { operator: "ilike", strings: 5 },
     });
     expect(result.isSuccessful).toBe(false);
@@ -86,11 +81,6 @@ test("Value of selection filter", () => {
         resModel: "res.currency",
         selectionField: "position",
         defaultValue: { operator: "in", selectionValues: ["default value"] },
-    });
-    expect(result.isSuccessful).toBe(true);
-
-    result = setGlobalFilterValueWithoutReload(model, {
-        id: "1",
     });
     expect(result.isSuccessful).toBe(true);
 

@@ -310,6 +310,28 @@ test("Can save a value to an existing global filter", async function () {
     expect(listDomain.length).toBe(3);
 });
 
+test("Command rejected when setting the same date filter value", async () => {
+    const { model } = await createSpreadsheetWithPivotAndList();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
+        pivot: DEFAULT_FIELD_MATCHINGS,
+        list: DEFAULT_LIST_FIELD_MATCHINGS,
+    });
+    const gf = model.getters.getGlobalFilters()[0];
+    const year = DateTime.local().year;
+
+    let result = await setGlobalFilterValue(model, {
+        id: gf.id,
+        value: { type: "month", month: 2, year },
+    });
+    expect(result).toBe(DispatchResult.Success);
+
+    result = await setGlobalFilterValue(model, {
+        id: gf.id,
+        value: { type: "month", month: 2, year },
+    });
+    expect(result.reasons).toEqual([CommandResult.NoChanges]);
+});
+
 test("Domain of simple date filter", async function () {
     mockDate("2022-07-14 00:00:00");
     const { model } = await createSpreadsheetWithPivotAndList();

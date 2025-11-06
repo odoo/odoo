@@ -25,6 +25,7 @@ import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDate } from "@web/core/l10n/dates";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
+import { deepEqual } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
 
@@ -61,6 +62,11 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 }
                 if (!checkFilterValueIsValid(filter, cmd.value)) {
                     return CommandResult.InvalidValueTypeCombination;
+                }
+
+                const currentFilterValue = this.getters.getGlobalFilterValue(cmd.id);
+                if (deepEqual(currentFilterValue, cmd.value)) {
+                    return CommandResult.NoChanges;
                 }
                 break;
             }
