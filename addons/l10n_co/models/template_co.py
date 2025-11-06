@@ -33,5 +33,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'co_puc_532000',
                 'expense_account_id': 'co_puc_610000',
                 'income_account_id': 'co_puc_417500',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'co_puc_140500',
+            },
+        }
+
+    @template('co', 'account.account')
+    def _get_co_account_account(self):
+        return {
+            'co_puc_140500': {
+                'account_stock_expense_id': 'co_puc_621000',
+                'account_stock_variation_id': 'co_puc_146501',
             },
         }

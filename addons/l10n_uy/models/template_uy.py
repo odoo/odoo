@@ -34,6 +34,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'uy_code_21321',
                 'income_account_id': 'uy_code_4102',
                 'expense_account_id': 'uy_code_5100',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'uy_code_11704',
             },
         }
 
@@ -61,3 +63,11 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == 'uy':
             company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_uy.it_rut')
         return res
+
+    @template('uy', 'account.account')
+    def _get_uy_account_account(self):
+        return {
+            'uy_code_11704': {
+                'account_stock_variation_id': 'uy_code_5401',
+            },
+        }

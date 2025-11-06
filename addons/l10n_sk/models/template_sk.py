@@ -35,5 +35,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vs_tuz_23',
                 'expense_account_id': 'chart_sk_504000',
                 'income_account_id': 'chart_sk_604000',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'chart_sk_112000',
+            },
+        }
+
+    @template('sk', 'account.account')
+    def _get_sk_account_account(self):
+        return {
+            'chart_sk_112000': {
+                'account_stock_expense_id': 'chart_sk_568000',
+                'account_stock_variation_id': 'chart_sk_501000',
             },
         }

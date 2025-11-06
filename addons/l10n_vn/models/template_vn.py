@@ -41,5 +41,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_income_account_id': 'chart711',
                 'default_cash_difference_expense_account_id': 'chart811',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'chart152',
+            },
+        }
+
+    @template('vn', 'account.account')
+    def _get_vn_account_account(self):
+        return {
+            'chart152': {
+                'account_stock_variation_id': 'chart6111',
             },
         }

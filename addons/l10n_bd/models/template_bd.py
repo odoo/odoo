@@ -33,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_IN_BD_10',
                 'income_account_id': 'l10n_bd_400100',
                 'expense_account_id': 'l10n_bd_500200',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_bd_100502',
             },
         }
 
@@ -44,5 +46,14 @@ class AccountChartTemplate(models.AbstractModel):
                 "code": "TA",
                 "type": "general",
                 "show_on_dashboard": True,
+            },
+        }
+
+    @template('bd', 'account.account')
+    def _get_bd_account_account(self):
+        return {
+            'l10n_bd_100502': {
+                'account_stock_expense_id': 'l10n_bd_500907',
+                'account_stock_variation_id': 'l10n_bd_500905',
             },
         }

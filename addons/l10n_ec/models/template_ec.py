@@ -38,6 +38,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'ec110307',
                 'income_account_id': 'ec410101',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'ec110306',
             },
         }
 
@@ -58,3 +60,12 @@ class AccountChartTemplate(models.AbstractModel):
         # Setup default Income/Expense Accounts on Sale/Purchase journals
         if (purchase_journal := self.ref("purchase", raise_if_not_found=False)) and (expense_account_ref := template_data.get('journal_account_expense_categ_id')):
             purchase_journal.default_account_id = self.ref(expense_account_ref, raise_if_not_found=False)
+
+    @template('ec', 'account.account')
+    def _get_ec_account_account(self):
+        return {
+            'ec110306': {
+                'account_stock_expense_id': 'ec510106',
+                'account_stock_variation_id': 'ec110310',
+            },
+        }

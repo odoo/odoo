@@ -39,5 +39,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'om_account_200401',
                 'income_account_id': 'om_account_400101',
                 'expense_account_id': 'om_account_500101',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'om_account_100502',
+            },
+        }
+
+    @template('om', 'account.account')
+    def _get_om_account_account(self):
+        return {
+            'om_account_100502': {
+                'account_stock_expense_id': 'om_account_500907',
+                'account_stock_variation_id': 'om_account_500905',
             },
         }

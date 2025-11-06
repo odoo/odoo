@@ -10,6 +10,7 @@ from . import wizard
 def _post_init_hook(env):
     _configure_journals(env)
     _create_product_value(env)
+    _configure_stock_account_company_data(env)
 
 
 def _create_product_value(env):
@@ -67,3 +68,15 @@ def _configure_journals(env):
 
         ChartTemplate._load_data(data)
         ChartTemplate._post_load_data(template_code, company, template_data)
+
+
+def _configure_stock_account_company_data(env):
+    for company in env['res.company'].search([('chart_template', '!=', False)], order="parent_path"):
+        ChartTemplate = env['account.chart.template'].with_company(company)
+        template_code = company.chart_template
+        res_company_data = ChartTemplate._get_stock_account_res_company(template_code)
+        account_account_data = ChartTemplate._get_stock_account_account(template_code)
+        ChartTemplate._load_data({
+            'res.company': res_company_data,
+            'account.account': account_account_data,
+        })

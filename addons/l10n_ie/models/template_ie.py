@@ -35,5 +35,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'ie_tax_purchase_goods_23',
                 'expense_account_id': 'l10n_ie_account_60',
                 'income_account_id': 'l10n_ie_account_70',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_ie_account_2000',
+            },
+        }
+
+    @template('ie', 'account.account')
+    def _get_ie_account_account(self):
+        return {
+            'l10n_ie_account_2000': {
+                'account_stock_variation_id': 'l10n_ie_account_60',
             },
         }

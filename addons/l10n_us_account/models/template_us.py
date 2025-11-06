@@ -89,6 +89,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'account_account_us_income',
                 'account_sale_tax_id': default_sales_tax,
                 'account_purchase_tax_id': default_purchase_tax,
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'account_account_us_inventory_valuation',
             },
         }
 
@@ -99,3 +101,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': self.env._('Funds in Transit'),
             })
         return accounts_data
+
+    @template('us', 'account.account')
+    def _get_us_account_account(self):
+        return {
+            'account_account_us_inventory_valuation': {
+                'account_stock_variation_id': 'account_account_us_raw_materials',
+            },
+        }

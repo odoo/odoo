@@ -29,5 +29,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'impuestos_plantilla_iva_por_cobrar',
                 'income_account_id': 'cta410101',
                 'expense_account_id': 'cta510101',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'cta140101',
+            },
+        }
+
+    @template('gt', 'account.account')
+    def _get_gt_account_account(self):
+        return {
+            'cta140101': {
+                'account_stock_expense_id': 'cta510101',
+                'account_stock_variation_id': 'cta640101',
             },
         }

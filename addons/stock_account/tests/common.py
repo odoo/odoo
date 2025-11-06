@@ -257,6 +257,11 @@ class TestStockValuationCommon(BaseCommon):
             ('account_id', '=', self.account_stock_valuation.id),
         ], order='date, id')
 
+    def _get_stock_variation_move_lines(self):
+        return self.env['account.move.line'].search([
+            ('account_id', '=', self.account_stock_variation.id),
+        ], order='date, id')
+
     def _get_expense_move_lines(self):
         return self.env['account.move.line'].search([
             ('account_id', '=', self.account_expense.id),

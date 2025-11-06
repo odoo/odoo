@@ -34,6 +34,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_cz_21_receipt_domestic_supplies',
                 'expense_account_id': 'chart_cz_504000',
                 'income_account_id': 'chart_cz_604000',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'chart_cz_131000',
             },
         }
 
@@ -65,3 +67,12 @@ class AccountChartTemplate(models.AbstractModel):
                 if invoice_date := vals.get('invoice_date'):
                     vals['taxable_supply_date'] = invoice_date
         return data
+
+    @template('cz', 'account.account')
+    def _get_cz_account_account(self):
+        return {
+            'chart_cz_131000': {
+                'account_stock_expense_id': 'chart_cz_504000',
+                'account_stock_variation_id': 'chart_cz_583000',
+            },
+        }

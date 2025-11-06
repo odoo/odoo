@@ -33,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tvad_21',
                 'expense_account_id': 'ro_pcg_expense',
                 'income_account_id': 'ro_pcg_sale',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'pcg_301',
             },
         }
 
@@ -115,5 +117,14 @@ class AccountChartTemplate(models.AbstractModel):
                         'label': 'Operations being clarified',
                     }),
                 ],
+            },
+        }
+
+    @template('ro', 'account.account')
+    def _get_ro_account_account(self):
+        return {
+            'pcg_301': {
+                'account_stock_expense_id': 'pcg_601',
+                'account_stock_variation_id': 'pcg_603',
             },
         }
