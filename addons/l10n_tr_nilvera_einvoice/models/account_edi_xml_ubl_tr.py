@@ -88,14 +88,6 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             },
         })
 
-        if invoice.invoice_line_ids._fields.get('deferred_start_date'):
-            line_ids = invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line.deferred_start_date)
-            if line_ids:
-                document_node['cac:InvoicePeriod'] = {
-                    'cbc:StartDate': {'_text': line_ids[0].deferred_start_date},
-                    'cbc:EndDate': {'_text': line_ids[0].deferred_end_date},
-                }
-
         document_node['cac:OrderReference']['cbc:IssueDate'] = {'_text': invoice.invoice_date}
 
         if invoice.partner_id.l10n_tr_nilvera_customer_status == 'earchive':
