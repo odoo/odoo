@@ -30,12 +30,8 @@
                 </xpath>
                 <xpath expr="//field[@name='peppol_endpoint']" position="after">
                     <field name="peppol_verification_state" invisible="1" force_save="1"/>
-                    <label for="peppol_verification_state"
-                           groups="base.group_no_one"
-                           invisible="not peppol_endpoint"/>
-                    <div class="row"
-                         groups="base.group_no_one"
-                         invisible="not peppol_endpoint">
+                    <label for="peppol_verification_state" invisible="not peppol_endpoint"/>
+                    <div class="row" invisible="not peppol_endpoint">
                         <div class="col-6">
                             <field name="peppol_verification_state" readonly="1"/>
                         </div>
