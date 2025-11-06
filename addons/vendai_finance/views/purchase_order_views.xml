@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Purchase Order Form View - Add Financing Button and Tab -->
+    <record id="view_purchase_order_form_vendai" model="ir.ui.view">
+        <field name="name">purchase.order.form.vendai</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Offer Financing Button in Header -->
+            <xpath expr="//header/button[@name='button_confirm']" position="after">
+                <button name="action_offer_financing" 
+                        string="Offer Financing" 
+                        type="object" 
+                        class="btn-primary"
+                        invisible="not vendai_financing_available or vendai_financing_offered or state not in ('draft', 'sent', 'to approve', 'purchase')"/>
+            </xpath>
+
+            <!-- Add Smart Button for Credit Facility -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_facility" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-money"
+                        invisible="not vendai_facility_id">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Credit</span>
+                        <span class="o_stat_text">Facility</span>
+                    </div>
+                </button>
+            </xpath>
+
+            <!-- Add Supplier Financing Page in Notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Supplier Financing" name="vendai_financing" invisible="not vendai_financing_available">
+                    <group>
+                        <group string="Supplier Credit Information">
+                            <field name="vendai_financing_available" invisible="1"/>
+                            <field name="vendai_credit_score" widget="progressbar"/>
+                            <label for="vendai_credit_score" string="Credit Score"/>
+                            <div class="text-muted">
+                                Score based on transaction history, payment behavior, and volume
+                            </div>
+                        </group>
+                        <group string="Financing Status">
+                            <field name="vendai_financing_offered"/>
+                            <field name="vendai_facility_id" readonly="1" invisible="not vendai_facility_id"/>
+                            <field name="vendai_facility_state" widget="badge" invisible="not vendai_facility_id"/>
+                        </group>
+                    </group>
+                    <group string="Financing Terms" invisible="not vendai_financing_offered">
+                        <group>
+                            <field name="vendai_financing_amount" widget="monetary"/>
+                            <field name="vendai_interest_rate" widget="percentage"/>
+                            <field name="vendai_tenor_days"/>
+                        </group>
+                        <group>
+                            <field name="vendai_estimated_interest" widget="monetary"/>
+                            <label for="vendai_estimated_interest" string="Total Repayment"/>
+                            <div>
+                                <field name="vendai_financing_amount" widget="monetary" readonly="1" nolabel="1" class="oe_inline"/> + 
+                                <field name="vendai_estimated_interest" widget="monetary" readonly="1" nolabel="1" class="oe_inline"/>
+                            </div>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="vendai_financing_offered">
+                        <i class="fa fa-info-circle"/> 
+                        This supplier is eligible for financing. Click "Offer Financing" to proceed.
+                    </div>
+                    <div class="alert alert-success" role="alert" invisible="not vendai_financing_offered">
+                        <i class="fa fa-check-circle"/> 
+                        Financing has been offered to the supplier. Track progress in the Credit Facility.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Purchase Order Tree View - Add Financing Indicator -->
+    <record id="view_purchase_order_tree_vendai" model="ir.ui.view">
+        <field name="name">purchase.order.tree.vendai</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="vendai_financing_offered" optional="hide"/>
+                <field name="vendai_facility_state" optional="hide" widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

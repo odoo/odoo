@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Accept Financing Wizard Form View -->
+    <record id="view_accept_financing_wizard_form" model="ir.ui.view">
+        <field name="name">vendai.accept.financing.wizard.form</field>
+        <field name="model">vendai.accept.financing.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Accept Financing Offer">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <span>Accept Financing Offer</span>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Facility Details">
+                            <field name="facility_id" readonly="1"/>
+                            <field name="buyer_id" readonly="1"/>
+                            <field name="purchase_order_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Financial Terms">
+                            <field name="principal" widget="monetary" readonly="1"/>
+                            <field name="interest_rate" widget="percentage" readonly="1"/>
+                            <field name="tenor_days" readonly="1"/>
+                            <field name="total_repayment" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+                    <separator string="Disbursement Details"/>
+                    <group>
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle"/> 
+                            <strong>Important:</strong> Funds will be disbursed to the bank account you provide below.
+                            Ensure the details are accurate to avoid delays.
+                        </div>
+                    </group>
+                    <group>
+                        <group string="Bank Account Information">
+                            <field name="bank_account_number" placeholder="e.g., 1234567890" required="1"/>
+                            <field name="bank_name" placeholder="e.g., Equity Bank Kenya" required="1"/>
+                            <field name="bank_branch" placeholder="e.g., Westlands Branch"/>
+                            <field name="account_holder_name" placeholder="e.g., Kevian Kenya Ltd" required="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-warning" role="alert">
+                                <p><strong>Disbursement Timeline:</strong></p>
+                                <ul>
+                                    <li>Bank Transfer: 1-2 business days</li>
+                                    <li>RTGS/EFT: Same day (if before 2 PM)</li>
+                                    <li>M-Pesa: Instant (amounts &lt; KES 250,000)</li>
+                                </ul>
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Repayment Terms"/>
+                    <group>
+                        <div class="alert alert-success" role="alert">
+                            <p><strong>Repayment Process:</strong></p>
+                            <ol>
+                                <li>You deliver goods/services as per PO</li>
+                                <li>Buyer processes invoice payment normally</li>
+                                <li><field name="total_repayment" widget="monetary" readonly="1" nolabel="1"/> automatically sent to lender</li>
+                                <li>You receive balance: <field name="principal" widget="monetary" readonly="1" nolabel="1"/> (PO Amount - Repayment)</li>
+                            </ol>
+                            <p class="mb-0"><strong>Due Date:</strong> <field name="tenor_days" readonly="1" nolabel="1"/> days from disbursement</p>
+                        </div>
+                    </group>
+                    <separator string="Terms &amp; Conditions"/>
+                    <group>
+                        <field name="accept_terms" widget="boolean_toggle"/>
+                        <div class="text-muted" invisible="not accept_terms">
+                            By accepting, you agree to:
+                            <ul>
+                                <li>Receive <field name="principal" widget="monetary" readonly="1" nolabel="1"/> from the lender</li>
+                                <li>Repay <field name="total_repayment" widget="monetary" readonly="1" nolabel="1"/> via invoice payment deduction</li>
+                                <li>Deliver goods/services as per Purchase Order</li>
+                                <li>Standard credit facility terms and conditions</li>
+                            </ul>
+                        </div>
+                        <div class="alert alert-danger" role="alert" invisible="accept_terms">
+                            <i class="fa fa-exclamation-triangle"/> 
+                            You must accept the terms and conditions to proceed
+                        </div>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Accept Offer" 
+                            name="action_accept" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="not accept_terms"/>
+                    <button string="Decline" 
+                            name="action_decline" 
+                            type="object" 
+                            class="btn-danger"
+                            confirm="Are you sure you want to decline this financing offer?"/>
+                    <button string="Cancel" 
+                            class="btn-secondary" 
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Accept Financing Wizard Action -->
+    <record id="action_accept_financing_wizard" model="ir.actions.act_window">
+        <field name="name">Accept Financing</field>
+        <field name="res_model">vendai.accept.financing.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_vendai_credit_facility"/>
+    </record>
+
+</odoo>

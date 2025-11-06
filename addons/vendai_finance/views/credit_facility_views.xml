@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Credit Facility Form View -->
+    <record id="view_vendai_credit_facility_form" model="ir.ui.view">
+        <field name="name">vendai.credit.facility.form</field>
+        <field name="model">vendai.credit.facility</field>
+        <field name="arch" type="xml">
+            <form string="Credit Facility">
+                <header>
+                    <button name="action_offer_to_supplier"
+                            string="Offer to Supplier"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_accept_by_supplier"
+                            string="Accept Offer"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'offered'"/>
+                    <button name="action_submit_to_lender"
+                            string="Submit to Lender"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'accepted'"/>
+                    <button name="action_disburse"
+                            string="Disburse Funds"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'approved'"/>
+                    <button name="action_process_repayment"
+                            string="Process Repayment"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state not in ('disbursed', 'active')"/>
+                    <button name="action_close_facility"
+                            string="Close Facility"
+                            type="object"
+                            invisible="state != 'repaying'"/>
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            invisible="state in ('closed', 'cancelled', 'disbursed', 'active', 'repaying')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,offered,accepted,approved,disbursed,active,repaying,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchase_order"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-shopping-cart"
+                                invisible="not purchase_order_id">
+                            <field name="purchase_order_id" widget="statinfo" string="Purchase Order"/>
+                        </button>
+                        <button name="action_view_invoice"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                invisible="not invoice_id">
+                            <field name="invoice_id" widget="statinfo" string="Invoice"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Facility Number" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Parties">
+                            <field name="buyer_id" options="{'no_create': True}"/>
+                            <field name="supplier_id" options="{'no_create': True}"/>
+                            <field name="lender_id" options="{'no_create': True}"/>
+                            <field name="purchase_order_id" readonly="1"/>
+                        </group>
+                        <group string="Financial Terms">
+                            <field name="po_amount" widget="monetary"/>
+                            <field name="principal" widget="monetary"/>
+                            <field name="interest_rate" widget="percentage"/>
+                            <field name="tenor_days"/>
+                            <field name="interest_amount" widget="monetary"/>
+                            <field name="total_repayment" widget="monetary" class="oe_subtotal_footer_separator"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Important Dates">
+                            <field name="offered_date"/>
+                            <field name="accepted_date"/>
+                            <field name="approved_date"/>
+                            <field name="disbursed_date"/>
+                            <field name="due_date"/>
+                            <field name="closed_date"/>
+                        </group>
+                        <group string="Disbursement Information">
+                            <field name="supplier_bank_account"/>
+                            <field name="supplier_bank_name"/>
+                            <field name="disbursement_method"/>
+                            <field name="disbursement_ref"/>
+                        </group>
+                    </group>
+                    <group string="Repayment Information">
+                        <group>
+                            <field name="invoice_id"/>
+                            <field name="repayment_amount" widget="monetary"/>
+                            <field name="repayment_date"/>
+                        </group>
+                        <group>
+                            <field name="repayment_ref"/>
+                        </group>
+                    </group>
+                    <group string="Lender Integration" invisible="state == 'draft'">
+                        <field name="lender_facility_id"/>
+                        <field name="lender_api_url" widget="url"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Credit Facility Tree View -->
+    <record id="view_vendai_credit_facility_tree" model="ir.ui.view">
+        <field name="name">vendai.credit.facility.tree</field>
+        <field name="model">vendai.credit.facility</field>
+        <field name="arch" type="xml">
+            <list string="Credit Facilities" decoration-info="state == 'draft'" decoration-warning="state in ('offered', 'accepted')" decoration-success="state == 'closed'">
+                <field name="name"/>
+                <field name="buyer_id"/>
+                <field name="supplier_id"/>
+                <field name="lender_id"/>
+                <field name="principal" sum="Total Principal"/>
+                <field name="interest_amount" sum="Total Interest"/>
+                <field name="total_repayment" sum="Total Repayment"/>
+                <field name="disbursed_date"/>
+                <field name="due_date"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('offered', 'accepted')" decoration-success="state == 'closed'"/>
+                <field name="currency_id" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Credit Facility Kanban View -->
+    <record id="view_vendai_credit_facility_kanban" model="ir.ui.view">
+        <field name="name">vendai.credit.facility.kanban</field>
+        <field name="model">vendai.credit.facility</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="buyer_id"/>
+                <field name="supplier_id"/>
+                <field name="principal"/>
+                <field name="total_repayment"/>
+                <field name="state"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <span class="badge badge-pill">
+                                    <field name="principal" widget="monetary"/>
+                                </span>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div>
+                                    <i class="fa fa-building-o" title="Buyer"/> <field name="buyer_id"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-truck" title="Supplier"/> <field name="supplier_id"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-university" title="Lender"/> <field name="lender_id"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="disbursed_date" widget="date"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    Total: <field name="total_repayment" widget="monetary"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Credit Facility Search View -->
+    <record id="view_vendai_credit_facility_search" model="ir.ui.view">
+        <field name="name">vendai.credit.facility.search</field>
+        <field name="model">vendai.credit.facility</field>
+        <field name="arch" type="xml">
+            <search string="Search Credit Facilities">
+                <field name="name" string="Facility Number"/>
+                <field name="buyer_id"/>
+                <field name="supplier_id"/>
+                <field name="lender_id"/>
+                <field name="purchase_order_id"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Offered" name="offered" domain="[('state', '=', 'offered')]"/>
+                <filter string="Accepted" name="accepted" domain="[('state', '=', 'accepted')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Active" name="active" domain="[('state', 'in', ('disbursed', 'active', 'repaying'))]"/>
+                <filter string="Closed" name="closed" domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <separator/>
+                <filter string="This Month" name="this_month"
+                        domain="[('disbursed_date', '&gt;=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                 ('disbursed_date', '&lt;=', (context_today() + relativedelta(day=31)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Month" name="last_month"
+                        domain="[('disbursed_date', '&gt;=', (context_today() - relativedelta(months=1, day=1)).strftime('%Y-%m-%d')),
+                                 ('disbursed_date', '&lt;=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Buyer" name="group_buyer" context="{'group_by': 'buyer_id'}"/>
+                    <filter string="Supplier" name="group_supplier" context="{'group_by': 'supplier_id'}"/>
+                    <filter string="Lender" name="group_lender" context="{'group_by': 'lender_id'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Disbursed Date" name="group_disbursed_date" context="{'group_by': 'disbursed_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Credit Facility Action -->
+    <record id="action_vendai_credit_facility" model="ir.actions.act_window">
+        <field name="name">Credit Facilities</field>
+        <field name="res_model">vendai.credit.facility</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Credit Facility
+            </p>
+            <p>
+                Credit facilities enable tripartite supplier financing between buyers, suppliers, and lenders.
+            </p>
+        </field>
+    </record>
+
+    <!-- Supplier Credit Score Tree View -->
+    <!-- Suppliers Action -->
+    <record id="action_vendai_suppliers" model="ir.actions.act_window">
+        <field name="name">Suppliers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('supplier_rank', '>', 0)]</field>
+        <field name="context">{'default_supplier_rank': 1}</field>
+    </record>
+
+    <!-- Lenders Action -->
+    <record id="action_vendai_lenders" model="ir.actions.act_window">
+        <field name="name">Lenders</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vendai_is_lender', '=', True)]</field>
+        <field name="context">{'default_vendai_is_lender': True}</field>
+    </record>
+
+    <!-- Credit Scores Action -->
+    <record id="action_vendai_credit_scores" model="ir.actions.act_window">
+        <field name="name">Supplier Credit Scores</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="views" eval="[(ref('base.view_partner_tree'), 'tree'), (ref('base.view_partner_form'), 'form')]"/>
+        <field name="domain">[('supplier_rank', '>', 0)]</field>
+        <field name="context">{'search_default_suppliers': 1}</field>
+    </record>
+</odoo>

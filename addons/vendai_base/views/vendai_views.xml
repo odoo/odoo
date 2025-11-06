@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="vendai_backend_layout" inherit_id="web.layout">
+        <xpath expr="//div[hasclass('o_main')]" position="inside">
+            <div class="vendai-assistant">
+                <div class="assistant-header">
+                    <h3>VendAI Assistant</h3>
+                    <div class="autonomy-slider">
+                        <input type="range" min="0" max="100" t-model="state.autonomyLevel" t-on-input="updateAutonomyLevel"/>
+                        <span t-esc="state.autonomyLevel + '%'"/>
+                    </div>
+                </div>
+                <div class="messages-container">
+                    <t t-foreach="state.messages" t-as="message" t-key="message_index">
+                        <div t-attf-class="message {{message.type}}">
+                            <p t-esc="message.content"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="input-container">
+                    <textarea 
+                        placeholder="Ask me anything..."
+                        t-model="state.inputValue"
+                        t-on-keydown="sendMessage"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

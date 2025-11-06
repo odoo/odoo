@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Form View - Add VendAI Credit Information -->
+    <record id="view_partner_form_vendai" model="ir.ui.view">
+        <field name="name">res.partner.form.vendai</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Smart Buttons for Credit Facilities -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_credit_facilities" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-money"
+                        invisible="vendai_total_facilities == 0">
+                    <field name="vendai_total_facilities" widget="statinfo" string="Credit Facilities"/>
+                </button>
+                <button name="action_view_active_facilities" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-line-chart"
+                        invisible="vendai_active_facilities == 0">
+                    <field name="vendai_active_facilities" widget="statinfo" string="Active Facilities"/>
+                </button>
+            </xpath>
+
+            <!-- Add VendAI Finance Page for Suppliers -->
+            <xpath expr="//notebook" position="inside">
+                <page string="VendAI Finance" name="vendai_finance">
+                    <group>
+                        <group string="Credit Score">
+                            <field name="vendai_credit_score_manual"/>
+                            <field name="vendai_credit_score" widget="progressbar"/>
+                            <label for="vendai_credit_score" string="Current Score"/>
+                            <div class="o_row">
+                                <span class="badge badge-success" invisible="vendai_credit_score &lt; 70">
+                                    Excellent Credit
+                                </span>
+                                <span class="badge badge-warning" invisible="vendai_credit_score &lt; 50 or vendai_credit_score &gt;= 70">
+                                    Good Credit
+                                </span>
+                                <span class="badge badge-danger" invisible="vendai_credit_score &gt;= 50">
+                                    Limited Credit
+                                </span>
+                            </div>
+                            <div class="text-muted mt-2">
+                                <p><strong>Score Breakdown:</strong></p>
+                                <ul>
+                                    <li>Transaction Volume: 30 points</li>
+                                    <li>Transaction Count: 20 points</li>
+                                    <li>On-Time Payment Rate: 40 points</li>
+                                    <li>Recent Activity: 10 points</li>
+                                </ul>
+                            </div>
+                        </group>
+                        <group string="Facility Statistics">
+                            <field name="vendai_total_facilities"/>
+                            <field name="vendai_active_facilities"/>
+                            <field name="vendai_total_borrowed" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Financing Eligibility">
+                        <group>
+                            <div class="alert alert-success" role="alert" invisible="vendai_credit_score &lt; 50">
+                                <i class="fa fa-check-circle" title="Eligible"/> 
+                                <strong>Eligible for Financing</strong><br/>
+                                This supplier meets the minimum credit score requirement (50+) for supplier financing.
+                            </div>
+                            <div class="alert alert-warning" role="alert" invisible="vendai_credit_score &gt;= 50">
+                                <i class="fa fa-exclamation-triangle" title="Not Eligible"/> 
+                                <strong>Not Eligible</strong><br/>
+                                Minimum credit score of 50 required. Current score: <field name="vendai_credit_score" nolabel="1" readonly="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="vendai_credit_score" string="Max Financing"/>
+                            <div>
+                                <span invisible="vendai_credit_score &lt; 50">Not eligible</span>
+                                <span invisible="vendai_credit_score &lt; 60 or vendai_credit_score &gt;= 80">40-45% of PO value</span>
+                                <span invisible="vendai_credit_score &lt; 70 or vendai_credit_score &gt;= 80">45-50% of PO value</span>
+                                <span invisible="vendai_credit_score &lt; 80">50-60% of PO value</span>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Partner Tree View - Add Credit Score -->
+    <record id="view_partner_tree_vendai" model="ir.ui.view">
+        <field name="name">res.partner.tree.vendai</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="vendai_credit_score" optional="hide" widget="progressbar"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

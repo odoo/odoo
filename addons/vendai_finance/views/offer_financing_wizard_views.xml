@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Offer Financing Wizard Form View -->
+    <record id="view_offer_financing_wizard_form" model="ir.ui.view">
+        <field name="name">vendai.offer.financing.wizard.form</field>
+        <field name="model">vendai.offer.financing.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Offer Financing to Supplier">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <span>Offer Supplier Financing</span>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Purchase Order Details">
+                            <field name="purchase_order_id" readonly="1"/>
+                            <field name="supplier_id" readonly="1"/>
+                            <field name="po_amount" widget="monetary" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Supplier Credit Profile">
+                            <field name="credit_score" widget="progressbar" readonly="1"/>
+                            <label for="credit_score" string="Credit Rating"/>
+                            <div>
+                                <span class="badge badge-success" invisible="credit_score &lt; 80">
+                                    Excellent (80-100)
+                                </span>
+                                <span class="badge badge-info" invisible="credit_score &lt; 70 or credit_score &gt;= 80">
+                                    Very Good (70-79)
+                                </span>
+                                <span class="badge badge-warning" invisible="credit_score &lt; 60 or credit_score &gt;= 70">
+                                    Good (60-69)
+                                </span>
+                                <span class="badge badge-secondary" invisible="credit_score &lt; 50 or credit_score &gt;= 60">
+                                    Fair (50-59)
+                                </span>
+                                <span class="badge badge-danger" invisible="credit_score &gt;= 50">
+                                    Limited (&lt;50)
+                                </span>
+                            </div>
+                            <field name="max_financing_amount" widget="monetary" readonly="1"/>
+                            <div class="text-muted">
+                                Maximum financing based on credit score
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Financing Terms"/>
+                    <group>
+                        <group>
+                            <label for="financing_amount" string="Financing Amount" class="font-weight-bold"/>
+                            <div>
+                                <field name="financing_amount" widget="monetary" class="oe_inline"/>
+                                <div class="text-muted">
+                                    Min: KES 100,000 | Max: <field name="max_financing_amount" widget="monetary" readonly="1" nolabel="1"/>
+                                </div>
+                            </div>
+                            <field name="interest_rate" widget="percentage"/>
+                            <field name="tenor_days"/>
+                        </group>
+                        <group>
+                            <field name="estimated_interest" widget="monetary" readonly="1"/>
+                            <field name="total_repayment" widget="monetary" readonly="1" class="oe_subtotal_footer_separator"/>
+                            <div class="text-muted">
+                                Total amount supplier will repay
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Cost Breakdown"/>
+                    <group>
+                        <group>
+                            <label string="Purchase Order Amount"/>
+                            <div>
+                                <field name="po_amount" widget="monetary" readonly="1" nolabel="1"/>
+                            </div>
+                            <label string="Less: Financing Amount"/>
+                            <div>
+                                <field name="financing_amount" widget="monetary" readonly="1" nolabel="1" class="text-danger"/>
+                            </div>
+                            <label string="Net Payment to Supplier" class="font-weight-bold"/>
+                            <div class="o_row">
+                                <field name="po_amount" widget="monetary" readonly="1" nolabel="1" invisible="1"/>
+                                <span class="font-weight-bold">
+                                    KES <field name="financing_amount" readonly="1" nolabel="1" invisible="1"/>
+                                    <!-- Net = PO Amount - Financing Amount -->
+                                </span>
+                            </div>
+                        </group>
+                        <group>
+                            <div class="alert alert-info" role="alert">
+                                <p><strong>How it works:</strong></p>
+                                <ol>
+                                    <li>Lender disburses <field name="financing_amount" widget="monetary" readonly="1" nolabel="1"/> to supplier</li>
+                                    <li>Supplier delivers goods/services</li>
+                                    <li>You pay invoice as normal</li>
+                                    <li><field name="total_repayment" widget="monetary" readonly="1" nolabel="1"/> auto-deducted to lender</li>
+                                    <li>Balance paid to supplier</li>
+                                </ol>
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Buyer Guarantee"/>
+                    <group>
+                        <field name="buyer_guarantee" widget="boolean_toggle"/>
+                        <div class="alert alert-warning" role="alert" invisible="buyer_guarantee">
+                            <i class="fa fa-exclamation-triangle"/> 
+                            You must guarantee payment to proceed with financing
+                        </div>
+                        <div class="text-muted" invisible="not buyer_guarantee">
+                            By guaranteeing, you commit to ensuring the invoice is paid on time, 
+                            allowing the lender to recover their funds plus interest.
+                        </div>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Offer Financing" 
+                            name="action_offer_financing" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="not buyer_guarantee"/>
+                    <button string="Cancel" 
+                            class="btn-secondary" 
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Offer Financing Wizard Action -->
+    <record id="action_offer_financing_wizard" model="ir.actions.act_window">
+        <field name="name">Offer Financing</field>
+    <field name="res_model">vendai.offer.financing.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+    </record>
+
+</odoo>

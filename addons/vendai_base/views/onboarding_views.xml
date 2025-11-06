@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="vendai_onboarding" name="VendAI Onboarding">
+        <div class="vendai-onboarding">
+            <div class="steps-container">
+                <t t-foreach="state.steps" t-as="step" t-key="step_index">
+                    <div class="step">
+                        <div t-attf-class="step-number {{ step.completed ? 'completed' : '' }} {{ state.currentStep == step_index ? 'active' : '' }}">
+                            <t t-if="step.completed">✓</t>
+                            <t t-else="" t-esc="step_index + 1"/>
+                        </div>
+                        <div class="step-title" t-esc="step.title"/>
+                    </div>
+                </t>
+            </div>
+            
+            <div class="step-content">
+                <t t-if="state.currentStep == 0">
+                    <h2>Welcome to VendAI</h2>
+                    <p>Let's get your shop ready for success! We'll guide you through a few simple steps to set up your Point of Sale system.</p>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" t-on-click="nextStep">Get Started</button>
+                    </div>
+                </t>
+                
+                <t t-elif="state.currentStep == 1">
+                    <h2>Tell us about your shop</h2>
+                    <div class="form-group">
+                        <label for="shopName">Shop Name</label>
+                        <input type="text" class="form-control" id="shopName"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" class="form-control" id="location"/>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" t-on-click="nextStep">Continue</button>
+                    </div>
+                </t>
+                
+                <t t-elif="state.currentStep == 2">
+                    <h2>Add Your Products</h2>
+                    <p>Choose how you want to add your products:</p>
+                    <div class="import-options">
+                        <button class="btn btn-outline-primary mr-2">Import from CSV</button>
+                        <button class="btn btn-outline-primary">Add Manually</button>
+                    </div>
+                    <div class="action-buttons mt-4">
+                        <button class="btn btn-primary" t-on-click="nextStep">Continue</button>
+                    </div>
+                </t>
+                
+                <t t-elif="state.currentStep == 3">
+                    <h2>You're All Set!</h2>
+                    <p>Your Point of Sale is ready to use. Click below to start selling!</p>
+                    <div class="action-buttons">
+                        <a href="/web/pos/ui" class="btn btn-success">Launch POS</a>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

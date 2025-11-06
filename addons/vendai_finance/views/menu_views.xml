@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_vendai_root"
+              name="VendAI Finance"
+              sequence="50"/>
+
+    <!-- Credit Facilities Menu -->
+    <menuitem id="menu_vendai_facilities"
+              name="Credit Facilities"
+              parent="menu_vendai_root"
+              sequence="10"
+              action="action_vendai_credit_facility"/>
+
+    <!-- Suppliers Menu -->
+    <menuitem id="menu_vendai_suppliers"
+              name="Suppliers"
+              parent="menu_vendai_root"
+              sequence="20"
+              action="action_vendai_suppliers"/>
+
+    <!-- Lenders Menu -->
+    <menuitem id="menu_vendai_lenders"
+              name="Lenders"
+              parent="menu_vendai_root"
+              sequence="30"
+              action="action_vendai_lenders"/>
+
+    <!-- Reports Submenu -->
+    <menuitem id="menu_vendai_reports"
+              name="Reports"
+              parent="menu_vendai_root"
+              sequence="40"/>
+
+    <menuitem id="menu_vendai_credit_scores"
+              name="Credit Scores"
+              parent="menu_vendai_reports"
+              sequence="10"
+              action="action_vendai_credit_scores"/>
+
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_vendai_configuration"
+              name="Configuration"
+              parent="menu_vendai_root"
+              sequence="100"/>
+
+    <menuitem id="menu_vendai_settings"
+              name="Settings"
+              parent="menu_vendai_configuration"
+              sequence="10"/>
+
+</odoo>

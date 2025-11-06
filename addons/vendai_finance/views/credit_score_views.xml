@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Credit Score History Tree View -->
+    <record id="view_vendai_credit_score_tree" model="ir.ui.view">
+        <field name="name">vendai.credit.score.tree</field>
+        <field name="model">vendai.credit.score</field>
+        <field name="arch" type="xml">
+            <tree string="Credit Score History" default_order="calculation_date desc">
+                <field name="calculation_date"/>
+                <field name="partner_id"/>
+                <field name="score"/>
+                <field name="notes" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Credit Score History Form View -->
+    <record id="view_vendai_credit_score_form" model="ir.ui.view">
+        <field name="name">vendai.credit.score.form</field>
+        <field name="model">vendai.credit.score</field>
+        <field name="arch" type="xml">
+            <form string="Credit Score Entry">
+                <sheet>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="score" widget="progressbar"/>
+                        <field name="calculation_date"/>
+                    </group>
+                    <group string="Notes" colspan="4">
+                        <field name="notes" placeholder="Source data, decisions, or manual overrides"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Credit Score History Search View -->
+    <record id="view_vendai_credit_score_search" model="ir.ui.view">
+        <field name="name">vendai.credit.score.search</field>
+        <field name="model">vendai.credit.score</field>
+        <field name="arch" type="xml">
+            <search string="Search Credit Scores">
+                <field name="partner_id"/>
+                <field name="score"/>
+                <field name="calculation_date"/>
+                <separator/>
+                <filter string="Last 30 Days" name="last_30" domain="[('calculation_date', '>=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter string="Score &lt; 50" name="low" domain="[('score', '&lt;', 50)]"/>
+                <filter string="Score 80+" name="high" domain="[('score', '&gt;=', 80)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_partner" string="Supplier" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by': 'calculation_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Credit Score History Graph View -->
+    <record id="view_vendai_credit_score_graph" model="ir.ui.view">
+        <field name="name">vendai.credit.score.graph</field>
+        <field name="model">vendai.credit.score</field>
+        <field name="arch" type="xml">
+            <graph string="Credit Score Trend" type="line">
+                <field name="calculation_date" type="row" interval="day"/>
+                <field name="partner_id" type="col"/>
+                <field name="score" type="measure"/>
+            </graph>
+        </field>
+    </record>
+</odoo>

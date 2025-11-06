@@ -1231,13 +1231,10 @@ class GeoIP(collections.abc.Mapping):
     def __getattr__(self, attr):
         # Be smart and determine whether the attribute exists on the
         # country object or on the city object.
-        try:
-            if hasattr(GEOIP_EMPTY_COUNTRY, attr):
-                return getattr(self._country_record, attr)
-            if hasattr(GEOIP_EMPTY_CITY, attr):
-                return getattr(self._city_record, attr)
-        except NameError:
-            pass
+        if hasattr(GEOIP_EMPTY_COUNTRY, attr):
+            return getattr(self._country_record, attr)
+        if hasattr(GEOIP_EMPTY_CITY, attr):
+            return getattr(self._city_record, attr)
         raise AttributeError(f"{self} has no attribute {attr!r}")
 
     def __bool__(self):
@@ -2602,4 +2599,3 @@ class Application:
 
 
 root = Application()
-
