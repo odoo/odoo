@@ -163,7 +163,9 @@ class HrEmployee(models.Model):
         }
     }
     """
-
+    bank_name = fields.Char(string="Bank Name", compute='_compute_bank_account_details', inverse='_inverse_compute_bank_account_details', groups="hr.group_hr_user", tracking=True, readonly=False)
+    bank_bic = fields.Char(string="Bank Identification Code", compute='_compute_bank_account_details', inverse='_inverse_compute_bank_account_details', groups="hr.group_hr_user", tracking=True, readonly=False)
+    bank_account_number = fields.Char(string="Bank Account Number", compute='_compute_bank_account_details', inverse='_inverse_compute_bank_account_details', groups="hr.group_hr_user", tracking=True, readonly=False)
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
     visa_expire = fields.Date('Visa Expiration Date', groups="hr.group_hr_user", tracking=True)
@@ -300,6 +302,27 @@ class HrEmployee(models.Model):
                 employee.has_multiple_bank_accounts = True
             else:
                 employee.has_multiple_bank_accounts = False
+
+    @api.depends('primary_bank_account_id')
+    def _compute_bank_account_details(self):
+        for rec in self:
+            rec.bank_bic = rec.primary_bank_account_id.bank_bic if rec.primary_bank_account_id else False
+            rec.bank_name = rec.primary_bank_account_id.bank_name if rec.primary_bank_account_id else False
+            rec.bank_account_number = rec.primary_bank_account_id.acc_number if rec.primary_bank_account_id else False
+
+    def _inverse_compute_bank_account_details(self):
+        for emp in self:
+            if emp.bank_name and emp.bank_account_number and not emp.primary_bank_account_id:
+                bank = self.env['res.bank'].search([('name', '=', emp.bank_name)], limit=1)
+                if not bank:
+                    bank = self.env['res.bank'].create({'name': emp.bank_name})
+                emp.bank_account_ids = [(0, 0, {
+                "bank_name": emp.bank_name,
+                'bank_bic': emp.bank_bic,
+                'acc_number': emp.bank_account_number,
+                'partner_id': emp.work_contact_id.id,
+                'bank_id': bank.id,
+                })]
 
     @api.depends('bank_account_ids')
     def _sync_salary_distribution(self):
