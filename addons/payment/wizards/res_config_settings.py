@@ -45,11 +45,10 @@ class ResConfigSettings(models.TransientModel):
         :return: The active providers domain.
         :rtype: Domain
         """
-        company_domain = self.env['payment.provider']._check_company_domain(self.company_id)
-        if enabled_only:
-            return company_domain & Domain('state', '=', 'enabled')
-        else:
-            return company_domain & Domain('state', '!=', 'disabled')
+        return Domain.AND([
+            [('state', '=', 'enabled') if enabled_only else ('state', '!=', 'disabled')],
+            self.env['payment.provider']._check_company_domain(self.company_id),
+        ])
 
     # === ACTION METHODS === #
 

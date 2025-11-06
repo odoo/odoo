@@ -13,7 +13,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
 
-
 # Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
 _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
@@ -23,6 +22,7 @@ class PaymentProvider(models.Model):
     _description = 'Payment Provider'
     _order = 'module_state, state desc, sequence, name'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     def _valid_field_parameter(self, field, name):
         return name == 'required_if_provider' or super()._valid_field_parameter(field, name)
