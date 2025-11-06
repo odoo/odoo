@@ -15,22 +15,24 @@
                         <t t-name="menu">
                             <a type="open" class="dropdown-item" role="menuitem">Advanced Settings</a>
                         </t>
-                        <t t-name="card" class="row g-0">
+                        <t t-name="card">
                             <widget name="web_ribbon" class="d-flex" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                            <aside class="col-2 my-auto">
-                                <field name="avatar_128" widget="image" options="{'size': [50, 50], 'img_class': 'bg-transparent'}" alt="Channel"/>
-                            </aside>
-                            <main class="col me-4 ms-2">
-                                <span class="fw-bold fs-5">#<field name="display_name"/></span>
+                            <main>
+                                <div class="d-flex gap-2 mb-2">
+                                    <field name="avatar_128" widget="image" options="{'size': [25, 25], 'img_class': 'bg-transparent'}" alt="Channel"/>
+                                    <span class="fw-bold fs-5">#<field name="display_name"/></span>
+                                </div>
                                 <field name="channel_type" groups="base.group_no_one"/>
-                                <field name="description" class="text-muted lh-1 small"/>
+                                <field name="description" class="small text-muted"/>
+                            </main>
+                            <footer>
                                 <button type="object" invisible="not can_leave" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow">
                                     <i class="fa fa-sign-out" role="img"></i> Leave
                                 </button>
                                 <button type="object" invisible="not can_join" class="btn btn-primary ms-auto mt-auto" name="channel_join">
                                     <i class="fa fa-sign-in" role="img"></i> Join
                                 </button>
-                            </main>
+                            </footer>
                         </t>
                     </templates>
                 </kanban>
