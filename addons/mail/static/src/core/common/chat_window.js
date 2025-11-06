@@ -77,10 +77,6 @@ export class ChatWindow extends Component {
         return this.props.chatWindow.channel;
     }
 
-    get showImStatus() {
-        return this.channel.channel_type === "chat" && this.channel.correspondent;
-    }
-
     get attClass() {
         return {
             "w-100 h-100 o-mobile": this.ui.isSmall,

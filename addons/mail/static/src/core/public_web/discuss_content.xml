@@ -15,7 +15,7 @@
                             </a>
                         </t>
                     </FileUploader>
-                    <ImStatus t-if="thread.correspondent and showImStatus" className="'o-mail-DiscussContent-headerImStatus position-absolute'" member="thread.correspondent"/>
+                    <ImStatus t-if="thread.channel?.showImStatus" className="'o-mail-DiscussContent-headerImStatus position-absolute'" member="thread.correspondent" size="'sm'" withIsTyping="false"/>
                 </div>
                 <t t-else="">
                     <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>

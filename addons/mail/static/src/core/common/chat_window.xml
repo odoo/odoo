@@ -88,7 +88,7 @@
         'ps-2': !hasActionsMenu,
     }" name="threadAvatar">
         <img class="rounded-3 object-fit-cover" t-att-src="channel.parent_channel_id?.avatarUrl ?? channel.avatarUrl" alt="Channel Image"/>
-        <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="channel.correspondent" size="'sm'"/>
+        <ImStatus t-if="channel.showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="channel.correspondent" size="'sm'" withIsTyping="false"/>
     </div>
     <t t-if="channel.parent_channel_id">
         <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="channel.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.channel.parent_channel_id.open({ focus: true })"/>

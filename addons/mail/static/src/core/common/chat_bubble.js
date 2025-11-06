@@ -81,9 +81,6 @@ export class ChatBubble extends Component {
     }
 
     get showImStatus() {
-        return (
-            this.channel.correspondent?.im_status &&
-            this.channel.correspondent.im_status !== "offline"
-        );
+        return this.channel.showImStatus;
     }
 }

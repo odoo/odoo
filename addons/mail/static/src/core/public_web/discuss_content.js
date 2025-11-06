@@ -60,10 +60,6 @@ export class DiscussContent extends Component {
         return this.props.thread || this.store.discuss.thread;
     }
 
-    get showImStatus() {
-        return this.thread.channel?.channel_type === "chat";
-    }
-
     get showThreadAvatar() {
         return ["channel", "group", "chat"].includes(this.thread.channel?.channel_type);
     }
