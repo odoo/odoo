@@ -6,6 +6,7 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mollie import const
@@ -76,6 +77,36 @@ class PaymentTransaction(models.Model):
             # redirection, we include it in the redirect URL to be able to match the transaction.
             'redirectUrl': f'{redirect_url}?ref={self.reference}',
             'webhookUrl': f'{webhook_url}?ref={self.reference}',
+            'billingAddress': self._mollie_prepare_billing_address_payload(),
+            'lines': [{
+                "description": 'Odoo purchase',
+                "quantity": 1,
+                "unitPrice": {
+                    "currency": self.currency_id.name,
+                    "value": f"{self.amount:.{decimal_places}f}"
+                },
+                "totalAmount": {
+                    "currency": self.currency_id.name,
+                    "value": f"{self.amount:.{decimal_places}f}"
+                },
+            }],
+        }
+
+    def _mollie_prepare_billing_address_payload(self):
+        """Return correctly formatted billing address payload.
+
+        :return: The Mollie-formatted payload for the billingAddress field in the payment request.
+        :rtype: dict
+        """
+        given_name, family_name = payment_utils.split_partner_name(self.partner_name)
+        return {
+            "givenName": given_name,
+            "familyName": family_name,
+            "streetAndNumber": self.partner_address,
+            "postalCode": self.partner_zip,
+            "city": self.partner_city,
+            "country": self.partner_country_id.code,
+            "email": self.partner_email,
         }
 
     @api.model
