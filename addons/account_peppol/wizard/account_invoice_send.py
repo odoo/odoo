@@ -167,12 +167,3 @@ class AccountInvoiceSend(models.TransientModel):
 
         if not tools.config['test_enable'] and not modules.module.current_test:
             self._cr.commit()
-
-        error_messages = {
-            invoice.id: invoice_data.get('error')
-            for invoice, invoice_data in invoices_data.items()
-            if invoice_data.get('error')}
-        invoices._message_log_batch(bodies=error_messages)
-
-        if not tools.config['test_enable'] and not modules.module.current_test:
-            self._cr.commit()
