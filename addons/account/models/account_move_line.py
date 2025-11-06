@@ -1194,11 +1194,11 @@ class AccountMoveLine(models.Model):
             aml.no_followup = aml.move_id.is_entry() and not aml.move_id.origin_payment_id
 
     def _inverse_no_followup(self):
-        # If one line of an invoice gets excluded from or included in the follow up report, we want all
-        # payable/receivable lines of that invoice to do the same.
+        # If one line of an entry gets excluded from or included in the follow up report, we want all
+        # payable/receivable lines of that entry to do the same.
         for aml in self:
             move = aml.move_id
-            if move.is_invoice():
+            if not move.is_receipt():
                 move.no_followup = aml.no_followup
 
     def _search_payment_date(self, operator, value):

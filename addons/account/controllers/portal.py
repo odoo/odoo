@@ -117,6 +117,8 @@ class PortalAccount(CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        invoices = AccountInvoice.search(domain, order=order).filtered(lambda r: not r.no_followup)
+        invoices_count = len(invoices)
         values.update({
             'date': date_begin,
             # content according to pager and archive selected
@@ -124,9 +126,7 @@ class PortalAccount(CustomerPortal):
             'invoices': lambda pager_offset: (
                 [
                     invoice._get_invoice_portal_extra_values()
-                    for invoice in AccountInvoice.search(
-                        domain, order=order, limit=self._items_per_page, offset=pager_offset
-                    )
+                    for invoice in invoices[pager_offset : pager_offset + self._items_per_page]
                 ]
                 if AccountInvoice.has_access('read') else
                 AccountInvoice
@@ -135,7 +135,7 @@ class PortalAccount(CustomerPortal):
             'pager': {  # vals to define the pager.
                 "url": url,
                 "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
-                "total": AccountInvoice.search_count(domain) if AccountInvoice.has_access('read') else 0,
+                "total": invoices_count if AccountInvoice.has_access('read') else 0,
                 "page": page,
                 "step": self._items_per_page,
             },

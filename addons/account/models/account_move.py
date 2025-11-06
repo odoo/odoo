@@ -346,6 +346,11 @@ class AccountMove(models.Model):
         readonly=False,
         help="Exclude this journal entry from follow-up reports."
     )
+    display_no_followup = fields.Boolean(
+        string="Display No Follow-Up",
+        compute='_compute_display_no_followup',
+        readonly=True,
+    )
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
@@ -2372,7 +2377,7 @@ class AccountMove(models.Model):
     @api.depends('line_ids.no_followup')
     def _compute_no_followup(self):
         for move in self:
-            if move.is_invoice():
+            if not move.is_receipt():
                 lines = move.line_ids.filtered(
                     lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
                 )
@@ -2382,10 +2387,19 @@ class AccountMove(models.Model):
 
     def _inverse_no_followup(self):
         for move in self:
-            if move.is_invoice():
+            if not move.is_receipt():
                 move.line_ids.filtered(
                     lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
                 ).no_followup = move.no_followup
+
+    @api.depends('line_ids.account_type', 'journal_id')
+    def _compute_display_no_followup(self):
+        for move in self:
+            if move.is_entry():
+                lines = move.line_ids.filtered(lambda line: line.account_type == 'asset_receivable')
+                move.display_no_followup = bool(move.journal_id.type == 'general' and lines)
+            else:
+                move.display_no_followup = False
 
     # -------------------------------------------------------------------------
     # ALERTS
