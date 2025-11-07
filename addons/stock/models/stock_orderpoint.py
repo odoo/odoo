@@ -331,7 +331,7 @@ class StockWarehouseOrderpoint(models.Model):
         records = self.search_fetch([('qty_to_order_manual', 'in', [0, False])], ['qty_to_order_computed'])
         matched_ids = records.filtered_domain([('qty_to_order_computed', operator, value)]).ids
         return ['|',
-                    ('qty_to_order_manual', operator, value),
+                    '&', ('qty_to_order_manual', operator, value), ('qty_to_order_manual', 'not in', [0, False]),
                     ('id', 'in', matched_ids)
                 ]
 
