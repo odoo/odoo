@@ -193,6 +193,8 @@ class AccountMoveSend(models.AbstractModel):
                     'date': fields.Date.context_today(self),
                 },
             )
+            if "<pdfaid:conformance>B</pdfaid:conformance>" in content:
+                content.replace("<pdfaid:conformance>B</pdfaid:conformance>", "<pdfaid:conformance>A</pdfaid:conformance>")
             writer.add_file_metadata(content.encode())
 
         # Replace the current content.
