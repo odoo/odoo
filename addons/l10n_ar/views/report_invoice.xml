@@ -255,7 +255,7 @@
                 </t>
                 <!-- Show CBU for FACTURA DE CREDITO ELECTRONICA MiPyMEs and NOTA DE DEBITO ELECTRONICA MiPyMEs -->
                 <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211', '202', '207', '212'] and o.partner_bank_id">
-                    <br/><strong>CBU for payment: </strong><span t-out="o.partner_bank_id.acc_number or '' if o.partner_bank_id.acc_type == 'cbu' else ''"/>
+                    <br/><strong>CBU for payment: </strong><span t-out="o.partner_bank_id.account_number or '' if o.partner_bank_id.account_type == 'cbu' else ''"/>
                 </t>
 
             </div>

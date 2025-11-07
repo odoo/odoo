@@ -392,18 +392,15 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_address_node(self, vals):
         partner = vals['partner']
-        model = partner._name
-        country = partner['country' if model == 'res.bank' else 'country_id']
-        state = partner['state' if model == 'res.bank' else 'state_id']
 
         return {
             'cbc:StreetName': {'_text': ' '.join(s for s in [partner.street, partner.street2] if s)},
             'cbc:CitySubdivisionName': {'_text': partner.city},
-            'cbc:CityName': {'_text': state.name},
+            'cbc:CityName': {'_text': partner.state_id.name},
             'cbc:PostalZone': {'_text': partner.zip},
             'cac:Country': {
-                'cbc:IdentificationCode': {'_text': country.code},
-                'cbc:Name': {'_text': country.with_context(lang='tr_TR').name},
+                'cbc:IdentificationCode': {'_text': partner.country_id.code},
+                'cbc:Name': {'_text': partner.country_id.with_context(lang='tr_TR').name},
             }
         }
 

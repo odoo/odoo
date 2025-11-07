@@ -1041,18 +1041,6 @@ class AccountMove(models.Model):
 
     @api.depends('bank_partner_id', 'currency_id', 'preferred_payment_method_line_id')
     def _compute_partner_bank_id(self):
-        def _bank_selection_key(bank):
-            """Sorting priority:
-            0. Same currency as the move or no currency
-            1. Different currency
-            Then: prefer banks allowing outgoing payments (trusted ones)
-            """
-            if bank.currency_id == move.currency_id or not bank.currency_id:
-                currency_priority = 0
-            else:
-                currency_priority = 1
-            return (currency_priority, not bank.allow_out_payment)
-
         for move in self:
             if move.is_inbound() and (
                 payment_method := (
@@ -1065,7 +1053,7 @@ class AccountMove(models.Model):
 
             move.partner_bank_id = move.bank_partner_id.bank_ids.filtered(
                 lambda bank: not bank.company_id or bank.company_id == move.company_id
-            ).sorted(key=_bank_selection_key)[:1]
+            ).sorted(key=lambda b: not b.allow_out_payment)[:1]
 
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):

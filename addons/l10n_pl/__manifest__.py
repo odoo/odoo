@@ -19,7 +19,6 @@ Niniejszy moduł jest przeznaczony dla odoo 8.0.
 Wewnętrzny numer wersji OpenGLOBE 1.02
     """,
     'depends': [
-        'base_iban',
         'base_vat',
         'account',
         'account_edi_ubl_cii',

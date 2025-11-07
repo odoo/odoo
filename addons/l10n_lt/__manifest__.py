@@ -25,7 +25,6 @@ This module also includes:
     'auto_install': ['account'],
     'data': [
         'data/account_account_tag_data.xml',
-        'data/res_bank_data.xml',
         'data/tax_report_data.xml',
         'views/account_tax.xml',
     ],

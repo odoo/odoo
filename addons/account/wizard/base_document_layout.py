@@ -54,7 +54,7 @@ class BaseDocumentLayout(models.TransientModel):
     def _compute_account_number(self):
         for record in self:
             if record.partner_id.bank_ids:
-                record.account_number = record.partner_id.bank_ids[0].acc_number or ''
+                record.account_number = record.partner_id.bank_ids[0].account_number or ''
             else:
                 record.account_number = ''
 
@@ -67,12 +67,12 @@ class BaseDocumentLayout(models.TransientModel):
         for record in self:
             if record.partner_id.bank_ids and record.account_number:
                 bank = record.partner_id.bank_ids[0]
-                if bank.acc_number != record.account_number:
-                    bank.acc_number = record.account_number
+                if bank.account_number != record.account_number:
+                    bank.account_number = record.account_number
             elif record.account_number:
                 record.partner_id.bank_ids = [
                     Command.create({
-                        'acc_number': record.account_number,
+                        'account_number': record.account_number,
                         'partner_id': record.partner_id.id,
                     })
                 ]

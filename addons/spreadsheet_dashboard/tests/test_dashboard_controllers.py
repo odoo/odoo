@@ -54,8 +54,8 @@ class TestDashboardController(DashboardTestCommon, HttpCase):
         sample_dashboard_path = 'spreadsheet_dashboard/tests/data/sample_dashboard.json'
         dashboard = self.create_dashboard()
         dashboard.sample_dashboard_file_path = sample_dashboard_path
-        dashboard.main_data_model_ids = [(4, self.env.ref('base.model_res_bank').id)]
-        self.env['res.bank'].sudo().search([]).action_archive()
+        dashboard.main_data_model_ids = [(4, self.env.ref('base.model_res_partner_bank').id)]
+        self.env['res.partner.bank'].sudo().search([]).action_archive()
         response = self.url_open(f'/spreadsheet/dashboard/data/{dashboard.id}')
         self.assertEqual(response.json(), {
             'is_sample': True,

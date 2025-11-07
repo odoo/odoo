@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="clearing_label_all" model="clearing.label">
+        <field name="name">Clearing Number</field>
+    </record>
+
+    <record id="clearing_label_au" model="clearing.label">
+        <field name="name">BSB</field>
+        <field name="country_id" ref="au"/>
+    </record>
+
+    <record id="clearing_label_ca" model="clearing.label">
+        <field name="name">Routing Number (EFT)</field>
+        <field name="country_id" ref="ca"/>
+    </record>
+    
+    <record id="clearing_label_cl" model="clearing.label">
+        <field name="name">SBIF Code</field>
+        <field name="country_id" ref="cl"/>
+    </record>
+
+    <record id="clearing_label_hk" model="clearing.label">
+        <field name="name">Bank Code</field>
+        <field name="country_id" ref="hk"/>
+    </record>
+
+    <record id="clearing_label_jp" model="clearing.label">
+        <field name="name">Zengin Branch Code</field>
+        <field name="country_id" ref="jp"/>
+    </record>
+
+    <record id="clearing_label_mx" model="clearing.label">
+        <field name="name">ABM Code</field>
+        <field name="country_id" ref="mx"/>
+    </record>
+
+    <record id="clearing_label_pe" model="clearing.label">
+        <field name="name">Bank Code</field>
+        <field name="country_id" ref="pe"/>
+    </record>
+
+    <record id="clearing_label_sa" model="clearing.label">
+        <field name="name">Bank SARIE Code</field>
+        <field name="country_id" ref="sa"/>
+    </record>
+
+    <record id="clearing_label_ae" model="clearing.label">
+        <field name="name">Routing Code Agent</field>
+        <field name="country_id" ref="ae"/>
+    </record>
+
+    <record id="clearing_label_uk" model="clearing.label">
+        <field name="name">Sort Code</field>
+        <field name="country_id" ref="uk"/>
+    </record>
+
+    <record id="clearing_label_us" model="clearing.label">
+        <field name="name">Routing Number</field>
+        <field name="country_id" ref="us"/>
+    </record>
+</odoo>

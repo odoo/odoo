@@ -19,10 +19,12 @@
     </record>
 
     <record id="base.demo_bank_mx" model="res.partner.bank" forcecreate="1">
-        <field name="acc_number">0134567890</field>
+        <field name="account_number">0134567890</field>
         <field name="partner_id" ref="base.partner_demo_company_mx"/>
         <field name="company_id" ref="base.demo_company_mx"/>
-        <field name="bank_id" ref="l10n_mx.acc_bank_014_SANTANDER"/>
+        <field name="bank_name">SANTANDER</field>
+        <field name="clearing_label_id" ref="base.clearing_label_mx"/>
+        <field name="clearing_number">014</field>
         <field name="allow_out_payment" eval="True"/>
     </record>
 

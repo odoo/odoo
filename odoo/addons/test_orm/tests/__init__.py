@@ -7,6 +7,7 @@ from . import (
     test_company_checks,
     test_config_settings,
     test_convert,
+    test_create,
     test_convert_env,
     test_domain,
     test_fields,

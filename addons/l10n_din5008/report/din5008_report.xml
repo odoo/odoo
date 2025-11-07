@@ -135,9 +135,9 @@
                                 <td colspan="3" t-if="company.partner_id.bank_ids">
                                     <ul class="list-inline">
                                         <t t-foreach="company.partner_id.bank_ids[:2]" t-as="bank">
-                                            <li><span t-field="bank.bank_id.name"/></li>
-                                            <li class="text-nowrap">IBAN: <span t-field="bank.acc_number"/></li>
-                                            <li>BIC: <span t-field="bank.bank_id.bic"/></li>
+                                            <li><span t-field="bank.bank_name"/></li>
+                                            <li class="text-nowrap">IBAN: <span t-field="bank.account_number"/></li>
+                                            <li>BIC: <span t-field="bank.bank_bic"/></li>
                                         </t>
                                     </ul>
                                 </td>

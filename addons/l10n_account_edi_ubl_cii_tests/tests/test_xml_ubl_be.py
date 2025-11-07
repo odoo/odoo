@@ -25,7 +25,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
+            'bank_ids': [(0, 0, {'account_number': 'BE15001559627230'})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -38,7 +38,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
+            'bank_ids': [(0, 0, {'account_number': 'BE90735788866632'})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -287,7 +287,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         and imported in the xml file
         """
         acc_bank = self.env['res.partner.bank'].create({
-            'acc_number': 'BE15001559627231',
+            'account_number': 'BE15001559627231',
             'partner_id': self.company_data['company'].partner_id.id,
         })
 

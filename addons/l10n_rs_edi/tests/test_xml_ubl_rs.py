@@ -24,9 +24,8 @@ class TestUBLRS(TestUBLCommon):
         cls.company_data['company'].partner_id.l10n_rs_edi_registration_number = '87654321'
 
         cls.env['res.partner.bank'].create({
-            'acc_type': 'iban',
             'partner_id': cls.company_data['company'].partner_id.id,
-            'acc_number': 'RS1234123456123456123456',
+            'account_number': 'RS1234123456123456123456',
         })
 
         cls.partner_a = cls.env['res.partner'].create({
@@ -37,7 +36,7 @@ class TestUBLRS(TestUBLCommon):
             'zip': '101801',
             'phone': '+381 98 765 43 21',
             'vat': 'RS111032440',
-            'bank_ids': [Command.create({'acc_number': 'RS1234567891234567892345'})],
+            'bank_ids': [Command.create({'account_number': 'RS1234567891234567892345'})],
             'l10n_rs_edi_registration_number': '12345678',
         })
 

@@ -66,7 +66,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         }])
 
         cls.env['res.partner.bank'].create({
-            'acc_number': '0144748555',
+            'account_number': '0144748555',
             'partner_id': cls.env.company.partner_id.id,
         })
 

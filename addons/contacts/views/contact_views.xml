@@ -62,8 +62,14 @@
         action="base.res_partner_industry_action" parent="res_partner_menu_config"
         sequence="4"/>
 
+    <menuitem id="menu_action_res_partner_bank_form"
+        action="base.action_res_partner_bank_account_form"
+        parent="res_partner_menu_config"
+        groups="base.group_no_one"
+        sequence="5"/>
+
     <menuitem id="menu_localisation" name="Localization"
-        parent="res_partner_menu_config" sequence="5"/>
+        parent="res_partner_menu_config" sequence="6"/>
 
     <menuitem id="menu_country_partner"
         action="base.action_country" parent="menu_localisation"
@@ -77,20 +83,5 @@
     <menuitem id="menu_country_state_partner"
         action="base.action_country_state"
         parent="menu_localisation"
-        sequence="2"/>
-
-    <menuitem id="menu_config_bank_accounts"
-        name="Bank Accounts"
-        parent="res_partner_menu_config"
-        sequence="6"/>
-
-    <menuitem id="menu_action_res_bank_form"
-        action="base.action_res_bank_form"
-        parent="menu_config_bank_accounts"
-        sequence="1"/>
-
-    <menuitem id="menu_action_res_partner_bank_form"
-        action="base.action_res_partner_bank_account_form"
-        parent="menu_config_bank_accounts"
         sequence="2"/>
 </odoo>

@@ -22,7 +22,6 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
 
     """,
     'depends': [
-        'base_iban',
         'base_vat',
         'account',
     ],

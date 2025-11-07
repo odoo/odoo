@@ -48,7 +48,6 @@
             </filter>
             <field name="original_journal_id" position="before">
                 <field name="issuer_vat"/>
-                <field name="bank_id"/>
                 <field name="current_journal_id"/>
             </field>
             <filter name="groupby_issue_state" position="replace">
@@ -134,7 +133,6 @@
                         </group>
                         <group>
                             <field name="amount"/>
-                            <field name="bank_id"  invisible="issue_state"/>
                             <field name="issuer_vat"  invisible="issue_state"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>

@@ -1791,7 +1791,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.invoice.action_post()
 
         bank1 = self.env['res.partner.bank'].create({
-            'acc_number': 'BE43798822936101',
+            'account_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
         })
 
@@ -2632,7 +2632,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # Test to check that when switching from out_invoice to out_refund the bank partner is changed accordingly
         bank = self.env["res.partner.bank"].create({
             "bank_name": "FAKE",
-            "acc_number": "1234567890",
+            "account_number": "1234567890",
             "partner_id": self.partner_a.id,
         })
 
@@ -4582,12 +4582,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         company_2 = self.company_data_2['company']
         bank = self.env["res.partner.bank"].create({
             "bank_name": "FAKE",
-            "acc_number": "1234567890",
+            "account_number": "1234567890",
             "partner_id": company_1.partner_id.id,
         })
         bank_2 = self.env["res.partner.bank"].create({
             "bank_name": "FAKE 2",
-            "acc_number": "1234567890",
+            "account_number": "1234567890",
             "partner_id": company_2.partner_id.id,
         })
         invoice_new = self.env["account.move"].with_context(default_move_type="out_invoice").new({

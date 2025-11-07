@@ -5,13 +5,7 @@
         <field name="model">res.partner.bank</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='clearing_number']" position="attributes">
-                <attribute name="invisible" add="show_aba_routing" separator=" or "/>
-            </xpath>
-            <field name="clearing_number" position="after">
-                <field name="clearing_number" string="ABA/Routing" invisible="not show_aba_routing"/>
-            </field>
-            <field name="currency_id" position="after">
+            <field name="holder_name" position="before">
                 <field name="l10n_us_bank_account_type" invisible="country_code != 'US'"/>
             </field>
         </field>

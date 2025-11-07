@@ -142,20 +142,20 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.env.user.group_ids += self.env.ref('account.group_validate_bank_account')
         partner = self.env['res.partner'].create({'name': 'MyCustomer'})
         account = self.env['res.partner.bank'].create({
-            'acc_number': '123456789',
+            'account_number': '123456789',
             'partner_id': partner.id,
         })
         account.allow_out_payment = True
 
         with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
-            account.write({'acc_number': '1234567890999'})
+            account.write({'account_number': '1234567890999'})
         with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
-            account.write({'sanitized_acc_number': '1234567890999'})
+            account.write({'sanitized_account_number': '1234567890999'})
         with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
             account.write({'partner_id': self.env['res.partner'].create({'name': 'MyCustomer 2'}).id})
 
         account.allow_out_payment = False
-        account.write({'acc_number': '1234567890999000'})
+        account.write({'account_number': '1234567890999000'})
 
         self.env.user.group_ids -= self.env.ref('account.group_validate_bank_account')
         with self.assertRaisesRegex(UserError, "You do not have the rights to trust"), self.cr.savepoint():

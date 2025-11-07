@@ -250,15 +250,15 @@
                         <ram:InvoiceCurrencyCode t-out="currency.name"/>
 
                         <!-- Bank account. -->
-                        <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.partner_bank_id.sanitized_acc_number">
+                        <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.partner_bank_id.sanitized_account_number">
                             <ram:TypeCode t-out="payment_means_code"/>
                             <ram:PayeePartyCreditorFinancialAccount>
                                 <ram:IBANID
-                                    t-if="record.partner_bank_id.acc_type == 'iban'"
-                                    t-out="record.partner_bank_id.sanitized_acc_number"/>
+                                    t-if="record.partner_bank_id.account_type == 'iban'"
+                                    t-out="record.partner_bank_id.sanitized_account_number"/>
                                 <ram:ProprietaryID
-                                    t-if="record.partner_bank_id.acc_type != 'iban'"
-                                    t-out="record.partner_bank_id.sanitized_acc_number"/>
+                                    t-if="record.partner_bank_id.account_type != 'iban'"
+                                    t-out="record.partner_bank_id.sanitized_account_number"/>
                             </ram:PayeePartyCreditorFinancialAccount>
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 

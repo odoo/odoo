@@ -115,7 +115,7 @@
                                             <span class="d-block fw-bold" t-if="line.partner_id">
                                                 <span t-out="line.partner_id.name">Marc Demo</span> <span t-if="line.partner_bank_id and line.partner_bank_id.partner_id != line.partner_id">(<span t-out="line.partner_bank_id.partner_id.name">Bank of odoo</span>)</span>
                                             </span>
-                                            <span class="d-block" t-if="line.partner_bank_id or line.account_number" t-out="line.account_number or line.partner_bank_id.acc_number">534677881234</span>
+                                            <span class="d-block" t-if="line.partner_bank_id or line.account_number" t-out="line.account_number or line.partner_bank_id.account_number">534677881234</span>
                                             <span class="d-block" t-if="line.payment_ref" t-field="line.payment_ref">Payment Reference</span>
                                         </td>
                                         <td class="text-end py-1">

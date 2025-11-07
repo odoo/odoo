@@ -17,7 +17,7 @@ class TestSelfAccessPreferences(TestHrCommon):
         """ A simple user should be able to read all fields in the preferences form """
         james = new_test_user(self.env, login='hel', groups='base.group_user', name='Simple employee', email='ric@example.com')
         james = james.with_user(james)
-        james_bank_account = self.env['res.partner.bank'].create({'acc_number': 'BE1234567890', 'partner_id': james.partner_id.id})
+        james_bank_account = self.env['res.partner.bank'].create({'account_number': 'BE1234567890', 'partner_id': james.partner_id.id})
         self.env['hr.employee'].create({
             'name': 'James',
             'user_id': james.id,
@@ -201,7 +201,7 @@ class TestSelfAccessRights(TestHrCommon):
     def test_access_employee_account(self):
         hubert = new_test_user(self.env, login='hubert', groups='base.group_user', name='Hubert Bonisseur de La Bath', email='hubert@oss.fr')
         hubert = hubert.with_user(hubert)
-        hubert_acc = self.env['res.partner.bank'].create({'acc_number': 'FR1234567890', 'partner_id': hubert.partner_id.id})
+        hubert_acc = self.env['res.partner.bank'].create({'account_number': 'FR1234567890', 'partner_id': hubert.partner_id.id})
         hubert_emp = self.env['hr.employee'].create({
             'name': 'Hubert',
             'user_id': hubert.id,

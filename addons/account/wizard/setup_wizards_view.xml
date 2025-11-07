@@ -39,8 +39,7 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="acc_number" placeholder="e.g BE15001559627230"/>
-                            <field name="bank_id" placeholder="e.g Bank of America"/>
+                            <field name="account_number" placeholder="e.g BE15001559627230" widget="account_number"/>
                             <field name="bank_bic" placeholder="e.g GEBABEBB" string="Bank Identifier Code"/>
                             <field name="linked_journal_id"
                                    options="{'no_create': True}"
@@ -65,8 +64,8 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="acc_number" placeholder="e.g BE15001559627230"/>
-                            <field name="bank_id" placeholder="e.g Bank of America"/>
+                            <field name="account_number" placeholder="e.g BE15001559627230" widget="account_number"/>
+                            <field name="bank_bic" placeholder="e.g GEBABEBB"/>
                             <field name="linked_journal_id"
                                    options="{'no_create': True}"
                                    placeholder="Leave empty to create new"

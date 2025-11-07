@@ -72,10 +72,9 @@ class TestPrivacyWizard(TransactionCase):
         self.assertEqual((wizard.line_ids - partner_line).resource_ref, None)
 
     def test_wizard_direct_reference(self):
-        bank = self.env['res.bank'].create({
-            'name': 'ING',
-            'bic': 'BBRUBEBB',
-            'email': 'rintin.tin@gmail.com'
+        guest = self.env['mail.guest'].create({
+            'name': 'Guest',
+            'email': 'rintin.tin@gmail.com',
         })
 
         wizard = self.env['privacy.lookup.wizard'].with_context(
@@ -89,8 +88,8 @@ class TestPrivacyWizard(TransactionCase):
         self.assertEqual(wizard.line_ids[0].res_id, self.partner.id)
         self.assertEqual(wizard.line_ids[0].res_model, self.partner._name)
 
-        self.assertEqual(wizard.line_ids[1].res_id, bank.id)
-        self.assertEqual(wizard.line_ids[1].res_model, bank._name)
+        self.assertEqual(wizard.line_ids[1].res_id, guest.id)
+        self.assertEqual(wizard.line_ids[1].res_model, guest._name)
 
     def test_wizard_indirect_reference(self):
         self.env.company.partner_id = self.partner
@@ -108,7 +107,7 @@ class TestPrivacyWizard(TransactionCase):
     def test_wizard_indirect_reference_cascade(self):
         # Don't retrieve ondelete cascade records
         self.env["res.partner.bank"].create({
-            'acc_number': '0123-%s' % self.partner.id,
+            'account_number': '0123-%s' % self.partner.id,
             'partner_id': self.partner.id,
             'company_id': self.env.company.id
         })

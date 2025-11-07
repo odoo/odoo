@@ -11,7 +11,16 @@ import { Component, onMounted } from "@odoo/owl";
 class BankTag extends Component {
     static template = "account.BankTag";
     static components = { BadgeTag };
-    static props = ["allowOutPayment?", "color", "onClick", "onDelete", "onClick", "text", "tooltip"];
+    static props = [
+        "allowOutPayment?",
+        "color",
+        "onClick",
+        "onDelete",
+        "crossTooltip",
+        "onClick",
+        "text",
+        "tooltip",
+    ];
 }
 
 export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
@@ -34,9 +43,18 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
         });
     }
 
+    async archiveTag(id) {
+        const data = this.props.record.data[this.props.name];
+        const tagRecord = data.records.find((r) => r.id === id);
+        await tagRecord.update({ active: false });
+        data.records = data.records.filter((r) => r.id !== id);
+    }
+
     getTagProps(record) {
         return {
             ...super.getTagProps(record),
+            onDelete: !this.props.readonly ? () => this.archiveTag(record.id) : undefined,
+            crossTooltip: _t("Archive"),
             allowOutPayment: record.data?.allow_out_payment,
         };
     }
@@ -75,6 +93,7 @@ export const fieldMany2ManyTagsBanks = {
         return [
             ...many2ManyTagsField.relatedFields({ options }),
             { name: options.allow_out_payment_field, type: "boolean", readonly: false },
+            { name: "active", type: "boolean", readonly: false },
         ];
     },
 };

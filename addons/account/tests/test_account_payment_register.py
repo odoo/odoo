@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 from odoo import fields, Command
@@ -12,12 +11,12 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 from odoo.tests.common import Like
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingWithBanksCommon
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
+class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -56,27 +55,6 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                 Command.create({'value': 'percent', 'value_amount': 30.0, 'nb_days': 5}),
                 Command.create({'value': 'percent', 'value_amount': 60.0, 'nb_days': 10}),
             ],
-        })
-
-        cls.partner_bank_account1 = cls.env['res.partner.bank'].create({
-            'acc_number': "0123456789",
-            'partner_id': cls.partner_a.id,
-            'acc_type': 'bank',
-        })
-        cls.partner_bank_account2 = cls.env['res.partner.bank'].create({
-            'acc_number': "9876543210",
-            'partner_id': cls.partner_a.id,
-            'acc_type': 'bank',
-        })
-        cls.comp_bank_account1 = cls.env['res.partner.bank'].create({
-            'acc_number': "985632147",
-            'partner_id': cls.env.company.partner_id.id,
-            'acc_type': 'bank',
-        })
-        cls.comp_bank_account2 = cls.env['res.partner.bank'].create({
-            'acc_number': "741258963",
-            'partner_id': cls.env.company.partner_id.id,
-            'acc_type': 'bank',
         })
 
         # Customer invoices sharing the same batch.
@@ -583,11 +561,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
     def test_register_payment_multiple_batch_grouped_with_credit_note(self):
         ''' Do not batch payments if multiple partner_bank_id '''
         bank1 = self.env['res.partner.bank'].create({
-            'acc_number': 'BE43798822936101',
+            'account_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
         })
         bank2 = self.env['res.partner.bank'].create({
-            'acc_number': 'BE85812541345906',
+            'account_number': 'BE85812541345906',
             'partner_id': self.partner_a.id,
         })
 

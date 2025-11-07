@@ -16,7 +16,6 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/united_kingdom.html',
     'depends': [
         'account',
-        'base_iban',
         'base_vat',
     ],
     'auto_install': ['account'],

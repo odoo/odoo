@@ -401,7 +401,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         all_src_accounts = src_partners.bank_ids
 
         for src_account in all_src_accounts:
-            duplicate_account = dst_partner.bank_ids.filtered(lambda a: a.sanitized_acc_number == src_account.sanitized_acc_number)
+            duplicate_account = dst_partner.bank_ids.filtered(lambda a: a.sanitized_account_number == src_account.sanitized_account_number)
             if duplicate_account:
                 self._update_foreign_keys_generic('res.partner.bank', src_account, duplicate_account)
                 self._update_reference_fields_generic('res.partner.bank', src_account, duplicate_account)

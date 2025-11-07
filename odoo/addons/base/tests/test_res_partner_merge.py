@@ -17,9 +17,9 @@ class TestMergePartner(TransactionCase):
         self.partner3 = self.Partner.create({'name': 'Partner 3', 'email': 'partner3@example.com'})
 
         # Create bank accounts
-        self.bank1 = self.Bank.create({'acc_number': '12345', 'partner_id': self.partner1.id})
-        self.bank2 = self.Bank.create({'acc_number': '54321', 'partner_id': self.partner2.id})
-        self.bank3 = self.Bank.create({'acc_number': '12345', 'partner_id': self.partner3.id})  # Duplicate account number
+        self.bank1 = self.Bank.create({'account_number': '12345', 'partner_id': self.partner1.id})
+        self.bank2 = self.Bank.create({'account_number': '54321', 'partner_id': self.partner2.id})
+        self.bank3 = self.Bank.create({'account_number': '12345', 'partner_id': self.partner3.id})  # Duplicate account number
 
         # Create references
         self.attachment1 = self.env['ir.attachment'].create({
@@ -76,8 +76,8 @@ class TestMergePartner(TransactionCase):
         self.assertFalse(src_partners.exists(), "Source partners should be deleted after merge")
         self.assertTrue(self.partner2.exists(), "Destination partner should exist after merge")
         self.assertRecordValues(self.partner2.bank_ids, [
-            {'acc_number': '12345'},
-            {'acc_number': '54321'},
+            {'account_number': '12345'},
+            {'account_number': '54321'},
         ])
         self.assertEqual(self.attachment_bank1.res_id, self.bank1.id, "Bank attachment should remain linked to the correct bank account")
         self.assertEqual(self.attachment_bank3.res_id, self.bank1.id, "Bank attachment should be reassigned to the correct bank account")
@@ -143,8 +143,8 @@ class TestMergePartner(TransactionCase):
         self.assertFalse(src_partners.exists(), "Source partners should be deleted after merge")
         self.assertTrue(self.partner2.exists(), "Destination partner should exist after merge")
         self.assertRecordValues(self.partner2.bank_ids, [
-            {'acc_number': '12345'},
-            {'acc_number': '54321'},
+            {'account_number': '12345'},
+            {'account_number': '54321'},
         ])
         self.assertEqual(self.attachment_bank1.res_id, self.bank1.id, "Bank attachment should remain linked to the correct bank account")
         self.assertEqual(self.attachment_bank3.res_id, self.bank1.id, "Bank attachment should be reassigned to the correct bank account")

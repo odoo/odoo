@@ -3,6 +3,31 @@ from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')
+class TestSearch(TransactionCase):
+    def test_search_active(self):
+        """
+        test that a custom field x_active on a model with the standard active
+        field does not interfere with the standard behaviour
+        """
+        model = self.env['test_orm.related_bar']
+        self.env['ir.model.fields'].create({
+            'name': 'x_active',
+            'model_id': self.env.ref('test_orm.model_test_orm_related_bar').id,
+            'ttype': 'boolean',
+        })
+        self.assertEqual('active', model._active_name)
+        credit_communal = model.create({'name': 'Crédit Communal', 'x_active': False, 'active': True})
+        cc_search = model.search([('name', '=', 'Crédit Communal')])
+        self.assertIn(credit_communal, cc_search, "Search for active record with x_active set to False has failed")
+        credit_communal.write({
+            'active': False,
+            'x_active': True,
+        })
+        cc_search = model.search([('name', '=', 'Crédit Communal')])
+        self.assertNotIn(credit_communal, cc_search, "Search for inactive record with x_active set to True has failed")
+
+
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubqueries(TransactionCase):
     """ Test the subqueries made by search() with relational fields. """

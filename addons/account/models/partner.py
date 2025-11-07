@@ -342,7 +342,7 @@ class ResPartner(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     fiscal_country_group_codes = fields.Json(compute='_compute_fiscal_country_group_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
-    duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
+    duplicate_bank_partner_ids = fields.Many2many('res.partner', compute='_compute_duplicate_bank_partner_ids')
 
     global_location_number = fields.Char(string="GLN", help="Global Location Number")
 
@@ -1038,6 +1038,11 @@ class ResPartner(models.Model):
                     placeholder = _("%s, or not applicable", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
+
+    @api.depends('bank_ids.duplicate_bank_partner_ids')
+    def _compute_duplicate_bank_partner_ids(self):
+        for partner in self:
+            partner.duplicate_bank_partner_ids = partner.bank_ids.duplicate_bank_partner_ids
 
     @api.depends('country_id')
     def _compute_company_registry_placeholder(self):

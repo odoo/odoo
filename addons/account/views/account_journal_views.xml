@@ -107,7 +107,7 @@
                                     <group name="bank_account_number" invisible="type != 'bank'">
                                         <field name="company_partner_id" invisible="1"/>
                                         <field name="bank_account_id" string="Bank Account Number" context="{'default_partner_id': company_partner_id}"/>
-                                        <field name="bank_id" invisible="not bank_account_id"/>
+                                        <field name="bank_bic" invisible="not bank_account_id"/>
                                         <field name="bank_statements_source" widget="radio" required="type == 'bank'"  groups="account.group_account_basic"/>
                                     </group>
                                     <group name="bank_source" invisible="type != 'credit'">

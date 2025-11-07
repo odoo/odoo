@@ -33,9 +33,6 @@ With this module you will have:
     'data': [
         'data/account.account.tag.csv',
         'data/account_report_diot.xml',
-        'data/res_bank_data.xml',
-        'views/partner_view.xml',
-        'views/res_bank_view.xml',
         'views/account_views.xml',
         'views/account_tax_view.xml',
         'views/res_config_settings_views.xml',

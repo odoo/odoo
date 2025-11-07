@@ -46,12 +46,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         address_node = super()._get_address_node(vals)
         partner = vals['partner']
 
-        if partner._name == 'res.bank':
-            state = partner.state
-        else:
-            state = partner.state_id
-
-        if state:
+        if state := partner.state_id:
             address_node['cbc:CountrySubentity']['_text'] = partner.country_code + '-' + state.code
 
             # Romania requires the CityName to be in the format of "SECTORX" if the address state is in Bucharest.

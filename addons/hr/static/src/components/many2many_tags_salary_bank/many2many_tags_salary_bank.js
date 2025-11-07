@@ -60,7 +60,7 @@ export const fieldMany2ManyTagsSalaryBank = {
             { options, attrs, string, placeholder },
             dynamicInfo
         );
-        props.nameCreateField = "acc_number";
+        props.nameCreateField = "account_number";
         return props;
     },
 };

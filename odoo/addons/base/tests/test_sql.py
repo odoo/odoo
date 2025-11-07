@@ -198,31 +198,31 @@ class TestSqlTools(TransactionCase):
 
     def test_add_constraint(self):
         definition = "CHECK (name !~ '%')"
-        sql.add_constraint(self.env.cr, 'res_bank', 'test_constraint_dummy', definition)
+        sql.add_constraint(self.env.cr, 'res_partner', 'test_constraint_dummy', definition)
 
         # ensure the constraint with % works and it's in the DB
         with self.assertRaises(CheckViolation), mute_logger('odoo.sql_db'):
-            self.env['res.bank'].create({'name': r'10% bank'})
+            self.env['res.partner'].create({'name': r'10% partner'})
 
         # ensure the definitions match
-        db_definition = sql.constraint_definition(self.env.cr, 'res_bank', 'test_constraint_dummy')
+        db_definition = sql.constraint_definition(self.env.cr, 'res_partner', 'test_constraint_dummy')
         self.assertEqual(db_definition, definition)
 
     def test_add_index(self):
         definition = "(name, id)"
-        sql.add_index(self.env.cr, 'res_bank_test_name', 'res_bank', definition, unique=False)
+        sql.add_index(self.env.cr, 'res_partner_test_name', 'res_partner', definition, unique=False)
 
         # check the definition
-        db_definition, db_comment = sql.index_definition(self.env.cr, 'res_bank_test_name')
+        db_definition, db_comment = sql.index_definition(self.env.cr, 'res_partner_test_name')
         self.assertIn(definition, db_definition)
         self.assertIs(db_comment, None)
 
     def test_add_index_escape(self):
         definition = "(id) WHERE name ~ '%'"
         comment = r'some%comment'
-        sql.add_index(self.env.cr, 'res_bank_test_percent_escape', 'res_bank', definition, unique=False, comment=comment)
+        sql.add_index(self.env.cr, 'res_partner_test_percent_escape', 'res_partner', definition, unique=False, comment=comment)
 
         # ensure the definitions match (definition is the comment if it is set)
-        db_definition, db_comment = sql.index_definition(self.env.cr, 'res_bank_test_percent_escape')
+        db_definition, db_comment = sql.index_definition(self.env.cr, 'res_partner_test_percent_escape')
         self.assertIn('WHERE', db_definition)  # the definition is rewritten by postgres
         self.assertEqual(db_comment, comment)

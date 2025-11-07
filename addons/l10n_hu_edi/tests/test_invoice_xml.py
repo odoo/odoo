@@ -17,20 +17,20 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
 
             cls.company_data['company'].write({
                 'bank_ids': [Command.create({
-                    'acc_number': 'HU0123456789',
+                    'account_number': 'HU0123456789',
                 })]
             })
             cls.partner_company.write({
                 'bank_ids': [Command.create({
-                    'acc_number': 'HU6666666666',
+                    'account_number': 'HU6666666666',
                 })]
             })
             cls.bank_company = cls.env['res.partner.bank'].create({
-                'acc_number': 'HU7357735773',
+                'account_number': 'HU7357735773',
                 'partner_id': cls.company_data['company'].partner_id.id,
             })
             cls.bank_partner = cls.env['res.partner.bank'].create({
-                'acc_number': 'HU9487189480',
+                'account_number': 'HU9487189480',
                 'partner_id': cls.partner_company.id,
             })
 

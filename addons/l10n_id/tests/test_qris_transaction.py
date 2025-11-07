@@ -39,7 +39,7 @@ class TestQrisTransaction(AccountTestInvoicingCommon):
         }
 
         cls.acc_qris_id = cls.env['res.partner.bank'].create({
-            'acc_number': '123456789012345678',
+            'account_number': '123456789012345678',
             'partner_id': cls.company_data['company'].partner_id.id,
             'l10n_id_qris_api_key': 'apikey',
             'l10n_id_qris_mid': 'mid',

@@ -922,13 +922,10 @@ class TestExpenses(TestExpenseCommon):
         """
         self.env.ref('base.EUR').active = True
         bank_journal = self.company_data['default_journal_bank']
-        bank = self.env['res.bank'].create({
-            'name': 'BNP Paribas',
-            'bic': 'GEBABEBB',
-        })
         bank_journal.write({
-            'bank_id': bank.id,
-            'bank_acc_number': 'BE48363523682327',
+            'bank_name': 'BNP Paribas',
+            'bank_bic': 'GEBABEBB',
+            'bank_account_number': 'BE48363523682327',
             'currency_id': self.env.ref('base.EUR').id,
         })
 

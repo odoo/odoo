@@ -19,7 +19,7 @@ class TestUBLSG(TestUBLCommon):
             'phone': '+65 9123 4567',
             'email': 'info@outlook.sg',
             'country_id': cls.env.ref('base.sg').id,
-            'bank_ids': [(0, 0, {'acc_number': '000099998B57'})],
+            'bank_ids': [(0, 0, {'account_number': '000099998B57'})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'ubl_sg',
         })
@@ -32,7 +32,7 @@ class TestUBLSG(TestUBLCommon):
             'vat': 'S16FC0121D',
             'phone': '+65 9123 4589',
             'country_id': cls.env.ref('base.sg').id,
-            'bank_ids': [(0, 0, {'acc_number': '93999574162167'})],
+            'bank_ids': [(0, 0, {'account_number': '93999574162167'})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'ubl_sg',
         })
