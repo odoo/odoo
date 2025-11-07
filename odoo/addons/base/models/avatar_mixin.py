@@ -8,15 +8,12 @@ from odoo.tools import html_escape, file_open
 from odoo.tools.misc import limited_field_access_token
 
 
-def get_hsl_from_seed(seed):
+def get_random_ui_color_from_seed(seed):
     hashed_seed = sha512(seed.encode()).hexdigest()
-    # full range of colors, in degree
-    hue = int(hashed_seed[0:2], 16) * 360 / 255
-    # colorful result but not too flashy, in percent
-    sat = int(hashed_seed[2:4], 16) * ((70 - 40) / 255) + 40
-    # not too bright and not too dark, in percent
-    lig = 45
-    return f'hsl({hue:.0f}, {sat:.0f}%, {lig:.0f}%)'
+    # Colors from COLOR_XL[] in core/colors/colors.js
+    avatar_bg_colors = ["#4EA7F2", "#3188E6", "#056BD9", "#155193", "#A76DBC", "#7F4295", "#6D2387", "#4F1565", "#EA6175", "#CE4257", "#982738", "#791B29", "#43C5B1", "#00A78D", "#0E8270", "#105F53", "#F4A261", "#F48935", "#BE5D10", "#7D380D", "#8481DD", "#5752D1", "#3A3580", "#26235F", "#A4A8B6", "#7E8290", "#545B70", "#3F4250", "#FFD86D", "#FFBC2C", "#C08A16", "#936A12"]
+    num = int(hashed_seed, 16)
+    return avatar_bg_colors[num % len(avatar_bg_colors)]
 
 
 class AvatarMixin(models.AbstractModel):
@@ -64,7 +61,7 @@ class AvatarMixin(models.AbstractModel):
 
     def _avatar_generate_svg(self):
         initial = html_escape(self[self._avatar_name_field][0].upper())
-        bgcolor = get_hsl_from_seed(self[self._avatar_name_field] + str(self.create_date.timestamp() if self.create_date else ""))
+        bgcolor = get_random_ui_color_from_seed(self[self._avatar_name_field] + str(self.create_date.timestamp() if self.create_date else ""))
         return b64encode((
             "<?xml version='1.0' encoding='UTF-8' ?>"
             "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
