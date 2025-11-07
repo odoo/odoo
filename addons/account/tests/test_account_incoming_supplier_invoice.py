@@ -589,6 +589,18 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             },
         )
 
+    def test_25_mail_alias_gifs(self):
+        self.assert_attachment_import(
+            origin='mail_alias',
+            attachments_vals=[self.gif1_vals, self.gif2_vals],
+            expected_invoices={
+                1: {
+                    'gif1.gif': {'on_message': True},
+                    'gif2.gif': {'on_message': True},
+                },
+            },
+        )
+
     def test_30_chatter_upload_pdf_and_xml(self):
         self.assert_attachment_import(
             origin='chatter_upload',
@@ -922,7 +934,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                     'gif1.gif': {'on_message': True},
                     'gif2.gif': {'on_message': True},
                     'invoice1.pdf': {'on_invoice': True, 'on_message': True},
-                    'invoice1.xml': {'is_decoded': True, 'is_new': True, 'on_message': True}
+                    'invoice1.xml': {'is_decoded': True, 'is_new': True, 'on_message': True},
                 },
                 2: {
                     'invoice2.pdf': {'on_invoice': True, 'on_message': True},
