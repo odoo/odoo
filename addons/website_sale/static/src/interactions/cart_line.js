@@ -1,3 +1,4 @@
+import { markup } from '@odoo/owl';
 import { Interaction } from '@web/public/interaction';
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
@@ -61,6 +62,8 @@ export class CartLine extends Interaction {
             product_id: parseInt(input.dataset.productId),
             quantity: quantity,
         }));
+
+        data['website_sale.cart_lines'] = markup(data['website_sale.cart_lines']);
 
         if (!data.cart_quantity) {
             // Ensure the last cart removal is recorded.

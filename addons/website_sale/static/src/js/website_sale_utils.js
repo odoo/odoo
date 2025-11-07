@@ -1,7 +1,6 @@
-import { markup } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { _t } from '@web/core/l10n/translation';
-import { setElementContent } from '@web/core/utils/html';
+import { createElementWithContent } from '@web/core/utils/html';
 
 /**
  * Updates both navbar cart
@@ -28,15 +27,10 @@ function updateCartNavBar(data) {
     }
 
     const cartLines = document.querySelectorAll('.js_cart_lines');
-    cartLines[0]?.insertAdjacentHTML('beforebegin', markup(data['website_sale.cart_lines']));
+    cartLines[0]?.insertAdjacentHTML('beforebegin', data['website_sale.cart_lines']);
     cartLines.forEach(el => el.remove());
 
     updateCartSummary(data);
-
-    // Adjust the cart's left column width to accommodate the cart summary (right column). The left
-    // column of an empty cart initially takes the full width, but adding products (e.g. via quick
-    // reorder) enables the cart summary on the right.
-    document.querySelector('.oe_cart').classList.toggle('col-lg-7', !!data.cart_quantity);
 
     if (data.cart_ready) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
@@ -54,7 +48,10 @@ function updateCartNavBar(data) {
 function updateCartSummary(data) {
     if (data['website_sale.shorter_cart_summary']) {
         const shorterCartSummaryEl = document.querySelector('.o_wsale_shorter_cart_summary');
-        setElementContent(shorterCartSummaryEl, markup(data['website_sale.shorter_cart_summary']));
+        const newShorterCartSummaryEl = createElementWithContent(
+            'div', data['website_sale.shorter_cart_summary'],
+        );
+        shorterCartSummaryEl.replaceWith(...newShorterCartSummaryEl.childNodes);
     }
     if (data['website_sale.total']) {
         document.querySelectorAll('div.o_cart_total').forEach(

@@ -196,20 +196,15 @@
                             <t t-call="website_sale.wizard_checkout"/>
                         </div>
                         <!-- Checkout Page Content | Left Column -->
-                        <div
-                            t-attf-class="oe_clear_stucture oe_cart col-12 #{'col-lg-7' if website_sale_order and website_sale_order.website_order_line else ''}"
-                        >
+                        <div t-attf-class="oe_clear_stucture oe_cart col">
                             <t t-out="0"/>
                         </div>
 
                         <!-- Short Checkout Summary displayed on /cart | Right Column -->
-                        <div
+                        <t
                             t-if="show_shorter_cart_summary"
-                            class="o_wsale_shorter_cart_summary offset-xxl-1 col-lg-5 col-xxl-4"
-                        >
-                            <!-- Parent element needed for proper JS side rendering -->
-                            <t t-call="website_sale.shorter_cart_summary"/>
-                        </div>
+                            t-call="website_sale.shorter_cart_summary"
+                        />
                         <!-- Full Checkout Summary displayed on all checkout pages | Right Column -->
                         <div
                             t-else=""
@@ -303,12 +298,20 @@
 
     <template id="website_sale.shorter_cart_summary">
         <div
-            t-if="website_sale_order and website_sale_order.website_order_line"
-            class="o_total_card card o_wsale_sticky_object sticky-lg-top"
+            t-attf-class="o_wsale_shorter_cart_summary #{
+                'offset-xxl-1 col-lg-5 col-xxl-4'
+                if website_sale_order and website_sale_order.website_order_line
+                else ''
+            }"
         >
-            <div class="card-body p-0 p-lg-4" name="o_cart_total_card_body">
-                <t t-call="website_sale.total" _cart_total_classes.f="o_checkout_cart_total pt-2 pt-lg-0"/>
-                <t t-call="website_sale.navigation_buttons"/>
+            <div
+                t-if="website_sale_order and website_sale_order.website_order_line"
+                class="o_total_card card o_wsale_sticky_object sticky-lg-top"
+            >
+                <div class="card-body p-0 p-lg-4" name="o_cart_total_card_body">
+                    <t t-call="website_sale.total" _cart_total_classes.f="o_checkout_cart_total pt-2 pt-lg-0"/>
+                    <t t-call="website_sale.navigation_buttons"/>
+                </div>
             </div>
         </div>
     </template>
