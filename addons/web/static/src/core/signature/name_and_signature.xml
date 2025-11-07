@@ -90,7 +90,7 @@
                         <div t-if="state.signMode === 'load'" class="o_web_sign_load_file col-auto">
                             <button type="button" id="loadFileXml" t-on-click="uploadFile"
                                 class="btn btn-link fa fa-upload" />
-                            <input t-ref="signInputLoad" type="file" role="button" name="files[]" class="d-none" t-on-change="onChangeSignLoadInput"/>
+                            <input t-ref="signInputLoad" type="file" accept="image/png, image/jpeg" role="button" name="files[]" class="d-none" t-on-change="onChangeSignLoadInput"/>
                         </div>
                     </div>
                 </div>
