@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A Portuguese company sees a product used on Portuguese documents by its name there, which it cannot change -->
+    <record id="product_template_form_view_inherit_pt" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.pt</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h1//field[@name='name']" position="attributes">
+                <attribute name="readonly">l10n_pt_name_locked</attribute>
+            </xpath>
+            <xpath expr="//h1//field[@name='name']" position="after">
+                <field name="l10n_pt_name_locked" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_view_form_normalized_inherit_pt" model="ir.ui.view">
+        <field name="name">product.product.view.form.normalized.inherit.pt</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="readonly">l10n_pt_name_locked</attribute>
+            </field>
+            <field name="name" position="after">
+                <field name="l10n_pt_name_locked" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Products are also found by their name on Portuguese documents -->
+    <record id="product_template_search_view_inherit_pt" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.pt</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="filter_domain">['|', '|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self), ('name', 'ilike', self), ('l10n_pt_product_name', 'ilike', self), ('barcode', 'ilike', self)]</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_search_form_view_inherit_pt" model="ir.ui.view">
+        <field name="name">product.product.search.inherit.pt</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="filter_domain">['|', '|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('l10n_pt_product_name', 'ilike', self), ('barcode', 'ilike', self)]</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
