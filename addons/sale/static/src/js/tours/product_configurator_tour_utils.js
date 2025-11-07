@@ -100,7 +100,7 @@ function selectAttribute(productName, attributeName, attributeValue, attributeTy
         case 'multi':
             return {
                 content: content,
-                trigger: `${ptalSelector}:has(label:contains(/^${attributeValue}$/)) input[type="checkbox"]`,
+                trigger: `${ptalSelector}:has(label:text(${attributeValue})) input[type="checkbox"]`,
                 run: "click",
             };
         case 'pills':
