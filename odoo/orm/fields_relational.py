@@ -64,6 +64,12 @@ class _Relational(Field[BaseModel]):
                     # a lot of missing records, just fetch that field
                     remaining = records[len(vals):]
                     remaining.fetch([self.name])
+                    # fetch does not raise MissingError, check value
+                    if record_id not in field_cache:
+                        raise MissingError("\n".join([
+                            env._("Record does not exist or has been deleted."),
+                            env._("(Record: %(record)s, User: %(user)s)", record=record_id, user=env.uid),
+                        ])) from None
                 else:
                     remaining = records.__class__(env, (record_id,), records._prefetch_ids)
                     super().__get__(remaining, owner)
