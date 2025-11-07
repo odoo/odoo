@@ -9,18 +9,19 @@ import { usePopover } from "@web/core/popover/popover_hook";
 registerThreadAction("create-lead", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: LivechatCommandDialog,
-    actionPanelComponentProps: ({ action }) => ({
+    actionPanelComponentProps: ({ action, thread }) => ({
         close: () => action.actionPanelClose(),
         commandName: "lead",
         placeholderText: _t("e.g. Product pricing"),
+        thread,
         title: _t("Create Lead"),
         icon: "fa fa-handshake-o",
     }),
     actionPanelOpen({ owner, thread }) {
-        this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
-            thread,
-            ...this.actionPanelComponentProps,
-        });
+        this.popover?.open(
+            owner.root.el.querySelector(`[name="${this.id}"]`),
+            this.actionPanelComponentProps
+        );
     },
     actionPanelOuterClass: "bg-100",
     condition: false, // managed by ThreadAction patch
