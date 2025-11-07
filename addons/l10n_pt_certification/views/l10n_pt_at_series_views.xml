@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_l10n_pt_at_series_form" model="ir.ui.view">
+        <field name="name">at.series.form</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="arch" type="xml">
+            <form string="Autoridade Tributária (AT) Series">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" placeholder="Model Name"/>
+                        <h1><field name="name" placeholder="e.g. 2025"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='training_series'/>
+                            <field name='date_end'/>
+                            <field name='active'/>
+                        </group>
+                        <group>
+                            <field name="sale_journal_id"/>
+                            <field name="payment_journal_id"/>
+                            <field name="company_exclusive_series"/>
+                            <field name="company_id" invisible="not company_exclusive_series"/>
+                        </group>
+                    </group>
+                    <field name='at_series_line_ids'>
+                        <list editable="bottom" string="Series per Document Type">
+                            <field name='type'/>
+                            <field name='prefix'/>
+                            <field name='at_code'/>
+                            <field name='document_identifier'/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_pt_at_series_tree" model="ir.ui.view">
+        <field name="name">at.series.tree</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="arch" type="xml">
+            <list string="Autoridade Tributária (AT) Series">
+                <field name='name'/>
+                <field name='training_series' widget="boolean_toggle"/>
+                <field name='date_end'/>
+                <field name="at_series_line_ids" widget="many2many_tags"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="view_l10n_pt_at_series_search" model="ir.ui.view">
+        <field name="name">at.series.search.view</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="arch" type="xml">
+            <search string="Autoridade Tributária (AT) Series">
+                <field name="name"/>
+                <filter string="Training Series" name="training_series" domain="[('training_series','=',True)]"/>
+                <filter string="Non-Training Series" name="non_training_series" domain="[('training_series','=',False)]"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active series"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]" help="Show archived series"/>
+                <group string="Group By">
+                    <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_open_l10n_pt_at_series_series_list_view" model="ir.actions.act_window">
+        <field name="name">Autoridade Tributária (AT) Series</field>
+        <field name="res_model">l10n_pt.at.series</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="l10n_pt_certification.view_l10n_pt_at_series_tree"/>
+        <field name="search_view_id" ref="view_l10n_pt_at_series_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+</odoo>

@@ -1551,6 +1551,7 @@
                                         <field name="invoice_incoterm_id" options="{'placeholder_field': 'invoice_incoterm_placeholder'}" invisible="move_type in ('out_receipt', 'in_receipt')"/>
                                         <field name="incoterm_location" invisible="move_type in ('out_receipt', 'in_receipt')"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
+                                        <field name="inalterable_hash" groups="base.group_no_one"/>
                                         <field name="secured" groups="account.group_account_secured,base.group_no_one"/>
                                         <field name="preferred_payment_method_line_id"
                                                string="Payment Method"
@@ -1591,6 +1592,7 @@
                                     </group>
                                     <group>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
+                                        <field name="inalterable_hash" groups="base.group_no_one"/>
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>
                                     </group>
                                 </group>
