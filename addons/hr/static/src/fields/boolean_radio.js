@@ -11,14 +11,22 @@ export class BooleanRadio extends RadioField {
     };
     setup() {
         super.setup(...arguments);
-        onMounted(this.moveElement);
+        onMounted(() => {
+            this.updateLabels();
+        });
     }
 
-    moveElement() {
-        document.querySelectorAll("[data-value='true']")[0]
-            .labels[0].textContent = document.getElementById(this.props.yes_label_element_id).innerText;
-        document.querySelectorAll("[data-value='false']")[0]
-            .labels[0].textContent = document.getElementById(this.props.no_label_element_id).innerText;
+    updateLabels() {
+        const trueLabel = document.getElementById(
+            this.props.yes_label_element_id
+        ).innerText;
+        const falseLabel = document.getElementById(
+            this.props.no_label_element_id
+        ).innerText;
+        document.getElementById(`${this.id}_true`).labels[0].textContent =
+            trueLabel;
+        document.getElementById(`${this.id}_false`).labels[0].textContent =
+            falseLabel;
     }
 
     get items() {
@@ -27,7 +35,8 @@ export class BooleanRadio extends RadioField {
     }
 
     get value() {
-        if (this.type === "boolean") return this.props.record.data[this.props.name].toString();
+        if (this.type === "boolean")
+            return this.props.record.data[this.props.name].toString();
         return super.items;
     }
 
@@ -35,10 +44,12 @@ export class BooleanRadio extends RadioField {
      * @param {any} value
      */
     onChange(value) {
-        if (this.type === "boolean") this.props.record.update({ [this.props.name]: value[0] === "true" });
+        if (this.type === "boolean")
+            this.props.record.update({
+                [this.props.name]: value[0] === "true",
+            });
         super.onChange();
     }
-
 }
 
 export const booleanRadio = {
@@ -46,6 +57,7 @@ export const booleanRadio = {
     component: BooleanRadio,
     displayName: _t("Boolean display as radio field with translatable labels"),
     supportedOptions: [
+        ...radioField.supportedOptions,
         {
             label: _t("True association"),
             name: "yes_label_element_id",
@@ -62,6 +74,7 @@ export const booleanRadio = {
     supportedTypes: ["boolean"],
     extractProps({ options }, dynamicInfo) {
         return {
+            ...radioField.extractProps(...arguments),
             readonly: dynamicInfo.readonly,
             yes_label_element_id: options.yes_label_element_id,
             no_label_element_id: options.no_label_element_id,
