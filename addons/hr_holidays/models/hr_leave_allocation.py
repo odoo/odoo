@@ -291,7 +291,7 @@ class HrLeaveAllocation(models.Model):
         if self.allocation_type == "accrual" and self.accrual_plan_id:
             return self.accrual_plan_id.sudo().added_value_type
         elif self.allocation_type == "regular":
-            return self.holiday_status_id.request_unit
+            return self.holiday_status_id.unit_of_measure
         else:
             return "day"
 

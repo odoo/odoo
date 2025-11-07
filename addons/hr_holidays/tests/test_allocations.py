@@ -62,6 +62,11 @@ class TestAllocations(TestHrHolidaysCommon):
                     (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
                 ]
         })
+        cls.leave_type_diff_gran = cls.env['hr.leave.type'].create({
+            'name': 'TO with hours unit of measure and day request unit',
+            'unit_of_measure': 'hour',
+            'request_unit': 'day',
+        })
 
     def test_allocation_whole_company(self):
         company_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
@@ -499,6 +504,44 @@ class TestAllocations(TestHrHolidaysCommon):
                 },
                 "The name_validity field was not set correctly."
             )
+
+    def test_different_granularity(self):
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': '1 day regular allocation in hours',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type_diff_gran.id,
+            'date_from': date(2025, 10, 1),
+        })
+
+        self.assertEqual(allocation.type_request_unit, 'hour')
+        allocation.action_approve()
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type_diff_gran.id,
+            'request_date_from': date(2025, 10, 31),
+            'request_date_to': date(2025, 10, 31),
+        })
+        leave.action_approve()
+        self.assertEqual(leave.leave_type_request_unit, 'day')
+
+    def test_different_granularity_insufficient_hours(self):
+        allocation_insufficient_hours = self.env['hr.leave.allocation'].create({
+            'name': 'Allocation less than a day',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type_diff_gran.id,
+            'date_from': date(2025, 10, 1),
+            'number_of_days': 3.0 / 8.0,  # the employee's day is 8 hours
+        })
+        self.assertEqual(allocation_insufficient_hours.type_request_unit, 'hour')
+        allocation_insufficient_hours.action_approve()
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].create({
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type_diff_gran.id,
+            'request_date_from': date(2025, 11, 10),
+            'request_date_to': date(2025, 11, 10),
+            })
 
     def test_leave_allocation_by_removing_employee(self):
         """
