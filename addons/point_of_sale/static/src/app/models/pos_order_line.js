@@ -340,6 +340,7 @@ export class PosOrderline extends PosOrderlineAccounting {
             (Boolean(orderline.getCustomerNote()) === false &&
                 Boolean(this.getCustomerNote()) === false) ||
             orderline.getCustomerNote() === this.getCustomerNote();
+        const getLotName = (line) => line.pack_lot_ids[0]?.lot_name;
 
         // only orderlines of the same product can be merged
         return (
@@ -349,7 +350,7 @@ export class PosOrderline extends PosOrderlineAccounting {
             // don't merge discounted orderlines
             this.getDiscount() === 0 &&
             this.currency.isZero(price - order_line_price - orderline.getPriceExtra()) &&
-            !this.isLotTracked() &&
+            (!this.isLotTracked() || getLotName(this) === getLotName(orderline)) &&
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&
             !this.refunded_orderline_id &&
@@ -374,8 +375,13 @@ export class PosOrderline extends PosOrderlineAccounting {
     merge(orderline) {
         this.order_id.assertEditable();
         this.setQuantity(this.getQuantity() + orderline.getQuantity());
+        // Merge pack_lot_ids uniquely to avoid duplicates
+        const existingLotNames = new Set(this.pack_lot_ids.map((l) => l.lot_name));
+        const uniqueNewLots = orderline.pack_lot_ids.filter(
+            (lot) => !existingLotNames.has(lot.lot_name)
+        );
         this.update({
-            pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
+            pack_lot_ids: [["link", ...uniqueNewLots]],
         });
     }
 
