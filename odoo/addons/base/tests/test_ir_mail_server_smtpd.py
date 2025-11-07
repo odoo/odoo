@@ -72,7 +72,7 @@ class Certificate:
 # fail fast for timeout errors
 @patch('odoo.addons.base.models.ir_mail_server.SMTP_TIMEOUT', .1)
 # prevent the CLI from interfering with the tests
-@patch.dict(config.options, {'smtp_server': ''})
+@TransactionCaseWithUserDemo.test_config(smtp_server='')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
     @classmethod

@@ -529,6 +529,21 @@ class BaseCase(case.TestCase):
             if popped_request is not request:
                 raise Exception('Wrong request stack cleanup.')
 
+    @staticmethod
+    @contextmanager
+    def test_config(options=None, /, **kwargs):
+        """ Patch the config with new options. """
+        if options is None:
+            options = {}
+        options.update(**kwargs)
+
+        patcher = patch.object(config, 'options', config.options.new_child(options))
+        patcher.start()
+        try:
+            yield options
+        finally:
+            patcher.stop()
+
     @contextmanager
     def _raisesContext(self, method, expected_exception, *args, **kwargs):
         """ Context manager that clears the environment upon failure. """
