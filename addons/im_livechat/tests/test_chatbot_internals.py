@@ -268,6 +268,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "type": "discuss.channel/joined",
                         "payload": {
                             "channel_id": discuss_channel.id,
+                            "invite_to_rtc_call": False,
                             "data": channel_data_join,
                             "invited_by_user_id": self.env.user.id,
                         },

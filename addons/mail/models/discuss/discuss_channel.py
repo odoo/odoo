@@ -632,6 +632,7 @@ class DiscussChannel(models.Model):
             for member in new_members:
                 payload = {
                     "channel_id": member.channel_id.id,
+                    "invite_to_rtc_call": invite_to_rtc_call,
                     "data": Store(bus_channel=member._bus_channel())
                     .add(member.channel_id)
                     .add(member, "unpin_dt")
