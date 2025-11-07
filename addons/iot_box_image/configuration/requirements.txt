@@ -1,6 +1,6 @@
 # The following requirements are needed only on Raspberry Pi IoT:
 gatt; sys_platform == "linux" and "rpi" in platform_release
-/home/pi/odoo/addons/iot_box_image/configuration/aiortc-1.4.0-py3-none-any.whl; sys_platform == "linux" and "rpi" in platform_release
+/home/pi/odoo/addons/iot_box_image/configuration/aiortc-1.4.0-py3-none-any.whl; sys_platform == "linux" and "rpi" in platform_release and python_version <= '3.11'
 
 # The following requirements are needed only on Windows Virtual IoT:
 aiortc; sys_platform == "win32"
