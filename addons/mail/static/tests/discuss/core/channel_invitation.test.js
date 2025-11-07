@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     insertText,
+    mockPermissionsPrompt,
     openDiscuss,
     setupChatHub,
     start,
@@ -222,4 +223,14 @@ test("invite user to self chat opens DM chat with user", async () => {
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
     await click("button:contains('Go to Conversation'):enabled");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "TestPartner" });
+});
+
+test("invite input not focused when there is an active dialog", async () => {
+    await startServer();
+    mockPermissionsPrompt();
+    await start();
+    await openDiscuss();
+    await click("button[title='New Meeting']");
+    await contains(".o-discuss-ChannelInvitation-search");
+    await contains("button:focus", { text: "Use Camera" });
 });

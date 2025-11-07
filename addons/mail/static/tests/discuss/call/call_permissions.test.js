@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     mockGetMedia,
+    mockPermissionsPrompt,
     openDiscuss,
     start,
     startServer,
@@ -10,24 +11,8 @@ import {
 
 import { describe, test } from "@odoo/hoot";
 
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-
 describe.current.tags("desktop");
 defineMailModels();
-
-function mockPermissionsPrompt() {
-    patchWithCleanup(browser.navigator.permissions, {
-        async query() {
-            return {
-                state: "prompt",
-                addEventListener: () => {},
-                removeEventListener: () => {},
-                onchange: null,
-            };
-        },
-    });
-}
 
 test("Starting a video call asks for permissions", async () => {
     const pyEnv = await startServer();

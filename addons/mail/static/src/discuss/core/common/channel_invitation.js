@@ -1,7 +1,15 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -40,6 +48,7 @@ export class ChannelInvitation extends Component {
             selectedPartners: [],
             sentEmails: new Set(),
         });
+        this.focusInviteInput = this.focusInviteInput.bind(this);
         this.debouncedFetchPartnersToInvite = useDebounced(
             this.fetchPartnersToInvite.bind(this),
             250
@@ -50,14 +59,16 @@ export class ChannelInvitation extends Component {
             }
         });
         onMounted(() => {
-            if (this.store.self_user && this.props.channel) {
-                this.inputRef.el.focus();
-            }
+            this.focusInviteInput();
+            this.ui.bus.addEventListener("active-element-changed", this.focusInviteInput);
+        });
+        onWillUnmount(() => {
+            this.ui.bus.removeEventListener("active-element-changed", this.focusInviteInput);
         });
         useEffect(
             () => {
                 if (this.props.autofocus) {
-                    this.inputRef.el?.focus();
+                    this.focusInviteInput();
                 }
             },
             () => [this.props.autofocus]
@@ -115,6 +126,18 @@ export class ChannelInvitation extends Component {
             return _t("Invite people or email");
         }
         return _t("Search people to invite");
+    }
+
+    focusInviteInput() {
+        const inputEl = this.store.self_user && this.props.channel && this.inputRef.el;
+        if (!inputEl) {
+            return;
+        }
+        const { activeElement } = this.ui;
+        if (activeElement && activeElement !== document && !activeElement.contains(inputEl)) {
+            return;
+        }
+        inputEl.focus();
     }
 
     async fetchPartnersToInvite() {

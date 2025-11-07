@@ -992,3 +992,16 @@ export function patchVoiceMessageAudio() {
     });
     return res;
 }
+
+export function mockPermissionsPrompt() {
+    patchWithCleanup(browser.navigator.permissions, {
+        async query() {
+            return {
+                state: "prompt",
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                onchange: null,
+            };
+        },
+    });
+}
