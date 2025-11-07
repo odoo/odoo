@@ -130,12 +130,12 @@ export class CallPreview extends Component {
     get actions() {
         const cameraOnActionUpdated = {
             ...cameraOnAction,
-            name: () => (this.state.videoStream ? _t("Stop camera") : _t("Turn camera on")),
             isActive: () => this.state.videoStream,
+            name: ({ action }) => (action.isActive ? _t("Stop camera") : _t("Turn camera on")),
             onSelected: () => this.toggleCamera(),
             tags: (...args) => {
                 const tags = cameraOnAction.tags?.(...args) ?? [];
-                if (!args[0].action.isActive) {
+                if (!args[0].action.isActive && this.rtc.cameraPermission !== "granted") {
                     tags.push(ACTION_TAGS.DANGER);
                 }
                 return tags;

@@ -99,6 +99,11 @@ export class CallInvitation extends Component {
                         if (this.state.hasMicrophone) {
                             this.state.activateMicrophone++;
                         }
+                        if (this.state.showCameraPreview) {
+                            this.props.channel.self_member_id?.cancelInvitationTimeout();
+                        } else {
+                            this.props.channel.self_member_id?.startInvitationTimeout();
+                        }
                     },
                     tags: () => [ACTION_TAGS.CALL_LAYOUT],
                 },
@@ -117,13 +122,6 @@ export class CallInvitation extends Component {
 
     get inviter() {
         return this.props.channel.self_member_id?.rtc_inviting_session_id?.channel_member_id;
-    }
-
-    get incomingCallText() {
-        if (this.props.channel.channel_type === "chat" || !this.inviter) {
-            return _t("Incoming call");
-        }
-        return _t("Incoming call from %(inviter)s", { inviter: this.inviter.name });
     }
 
     /** @param {{ microphone?: boolean, camera?: boolean }} settings */

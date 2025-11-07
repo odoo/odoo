@@ -22,6 +22,7 @@ import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
@@ -762,6 +763,28 @@ test("automatically cancel incoming call after some time", async () => {
     await openDiscuss(channelId);
     await contains(".o-discuss-CallInvitation");
     await advanceTime(30_000);
+    await contains(".o-discuss-CallInvitation", { count: 0 });
+});
+
+test("Should not auto-cancel incoming call when camera preview is open", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [memberId] = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    const rtcSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: memberId,
+        channel_id: channelId,
+    });
+    pyEnv["discuss.channel.member"].write([memberId], { rtc_inviting_session_id: rtcSessionId });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-CallInvitation");
+    await advanceTime(ChannelMember.CANCEL_CALL_INVITE_DELAY - 5000);
+    await contains(".o-discuss-CallInvitation");
+    await click(".o-mail-ActionList-button[title='Show camera preview']");
+    await advanceTime(ChannelMember.CANCEL_CALL_INVITE_DELAY - 5000); // Call should not auto-cancel while preview is open
+    await contains(".o-discuss-CallInvitation");
+    await click(".o-mail-ActionList-button[title='Hide camera preview']");
+    await advanceTime(ChannelMember.CANCEL_CALL_INVITE_DELAY); // Timer restarts when the preview closes, and the call should auto-cancel after 30s.
     await contains(".o-discuss-CallInvitation", { count: 0 });
 });
 
