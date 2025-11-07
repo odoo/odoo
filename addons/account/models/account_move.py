@@ -6516,8 +6516,13 @@ class AccountMove(models.Model):
                 # so we also check tax_cash_basis_origin_move_id, which stays unchanged
                 # (we need both, as tax_cash_basis_origin_move_id did not exist in older versions).
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
-            if move.inalterable_hash:
+            if move.inalterable_hash and not move._can_reset_hashed_entry():
                 raise UserError(_('You cannot reset to draft a locked journal entry.'))
+
+    def _can_reset_hashed_entry(self):
+        """ Hook for the localizations whose flows reset a hashed entry to draft. A hashed entry is locked: never by default. """
+        self.ensure_one()
+        return False
 
     def button_hash(self):
         self._hash_moves(force_hash=True)
