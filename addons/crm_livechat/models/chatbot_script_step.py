@@ -57,9 +57,12 @@ class ChatbotScriptStep(models.Model):
         customer_values = self._chatbot_prepare_customer_values(
             discuss_channel, create_partner=False, update_partner=True)
         if self.env.user._is_public():
+            country = customer_values.get('country', False)
             create_values = {
                 'email_from': customer_values['email'],
                 'phone': customer_values['phone'],
+                'lang_id': customer_values["lang"].id,
+                'country_id': country.get('id', False) if country else False,
             }
         else:
             create_values = {"partner_id": self.env.user.partner_id.id}

@@ -67,12 +67,12 @@ class MailGuest(models.Model):
             return guest.sudo(False).with_context(guest=guest)
         return self.env['mail.guest']
 
-    def _get_or_create_guest(self, *, guest_name, country_code, timezone):
+    def _get_or_create_guest(self, *, guest_name, country_code, timezone, lang=None):
         if not (guest := self._get_guest_from_context()):
             guest = self.create(
                 {
                     "country_id": self.env["res.country"].search([("code", "=", country_code)]).id,
-                    "lang": get_lang(self.env).code,
+                    "lang": (lang if lang else get_lang(self.env)).code,
                     "name": guest_name,
                     "timezone": timezone,
                 }
