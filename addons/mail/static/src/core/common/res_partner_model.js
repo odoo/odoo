@@ -38,11 +38,6 @@ export class ResPartner extends Record {
     commercial_company_name;
     country_id = fields.One("res.country");
     debouncedSetImStatus;
-    displayName = fields.Attr(undefined, {
-        compute() {
-            return this._computeDisplayName();
-        },
-    });
     /** @type {string} */
     email;
     /**
@@ -96,6 +91,16 @@ export class ResPartner extends Record {
     previousPresencechannel;
     write_date = fields.Datetime();
 
+    /**
+     * @deprecated
+     *
+     * `store.menuThreads` uses this field to filter threads based on search
+     * terms. For each computation, the `menuThread` field is marked as needing a
+     * recompute, which can lead to excessive recursion—sometimes even exceeding the
+     * call stack size. This computation is simple enough that it doesn’t need a
+     * compute and has been replaced by a getter. To override the display name
+     * computation, override the displayName getter.
+     */
     _computeDisplayName() {
         return this.name;
     }
@@ -109,6 +114,10 @@ export class ResPartner extends Record {
             ...accessTokenParam,
             unique: this.write_date,
         });
+    }
+
+    get displayName() {
+        return this._computeDisplayName();
     }
 
     searchChat() {
