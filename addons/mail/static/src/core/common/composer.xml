@@ -40,7 +40,8 @@
                     <div class="position-relative flex-grow-1">
                         <t t-set="inputClasses" t-value="'form-control px-3 border-0 rounded-3'"/>
                         <textarea class="o-mail-Composer-input bg-view shadow-none overflow-auto"
-                            t-att-class="inputClasses"
+                            t-att-class="{ 'o-mobile': isMobileOS() }"
+                            t-attf-class="{{ inputClasses }}"
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
@@ -59,7 +60,8 @@
                         -->
                         <textarea
                             class="o-mail-Composer-fake overflow-hidden position-absolute"
-                            t-att-class="inputClasses"
+                            t-att-class="{ 'o-mobile': isMobileOS() }"
+                            t-attf-class="{{ inputClasses }}"
                             t-model="props.composer.textInputContent"
                             t-ref="fakeTextarea"
                             disabled="1"
