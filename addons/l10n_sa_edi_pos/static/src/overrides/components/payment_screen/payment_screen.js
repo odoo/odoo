@@ -11,10 +11,11 @@ patch(PaymentScreen.prototype, {
         const order = this.currentOrder;
         // note: isSACompany guarantees order.is_to_invoice()
         // Skip if invoice is not mandatory(Ex: settlement)
+        // note: Skips entirely if journal is not onboarded or electronic invoicing is not selected
         if (
             order.isSACompany() &&
             order.finalized &&
-            order.l10n_sa_invoice_edi_state !== "sent" &&
+            !order.l10n_sa_invoice_qr_code_str &&
             order.isInvoiceMandatoryForSA()
         ) {
             const orderError = _t("%s by going to Backend > Orders > Invoice", order.pos_reference);
