@@ -48,7 +48,7 @@ class TestAvatarMixin(TransactionCase):
         expectedAvatar = (
             "<?xml version='1.0' encoding='UTF-8' ?>"
             "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
-            "<rect fill='hsl(184, 40%, 45%)' height='180' width='180'/>"
+            "<rect fill='#4EA7F2' height='180' width='180'/>"
             "<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>M</text>"
             "</svg>"
         )
@@ -61,7 +61,7 @@ class TestAvatarMixin(TransactionCase):
         expectedAvatar = (
             "<?xml version='1.0' encoding='UTF-8' ?>"
             "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
-            "<rect fill='hsl(71, 48%, 45%)' height='180' width='180'/>"
+            "<rect fill='#A76DBC' height='180' width='180'/>"
             "<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>J</text>"
             "</svg>"
         )
