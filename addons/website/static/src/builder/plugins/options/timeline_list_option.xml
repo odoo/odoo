@@ -2,16 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="website.TimelineListOption">
-    <BuilderRow label.translate="Milestones">
-        <BuilderButton
-            type="'success'"
-            action="'addItem'"
-            actionParam="'.s_timeline_list_row'"
-            actionValue="'beforebegin'"
-            preview="false"
-            applyTo="':scope > :has(.s_timeline_list_row)'">
-            Add Milestone
-        </BuilderButton>
+    <BuilderRow label.translate="Milestones" applyTo="':scope > :has(.s_timeline_list_row)'">
+        <BuilderButton type="'success'" action="'addItem'" actionParam="'.s_timeline_list_row:last-child'" preview="false">Add Milestone</BuilderButton>
     </BuilderRow>
 
     <BuilderRow label.translate="Alignment">

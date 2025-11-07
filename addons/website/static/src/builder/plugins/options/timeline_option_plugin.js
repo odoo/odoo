@@ -1,8 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
+import { renderToElement } from "@web/core/utils/render";
 
 function isTimelineCard(el) {
     return el.matches(".s_timeline_card");
@@ -12,6 +14,9 @@ export class TimelineOptionPlugin extends Plugin {
     static id = "timelineOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        builder_actions: {
+            AddMilestoneAction,
+        },
         dropzone_selectors: {
             selector: ".s_timeline_row",
             dropNear: ".s_timeline_row",
@@ -56,6 +61,24 @@ export class TimelineOptionPlugin extends Plugin {
         const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
         timelineRowEl.append(firstContentEl);
         timelineCardEls.forEach((card) => card.classList.toggle("text-md-end"));
+    }
+}
+
+export class AddMilestoneAction extends BuilderAction {
+    static id = "addMilestone";
+    static dependencies = ["builderOptions"];
+
+    apply({ editingElement, value: position }) {
+        const lastRowEl = [...editingElement.querySelectorAll(".s_timeline_row")].at(-1);
+        // Clone to preserve the style of the dot and the line.
+        const dotEl = lastRowEl.querySelector(".o_dot").cloneNode();
+        const dotLineEl = lastRowEl.querySelector(".o_dot_line").cloneNode();
+
+        const newRowEl = renderToElement("website.s_timeline_row_additional", { position });
+        newRowEl.prepend(dotEl);
+        newRowEl.prepend(dotLineEl);
+        lastRowEl.after(newRowEl);
+        this.dependencies.builderOptions.setNextTarget(newRowEl);
     }
 }
 
