@@ -420,7 +420,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         with freeze_time(self.dt_reference):
             data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]})
         for model_name, msg, exp_total, exp_today, exp_planned, exp_overdue in [
-            ('mail.activity', 'Free activities', 2, 2, 0, 0),
+            ('mail.activity', 'Free activities', 1, 1, 1, 0),
             (self.test_record._name, 'Archiving does not remove activities', 1, 1, 1, 0),
             (self.test_lead_records._name, 'Planned do not count in total', 1, 1, 1, 0),
         ]:
@@ -446,8 +446,8 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
                 self.assertEqual(planned_count, exp_planned)
                 self.assertEqual(overdue_count, exp_overdue)
         self.assertEqual(
-            data["Store"]["activityCounter"], 4,
-            '1 from lead (today), 2 from free (today), each activity=record-like, 1 from activity-test-model'
+            data["Store"]["activityCounter"], 3,
+            '1 from lead (today), 1 from free (today), 1 from activity-test-model'
         )
 
 
