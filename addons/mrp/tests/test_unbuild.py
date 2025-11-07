@@ -970,7 +970,6 @@ class TestUnbuild(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_2.id,
             'product_tmpl_id': self.product_2.product_tmpl_id.id,
-            'consumption': 'flexible',
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -987,7 +986,7 @@ class TestUnbuild(TestMrpCommon):
 
         mo.qty_producing = 1.0
         mo.move_raw_ids.write({'quantity': 15, 'picked': True})
-        mo.button_mark_done()
+        mo.with_context(skip_consumption=True).button_mark_done()
 
         Form.from_action(self.env, mo.button_unbuild()).save().action_validate()
         self.assertEqual(mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_3).product_uom_qty, 15)
@@ -998,7 +997,6 @@ class TestUnbuild(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_2.id,
             'product_tmpl_id': self.product_2.product_tmpl_id.id,
-            'consumption': 'flexible',
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [Command.create({'product_id': self.product_3.id, 'product_qty': 1})]
@@ -1104,7 +1102,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.qty_producing = 4.0
         mo_form.save()
 
-        mo.button_mark_done()
+        mo.with_context(skip_consumption=True).button_mark_done()
 
         unbuild_wizard = Form(self.env['mrp.unbuild'])
         unbuild_wizard.mo_id = mo

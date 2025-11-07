@@ -67,19 +67,6 @@ class MrpBom(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company', index=True,
         default=lambda self: self.env.company)
-    consumption = fields.Selection([
-        ('flexible', 'Allowed'),
-        ('warning', 'Allowed with warning'),
-        ('strict', 'Blocked')],
-        help="Defines if you can consume more or less components than the quantity defined on the BoM:\n"
-             "  * Allowed: allowed for all manufacturing users.\n"
-             "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-             "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
-             "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected.",
-        default='warning',
-        string='Flexible Consumption',
-        required=True
-    )
     possible_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value',
         compute='_compute_possible_product_template_attribute_value_ids')

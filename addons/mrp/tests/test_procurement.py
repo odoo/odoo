@@ -95,7 +95,7 @@ class TestProcurement(TestMrpCommon):
         mo_form.qty_producing = production_product_6.product_qty
         production_product_6 = mo_form.save()
         # Check procurement and Production state for product 6.
-        production_product_6.button_mark_done()
+        production_product_6.with_context(skip_consumption=True).button_mark_done()
         self.assertEqual(production_product_6.state, 'done', 'Production order should be in state done')
         self.assertEqual(self.product_6.qty_available, 24, 'Wrong quantity available of finished product.')
 
@@ -426,7 +426,6 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': product_1.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': product_2.id, 'product_qty': 1}),
@@ -551,7 +550,7 @@ class TestProcurement(TestMrpCommon):
         mo.move_raw_ids.quantity = 15
         mo_form.qty_producing = 15
         mo = mo_form.save()
-        mo.button_mark_done()
+        mo.with_context(skip_consumption=True).button_mark_done()
 
         self.assertEqual(pick_output.move_ids.quantity, 10, "Completed products should have been auto-reserved in picking")
 
@@ -614,7 +613,6 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': product.product_tmpl_id.id,
             'uom_id': product.uom_id.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': component.id, 'product_qty': 1}),
@@ -701,7 +699,6 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': product_1.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [Command.create({'product_id': product_2.id, 'product_qty': 1})]
         })
@@ -711,7 +708,6 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': product_2.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [Command.create({'product_id': product_3.id, 'product_qty': 1})]
         })
@@ -721,7 +717,6 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': product_3.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [Command.create({'product_id': product_4.id, 'product_qty': 1})]
         })
@@ -878,7 +873,6 @@ class TestProcurement(TestMrpCommon):
             'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'consumption': 'flexible',
             'bom_line_ids': [
                 Command.create({'product_id': comp1.id, 'product_qty': 1}),
                 Command.create({'product_id': comp2.id, 'product_qty': 2}),

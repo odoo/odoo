@@ -72,7 +72,6 @@ class TestManualConsumption(TestMrpCommon):
         - Mark the MO as done.
         - Another move should be created and merged with the first move.
         """
-        self.bom_4.consumption = 'warning'
         component = self.bom_4.bom_line_ids.product_id
         component.write({
             'is_storable': True,

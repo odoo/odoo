@@ -312,14 +312,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         """
         with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
-        bom = self.env['mrp.bom'].search([
-            ('product_id', '=', self.finished_product.id)
-        ])
         new_product = self.env['product.product'].create({
             'name': 'New product',
             'is_storable': True,
         })
-        bom.consumption = 'flexible'
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.finished_product
         production_form.picking_type_id = self.picking_type_manu
@@ -512,7 +508,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo_form.qty_producing = 20
         mo = mo_form.save()
 
-        action = mo.button_mark_done()
+        action = mo.with_context(skip_consumption=True).button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
 

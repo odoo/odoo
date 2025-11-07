@@ -17,7 +17,6 @@ class TestWorkcenterOverview(common.TestMrpCommon):
             'product_tmpl_id': self.product_2.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'operation_ids': [
                 Command.create({
                     'name': 'Make it look you are working',

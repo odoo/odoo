@@ -14,6 +14,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, skip_consumption=True))
         cls.env.ref('base.group_user').write({
             'implied_ids': [Command.link(cls.env.ref('stock.group_production_lot').id)],
         })
@@ -300,7 +301,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'consumption': 'flexible',
             'bom_line_ids': [Command.create({
                 'product_id': product_component.id,
                 'product_qty': 1,
@@ -954,6 +954,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestMrpWorkorderBackorder, cls).setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, skip_consumption=True))
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.finished1 = cls.env['product.product'].create({
             'name': 'finished1',
@@ -982,7 +983,6 @@ class TestMrpWorkorderBackorder(TransactionCase):
             'product_tmpl_id': cls.finished1.product_tmpl_id.id,
             'uom_id': cls.uom_unit.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': cls.compfinished1.id, 'product_qty': 1}),

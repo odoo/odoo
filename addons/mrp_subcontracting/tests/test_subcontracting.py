@@ -525,8 +525,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(len(mo), 1)
 
     def test_flow_flexible_bom_1(self):
-        """ Record Component for a bom subcontracted with a flexible and flexible + warning consumption """
-        self.bom.consumption = 'flexible'
+        """ Record component for a subcontracted BoM. """
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
@@ -720,7 +719,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """ Tests to set a quantity done directly on a subcontracted move without using the subcontracting wizard.
             Checks that it does the same as it would do with the wizard.
         """
-        self.bom.consumption = 'flexible'
         quantities = [10, 15, 12, 14]
 
         with Form(self.env['stock.picking']) as picking_form:
@@ -748,7 +746,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_change_reception_serial(self):
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]})
         self.finished.tracking = 'serial'
-        self.bom.consumption = 'flexible'
 
         finished_lots = self.env['stock.lot'].create([{
             'name': 'lot_%s' % number,
@@ -798,7 +795,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_ids != new_lot)), 2)
 
     def test_decrease_quantity_done(self):
-        self.bom.consumption = 'flexible'
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         uom_duo = self.env['uom.uom'].create({
             'name': 'Duos',
@@ -894,7 +890,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
     def test_validate_partial_subcontracting_without_backorder(self):
         """ Test the validation of a partial subcontracting without creating a backorder."""
-        self.bom.consumption = 'flexible'
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         receipt = self.env['stock.picking'].create({
             'partner_id': self.subcontractor_partner1.id,
@@ -1466,7 +1461,6 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             'product_qty': 1.0,
             'type': 'subcontract',
             'subcontractor_ids': [Command.link(self.subcontractor.id)],
-            'consumption': 'strict',
             'bom_line_ids': [
                 Command.create({'product_id': self.raw_material.id, 'product_qty': 1}),
             ]

@@ -53,7 +53,7 @@ class TestMrpCancelMO(TestMrpCommon):
         after post inventory.
         """
         # Create MO
-        manufacturing_order = self.generate_mo(consumption='strict')[0]
+        manufacturing_order = self.generate_mo()[0]
         # Produce some quantity (not all to avoid to done the MO when post inventory)
         mo_form = Form(manufacturing_order)
         mo_form.qty_producing = 2
@@ -132,7 +132,7 @@ class TestMrpCancelMO(TestMrpCommon):
             'bom_id': self.bom_1.id,
         })
         mo.action_confirm()
-        mo.button_mark_done()
+        mo.with_context(skip_consumption=True).button_mark_done()
         self.assertEqual(mo.state, 'done')
         with self.assertRaises(UserError):
             mo.action_cancel()

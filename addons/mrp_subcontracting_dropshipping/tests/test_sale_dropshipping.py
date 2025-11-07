@@ -305,7 +305,6 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             'product_id': final_product.id,
             'product_tmpl_id': final_product.product_tmpl_id.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'phantom',
             'bom_line_ids': [
                 (0, 0, {'product_id': product_a.id, 'product_qty': 1}),
