@@ -13,10 +13,10 @@
                             </div>
                             <div class="ms-2 me-3 flex-grow-1 overflow-hidden">
                                 <p class="o-discuss-CallInvitation-channelName m-0 fw-bold small text-truncate" t-esc="props.channel.displayName"/>
-                                <p class="o-discuss-CallInvitation-description m-0 fst-italic smaller text-truncate pe-1" t-esc="incomingCallText"/>
+                                <p class="o-discuss-CallInvitation-description m-0 fst-italic smaller text-truncate pe-1">Incoming call...</p>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center flex-shrink-0">
+                        <div class="d-flex align-items-center flex-shrink-0 gap-2">
                             <ActionList actions="acceptOrRejectActions" inline="true" hasBtnBg="true"/>
                             <ActionList actions="otherActions" inline="true"/>
                         </div>

@@ -18,8 +18,7 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
                     ".o-discuss-CallInvitation-channelName:contains('bob (base.group_user) and john (base.group_user)')",
             },
             {
-                trigger:
-                    ".o-discuss-CallInvitation-description:contains('Incoming call from bob (base.group_user)')",
+                trigger: ".o-discuss-CallInvitation-description:contains('Incoming call...')",
             },
             {
                 trigger: ".o-discuss-CallInvitation-cameraPreview:not(:visible)",

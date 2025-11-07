@@ -2,9 +2,25 @@
 <templates xml:space="preserve">
     <t t-name="mail.CallPreview">
         <div class="o-mail-CallPreview ratio ratio-16x9">
-            <div class="bg-dark">
-                <video class="object-fit-cover h-100 w-100" autoplay="" style="background-color: rgba(0, 0, 0, 0.5);" t-ref="video"/>
-                <div class="position-absolute bottom-0 mb-3 w-100 d-flex justify-content-center">
+            <div t-att-class="{'bg-dark': env.inWelcomePage}">
+                <video t-if="state.videoStream" class="object-fit-cover h-100 w-100 position-relative z-0" autoplay="" t-ref="video"/>
+                <div t-else="" class="position-absolute top-0 start-0 end-0 bottom-0 d-flex flex-column align-items-center justify-content-center text-center px-3 z-1" t-att-class="{'text-white': env.inWelcomePage}">
+                    <t t-if="env.inWelcomePage and rtc.cameraPermission !== 'granted'">
+                        <span class="fs-3">Do you want people to see and hear you in the meeting?</span>
+                        <button class="btn btn-primary mt-3" t-on-click="() => this.toggleCamera()">Allow Microphone and Camera</button>
+                    </t>
+                    <t t-else="">
+                        <div class="d-flex flex-column align-items-center" t-att-class="{'mb-4': !env.inWelcomePage}">
+                            <i class="fa fa-camera fa-4x mb-2 opacity-50"/>
+                            <span class="fs-4 fw-bold">No Camera Preview</span>
+                            <small class="opacity-50">
+                                <t t-if="rtc.cameraPermission !== 'granted'">Please allow access in your browser settings.</t>
+                                <t t-else="">Turn on your camera to see the preview.</t>
+                            </small>
+                        </div>
+                    </t>
+                </div>
+                <div class="position-absolute bottom-0 mb-3 w-100 d-flex justify-content-center z-2">
                     <ActionList actions="actions" inline="true" hasBtnBg="true"/>
                 </div>
             </div>
