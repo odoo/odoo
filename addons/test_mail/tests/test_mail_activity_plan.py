@@ -6,8 +6,9 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import fields
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, tagged, users
 from odoo.tools.misc import format_date
 
@@ -179,6 +180,21 @@ class TestActivitySchedule(ActivityScheduleCase):
         self.assertEqual(len(self.test_records[2].activity_ids), 2)
         self.assertEqual(len(self.test_records[3].activity_ids), 0)
         self.assertEqual(len(self.test_records[4].activity_ids), 0)
+
+    @users('admin')
+    def test_activity_schedule_rights_upload(self):
+        user = mail_new_test_user(
+            self.env,
+            groups='base.group_public',
+            login='bert',
+            name='Bert Tartignole',
+        )
+        demo_record = self.env['mail.test.access'].create({'access': 'admin', 'name': 'Record'})
+        form = self._instantiate_activity_schedule_wizard(demo_record)
+        form.activity_type_id = self.env.ref('test_mail.mail_act_test_upload_document')
+        with self.assertRaises(UserError):
+            form.activity_user_id = user
+        form.save()
 
     @users('employee')
     def test_activity_schedule_norecord(self):
