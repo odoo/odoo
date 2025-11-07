@@ -56,19 +56,41 @@ class ProductPricelistReport(models.AbstractModel):
 
     def _get_product_data(self, is_product_tmpl, product, pricelist, quantities, date):
         product = product.with_context(display_default_code=False)
+        has_multiple_variants = is_product_tmpl and product.product_variant_count > 1
+
+        # Determine applicable UoMs
+        if not has_multiple_variants:
+            product_uoms = pricelist._get_related_uoms(product, is_product_tmpl) + product.uom_id
+        else:
+            product_uoms = product.uom_id
+
         data = {
             'id': product.id,
-            'name': (is_product_tmpl and product.name) or product.display_name,
-            'price': dict.fromkeys(quantities, 0.0),
-            'uom': product.uom_id.name,
+            'name': product.name if is_product_tmpl else product.display_name,
+            'price': {
+                uom.id: {qty: {} for qty in quantities}
+                for uom in product_uoms
+            },
+            'uoms': [{'id': uom.id, 'name': uom.name} for uom in product_uoms],
             'default_code': product.default_code,
             'barcode': product.barcode,
             'category': product.categ_id.name,
+            'show_product_data': not has_multiple_variants,
         }
-        for qty in quantities:
-            data['price'][qty] = pricelist._get_product_price(product, qty, date=date)
 
-        if is_product_tmpl and product.product_variant_count > 1:
+        # Compute prices only when we actually show product data
+        if not has_multiple_variants:
+            for uom in product_uoms:
+                for qty in quantities:
+                    data['price'][uom.id][qty] = pricelist._get_product_price(
+                        product,
+                        qty,
+                        date=date,
+                        uom=uom
+                    )
+
+        # Expand variants when template has multiple variants
+        if has_multiple_variants:
             data['variants'] = [
                 self._get_product_data(False, variant, pricelist, quantities, date)
                 for variant in product.product_variant_ids

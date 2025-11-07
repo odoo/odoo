@@ -231,6 +231,13 @@
                                     />
                                     <field name="min_quantity" optional="show"/>
                                     <field
+                                        name="uom_ids"
+                                        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []"
+                                        groups="uom.group_uom"
+                                        widget="many2many_uom_tags"
+                                        options="{'no_create': 1}"
+                                    />
+                                    <field
                                         name="date_start"
                                         string="Validity"
                                         widget="daterange"

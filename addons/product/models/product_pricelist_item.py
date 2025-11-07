@@ -69,6 +69,7 @@ class ProductPricelistItem(models.Model):
         required=True,
         help="Pricelist Item applicable on selected option")
 
+    # Product Related Fields
     categ_id = fields.Many2one(
         comodel_name='product.category',
         string="Category",
@@ -87,7 +88,10 @@ class ProductPricelistItem(models.Model):
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
     product_uom_name = fields.Char(related='product_tmpl_id.uom_name')
     product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')
+    uom_ids = fields.Many2many('uom.uom', string="Packagings")
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
 
+    # Price Related Fields
     base = fields.Selection(
         selection=[
             ('list_price', 'Sales Price'),
@@ -180,6 +184,11 @@ class ProductPricelistItem(models.Model):
                 or item.company_id.currency_id
                 or item.env.company.currency_id
             )
+
+    @api.depends('product_tmpl_id', 'product_tmpl_id.uom_id', 'product_tmpl_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for item in self:
+            item.allowed_uom_ids = item.product_tmpl_id.uom_id | item.product_tmpl_id.uom_ids
 
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
     def _compute_name(self):
@@ -508,13 +517,14 @@ class ProductPricelistItem(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    def _is_applicable_for(self, product, qty_in_product_uom):
-        """Check whether the current rule is valid for the given product & qty.
+    def _is_applicable_for(self, product, quantity, uom=None, **_kwargs):
+        """Check whether the current rule is valid for the given product, qty and uom.
 
         Note: self.ensure_one()
 
         :param product: product record (product.product/product.template)
-        :param float qty_in_product_uom: quantity, expressed in product UoM
+        :param float quantity: quantity of products requested (in given uom)
+        :param uom: Selected unit of measure (uom.uom record)
         :returns: Whether rules is valid or not
         :rtype: bool
         """
@@ -523,9 +533,22 @@ class ProductPricelistItem(models.Model):
         res = True
 
         is_product_template = product._name == 'product.template'
-        if self.min_quantity and qty_in_product_uom < self.min_quantity:
-            res = False
+        effective_uom = uom or product.uom_id
 
+        # Check UOM restriction only if rule is applied on a specific template/variant
+        if (
+            self.display_applied_on == '1_product'
+            and self.uom_ids
+            and effective_uom not in self.uom_ids
+        ):
+            return False
+
+        effective_quantity = self.min_quantity and self._compute_qty_to_consider(
+            product, quantity, effective_uom, **_kwargs
+        )
+
+        if self.min_quantity and effective_quantity < self.min_quantity:
+            res = False
         elif self.applied_on == "2_product_category":
             if not product.categ_id or (
                 product.categ_id != self.categ_id
@@ -551,6 +574,17 @@ class ProductPricelistItem(models.Model):
             res = False
 
         return res
+
+    def _compute_qty_to_consider(self, product, quantity, uom, **_kwargs):
+        """Compute quantity in product UoM if not specified on pricelist item. Used when the min
+        quantity on pricelist rules are specified w.r.t. product default UoM."""
+
+        if not self.uom_ids and uom != product.uom_id:  # no packaging specified then convert quantity to base uom
+            effective_quantity = uom._compute_quantity(quantity, product.uom_id, raise_if_failure=False)
+        else:
+            effective_quantity = quantity
+
+        return effective_quantity
 
     def _compute_price(self, product, quantity, uom, date, currency=None, **kwargs):
         """Compute the unit price of a product in the context of a pricelist application.
