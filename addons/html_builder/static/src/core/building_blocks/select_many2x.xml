@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<!-- TODO: support more features from the previous implementation: "callWith", "filterInModel", "filterInField", "nullText" -->
-
 <t t-name="html_builder.SelectMany2X">
     <SelectMenu
         choices="this.filteredSearchResult().map(e => ({ value: e, label: e.display_name  }))"
