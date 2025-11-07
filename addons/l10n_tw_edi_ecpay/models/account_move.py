@@ -545,12 +545,6 @@ class AccountMove(models.Model):
             item_list[-1]["ItemPrice"] = float_round(item_list[-1]["ItemAmount"] / item_list[-1]["ItemCount"], precision_rounding=0.01)
             sale_amount += exchange_difference
 
-            # Check if the credit note has amount due, we need to add it to the sale amount
-            item_list[-1]["ItemAmount"] += self.amount_residual_signed
-            item_list[-1]["ItemAmount"] = float_round(item_list[-1]["ItemAmount"], precision_rounding=0.01)
-            item_list[-1]["ItemPrice"] = float_round(item_list[-1]["ItemAmount"] / item_list[-1]["ItemCount"], precision_rounding=0.01)
-            sale_amount += self.amount_residual_signed
-
         if self.l10n_tw_edi_is_b2b and is_allowance:
             json_data["Details"] = item_list
         else:
