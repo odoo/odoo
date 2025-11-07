@@ -48,6 +48,8 @@ class ResCompany(models.Model):
 
     def action_close_stock_valuation(self, at_date=None, auto_post=False):
         self.ensure_one()
+        if at_date and isinstance(at_date, str):
+            at_date = fields.Date.from_string(at_date)
         aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
@@ -60,7 +62,7 @@ class ResCompany(models.Model):
 
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,
-            'date': fields.Date.today(),
+            'date': at_date or fields.Date.today(),
             'ref': _('Stock Closing'),
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
         }
