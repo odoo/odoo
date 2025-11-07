@@ -153,7 +153,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check message has correct recipients",
-            trigger: ".o-mail-MessageNotificationPopover:contains('Not A Demo User\nJane')",
+            trigger: ".o-mail-MessageNotificationPopover:contains('Not A Demo User Jane')",
         },
         {
             content: "Check message contains the first attachment",

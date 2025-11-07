@@ -35,25 +35,25 @@ export function assertCartAmounts({taxes = false, untaxed = false, total = false
     if (taxes) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_total_taxes .oe_currency_value:contains(/^${taxes}$/)`,
+            trigger: `tr#order_total_taxes .oe_currency_value:text(${taxes})`,
         });
     }
     if (untaxed) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_total_untaxed .oe_currency_value:contains(/^${untaxed}$/)`,
+            trigger: `tr#order_total_untaxed .oe_currency_value:text(${untaxed})`,
         });
     }
     if (total) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_total .oe_currency_value:contains(/^${total}$/)`,
+            trigger: `tr#order_total .oe_currency_value:text(${total})`,
         });
     }
     if (delivery) {
         steps.push({
             content: 'Check if the tax is correct',
-            trigger: `tr#order_delivery .oe_currency_value:contains(/^${delivery}$/)`,
+            trigger: `tr#order_delivery .oe_currency_value:text(${delivery})`,
         });
     }
     return steps
@@ -121,7 +121,7 @@ export function goToCart({
 } = {}) {
     return {
         content: _t("Go to cart"),
-        trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:contains(/^${quantity}$/)`,
+        trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:text(${quantity})`,
         tooltipPosition: position,
         run: "click",
         expectUnloadPage,
@@ -242,7 +242,7 @@ export function searchProduct(productName, { select = false } = {}) {
     if (select) {
         steps.push({
             content: `Select ${productName}`,
-            trigger: `.oe_product_cart:first a:contains(/^${productName}$/i)`,
+            trigger: `.oe_product_cart:first a:text(${productName})`,
             run: "click",
             expectUnloadPage: true,
         });

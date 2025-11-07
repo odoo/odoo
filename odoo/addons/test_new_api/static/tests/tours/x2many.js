@@ -63,11 +63,11 @@
         run: "click",
     }, {
         content: "select Admin",
-        trigger: 'tr:has(td:contains(/^Mitchell Admin$/)) .o_list_record_selector input[type="checkbox"]',
+        trigger: 'tr:has(td:text(Mitchell Admin)) .o_list_record_selector input[type="checkbox"]',
         run: "click",
     },
     {
-        trigger: 'tr:has(td:contains(/^Mitchell Admin$/)) .o_list_record_selector input[type="checkbox"]:checked',
+        trigger: 'tr:has(td:text(Mitchell Admin)) .o_list_record_selector input[type="checkbox"]:checked',
     },
     {
         content: "save selected participants",
@@ -75,7 +75,7 @@
         run: "click",
     },
     {
-        trigger: '.o_field_widget[name=participants] .o_data_cell:contains(/^Mitchell Admin$/)',
+        trigger: '.o_field_widget[name=participants] .o_data_cell:text(Mitchell Admin)',
     },
     ...stepUtils.saveForm(),
     { // add message a
@@ -124,7 +124,7 @@
     },
     { // change message b
         content: "edit message b",
-        trigger: '.o_field_widget[name=messages] .o_data_cell:contains(/^b$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_cell:text(b)',
         run: "click",
     }, {
         content: "change the body",
@@ -164,11 +164,11 @@
         run: "click",
     }, {
         content: "select Demo User",
-        trigger: 'tr:has(td:contains(/^Marc Demo$/)) .o_list_record_selector input[type="checkbox"]',
+        trigger: 'tr:has(td:text(Marc Demo)) .o_list_record_selector input[type="checkbox"]',
         run: "click",
     },
     {
-        trigger: 'tr:has(td:contains(/^Marc Demo$/)) .o_list_record_selector input[type="checkbox"]:checked',
+        trigger: 'tr:has(td:text(Marc Demo)) .o_list_record_selector input[type="checkbox"]:checked',
     },
     {
         content: "save selected participants",
@@ -191,7 +191,7 @@
         trigger: '.o_content:has(.o_field_widget[name=messages] tbody .o_data_row:eq(2))',
     }, {
         content: "check data 2",
-        trigger: `.o_content:has(.o_field_widget[name=messages] tr:has(td:contains(/^bbb$/)):has(td:contains(/^\\[test_trigger\\] Mitchell Admin$/)))`,
+        trigger: `.o_content:has(.o_field_widget[name=messages] tr:has(td:text(bbb)):has(td:text([test_trigger] Mitchell Admin)))`,
     }, {
         content: "go to tab 3",
         trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
@@ -229,7 +229,7 @@
         run: "click",
     },
     {
-        trigger: '.o_field_widget[name=messages] .o_data_cell:contains(/^d$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_cell:text(d)',
     },
     { // add message e
         content: "create new message e",
@@ -245,11 +245,11 @@
         run: "click",
     },
     {
-        trigger: '.o_field_widget[name=messages] .o_data_cell:contains(/^e$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_cell:text(e)',
     },
     { // change message a
         content: "edit message a",
-        trigger: '.o_field_widget[name=messages] .o_data_cell:contains(/^a$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_cell:text(a)',
         run: "click",
     }, {
         content: "change the body",
@@ -261,11 +261,11 @@
         run: "click",
     },
     {
-        trigger: '.o_field_widget[name=messages] .o_data_cell:contains(/^aaa$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_cell:text(aaa)',
     },
     { // change message e
         content: "edit message e",
-        trigger: '.o_field_widget[name=messages] .o_data_cell:contains(/^e$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_cell:text(e)',
         run: "click",
     }, {
         content: "open the many2one to select another user",
@@ -293,15 +293,15 @@
         trigger: '.o_field_widget[name="message_concat"] textarea:value([test_trigger] Marc Demo:e)',
     }, { // remove
         content: "remove b",
-        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:contains(/^bbb$/)) .o_list_record_remove',
+        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:text(bbb)) .o_list_record_remove',
         run: "click",
     }, {
         content: "remove e",
-        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:contains(/^e$/)) .o_list_record_remove',
+        trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:text(e)) .o_list_record_remove',
         run: "click",
     },
     {
-        trigger: 'body:not(:has(tr:has(td:contains(/^e$/))))',
+        trigger: 'body:not(:has(tr:has(td:text(e))))',
     },
     { // save
         content: "save discussion",
@@ -312,10 +312,10 @@
         trigger: '.o_content:not(:has(.o_field_widget[name=messages] tbody tr:has(.o_list_record_remove):eq(4)))',
     }, {
         content: "check data 5",
-        trigger: '.o_content:has(.o_field_widget[name=messages] tbody:has(tr td:contains(/^aaa$/)):has(tr td:contains(/^c$/)):has(tr td:contains(/^d$/)))',
+        trigger: '.o_content:has(.o_field_widget[name=messages] tbody:has(tr td:text(aaa)):has(tr td:text(c)):has(tr td:text(d)))',
     }, {
         content: "check data 6",
-        trigger: `.o_content:has(.o_field_widget[name=messages] tbody tr:has(td:contains(/^\\[test_trigger\\] Mitchell Admin$/)):has(td:contains(/^aaa$/)))`,
+        trigger: `.o_content:has(.o_field_widget[name=messages] tbody tr:has(td:text([test_trigger] Mitchell Admin)):has(td:text(aaa)))`,
     }, {
         content: "go to Participants",
         trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
@@ -333,7 +333,7 @@
         run: "click",
     },
     {
-        trigger: '.o_form_editable .o_field_widget[name=messages] tbody tr:has(td:contains(/^d$/))',
+        trigger: '.o_form_editable .o_field_widget[name=messages] tbody tr:has(td:text(d))',
     },
     { // add message ddd
         content: "create new message ddd",
@@ -370,7 +370,7 @@
         trigger: '.o_content:has(.o_field_widget[name=messages] .o_data_row:eq(3))',
     },
     {
-        trigger: '.o_field_widget[name=messages]:has(tr td:contains(/^ddd$/))',
+        trigger: '.o_field_widget[name=messages]:has(tr td:text(ddd))',
     },
     ...stepUtils.discardForm({ // cancel
         content: "cancel change",
@@ -466,7 +466,7 @@
         trigger: '.o_content:not(:has(.o_field_widget[name="message_concat"] textarea:value(Mitchell Admin:d)))',
     },
     {
-        trigger: 'body:not(:has(tr:has(td:contains(/^d$/))))',
+        trigger: 'body:not(:has(tr:has(td:text(d))))',
     },
     ...stepUtils.saveForm(),
     { // check saved data
@@ -536,11 +536,11 @@
         run:     "edit {generate_dummy_message} && click body",
     },
     {
-        trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:contains(/^13$/)',
+        trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:text(13)',
     },
     {
         content: "check new dummy message happened",
-        trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:contains(/^13$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:text(13)',
     }, {
         content: "check field not in embedded view received correctly",
         trigger: '.o_field_widget[name=messages] .o_data_row input[type="checkbox"]:checked',
@@ -557,11 +557,11 @@
         run:     "edit {generate_dummy_message} && click body",
     },
     {
-        trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:contains(/^22$/)',
+        trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:text(22)',
     },
     {
         content: "check update and new dummy message happened",
-        trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:contains(/^22$/)',
+        trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:text(22)',
     },
     ...stepUtils.discardForm(),
     ]});
