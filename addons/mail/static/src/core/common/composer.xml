@@ -68,7 +68,8 @@
                     <div class="position-relative flex-grow-1">
                         <t t-set="inputClasses" t-value="{
                             'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
-                            'ps-2': partitionedActions.other.length === 0
+                            'o-mobile': isMobileOS,
+                            'ps-2': partitionedActions.other.length === 0,
                         }"/>
                         <Wysiwyg t-if="composerService.htmlEnabled" class="'w-100 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="onLoadWysiwyg"/>
                         <t t-else="">
