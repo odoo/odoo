@@ -20,7 +20,7 @@ FIGURE_TYPE_SELECTION_VALUES = [
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
-CROSS_REPORT_REGEX = re.compile(r'^cross_report\((.+)\)$')
+CROSS_REPORT_REGEX = re.compile(r'^cross_report\((?P<report>[^,\s]+)(,\s*(?P<force_date_scope>force_date_scope))?\)$')
 
 ACCOUNT_CODES_ENGINE_SPLIT_REGEX = re.compile(r"(?=[+-])")
 ACCOUNT_CODES_ENGINE_TERM_REGEX = re.compile(
@@ -792,7 +792,6 @@ class AccountReportExpression(models.Model):
         for expr in self:
             expr.display_name = f'{expr.report_line_name} [{expr.label}]'
 
-
     def _expand_aggregations(self):
         """Return self and its full aggregation expression dependency"""
         result = self
@@ -814,7 +813,7 @@ class AccountReportExpression(models.Model):
                             raise UserError(_(
                                 "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
                                 "The format of the cross report expression is invalid. \n"
-                                "Expected: cross_report(<report_id>|<xml_id>)"
+                                "Expected: cross_report(<report_id>|<xml_id>[,force_date_sope])"
                                 "Example:  cross_report(my_module.my_report) or cross_report(123)",
                                 report_name=candidate_expr.report_line_id.report_id.display_name,
                                 line_name=candidate_expr.report_line_name,
