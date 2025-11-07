@@ -151,22 +151,7 @@ function useIsActiveItem() {
         return isActiveFn();
     }
 
-    const getState = () => {
-        const newState = {};
-        for (const itemId of listenedKeys) {
-            newState[itemId] = isActive(itemId);
-        }
-        return newState;
-    };
-    const state = useDomState(getState);
-    const listener = () => {
-        const newState = getState();
-        Object.assign(state, newState);
-    };
-    env.dependencyManager.addEventListener("dependency-updated", listener);
-    onWillDestroy(() => {
-        env.dependencyManager.removeEventListener("dependency-updated", listener);
-    });
+    const state = useItemStatus(listenedKeys, isActive);
     return function isActiveItem(itemId) {
         listenedKeys.add(itemId);
         if (state[itemId] === undefined) {
@@ -188,22 +173,7 @@ export function useGetItemValue() {
         return getValueFn();
     }
 
-    const getState = () => {
-        const newState = {};
-        for (const itemId of listenedKeys) {
-            newState[itemId] = getValue(itemId);
-        }
-        return newState;
-    };
-    const state = useDomState(getState);
-    const listener = () => {
-        const newState = getState();
-        Object.assign(state, newState);
-    };
-    env.dependencyManager.addEventListener("dependency-updated", listener);
-    onWillDestroy(() => {
-        env.dependencyManager.removeEventListener("dependency-updated", listener);
-    });
+    const state = useItemStatus(listenedKeys, getValue);
     return function getItemValue(itemId) {
         listenedKeys.add(itemId);
         if (!(itemId in state)) {
@@ -1025,4 +995,25 @@ export class BaseOptionComponent extends Component {
     isActiveItems(itemIds) {
         return itemIds.map((i) => this.isActiveItem(i)).find(Boolean) || false;
     }
+}
+
+function useItemStatus(listenedKeys, newStateFn) {
+    const env = useEnv();
+    const getState = () => {
+        const newState = {};
+        for (const itemId of listenedKeys) {
+            newState[itemId] = newStateFn(itemId);
+        }
+        return newState;
+    };
+    const state = useDomState(getState);
+    const listener = () => {
+        const newState = getState();
+        Object.assign(state, newState);
+    };
+    env.dependencyManager.addEventListener("dependency-updated", listener);
+    onWillDestroy(() => {
+        env.dependencyManager.removeEventListener("dependency-updated", listener);
+    });
+    return state;
 }
