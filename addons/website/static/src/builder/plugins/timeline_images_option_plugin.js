@@ -1,8 +1,11 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { BEGIN, SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { after, SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
+
+export const TIMELINE = after(WEBSITE_BACKGROUND_OPTIONS);
 
 export class TimelineImagesOption extends BaseOptionComponent {
     static template = "website.TimelineImagesOption";
@@ -24,7 +27,7 @@ class TimelineImagesOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
-            withSequence(BEGIN, TimelineImagesOption),
+            withSequence(TIMELINE, TimelineImagesOption),
             withSequence(SNIPPET_SPECIFIC_END, DotLinesColorOption),
             withSequence(SNIPPET_SPECIFIC, DotColorOption),
         ],

@@ -1,18 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-name="website.s_timeline_row_additional">
+    <div
+        t-att-class="'s_timeline_row position-relative d-flex gap-md-5 pb-4' + (position == 'right' ? ' flex-column flex-md-row' : '')"
+        data-name="Milestone">
+
+        <!-- Left Milestone Event  -->
+        <t t-if="position != 'right'">
+            <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                <div
+                    class="s_timeline_card s_card card my-0 ms-auto text-md-end"
+                    style="border-width: 0px !important;" data-vxml="001"
+                    data-snippet="s_card"
+                    data-name="Milestone Event">
+                    <div class="card-body">
+                        <small class="text-muted">07/11/2025</small>
+                        <h3 class="h4-fs card-title">
+                            First Feature
+                        </h3>
+                        <p class="card-text">A timeline is a graphical representation on
+                            which important events are marked.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="s_timeline_content w-0 w-md-100 h-0"/>
+        </t>
+
+        <!-- Right Milestone Event  -->
+        <t t-if="position != 'left'">
+            <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                <div
+                    class="s_timeline_card s_card card my-0 ms-auto"
+                    style="border-width: 0px !important;" data-vxml="001"
+                    data-snippet="s_card"
+                    data-name="Milestone Event">
+                    <div class="card-body">
+                        <small class="text-muted">07/11/2025</small>
+                        <h3 class="h4-fs card-title">
+                            Latest Feature
+                        </h3>
+                        <p class="card-text">A timeline is a graphical representation on
+                            which important events are marked.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="s_timeline_content w-0 w-md-100 h-0"/>
+        </t>
+    </div>
+</t>
+
 <t t-name="website.TimelineOption">
-    <BuilderRow label.translate="Date">
+    <BuilderRow label.translate="Add Milestones">
         <BuilderButton
             type="'success'"
-            action="'addItem'"
-            actionParam="'.s_timeline_row'"
-            actionValue="'beforebegin'"
+            action="'addMilestone'"
+            actionValue="'left'"
             preview="false">
-            Add Date
+            Left
+        </BuilderButton>
+        <BuilderButton
+            type="'success'"
+            action="'addMilestone'"
+            actionValue="'both'"
+            preview="false">
+            Both
+        </BuilderButton>
+        <BuilderButton
+            type="'success'"
+            action="'addMilestone'"
+            actionValue="'right'"
+            preview="false">
+            Right
         </BuilderButton>
     </BuilderRow>
 </t>
 
 </templates>
-
