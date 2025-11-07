@@ -153,10 +153,10 @@ class AccountMove(models.Model):
         # EXTEND 'account' to add dependencies
         return super()._compute_need_cancel_request()
 
-    @api.depends('name')
+    @api.depends('name', 'ref')
     def _compute_l10n_hu_edi_attachment_filename(self):
         for move in self:
-            move.l10n_hu_edi_attachment_filename = f'{move.name.replace("/", "_")}.xml' if move.name else 'nav30.xml'
+            move.l10n_hu_edi_attachment_filename = f'{(move.ref or move.name or "nav30").replace("/", "_")}.xml'
 
     # === Inverses === #
 
