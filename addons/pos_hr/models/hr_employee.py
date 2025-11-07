@@ -31,7 +31,10 @@ class HrEmployee(models.Model):
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
 
         for employee in read_records:
-            if employee['id'] in manager_ids or employee['id'] in config.advanced_employee_ids.ids:
+            if employee['id'] in manager_ids:
+                role = 'manager'
+                employee['_user_role'] = 'admin'
+            elif employee['id'] in config.advanced_employee_ids.ids:
                 role = 'manager'
             elif employee['id'] in config.minimal_employee_ids.ids:
                 role = 'minimal'
