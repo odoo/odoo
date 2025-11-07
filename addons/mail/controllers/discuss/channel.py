@@ -6,7 +6,8 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
+from odoo.exceptions import AccessError
 
 
 class DiscussChannelWebclientController(WebclientController):
@@ -226,3 +227,31 @@ class ChannelController(http.Controller):
         channel.parent_channel_id.message_post(body=body, subtype_xmlid="mail.mt_comment")
         # sudo: discuss.channel - skipping ACL for users who created the thread
         channel.sudo().unlink()
+
+    @http.route("/discuss/channel/remove_member", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_channel_remove_member(self, member_id):
+        channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
+        if not channel_member:
+            raise NotFound()
+        channel_member.unlink()
+
+    @http.route("/discuss/channel/member/set_role", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_channel_set_channel_member_role(self, member_id, channel_role):
+        channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
+        if not channel_member:
+            raise NotFound()
+        channel = channel_member.channel_id
+        # sudo: discuss.channel.member - reading channel role of is considered allowed
+        self_channel_role = channel.self_member_id.sudo().channel_role
+        if not self_channel_role == "owner" and not request.env.user.has_group("base.group_system"):
+            raise AccessError(self.env._("Only the channel owner or DB admins can modify member roles."))
+        if (
+            channel_member.sudo().channel_role == "owner"
+            and channel_member != channel.self_member_id
+            and not request.env.user.has_group("base.group_system")
+        ):
+            raise AccessError(
+                self.env._("Removing ownership from an owner is not allowed. Please contact your DB administrator.")
+            )
+        # sudo: discuss.channel.member - writing channel role of a member is considered allowed
+        channel_member.sudo().channel_role = channel_role

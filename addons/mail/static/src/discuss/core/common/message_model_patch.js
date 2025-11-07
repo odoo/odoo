@@ -52,6 +52,15 @@ const messagePatch = {
         });
         this.threadAsFirstUnread = fields.One("mail.thread", { inverse: "firstUnreadMessage" });
     },
+    /**
+     * @override
+     */
+    get allowsEdition() {
+        return (
+            super.allowsEdition ||
+            ["owner", "admin"].includes(this.channel_id?.self_member_id?.channel_role)
+        );
+    },
     /** @returns {import("models").ChannelMember[]} */
     get channelMemberHaveSeen() {
         return this.thread.membersThatCanSeen.filter(

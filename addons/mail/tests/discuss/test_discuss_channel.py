@@ -151,6 +151,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "discuss.channel.member": [
                                 {
                                     "channel_id": {"id": test_group.id, "model": "discuss.channel"},
+                                    "channel_role": False,
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
@@ -197,6 +198,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "discuss.channel": [{"id": test_group.id, "member_count": 2}],
                             "discuss.channel.member": [
                                 {
+                                    "channel_role": False,
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,

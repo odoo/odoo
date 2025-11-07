@@ -184,6 +184,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "partner_id": operator.partner_id.id,
                     "seen_message_id": False,
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_role": False,
                 },
                 {
                     "create_date": fields.Datetime.to_string(visitor_member.create_date),
@@ -203,6 +204,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "seen_message_id": False,
                     "unpin_dt": False,
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_role": False,
                 },
             ],
         )
@@ -276,6 +278,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "seen_message_id": False,
                     "unpin_dt": fields.Datetime.to_string(operator_member.unpin_dt),
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_role": False,
                 },
             ],
         )
