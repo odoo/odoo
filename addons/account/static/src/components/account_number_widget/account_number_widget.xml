@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account.AccountNumberCharField" t-inherit="web.CharField">
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-on-input">validateAccountNumberDebounced</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="account.AccountNumberWidget">
+        <div class="position-relative w-100">
+            <div class="position-relative w-100">
+                <t t-call="account.AccountNumberCharField"/>
+            </div>
+            <div t-if="this.state.label" class="position-absolute top-50 end-0 translate-middle-y me-1">
+                <span class="o_account_number badge rounded-pill text-success bg-success bg-opacity-25 d-inline-flex px-2 mb-1">
+                    <i class="fa fa-check me-1"/>
+                    <span t-out="this.state.label"/>
+                </span>
+            </div>
+        </div>
+    </t>
+</templates>

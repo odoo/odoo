@@ -1513,13 +1513,13 @@ class AccountMove(models.Model):
                 if acc_number := get_text(tree, './/DatiPagamento/DettaglioPagamento/IBAN'):
                     if self.partner_id and self.partner_id.commercial_partner_id:
                         bank = self.env['res.partner.bank'].search([
-                            ('acc_number', '=', acc_number),
+                            ('account_number', '=', acc_number),
                             ('partner_id', '=', self.partner_id.commercial_partner_id.id),
                             ('company_id', 'in', [self.company_id.id, False])
                         ], order='company_id', limit=1)
                     else:
                         bank = self.env['res.partner.bank'].search([
-                            ('acc_number', '=', acc_number),
+                            ('account_number', '=', acc_number),
                             ('company_id', 'in', [self.company_id.id, False])
                         ], order='company_id', limit=1)
                     if bank:

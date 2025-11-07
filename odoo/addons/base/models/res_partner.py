@@ -18,7 +18,7 @@ from odoo.tools.date_utils import all_timezones
 
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
-    from .res_bank import ResPartnerBank
+    from .res_partner_bank import ResPartnerBank
     from .res_country import ResCountry, ResCountryState
     from .res_company import ResCompany
 

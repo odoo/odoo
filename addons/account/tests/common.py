@@ -1409,6 +1409,28 @@ class AccountTestInvoicingCommon(ProductCommon):
         return etree.fromstring(xml_tree_str)
 
 
+class AccountTestInvoicingWithBanksCommon(AccountTestInvoicingCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner_bank_account1 = cls.env['res.partner.bank'].create({
+            'account_number': "0123456789",
+            'partner_id': cls.partner_a.id,
+        })
+        cls.partner_bank_account2 = cls.env['res.partner.bank'].create({
+            'account_number': "9876543210",
+            'partner_id': cls.partner_a.id,
+        })
+        cls.comp_bank_account1 = cls.env['res.partner.bank'].create({
+            'account_number': "985632147",
+            'partner_id': cls.env.company.partner_id.id,
+        })
+        cls.comp_bank_account2 = cls.env['res.partner.bank'].create({
+            'account_number': "741258963",
+            'partner_id': cls.env.company.partner_id.id,
+        })
+
+
 class AccountTestMockOnlineSyncCommon(HttpCase):
     def start_tour(self, url_path, tour_name, **kwargs):
         with self.mock_online_sync_favorite_institutions():

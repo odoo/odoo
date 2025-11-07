@@ -1,7 +1,7 @@
 from markupsafe import Markup
 
-from odoo import _, models, Command
-from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo import _, models
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_repr
 from odoo.tools.float_utils import float_round
@@ -577,9 +577,9 @@ class AccountEdiCommon(models.AbstractModel):
         partner = self.env.company.partner_id if invoice.is_inbound() else invoice.partner_id
         banks_to_create = []
         acc_number_partner_bank_dict = {
-            bank.sanitized_acc_number: bank
+            bank.sanitized_account_number: bank
             for bank in ResPartnerBank.with_context(active_test=False).search(
-                [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
+                [('company_id', 'in', [False, invoice.company_id.id]), ('account_number', 'in', bank_details)]
             )
         }
         for account_number in bank_details:
@@ -591,7 +591,7 @@ class AccountEdiCommon(models.AbstractModel):
                 return
             elif not partner_bank and account_number:
                 banks_to_create.append({
-                    'acc_number': account_number,
+                    'account_number': account_number,
                     'partner_id': partner.id,
                 })
         if banks_to_create:

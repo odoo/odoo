@@ -48,7 +48,7 @@
                                 <span>Account / Payable to</span>
                             </div>
                             <div class="swissqr_text content">
-                                <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <span t-field="o.partner_bank_id.account_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <br/>
                                 <span t-out="company.name"/><br/>
@@ -160,7 +160,7 @@
                                 <span>Account / Payable to</span><br/>
                             </div>
                             <div class="swissqr_text content">
-                                <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <span t-field="o.partner_bank_id.account_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <br/>
                                 <span t-out="company.name"/><br/>

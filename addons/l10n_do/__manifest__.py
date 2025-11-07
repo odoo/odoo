@@ -76,7 +76,6 @@ en Odoo):
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'depends': [
         'account',
-        'base_iban',
     ],
     'auto_install': ['account'],
     'data': [

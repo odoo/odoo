@@ -16,7 +16,6 @@ Accounting chart and localization for Hungary
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
-        'data/res.bank.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -24,7 +24,6 @@ Spanish charts of accounts (PGCE 2008).
 """,
     'depends': [
         'account',
-        'base_iban',
         'base_vat',
         'account_edi_ubl_cii',
     ],

@@ -103,7 +103,6 @@ class AccountSetupBankManualConfig(models.TransientModel):
         compute="_compute_linked_journal_id",
         check_company=True,
     )
-    bank_bic = fields.Char(related='bank_id.bic', readonly=False, string="Bic")
     num_journals_without_account_bank = fields.Integer(default=lambda self: self._number_unlinked_journal('bank'))
     num_journals_without_account_credit = fields.Integer(default=lambda self: self._number_unlinked_journal('credit'))
     company_id = fields.Many2one('res.company', required=True, compute='_compute_company_id')
@@ -115,10 +114,10 @@ class AccountSetupBankManualConfig(models.TransientModel):
             ('id', '!=', self.default_linked_journal_id(journal_type)),
         ])
 
-    @api.onchange('acc_number')
-    def _onchange_acc_number(self):
+    @api.onchange('account_number')
+    def _onchange_account_number(self):
         for record in self:
-            record.new_journal_name = record.acc_number
+            record.new_journal_name = record.account_number
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -128,12 +127,7 @@ class AccountSetupBankManualConfig(models.TransientModel):
         """
         for vals in vals_list:
             vals['partner_id'] = self.env.company.partner_id.id
-            vals['new_journal_name'] = vals['acc_number']
-
-            # If no bank has been selected, but we have a bic, we are using it to find or create the bank
-            if not vals.get('bank_id') and vals.get('bank_bic'):
-                vals['bank_id'] = self.env['res.bank'].search([('bic', '=', vals['bank_bic'])], limit=1).id \
-                                  or self.env['res.bank'].create({'name': vals['bank_bic'], 'bic': vals['bank_bic']}).id
+            vals['new_journal_name'] = vals['account_number']
 
         return super().create(vals_list)
 

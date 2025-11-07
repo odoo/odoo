@@ -12,7 +12,7 @@ from odoo.http import request
 from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.tools import formatLang, float_compare, float_is_zero, float_round, float_repr, cleanup_xml_node, groupby
 from odoo.tools.misc import split_every
-from odoo.addons.base_iban.models.res_partner_bank import normalize_iban
+from odoo.addons.account.tools import normalize_account_number
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import format_bool, L10nHuEdiConnection, L10nHuEdiConnectionError
 
 _logger = logging.getLogger(__name__)
@@ -348,7 +348,7 @@ class AccountMove(models.Model):
                 'action_text': _('View Company/ies'),
             },
             'partner_bank_account_invalid': {
-                'records': self.partner_bank_id.filtered(lambda p: not hu_bank_account_regex.fullmatch(p.acc_number)),
+                'records': self.partner_bank_id.filtered(lambda p: not hu_bank_account_regex.fullmatch(p.account_number)),
                 'message': _('Please set a valid recipient bank account number!'),
                 'action_text': _('View partner(s)'),
             },
@@ -827,10 +827,10 @@ class AccountMove(models.Model):
 
         def format_bank_account_number(bank_account):
             # Normalize IBANs (no spaces!)
-            if bank_account.acc_type == 'iban':
-                return normalize_iban(bank_account.acc_number)
+            if bank_account.account_type == 'iban':
+                return normalize_account_number(bank_account.account_number)
             else:
-                return bank_account.acc_number
+                return bank_account.account_number
 
         supplier = self.company_id.partner_id
         customer = self.partner_id.commercial_partner_id

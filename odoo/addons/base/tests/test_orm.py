@@ -229,24 +229,6 @@ class TestORM(TransactionCase):
 
     def test_create_multi(self):
         """ create for multiple records """
-        # assumption: 'res.bank' does not override 'create'
-        vals_list = [{'name': name} for name in ('Foo', 'Bar', 'Baz')]
-        vals_list[0]['email'] = 'foo@example.com'
-        for vals in vals_list:
-            record = self.env['res.bank'].create(vals)
-            self.assertEqual(len(record), 1)
-            self.assertEqual(record.name, vals['name'])
-            self.assertEqual(record.email, vals.get('email', False))
-
-        records = self.env['res.bank'].create([])
-        self.assertFalse(records)
-
-        records = self.env['res.bank'].create(vals_list)
-        self.assertEqual(len(records), len(vals_list))
-        for record, vals in zip(records, vals_list):
-            self.assertEqual(record.name, vals['name'])
-            self.assertEqual(record.email, vals.get('email', False))
-
         # create countries and states
         vals_list = [{
             'name': 'Foo',

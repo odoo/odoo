@@ -489,12 +489,12 @@ class AccountBankStatementLine(models.Model):
         # However, at the end, we need to filter out the results to not trigger the check_company when trying to
         # assign a res.partner.bank owned by another company.
         bank_account = self.env['res.partner.bank'].sudo().with_context(active_test=False).search([
-            ('acc_number', '=', self.account_number),
+            ('account_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
         if not bank_account and not self.env['ir.config_parameter'].sudo().get_bool("account.skip_create_bank_account_on_reconcile"):
             bank_account = self.env['res.partner.bank'].create({
-                'acc_number': self.account_number,
+                'account_number': self.account_number,
                 'partner_id': self.partner_id.id,
                 'journal_id': None,
             })

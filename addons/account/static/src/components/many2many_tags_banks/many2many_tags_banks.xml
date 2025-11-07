@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="account.BankTag">
-        <BadgeTag color="this.props.color" onClick="this.props.onClick" onDelete="this.props.onDelete">
-            <i t-if="this.props.allowOutPayment" class="fa fa-shield text-success" data-tooltip="Trusted"/>
-            <i t-else="" class="fa fa-exclamation-circle text-danger" data-tooltip="Untrusted"/>
+        <BadgeTag color="this.props.color" onClick="this.props.onClick" onDelete="this.props.onDelete" tooltip="this.props.tooltip" crossTooltip="this.props.crossTooltip">
+            <i t-if="this.props.allowOutPayment" class="me-1 fa fa-shield text-success" data-tooltip="Trusted"/>
+            <i t-else="" class="me-1 fa fa-exclamation-circle text-danger" data-tooltip="Untrusted"/>
             <div class="o_tag_badge_text" t-out="this.props.text"/>
         </BadgeTag>
     </t>

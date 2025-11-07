@@ -20,14 +20,10 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             'city': 'Vietnam',
         })
 
-        cls.bank_vn = cls.env['res.bank'].create({
-            'name': 'VN Bank',
-            'bic': '970422',
-        })
-
         cls.acc_emv_vn = cls.env['res.partner.bank'].create({
-            'acc_number': '123456789012345678',
-            'bank_id': cls.bank_vn.id,
+            'account_number': '123456789012345678',
+            'bank_name': 'VN Bank',
+            'bank_bic': '970422',
             'partner_id': cls.company_data['company'].partner_id.id,
             'proxy_type': 'bank_acc',
             'proxy_value': '660704060000129',
@@ -35,7 +31,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         })
 
         cls.acc_emv_vn_without_paynow_info = cls.env['res.partner.bank'].create({
-            'acc_number': '1234567890',
+            'account_number': '1234567890',
             'partner_id': cls.company_data['company'].partner_id.id,
         })
 
@@ -54,9 +50,9 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             'city': 'Vietnam',
             'bank_ids': [
                 Command.create({
-                    'acc_number': '123456789012345670',
-                    'bank_id': cls.bank_vn.id,
-                    'currency_id': cls.env.ref('base.VND').id,
+                    'account_number': '123456789012345670',
+                    'bank_name': 'VN Bank',
+                    'bank_bic': '970422',
                     'allow_out_payment': True
                 })
             ]

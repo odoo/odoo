@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <group name="bank_details" position="inside">
+                <field name="intermediary_bank_bic" invisible="country_code != 'US'"/>
+            </group>
+        </field>
+    </record>
+</odoo>

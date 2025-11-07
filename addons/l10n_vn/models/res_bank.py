@@ -19,7 +19,7 @@ class ResPartnerBank(models.Model):
     def _check_vn_proxy(self):
         for bank in self.filtered(lambda b: b.country_code == 'VN'):
             if bank.proxy_type not in ['merchant_id', 'payment_service', 'atm_card', 'bank_acc', 'none', False]:
-                raise ValidationError(_("The QR Code Type must be either Merchant ID, ATM Card Number or Bank Account to generate a Vietnam Bank QR code for account number %s.", bank.acc_number))
+                raise ValidationError(_("The QR Code Type must be either Merchant ID, ATM Card Number or Bank Account to generate a Vietnam Bank QR code for account number %s.", bank.account_number))
 
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):

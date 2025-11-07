@@ -634,7 +634,7 @@ class AccountMove(models.Model):
         if self.partner_bank_id:
             buyer_information.update({
                 'buyerBankName': self.partner_bank_id.bank_name,
-                'buyerBankAccount': self.partner_bank_id.acc_number,
+                'buyerBankAccount': self.partner_bank_id.account_number,
             })
 
         json_values['buyerInfo'] = buyer_information
@@ -657,7 +657,7 @@ class AccountMove(models.Model):
         if self.partner_bank_id:
             seller_information.update({
                 'sellerBankName': self.partner_bank_id.bank_name,
-                'sellerBankAccount': self.partner_bank_id.acc_number,
+                'sellerBankAccount': self.partner_bank_id.account_number,
             })
 
             if self.partner_bank_id.proxy_type == 'merchant_id':

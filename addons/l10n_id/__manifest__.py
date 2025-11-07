@@ -14,7 +14,6 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/indonesia.html',
     'depends': [
         'account',
-        'base_iban',
         'base_vat',
     ],
     'auto_install': ['account'],

@@ -120,9 +120,9 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         company.phone = '+33499999999'
         company.zip = '78440'
         company.partner_id.bank_ids = [Command.create({
-            'acc_number': '999999',
+            'account_number': '999999',
             'partner_id': company.partner_id.id,
-            'acc_holder_name': 'The Chosen One'
+            'holder_name': 'The Chosen One'
         })]
 
         for ubl_cii_format in ['facturx', 'ubl_bis3']:
@@ -537,11 +537,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             )
 
     def test_payment_means_code_in_facturx_xml(self):
-        bank_ing = self.env['res.bank'].create({'name': 'ING', 'bic': 'BBRUBEBB'})
         partner_bank = self.env['res.partner.bank'].create({
-                'acc_number': 'BE15001559627230',
+                'account_number': 'BE15001559627230',
                 'partner_id': self.partner_a.id,
-                'bank_id': bank_ing.id,
+                'bank_name': 'ING',
+                'bank_bic': 'BBRUBEBB',
                 'company_id': self.env.company.id,
             })
         invoice = self.env['account.move'].create({
@@ -565,8 +565,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             company = self.env.company
             company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
             company_bank_journal = self.company_data['default_journal_bank']
-            company_bank_journal.bank_acc_number = 'CH9300762011623852957'
-            company_bank_journal.bank_account_id.bank_id = bank_ing
+            company_bank_journal.bank_account_number = 'CH9300762011623852957'
             self.partner_a.country_id = self.env.ref('base.nl').id
 
             mandate = self.env['sdd.mandate'].create({
@@ -639,10 +638,10 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             self.assertEqual(node.findtext('.//{*}TaxExemptionReasonCode') or False, tax.ubl_cii_tax_exemption_reason_code)
 
     def test_bank_details_import(self):
-        acc_number = '1234567890'
+        account_number = '1234567890'
         partner_bank = self.env['res.partner.bank'].create({
             'active': False,
-            'acc_number': acc_number,
+            'account_number': account_number,
             'partner_id': self.partner_a.id
         })
         invoice = self.env['account.move'].create({
@@ -651,12 +650,12 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
         })
         # will not raise sql constraint because the sql is not commited yet
-        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number])
+        self.env['account.edi.common']._import_partner_bank(invoice, [account_number])
         self.assertEqual(invoice.partner_bank_id, partner_bank, "Partner bank must be the same")
         self.assertTrue(partner_bank.active, "Partner bank must be the activated")
 
     def test_bank_details_import_duplicate(self):
-        acc_number = '1234567890'
+        account_number = '1234567890'
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
             'move_type': 'in_invoice',
@@ -664,13 +663,13 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         })
         # Importing should not try to create multiple partner bank records with the same account number.
         # It would cause a traceback due to a unique constraint on the (sanitized) account number, partner pair.
-        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number, acc_number])
+        self.env['account.edi.common']._import_partner_bank(invoice, [account_number, account_number])
 
     def test_oin_code(self):
         partner = self.partner_a
         partner.peppol_endpoint = '00000000001020304050'
         partner.country_id = self.env.ref('base.nl').id
-        partner.bank_ids = [Command.create({'acc_number': "0123456789"})]
+        partner.bank_ids = [Command.create({'account_number': "0123456789"})]
         invoice = self.env['account.move'].create({
             'partner_id': partner.id,
             'move_type': 'out_invoice',

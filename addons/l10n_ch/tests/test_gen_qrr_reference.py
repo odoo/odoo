@@ -16,25 +16,20 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_country('ch')
     def setUpClass(cls):
         super().setUpClass()
-        cls.bank = cls.env["res.bank"].create(
-            {
-                "name": "Alternative Bank Schweiz AG",
-                "bic": "ALSWCH21XXX",
-            }
-        )
         cls.partner = cls.env['res.partner'].create({
             'name': 'Bobby',
             'country_id': cls.env.ref('base.ch').id,
         })
         cls.bank_acc_qriban = cls.env["res.partner.bank"].create(
             {
-                "acc_number": QR_IBAN,
-                "bank_id": cls.bank.id,
+                "account_number": QR_IBAN,
+                "bank_name": "Alternative Bank Schweiz AG",
+                "bank_bic": "ALSWCH21XXX",
                 "partner_id": cls.partner.id,
             }
         )
         cls.qr_bank_account = cls.env['res.partner.bank'].create({
-            'acc_number': "CH4431999123000889012",
+            'account_number': "CH4431999123000889012",
             'partner_id': cls.partner.id,
         })
 

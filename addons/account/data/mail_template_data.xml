@@ -50,7 +50,7 @@
                 <br /><br />
                 Please use the following communication for your payment: <strong t-out="object.payment_reference or ''">INV/2021/05/0005</strong>
                 <t t-if="object.partner_bank_id">
-                    on the account <strong t-out="object.partner_bank_id.acc_number"/>
+                    on the account <strong t-out="object.partner_bank_id.account_number"/>
                 </t>
                 .
             </t>

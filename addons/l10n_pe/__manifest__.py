@@ -21,13 +21,11 @@
         'security/ir.model.access.csv',
         'views/account_tax_view.xml',
         'views/portal_address_templates.xml',
-        'views/res_bank_view.xml',
         'data/l10n_latam_document_type_data.xml',
         'data/res.city.csv',
         'data/l10n_pe.res.city.district.csv',
         'data/res_country_data.xml',
         'data/l10n_latam_identification_type_data.xml',
-        'data/res.bank.csv',
     ],
     'assets': {
         'web.assets_frontend': [

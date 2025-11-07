@@ -351,7 +351,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         vals1 = {
             'name': 'Non-empty relational fields',
             'country_id': self.ref('base.be'),
-            'bank_ids': [Command.create({'acc_number': 'FOO42'})],
+            'bank_ids': [Command.create({'account_number': 'FOO42'})],
             'category_id': [Command.link(self.partner_category.id)],
         }
         partners = partners.create([vals0, vals1])

@@ -1679,7 +1679,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         # Setup a running session, with a paid pos order that is not invoiced
         self.pos_config_usd.open_ui()
         self.cash_payment_method.journal_id.bank_account_id = self.env['res.partner.bank'].create({
-            'acc_number': 'FR7612345678901234567890123',
+            'account_number': 'FR7612345678901234567890123',
             'partner_id': self.company.partner_id.id,
             'bank_name': 'Test Bank',
         })

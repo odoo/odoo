@@ -25,11 +25,10 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._assert_invoice_ubl_file(invoice, 'test_invoice_item_description_name')
 
     def test_invoice_payee_financial_account(self):
-        bank_kbc = self.env['res.bank'].create({
-            'name': 'KBC',
-            'bic': 'KREDBEBB',
+        self.env.company.bank_ids[0].write({
+            'bank_name': 'KBC',
+            'bank_bic': 'KREDBEBB',
         })
-        self.env.company.bank_ids[0].bank_id = bank_kbc
 
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=100.0, taxes_id=tax_21)

@@ -17,10 +17,6 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
     company_id = fields.Many2one(related='payment_register_id.company_id')
     currency_id = fields.Many2one(related='payment_register_id.currency_id')
     name = fields.Char(string='Number')
-    bank_id = fields.Many2one(
-        comodel_name='res.bank',
-        compute='_compute_bank_id', store=True, readonly=False,
-    )
     issuer_vat = fields.Char(
         compute='_compute_issuer_vat', store=True, readonly=False,
     )
@@ -31,13 +27,6 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
     def _onchange_name(self):
         if self.name:
             self.name = self.name.zfill(8)
-
-    @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
-    def _compute_bank_id(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_register_id.payment_method_line_id.code == 'new_third_party_checks')
-        for rec in new_third_party_checks:
-            rec.bank_id = rec.payment_register_id.partner_id.bank_ids[:1].bank_id
-        (self - new_third_party_checks).bank_id = False
 
     @api.depends('payment_register_id.payment_method_line_id.code', 'payment_register_id.partner_id')
     def _compute_issuer_vat(self):

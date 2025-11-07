@@ -597,23 +597,19 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _get_address_node(self, vals):
-        """ Generic helper to generate the Address node for a res.partner or res.bank. """
+        """ Generic helper to generate the Address node for a res.partner or res.partner.bank. """
         partner = vals['partner']
-        country_key = 'country' if partner._name == 'res.bank' else 'country_id'
-        state_key = 'state' if partner._name == 'res.bank' else 'state_id'
-        country = partner[country_key]
-        state = partner[state_key]
 
         return {
             'cbc:StreetName': {'_text': partner.street},
             'cbc:AdditionalStreetName': {'_text': partner.street2},
             'cbc:CityName': {'_text': partner.city},
             'cbc:PostalZone': {'_text': partner.zip},
-            'cbc:CountrySubentity': {'_text': state.name},
-            'cbc:CountrySubentityCode': {'_text': state.code},
+            'cbc:CountrySubentity': {'_text': partner.state_id.name},
+            'cbc:CountrySubentityCode': {'_text': partner.state_id.code},
             'cac:Country': {
-                'cbc:IdentificationCode': {'_text': country.code},
-                'cbc:Name': {'_text': country.name},
+                'cbc:IdentificationCode': {'_text': partner.country_id.code},
+                'cbc:Name': {'_text': partner.country_id.name},
             },
         }
 
@@ -657,25 +653,24 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_financial_account_node(self, vals):
         """ Generic helper to generate the FinancialAccount node for a res.partner.bank """
         partner_bank = vals['partner_bank']
-        bank = partner_bank.bank_id
         financial_institution_branch = None
-        if bank:
+        if partner_bank.bank_bic:
             financial_institution_branch = {
                 'cbc:ID': {
-                    '_text': bank.bic,
+                    '_text': partner_bank.bank_bic,
                     'schemeID': 'BIC'
                 },
                 'cac:FinancialInstitution': {
                     'cbc:ID': {
-                        '_text': bank.bic,
+                        '_text': partner_bank.bank_bic,
                         'schemeID': 'BIC'
                     },
-                    'cbc:Name': {'_text': bank.name},
-                    'cac:Address': self._get_address_node({**vals, 'partner': bank})
+                    'cbc:Name': {'_text': partner_bank.bank_name},
+                    'cac:Address': self._get_address_node({**vals, 'partner': partner_bank})
                 }
             }
         return {
-            'cbc:ID': {'_text': partner_bank.acc_number.replace(' ', '')},
+            'cbc:ID': {'_text': partner_bank.account_number.replace(' ', '')},
             'cac:FinancialInstitutionBranch': financial_institution_branch
         }
 

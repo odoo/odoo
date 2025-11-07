@@ -202,7 +202,7 @@
                 <xpath expr="//sheet" position="before">
                     <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert"
                          invisible="not duplicate_bank_partner_ids">
-                        <span>One or more Bank Accounts set on this partner are also used by others:</span>
+                        <span class="me-1">One or more Bank Accounts set on this partner are also used by others:</span>
                         <field name="duplicate_bank_partner_ids" widget="x2many_buttons" string="Partners with same bank"/>
                         <br/>
                         <span>Please make sure that this is a wanted behavior.</span>

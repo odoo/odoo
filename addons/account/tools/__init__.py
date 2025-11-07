@@ -1,6 +1,7 @@
 import requests
 from urllib3.util.ssl_ import create_urllib3_context
 
+from .bank_account_number import *
 from .structured_reference import *
 from .dict_to_xml import dict_to_xml
 

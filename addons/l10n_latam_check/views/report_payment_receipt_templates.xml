@@ -7,7 +7,6 @@
                     <thead>
                         <tr>
                             <th><span>Check Number</span></th>
-                            <th t-if="o.payment_method_code != 'own_checks'"><span>Bank</span></th>
                             <th t-if="o.payment_method_code != 'own_checks'"><span>Issuer VAT</span></th>
                             <th><span>Payment date</span></th>
                             <th class="text-end"><span>Amount</span></th>
@@ -18,9 +17,6 @@
                             <tr>
                                 <td>
                                     <span t-field='check.name'/>
-                                </td>
-                                <td t-if="o.payment_method_code != 'own_checks'">
-                                    <span t-field='check.bank_id.display_name'/>
                                 </td>
                                 <td t-if="o.payment_method_code != 'own_checks'">
                                     <span t-field='check.issuer_vat'/>

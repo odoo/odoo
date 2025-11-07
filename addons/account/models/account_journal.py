@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.tools import email_normalize, email_normalize_all, groupby, urls
 from odoo.tools.misc import hash_sign
 from collections import defaultdict
@@ -248,8 +248,9 @@ class AccountJournal(models.Model):
         check_company=True,
         domain="[('partner_id','=', company_partner_id)]")
     bank_statements_source = fields.Selection(selection='_get_bank_statements_available_sources', string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
-    bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
-    bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
+    bank_name = fields.Char(related='bank_account_id.bank_name', readonly=False)
+    bank_account_number = fields.Char(related='bank_account_id.account_number', readonly=False)
+    bank_bic = fields.Char(related='bank_account_id.bank_bic', readonly=False)
 
     # alias configuration for journals
     alias_name = fields.Char(help="Send one separate email for each invoice.\n"
@@ -737,7 +738,7 @@ class AccountJournal(models.Model):
                 bank_accounts += bank_account
         self.env['account.payment.method.line'].search([('journal_id', 'in', self.ids)]).unlink()
         ret = super(AccountJournal, self).unlink()
-        bank_accounts.unlink()
+        bank_accounts.action_archive()
         return ret
 
     def copy_data(self, default=None):
@@ -790,9 +791,6 @@ class AccountJournal(models.Model):
                         'company_id': company.id,
                         'partner_id': company.partner_id.id,
                     })
-            if 'currency_id' in vals:
-                if journal.bank_account_id:
-                    journal.bank_account_id.currency_id = vals['currency_id']
             if 'bank_account_id' in vals:
                 if vals.get('bank_account_id'):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
@@ -824,9 +822,9 @@ class AccountJournal(models.Model):
                 journal.default_account_id.currency_id = journal.currency_id
 
         # Create the bank_account_id if necessary
-        if 'bank_acc_number' in vals:
+        if 'bank_account_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
-                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+                journal.set_bank_account(vals.get('bank_account_number'), vals.get('bank_bic'))
 
         return result
 
@@ -984,7 +982,7 @@ class AccountJournal(models.Model):
             has_loss_account = vals.get('loss_account_id')
 
             # === Fill missing name ===
-            vals['name'] = vals.get('name') or vals.get('bank_acc_number') or vals.get('name_placeholder')
+            vals['name'] = vals.get('name') or vals.get('bank_account_number') or vals.get('name_placeholder')
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
@@ -1034,25 +1032,24 @@ class AccountJournal(models.Model):
 
         for journal, vals in zip(journals, vals_list):
             # Create the bank_account_id if necessary
-            if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
-                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+            if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_account_number'):
+                journal.set_bank_account(vals.get('bank_account_number'), vals.get('bank_bic'))
 
         return journals
 
-    def set_bank_account(self, acc_number, bank_id=None):
+    def set_bank_account(self, account_number, bank_bic=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()
         res_partner_bank = self.env['res.partner.bank'].search([
-            ('sanitized_acc_number', '=', sanitize_account_number(acc_number)),
+            ('sanitized_account_number', '=', sanitize_account_number(account_number)),
             ('partner_id', '=', self.company_id.partner_id.id),
         ], limit=1)
         if res_partner_bank:
             self.bank_account_id = res_partner_bank.id
         else:
             self.bank_account_id = self.env['res.partner.bank'].create({
-                'acc_number': acc_number,
-                'bank_id': bank_id,
-                'currency_id': self.currency_id.id,
+                'account_number': account_number,
+                'bank_bic': bank_bic,
                 'partner_id': self.company_id.partner_id.id,
                 'journal_id': self,
             }).id

@@ -19,10 +19,9 @@ class TestUsersHttp(HttpCase):
         )
 
         bank_account = self.env['res.partner.bank'].create({
-            'acc_number': '123456789',
+            'account_number': '123456789',
             'partner_id': portal_user.partner_id.id,
-            'acc_holder_name': 'Partner A Holder',
-            'acc_type': 'bank',
+            'holder_name': 'Partner A Holder',
         })
 
         common_data = {
@@ -47,7 +46,7 @@ class TestUsersHttp(HttpCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(bank_account.acc_holder_name, 'Partner A Holder')
+        self.assertEqual(bank_account.holder_name, 'Partner A Holder')
 
     def test_deactivate_portal_user(self):
         # Create a portal user with data which should be removed on deactivation

@@ -220,9 +220,9 @@
                     <ModalitaPagamento t-translation="off" t-out="payment_method"/>
                     <DataScadenzaPagamento t-out="format_date(payment.date_maturity)"/>
                     <ImportoPagamento t-out="format_monetary(abs(payment.amount_currency), currency)"/>
-                    <IstitutoFinanziario t-if="partner_bank.bank_id" t-out="format_alphanumeric(partner_bank.bank_id.name, 80)"/>
-                    <IBAN t-if="partner_bank.acc_type == 'iban'" t-out="partner_bank.sanitized_acc_number"/>
-                    <BIC t-elif="partner_bank.acc_type == 'bank' and partner_bank.bank_id.bic" t-out="partner_bank.bank_id.bic"/>
+                    <IstitutoFinanziario t-if="partner_bank.bank_name" t-out="format_alphanumeric(partner_bank.bank_name, 80)"/>
+                    <IBAN t-if="partner_bank.account_type == 'iban'" t-out="partner_bank.sanitized_account_number"/>
+                    <BIC t-elif="partner_bank.account_type == 'bank' and partner_bank.bank_bic" t-out="partner_bank.bank_bic"/>
                     <CodicePagamento t-if="record.payment_reference" t-out="format_alphanumeric(record.payment_reference, 60)"/>
                 </DettaglioPagamento>
             </t>

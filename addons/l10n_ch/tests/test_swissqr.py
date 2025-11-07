@@ -63,7 +63,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         """ Generates a test res.partner.bank. """
         return self.env['res.partner.bank'].create(
             {
-                'acc_number': number,
+                'account_number': number,
                 'partner_id': self.env.user.company_id.partner_id.id,
             }
         )
@@ -118,7 +118,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "{unstr_msg}\n"
             "EPD"
         ).format(
-            iban=invoice.partner_bank_id.sanitized_acc_number,
+            iban=invoice.partner_bank_id.sanitized_account_number,
             ref_type=ref_type,
             struct_ref=struct_ref or '',
             unstr_msg=unstr_msg,

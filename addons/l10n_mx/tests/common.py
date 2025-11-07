@@ -35,5 +35,5 @@ class TestMxCommon(AccountTestInvoicingCommon):
             'zip': '33826',
             'country_id': cls.env.ref('base.mx').id,
             'vat': 'ICV060329BY0',
-            'bank_ids': [Command.create({'acc_number': "0123456789"})],
+            'bank_ids': [Command.create({'account_number': "0123456789"})],
         })

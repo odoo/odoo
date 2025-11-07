@@ -155,20 +155,15 @@ class TestUBLRO(TestUBLCommon):
             'street': "Strada Kunst, 3",
         })
 
-        cls.bank = cls.env['res.bank'].create({
-            'name': 'Banca Trimitere EDI Global',
-            'country': cls.env.ref('base.ro').id,
-            'state': cls.env.ref('base.RO_CJ').id,
+        cls.env['res.partner.bank'].create({
+            'partner_id': cls.company_data['company'].partner_id.id,
+            'account_number': 'RO98RNCB1234567890123456',
+            'bank_name': 'Banca Trimitere EDI Global',
+            'country_id': cls.env.ref('base.ro').id,
+            'state_id': cls.env.ref('base.RO_CJ').id,
             'city': 'Cluj-Napoca',
             'zip': '400000',
             'street': 'Strada Global EDI Test',
-        })
-
-        cls.env['res.partner.bank'].create({
-            'acc_type': 'iban',
-            'partner_id': cls.company_data['company'].partner_id.id,
-            'acc_number': 'RO98RNCB1234567890123456',
-            'bank_id': cls.bank.id,
         })
 
         cls.partner_a = cls.env['res.partner'].create({
@@ -180,7 +175,7 @@ class TestUBLRO(TestUBLCommon):
             'vat': 'RO1234567897',
             'phone': '+40 123 456 780',
             'street': "Rolling Roast, 88",
-            'bank_ids': [(0, 0, {'acc_number': 'RO98RNCB1234567890123456'})],
+            'bank_ids': [(0, 0, {'account_number': 'RO98RNCB1234567890123456'})],
             'ref': 'ref_partner_a',
             'invoice_edi_format': 'ciusro',
         })

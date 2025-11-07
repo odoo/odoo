@@ -22,7 +22,7 @@ class QRPrintTest(AccountTestInvoicingCommon):
         })
         # The bank account must be QR-compatible
         cls.qr_bank_account = cls.env['res.partner.bank'].create({
-            'acc_number': "CH4431999123000889012",
+            'account_number': "CH4431999123000889012",
             'partner_id': cls.env.company.partner_id.id,
         })
         cls.correct_invoice_chf = cls.env['account.move'].create({

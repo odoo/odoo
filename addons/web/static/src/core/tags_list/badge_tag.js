@@ -1,5 +1,6 @@
 import { Component } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
+import { _t } from "@web/core/l10n/translation";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export class BadgeTag extends Component {
@@ -9,6 +10,7 @@ export class BadgeTag extends Component {
         cssClass: { type: [String, Object], optional: true },
         onClick: { type: Function, optional: true },
         onDelete: { type: Function, optional: true },
+        crossTooltip: { type: String, optional: true },
         ref: { optional: true },
         slots: { optional: true },
         text: { type: String, optional: true },
@@ -16,6 +18,7 @@ export class BadgeTag extends Component {
     };
     static defaultProps = {
         color: 0,
+        crossTooltip: _t("Delete"),
     };
 
     get tagColorClass() {

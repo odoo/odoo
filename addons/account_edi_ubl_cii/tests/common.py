@@ -32,7 +32,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
             'property_account_payable_id': cls.company_data['default_account_payable'].id,
             'company_id': cls.company_data['company'].id,
-            'bank_ids': [Command.create({'acc_number': 'BE90735788866632'})],
+            'bank_ids': [Command.create({'account_number': 'BE90735788866632'})],
             'country_id': cls.env.ref('base.be').id,
             **kwargs,
         })
@@ -68,7 +68,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'property_account_payable_id': cls.company_data['default_account_payable'].id,
             'company_id': cls.company_data['company'].id,
             'country_id': cls.env.ref('base.au').id,
-            'bank_ids': [Command.create({'acc_number': '93999574162167'})],
+            'bank_ids': [Command.create({'account_number': '93999574162167'})],
             **kwargs,
         })
 
@@ -149,7 +149,7 @@ class TestUblCiiBECommon(TestUblCiiCommon):
             'vat': 'BE0202239951',
             'company_registry': '0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [Command.create({'acc_number': 'BE15001559627230'})],
+            'bank_ids': [Command.create({'account_number': 'BE15001559627230'})],
         })
         return company
 

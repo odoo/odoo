@@ -61,7 +61,7 @@ class ResPartnerBank(models.Model):
                 merchant_account_info = ''.join([self._serialize(*val) for val in [
                     (0, self.proxy_value),
                     (1, self.l10n_kh_merchant_id),
-                    (2, self.bank_id.name),
+                    (2, self.bank_name),
                 ]])
                 return 30, merchant_account_info
         return super()._get_merchant_account_info()

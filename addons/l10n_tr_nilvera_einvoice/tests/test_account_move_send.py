@@ -90,10 +90,7 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
         invoice xml generation should work when company has bank account with bank information
         in order to send email with invoice xml to recipient's bank
         """
-        bank = self.env['res.bank'].create({
-            'name': 'Test Bank',
-            'bic': 'TESTTRISXXX',
-        })
-        self.company_data['company'].bank_ids.bank_id = bank.id
-
+        bank = self.company_data['company'].bank_ids[0]
+        bank.bank_name = 'Test Bank'
+        bank.bank_bic = 'TESTTRISXXX'
         self.assertTrue(self._generate_invoice_xml(self.einvoice_partner), "XML generation failed")

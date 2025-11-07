@@ -105,7 +105,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'email': "email@gmail.com",
         })
         self._get_main_company().partner_id.write({
-            'bank_ids': [Command.create({'acc_number': 'FOO42'})]
+            'bank_ids': [Command.create({'account_number': 'FOO42'})]
         })
         self.main_pos_config.open_ui()
         self.pos_order_pos0 = self.env['pos.order'].create({
