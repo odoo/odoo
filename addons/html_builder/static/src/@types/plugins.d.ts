@@ -14,7 +14,7 @@ declare module "plugins" {
     import { get_overlay_buttons, OverlayButtonsShared } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { empty_node_predicates, is_unremovable_selector, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
     import { after_save_handlers, before_save_handlers, get_dirty_els, save_element_handlers, save_elements_overrides, save_handlers, SaveShared } from "@html_builder/core/save_plugin";
-    import { after_setup_editor_handlers, before_setup_editor_handlers, o_editable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
+    import { after_setup_editor_handlers, before_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { target_hide, target_show, VisibilityShared } from "@html_builder/core/visibility_plugin";
     import { default_shape_handlers, post_compute_shape_listeners } from "@html_builder/plugins/image/image_shape_option_plugin";
     import { background_filter_target_providers, get_target_element_providers, on_bg_image_hide_handlers } from "@html_builder/plugins/background_option/background_image_option_plugin";
@@ -139,7 +139,7 @@ declare module "plugins" {
         lower_panel_entries: lower_panel_entries;
         mark_color_level_selector_params: mark_color_level_selector_params;
         no_parent_containers: no_parent_containers;
-        o_editable_selectors: o_editable_selectors;
+        savable_selectors: savable_selectors;
         /** @deprecated */
         patch_builder_options: {
             target_name: string,

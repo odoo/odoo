@@ -12,7 +12,7 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef {(() => void | true)[]} after_setup_editor_handlers
  * @typedef {(() => void)[]} before_setup_editor_handlers
  *
- * @typedef {CSSSelector[]} o_editable_selectors
+ * @typedef {CSSSelector[]} savable_selectors
  */
 
 export class SetupEditorPlugin extends Plugin {
@@ -22,7 +22,7 @@ export class SetupEditorPlugin extends Plugin {
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         closest_savable_providers: withSequence(10, (el) => el.closest(".o_savable")),
-        o_editable_selectors: "[data-oe-model]",
+        savable_selectors: "[data-oe-model]",
         unremovable_node_predicates: (node) => node.classList?.contains("o_savable"),
     };
 
@@ -37,8 +37,8 @@ export class SetupEditorPlugin extends Plugin {
         );
         welcomeMessageEl?.remove();
         this.dispatchTo("before_setup_editor_handlers");
-        const editableSelectors = this.getResource("o_editable_selectors").join(", ");
-        const editableEls = [...this.editable.querySelectorAll(editableSelectors)]
+        const savableSelectors = this.getResource("savable_selectors").join(", ");
+        const savableEls = [...this.editable.querySelectorAll(savableSelectors)]
             .filter((el) => !el.closest(".o_not_editable"))
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
@@ -51,8 +51,8 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.classList.contains("oe_snippet_editor"))
             .filter((el) => !el.matches("hr, br, input, textarea"))
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
-        for (const editableEl of editableEls) {
-            editableEl.classList.add("o_savable");
+        for (const savableEl of savableEls) {
+            savableEl.classList.add("o_savable");
         }
         if (this.delegateTo("after_setup_editor_handlers")) {
             return;
