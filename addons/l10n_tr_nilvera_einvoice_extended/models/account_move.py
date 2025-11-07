@@ -27,7 +27,7 @@ class AccountMove(models.Model):
         ],
         help="The type of invoice to be sent to GİB.",
     )
-    l10n_tr_is_export_invoice = fields.Boolean(string="Is GIB Export")
+    l10n_tr_is_export_invoice = fields.Boolean(string="GİB Product Export Invoice")
     l10n_tr_shipping_type = fields.Selection(
         selection=[
             ("1", "Sea Transportation"),

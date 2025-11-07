@@ -11,7 +11,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
-        tr_moves = moves.filtered(lambda m: m.country_code == "TR")
+        tr_moves = moves.filtered(lambda m: m.country_code == "TR" and m.l10n_tr_is_export_invoice)
 
         # Warning alert if product is missing CTSP Number
         if non_eligible_tr_products := tr_moves.invoice_line_ids.product_id.filtered(
@@ -22,7 +22,7 @@ class AccountMoveSend(models.AbstractModel):
                     "The following products are missing a CTSP Number:\n%(products)s\n",
                     products="\n".join(f"- {product.display_name}" for product in non_eligible_tr_products),
                 ),
-                "level": "warning",
+                "level": "danger",
                 "action_text": _("View Product(s)"),
                 "action": non_eligible_tr_products._get_records_action(
                     name=_("Check Products"),
