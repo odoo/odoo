@@ -29,14 +29,14 @@ registerBackendAndFrontendTour("question", {
     run: "editor Test",
 },
 {
-    trigger: `.note-editable p:not(:contains(/^<br>$/))`,
+    trigger: `.note-editable p:not(:text(<br>))`,
 },
 {
     trigger: ".o_select_menu_toggler",
     content: _t("Insert tags related to your question."),
     tooltipPosition: "top",
     run: "click",
-}, 
+},
 {
     trigger: ".o_select_menu_sticky",
     run: "edit Test",
@@ -82,7 +82,7 @@ registerBackendAndFrontendTour("question", {
     run: "editor Test",
 },
 {
-    trigger: `.note-editable p:not(:contains(/^<br>$/))`,
+    trigger: `.note-editable p:not(:text(<br>))`,
 },
 {
     trigger: "button:contains(\"Post Answer\")",
@@ -90,7 +90,7 @@ registerBackendAndFrontendTour("question", {
     tooltipPosition: "bottom",
     run: "click",
     expectUnloadPage: true,
-}, 
+},
 {
     trigger: ".o_wforum_content_wrapper h3:contains(test)",
 },

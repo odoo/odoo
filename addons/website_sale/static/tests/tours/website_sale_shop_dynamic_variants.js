@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     steps: () => [
     {
         content: "select Dynamic Product",
-        trigger: ".oe_product_cart a:contains(/^Dynamic Product$/)",
+        trigger: ".oe_product_cart a:text(Dynamic Product)",
         run: "click",
         expectUnloadPage: true,
     },
