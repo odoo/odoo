@@ -146,8 +146,11 @@ export class ThreadService {
     /**
      * @param {import("models").Thread} thread
      */
-    async markAsFetched(thread) {
-        await this.orm.silent.call("discuss.channel", "channel_fetched", [[thread.id]]);
+    async markAsFetched(thread, messageId) {
+        await this.rpc("/discuss/channel/mark_as_fetched", {
+            channel_id: thread.id,
+            last_message_id: messageId,
+        });
     }
 
     getFetchRoute(thread) {

@@ -441,37 +441,50 @@ patch(MockServer.prototype, {
      * @param {integer[]} ids
      * @param {string} extra_info
      */
-    _mockDiscussChannelChannelFetched(ids) {
+    _mockDiscussChannelChannelFetched(ids, message_ids) {
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
+        let messageIdIndex = 0;
         for (const channel of channels) {
             if (!["chat", "whatsapp"].includes(channel.channel_type)) {
                 continue;
             }
+            let lastMessageId = null;
             const channelMessages = this.getRecords("mail.message", [
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
             ]);
-            const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                if (message.id > lastMessage.id) {
-                    return message;
+            if (message_ids && message_ids[messageIdIndex] !== undefined) {
+                lastMessageId = Number.parseInt(message_ids[messageIdIndex]);
+                if (!channelMessages.find((m) => m.id === lastMessageId)) {
+                    messageIdIndex++;
+                    continue;
                 }
-                return lastMessage;
-            }, channelMessages[0]);
-            if (!lastMessage) {
-                continue;
+            } else {
+                const lastMessage = channelMessages.reduce((lastMessage, message) => {
+                    if (message.id > lastMessage.id) {
+                        return message;
+                    }
+                    return lastMessage;
+                }, channelMessages[0]);
+                if (!lastMessage) {
+                    messageIdIndex++;
+                    continue;
+                }
+                lastMessageId = lastMessage.id;
             }
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
                 channel.id
             );
             this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
-                fetched_message_id: lastMessage.id,
+                fetched_message_id: lastMessageId,
             });
             this.pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
                 channel_id: channel.id,
                 id: memberOfCurrentUser.id,
-                last_message_id: lastMessage.id,
+                last_message_id: lastMessageId,
                 partner_id: this.pyEnv.currentPartnerId,
             });
+            messageIdIndex++;
         }
     },
     /**

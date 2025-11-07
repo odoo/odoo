@@ -1,5 +1,8 @@
 /* eslint-env serviceworker */
 /* eslint-disable no-restricted-globals */
+const MAX_FETCH_CACHE_SIZE = 20;
+const channelFetchedResponseByMessageId = new Map();
+
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
     if (event.notification.data) {
@@ -42,4 +45,37 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
         mode: "cors",
         credentials: "include",
     });
+});
+self.addEventListener("fetch", (event) => {
+    const url = new URL(event.request.url);
+    if (url.pathname === "/discuss/channel/mark_as_fetched") {
+        event.respondWith(
+            (async () => {
+                try {
+                    const request = event.request.clone();
+                    const payload = await request.json();
+                    const { last_message_id } = payload.params;
+                    if (channelFetchedResponseByMessageId.has(last_message_id)) {
+                        return channelFetchedResponseByMessageId
+                            .get(last_message_id)
+                            .then((resp) => resp.clone());
+                    }
+                    if (channelFetchedResponseByMessageId.size >= MAX_FETCH_CACHE_SIZE) {
+                        const firstKey = channelFetchedResponseByMessageId.keys().next().value;
+                        channelFetchedResponseByMessageId.delete(firstKey);
+                    }
+                    const fetch_promise = fetch(event.request);
+                    channelFetchedResponseByMessageId.set(last_message_id, fetch_promise);
+                    const response = await fetch_promise;
+                    const responseBody = await response.clone().json();
+                    if (response.status >= 400 || "error" in responseBody) {
+                        channelFetchedResponseByMessageId.delete(last_message_id);
+                    }
+                    return response;
+                } catch {
+                    return fetch(event.request);
+                }
+            })()
+        );
+    }
 });

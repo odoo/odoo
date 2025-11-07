@@ -1091,17 +1091,36 @@ class Channel(models.Model):
         return ["chat", "group"]
 
     def channel_fetched(self):
+        self._channel_fetched()
+
+    def _channel_fetched(self, message_ids=None):
         """ Broadcast the channel_fetched notification to channel members
         """
-        for channel in self:
-            if not channel.message_ids.ids:
+        if message_ids and len(message_ids) != len(self):
+            raise ValueError("If provided, message_ids length must be equal to the number of channels.")
+
+        if message_ids:
+            domain = [
+                ("model", "=", "discuss.channel"),
+                ("res_id", "in", self.ids),
+                ("id", "in", message_ids)
+            ]
+            last_message_by_channel = {
+                m.res_id: m.id for m in self.env["mail.message"].search_fetch(domain, ["res_id"])
+            }
+        else:
+            last_message_by_channel = {
+                c["id"]: c["message_id"] for c in self._channel_last_message_ids()
+            }
+        for channel, message_id in zip(self, message_ids or [None] * len(self)):
+            last_message_id = last_message_by_channel.get(channel.id, None)
+            if not last_message_id:
                 return
             # a bit not-modular but helps understanding code
             if channel.channel_type not in {'chat', 'whatsapp'}:
                 return
-            last_message_id = channel.message_ids.ids[0] # zero is the index of the last message
             member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
-            if member.fetched_message_id.id == last_message_id:
+            if member.fetched_message_id and member.fetched_message_id.id >= last_message_id:
                 # last message fetched by user is already up-to-date
                 return
             # Avoid serialization error when multiple tabs are opened.
@@ -1113,6 +1132,7 @@ class Channel(models.Model):
                     FOR NO KEY UPDATE SKIP LOCKED
                 )
             """
+            member.invalidate_recordset(["fetched_message_id"])
             self.env.cr.execute(query, (last_message_id, member.id))
             self.env['bus.bus']._sendone(channel, 'discuss.channel.member/fetched', {
                 'channel_id': channel.id,

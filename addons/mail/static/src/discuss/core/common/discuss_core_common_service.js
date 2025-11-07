@@ -249,7 +249,7 @@ export class DiscussCoreCommon {
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
-            this.threadService.markAsFetched(channel);
+            this.threadService.markAsFetched(channel, message.id);
         }
         if (
             !channel.loadNewer &&

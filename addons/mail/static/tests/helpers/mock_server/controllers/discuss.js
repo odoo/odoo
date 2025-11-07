@@ -72,6 +72,10 @@ patch(MockServer.prototype, {
             const { channel_id, known_member_ids } = args;
             return this._mockDiscussChannelloadOlderMembers([channel_id], known_member_ids);
         }
+        if (route === "/discuss/channel/mark_as_fetched") {
+            const { channel_id, last_message_id } = args;
+            return this._mockDiscussChannelChannelFetched(channel_id, [last_message_id]);
+        }
         if (route === "/mail/history/messages") {
             const { search_term, after, before, limit } = args;
             return this._mockRouteMailMessageHistory(search_term, after, before, limit);

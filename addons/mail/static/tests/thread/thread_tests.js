@@ -283,11 +283,12 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
+        let last_message_id = null;
         const { env } = await start({
             mockRPC(route, args) {
-                if (args.method === "channel_fetched") {
-                    assert.strictEqual(args.args[0][0], channelId);
-                    assert.strictEqual(args.model, "discuss.channel");
+                if (route === "/discuss/channel/mark_as_fetched") {
+                    assert.strictEqual(args.channel_id, channelId);
+                    assert.strictEqual(args.last_message_id, last_message_id);
                     assert.step("rpc:channel_fetch");
                 } else if (route === "/discuss/channel/set_last_seen_message") {
                     assert.strictEqual(args.channel_id, channelId);
@@ -296,13 +297,15 @@ QUnit.test(
             },
         });
         await contains(".o_menu_systray i[aria-label='Messages']");
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
+        pyEnv.withUser(userId, async () => {
+            const messageData = await env.services.rpc("/mail/message/post", {
                 post_data: { body: "Hello!", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
-            })
-        );
+            });
+            last_message_id = messageData.id;
+            return messageData;
+        });
         await contains(".o-mail-Message");
         assert.verifySteps(["rpc:channel_fetch"]);
         await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
@@ -328,7 +331,7 @@ QUnit.test(
         });
         const { env, openDiscuss } = await start({
             async mockRPC(route, args) {
-                if (args.method === "channel_fetched" && args.args[0] === channelId) {
+                if (route === "/discuss/channel/mark_as_fetched" && args.channel_id === channelId) {
                     throw new Error(
                         "'channel_fetched' RPC must not be called for created channel as message is directly seen"
                     );

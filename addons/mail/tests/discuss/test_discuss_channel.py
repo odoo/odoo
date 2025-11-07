@@ -558,3 +558,24 @@ class TestChannelInternals(MailCommon):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    def test_channel_fetched(self):
+        chat = self.env["discuss.channel"].channel_get(self.user_employee.partner_id.ids)
+        member_employee = chat.channel_member_ids.filtered(
+            lambda m: m.partner_id == self.user_employee.partner_id
+        )
+        self.assertFalse(member_employee.fetched_message_id)
+        message = chat.message_post(
+            body="Test Message", message_type="comment", subtype_xmlid="mail.mt_comment"
+        )
+        self.assertFalse(member_employee.fetched_message_id)
+        chat.with_user(self.user_employee).channel_fetched()
+        self.assertEqual(member_employee.fetched_message_id.id, message.id)
+        message_2 = chat.message_post(
+            body="Test Message", message_type="comment", subtype_xmlid="mail.mt_comment"
+        )
+        self.assertEqual(member_employee.fetched_message_id, message)
+        chat.with_user(self.user_employee)._channel_fetched(message_ids=message_2.ids)
+        self.assertEqual(member_employee.fetched_message_id, message_2)
+        chat.with_user(self.user_employee)._channel_fetched(message_ids=message.ids)
+        self.assertEqual(member_employee.fetched_message_id, message_2)

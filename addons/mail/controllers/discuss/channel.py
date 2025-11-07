@@ -139,3 +139,10 @@ class ChannelController(http.Controller):
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         return request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")._attachment_format()
+
+    @http.route("/discuss/channel/mark_as_fetched", methods=["POST"], type="json", auth="user")
+    def discuss_channel_mark_as_fetched(self, channel_id, last_message_id):
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            raise NotFound()
+        channel._channel_fetched(message_ids=[last_message_id])
