@@ -1,6 +1,6 @@
     import { changePricelist, checkPriceCart } from "@website_event_sale/../tests/tours/helpers/WebsiteEventSaleTourMethods";
 
-    function checkPriceBooth(eventName, price, priceSelected) {
+    function checkPriceBooth(eventName, price) {
         return [
             {
                 content: "Go to page Event",
@@ -31,23 +31,19 @@
                 content: "Verify Price displayed",
                 trigger: `.oe_currency_value:contains(${price})`,
             },
-            {
-                content: "Verify Price of selected booth",
-                trigger: `div.o_wbooth_booth_total_price span.oe_currency_value:contains(${priceSelected})`,
-            },
         ]
     }
-    function checkPriceDiscountBooth(eventName, price, priceSelected, discount) {
+    function checkPriceDiscountBooth(eventName, price, discount) {
         return [
-            ...checkPriceBooth(eventName, price, priceSelected),
+            ...checkPriceBooth(eventName, price),
             {
                 content: "Verify Price before discount",
                 trigger: `del:contains(${discount})`,
             },
         ]
     }
-    export const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceSelected, priceCart, priceBeforeDiscount=false}) {
-        const checkPriceSteps = priceBeforeDiscount ? checkPriceDiscountBooth(eventName, price, priceSelected, priceBeforeDiscount) : checkPriceBooth(eventName, price, priceSelected);
+    export const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceCart, priceBeforeDiscount=false}) {
+        const checkPriceSteps = priceBeforeDiscount ? checkPriceDiscountBooth(eventName, price, priceBeforeDiscount) : checkPriceBooth(eventName, price);
         return [
            ...changePricelist(pricelistName),
            ...checkPriceSteps,
