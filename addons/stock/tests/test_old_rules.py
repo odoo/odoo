@@ -2,6 +2,7 @@
 
 from datetime import timedelta
 
+from odoo import Command
 from odoo.addons.stock.models.stock_rule import StockRule
 from odoo.tests import Form
 from odoo.addons.stock.tests.common import TestStockCommon
@@ -394,7 +395,7 @@ class TestOldRules(TestStockCommon):
     def test_update_picking_origin(self):
         """ Check that adding new moves to a picking updates its origin without duplicate nor order mismatch
         """
-
+        reference = self.env['stock.reference'].create({'name': 'reference'})
         moves = self.env['stock.move'].create([
             {
                 'picking_type_id': self.warehouse_1.out_type_id.id,
@@ -404,6 +405,7 @@ class TestOldRules(TestStockCommon):
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 1.0,
                 'origin': origin,
+                'reference_ids': [Command.link(reference.id)],
             } for product, origin in [(self.productA, 'origin1'), (self.productA, 'origin2'), (self.productB, 'origin2'), (self.productB, 'origin1')]
         ])
         moves[0]._action_confirm()
