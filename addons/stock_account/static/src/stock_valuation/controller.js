@@ -77,6 +77,10 @@ export class StockValuationReportController {
     // Actions -----------------------------------------------------------------
     async actionGenerateEntry() {
         const args = [[this.companyId]];
+        const date = this.state.date.toISODate() || false;
+        if (date != DateTime.now().toISODate()) {
+            args.push(date);
+        }
         const action = await this.orm.call("res.company", "action_close_stock_valuation", args);
         if (action) {
             this.actionService.doAction(action);
