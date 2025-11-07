@@ -33,15 +33,6 @@
                 ) or '0'
             </attribute>
         </xpath>
-        <xpath expr="//button[hasclass('o_wbooth_registration_submit')]" position="before">
-            <div class="o_wbooth_booth_total_price d-none text-end">
-                <div class="fw-bold">
-                    <span>Total</span>
-                    <span t-out="float(0)"
-                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                </div>
-            </div>
-        </xpath>
     </template>
 
     <template id="event_booth_order_progress" inherit_id="website_event_booth.event_booth_order_progress">
