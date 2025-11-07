@@ -357,13 +357,13 @@ class ResPartner(models.Model):
 
     def _avatar_get_placeholder_path(self):
         if self.is_company:
-            return "base/static/img/company_image.png"
+            return "base/static/img/avatar_placeholder_company.png"
         if self.type == 'delivery':
-            return "base/static/img/truck.png"
+            return "base/static/img/avatar_placeholder_delivery.png"
         if self.type == 'invoice':
-            return "base/static/img/bill.png"
+            return "base/static/img/avatar_placeholder_invoice.png"
         if self.type == 'other':
-            return "base/static/img/puzzle.png"
+            return "base/static/img/avatar_placeholder_other.png"
         return super()._avatar_get_placeholder_path()
 
     def _get_complete_name(self):

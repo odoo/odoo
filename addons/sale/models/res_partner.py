@@ -47,7 +47,7 @@ class ResPartner(models.Model):
             return data_list
         for partner in self.filtered('sale_order_count'):
             data_list[partner.id].append(
-                {'iconClass': 'fa-usd', 'value': partner.sale_order_count, 'label': self.env._('Sale Orders'), 'tagClass': 'o_tag_color_2'}
+                {'iconClass': 'fa-usd', 'value': partner.sale_order_count, 'label': self.env._('Sale Orders')}
             )
         return data_list
 
