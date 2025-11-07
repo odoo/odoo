@@ -54,6 +54,7 @@ patch(WebClient.prototype, {
      * @return {Promise<void>}
      */
     async _subscribePush(numberTry = 1) {
+        await this.serviceWorkerActivatedDeferred;
         const pushManager = await this.pushManager();
         if (!pushManager) {
             return;
@@ -123,6 +124,7 @@ patch(WebClient.prototype, {
      * @return {Promise<void>}
      */
     async _unsubscribePush() {
+        await this.serviceWorkerActivatedDeferred;
         const pushManager = await this.pushManager();
         if (!pushManager) {
             return;
