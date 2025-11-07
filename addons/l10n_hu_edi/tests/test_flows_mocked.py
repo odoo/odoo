@@ -7,7 +7,6 @@ from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSend
 from odoo.addons.l10n_hu_edi.tests.common import L10nHuEdiTestCommon
 
 import requests
-from unittest import mock
 from freezegun import freeze_time
 import contextlib
 
@@ -316,51 +315,3 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         storno.js_assign_outstanding_line(dn.line_ids.filtered(lambda l: l.credit == 0).id)
         operation = storno._l10n_hu_edi_get_operation_type()
         self.assertEqual(operation, 'STORNO')
-
-    # === Helpers === #
-
-    @contextlib.contextmanager
-    def patch_post(self, responses=None):
-        """ Patch requests.Session in l10n_hu_edi.connection.
-
-        :param responses: If specified, a dict {service: response} that gives, for any service,
-                          bytes that should be served as response data, or an Exception that should be raised.
-                          Otherwise, will use the default responses stored under
-                          mocked_requests/{service}_response.xml
-        """
-        test_case = self
-
-        class MockedSession:
-            def post(self, url, data, headers, timeout=None):
-                prod_url = 'https://api.onlineszamla.nav.gov.hu/invoiceService/v3'
-                demo_url = 'https://api-test.onlineszamla.nav.gov.hu/invoiceService/v3'
-                mocked_requests = ['manageInvoice', 'queryTaxpayer', 'tokenExchange', 'queryTransactionStatus', 'queryTransactionList', 'manageAnnulment']
-
-                base_url, __, service = url.rpartition('/')
-                if base_url not in (prod_url, demo_url) or service not in mocked_requests:
-                    test_case.fail(f'Invalid POST url: {url}')
-
-                with tools.file_open(f'l10n_hu_edi/tests/mocked_requests/{service}_request.xml', 'rb') as expected_request_file:
-                    test_case.assertXmlTreeEqual(
-                        test_case.get_xml_tree_from_string(data),
-                        test_case.get_xml_tree_from_string(expected_request_file.read()),
-                    )
-
-                mock_response = mock.Mock(spec=requests.Response)
-                mock_response.status_code = 200
-                mock_response.headers = ''
-
-                if responses and service in responses:
-                    if isinstance(responses[service], Exception):
-                        raise responses[service]
-                    mock_response.text = responses[service]
-                else:
-                    with tools.file_open(f'l10n_hu_edi/tests/mocked_requests/{service}_response.xml', 'r') as response_file:
-                        mock_response.text = response_file.read()
-                return mock_response
-
-            def close(self):
-                pass
-
-        with mock.patch('odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection.requests.Session', side_effect=MockedSession, autospec=True):
-            yield
