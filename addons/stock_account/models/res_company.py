@@ -50,6 +50,9 @@ class ResCompany(models.Model):
         self.ensure_one()
         if at_date and isinstance(at_date, str):
             at_date = fields.Date.from_string(at_date)
+        last_closing_date = self._get_last_closing_date()
+        if at_date and last_closing_date and at_date < last_closing_date:
+            raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
         aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
