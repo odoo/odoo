@@ -19,7 +19,6 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
     static props = {
         value: { type: String },
         languageId: { type: String },
-        autofocus: { type: Boolean },
         onTextareaFocus: { type: Function },
         host: { type: Object },
     };
@@ -39,14 +38,6 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             this.pre = this.preRef.el;
             this.textarea = this.textareaRef.el;
             this.document = this.textarea.ownerDocument;
-
-            // Activate and focus the textarea if required.
-            if (this.props.autofocus) {
-                if (this.textarea !== this.document.activeElement) {
-                    this.textarea.focus();
-                    this.props.onTextareaFocus();
-                }
-            }
             this.highlight();
         });
 
