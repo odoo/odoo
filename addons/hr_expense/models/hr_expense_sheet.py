@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
+from datetime import datetime
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import clean_context
@@ -660,11 +662,17 @@ class HrExpenseSheet(models.Model):
         self.sudo().activity_update()
 
     def _do_approve(self):
+        user_local_dt = fields.Datetime.context_timestamp(
+                self.with_context(tz=self.env.user.tz),
+                datetime.now()
+            )
+        # Convert user datetime to naive UTC datetime
+        utc_naive_dt = user_local_dt.astimezone(pytz.UTC).replace(tzinfo=None)
         for sheet in self.filtered(lambda s: s.state in {'submit', 'draft'}):
             sheet.write({
                 'approval_state': 'approve',
                 'user_id': sheet.user_id.id or self.env.user.id,
-                'approval_date': fields.Date.context_today(sheet),
+                'approval_date': utc_naive_dt,
             })
         self.activity_update()
 

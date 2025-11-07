@@ -9,6 +9,7 @@ from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form
 from odoo.tools.misc import format_date
+from datetime import datetime, timedelta
 
 
 @tagged('-at_install', 'post_install')
@@ -114,6 +115,12 @@ class TestExpenses(TestExpenseCommon):
             {'state': 'approved'},
             {'state': 'approved'},
         ])
+        # Check that approval_date is set to current datetime upon approval
+        self.assertAlmostEqual(
+            expense_sheets[0].approval_date,
+            datetime.now(),
+            delta=timedelta(seconds=5)
+        )
 
         # Generate a payment for 'company_account' (and its move(s)) and a vendor bill for 'own_account'
         expense_sheets.action_sheet_move_create()
