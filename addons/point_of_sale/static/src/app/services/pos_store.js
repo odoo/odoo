@@ -672,13 +672,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {Promise<Object>}
      */
     async loadNewProducts(domain, offset = 0, limit = 0) {
-        const result = await this.data.callRelated(
-            "product.template",
-            "load_product_from_pos",
-            [odoo.pos_config_id, domain, offset, limit],
-            {},
-            false
-        );
+        const result = await this.data.loadProductFromPos(domain, offset, limit);
         this.productAttributesExclusion = this.computeProductAttributesExclusion(
             result["product.template.attribute.value"]
         );
@@ -2083,25 +2077,7 @@ export class PosStore extends WithLazyGetterTrap {
                 props: {
                     resId: product?.id,
                     onSave: async (record) => {
-                        if (
-                            record.evalContext.pos_categ_ids.length &&
-                            !this.config.iface_available_categ_ids.some((categ) =>
-                                record.evalContext.pos_categ_ids.includes(categ)
-                            )
-                        ) {
-                            await this.data.read("pos.category", [
-                                record.evalContext.pos_categ_ids[0],
-                            ]);
-                            await this.data.read(
-                                "pos.config",
-                                [this.config.id],
-                                ["iface_available_categ_ids"]
-                            );
-                        }
-                        this.data.read("product.template", [record.evalContext.id]);
-                        this.data.searchRead("product.product", [
-                            ["product_tmpl_id", "=", record.evalContext.id],
-                        ]);
+                        await this.loadNewProducts([["id", "=", record.evalContext.id]]);
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
