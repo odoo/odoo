@@ -562,14 +562,16 @@ class MrpWorkorder(models.Model):
     def _get_byproduct_move_to_update(self):
         return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
-    def _plan_workorder(self, replan=False):
+    def _plan_workorder(self, goal, forward=True, replan=False):
         self.ensure_one()
-        # Plan workorder after its predecessors
-        date_start = max(self.production_id.date_start, datetime.now())
-        for workorder in self.blocked_by_workorder_ids:
-            workorder._plan_workorder(replan)
-            if workorder.date_finished and workorder.date_finished > date_start:
-                date_start = workorder.date_finished
+        if forward:
+            # Plan workorder after its predecessors
+            for workorder in self.blocked_by_workorder_ids:
+                if workorder.state in ['done', 'cancel']:
+                    continue
+                workorder._plan_workorder(goal, True, replan)
+                if workorder.date_finished and workorder.date_finished > goal:
+                    goal = workorder.date_finished
         # Plan only suitable workorders
         if self.state not in ['blocked', 'ready']:
             return
@@ -580,7 +582,7 @@ class MrpWorkorder(models.Model):
                 return
         # Consider workcenter and alternatives
         workcenters = self.workcenter_id | self.workcenter_id.alternative_workcenter_ids
-        best_date_finished = datetime.max
+        best_date = datetime.max if forward else datetime.min
         vals = {}
         for workcenter in workcenters:
             if not workcenter.resource_calendar_id:
@@ -590,12 +592,12 @@ class MrpWorkorder(models.Model):
                 duration_expected = self.duration_expected
             else:
                 duration_expected = self._get_duration_expected(alternative_workcenter=workcenter)
-            from_date, to_date = workcenter._get_first_available_slot(date_start, duration_expected)
+            from_date, to_date = workcenter._get_first_available_slot(goal, duration_expected, forward)
             # If the workcenter is unavailable, try planning on the next one
             if not from_date:
                 continue
             # Check if this workcenter is better than the previous ones
-            if to_date and to_date < best_date_finished:
+            if (to_date < best_date if forward else from_date > best_date):
                 best_date_start = from_date
                 best_date_finished = to_date
                 best_workcenter = workcenter
@@ -603,8 +605,9 @@ class MrpWorkorder(models.Model):
                     'workcenter_id': workcenter.id,
                     'duration_expected': duration_expected,
                 }
-        # If none of the workcenter are available, raise
-        if best_date_finished == datetime.max:
+                best_date = to_date if forward else from_date
+        # If none of the workcenters are available, raise
+        if not vals:
             raise UserError(_('Impossible to plan the workorder. Please check the workcenter availabilities.'))
         # Create leave on chosen workcenter calendar
         leave = self.env['resource.calendar.leaves'].create({
@@ -617,6 +620,12 @@ class MrpWorkorder(models.Model):
         })
         vals['leave_id'] = leave.id
         self.write(vals)
+        if not forward:
+            # Plan predecessors
+            for workorder in self.blocked_by_workorder_ids:
+                if workorder.state in ['done', 'cancel']:
+                    continue
+                workorder._plan_workorder(best_date_start, False, replan)
 
     def _cal_cost(self, date=False):
         """Returns total cost of time spent on workorder.

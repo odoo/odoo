@@ -174,6 +174,11 @@
                     </group>
                 </page>
             </xpath>
+            <xpath expr="//group[@name='locations']" position="after">
+                <group invisible="code != 'mrp_operation'" string="Scheduling">
+                    <field name="scheduling"/>
+                </group>
+            </xpath>
         </field>
     </record>
 
