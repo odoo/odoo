@@ -26,7 +26,7 @@ import {
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 
 function getPickerCell(expr) {
-    return queryAll(`.o_datetime_picker .o_date_item_cell:contains(/^${expr}$/)`);
+    return queryAll(`.o_datetime_picker .o_date_item_cell:text(${expr})`);
 }
 
 class Partner extends models.Model {

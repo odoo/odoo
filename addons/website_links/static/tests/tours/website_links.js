@@ -103,7 +103,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         {
             content: "check that we landed on correct page with correct query strings",
-            trigger: ".s_title h1:contains(/^Contact us$/)",
+            trigger: ".s_title h1:text(Contact us)",
             run: function () {
                 const enc = c => encodeURIComponent(c).replace(/%20/g, '+');
                 const expectedUrl = `/contactus?utm_campaign=${enc(campaignValue)}&utm_source=${enc(sourceValue)}&utm_medium=${enc(mediumValue)}`;

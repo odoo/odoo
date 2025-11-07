@@ -1135,7 +1135,7 @@ registerWebsitePreviewTour("website_form_editable_content", {
     },
     {
         content: "Check that the new text value was correctly set",
-        trigger: ":iframe section.s_website_form h5:contains(/^ABC$/)",
+        trigger: ":iframe section.s_website_form h5:text(ABC)",
     },
     {
         content: "Remove the dropped column",

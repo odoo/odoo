@@ -98,6 +98,17 @@ class TestPaymentProvider(PaymentCommon):
             )
             self.assertNotIn(self.provider, compatible_providers)
 
+    def test_provider_compatible_with_branch_companies(self):
+        """ Test that the provider is available to branch companies. """
+        branch_company = self.env['res.company'].create({
+            'name': "Provider Branch Company",
+            'parent_id': self.provider.company_id.id,
+        })
+        compatible_providers = self.provider._get_compatible_providers(
+            branch_company.id, self.partner.id, self.amount,
+        )
+        self.assertIn(self.provider, compatible_providers)
+
     def test_provider_compatible_with_available_countries(self):
         """ Test that the provider is compatible with its available countries. """
         belgium = self.env.ref('base.be')

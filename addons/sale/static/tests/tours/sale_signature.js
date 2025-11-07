@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('sale_signature', {
     steps: () => [
     {
         content: "open the test SO",
-        trigger: 'a:contains(/^test SO$/)',
+        trigger: 'a:text(test SO)',
         run: "click",
         expectUnloadPage: true,
     },

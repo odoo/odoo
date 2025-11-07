@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-11 15:10+0000\n"
+"POT-Creation-Date: 2025-11-03 15:47+0000\n"
 "PO-Revision-Date: 2025-02-11 15:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,16 +19,19 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/l10n_latam_document_type.py:0
-#, python-format
 msgid ""
 "%(document_number)s is not a valid value for %(document_type)s.\n"
-"The document number must be entered with a maximum of 2 letters for the first part and 7 numbers for the second. The following are examples of valid document numbers:\n"
+"The document number must be entered with a maximum of 2 letters for the "
+"first part and 7 numbers for the second. The following are examples of valid "
+"document numbers:\n"
 "- XX0000001\n"
 " - YY0000123\n"
 " - A0000001"
 msgstr ""
 "%(document_number)s no es un un valor válida para %(document_type)s.\n"
-"El número de documento ingresado debe tener un máximo de 2 letras para la primera parte y 7 números para la segunda. Los siguientes son ejemplos de números de documento válidos:\n"
+"El número de documento ingresado debe tener un máximo de 2 letras para la "
+"primera parte y 7 números para la segunda. Los siguientes son ejemplos de "
+"números de documento válidos:\n"
 "- XX0000001\n"
 " - YY0000123\n"
 " - A0000001"
@@ -64,6 +68,11 @@ msgid "Base Purchases 22%"
 msgstr "Base 22% Compras"
 
 #. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_cmprs_reduced
+msgid "Base Purchases Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
 #: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_vnts_0
 msgid "Base Sales 0%"
 msgstr "Base 0% Ventas"
@@ -77,6 +86,11 @@ msgstr "Base 10% Ventas"
 #: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_vnts_22
 msgid "Base Sales 22%"
 msgstr "Base 22% Ventas"
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_vnts_reduced
+msgid "Base Sales Reduced VAT"
+msgstr ""
 
 #. module: l10n_uy
 #: model:l10n_latam.document.type,name:l10n_uy.dc_boleta_venta_contado
@@ -256,6 +270,11 @@ msgid "Delivery Guide"
 msgstr "Remito"
 
 #. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_uy
 #: model:l10n_latam.document.type,name:l10n_uy.dc_nc_expo
 msgid "Export Credit Note"
 msgstr "Nota de Crédito Exportación"
@@ -361,22 +380,23 @@ msgid "Passport (all countries)"
 msgstr "Pasaporte (todos los paises)"
 
 #. module: l10n_uy
-#. odoo-python
-#: code:addons/l10n_uy/models/l10n_latam_document_type.py:0
-msgid ""
-"Please introduce a valid Document number: 2 letters and 7 digits (XX0000001)"
-msgstr ""
-"Por favor ingrese un Número de documento válido: 2 letras y 7 dígitos "
-"(XX0000001)"
-
-#. module: l10n_uy
 #: model:account.report.line,name:l10n_uy.account_tax_report_cmprs_exnto_iva
 msgid "Purchases Exempt from VAT"
 msgstr "Compras IVA Exentas"
 
 #. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_cmprs_iva_reduced
+msgid "Purchases Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
 #: model:l10n_latam.identification.type,name:l10n_uy.it_rut
 msgid "RUT / RUC"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_vnts_iva_reduced
+msgid "Sales Reduced VAT"
 msgstr ""
 
 #. module: l10n_uy
@@ -393,11 +413,6 @@ msgstr "IVA Ventas 22%"
 #: model:account.report.line,name:l10n_uy.account_tax_report_vnts_iva
 msgid "Sales VAT exempt"
 msgstr "Ventas exentas de IVA"
-
-#. module: l10n_uy
-#: model:ir.model,name:l10n_uy.model_account_tax
-msgid "Tax"
-msgstr "Impuestos"
 
 #. module: l10n_uy
 #: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_cmprs
@@ -440,10 +455,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem to be valid.\n"
+"The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem "
+"to be valid.\n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"El %(vat_label)s número [%(wrong_vat)s] para %(partner_label)s no parece válido.\n"
+"El %(vat_label)s número [%(wrong_vat)s] para %(partner_label)s no parece "
+"válido.\n"
 "Nota: el formato esperoado es %(expected_format)s"
 
 #. module: l10n_uy

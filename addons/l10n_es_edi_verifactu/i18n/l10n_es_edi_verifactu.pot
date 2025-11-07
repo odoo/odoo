@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 16:41+0000\n"
-"PO-Revision-Date: 2025-07-17 16:41+0000\n"
+"POT-Creation-Date: 2025-11-03 15:42+0000\n"
+"PO-Revision-Date: 2025-11-03 15:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -195,6 +195,11 @@ msgid "Document Type"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__l10n_es_edi_verifactu_required
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__l10n_es_edi_verifactu_required
 msgid "Enable Veri*Factu"
@@ -240,7 +245,7 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 msgid "Go to the journal entry"
 msgstr ""
 
@@ -511,11 +516,6 @@ msgid "Substitution of"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
-#: model:ir.model,name:l10n_es_edi_verifactu.model_account_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_available_clave_regimens
 #: model:ir.model.fields,help:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_available_clave_regimens
 msgid ""
@@ -675,14 +675,14 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid "There is no Veri*Factu document for the refunded record."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid ""
 "There is no Veri*Factu document for the reversal of the substituted record."
@@ -690,7 +690,7 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid "There is no Veri*Factu document for the substituted record."
 msgstr ""
