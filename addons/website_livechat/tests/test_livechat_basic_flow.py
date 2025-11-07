@@ -234,6 +234,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 ),
                 "discuss.channel.member": [
                     {
+                        "channel_role": False,
                         "create_date": fields.Datetime.to_string(operator_member.create_date),
                         "fetched_message_id": False,
                         "id": operator_member.id,
@@ -244,6 +245,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "channel_id": {"id": channel.id, "model": "discuss.channel"},
                     },
                     {
+                        "channel_role": False,
                         "create_date": fields.Datetime.to_string(guest_member.create_date),
                         "fetched_message_id": False,
                         "id": guest_member.id,
@@ -350,6 +352,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             [
                 {
                     "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                    "channel_role": False,
                     "create_date": fields.Datetime.to_string(guest_member.create_date),
                     "custom_channel_name": False,
                     "custom_notifications": False,

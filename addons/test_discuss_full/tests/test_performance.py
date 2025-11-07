@@ -921,6 +921,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         if channel == self.channel_general and partner == self.users[0].partner_id:
             return {
+                "channel_role": False,
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -941,6 +942,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1 and partner == self.users[0].partner_id:
             return {
+                "channel_role": "owner",
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -961,6 +963,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2 and partner == self.users[0].partner_id:
             return {
+                "channel_role": "owner",
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -981,6 +984,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1 and partner == self.users[0].partner_id:
             return {
+                "channel_role": "owner",
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1007,6 +1011,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2 and partner == self.users[0].partner_id:
             return {
+                "channel_role": "owner",
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1027,6 +1032,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_group_1 and partner == self.users[0].partner_id:
             return {
+                "channel_role": "owner",
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1047,6 +1053,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_group_1 and partner == self.users[12].partner_id:
             return {
+                "channel_role": False,
                 "create_date": fields.Datetime.to_string(member_12.create_date),
                 "last_seen_dt": False,
                 "fetched_message_id": False,
@@ -1057,6 +1064,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_1 and partner == self.users[0].partner_id:
             return {
+                "channel_role": False,
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1077,6 +1085,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_1 and partner == self.users[14].partner_id:
             return {
+                "channel_role": False,
                 "create_date": fields.Datetime.to_string(member_14.create_date),
                 "last_seen_dt": False,
                 "fetched_message_id": False,
@@ -1087,6 +1096,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_2 and partner == self.users[0].partner_id:
             return {
+                "channel_role": False,
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1107,6 +1117,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_2 and partner == self.users[15].partner_id:
             return {
+                "channel_role": False,
                 "create_date": fields.Datetime.to_string(member_15.create_date),
                 "last_seen_dt": False,
                 "fetched_message_id": False,
@@ -1117,6 +1128,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_3 and partner == self.users[0].partner_id:
             return {
+                "channel_role": False,
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1137,6 +1149,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_3 and partner == self.users[2].partner_id:
             return {
+                "channel_role": False,
                 "create_date": fields.Datetime.to_string(member_2.create_date),
                 "last_seen_dt": False,
                 "fetched_message_id": False,
@@ -1147,6 +1160,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_4 and partner == self.users[0].partner_id:
             return {
+                "channel_role": False,
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1167,6 +1181,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_4 and partner == self.users[3].partner_id:
             return {
+                "channel_role": False,
                 "create_date": fields.Datetime.to_string(member_3.create_date),
                 "last_seen_dt": False,
                 "fetched_message_id": False,
@@ -1177,6 +1192,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1 and partner == self.users[0].partner_id:
             return {
+                "channel_role": False,
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1198,6 +1214,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1 and partner == self.users[1].partner_id:
             return {
+                "channel_role": False,
                 "create_date": fields.Datetime.to_string(member_1.create_date),
                 "last_seen_dt": fields.Datetime.to_string(member_1.last_seen_dt),
                 "fetched_message_id": last_message.id,
@@ -1209,6 +1226,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_2 and partner == self.users[0].partner_id:
             return {
+                "channel_role": False,
                 "create_date": member_0_create_date,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -1230,6 +1248,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_2 and guest:
             return {
+                "channel_role": False,
                 "create_date": fields.Datetime.to_string(member_g.create_date),
                 "last_seen_dt": fields.Datetime.to_string(member_g.last_seen_dt),
                 "fetched_message_id": last_message.id,
