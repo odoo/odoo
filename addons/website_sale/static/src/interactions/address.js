@@ -1,5 +1,7 @@
 import { CustomerAddress } from '@portal/interactions/address';
 import { patch } from '@web/core/utils/patch';
+import { createElementWithContent } from '@web/core/utils/html';
+import { markup } from '@odoo/owl';
 
 patch(CustomerAddress.prototype, {
     // /shop/address
@@ -14,5 +16,14 @@ patch(CustomerAddress.prototype, {
             submitButton.addEventListener('click', boundSaveAddress);
             this.registerCleanup(() => submitButton.removeEventListener('click', boundSaveAddress));
         });
+        // Display errors as nice alerts at the top of the checkout page.
+        this.errorsDiv = document.getElementById('checkout_alerts') ?? this.errorsDiv;
+    },
+
+    _renderErrorMessage(message) {
+        if (!message.html) {
+            return super._renderErrorMessage(...arguments);
+        }
+        return createElementWithContent('div', markup(message.html));
     },
 });

@@ -38,7 +38,6 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         Cart_controller = Cart()
         order_sudo = request.cart or request.website._create_cart()
-        warnings_to_aggregate = set()
         values = {
             'tracking_info': [],
         }
@@ -76,14 +75,8 @@ class CustomerPortal(sale_portal.CustomerPortal):
                 no_variant_attribute_value_ids=line.product_no_variant_attribute_value_ids.ids,
                 linked_products=linked_products,
             )
-            if not cart_values['quantity']:
-                # Only aggregate order warnings
-                warnings_to_aggregate.add(order_sudo.shop_warning)
 
             values['tracking_info'].extend(cart_values['tracking_info'])
-
-        if warnings_to_aggregate:
-            order_sudo.shop_warning = '\n'.join(warnings_to_aggregate)
 
         values['cart_quantity'] = order_sudo.cart_quantity
         return values

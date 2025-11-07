@@ -35,13 +35,16 @@ class IrHttp(models.AbstractModel):
         request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
 
     @api.model
-    @tools.ormcache('path', 'website_id')
+    @tools.ormcache('path', 'website_id', cache='routing.rewrites')
     def url_unrewrite(self, path, website_id):
-        """Returns the opposite of `url_rewrite`. Note that this method does not support query
-        params inside the path.
-        """
-        return self.env['website.rewrite'].sudo().search(Domain([
-            ('redirect_type', '=', '308'),
-            ('url_to', '=', path),
-            ('website_id', 'in', [False, website_id]),
-        ]), limit=1).url_from or path
+        """Return the opposite of `url_rewrite`. Note that this method does not support query
+        params inside the path."""
+        return self.env['website.rewrite'].sudo().search_fetch(
+            Domain([
+                ('redirect_type', '=', '308'),
+                ('url_to', '=', path),
+                ('website_id', 'in', (False, website_id)),
+            ]),
+            field_names=('url_from',),
+            limit=1,
+        ).url_from or path

@@ -2,6 +2,7 @@
 
 from . import (
     cart,
+    checkout,
     combo_configurator,
     comparison,
     delivery,

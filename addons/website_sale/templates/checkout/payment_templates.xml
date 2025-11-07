@@ -5,7 +5,7 @@
     <template id="website_sale.payment" name="Payment">
         <t t-set="hide_payment_button" t-value="True" t-if="errors or (website_sale_order.amount_total and not (payment_methods_sudo or tokens_sudo))"/>
         <t t-set="oe_structure">
-            <!--
+            <!-- This is the drag-and-drop area for website building blocs at the end of each
                  checkout page. This is append at the of the page in `checkout_layout`. The
                  templates created in the database to store blocs are hooked using XPath on the
                  `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
@@ -17,22 +17,9 @@
             redirect.f="/shop/payment"
             hide_payment_button="hide_payment_button"
             oe_structure="oe_structure">
-            <div class="col-12" t-if="errors">
-                <t t-foreach="errors" t-as="error">
-                    <div class="alert alert-danger" t-if="error" role="alert">
-                        <h4>
-                            <t t-out="error[0]" />
-                        </h4>
-                        <t t-out="error[1]" />
-                    </div>
-                </t>
-            </div>
             <div class="oe_structure clearfix" id="oe_structure_website_sale_payment_1"/>
 
-            <div
-                t-if="not shop_warnings and website_sale_order.amount_total"
-                name="website_sale_non_free_cart"
-            >
+            <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div id="payment_method" class="o_not_editable mb-3">
                     <t t-call="payment.form"/>
                 </div>

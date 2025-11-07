@@ -5,10 +5,11 @@ from odoo.exceptions import UserError
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _name = 'sale.order.line'
+    _inherit = ['sale.order.line', 'website.checkout.alert.mixin']
 
     name_short = fields.Char(compute='_compute_name_short')
-    shop_warning = fields.Char(string="Warning")
+    alerts = fields.Json()
 
     #=== COMPUTE METHODS ===#
 

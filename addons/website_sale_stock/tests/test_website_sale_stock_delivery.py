@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -23,10 +22,8 @@ class TestWebsiteSaleStockDeliveryController(WebsiteSaleStockCommon):
         cls.CartController = CartController()
 
     def test_validate_payment_with_no_available_delivery_method(self):
-        """
-        An error should be raised if you try to validate an order with a storable
-        product without any delivery method available
-        """
+        """The user should be redirected to the delivery method selection step if they didn't select
+        one yet."""
         self.env['delivery.carrier'].search([]).write({'website_published': False})
         website = self.website.with_user(self.public_user)
         with MockRequest(website.env, website=website, path='/shop/cart/add') as request:
@@ -49,20 +46,17 @@ class TestWebsiteSaleStockDeliveryController(WebsiteSaleStockCommon):
             )
             self.assertNotEqual(request.cart.partner_id, self.public_partner)
 
-        with (
-            MockRequest(
-                website.env, website=website, path='/shop/payment/validate', sale_order_id=cart.id,
-            ),
-            self.assertRaises(ValidationError),
+        with MockRequest(
+            website.env, website=website, path='/shop/payment/validate', sale_order_id=cart.id
         ):
             # Attempt to validate the payment a little too quickly
-            self.CheckoutController.shop_payment_validate()
+            response = self.CheckoutController.shop_payment_validate()
+
+            self.assertEqual(response.location, '/shop/checkout')
 
     def test_validate_order_out_of_stock_zero_price(self):
-        """
-        An error should be raised if you try to validate an order for
-        an out of stock product with 0 price
-        """
+        """The user should be redirected to the cart overview page if they try to buy a product out
+        of stock with 0 price."""
         self.storable_product.lst_price = 0.0
         cart = self._create_so(
             order_line=[Command.create({
@@ -73,10 +67,9 @@ class TestWebsiteSaleStockDeliveryController(WebsiteSaleStockCommon):
         )
 
         website = self.website.with_user(self.public_user)
-        with (
-            MockRequest(
-                website.env, website=website, path='/shop/payment/validate', sale_order_id=cart.id,
-            ),
-            self.assertRaises(ValidationError),
+        with MockRequest(
+            website.env, website=website, path='/shop/payment/validate', sale_order_id=cart.id
         ):
-            self.CheckoutController.shop_payment_validate()
+            response = self.CheckoutController.shop_payment_validate()
+
+            self.assertEqual(response.location, '/shop/cart')

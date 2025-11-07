@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """Override to exclude delivery methods that cannot fulfill the order."""
         return super()._get_preferred_delivery_method(
-            available_delivery_methods.filtered(self._can_be_delivered),
+            available_delivery_methods.filtered(self._can_be_delivered_with),
         )
 
     def _set_pickup_location(self, pickup_location_data):
@@ -90,28 +90,33 @@ class SaleOrder(models.Model):
         """Override of `website_sale` to include errors if no pickup location is selected and to
         ensure the cart is available in the selected store, even if out-of-stock orders are
         allowed."""
+        ready = super()._is_cart_ready_for_payment()
         if not self._has_deliverable_products():
-            return super()._is_cart_ready_for_payment()
+            return ready
 
         in_store = self.carrier_id.delivery_type == 'in_store'
         if in_store and not self.pickup_location_data:
-            self.shop_warning = self.env._("Please choose a store to collect your order.")
+            self._add_alert(
+                'warning', self.env._("Please choose a store to collect your order.")
+            )  # TODO: should we block?
             return False
 
-        # `_is_cart_ready_for_checkout` checks stock in all available warehouses; this checks for
-        # the selected warehouse/store.
-        warehouse_id = self.warehouse_id.id if in_store else self._get_shop_warehouse_id()
-        if warehouse_id and not self._is_in_stock(warehouse_id, allow_out_of_stock=not in_store):
-            self.shop_warning = (
-                in_store and self.env._("Some products are not available in the selected store.")
+        # `website_sale_stock` overrides `_is_cart_ready_for_checkout` to checks stock in all
+        # available warehouses on the website (store warehouses included); this checks for the
+        # selected warehouse/store only.
+        wh_id = self.warehouse_id.id if in_store else self._get_shop_warehouse_id()
+        if wh_id and not self._is_in_stock(wh_id, add_alerts=True):
+            self._add_alert(
+                'warning',  # TODO: should we block?
+                (in_store and self.env._("Some products are not available in the selected store."))
                 or self.env._(
                     "Unfortunately, we can not deliver this order with the selected delivery"
-                    " method. Please update your choice and try again.",
-                )
+                    " method. Please update your choice and try again."
+                ),
             )
             return False
 
-        return super()._is_cart_ready_for_payment()
+        return ready
 
     # === TOOLING ===#
 
@@ -129,41 +134,42 @@ class SaleOrder(models.Model):
                 if pickup_location_data:
                     default_pickup_locations[dm.id] = {
                         'pickup_location_data': pickup_location_data,
-                        'insufficient_stock_data': self.with_context(
-                            save_shop_warning=False
-                        )._get_insufficient_stock_data(pickup_location_data['id']),
+                        'insufficient_stock_data': self._get_insufficient_stock_data(
+                            pickup_location_data['id']
+                        ),
                     }
 
         return {'default_pickup_locations': default_pickup_locations}
 
-    def _is_in_stock(self, wh_id, allow_out_of_stock=False):
-        """ Check whether all storable products of the cart are in stock in the given warehouse.
+    def _is_in_stock(self, wh_id, *, add_alerts=False):
+        """Check whether all storable products of the cart are in stock in the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
-        :param bool allow_out_of_stock: Whether `product.allow_out_of_stock_order` should be taken
-            into account or not.
+        :param bool add_alerts: Wheter to add stock alerts on the unavailable order lines.
         :return: Whether all storable products are in stock.
         :rtype: bool
         """
-        return not self._get_insufficient_stock_data(wh_id, allow_out_of_stock=allow_out_of_stock)
+        insufficient_stock_data = self._get_insufficient_stock_data(wh_id)
 
-    def _get_insufficient_stock_data(self, wh_id, allow_out_of_stock=False):
+        if add_alerts:
+            for ol, avl_qty in insufficient_stock_data.items():
+                ol._add_alert('warning', ol._get_shop_warning_stock(ol.product_uom_qty, avl_qty))
+
+        return not insufficient_stock_data
+
+    def _get_insufficient_stock_data(self, wh_id):
         """Return the mapping of order lines with insufficient stock in the given warehouse to their
         maximum available quantity in the line's UoM.
         If there are multiple order lines for the same product, consider the sum of their
         quantities.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
-        :param bool allow_out_of_stock: Wheter `product.allow_out_of_stock_order` should be taken
-            into account or not.
         :return: The mapping of order lines to their maximum available quantity.
         :rtype: dict
         """
         insufficient_stock_data = {}
         for product, ols in self.order_line.grouped('product_id').items():
             if not product.is_storable or product.allow_out_of_stock_order:
-                continue
-            if allow_out_of_stock and product.allow_out_of_stock_order:
                 continue
             free_qty = product.with_context(warehouse_id=wh_id).free_qty
             for ol in ols:
@@ -174,19 +180,11 @@ class SaleOrder(models.Model):
                 if line_qty_in_uom > free_qty_in_uom:  # Not enough stock.
                     # Set a warning on the order line.
                     insufficient_stock_data[ol] = free_qty_in_uom
-                    if self.env.context.get('save_shop_warning', True):
-                        ol.shop_warning = self.env._(
-                            "%(available_qty)s/%(line_qty)s available at this location",
-                            available_qty=free_qty_in_uom, line_qty=int(ol.product_uom_qty),
-                        )
-                free_qty -= ol.product_uom_id._compute_quantity(free_qty_in_uom, product.uom_id)
+                free_qty -= ol.product_uom_id._compute_quantity(line_qty_in_uom, product.uom_id)
         return insufficient_stock_data
 
-    def _can_be_delivered(self, dm):
+    def _can_be_delivered_with(self, dm):
         """Determine whether the order can be delivered using the given delivery method.
-
-        For in-store deliveries, stock availability must be ensured even if `allow_out_of_stock` is
-        enabled, since customers may collect their order at any time without notice.
 
         :param delivery.carrier dm: The delivery method to check for stock availability.
         :rtype: bool
@@ -196,11 +194,8 @@ class SaleOrder(models.Model):
             return True
 
         if dm.delivery_type == 'in_store':
-            return any(
-                self.with_context(save_shop_warning=False)._is_in_stock(wh_id)
-                for wh_id in dm.warehouse_ids.ids
-            )
+            wh_ids = dm.warehouse_ids.ids
+        else:
+            wh_ids = [self._get_shop_warehouse_id()]
 
-        return self.with_context(save_shop_warning=False)._is_in_stock(
-            self._get_shop_warehouse_id(), allow_out_of_stock=True,
-        )
+        return any(map(self._is_in_stock, wh_ids))

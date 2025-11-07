@@ -4,9 +4,9 @@ from datetime import datetime
 from functools import partial
 from unittest.mock import patch
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import HttpCase, JsonRpcException, tagged
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.controllers.cart import Cart
@@ -14,14 +14,13 @@ from odoo.addons.website_sale.controllers.combo_configurator import (
     WebsiteSaleComboConfiguratorController,
 )
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.models.product_template import ProductTemplate
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.tools.misc import mute_logger
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
-
+class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -134,9 +133,12 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                     quantity=1,
                 )
 
+    @mute_logger('odoo.http')
     def test_update_cart_before_payment(self):
+        self.cart.order_line.unlink()
+
         website = self.website.with_user(self.public_user)
-        with MockRequest(website.env, website=website) as request:
+        with MockRequest(website.env, website=website, sale_order_id=self.cart.id) as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.product.product_tmpl_id,
                 product_id=self.product.id,
@@ -150,25 +152,27 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
                 product_id=self.product.id,
                 quantity=1,
             )
-            # Try processing payment with the old amount
-            with self.assertRaises(UserError):
-                PaymentPortal().shop_payment_transaction(
-                    sale_order.id,
-                    sale_order.access_token,
-                    amount=old_amount
-                )
 
+        # Try processing payment with the old amount
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
+            self.make_jsonrpc_request(
+                f'/shop/payment/transaction/{sale_order.id}',
+                {'access_token': sale_order._portal_ensure_token(), 'amount': old_amount},
+            )
+
+    @mute_logger('odoo.http')
     def test_check_order_delivery_before_payment(self):
-        website = self.website.with_user(self.public_user)
-        with MockRequest(website.env, website=website):
-            sale_order = self.env['sale.order'].create({
-                'partner_id': self.public_user.id,
-                'order_line': [Command.create({'product_id': self.product.id})],
-                'access_token': 'test_token',
-            })
-            # Try processing payment with a storable product and no carrier_id
-            with self.assertRaises(ValidationError):
-                PaymentPortal().shop_payment_transaction(sale_order.id, sale_order.access_token)
+        self.cart.write({
+            'order_line': [Command.clear(), Command.create({'product_id': self.product.id})],
+            'carrier_id': False,
+        })
+
+        # Try processing payment with a storable product and no carrier_id
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
+            self.make_jsonrpc_request(
+                f'/shop/payment/transaction/{self.cart.id}',
+                {'access_token': self.cart._portal_ensure_token()},
+            )
 
     def test_update_cart_zero_qty(self):
         # Try to remove a product that has already been removed

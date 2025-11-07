@@ -38,19 +38,15 @@ class SaleOrder(models.Model):
             if available_qty < total_cart_qty:
                 allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
                 if allowed_line_qty > 0:
-                    def format_qty(qty):
-                        return int(qty) if float(qty).is_integer() else qty
                     if order_line:
-                        warning = order_line._get_shop_warning_stock(
-                            format_qty(total_cart_qty),
-                            format_qty(available_qty),
-                        )
+                        warning = order_line._get_shop_warning_stock(total_cart_qty, available_qty)
                     else:
                         warning = self.env._(
-                            "You requested %(desired_qty)s products, but only %(available_qty)s are"
-                            " available in stock.",
-                            desired_qty=format_qty(total_cart_qty),
-                            available_qty=format_qty(available_qty),
+                            "You requested %(qty)g %(product_name)s,"
+                            " but only %(avl_qty)g are available in stock.",
+                            qty=total_cart_qty,
+                            product_name=product.display_name,
+                            avl_qty=available_qty,
                         )
                 elif order_line:
                     # Line will be deleted
@@ -60,8 +56,8 @@ class SaleOrder(models.Model):
                     )
                 else:
                     warning = self.env._(
-                        "%(product_name)s has not been added to your cart since it is not available.",
-                        product_name=product.name,
+                        "%(product_name)s was not added to your cart because it is unavailable.",
+                        product_name=product.display_name,
                     )
                 return allowed_line_qty, warning
         return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
@@ -122,18 +118,23 @@ class SaleOrder(models.Model):
     def _is_cart_ready_for_checkout(self):
         """Override of `website_sale` to prevent the user from proceeding if there is not enough
         stock for some order lines."""
-        if self._has_deliverable_products() and not self._all_product_available():
-            self.shop_warning = self.env._(
-                "Unfortunately, there is no longer enough stock to fulfill your order.\n"
-                "Please update your cart. We apologize for any inconvenience caused."
+        ready = super()._is_cart_ready_for_checkout()
+        if not self._has_deliverable_products():
+            return ready
+
+        if not self._all_product_available():
+            self._add_alert(
+                'warning',
+                self.env._("Unfortunately, there is no longer enough stock to fulfill your order."),
             )
             return False
-        return super()._is_cart_ready_for_checkout()
+
+        return ready
 
     def _all_product_available(self):
-        """Whether all the order lines are available on the current website."""
+        """Whether all the products are available on the current website."""
         self.ensure_one()
-        # Uses list comprehension to ensure all the shop warnings are updated.
+        # Uses list comprehension to ensure all products are checked and potential alerts are saved.
         return all([sol._check_availability() for sol in self.order_line])  # noqa: C419
 
     def _filter_can_send_abandoned_cart_mail(self):

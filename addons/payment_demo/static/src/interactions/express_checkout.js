@@ -1,7 +1,6 @@
 
 import { patch } from '@web/core/utils/patch';
 import { patchDynamicContent } from '@web/public/utils';
-import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { ExpressCheckout } from '@payment/interactions/express_checkout';
@@ -51,10 +50,9 @@ patch(ExpressCheckout.prototype, {
                 const id = parseInt(delivery_methods[0].id);
                 await this.waitFor(rpc('/shop/set_delivery_method', {dm_id: id}));
             } else {
-                this.services.dialog.add(ConfirmationDialog, {
-                    title: _t("Validation Error"),
-                    body: _t("No delivery method is available."),
-                });
+                this._displayErrorDialog(
+                    _t("Validation Error"), _t("No delivery method is available.")
+                );
                 return;
             }
         }
@@ -75,10 +73,8 @@ patch(ExpressCheckout.prototype, {
                 },
             }
         ));
-        const processingValues = await this.waitFor(rpc(
-            this.paymentContext['transactionRoute'],
-            this._prepareTransactionRouteParams(providerId),
-        ));
+        const processingValues = await this._prepareExpressTransaction();
+        if (processingValues.state === 'error') return;
         paymentDemoMixin.processDemoPayment(processingValues);
     },
 });

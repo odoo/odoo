@@ -47,14 +47,11 @@
                 </a>
             </p>
         </div>
-        <t
-            t-if="website_sale_order in shop_warnings"
-            t-call="website_sale.block_warning"
-            warning_key="website_sale_order"
-        />
-        <div id="cart_products"
-             t-if="website_sale_order and website_sale_order.website_order_line"
-             class="js_cart_lines d-flex flex-column mb32">
+        <div
+            t-else=""
+            id="cart_products"
+            class="js_cart_lines d-flex flex-column mb32"
+        >
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
                 <div
@@ -192,10 +189,11 @@
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
                 />
-                <a t-if="line in shop_warnings" href="#" class="btn btn-link">
+                <a t-if="line.alerts" href="#" class="btn btn-link">
                     <t
-                        t-call="website_sale.inline_warning"
-                        warning_key="line"
+                        t-call="website_sale.alert_inline"
+                        level="line._get_max_alert_level()"
+                        message="line._join_alert_messages()"
                     />
                 </a>
                 <a
@@ -210,10 +208,11 @@
             </t>
             <t t-else="">
                 <t
-                    t-if="line in shop_warnings"
-                    t-call="website_sale.inline_warning"
-                    warning_key="line"
-                    classes="'d-none d-md-block pe-1 align-self-center'"
+                    t-if="line.alerts"
+                    t-call="website_sale.alert_inline"
+                    level="line._get_max_alert_level()"
+                    message="line._join_alert_messages()"
+                    classes.f="d-none d-md-block pe-1 align-self-center"
                 />
                 <t t-set="displayed_qty" t-value="line._get_displayed_quantity()"/>
                 <input
@@ -226,10 +225,11 @@
                     t-att-size="len(str(displayed_qty))"
                 />
                 <t
-                    t-if="line in shop_warnings"
-                    t-call="website_sale.inline_warning"
-                    warning_key="line"
-                    classes="'d-md-none ps-1 align-self-center'"
+                    t-if="line.alerts"
+                    t-call="website_sale.alert_inline"
+                    level="line._get_max_alert_level()"
+                    message="line._join_alert_messages()"
+                    classes.f="d-md-none ps-1 align-self-center"
                 />
             </t>
         </div>

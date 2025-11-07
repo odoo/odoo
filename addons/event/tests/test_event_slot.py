@@ -205,19 +205,17 @@ class TestEventSlotSeats(TestEventSlotsCommon):
                     new.with_user(self.user_eventmanager).unlink()
 
         # check ``_verify_seats_availability`` itself
-        for check_input, should_crash, problematic_name in [
+        for check_input, should_crash in [
             # ok for event max seats for both slots
-            (((first_slot, False, 2), (second_slot, False, 4)), False, None),
+            (((first_slot, False, 2), (second_slot, False, 4)), False),
             # not enough seats on first slot
-            (((first_slot, False, 3),), True, first_slot.display_name),
+            (((first_slot, False, 3),), True),
             # not enough seats on second slot
-            (((second_slot, False, 5),), True, second_slot.display_name),
+            (((second_slot, False, 5),), True),
         ]:
-            with self.subTest(check_input=check_input, should_crash=should_crash, problematic_name=problematic_name):
+            with self.subTest(check_input=check_input, should_crash=should_crash):
                 if should_crash:
-                    # Error message should reference the slot name.
-                    # See `sale.order._is_cart_ready_for_checkout` for a why.
-                    with self.assertRaisesRegex(exceptions.ValidationError, problematic_name):
+                    with self.assertRaises(exceptions.ValidationError):
                         test_event._verify_seats_availability(check_input)
                 else:
                     test_event._verify_seats_availability(check_input)

@@ -85,41 +85,13 @@ class TestSaleOrder(ClickAndCollectCommon):
         free_qty = so._get_free_qty(self.storable_product)
         self.assertEqual(free_qty, 10)
 
-    def test_prevent_buying_out_of_stock_products_if_dm_is_in_store(self):
+    def test_prevent_buying_out_of_stock_products(self):
         cart = self._create_in_store_delivery_order(order_line=[Command.create({
             'product_id': self.product_2.id,
             'product_uom_qty': 5.0,
         })])
-        cart._set_pickup_location(f'{{"id": {self.warehouse.id}}}')
-
+        cart.warehouse_id = self.warehouse
         self.assertFalse(cart._is_cart_ready_for_payment())
-
-    def test_ignore_allow_out_of_stock_order_if_dm_is_in_store(self):
-        self.product_2.allow_out_of_stock_order = True  # And no available quantity
-        cart = self._create_in_store_delivery_order(order_line=[Command.create({
-            'product_id': self.product_2.id,
-            'product_uom_qty': 5.0,
-        })])
-        cart._set_pickup_location(f'{{"id": {self.warehouse.id}}}')
-
-        self.assertFalse(cart._is_cart_ready_for_payment())
-
-    def test_prevent_buying_out_of_stock_products_if_dm_is_not_in_store(self):
-        cart = self._create_so(carrier_id=self.free_delivery.id, order_line=[Command.create({
-            'product_id': self.product_2.id,
-            'product_uom_qty': 5.0,
-        })])
-
-        self.assertFalse(cart._is_cart_ready_for_checkout())
-
-    def test_dont_ignore_allow_out_of_stock_order_if_dm_is_not_in_store(self):
-        self.product_2.allow_out_of_stock_order = True  # And no available quantity
-        cart = self._create_so(carrier_id=self.free_delivery.id, order_line=[Command.create({
-            'product_id': self.product_2.id,
-            'product_uom_qty': 5.0,
-        })])
-
-        self.assertTrue(cart._is_cart_ready_for_payment())
 
     def test_product_in_stock_is_available(self):
         cart = self._create_in_store_delivery_order(

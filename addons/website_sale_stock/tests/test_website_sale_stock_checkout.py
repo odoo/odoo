@@ -9,7 +9,6 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockCheckout(WebsiteSaleStockCommon, HttpCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,7 +22,7 @@ class TestWebsiteSaleStockCheckout(WebsiteSaleStockCommon, HttpCase):
 
         website = self.website.with_user(self.public_user)
         with MockRequest(
-            website.env, website=website, path='/shop/checkout', sale_order_id=self.cart.id,
+            website.env, website=website, path='/shop/checkout', sale_order_id=self.cart.id
         ):
             response = self.CheckoutController.shop_checkout()
 
@@ -37,7 +36,7 @@ class TestWebsiteSaleStockCheckout(WebsiteSaleStockCommon, HttpCase):
 
         website = self.website.with_user(self.public_user)
         with MockRequest(
-            website.env, website=website, path='/shop/checkout', sale_order_id=self.cart.id,
+            website.env, website=website, path='/shop/checkout', sale_order_id=self.cart.id
         ):
             response = self.CheckoutController.shop_checkout()
 

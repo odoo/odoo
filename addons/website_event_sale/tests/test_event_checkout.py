@@ -10,28 +10,32 @@ from odoo.addons.website_sale.tests.common import MockRequest
 
 @tagged('post_install', '-at_install')
 class TestEventCheckout(TestWebsiteEventSaleCommon, HttpCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.CheckoutController = CheckoutController()
 
     def test_checkout_impossible_if_tickets_are_expired(self):
-        self.ticket.write({
-            'seats_max': 1,
-            'seats_limited': True,
-        })
+        self.ticket.write({'seats_max': 1, 'seats_limited': True})
 
-        so1 = self._create_so(order_line=[Command.create({
-            'product_id': self.ticket.product_id.id,
-            'event_id': self.event.id,
-            'event_ticket_id': self.ticket.id,
-        })])
-        so2 = self._create_so(order_line=[Command.create({
-            'product_id': self.ticket.product_id.id,
-            'event_id': self.event.id,
-            'event_ticket_id': self.ticket.id,
-        })])
+        so1 = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.ticket.product_id.id,
+                    'event_id': self.event.id,
+                    'event_ticket_id': self.ticket.id,
+                })
+            ]
+        )
+        so2 = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.ticket.product_id.id,
+                    'event_id': self.event.id,
+                    'event_ticket_id': self.ticket.id,
+                })
+            ]
+        )
         self.env['event.registration'].create([
             {
                 'state': 'draft',
@@ -39,7 +43,7 @@ class TestEventCheckout(TestWebsiteEventSaleCommon, HttpCase):
                 'partner_id': so1.partner_id.id,
                 'event_id': self.event.id,
                 'event_ticket_id': self.ticket.id,
-            },
+            }
         ])
 
         so2.action_confirm()

@@ -1,0 +1,51 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import bisect
+from typing import Literal
+
+from odoo import models
+
+
+class WebsiteCheckoutAlertMixin(models.AbstractModel):
+    _name = 'website.checkout.alert.mixin'
+    _description = "Website Checkout Alert Mixin"
+
+    _alerts = 'alerts'
+    """Json field name where the alerts will be stored."""
+
+    def _add_alert(self, level: Literal['info', 'warning', 'danger'], message: str, /, **kwargs):
+        """Add an alert to the current records.
+
+        Alerts are ordered by level of severity, `danger` to `info`.
+
+        :param level: Severity of the alert.
+        :param message: The message text to display to the customer.
+        :param kwargs: Extra info added in the alert dictionary.
+        """
+        LEVEL_SEQUENCE_MAPPING = {'danger': 0, 'warning': 500, 'info': 1000}
+        level_sequence = LEVEL_SEQUENCE_MAPPING[level]
+        for record in self:
+            alerts = record._get_alerts()
+            idx = bisect.bisect_right(
+                alerts, level_sequence, key=lambda alert: LEVEL_SEQUENCE_MAPPING[alert['level']]
+            )
+            alerts.insert(idx, {'level': level, 'message': message, **kwargs})
+            record[self._alerts] = alerts
+
+    def _get_alerts(self) -> list[dict]:
+        self.ensure_one()
+        return self[self._alerts] or []
+
+    def _join_alert_messages(self, sep="\n\n"):
+        """Return the alert messages of the current records joined by `sep`."""
+        return sep.join(alert['message'] for record in self for alert in record._get_alerts())
+
+    def _get_max_alert_level(self):
+        """Return the highest severity level (`danger` > `warning` > `info`). Defaults to `info`."""
+        self.ensure_one()
+        if alerts := self._get_alerts():
+            return alerts[0].get('level', 'info')
+        return 'info'
+
+    def _clear_alerts(self):
+        self[self._alerts] = False

@@ -62,7 +62,7 @@
                 </t>
                 <t t-else="">
                     <a role="button" name="website_sale_main_button"
-                        t-attf-class="btn btn-primary #{shop_warnings and 'disabled'} w-100"
+                        t-attf-class="btn btn-primary #{not website_sale_order._is_cart_ready() and 'disabled'} w-100"
                         t-att-href="next_website_checkout_step_href">
                         <span t-field="next_website_checkout_step.main_button_label"/>
                         <i class="fa fa-angle-right ms-2 fw-light"/>
@@ -178,7 +178,6 @@
         <!-- Checkout context (non exhaustive):
             - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
-            - shop_warnings: A dict mapping order or order lines to a warning message.
         -->
         <t t-call="website.layout"
             no_footer="True if show_footer is None else not show_footer"
@@ -190,13 +189,25 @@
                 t-set="show_mobile_cart_summary"
                 t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
             />
-            <t t-set="shop_warnings" t-value="shop_warnings or {}"/>
             <div id="wrap" class="d-flex flex-column flex-grow-1">
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
                         <div t-if="show_wizard_checkout" class="col-12">
                             <t t-call="website_sale.wizard_checkout"/>
                         </div>
+                        <div id="checkout_alerts" class="col-12">
+                            <t t-if="website_sale_order">
+                                <t
+                                    t-foreach="website_sale_order._get_alerts()"
+                                    t-as="alert"
+                                    t-call="website_sale.alert_banner"
+                                    level="alert['level']"
+                                    message="alert['message']"
+                                    classes.f="col-12"
+                                />
+                            </t>
+                        </div>
+
                         <!-- Checkout Page Content | Left Column -->
                         <div t-attf-class="oe_clear_stucture oe_cart col">
                             <t t-out="0"/>
@@ -295,6 +306,8 @@
                      IDs (like with t-att-id) and each template needs to define a div element. -->
                 <t t-out="oe_structure"/>
             </div>
+            <!-- Clear the cart alerts once they have been rendered to the user. -->
+            <t t-if="website_sale_order._clear_alerts()"/>
         </t>
     </template>
 
@@ -322,13 +335,6 @@
     <template id="website_sale.cart_summary_content">
         <t t-set="is_scrollable" t-value="len(website_sale_order.website_order_line) &gt; 4"/>
 
-        <div
-            t-if="not website_sale_order or not website_sale_order.website_order_line"
-            name="cart_summary_info"
-            class="alert alert-info"
-        >
-            Your cart is empty!
-        </div>
         <div class="position-relative">
             <div t-attf-class="border-bottom {{(is_scrollable and not is_offcanvas) and 'o_wsale_scrollable_table o_wsale_scrollable_table_desktop mx-n4 mt-n3 px-4 pt-3'}}">
                 <table
@@ -367,9 +373,11 @@
                                     <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
                                         <t t-out="int(line.product_uom_qty)" />
                                         <t
-                                            t-if="line in shop_warnings"
-                                            t-call="website_sale.inline_warning"
-                                            warning_key="line"
+                                            t-if="line.alerts"
+                                            t-call="website_sale.alert_inline"
+                                            level="line._get_max_alert_level()"
+                                            message="line._join_alert_messages()"
+                                            classes.f="o_order_line_alert"
                                         />
                                     </span>
                                 </div>
@@ -394,11 +402,6 @@
                     </tbody>
                 </table>
             </div>
-            <t
-                t-if="website_sale_order in shop_warnings"
-                t-call="website_sale.block_warning"
-                warning_key="website_sale_order"
-            />
         </div>
     </template>
 
@@ -506,38 +509,31 @@
         </tbody>
     </template>
 
-    <!--
-        Helper view to display a warning referenced by a given `warning_key` in
-        `shop_warnings`.
-
-        Params:
-            - `warning_key`: The warning key possibly in `shop_warnings`.
-            - `classes`: Additionnal styling classes.
-    -->
-    <template id="block_warning">
+    <template id="alert_banner">
         <div
-            t-attf-class="alert alert-warning js_cart_lines #{classes}"
+            t-attf-class="alert alert-#{level or 'danger'} alert-dismissible #{classes}"
             role="alert"
         >
-            <strong>Warning!</strong>
-            <div t-out="shop_warnings[warning_key]" class="text-prewrap"/>
+            <div t-out="message" class="text-prewrap"/>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
         </div>
     </template>
 
-    <!--
-        Helper view to display an inline warning referenced by a given `warning_key` in
-        `shop_warnings`.
+    <template id="alert_block">
+        <div t-attf-class="alert alert-#{level or 'danger'} #{classes}" role="alert">
+            <div t-out="message" class="text-prewrap"/>
+        </div>
+    </template>
 
-        Params:
-            - `warning_key`: The warning key possibly in `shop_warnings`.
-            - `classes`: Additionnal styling classes.
-    -->
-    <template id="inline_warning">
+    <template id="alert_inline">
         <i
-            t-attf-class="fa fa-warning #{classes}"
-            t-att-title="shop_warnings[warning_key]"
-            role="img"
-            aria-label="Warning"
+            t-attf-class="fa fa-#{level == 'info' and 'info-circle' or 'warning'} text-#{level or 'danger'} #{classes}"
+            t-att-title="message"
+            t-att-aria-label="message"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            data-bs-delay="0"
+            role="tooltip"
         />
     </template>
 

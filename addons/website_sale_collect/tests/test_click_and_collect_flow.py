@@ -29,7 +29,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         Test the basic flow of buying with click and collect as a public user with more than
         one delivery method available
         """
-        self.website.warehouse_id = self._create_warehouse()
+        self.website.warehouse_id = self._create_warehouse()  # Only C&C has stock available
         self.start_tour('/', 'website_sale_collect_widget')
 
     def test_default_location_is_set_for_pick_up_in_store(self):

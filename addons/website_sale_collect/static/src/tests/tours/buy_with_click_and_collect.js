@@ -6,6 +6,10 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
     url: '/shop',
     steps: () => [
         ...tourUtils.searchProduct("Test CAC Product", { select: true }),
+        {
+            content: "Check standard delivery is not possible",
+            trigger: '[name="delivery_availability"] div:contains("Not available")',
+        },
         clickOnElement("Open Location selector", '[name="click_and_collect_availability"]'),
         {
             content: "Check the dialog is opened",
@@ -16,12 +20,12 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
             content: "Check pickup location is set",
             trigger: '[name="click_and_collect_availability"] h6:contains("Shop 1")',
         },
-        clickOnElement('Add to cart', '#add_to_cart'),
+        ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart({ quantity: 1 }),
         tourUtils.goToCheckout(),
         ...tourUtils.fillAdressForm(undefined, true),
         {
-            content: "Check standard deliveries are marked as unavailable for the order.",
+            content: "Check standard deliveries are marked as unavailable for the order",
             trigger: 'input[name="o_delivery_radio"][data-delivery-type="fixed"] ~ label:contains("Not available")',
         },
     ],

@@ -83,31 +83,6 @@ function updateQuickReorderSidebar(data) {
 }
 
 /**
- * Displays `message` in an alert box at the top of the page if it's a
- * non-empty string.
- *
- * @param {string | null} message
- */
-function showWarning(message) {
-    if (!message) return;
-    document.querySelector('.oe_website_sale')?.querySelector('#data_warning')?.remove();
-
-    const alertDiv = document.createElement('div');
-    alertDiv.classList.add('alert', 'alert-danger', 'alert-dismissible');
-    alertDiv.role = 'alert';
-    alertDiv.id = 'data_warning';
-    const closeButton = document.createElement('button');
-    closeButton.classList.add('btn-close');
-    closeButton.type = 'button'; // Avoid default submit type in case of a form.
-    closeButton.dataset.bsDismiss = 'alert';
-    const messageSpan = document.createElement('span');
-    messageSpan.textContent = message;
-    alertDiv.appendChild(closeButton);
-    alertDiv.appendChild(messageSpan);
-    document.querySelector('.oe_website_sale').prepend(alertDiv);
-}
-
-/**
  * Return the selected attribute values from the given container.
  *
  * @param {Element} container the container to look into
@@ -120,7 +95,6 @@ function getSelectedAttributeValues(container) {
 
 export default {
     updateCartNavBar: updateCartNavBar,
-    showWarning: showWarning,
     getSelectedAttributeValues: getSelectedAttributeValues,
     updateQuickReorderSidebar: updateQuickReorderSidebar,
 };

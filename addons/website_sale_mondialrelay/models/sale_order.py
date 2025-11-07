@@ -9,22 +9,28 @@ class SaleOrder(models.Model):
     def _is_cart_ready_for_payment(self):
         """Override of `website_sale` to check that Point Relais® is used with the correct delivery
         method, and vice versa."""
+        ready = super()._is_cart_ready_for_payment()
+        if not self._has_deliverable_products():
+            return ready
+
         if (
             self.partner_shipping_id.is_mondialrelay
             and self.delivery_set
             and self.carrier_id
             and not self.carrier_id.is_mondialrelay
         ):
-            self.shop_warning = self.env._(
-                "Point Relais® can only be used with the delivery method Mondial Relay."
+            self._add_alert(
+                'danger', "Point Relais® can only be used with the delivery method Mondial Relay."
             )
             return False
+
         if not self.partner_shipping_id.is_mondialrelay and self.carrier_id.is_mondialrelay:
-            self.shop_warning = self.env._(
-                "Delivery method Mondial Relay can only ship to Point Relais®."
+            self._add_alert(
+                'danger', "Delivery method Mondial Relay can only ship to Point Relais®."
             )
             return False
-        return super()._is_cart_ready_for_payment()
+
+        return ready
 
     def _compute_partner_shipping_id(self):
         super()._compute_partner_shipping_id()

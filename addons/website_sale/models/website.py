@@ -975,36 +975,31 @@ class Website(models.Model):
 
     def _create_checkout_steps(self):
         generic_steps = self.env['website.checkout.step'].sudo().search(
-            [('website_id', '=', False)], order='parent_id DESC',  # Create the root-steps first
+            [('website_id', '=', False)],
+            order='parent_id NULLS FIRST',  # Create the root-steps first
         )
+        created_steps = self.env['website.checkout.step']
         for step in generic_steps:
             values = {
                 'website_id': self.id,
                 # "Sub"-steps are not shown explicitly to the user
                 'is_published': not step.parent_id,
                 'parent_id': (
-                    self.env['website.checkout.step'].sudo().search(Domain([
-                        ('website_id', '=', self.id), ('step_href', '=', step.parent_id.step_href),
-                    ]), limit=1).id
+                    created_steps.filtered(lambda s: s.step_href == step.parent_id.step_href).id
                     if step.parent_id else False
                 ),
             }
             if step.step_href == '/shop/extra_info':
-                values['is_published'] = self.with_context(
-                    website_id=self.id,
-                ).viewref('website_sale.extra_info').active
-            step.copy(values)
+                values['is_published'] = (
+                    self.with_context(website_id=self.id).viewref('website_sale.extra_info').active
+                )
+            created_steps += step.copy(values)
 
     def _get_checkout_step(self, href):
         return self.env['website.checkout.step'].sudo().search([
             ('website_id', '=', self.id),
             ('step_href', '=', href),
         ], limit=1)
-
-    def _get_previous_checkout_steps(self, href, limit=None):
-        return self._get_checkout_step(href)._get_previous_checkout_steps(
-            self._get_allowed_steps_domain(), limit=limit,
-        )
 
     def _get_allowed_steps_domain(self):
         return [
@@ -1019,13 +1014,11 @@ class Website(models.Model):
         return steps
 
     def _get_checkout_step_values(self):
-        step_href = request_href = self.env['ir.http'].url_unrewrite(
-            request.httprequest.path, self.id,
-        )
+        request_href = self.env['ir.http'].url_unrewrite(request.httprequest.path, self.id)
         allowed_steps_domain = self._get_allowed_steps_domain()
 
-        current_step = self._get_checkout_step(step_href)
-        if current_step.parent_id:
+        current_step = self._get_checkout_step(request_href)
+        while current_step.parent_id:
             current_step = current_step.parent_id
         current_step = current_step.filtered_domain(allowed_steps_domain)
 
@@ -1041,7 +1034,7 @@ class Website(models.Model):
             next_href = False
 
         return {
-            'current_website_checkout_step_href': step_href,
+            'current_website_checkout_step_href': current_step.step_href,
             'previous_website_checkout_step': previous_step,
             'next_website_checkout_step': next_step,
             'next_website_checkout_step_href': next_href,

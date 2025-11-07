@@ -31,8 +31,7 @@ class WebsiteCheckoutStep(models.Model):
         return self._get_previous_checkout_steps(allowed_steps_domain, limit=1)
 
     def _get_previous_checkout_steps(self, allowed_steps_domain, limit=None):
-        """ Get the previous steps in the checkout flow based on the sequence."""
-
+        """Get the previous steps in the checkout flow based on the sequence."""
         previous_step_domain = Domain.AND(
             [allowed_steps_domain, [('sequence', '<', self.sequence)]]
         )

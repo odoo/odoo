@@ -160,15 +160,17 @@ export class CustomerAddress extends Interaction {
             // input update, which is not worth catching for the rare cases where the
             // server-side validation will catch validation issues (now that required inputs
             // are also handled client-side)
-            const newErrors = result.messages.map(message => {
-                const errorHeader = document.createElement('h5');
-                errorHeader.classList.add('text-danger');
-                errorHeader.appendChild(document.createTextNode(message));
-                return errorHeader;
-            });
-
-            this.errorsDiv.replaceChildren(...newErrors);
+            this.errorsDiv.replaceChildren();
+            const newErrors = result.messages.map(this._renderErrorMessage.bind(this));
+            this.errorsDiv.append(...newErrors);
         }
+    }
+
+    _renderErrorMessage(message) {
+        const errorHeader = document.createElement('h5');
+        errorHeader.classList.add('text-danger');
+        errorHeader.appendChild(document.createTextNode(message));
+        return errorHeader;
     }
 
     /**

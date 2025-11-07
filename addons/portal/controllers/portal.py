@@ -294,7 +294,7 @@ class CustomerPortal(Controller):
             'delivery_addresses': delivery_partners_sudo,
         }
 
-    def _check_billing_address(self, partner_sudo):
+    def _check_billing_address(self, partner_sudo, **kwargs):
         """ Check that all mandatory billing fields are filled for the given partner.
 
         :param res.partner partner_sudo: The partner whose billing address to check.
@@ -302,11 +302,11 @@ class CustomerPortal(Controller):
         :rtype: bool
         """
         mandatory_billing_fields = self._get_mandatory_billing_address_fields(
-            partner_sudo.country_id
+            partner_sudo.country_id, **kwargs
         )
         return all(partner_sudo.read(mandatory_billing_fields)[0].values())
 
-    def _get_mandatory_billing_address_fields(self, country_sudo):
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
         """ Return the set of mandatory billing field names.
 
         :param res.country country_sudo: The country to use to build the set of mandatory fields.
@@ -314,12 +314,12 @@ class CustomerPortal(Controller):
         :rtype: set
         """
         base_fields = {'name', 'email'}
-        if not self._needs_address():
+        if not self._needs_address(**kwargs):
             return base_fields
         base_fields.add('phone')  # not required for quick checkout (event)
-        return base_fields | self._get_mandatory_address_fields(country_sudo)
+        return base_fields | self._get_mandatory_address_fields(country_sudo, **kwargs)
 
-    def _check_delivery_address(self, partner_sudo):
+    def _check_delivery_address(self, partner_sudo, **kwargs):
         """ Check that all mandatory delivery fields are filled for the given partner.
 
         :param res.partner partner_sudo: The partner whose delivery address to check.
@@ -327,11 +327,11 @@ class CustomerPortal(Controller):
         :rtype: bool
         """
         mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
-            partner_sudo.country_id
+            partner_sudo.country_id, **kwargs
         )
         return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
 
-    def _get_mandatory_delivery_address_fields(self, country_sudo):
+    def _get_mandatory_delivery_address_fields(self, country_sudo, **kwargs):
         """ Return the set of mandatory delivery field names.
 
         :param res.country country_sudo: The country to use to build the set of mandatory fields.
@@ -339,16 +339,16 @@ class CustomerPortal(Controller):
         :rtype: set
         """
         base_fields = {'name', 'email'}
-        if not self._needs_address():
+        if not self._needs_address(**kwargs):
             return base_fields
         base_fields.add('phone')  # not required for quick checkout (event)
-        return base_fields | self._get_mandatory_address_fields(country_sudo)
+        return base_fields | self._get_mandatory_address_fields(country_sudo, **kwargs)
 
-    def _needs_address(self):
+    def _needs_address(self, **_kwargs):
         """ Hook meant to be overridden in other modules. """
         return True
 
-    def _get_mandatory_address_fields(self, country_sudo):
+    def _get_mandatory_address_fields(self, country_sudo, **_kwargs):
         """ Return the set of common mandatory address fields.
 
         :param res.country country_sudo: The country to use to build the set of mandatory fields.

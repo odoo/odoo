@@ -9,11 +9,12 @@ from odoo.http import request, route
 from odoo.tools import SQL
 
 from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.website_sale.controllers.checkout import Checkout
 
 
 # TODO ANVFE part of payment routes ? /shop/payment ? express_checkout ?
 
-class PaymentPortal(payment_portal.PaymentPortal):
+class PaymentPortal(payment_portal.PaymentPortal, Checkout):
 
     def _validate_transaction_for_order(self, transaction, sale_order):
         """
@@ -53,11 +54,15 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise ValidationError(_("The order has been cancelled."))
 
         # Ensure the cart is still valid before proceeding any further.
-        if not order_sudo._is_cart_ready_to_be_paid():
-            raise ValidationError(_(
-                "Your cart is not ready to be paid, please verify previous steps.\n%s",
-                order_sudo.shop_warning,
-            ))
+        if redirection := self._validate_previous_checkout_steps(
+            step_href='/shop/payment',
+            order_sudo=order_sudo.with_context(block_on_price_change=True),
+        ):
+            return {
+                'state': 'error',
+                'state_message': order_sudo._join_alert_messages(),
+                'redirect': redirection.location,
+            }
 
         self._validate_transaction_kwargs(kwargs)
         kwargs.update({

@@ -158,6 +158,7 @@ export class QuickReorder extends Interaction {
         wSaleUtils.updateQuickReorderSidebar(data);
         this.services['public.interactions'].startInteractions(cart);
         this.services['public.interactions'].startInteractions(cartSummary);
+        this.services.cart.showWarning(data.warning);
 
         // Move the focus to the next quantity input.
         this._focusNextQuantityInput(currentButtonIndex);

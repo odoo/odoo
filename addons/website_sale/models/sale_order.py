@@ -2,11 +2,12 @@
 
 import random
 from datetime import datetime
+from typing import Literal
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.tools import SQL, float_is_zero, float_round
@@ -19,7 +20,8 @@ from odoo.addons.website_sale.models.website import (
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _name = 'sale.order'
+    _inherit = ['sale.order', 'website.checkout.alert.mixin']
 
     website_id = fields.Many2one(
         help="Website through which this order was placed for eCommerce orders.",
@@ -28,7 +30,7 @@ class SaleOrder(models.Model):
     )
 
     cart_recovery_email_sent = fields.Boolean(string="Cart recovery email already sent")
-    shop_warning = fields.Char(string="Warning")
+    alerts = fields.Json()
 
     # Computed fields
     website_order_line = fields.One2many(
@@ -380,9 +382,6 @@ class SaleOrder(models.Model):
         # could be different from the line's product_id (see variant generation logic in
         # `_prepare_order_line_values`).
 
-        if warning:
-            (order_line or self).shop_warning = warning
-
         if not self.env.context.get('skip_cart_verification'):
             self._verify_cart_after_update()
 
@@ -394,7 +393,12 @@ class SaleOrder(models.Model):
         }
 
     def _cart_find_product_line(
-        self, product_id, uom_id, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
+        self,
+        product_id,
+        uom_id,
+        linked_line_id=False,
+        no_variant_attribute_value_ids=None,
+        **kwargs,
     ):
         """Find the cart line matching the given parameters.
 
@@ -439,8 +443,8 @@ class SaleOrder(models.Model):
         )
         if has_configurable_no_variant_attributes:
             filtered_sol = filtered_sol.filtered(
-                lambda sol:
-                    sol.product_no_variant_attribute_value_ids.ids == no_variant_attribute_value_ids
+                lambda sol: sol.product_no_variant_attribute_value_ids.ids
+                == no_variant_attribute_value_ids
             )
 
         return filtered_sol
@@ -487,9 +491,6 @@ class SaleOrder(models.Model):
         order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
         if not self.env.context.get('skip_cart_verification'):
             self._verify_cart_after_update()
-
-        if warning:
-            (order_line or self).shop_warning = warning
 
         return {
             'added_qty': added_qty,
@@ -645,24 +646,19 @@ class SaleOrder(models.Model):
 
         return values
 
-    def _check_combo_quantities(self, line) -> bool:
+    def _check_combo_quantities(self, line) -> str | None:
         """Ensure all combo item lines have the same quantity.
 
-        :returns: whether the combo quantities had to be updated
+        :returns: A reason if the combo quantities had to be updated; otherwise None.
         """
         # Ensure all combo lines have the same quantity
         if not (combo_lines := line.linked_line_ids):
-            return False
+            return None
+
         available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
         if available_combo_quantity < line.product_uom_qty:
-            line.shop_warning = line._get_shop_warning_stock(
-                line.product_uom_qty,
-                available_combo_quantity,
-            )
             (line + combo_lines).product_uom_qty = available_combo_quantity
-            return True
-
-        return False
+            return line._get_shop_warning_stock(line.product_uom_qty, available_combo_quantity)
 
     def _verify_cart_after_update(self):
         """Global checks on the cart after updates.
@@ -895,90 +891,87 @@ class SaleOrder(models.Model):
 
         return res
 
-    def _pop_shop_warnings(self):
-        """Clear and return the warnings associated with the current orders.
-
-        Note: Can be called with an empty recordset.
-
-        :return: A dict mapping the orders or order lines to a warning message, if any.
-        :rtype: dict[sale.order | sale.order.line, str]
-        """
-        warnings = {}
-        if not self:
-            return warnings
-
-        self.ensure_one()
-        if (warning := self.shop_warning):
-            warnings[self] = warning
-
-        order_lines_with_warning = self.order_line.filtered('shop_warning')
-        for line in order_lines_with_warning:
-            warnings[line] = line.shop_warning
-
-        self.shop_warning = False
-        order_lines_with_warning.shop_warning = False
-        return warnings
-
     def _is_cart_ready_for_checkout(self):
-        """Whether the cart is valid and the user can proceed to the checkout step.
+        """Whether the cart is ready to proceed to the checkout "Address" step: `/shop/checkout`.
 
-        This method is also intended to set the `shop_warning` with any relevant message that can
-        help the customer complete their cart.
+        This method performs the necessary validations and may add user-facing messages
+        via `_add_alert` to help the customer correct the cart (for example: empty cart).
 
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`.
 
+        :return: True if the cart can proceed to the Address step (and beyond); False to block
+            progression.
         :rtype: bool
         """
         self.ensure_one()
+
         if not self.order_line:
-            self.shop_warning = self.env._("Your cart is empty!")
-            return False
+            self._add_alert('info', self.env._("Your cart is empty!"))
+            return False  # Block the customer
+
         return True
 
     def _is_cart_ready_for_payment(self):
-        """Whether the cart is ready to be confirmed and the user can proceed to the payment step.
+        """Whether the cart is ready to be confirmed and proceed to the checkout "Payment" step:
+        `/shop/payment`.
 
-        By default, the cart must have a delivery method if it contains deliverable products.
+        This method performs the necessary validations and may add user-facing messages
+        via `_add_alert` to help the customer correct the cart (for example: no delivery method
+        selected).
 
-        This method is also intended to set the `shop_warning` with any relevant message that can
-        help the customer complete their cart.
+        Note: `self.ensure_one()`.
 
-        Note: self.ensure_one()
-
+        :return: True if the cart can proceed to the Payment step (and beyond); False to block
+            progression.
         :rtype: bool
         """
         self.ensure_one()
 
-        if self._has_deliverable_products():
-            if not self._get_delivery_methods():
-                self.shop_warning = self.env._(
-                    "Sorry, we are unable to ship your order.\n"
-                    "No shipping method is available for your current order and shipping address."
-                    " Please contact us for more information."
-                )
-                return False
-            if not self.carrier_id:
-                self.shop_warning = self.env._("No shipping method is selected.")
-                return False
-        return True
+        if self._has_deliverable_products() and not self.carrier_id:
+            self._add_alert('warning', self.env._("No shipping method is selected."))
+            return False
 
-    def _is_cart_ready_to_be_paid(self):
-        """Whether the cart is valid and can be paid for.
-
-        This method is also intended to set the `shop_warning` with any relevant message that can
-        help the customer complete their cart.
-
-        Note: self.ensure_one()
-
-        :rtype: bool
-        """
-        self.ensure_one()
-        return self._is_cart_ready_for_checkout() and self._is_cart_ready_for_payment()
-
-    def _recompute_cart(self):
-        """Recompute taxes and prices for the current cart."""
+        initial_amount = self.amount_total
         self._recompute_taxes()
         self._recompute_prices()
+
+        if self.currency_id.compare_amounts(self.amount_total, initial_amount):
+            self._add_alert(
+                'warning',
+                self.env._(
+                    "Prices have changed. Please review your cart."
+                    "\nYou might need to refresh the page."
+                ),
+            )
+            if self.env.context.get('block_on_price_change'):
+                return False
+
+        return True
+
+    def _is_cart_ready(self):
+        """Wheter the cart is free of errors or should the customer be blocked at the current
+        checkout step to fix them.
+
+        :return: True if the cart does not have an alert of 'danger' level, False otherwise.
+        :rtype: bool
+        """
+        return self._get_max_alert_level() != 'danger'
+
+    def _add_alert(self, level: Literal['info', 'warning', 'danger'], message: str, /, **kwargs):
+        """Add a global alert to the order shown at the top of the checkout page.
+
+        Note: alerts are transient, they are cleared after being rendered.
+
+        :param level: Severity of the alert. A 'danger' alert will block the main checkout
+            navigation button.
+        :param message: The message text to display to the customer.
+        :param kwargs: Extra info added in the alert dictionary.
+        """
+        return super()._add_alert(level, message, **kwargs)  # Override for docstring
+
+    def _clear_alerts(self):
+        self.order_line._clear_alerts()
+        return super()._clear_alerts()
 
     def _validate_order(self):
         self.filtered('website_id')._archive_partner_if_no_user()

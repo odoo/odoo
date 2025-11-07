@@ -1,4 +1,8 @@
+import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { _t } from '@web/core/l10n/translation';
+import { rpc, RPCError } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
+import { redirect } from '@web/core/utils/urls';
 import { Interaction } from '@web/public/interaction';
 
 export class ExpressCheckout extends Interaction {
@@ -12,8 +16,10 @@ export class ExpressCheckout extends Interaction {
 
     async willStart() {
         const expressCheckoutForm = this._getExpressCheckoutForm();
+        const providerData = expressCheckoutForm.dataset;
+        this._updatePaymentContext(providerData)
         if (expressCheckoutForm) {
-            await this._prepareExpressCheckoutForm(expressCheckoutForm.dataset);
+            await this._prepareExpressCheckoutForm(providerData);
         }
     }
 
@@ -39,6 +45,18 @@ export class ExpressCheckout extends Interaction {
     }
 
     /**
+     * Display an error dialog.
+     *
+     * @private
+     * @param {string} title - The title of the dialog.
+     * @param {string} errorMessage - The error message.
+     * @return {void}
+     */
+    _displayErrorDialog(title, errorMessage = "") {
+        this.services.dialog.add(ConfirmationDialog, { title: title, body: errorMessage || "" });
+    }
+
+    /**
      * Return the express checkout form, if found.
      *
      * @private
@@ -48,6 +66,10 @@ export class ExpressCheckout extends Interaction {
         return document.querySelector(
             'form[name="o_payment_express_checkout_form"] div[name="o_express_checkout_container"]'
         );
+    }
+
+    _updatePaymentContext(providerData) {
+        this.paymentContext.providerId = providerData.providerId;
     }
 
     /**
@@ -62,15 +84,45 @@ export class ExpressCheckout extends Interaction {
     async _prepareExpressCheckoutForm(providerData) {}
 
     /**
+     * Make an RPC to initiate the express payment flow by creating a new transaction.
+     *
+     * @private
+     * @return {Object} - The transaction processing values.
+     */
+    async _prepareExpressTransaction() {
+        try {
+            // Create a transaction and retrieve its processing values.
+            const processingValues = await this.waitFor(rpc(
+                this.paymentContext['transactionRoute'],
+                this._prepareTransactionRouteParams(),
+            ));
+            if (processingValues.state === 'error') {
+                if (processingValues.redirect) {
+                    redirect(processingValues.redirect);
+                } else {
+                    this._displayErrorDialog(
+                        _t("Payment processing failed"), processingValues.state_message
+                    );
+                }
+            }
+            return processingValues;
+        } catch (error) {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+            }
+            return {state: 'error', state_message: error.data.message};
+        }
+    }
+
+    /**
      * Prepare the params for the RPC to the transaction route.
      *
      * @private
-     * @param {number} providerId - The id of the provider handling the transaction.
      * @returns {object} - The transaction route params.
      */
-    _prepareTransactionRouteParams(providerId) {
+    _prepareTransactionRouteParams() {
         return {
-            'provider_id': parseInt(providerId),
+            'provider_id': parseInt(this.paymentContext['providerId']),
             'payment_method_id': parseInt(this.paymentContext['paymentMethodUnknownId']),
             'token_id': null,
             'flow': 'direct',

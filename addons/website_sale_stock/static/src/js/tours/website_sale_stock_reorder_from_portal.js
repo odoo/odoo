@@ -17,11 +17,12 @@ registry.category("web_tour.tours").add('website_sale_stock_reorder_from_portal'
         },
         {
             content: "Check that there is one out of stock product",
-            trigger: "div.alert-warning:contains('unavailable_product has not been added to your cart since it is not available.')",
+            trigger: "div.alert-warning:contains('unavailable_product was not added to your cart because it is unavailable.')",
         },
         {
+            break: true,
             content: "Check that there is one product that does not have enough stock",
-            trigger: "div.o_cart_product i.fa.fa-warning[title='You requested 2 products, but only 1 are available in stock.']",
+            trigger: "div.o_cart_product i.fa.fa-warning[data-bs-original-title='You requested 2 partially_available_product, but only 1 are available in stock.']",
         },
     ]
 });
