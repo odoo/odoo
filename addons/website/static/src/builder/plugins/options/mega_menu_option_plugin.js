@@ -34,8 +34,10 @@ export class MegaMenuOptionPlugin extends Plugin {
     }
 
     async saveMegaMenuClasses() {
-        const megaMenuEl = this.editable.querySelector("[data-oe-field='mega_menu_content'");
-        if (megaMenuEl) {
+        const proms = [];
+        for (const megaMenuEl of this.editable.querySelectorAll(
+            "[data-oe-field='mega_menu_content']"
+        )) {
             // On top of saving the mega menu content like any other field
             // content, we must save the custom classes that were set on the
             // menu itself.
@@ -44,10 +46,13 @@ export class MegaMenuOptionPlugin extends Plugin {
                     !["dropdown-menu", "o_mega_menu", "o_editable"].includes(megaMenuClass)
             );
 
-            await this.services.orm.write("website.menu", [parseInt(megaMenuEl.dataset.oeId)], {
-                mega_menu_classes: classes.join(" "),
-            });
+            proms.push(
+                this.services.orm.write("website.menu", [parseInt(megaMenuEl.dataset.oeId)], {
+                    mega_menu_classes: classes.join(" "),
+                })
+            );
         }
+        await Promise.all(proms);
     }
 }
 
