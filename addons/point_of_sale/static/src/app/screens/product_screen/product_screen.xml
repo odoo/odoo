@@ -6,10 +6,12 @@
                 class="leftpane d-flex flex-column pb-2 border-end bg-view">
                 <OrderSummary />
                 <div class="pads px-2">
-                    <div class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
-                        <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
-                    </div>
-                    <div class="subpads d-flex flex-column gap-2">
+                    <t t-if="!ui.isSmall">
+                        <div class="control-buttons d-flex justify-content-between gap-2 w-100 pt-2">
+                            <ControlButtons onClickMore.bind="displayAllControlPopup"/>
+                        </div>
+                    </t>
+                    <div class="subpads d-flex flex-column gap-2 pt-2">
                         <Numpad t-if="!currentOrder?.isEmpty() and pos.getOrder()?.uiState.selected_orderline_uuid" class="'d-grid'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
                         <ActionpadWidget 
                             partner="currentOrder?.getPartner()" 
