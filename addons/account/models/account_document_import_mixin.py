@@ -408,7 +408,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
 
     def _should_attach_to_record(self, attachment):
         """ Indicate whether a given attachment should be displayed in the record's attachments. """
-        return not attachment.res_field and attachment.mimetype in {
+        return attachment and not attachment.res_field and attachment.mimetype in {
             'text/csv',
             'application/pdf',
             'application/vnd.ms-excel',
