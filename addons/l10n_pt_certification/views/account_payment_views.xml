@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_form_inherit_pt" model="ir.ui.view">
+            <field name="name">account.payment.form.inherit.pt</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('alert')]" position="after">
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not l10n_pt_show_future_date_warning">
+                        Setting the payment date in the future will prevent new receipts with a date before
+                        <field name="date" readonly="1"/> from being issued.
+                    </div>
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not l10n_pt_at_series_missing_at_code">
+                        The AT Series <field name="l10n_pt_at_series_id" readonly="1"/> is missing its validation code.
+                        Register it with the Autoridade Tributária before sending or printing.
+                    </div>
+                </xpath>
+                <xpath expr="//button[@name='action_reject']" position="after">
+                    <button name="action_open_reprint_wizard"
+                        string="Print"
+                        invisible="state not in ('in_process', 'paid', 'canceled') or country_code != 'PT' or payment_type == 'outbound'"
+                        type="object"
+                        groups="base.group_user"
+                        data-hotkey="o"/>
+                </xpath>
+                <!-- An issued receipt is not reset to draft: it is cancelled through the cancellation wizard. -->
+                <xpath expr="//button[@name='action_draft']" position="attributes">
+                    <attribute name="invisible">state == 'draft' or (country_code == 'PT' and l10n_pt_document_number)</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="invisible">not id or not (state == 'draft' or (state == 'in_process' and is_sent)) or (country_code == 'PT' and l10n_pt_document_number)</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="after">
+                    <button name="%(l10n_pt_certification.action_l10n_pt_cancel)d"
+                            string="Cancel"
+                            type="action"
+                            groups="account.group_account_invoice"
+                            data-hotkey="w"
+                            invisible="not id or state not in ('in_process', 'paid') or payment_type != 'inbound' or country_code != 'PT'"/>
+                </xpath>
+                <!-- The series decides the number; the number is the receipt's PT identity once issued. -->
+                <xpath expr="//group[@name='group1']" position="inside">
+                    <field name="l10n_pt_at_series_id"
+                           invisible="country_code != 'PT' or payment_type != 'inbound'"
+                           readonly="state in ['in_process', 'paid', 'canceled']"
+                           required="payment_type == 'inbound' and country_code == 'PT'"
+                           domain="[('active', '=', True), ('journal_id', '=', journal_id), ('document_type', '=', l10n_pt_document_type)]"/>
+                    <field name="l10n_pt_document_number"
+                           invisible="country_code != 'PT' or not l10n_pt_document_number"/>
+                </xpath>
+                <!-- What issuing records, in the same tab and order on every PT document -->
+                <xpath expr="//notebook[@name='payment_notebook']" position="inside">
+                    <page name="l10n_pt_info"
+                          string="Portugal"
+                          invisible="country_code != 'PT' or payment_type != 'inbound'">
+                        <group name="l10n_pt_info_group">
+                            <group string="Document" name="l10n_pt_document_group">
+                                <field name="l10n_pt_document_type"/>
+                                <field name="l10n_pt_document_number"/>
+                                <field name="l10n_pt_at_series_id" readonly="1"/>
+                                <field name="l10n_pt_atcud"/>
+                            </group>
+                            <group string="Issue" name="l10n_pt_issue_group" invisible="not l10n_pt_document_number">
+                                <field name="l10n_pt_issued_on"/>
+                                <field name="l10n_pt_issue_user_id" widget="many2one_avatar_user"/>
+                            </group>
+                            <group string="Cancellation" name="l10n_pt_cancel_group" invisible="state != 'canceled'">
+                                <field name="l10n_pt_cancel_date"/>
+                                <field name="l10n_pt_cancel_user_id" widget="many2one_avatar_user"/>
+                                <field name="l10n_pt_cancel_reason"
+                                       required="state == 'canceled' and l10n_pt_document_number"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_tree_inherit_pt" model="ir.ui.view">
+            <field name="name">account.payment.tree.inherit.pt</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                   <field name="l10n_pt_document_number" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
