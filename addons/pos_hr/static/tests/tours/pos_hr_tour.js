@@ -364,3 +364,33 @@ registry
                 Chrome.notExistMenuOption("Backend"),
             ].flat(),
     });
+
+registry.category("web_tour.tours").add("test_maximum_closing_difference", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.enterOpeningAmount("10"),
+            Chrome.clickBtn("Open Register"),
+
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Manager 2", { run: "click" }),
+            PosHr.enterPin("5652"),
+            Chrome.clickMenuOption("Close Register"),
+            Chrome.clickBtn("Close Register"),
+            {
+                trigger: negate(`button:contains("Proceed anyway")`),
+            },
+            Chrome.clickBtn("Ok"),
+            Chrome.clickBtn("Discard"),
+
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Chrome.clickMenuOption("Close Register"),
+            Chrome.clickBtn("Close Register"),
+            Chrome.hasBtn("Proceed anyway"),
+            Chrome.clickBtn("Proceed anyway", { expectUnloadPage: true }),
+            PosHr.loginScreenIsShown(),
+        ].flat(),
+});
