@@ -7,11 +7,9 @@
                 <sheet>
                 <group>
                     <group>
-                        <field name="company_id" invisible="1" />
                         <field name="name" />
                         <field name="printer_type" widget="radio"/>
                         <field name="epson_printer_ip" invisible="printer_type != 'epson_epos'"/>
-                        <field name="proxy_ip" invisible="printer_type != 'iot'"/>
                         <field name="product_categories_ids" />
                     </group>
                     <group>
@@ -50,8 +48,7 @@
             <list string="Preparation Printers">
                 <field name="name" />
                 <field name="product_categories_ids" widget="many2many_tags"/>
-                <field name="proxy_ip" optional="hide"/>
-                <field name="company_id" optional="hide"/>
+                <field name="epson_printer_ip" optional="hide"/>
             </list>
         </field>
     </record>
