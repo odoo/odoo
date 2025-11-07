@@ -4,6 +4,7 @@
 from odoo import api, models, _
 from odoo.tools import format_datetime
 from markupsafe import Markup
+from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby, topological_sort
 
 
 rec = 0
@@ -66,6 +67,7 @@ class StockTraceabilityReport(models.TransientModel):
         elif  rec_id and model == 'stock.move.line' and context.get('lot_name'):
             record = self.env[model].browse(rec_id)
             dummy, is_used = self._get_linked_move_lines(record)
+            tools_groupby
             if is_used:
                 lines = is_used
         elif rec_id and model in ('stock.picking', 'mrp.production'):
@@ -204,6 +206,9 @@ class StockTraceabilityReport(models.TransientModel):
             else:
                 # Traceability in case of consumed in.
                 lines = self._get_move_lines(move_line, line_id=line_id)
+        move_line = self.env[model].browse(model_id)
+        index = list(move_line.move_id.lot_ids.ids).index(move_line.lot_id)
+        lots = tools_groupby(lines, key=lambda l: l.product_id.id)
         for line in lines:
             unfoldable = False
             if line.consume_line_ids or (model != "stock.lot" and line.lot_id and self._get_move_lines(line)):

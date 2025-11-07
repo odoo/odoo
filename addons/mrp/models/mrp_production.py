@@ -1863,8 +1863,16 @@ class MrpProduction(models.Model):
         moves_to_finish.picked = True
         moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
         for order in self:
-            consume_move_lines = moves_to_do_by_order[order.id].mapped('move_line_ids')
-            order.move_finished_ids.move_line_ids.consume_line_ids = [(6, 0, consume_move_lines.ids)]
+            if order.product_id.tracking == 'serial' and False:
+                for consumable in [a for a in tools_groupby(moves_to_do_by_order[order.id].mapped('move_line_ids'), key=lambda m: m.product_id.id)]:
+                    for finished_product in order.move_finished_ids.move_line_ids:
+                        if len(consumable[1]) > 0:
+                            finished_product.consume_line_ids = consumable[1][0]
+                        else:
+                            finished_product.consume_line_ids = consumable[1]
+            else:
+                consume_move_lines = moves_to_do_by_order[order.id].mapped('move_line_ids')
+                order.move_finished_ids.move_line_ids.consume_line_ids = [(6, 0, consume_move_lines.ids)]
         return True
 
     @api.model
