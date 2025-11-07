@@ -33,7 +33,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Time Off Type", required=True,
         domain=_domain_holiday_status_id)
-    request_unit = fields.Selection(related="holiday_status_id.request_unit")
+    unit_of_measure = fields.Selection(related="holiday_status_id.unit_of_measure")
     allocation_mode = fields.Selection([
         ('employee', 'By Employee'),
         ('company', 'By Company'),
@@ -67,10 +67,10 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         if not self.holiday_status_id:
             return self.env._("Allocation Request")
         return self.env._(
-            '%(name)s (%(duration)s %(request_unit)s(s))',
+            '%(name)s (%(duration)s %(unit_of_measure)s(s))',
             name=self.holiday_status_id.name,
             duration=float_round(self.duration, precision_digits=2),
-            request_unit=self.request_unit
+            unit_of_measure=self.unit_of_measure
         )
 
     def _get_employees_from_allocation_mode(self):
@@ -94,7 +94,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         return [{
             'name': self.name,
             'holiday_status_id': self.holiday_status_id.id,
-            'number_of_days': self.duration if self.request_unit != "hour" else self.duration / hours_per_day[employee.id],
+            'number_of_days': self.duration if self.unit_of_measure != "hour" else self.duration / hours_per_day[employee.id],
             'employee_id': employee.id,
             'state': 'confirm',
             'allocation_type': self.allocation_type,

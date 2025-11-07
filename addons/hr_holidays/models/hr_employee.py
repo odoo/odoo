@@ -98,7 +98,7 @@ class HrEmployee(models.Model):
                             and (not allocation.date_to or allocation.date_to >= current_date):
                         virtual_remaining_leaves = leaves_taken[employee][leave_type][allocation]['virtual_remaining_leaves']
                         employee_remaining_leaves += virtual_remaining_leaves\
-                            if leave_type.request_unit in ['day', 'half_day']\
+                            if leave_type.unit_of_measure == 'day'\
                             else virtual_remaining_leaves / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
                         employee_max_leaves += allocation.number_of_days
             employee.allocation_remaining_display = "%g" % float_round(employee_remaining_leaves, precision_digits=2)
@@ -492,7 +492,7 @@ class HrEmployee(models.Model):
             if allocation.allocation_type == 'accrual':
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
-                if allocation.holiday_status_id.request_unit in ['hour']\
+                if allocation.holiday_status_id.unit_of_measure == 'hour'\
                 else allocation.number_of_days_display
             max_leaves += future_leaves
             allocation_data.update({
@@ -532,7 +532,7 @@ class HrEmployee(models.Model):
                         allocations_without_date_to |= leave_allocation
                 sorted_leave_allocations = allocations_with_date_to.sorted(key='date_to') + allocations_without_date_to
 
-                if leave_type.request_unit in ['day', 'half_day']:
+                if leave_type.unit_of_measure == 'day':
                     leave_duration_field = 'number_of_days'
                     leave_unit = 'days'
                 else:
@@ -622,7 +622,7 @@ class HrEmployee(models.Model):
                         date_accrual_bonus += consumed_content[allocation]['accrual_bonus']
                         virtual_remaining += consumed_content[allocation]['virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:
-                        additional_leaves_duration += leave.number_of_hours if leave_type.request_unit == 'hour' else leave.number_of_days
+                        additional_leaves_duration += leave.number_of_hours if leave_type.unit_of_measure == 'hour' else leave.number_of_days
                     latest_remaining = virtual_remaining - date_accrual_bonus + latest_accrual_bonus
                     content['exceeding_duration'] = round(min(0, latest_remaining - additional_leaves_duration), 2)
 

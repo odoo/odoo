@@ -14,7 +14,7 @@ export class TimeOffCardPopover extends Component {
         "left",
         "warning",
         "closest",
-        "request_unit",
+        "unit_of_measure",
         "exceeding_duration",
         "close?",
         "allows_negative",
@@ -119,7 +119,7 @@ export class TimeOffCard extends Component {
     }
 
     formatDuration(duration) {
-        if (this.props.data.request_unit === 'hour') {
+        if (this.props.data.unit_of_measure === 'hour') {
             return this.formatHour(duration);
         }
         return formatNumber(this.lang, duration);
@@ -148,7 +148,7 @@ export class TimeOffCard extends Component {
             left: formatNumber(this.lang, data.virtual_remaining_leaves),
             warning: this.warning,
             closest: data.closest_allocation_duration,
-            request_unit: data.request_unit,
+            unit_of_measure: data.unit_of_measure,
             exceeding_duration: data.exceeding_duration,
             allows_negative: data.allows_negative,
             max_allowed_negative: data.max_allowed_negative,
