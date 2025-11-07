@@ -64,6 +64,11 @@ class StockRule(models.Model):
                     quantity=procurement.product_qty,
                     date=max(procurement_date_planned.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
+                if not supplier:
+                    supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
+                        quantity=procurement.product_qty,
+                        date=max(procurement_date_planned.date(), fields.Date.today()),
+                        uom_id=procurement.product_uom)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than
             # blocking the user.

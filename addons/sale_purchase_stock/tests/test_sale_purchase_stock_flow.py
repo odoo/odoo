@@ -3,6 +3,7 @@
 
 from odoo import Command
 from odoo.tests.common import TransactionCase, Form
+from freezegun import freeze_time
 
 
 class TestSalePurchaseStockFlow(TransactionCase):
@@ -16,7 +17,10 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
 
-        cls.vendor = cls.env['res.partner'].create({'name': 'Super Vendor'})
+        cls.vendor, cls.vendor_2 = cls.env['res.partner'].create([
+            {'name': 'Super Vendor'},
+            {'name': 'Even Better Vendor'}
+        ])
         cls.customer = cls.env['res.partner'].create({'name': 'Super Customer'})
 
         cls.mto_product = cls.env['product.product'].create({
@@ -85,6 +89,58 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         sm.move_line_ids.quantity = 10
         self.assertEqual(so.order_line.qty_delivered, 10)
+
+    @freeze_time('2020-01-01')
+    def test_sale_mto_with_seller_with_expired_end_date(self):
+        '''
+        Test that a Purchase Order is created using the valid seller
+        when a product has multiple sellers (one expired and one active).
+
+        Create a product with:
+            - Two sellers:
+                - Seller A: expired end_date
+                - Seller B: valid end_date
+            - Routes: "Make To Order" + "Buy"
+        Create a Sales Order with a customer that is not one of the sellers.
+        '''
+        product = self.env['product.product'].create({
+            'name': 'LovelyProduct',
+            'type': 'product',
+            'route_ids': [Command.set((self.mto_route + self.buy_route).ids)],
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.vendor.id,
+                    'date_start': '2019-01-01',
+                    'date_end': '2019-02-01',
+                    'price': 10,
+                    'sequence': 1,
+                }),
+                Command.create({
+                    'partner_id': self.vendor_2.id,
+                    'date_start': '2019-01-01',
+                    'date_end': '2021-02-01',
+                    'price': 5,
+                    'sequence': 2,
+                })
+            ],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 5,
+                    'product_uom': product.uom_id.id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        no_po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)], limit=1)
+        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor_2.id)], limit=1)
+
+        self.assertFalse(no_po)
+        self.assertEqual(po.amount_untaxed, 5 * 5)
 
     def test_sale_need_purchase_variants(self):
         """
