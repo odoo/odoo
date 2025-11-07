@@ -40,10 +40,8 @@ export class ProductsDesignPanelPlugin extends Plugin {
     }
 
     async onSave() {
-        const persistentPanels = Array.from(this.panels).filter(panel => panel.needsDbPersistence);
-
-        for (const panel of persistentPanels) {
-            const pageEl = panel.env.getEditingElement();
+        const dirtyPageEls = Array.from(this.editable.querySelectorAll(".o_dirty_product_list"));
+        for (const pageEl of dirtyPageEls) {
             const updateData = {};
 
             // Save gap
@@ -53,22 +51,21 @@ export class ProductsDesignPanelPlugin extends Plugin {
 
             // Scan DOM for all classes with o_wsale_products_opt_ prefix
             const currentClasses = Array.from(pageEl.classList);
-            const productOptClasses = currentClasses.filter(className =>
-                className.startsWith('o_wsale_products_opt_')
+            const productOptClasses = currentClasses.filter((className) =>
+                className.startsWith("o_wsale_products_opt_")
             );
 
-            // Always save the classes field (empty string if no classes found)
-            updateData[panel.props.recordName] = productOptClasses.join(' ');
-
-            // Early return only if no classes and no gap to save
-            if (productOptClasses.length === 0 && pageEl.dataset.gapToSave === undefined) {
-                continue;
+            const recordName = pageEl.dataset.recordName;
+            if (recordName) {
+                // Always save the classes field (empty string if no classes found)
+                updateData[recordName] = productOptClasses.join(" ");
             }
 
             // Save data
             if (Object.keys(updateData).length > 0) {
                 await rpc("/shop/config/website", updateData);
             }
+            pageEl.classList.remove("o_dirty_product_list");
         }
     }
 }
@@ -101,7 +98,7 @@ class ClassActionWithSuggestedAction extends BuilderAction {
         // Transform context to match what the target action expects
         const delegatedContext = {
             ...context,
-            params: { mainParam: className }
+            params: { mainParam: className },
         };
 
         return targetAction.isApplied(delegatedContext);
@@ -109,20 +106,24 @@ class ClassActionWithSuggestedAction extends BuilderAction {
 
     getValue(context) {
         const { className } = context.params;
-        const targetAction = Array.isArray(className) ?
-            this.setClassRangeAction : this.classAction;
+        const targetAction = Array.isArray(className) ? this.setClassRangeAction : this.classAction;
 
         const delegatedContext = {
             ...context,
-            params: { mainParam: className }
+            params: { mainParam: className },
         };
 
         return targetAction.getValue?.(delegatedContext);
     }
 
     apply(context) {
-        const { editingElement, params: { className, suggestedClasses } } = context;
+        const {
+            editingElement,
+            params: { className, suggestedClasses, recordName },
+        } = context;
 
+        editingElement.classList.add("o_dirty_product_list");
+        editingElement.dataset.recordName = recordName;
         if (suggestedClasses) {
             this.applySuggestedClasses(editingElement, suggestedClasses);
         }
@@ -132,7 +133,7 @@ class ClassActionWithSuggestedAction extends BuilderAction {
 
         const delegatedContext = {
             ...context,
-            params: { mainParam: className }
+            params: { mainParam: className },
         };
 
         return targetAction.apply(delegatedContext);
@@ -150,7 +151,7 @@ class ClassActionWithSuggestedAction extends BuilderAction {
 
         return targetAction.clean({
             ...context,
-            params: { mainParam: className }
+            params: { mainParam: className },
         });
     }
 
@@ -198,6 +199,7 @@ class SetGapAction extends BuilderAction {
     }
 
     apply({ editingElement, value }) {
+        editingElement.classList.add("o_dirty_product_list");
         editingElement.style.setProperty("--o-wsale-products-grid-gap", value);
         if (this.panel?.needsDbPersistence) {
             editingElement.dataset.gapToSave = value;
