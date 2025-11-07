@@ -237,6 +237,9 @@
                         theme="'monokai'"
                         onChange.bind="onCodeChange"
                         value="this.state.value"/>
+            <div t-if="this.state.missingAttribute" class="alert alert-danger mt-3">
+                <t t-esc="this.state.missingAttribute"/>
+            </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="onConfirm">Save</button>
                 <button class="btn" t-on-click="this.props.close">Discard</button>

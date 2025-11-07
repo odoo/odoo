@@ -21,12 +21,23 @@ class CodeEditorDialog extends Component {
     };
     setup() {
         this.dialog = useService("dialog");
-        this.state = useState({ value: this.props.value });
+        this.state = useState({ value: this.props.value, missingAttribute: false });
     }
     onCodeChange(newValue) {
         this.state.value = newValue;
     }
     onConfirm() {
+        const htmlContent = new DOMParser().parseFromString(this.state.value, "text/html");
+        const modelElements = htmlContent.querySelectorAll("[data-oe-model]");
+        for (const el of modelElements) {
+            if (!el.getAttribute("data-oe-field") || !el.getAttribute("data-oe-type")) {
+                this.state.missingAttribute = _t(
+                    "Missing 'data-oe-field' or 'data-oe-type' attributes in element:- %(element)s",
+                    { element: el.outerHTML }
+                );
+                return;
+            }
+        }
         this.props.confirm(this.state.value);
         this.props.close();
     }
