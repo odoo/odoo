@@ -49,7 +49,7 @@
                 <button
                     class="button w-50 btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                     t-on-click="() => doSubmitOrder.call()"
-                    t-elif="!ui.isSmall and this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrints.length"
+                    t-elif="!ui.isSmall and this.pos.kitchenPrinters.length and this.currentOrder.uiState.lastPrints.length"
                     t-att-disabled="doSubmitOrder.status === 'loading'">
                     Reprint
                 </button>

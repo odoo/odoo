@@ -1,4 +1,3 @@
-import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
@@ -68,7 +67,7 @@ export class HardwareProxy extends EventBus {
     }
 
     connectToPrinter() {
-        this.printer = new HWPrinter({ url: this.host });
+        throw new Error("Deprecated: Use 'iot_http' service instead of 'hardware_proxy'.");
     }
 
     /**
