@@ -46,11 +46,6 @@ export class Persona extends Record {
     /** @type {string} */
     phone;
     debouncedSetImStatus;
-    displayName = fields.Attr(undefined, {
-        compute() {
-            return this._computeDisplayName();
-        },
-    });
     main_user_id = fields.One("res.users");
     monitorPresence = fields.Attr(false, {
         compute() {
@@ -117,6 +112,16 @@ export class Persona extends Record {
     write_date = fields.Datetime();
     group_ids = fields.Many("res.groups", { inverse: "personas" });
 
+    /**
+     * @deprecated
+     *
+     * `store.menuThreads` uses this field to filter threads based on search
+     * terms. For each computation, the `menuThread` field is marked as needing a
+     * recompute, which can lead to excessive recursion—sometimes even exceeding the
+     * call stack size. This computation is simple enough that it doesn’t need a
+     * compute and has been replaced by a getter. To override the display name
+     * computation, override the displayName getter.
+     */
     _computeDisplayName() {
         return this.name;
     }
@@ -147,6 +152,10 @@ export class Persona extends Record {
             });
         }
         return this.store.DEFAULT_AVATAR;
+    }
+
+    get displayName() {
+        return this._computeDisplayName();
     }
 
     searchChat() {
