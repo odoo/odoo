@@ -43,11 +43,9 @@
                     </div>
                 </t>
             </div>
-            <div t-if="expertiseTags.length" class="d-flex flex-column bg-inherit gap-1">
+            <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Expertise</h6>
-                <div class="d-flex flex-wrap gap-1">
-                    <TagsList displayText="true" tags="expertiseTags"/>
-                </div>
+                <ExpertiseTagsAutocomplete channel="props.thread"/>
             </div>
             <t t-name="extra_infos"/>
             <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">

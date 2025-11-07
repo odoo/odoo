@@ -32,6 +32,9 @@ declare module "models" {
         livechat_expertise: String[];
         livechat_languages: String[];
     }
+    export interface ResUsers {
+        is_livechat_manager: boolean;
+    }
     export interface Store {
         Chatbot: StaticMailRecord<Chatbot, typeof ChatbotClass>;
         "chatbot.script": StaticMailRecord<ChatbotScript, typeof ChatbotScriptClass>;
