@@ -8,7 +8,7 @@ from markupsafe import Markup
 from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
-from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
+from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
@@ -251,7 +251,7 @@ class DiscussChannel(models.Model):
         if self.channel_type not in ('channel', 'group'):
             return False
         avatar = group_avatar if self.channel_type == 'group' else channel_avatar
-        bgcolor = get_hsl_from_seed(self.uuid)
+        bgcolor = get_random_ui_color_from_seed(self.uuid)
         avatar = avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')
         return base64.b64encode(avatar.encode())
 

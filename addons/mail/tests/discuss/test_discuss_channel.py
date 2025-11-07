@@ -624,8 +624,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         test_channel.uuid = 'channel-uuid'
         private_group = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
         private_group.uuid = 'group-uuid'
-        bgcolor_channel = html_escape('hsl(316, 61%, 45%)')  # depends on uuid
-        bgcolor_group = html_escape('hsl(17, 60%, 45%)')  # depends on uuid
+        bgcolor_channel = html_escape('#F48935')  # depends on uuid
+        bgcolor_group = html_escape('#EA6175')  # depends on uuid
         expceted_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_channel}"')).encode()
         expected_avatar_group = (group_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_group}"')).encode()
 
