@@ -5530,7 +5530,7 @@ class AccountMove(models.Model):
                 # so we also check tax_cash_basis_origin_move_id, which stays unchanged
                 # (we need both, as tax_cash_basis_origin_move_id did not exist in older versions).
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
-            if move.inalterable_hash:
+            if not self.env.context.get('allow_draft_hashed_entries') and move.inalterable_hash:
                 raise UserError(_('You cannot reset to draft a locked journal entry.'))
 
     def button_hash(self):
