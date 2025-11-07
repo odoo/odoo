@@ -318,3 +318,15 @@ class WebsiteSnippetFilter(models.Model):
         if 'field_names' in defaults and self.env.context.get('model') == 'product.product':
             defaults['field_names'] = 'display_name,description_sale,image_512'
         return defaults
+
+    # Move this code in website sale
+    @api.model
+    def get_dummy_product_records(self, template_key, num_of_elements):
+        """
+        Returns a list of dummy records for a given template key
+        @param template_key: Template key to identify the snippet
+        @return List of dummy records
+        """
+        dynamic_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
+        rendered = dynamic_filter and dynamic_filter._render(template_key, num_of_elements, None, with_sample=True) or []
+        return rendered

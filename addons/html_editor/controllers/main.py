@@ -735,3 +735,10 @@ class HTML_Editor(http.Controller):
             return response.json()
         else:
             return {'error': response.status_code}
+
+    @http.route('/web_editor/get_snippet_data', type='jsonrpc', auth='public', website=True)
+    def get_snippet_data(self, template_data, **kwargs):
+        results = {}
+        for key, value in template_data.items():
+            results[key] = request.env['website.snippet.filter'].get_dummy_product_records(key, value)
+        return results

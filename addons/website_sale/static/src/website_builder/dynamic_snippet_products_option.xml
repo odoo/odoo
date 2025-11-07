@@ -4,6 +4,7 @@
 <t t-name="website_sale.DynamicSnippetProductsOption" t-inherit="website.DynamicSnippetCarouselOption">
     <!-- TODO: The product snippets design will be refactored soon... Hide the template
      option once the final layouts and previews of the snippets are available. -->
+     <!-- TODO: MSH: Need to adapt changes of s_dynamic_snippet_products/options.js -->
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="attributes">
         <attribute name="t-if">filteredTemplates.length &gt; 1</attribute>
     </xpath>
