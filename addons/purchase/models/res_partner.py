@@ -49,6 +49,6 @@ class ResPartner(models.Model):
         if not self.env.user.has_group('purchase.group_purchase_user'):
             return data_list
         for partner in self.filtered(lambda partner: partner.purchase_order_count):
-            stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases'), 'tagClass': 'o_tag_color_5'}
+            stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases')}
             data_list[partner.id].append(stat_info)
         return data_list
