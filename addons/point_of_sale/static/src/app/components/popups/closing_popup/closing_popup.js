@@ -180,8 +180,10 @@ export class ClosePosPopup extends Component {
         );
     }
     hasUserAuthority() {
+        return this.props.is_manager || this.allowedDifference();
+    }
+    allowedDifference() {
         return (
-            this.props.is_manager ||
             this.props.amount_authorized_diff == null ||
             this.getMaxDifference() <= this.props.amount_authorized_diff
         );
