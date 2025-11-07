@@ -203,7 +203,7 @@
                                 <BackButton t-if="ui.isSmall" onClick="() => pos.onClickBackButton()"/>
                                 <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
-                                    t-if="this.pos.unwatched.printers.length and _selectedSyncedOrder.uiState.lastPrints.length">
+                                    t-if="this.pos.kitchenPrinters.length and _selectedSyncedOrder.uiState.lastPrints.length">
                                     <i class="fa fa-cutlery" aria-hidden="true"/>
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"

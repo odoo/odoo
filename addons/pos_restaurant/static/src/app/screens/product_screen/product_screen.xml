@@ -25,7 +25,7 @@
                     <button
                             class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                             t-on-click="() => doSubmitOrder.call()"
-                            t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrints.length"
+                            t-elif="this.pos.kitchenPrinters.length and this.currentOrder.uiState.lastPrints.length"
                             t-att-disabled="doSubmitOrder.status === 'loading'">
                         <i class="fa fa-cutlery" aria-hidden="true"></i>
                     </button>

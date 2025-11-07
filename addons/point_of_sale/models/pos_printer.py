@@ -34,16 +34,13 @@ class PosPrinter(models.Model):
     name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
     printer_type = fields.Selection(
         string='Printer Type',
-        default='iot',
+        default='epson_epos',
         selection=[
-            ('iot', 'Use a printer connected to the IoT Box'),
             ('epson_epos', 'Use an Epson printer'),
             ('epson_server_direct_print', 'Use Epson Server Direct Print'),
         ]
     )
-    proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     pos_config_ids = fields.Many2many('pos.config', 'pos_config_printer_rel', 'printer_id', 'config_id')
     epson_printer_ip = fields.Char(
         string='Epson Printer IP Address',
@@ -60,7 +57,7 @@ class PosPrinter(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'proxy_ip', 'product_categories_ids', 'printer_type', 'epson_printer_ip']
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'epson_printer_ip']
 
     @api.constrains('epson_printer_ip')
     def _constrains_epson_printer_ip(self):

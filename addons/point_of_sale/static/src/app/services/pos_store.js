@@ -1,18 +1,11 @@
 /* global waitForWebfonts */
 
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw, reactive } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import {
-    deduceUrl,
-    random5Chars,
-    uuidv4,
-    Counter,
-    orderUsageUTCtoLocalUtil,
-} from "@point_of_sale/utils";
-import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
+import { random5Chars, uuidv4, Counter, orderUsageUTCtoLocalUtil } from "@point_of_sale/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
@@ -118,7 +111,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.router = pos_router;
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
-        this.unwatched = markRaw({});
+        this.kitchenPrinters = [];
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
 
@@ -419,16 +412,15 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        // Create printer with hardware proxy, this will override related model data
-        this.unwatched.printers = [];
-        for (const relPrinter of this.models["pos.printer"].getAll()) {
-            const printer = relPrinter.raw;
-            const HWPrinter = this.createPrinter(printer);
-
-            HWPrinter.config = printer;
-            this.unwatched.printers.push(HWPrinter);
+        // Create preparation/kitchen printers
+        for (const printerConfig of this.models["pos.printer"].getAll()) {
+            const printer = this.createPrinter(printerConfig);
+            if (printer) {
+                printer.config = printerConfig.raw;
+                this.kitchenPrinters.push(printer);
+            }
         }
-        this.config.iface_printers = !!this.unwatched.printers.length;
+        this.config.iface_printers = !!this.kitchenPrinters.length;
 
         this.models["product.pricelist.item"].addEventListener("create", () => {
             const order = this.getOrder();
@@ -1156,8 +1148,6 @@ export class PosStore extends WithLazyGetterTrap {
                 busService: this.env.services.bus_service,
             });
         }
-        const url = deduceUrl(printerConfig.proxy_ip || "");
-        return new HWPrinter({ url });
     }
 
     async _loadFonts() {
@@ -1924,7 +1914,7 @@ export class PosStore extends WithLazyGetterTrap {
         return receiptsData;
     }
 
-    async printChanges(order, orderChange, reprint = false, printers = this.unwatched.printers) {
+    async printChanges(order, orderChange, reprint = false, printers = this.kitchenPrinters) {
         let isPrinted = false;
         const unsuccessfulPrints = [];
         const retryPrinters = new Set();
