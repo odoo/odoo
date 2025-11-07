@@ -168,6 +168,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 {
                     "id": test_user.id,
                     "is_admin": False,
+                    "is_livechat_manager": False,
                     "notification_type": "email",
                     "signature": ["markup", str(test_user.signature)],
                     "share": False,
@@ -288,6 +289,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 {
                     "id": operator.id,
                     "is_admin": False,
+                    "is_livechat_manager": False,
                     "notification_type": "email",
                     "share": False,
                     "signature": ["markup", str(operator.signature)],

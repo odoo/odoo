@@ -425,6 +425,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {
                     "id": self.users[0].id,
                     "is_admin": False,
+                    "is_livechat_manager": False,
                     "notification_type": "inbox",
                     "share": False,
                     "signature": ["markup", str(self.users[0].signature)],

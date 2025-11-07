@@ -36,6 +36,7 @@ export const livechatModels = {
 };
 
 serverState.groupLivechatId = 42;
+serverState.groupLivechatManagerId = 43;
 
 /**
  * Setup the server side of the livechat app.

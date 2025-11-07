@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo import Command
 from odoo.http import request, route
@@ -59,3 +59,37 @@ class LivechatChannelController(ChannelController):
                 },
                 subchannel="LOOKING_FOR_HELP",
             )
+
+    @route(
+        "/im_livechat/conversation/write_expertises", auth="user", methods=["POST"], type="jsonrpc"
+    )
+    def livechat_conversation_write_expertises(self, channel_id, orm_commands):
+        if any(cmd[0] not in (Command.LINK, Command.UNLINK) for cmd in orm_commands):
+            raise BadRequest(
+                self.env._("Write expertises: Only LINK and UNLINK commands are allowed.")
+            )
+        if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            return
+        if channel := request.env["discuss.channel"].search(
+            [("id", "=", channel_id), ("channel_type", "=", "livechat")]
+        ):
+            # sudo: discuss.channel - live chat users can update the expertises of any live chat.
+            channel.sudo().livechat_expertise_ids = orm_commands
+
+    @route(
+        "/im_livechat/conversation/create_and_link_expertise",
+        auth="user",
+        methods=["POST"],
+        type="jsonrpc",
+    )
+    def livechat_conversation_create_and_link_expertise(self, channel_id, expertise_name):
+        channel = request.env["discuss.channel"].search(
+            [("id", "=", channel_id), ("channel_type", "=", "livechat")]
+        )
+        if not channel:
+            return
+        stripped_name = expertise_name.strip()
+        expertise = request.env["im_livechat.expertise"].search([("name", "=", stripped_name)])
+        if not expertise:
+            expertise = request.env["im_livechat.expertise"].create({"name": stripped_name})
+        channel.livechat_expertise_ids = [Command.link(expertise.id)]

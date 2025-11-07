@@ -1,4 +1,5 @@
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
+import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_autocomplete";
 import { ConversationTagEdit } from "@im_livechat/core/web/livechat_conversation_tag_edit";
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
@@ -6,15 +7,15 @@ import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { Component, useEffect, useRef, useSubEnv } from "@odoo/owl";
 
+import { startUrl } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { startUrl } from "@web/core/browser/router";
 import { TagsList } from "@web/core/tags_list/tags_list";
-import { usePopover } from "@web/core/popover/popover_hook";
 
 export class LivechatChannelInfoList extends Component {
-    static components = { ActionPanel, TagsList, TranscriptSender };
+    static components = { ActionPanel, TagsList, ExpertiseTagsAutocomplete, TranscriptSender };
     static template = "im_livechat.LivechatChannelInfoList";
     static props = ["thread"];
 
@@ -58,6 +59,7 @@ export class LivechatChannelInfoList extends Component {
             .map((m) => m.chatbotStep);
     }
 
+    /** @deprecated */
     get expertiseTags() {
         return this.props.thread.livechat_expertise_ids.map((expertise) => ({
             id: expertise.id,

@@ -9,5 +9,10 @@ export class ResGroups extends mailModels.ResGroups {
             name: "Livechat User",
             privilege_id: false,
         },
+        {
+            id: serverState.groupLivechatManagerId,
+            name: "Livechat Manager",
+            privilege_id: false,
+        },
     ];
 }
