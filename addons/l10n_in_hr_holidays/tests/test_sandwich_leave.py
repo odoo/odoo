@@ -14,6 +14,26 @@ class TestSandwichLeave(TransactionCase):
             'name': 'Test Indian Company',
             'country_id': self.env.ref('base.in').id,
         })
+        self.test_calendar = self.env["resource.calendar"].create({
+            "name": "Test 8-17 Calendar",
+            "company_id": self.indian_company.id,
+            "attendance_ids": [
+                Command.create({
+                    "name": f"Day {day} {label}",
+                    "dayofweek": str(day),
+                    "hour_from": hour_from,
+                    "hour_to": hour_to,
+                    "day_period": label.lower(),
+                })
+                for day in range(5)
+                for label, hour_from, hour_to in (
+                    ("Morning", 8, 12),
+                    ("Lunch", 12, 13),
+                    ("Afternoon", 13, 17),
+                )
+            ]},
+        )
+        self.indian_company.resource_calendar_id = self.test_calendar
         self.env = self.env(context=dict(self.env.context, allowed_company_ids=self.indian_company.ids))
         self.demo_user = self.env["res.users"].with_company(self.indian_company).create({
             "login": "piyush",
@@ -49,6 +69,7 @@ class TestSandwichLeave(TransactionCase):
             'name': 'Rahul',
             'country_id': self.env.ref('base.in').id,
             'company_id': self.indian_company.id,
+            'resource_calendar_id': self.test_calendar.id,
         })
         self.wednesday_public_holiday = self.env['resource.calendar.leaves'].create({
             'name': 'test public holiday',
@@ -379,8 +400,8 @@ class TestSandwichLeave(TransactionCase):
             'holiday_status_id': self.leave_type_hours.id,
             'request_date_from': "2025-01-24",
             'request_date_to': "2025-01-24",
-            'request_hour_from': 10,
-            'request_hour_to': 13,
+            'request_hour_from': 8,
+            'request_hour_to': 12,
         })
         full_leave = self.env['hr.leave'].create({
             'name': 'Full Monday Leave',
@@ -389,9 +410,8 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': "2025-01-27",
             'request_date_to': "2025-01-27",
         })
-
         self.assertFalse(partial_leave.l10n_in_contains_sandwich_leaves)
-        self.assertEqual(partial_leave.number_of_hours, 3)
+        self.assertEqual(partial_leave.number_of_hours, 4)
         self.assertFalse(full_leave.l10n_in_contains_sandwich_leaves)
         self.assertEqual(full_leave.number_of_hours, 8)
 
