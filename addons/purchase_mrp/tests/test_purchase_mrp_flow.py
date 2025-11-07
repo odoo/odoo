@@ -514,7 +514,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'product_tmpl_id': finished.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'operation_ids': [
             ],
             'type': 'normal',

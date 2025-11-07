@@ -258,14 +258,6 @@ class MrpProduction(models.Model):
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
-    consumption = fields.Selection([
-        ('flexible', 'Allowed'),
-        ('warning', 'Allowed with warning'),
-        ('strict', 'Blocked')],
-        required=True,
-        readonly=True,
-        default='flexible',
-    )
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
@@ -1597,8 +1589,6 @@ class MrpProduction(models.Model):
         workorder_ids_to_confirm = set()
         for production in self:
             production_vals = {}
-            if production.bom_id:
-                production_vals.update({'consumption': production.bom_id.consumption})
             # In case of Serial number tracking, force the UoM to the UoM of product
             if production.product_tracking == 'serial' and production.uom_id != production.product_id.uom_id:
                 production_vals.update({
@@ -1755,7 +1745,7 @@ class MrpProduction(models.Model):
         if self.env.context.get('skip_consumption', False):
             return issues
         for order in self:
-            if order.consumption == 'flexible' or not order.bom_id or not order.bom_id.bom_line_ids:
+            if not order.bom_id or not order.bom_id.bom_line_ids:
                 continue
             expected_move_values = order._get_moves_raw_values()
             expected_qty_by_product = defaultdict(float)
@@ -1789,7 +1779,6 @@ class MrpProduction(models.Model):
             lines.append((0, 0, {
                 'mrp_production_id': order.id,
                 'product_id': product_id.id,
-                'consumption': order.consumption,
                 'uom_id': product_id.uom_id.id,
                 'product_consumed_qty_uom': consumed_qty,
                 'product_expected_qty_uom': expected_qty
@@ -1865,19 +1854,6 @@ class MrpProduction(models.Model):
                     continue
                 filtered_documents[(parent, responsible)] = rendering_context
             production._log_manufacture_exception(filtered_documents, cancel=True)
-
-        # In case of a flexible BOM, we don't know from the state of the moves if the MO should
-        # remain in progress or done. Indeed, if all moves are done/cancel but the quantity produced
-        # is lower than expected, it might mean:
-        # - we have used all components but we still want to produce the quantity expected
-        # - we have used all components and we won't be able to produce the last units
-        #
-        # However, if the user clicks on 'Cancel', it is expected that the MO is either done or
-        # canceled. If the MO is still in progress at this point, it means that the move raws
-        # are either all done or a mix of done / canceled => the MO should be done.
-        mos_to_mark_as_done = self.filtered(lambda p: p.state not in ['done', 'cancel'] and p.bom_id.consumption == 'flexible')
-        if mos_to_mark_as_done:
-            mos_to_mark_as_done.write({'state': 'done'})
 
         return True
 

@@ -9,7 +9,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 class TestMrpCommon(TestStockCommon):
 
     @classmethod
-    def generate_mo(cls, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False, consumption=False):
+    def generate_mo(cls, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False):
         """ This function generate a manufacturing order with one final
         product and two consumed product. Arguments allows to choose
         the tracking/qty for each different products. It returns the
@@ -39,7 +39,6 @@ class TestMrpCommon(TestStockCommon):
             'uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
-            'consumption': consumption if consumption else 'flexible',
             'bom_line_ids': [
                 Command.create({'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
                 Command.create({'product_id': product_to_use_1.id, 'product_qty': qty_base_1}),
@@ -157,7 +156,6 @@ class TestMrpCommon(TestStockCommon):
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
             'uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
-            'consumption': 'flexible',
             'operation_ids': [
             ],
             'type': 'normal',
@@ -169,7 +167,6 @@ class TestMrpCommon(TestStockCommon):
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
             'uom_id': cls.product_5.uom_id.id,
-            'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
                 Command.create({'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
@@ -185,7 +182,6 @@ class TestMrpCommon(TestStockCommon):
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'uom_id': cls.uom_dozen.id,
             'ready_to_produce': 'asap',
-            'consumption': 'flexible',
             'product_qty': 2.0,
             'operation_ids': [
                 Command.create({'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
@@ -200,7 +196,6 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_4 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
-            'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [Command.create({
                 'name': 'Rub it gently with a cloth',
@@ -216,7 +211,6 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_5 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
-            'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [Command.create({
                 'name': 'Rub it gently with a cloth two at once',
@@ -232,7 +226,6 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_6 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
-            'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [Command.create({
                 'name': 'Rub it gently with a cloth two at once',

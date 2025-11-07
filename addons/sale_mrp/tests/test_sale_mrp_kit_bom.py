@@ -58,7 +58,6 @@ class TestSaleMrpKitBom(BaseCommon):
             'product_id': product_variant_ids[0].id,
             'product_tmpl_id': product_variant_ids[0].product_tmpl_id.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'type': 'phantom',
             'bom_line_ids': [(0, 0, {'product_id': component_1.id, 'product_qty': 1})]
         })
@@ -67,7 +66,6 @@ class TestSaleMrpKitBom(BaseCommon):
             'product_id': product_variant_ids[1].id,
             'product_tmpl_id': product_variant_ids[1].product_tmpl_id.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'type': 'phantom',
             'bom_line_ids': [(0, 0, {'product_id': component_2.id, 'product_qty': 1})]
         })
@@ -707,7 +705,6 @@ class TestSaleMrpKitBom(BaseCommon):
             'product_id': kit_product.id,
             'product_tmpl_id': kit_product.product_tmpl_id.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'phantom',
             'bom_line_ids': [(0, 0, {'product_id': component_a.id, 'product_qty': 1})]
         })
@@ -820,7 +817,6 @@ class TestSaleMrpKitBom(BaseCommon):
             'product_id': kit_product.id,
             'product_tmpl_id': kit_product.product_tmpl_id.id,
             'product_qty': 1,
-            'consumption': 'flexible',
             'type': 'phantom',
             'bom_line_ids': [(0, 0, {'product_id': component_product.id, 'product_qty': 1})]
         })

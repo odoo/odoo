@@ -46,7 +46,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'product_tmpl_id': cls.laptop.product_tmpl_id.id,
             'product_qty': 1,
             'uom_id': cls.uom_unit.id,
-            'consumption': 'flexible',
             'bom_line_ids': [Command.create({
                 'product_id': cls.graphics_card.id,
                 'product_qty': 1,

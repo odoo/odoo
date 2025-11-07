@@ -172,7 +172,6 @@ class TestTraceability(TestMrpCommon):
             'product_tmpl_id': product_final.product_tmpl_id.id,
             'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': product_1.id, 'product_qty': 1}),

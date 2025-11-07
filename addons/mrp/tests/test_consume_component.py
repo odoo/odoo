@@ -77,7 +77,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.bom_none = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.produced_none.product_tmpl_id.id,
             'uom_id': cls.produced_none.uom_id.id,
-            'consumption': 'flexible',
             'sequence': 1
         })
 
@@ -86,7 +85,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.bom_lot = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.produced_lot.product_tmpl_id.id,
             'uom_id': cls.produced_lot.uom_id.id,
-            'consumption': 'flexible',
             'sequence': 2
         })
 
@@ -95,7 +93,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.bom_serial = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.produced_serial.product_tmpl_id.id,
             'uom_id': cls.produced_serial.uom_id.id,
-            'consumption': 'flexible',
             'sequence': 1
         })
 
@@ -414,7 +411,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': sfg_product.product_tmpl_id.id,
             'uom_id': sfg_product.uom_id.id,
-            'consumption': 'flexible',
             'sequence': 1
         })
         self.create_bom_lines(bom, compo1, [1])

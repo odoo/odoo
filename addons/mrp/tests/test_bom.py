@@ -277,7 +277,6 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_9.product_tmpl_id.id,
             'uom_id': self.product_9.uom_id.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'type': 'normal'
         })
         test_bom_4 = self.env['mrp.bom'].create({
@@ -285,7 +284,6 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_10.product_tmpl_id.id,
             'uom_id': self.product_10.uom_id.id,
             'product_qty': 1.0,
-            'consumption': 'flexible',
             'type': 'phantom'
         })
         test_bom_3.bom_line_ids = [Command.create({
