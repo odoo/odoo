@@ -605,6 +605,7 @@ class TestCreatePicking(ProductVariantsCommon):
                 values = {
                     'warehouse_id': picking_type_out.warehouse_id,
                     'action': 'pull_push',
+                    'reference_ids': reference,
                 }
             return self.env['stock.rule'].run([self.env['stock.rule'].Procurement(
                 product, product_qty, self.uom_unit, vendor.property_stock_customer,
@@ -634,8 +635,10 @@ class TestCreatePicking(ProductVariantsCommon):
             'price': 12.0,
         })
 
+        reference = self.env['stock.reference'].create({'name': 'reference'})
         # Create initial procurement that will generate the initial move and its picking.
         create_run_procurement(product, 50, {
+            'reference_ids': reference,
             'warehouse_id': picking_type_out.warehouse_id,
             'partner_id': vendor.id
         })
