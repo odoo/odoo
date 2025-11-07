@@ -6,3 +6,13 @@
         --gutter-x: 0;
     }
 }
+
+.o_res_partner_kanban_card {
+    --KanbanRecord__image-width: 36px;
+
+    @include media-breakpoint-up(md) {
+        &:not(:hover) .o_has_no_activity {
+            opacity: 0;
+        }
+    }
+}

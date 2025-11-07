@@ -202,34 +202,44 @@
                                     <field name="color"/>
                                     <field name="type"/>
                                     <field name="is_company"/>
+                                    <field name="company_type"/>
+                                    <field name="image_128"/>
+                                    <field name="name"/>
                                     <templates>
-                                        <t t-name="card" class="flex-row">
-                                            <aside class="o_kanban_aside_full">
-                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image" invisible="type != 'contact'"/>
-                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-contain p-2'}" alt="Contact image" invisible="type == 'contact'"/>
-                                            </aside>
-                                            <main class="ps-2 ps-md-0">
-                                                <field name="name" invisible="not name" class="fw-bold"/>
-                                                <field name="type" invisible="name" class="fw-bold"/>
-                                                <div t-if="record.email.raw_value" class="text-truncate">
-                                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                                    <field name="email"/>
+                                        <t t-name="card" class="o_res_partner_kanban_card flex-row gap-2">
+                                            <main class="gap-2">
+                                                <div class="d-flex flex-column w-100">
+                                                    <field name="name" invisible="not name" class="flex-grow-1 fw-bold"/>
+                                                    <field name="type" invisible="name" class="flex-grow-1 fw-bold"/>
+                                                    <span t-if="record.type.raw_value != 'contact'" class="text-muted">
+                                                        <i class="fa fa-fw me-1" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img" t-att-title="{'invoice': 'Invoice','delivery': 'Delivery', 'other': 'Other'}[record.type.raw_value]"/>
+                                                        <field name="type"/> address
+                                                    </span>
                                                 </div>
-                                                <div t-if="record.phone.raw_value">
-                                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
-                                                    <field name="phone"/>
-                                                </div>
-                                                <div invisible="not function or is_company">
-                                                    <i class="fa fa-fw me-1 fa-suitcase text-primary" title="Position"/>
-                                                    <field name="function"/>
-                                                </div>
-                                                <div t-if="record.type.raw_value != 'contact' and (record.city.raw_value or record.country_id.raw_value)">
-                                                    <i class="fa fa-fw me-1 fa-map-marker text-primary" title="Location"/>
-                                                    <field name="city"/>
-                                                    <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
-                                                    <field name="country_id"/>
+                                                <div>
+                                                    <div t-if="record.email.raw_value" class="text-truncate">
+                                                        <i class="fa fa-fw me-1 fa-envelope" title="Email"/>
+                                                        <field name="email"/>
+                                                    </div>
+                                                    <div t-if="record.phone.raw_value">
+                                                        <i class="fa fa-fw me-1 fa-phone" title="Phone"/>
+                                                        <field name="phone"/>
+                                                    </div>
+                                                    <div invisible="not function or is_company">
+                                                        <i class="fa fa-fw me-1 fa-suitcase" title="Position"/>
+                                                        <field name="function"/>
+                                                    </div>
+                                                    <div t-if="record.type.raw_value != 'contact' and (record.city.raw_value or record.country_id.raw_value)">
+                                                        <i class="fa fa-fw me-1 fa-map-marker" title="Location"/>
+                                                        <field name="city"/>
+                                                        <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
+                                                        <field name="country_id"/>
+                                                    </div>
                                                 </div>
                                             </main>
+                                            <aside>
+                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'w-100 rounded border object-fit-contain'}"/>
+                                            </aside>
                                         </t>
                                     </templates>
                                 </kanban>
@@ -346,44 +356,54 @@
             <field name="arch" type="xml">
                 <kanban sample="1">
                     <field name="avatar_128"/>
+                    <field name="image_128"/>
                     <field name="is_company"/>
                     <field name="active"/>
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="properties"/>
+                    <field name="company_type"/>
                     <templates>
-                        <t t-name="card" class="flex-row">
-                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                            <aside class="o_kanban_aside_full">
-                                <t t-if="!record.is_company.raw_value">
-                                    <div class="position-relative w-100 h-auto m-0">
-                                        <field name="avatar_128" alt="Contact image" class="h-100" widget="image" options="{'img_class': 'object-fit-contain'}"/>
-                                        <field t-if="record.parent_id.raw_value and record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
-                                        <field t-elif="record.parent_id.raw_value and !record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'avatar_128', 'img_class': 'object-fit-contain'}"/>
+                        <t t-name="card" class="o_res_partner_kanban_card flex-row gap-2">
+                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" class="z-1" invisible="active"/>
+                            <main class="gap-2">
+                                <div>
+                                    <p class="mb-0">
+                                        <field name="name" invisible="not name" class="fw-bold"/>
+                                        <field name="type" invisible="name" class="fw-bold"/>
+                                        <i t-if="record.type.raw_value != 'contact'" t-att-title="record.type.value" class="fa ms-2 text-muted" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img"/>
+                                    </p>
+                                    <field invisible="not parent_id" name="parent_id" class="text-muted"/>
+                                </div>
+                                <div>
+                                    <div t-if="record.email.raw_value" class="text-truncate">
+                                        <i class="fa fa-fw me-1 fa-envelope" title="Email"/>
+                                        <field name="email"/>
                                     </div>
+                                    <div t-if="record.phone.raw_value">
+                                        <i class="fa fa-fw me-1 fa-phone" title="Phone"/>
+                                        <field name="phone"/>
+                                    </div>
+                                    <div t-if="record.city.raw_value or record.country_id.raw_value">
+                                        <i class="fa fa-fw me-1 fa-map-marker" title="Location"/>
+                                        <field name="city"/>
+                                        <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
+                                        <field name="country_id"/>
+                                    </div>
+                                </div>
+                                <field name="properties" invisible="not properties" widget="properties"/>
+                                <footer t-if="record.application_statistics.raw_value">
+                                    <field name="application_statistics" invisible="not application_statistics" widget="contact_statistics"/>
+                                </footer>
+                            </main>
+                            <aside class="d-flex flex-column justify-content-between align-items-end gap-2">
+                                <t t-if="record.image_128.raw_value or record.type.raw_value === 'contact'">
+                                    <field name="avatar_128" class="w-100 m-0" widget="image" options="{'img_class': 'w-100 rounded border object-fit-contain'}"/>
                                 </t>
                                 <t t-else="">
-                                    <field name="avatar_128" class="w-100 h-auto m-0" widget="image" options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
+                                    <field name="parent_id" class="w-100 m-0" widget="image" options="{'preview_image': 'avatar_128', 'img_class': 'w-100 rounded border object-fit-contain'}"/>
                                 </t>
                             </aside>
-                            <main class="ps-2">
-                                <div class="mb-1">
-                                    <field name="complete_name" class="mb-0 fw-bold fs-5"/>
-                                </div>
-                                <div t-if="record.email.raw_value" class="text-truncate">
-                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                    <field name="email"/>
-                                </div>
-                                <div t-if="record.phone.raw_value">
-                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
-                                    <field name="phone"/>
-                                </div>
-                                <div t-if="record.city.raw_value or record.country_id.raw_value">
-                                    <i class="fa fa-fw me-1 fa-map-marker text-primary" title="Location"/>
-                                    <field name="city"/>
-                                    <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
-                                    <field name="country_id"/>
-                                </div>
-                                <field name="properties" widget="properties"/>
-                                <footer><field name="application_statistics" widget="contact_statistics"/></footer>
-                            </main>
                         </t>
                     </templates>
                 </kanban>

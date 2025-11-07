@@ -692,7 +692,7 @@ class ResPartner(models.Model):
         if not self.env.user.has_group('account.group_account_invoice'):
             return data_list
         for partner in self.filtered(lambda p: p._get_account_statistics_count()):
-            stat_info = {'iconClass': 'fa-pencil-square-o', 'value': partner._get_account_statistics_count(), 'label': _('Invoices/Bills/Mandates'), 'tagClass': 'o_tag_color_9'}
+            stat_info = {'iconClass': 'fa-pencil-square-o', 'value': partner._get_account_statistics_count(), 'label': _('Invoices/Bills/Mandates')}
             data_list[partner.id].append(stat_info)
         return data_list
 
