@@ -1,3 +1,4 @@
+import { markup } from '@odoo/owl';
 import { ProductCombo } from '@sale/js/models/product_combo';
 import { serializeComboItem } from '@sale/js/sale_utils';
 import { serializeDateTime } from '@web/core/l10n/dates';
@@ -139,6 +140,11 @@ export class QuickReorder extends Interaction {
             quantity: quantity,
             ...(isCombo && { linked_products: linkedProducts }),
         }));
+
+        data['website_sale.shorter_cart_summary'] = markup(
+            data['website_sale.shorter_cart_summary']
+        );
+        data['website_sale.cart_lines'] = markup(data['website_sale.cart_lines']);
 
         // Add the product to the cart and update the DOM.
         const cart = this.el.closest('#shop_cart');
