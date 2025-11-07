@@ -317,6 +317,8 @@ class AccountMove(models.Model):
             Hook to reset the chain head error prior to retrying the submission
         """
         self.filtered(lambda m: m.country_code == 'SA').write({'l10n_sa_edi_chain_head_id': False})
+        zatca = self.env.ref('l10n_sa_edi.edi_sa_zatca')
+        self.filtered(lambda m: m._get_edi_document(zatca))._detach_attachments()
         return super()._retry_edi_documents_error()
 
     def action_show_chain_head(self):
