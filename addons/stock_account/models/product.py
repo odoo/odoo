@@ -145,6 +145,7 @@ class ProductProduct(models.Model):
         for product in self:
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
             if at_date:
+                at_date = at_date.replace(hour=23, minute=59, second=59)
                 product = product.with_context(at_date=at_date)
             qty_available = product.sudo(False)._with_valuation_context().qty_available
             if product.lot_valuated:
