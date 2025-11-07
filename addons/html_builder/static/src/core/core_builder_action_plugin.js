@@ -142,7 +142,7 @@ export class ClassAction extends BuilderAction {
     }
 }
 
-class AttributeAction extends BuilderAction {
+export class AttributeAction extends BuilderAction {
     static id = "attributeAction";
     getValue({ editingElement, params: { mainParam: attributeName } = {} }) {
         return editingElement.getAttribute(attributeName);
@@ -169,7 +169,7 @@ class AttributeAction extends BuilderAction {
     }
 }
 
-class DataAttributeAction extends BuilderAction {
+export class DataAttributeAction extends BuilderAction {
     static id = "dataAttributeAction";
     getValue({ editingElement, params: { mainParam: attributeName } = {} }) {
         if (!/(^color|Color)($|(?=[A-Z]))/.test(attributeName)) {
@@ -203,7 +203,7 @@ class DataAttributeAction extends BuilderAction {
 }
 
 // TODO maybe find a better place for this
-class SetClassRangeAction extends BuilderAction {
+export class SetClassRangeAction extends BuilderAction {
     static id = "setClassRange";
     getValue({ editingElement, params: { mainParam: classNames } }) {
         for (const index in classNames) {

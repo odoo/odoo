@@ -424,7 +424,7 @@ function useReloadAction(getAllActions) {
 
 export function useHasPreview(getAllActions) {
     const comp = useComponent();
-    const getAction = comp.env.editor.shared.builderActions.getAction;
+    const getAction = useGetAction();
 
     let hasPreview = true;
     for (const descr of getAllActions()) {
@@ -463,7 +463,7 @@ export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
     const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(comp);
-    const getAction = comp.env.editor.shared.builderActions.getAction;
+    const getAction = useGetAction();
 
     const onReady = usePrepareAction(getAllActions);
     const { reload } = useReloadAction(getAllActions);
@@ -635,6 +635,25 @@ function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
     return userInputValue;
 }
 
+function useGetAction() {
+    const comp = useComponent();
+    const env = comp.env;
+    return (actionId) => {
+        let action;
+        if (env.localActions) {
+            action = env.localActions[actionId];
+        }
+        return action || env.editor.shared.builderActions.getAction(actionId);
+    };
+}
+
+export function useLocalAction(Action) {
+    const comp = useComponent();
+    const env = comp.env;
+    const action = new Action(comp.env.editor.getEditorContext(Action.dependencies));
+    useSubEnv({ localActions: { ...env.localActions, [Action.id]: action } });
+}
+
 export function useInputBuilderComponent({
     id,
     defaultValue,
@@ -643,7 +662,7 @@ export function useInputBuilderComponent({
 } = {}) {
     const comp = useComponent();
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
-    const getAction = comp.env.editor.shared.builderActions.getAction;
+    const getAction = useGetAction();
     const state = useDomState(getState);
 
     const onReady = usePrepareAction(getAllActions);
@@ -832,9 +851,9 @@ export const clickableBuilderComponentProps = {
 export function getAllActionsAndOperations(comp) {
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
+    const getAction = useGetAction();
 
     function getActionsSpecs(actions, userInputValue) {
-        const getAction = comp.env.editor.shared.builderActions.getAction;
         const overridableMethods = ["apply", "clean", "load", "loadOnClean"];
         const specs = [];
         for (let { actionId, actionParam, actionValue } of actions) {
@@ -940,7 +959,6 @@ export function getAllActionsAndOperations(comp) {
         });
     }
     function isApplied() {
-        const getAction = comp.env.editor.shared.builderActions.getAction;
         const editingElements = comp.env.getEditingElements();
         if (!editingElements.length) {
             return;

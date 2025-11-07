@@ -1,5 +1,8 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { onMounted, onWillDestroy, useState } from "@odoo/owl";
+import { ClassAction, SetClassRangeAction } from "@html_builder/core/core_builder_action_plugin";
+import { BaseOptionComponent, useLocalAction } from "@html_builder/core/utils";
+import { onMounted, onWillDestroy, useState, useSubEnv } from "@odoo/owl";
+
+
 
 export class ProductsDesignPanel extends BaseOptionComponent {
     static template = "website_sale.ProductsDesignPanel";
@@ -24,6 +27,31 @@ export class ProductsDesignPanel extends BaseOptionComponent {
         super.setup();
         this.state = useState({ overlayVisible: false });
         this.needsDbPersistence = this.props.recordName?.length > 0;
+        useSubEnv({
+            recordName: this.props.recordName,
+        });
+
+        const comp = this;
+
+        class CustomClassAction extends ClassAction {
+            apply(...args) {
+                super.apply(...args);
+                const { editingElement } = args[0];
+                editingElement.classList.add("o_dirty_product_list");
+                editingElement.dataset.recordName = comp.props.recordName;
+            }
+        }
+        class SetCustomClassRangeAction extends SetClassRangeAction {
+            apply(...args) {
+                super.apply(...args);
+                const { editingElement } = args[0];
+                editingElement.classList.add("o_dirty_product_list");
+                editingElement.dataset.recordName = comp.props.recordName;
+            }
+        }
+
+        useLocalAction(CustomClassAction);
+        useLocalAction(SetCustomClassRangeAction);
 
         onMounted(() => {
             this.setupActionConnections();
