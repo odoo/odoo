@@ -97,14 +97,14 @@ class AccountMoveLine(models.Model):
 
     def _get_l10n_in_gstr_section(self, tax_tags_dict):
 
-        def tags_have_categ(line_tax_tags, categories):
+        def tags_have_categ(line_tax_tags, categories, tax_tags_dict):
             return any(tag in line_tax_tags for category in categories for tag in tax_tags_dict.get(category, []))
 
         def is_invoice(move):
-            return move.is_inbound() and not move.debit_origin_id
+            return not move.debit_origin_id and move.is_inbound()
 
         def is_move_bill(move):
-            return move.is_outbound() and not move.debit_origin_id
+            return not move.debit_origin_id and move.is_outbound()
 
         def get_transaction_type(move):
             return 'intra_state' if move.l10n_in_state_id == move.company_id.state_id else 'inter_state'
@@ -118,15 +118,16 @@ class AccountMoveLine(models.Model):
         def get_sales_section(line):
             move = line.move_id
             gst_treatment = move.l10n_in_gst_treatment
-            transaction_type = get_transaction_type(move)
             line_tags = line.tax_tag_ids.ids
-            is_inv = is_invoice(move)
-            amt_limit = 100000 if not line.invoice_date or line.invoice_date >= date(2024, 11, 1) else 250000
 
             # ECO 9(5) Section: Check if the line has the ECO 9(5) tax tag
-            if tags_have_categ(line_tags, ['eco_9_5']):
+            if tags_have_categ(line_tags, ['eco_9_5'], tax_tags_dict):
                 return 'sale_eco_9_5'
 
+            transaction_type = get_transaction_type(move)
+            is_inv = is_invoice(move)
+            amt_limit = 100000 if not line.invoice_date or line.invoice_date >= date(2024, 11, 1) else 250000
+            
             # Nil rated, Exempt, Non-GST Sales
             if gst_treatment != 'overseas':
                 if any(tax.l10n_in_tax_type == 'nil_rated' for tax in line.tax_ids):
@@ -138,9 +139,9 @@ class AccountMoveLine(models.Model):
 
             # B2CS: Unregistered or Consumer sales with gst tags
             if gst_treatment in ('unregistered', 'consumer') and not is_reverse_charge_tax(line):
-                if (transaction_type == 'intra_state' and tags_have_categ(line_tags, ['sgst', 'cgst', 'cess'])) or (
+                if (transaction_type == 'intra_state' and tags_have_categ(line_tags, ['sgst', 'cgst', 'cess'], tax_tags_dict)) or (
                     transaction_type == "inter_state"
-                    and tags_have_categ(line_tags, ['igst', 'cess'])
+                    and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict)
                     and not is_lut_tax(line)
                     and (
                         is_inv and move.amount_total <= amt_limit
@@ -151,13 +152,13 @@ class AccountMoveLine(models.Model):
                     return 'sale_b2cs'
 
             # If no relevant tags are found, or the tags do not match any category, mark as out of scope
-            if not line_tags or not tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess', 'eco_9_5']):
+            if not line_tags or not tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'], tax_tags_dict):
                 return 'sale_out_of_scope'
 
             # If it's a standard invoice (not a debit/credit note)
             if is_inv:
                 # B2B with Reverse Charge and Regular
-                if gst_treatment in ('regular', 'composition', 'uin_holders') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and not is_lut_tax(line):
+                if gst_treatment in ('regular', 'composition', 'uin_holders') and not is_lut_tax(line):
                     if is_reverse_charge_tax(line):
                         return 'sale_b2b_rcm'
                     return 'sale_b2b_regular'
@@ -166,46 +167,46 @@ class AccountMoveLine(models.Model):
                     # B2CL: Unregistered interstate sales above threshold
                     if (
                         gst_treatment in ('unregistered', 'consumer')
-                        and tags_have_categ(line_tags, ['igst', 'cess'])
+                        and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict)
                         and not is_lut_tax(line)
                         and transaction_type == 'inter_state'
                         and move.amount_total > amt_limit
                     ):
                         return 'sale_b2cl'
                     # Export with payment and without payment (under LUT) of tax
-                    if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess']):
+                    if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict):
                         if is_lut_tax(line):
                             return 'sale_exp_wop'
                         return 'sale_exp_wp'
                     # SEZ with payment and without payment of tax
-                    if gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess']):
+                    if gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict):
                         if is_lut_tax(line):
                             return 'sale_sez_wop'
                         return 'sale_sez_wp'
                     # Deemed export
-                    if gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and not is_lut_tax(line):
+                    if gst_treatment == 'deemed_export' and not is_lut_tax(line):
                         return 'sale_deemed_export'
 
             # If it's not a standard invoice (i.e., it's a debit/credit note)
-            if not is_inv:
+            else:
                 # CDN for B2B reverse charge and B2B regular
-                if gst_treatment in ('regular', 'composition', 'uin_holders') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and not is_lut_tax(line):
+                if gst_treatment in ('regular', 'composition', 'uin_holders') and not is_lut_tax(line):
                     if is_reverse_charge_tax(line):
                         return 'sale_cdnr_rcm'
                     return 'sale_cdnr_regular'
                 if not is_reverse_charge_tax(line):
                     # CDN for SEZ exports with payment and without payment
-                    if gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess']):
+                    if gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict):
                         if is_lut_tax(line):
                             return 'sale_cdnr_sez_wop'
                         return 'sale_cdnr_sez_wp'
                     # CDN for deemed exports
-                    if gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and not is_lut_tax(line):
+                    if gst_treatment == 'deemed_export' and not is_lut_tax(line):
                         return 'sale_cdnr_deemed_export'
                     # CDN for B2CL (interstate > threshold)
                     if (
                         gst_treatment in ('unregistered', 'consumer')
-                        and tags_have_categ(line_tags, ['igst', 'cess'])
+                        and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict)
                         and not is_lut_tax(line)
                         and transaction_type == 'inter_state'
                         and (
@@ -216,7 +217,7 @@ class AccountMoveLine(models.Model):
                     ):
                         return 'sale_cdnur_b2cl'
                     # CDN for exports with payment and without payment
-                    if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess']):
+                    if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict):
                         if is_lut_tax(line):
                             return 'sale_cdnur_exp_wop'
                         return 'sale_cdnur_exp_wp'
@@ -239,55 +240,54 @@ class AccountMoveLine(models.Model):
                     return 'purchase_non_gst_supplies'
 
             # If no relevant tags are found, or the tags do not match any category, mark as out of scope
-            if not line_tags or not tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
+            if not line_tags or not tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'], tax_tags_dict):
                 return 'purchase_out_of_scope'
 
             if is_bill:
                 # B2B Regular and Reverse Charge purchases
-                if (gst_treatment in ('regular', 'composition', 'uin_holders') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'])):
+                if (gst_treatment in ('regular', 'composition', 'uin_holders')):
                     if is_reverse_charge_tax(line):
                         return 'purchase_b2b_rcm'
                     return 'purchase_b2b_regular'
 
                 if not is_reverse_charge_tax(line) and (
-                    gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'])
-                    or gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess'])
+                    gst_treatment == 'deemed_export'
+                    or gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict)
                 ):
                     return 'purchase_b2b_regular'
 
                 # B2C Unregistered or Consumer sales with gst tags
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
+                if gst_treatment in ('unregistered', 'consumer'):
                     if is_reverse_charge_tax(line):
                         return 'purchase_b2c_rcm'
                     return 'purchase_b2c_regular'
 
                 # export service type products purchases
-                if gst_treatment == 'overseas' and any(tax.tax_scope == 'service' for tax in line.tax_ids | line.tax_line_id) and tags_have_categ(line_tags, ['igst', 'cess']):
+                if gst_treatment == 'overseas' and any(tax.tax_scope == 'service' for tax in line.tax_ids | line.tax_line_id) and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict):
                     return 'purchase_imp_services'
 
                 # export goods type products purchases
-                if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess']) and not is_reverse_charge_tax(line):
+                if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict) and not is_reverse_charge_tax(line):
                     return 'purchase_imp_goods'
 
             if not is_bill:
                 # credit notes for b2b purchases
-                if gst_treatment in ('regular', 'composition', 'uin_holders') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
+                if gst_treatment in ('regular', 'composition', 'uin_holders'):
                     if is_reverse_charge_tax(line):
                         return 'purchase_cdnr_rcm'
                     return 'purchase_cdnr_regular'
 
                 # credit notes for b2c purchases
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
+                if gst_treatment in ('unregistered', 'consumer'):
                     if is_reverse_charge_tax(line):
                         return 'purchase_cdnur_rcm'
                     return 'purchase_cdnur_regular'
 
                 if not is_reverse_charge_tax(line):
-                    if gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'])\
-                        or gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess']):
+                    if gst_treatment == 'deemed_export' or gst_treatment == 'special_economic_zone' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict):
                         return 'purchase_cdnr_regular'
 
-                    if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess']):
+                    if gst_treatment == 'overseas' and tags_have_categ(line_tags, ['igst', 'cess'], tax_tags_dict):
                         return 'purchase_cdnur_regular'
 
             # If none of the above match, default to out of scope
@@ -295,13 +295,13 @@ class AccountMoveLine(models.Model):
 
         indian_sale_moves_lines = self.filtered(
             lambda l: l.move_id.country_code == 'IN'
-            and l.move_id.is_sale_document(include_receipts=True)
             and l.display_type in ('product', 'tax')
+            and l.move_id.is_sale_document(include_receipts=True)
         )
         indian_moves_purchase_lines = self.filtered(
             lambda l: l.move_id.country_code == 'IN'
-            and l.move_id.is_purchase_document(include_receipts=True)
             and l.display_type in ('product', 'tax')
+            and l.move_id.is_purchase_document(include_receipts=True)
         )
         # No Indian sale or purchase lines to process
         if not indian_sale_moves_lines and not indian_moves_purchase_lines:
