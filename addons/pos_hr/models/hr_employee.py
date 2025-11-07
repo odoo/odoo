@@ -31,7 +31,10 @@ class HrEmployee(models.Model):
 
         employees = employees.read(fields, load=False)
         for employee in employees:
-            if employee['id'] in manager_ids or employee['id'] in data['pos.config']['data'][0]['advanced_employee_ids']:
+            if employee['id'] in manager_ids:
+                role = 'manager'
+                employee['_user_role'] = "admin"
+            elif employee['id'] in data['pos.config']['data'][0]['advanced_employee_ids']:
                 role = 'manager'
             else:
                 role = 'cashier'
