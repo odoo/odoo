@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_receive_inbound_invoices" model="ir.cron">
+            <field name="name">NAV 3.0: Receive INBOUND invoices from NAV</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+                model._l10n_hu_edi_cron_query_invoice_digest()
+            </field>
+            <field name="interval_number">4</field>
+            <field name="interval_type">hours</field>
+        </record>
+
+        <record id="ir_cron_receive_inbound_invoices_wizard" model="ir.cron">
+            <field name="name">NAV 3.0: Receive INBOUND invoices from NAV Wizard</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+                model._l10n_hu_edi_cron_query_invoice_digest(from_cron=False)
+            </field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="ir_cron_query_invoice_data" model="ir.cron">
+            <field name="name">NAV 3.0: Query Invoice Data</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+                model._l10n_hu_edi_cron_query_invoice_data()
+            </field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="ir_cron_parse_invoice_data" model="ir.cron">
+            <field name="name">NAV 3.0: Parse Invoice Data</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">
+                model._l10n_hu_edi_cron_parse_invoice_data()
+            </field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+     </data>
+</odoo>

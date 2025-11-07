@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="l10n_hu_edi_receive.ListView.Buttons" t-inherit="account.FileuploadListView.Buttons">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <SyncWithNavBtn/>
+        </xpath>
+    </t>
+    
+    <t t-name="l10n_hu_edi_receive.SyncWithNavBtn">
+        <t t-if="this.showButton">
+            <button class="btn btn-secondary" t-on-click="openWizard">Sync with NAV</button>
+        </t>
+    </t>
+
+</templates>

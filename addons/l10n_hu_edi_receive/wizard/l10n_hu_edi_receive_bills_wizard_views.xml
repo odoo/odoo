@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_hu_edi_receive_bills_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_hu_edi.receive.bills.wizard.form</field>
+        <field name="model">l10n_hu_edi.receive.bills.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="l10n_hu_edi_receive_from" string="From"/>
+                    <field name="l10n_hu_edi_receive_to" string="To"/>
+                </group>
+                <footer>
+                    <button name="action_receive_bills" string="Fetch Bills"
+                            class="oe_highlight" type="object" data-hotkey="S"/>
+                    <button special="cancel" data-hotkey="J" string="Discard"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

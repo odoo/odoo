@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="query_invoice_digest_request">
+        <QueryInvoiceDigestRequest xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api">
+            <t t-call="l10n_hu_edi.request_header"/>
+            <page t-out="page"/>
+            <invoiceDirection t-out="invoiceDirection"/>
+            <invoiceQueryParams>
+                <mandatoryQueryParams>
+                    <insDate>
+                        <dateTimeFrom t-out="dateTimeFrom"/>
+                        <dateTimeTo t-out="dateTimeTo"/>
+                    </insDate>
+                </mandatoryQueryParams>
+            </invoiceQueryParams>
+        </QueryInvoiceDigestRequest>
+    </template>
+
+    <template id="query_invoice_data_request">
+        <QueryInvoiceDataRequest xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api">
+            <t t-call="l10n_hu_edi.request_header"/>
+            <invoiceNumberQuery>
+                <invoiceNumber t-out="invoiceNumber"/>
+                <invoiceDirection t-out="invoiceDirection"/>
+                <supplierTaxNumber t-out="supplierTaxNumber"/>
+                <batchIndex t-if="batchIndex" t-out="batchIndex"/>
+            </invoiceNumberQuery>
+        </QueryInvoiceDataRequest>
+    </template>
+
+</odoo>
