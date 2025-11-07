@@ -25,7 +25,8 @@ export class AccountMoveFormController extends FormController {
     }
 
     async loadExtraPrintItems() {
-        return this.orm.call("account.move", "get_extra_print_items", [this.model.root.resId]);
+        const items = await this.orm.call("account.move", "get_extra_print_items", [this.model.root.resId]);
+        return items.filter((item) => item.key !== "download_all");
     }
 
 
