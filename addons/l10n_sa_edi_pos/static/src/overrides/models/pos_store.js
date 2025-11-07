@@ -7,8 +7,7 @@ patch(PosStore.prototype, {
         const result = super.getReceiptHeaderData(...arguments);
         if (order && order.isSACompany && !result.is_settlement) {
             // is_settlement is assigned in super l10n_sa_pos
-            result.not_legal =
-                !order.l10n_sa_invoice_qr_code_str || order.l10n_sa_invoice_edi_state !== "sent";
+            result.not_legal = !order.l10n_sa_invoice_qr_code_str;
             result.qr_code = result.not_legal ? "" : qrCodeSrc(order.l10n_sa_invoice_qr_code_str);
         }
         return result;
