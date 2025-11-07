@@ -203,6 +203,8 @@ export class Call extends Component {
         if (!this.grid.el) {
             return;
         }
+        this.grid.el.style.setProperty("--width", "0");
+        this.grid.el.style.setProperty("--height", "0");
         const { width, height } = this.grid.el.getBoundingClientRect();
         const aspectRatio = this.minimized ? 1 : 16 / 9;
         const tileCount = this.grid.el.children.length;
@@ -241,5 +243,7 @@ export class Call extends Component {
             tileHeight: optimal.tileHeight,
             columnCount: optimal.columnCount,
         });
+        this.grid.el.style.setProperty("--width", `${this.state.tileWidth}px`);
+        this.grid.el.style.setProperty("--height", `${this.state.tileHeight}px`);
     }
 }
