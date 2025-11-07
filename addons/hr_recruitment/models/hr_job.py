@@ -195,6 +195,7 @@ class HrJob(models.Model):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.employee_id)
         app_to_job = dict((applicant.id, applicant.job_id.id) for applicant in applicants)
         attachments = self.env['ir.attachment'].search([
+            ('res_field', '=', False),
             '|',
             '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids),
             '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicants.ids)])
@@ -397,7 +398,7 @@ class HrJob(models.Model):
                 (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'list')
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
-            'domain': ['|',
+            'domain': [('res_field', '=', False), '|',
                 '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids),
                 '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.application_ids.ids),
             ],

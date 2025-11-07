@@ -551,6 +551,7 @@ class MailActivity(models.Model):
         activity_attachments = self.env['ir.attachment'].sudo().search_fetch([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
+            ('res_field', '=', False),
         ], ['res_id']).grouped('res_id')
 
         for model, activity_data in self.filtered('res_model')._classify_by_model().items():

@@ -1633,7 +1633,8 @@ class CrmLead(models.Model):
 
         all_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', self._name),
-            ('res_id', 'in', opportunities.ids)
+            ('res_id', 'in', opportunities.ids),
+            ('res_field', '=', False),
         ])
 
         for opportunity in opportunities:

@@ -359,6 +359,7 @@ class TestRecruitment(MailCase, TransactionCase):
         attachment_employee_applicant = self.Attachment.search([
             ('res_model', '=', employee_applicant['res_model']),
             ('res_id', '=', employee_applicant['res_id']),
+            ('res_field', '=', False),
         ])
         self.assertEqual(applicant_attachment['raw'], attachment_employee_applicant['raw'])
 

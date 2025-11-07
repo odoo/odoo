@@ -62,7 +62,7 @@ class TestReports(odoo.tests.TransactionCase):
 
     def test_report_reload_from_attachment(self):
         def get_attachments(res_id):
-            return self.env["ir.attachment"].search([('res_model', "=", "res.partner"), ("res_id", "=", res_id)])
+            return self.env["ir.attachment"].search([('res_model', "=", "res.partner"), ("res_id", "=", res_id), ("res_field", "=", False)])
 
         Report = self.env['ir.actions.report'].with_context(force_report_rendering=True)
 

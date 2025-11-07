@@ -772,6 +772,7 @@ class MrpBomLine(models.Model):
     def action_see_attachments(self):
         domain = [
             '&', ('attached_on_mrp', '=', 'bom'),
+            '&', ('res_field', '=', False),
             '|',
             '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
             '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)]

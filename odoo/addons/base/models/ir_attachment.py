@@ -602,17 +602,7 @@ class IrAttachment(models.Model):
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
         assert not self._active_name, "active name not supported on ir.attachment"
-        disable_binary_fields_attachments = False
-        domain = Domain(domain)
-        if (
-            not self.env.context.get('skip_res_field_check')
-            and not any(d.field_expr in ('id', 'res_field') for d in domain.iter_conditions())
-            and not bypass_access
-        ):
-            disable_binary_fields_attachments = True
-            domain &= Domain('res_field', '=', False)
-
-        domain = domain.optimize(self)
+        domain = Domain(domain).optimize(self)
         if self.env.su or bypass_access or domain.is_false():
             return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
 
@@ -632,6 +622,7 @@ class IrAttachment(models.Model):
         # - res_field != False needs to check field access on the res_model
         res_model_names = condition_values(self, 'res_model', domain)
         if 0 < len(res_model_names or ()) <= 5:
+            disable_binary_fields_attachments = self.env.is_system() or condition_values(self, 'res_field', domain) == (False,)
             env = self.with_context(active_test=False).env
             for res_model_name in res_model_names:
                 comodel = env.get(res_model_name)
@@ -646,7 +637,7 @@ class IrAttachment(models.Model):
                     continue
                 if query.where_clause:
                     codomain &= Domain('res_id', 'in', query)
-                if not disable_binary_fields_attachments and not self.env.is_system():
+                if not disable_binary_fields_attachments:
                     accessible_fields = [
                         field.name
                         for field in comodel._fields.values()

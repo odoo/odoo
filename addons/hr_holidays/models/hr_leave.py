@@ -194,7 +194,7 @@ class HrLeave(models.Model):
     can_cancel = fields.Boolean(compute='_compute_can_cancel', export_string_translation=False)
     can_back_to_approve = fields.Boolean(compute='_compute_can_back_to_approve', export_string_translation=False)
 
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_field', '=', False)], string="Attachments")
     # To display in form view
     supported_attachment_ids = fields.Many2many(
         'ir.attachment', string="Attach File", compute='_compute_supported_attachment_ids',

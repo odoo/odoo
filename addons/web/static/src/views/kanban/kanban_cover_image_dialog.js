@@ -26,6 +26,7 @@ export class KanbanCoverImageDialog extends Component {
                 [
                     ["res_model", "=", record.resModel],
                     ["res_id", "=", record.resId],
+                    ["res_field", "=", false],
                     ["mimetype", "ilike", "image"],
                 ],
                 ["id"]

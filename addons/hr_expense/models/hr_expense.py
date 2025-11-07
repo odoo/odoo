@@ -114,7 +114,7 @@ class HrExpense(models.Model):
     attachment_ids = fields.One2many(
         comodel_name='ir.attachment',
         inverse_name='res_id',
-        domain=[('res_model', '=', 'hr.expense')],
+        domain=[('res_model', '=', 'hr.expense'), ('res_field', '=', False)],
         string="Attachments",
     )
     state = fields.Selection(

@@ -19,7 +19,7 @@ class IrActionsReport(models.Model):
                 stream_list = []
                 stream = res[expense.id]['stream']
                 stream_list.append(stream)
-                attachments = self.env['ir.attachment'].search([('res_id', 'in', expense.ids), ('res_model', '=', 'hr.expense')])
+                attachments = self.env['ir.attachment'].search([('res_id', 'in', expense.ids), ('res_model', '=', 'hr.expense'), ('res_field', '=', False)])
                 expense_report = OdooPdfFileReader(stream, strict=False)
                 output_pdf = OdooPdfFileWriter()
                 output_pdf.appendPagesFromReader(expense_report)
