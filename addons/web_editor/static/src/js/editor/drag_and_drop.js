@@ -74,6 +74,14 @@ export function useNativeDraggable(hookParams, initialParams) {
     // to the makeDraggableHook function. There should not be any need to add
     // the default selector class here.
     el.classList.add("o_draggable");
+    
+    // Temporary workaround for a background-image visibility bug in the stable.
+    // This code should be removed in the master branch.
+    const targetUrl = "/web/image/website.s_text_cover_default_image";
+
+    if (el.style.backgroundImage && el.style.backgroundImage.includes(targetUrl)) {
+        el.classList.remove("d-none");
+    }
     cleanupFunctions.push(() => el.classList.remove("o_draggable"));
 
     const draggableState = makeDraggableHook({ setupHooks, ...hookParams})(currentParams);
