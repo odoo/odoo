@@ -37,14 +37,14 @@
                             </t>
                             <t t-if="!this.state.login_employee['job_id']">
                                 <p class="text-light"
-                                   style="color:#b6b6b6 !important">Add job title</p>
+                                   style="color:#b6b6b6 !important" t-esc="this.translations.addJobTitle"/>
                             </t>
                         </div>
                         <div class="employee_experience">
                             <t t-if="this.state.login_employee['experience']">
-                                <p class="text-light">Joined </p>
+                                <p class="text-light" t-esc="this.translations.joined + ' '"/>
                                 <p><t t-esc="this.state.login_employee['experience']"/>
-                                    Ago</p>
+                                    <t t-esc="this.translations.ago"/></p>
                             </t>
                             <t t-if="!this.state.login_employee['experience']">
                                 <p class="text-light"
@@ -80,7 +80,7 @@
                             </t>
                         </div>
                         <div class="address">
-                            <p><i class="fa fa-home" style="padding-right: 8px;color: darkblue;"/>Address
+                            <p><i class="fa fa-home" style="padding-right: 8px;color: darkblue;"/><t t-esc="this.translations.address"/>
                                 :
                                 <t t-if="this.state.login_employee['private_street']">
                                     <t t-esc="this.state.login_employee['private_street']"/>
@@ -114,8 +114,7 @@
                         <div class="stat-widget-one">
                             <div class="stat-icon"><i class="fa fa-money"/></div>
                             <div class="stat-content">
-                                <div class="stat-text">Payslips
-                                </div>
+                                <div class="stat-text" t-esc="this.translations.payslips"/>
                                 <div class="stat-digit"><t t-esc="this.state.login_employee['payslip_count']"/>
                                 </div>
                             </div>
@@ -130,7 +129,7 @@
                         <div class="stat-widget-one">
                             <div class="stat-icon"><i class="fa fa-clock-o"/></div>
                             <div class="stat-content">
-                                <div class="stat-text">Timesheets</div>
+                                <div class="stat-text" t-esc="this.translations.timesheets"/>
                                 <div class="stat-digit"><t t-esc="this.state.login_employee['emp_timesheets']"/></div>
                             </div>
                         </div>
@@ -144,7 +143,7 @@
                         <div class="stat-widget-one">
                             <div class="stat-icon"><i class="fa fa-fw fa-book"/></div>
                             <div class="stat-content">
-                                <div class="stat-text">Contracts</div>
+                                <div class="stat-text" t-esc="this.translations.contracts"/>
                                 <div class="stat-digit"><t t-esc="this.state.login_employee['contracts_count']"/></div>
                             </div>
                         </div>
@@ -158,7 +157,7 @@
                         <div class="stat-widget-one">
                             <div class="stat-icon"><i class="fa fa-bar-chart"/></div>
                             <div class="stat-content">
-                                <div class="stat-text">Broad Factor</div>
+                                <div class="stat-text" t-esc="this.translations.broadFactor"/>
                                 <div class="stat-digit"><t t-esc="this.state.login_employee['broad_factor']"/></div>
                             </div>
                         </div>
@@ -176,7 +175,7 @@
                                     <i class="fa fa-sign-in o_hr_attendance_sign_in_out_icon"/>
                                 </div>
                                 <div class="stat-content">
-                                    <div class="stat-text">Check In</div>
+                                    <div class="stat-text" t-esc="this.translations.checkIn"/>
                                 </div>
                             </t>
                             <t t-if="this.state.login_employee['attendance_state'] =='checked_in'">
@@ -184,7 +183,7 @@
                                     <i class="fa fa-sign-out o_hr_attendance_sign_in_out_icon"/>
                                 </div>
                                 <div class="stat-content">
-                                    <div class="stat-text">Check out</div>
+                                    <div class="stat-text" t-esc="this.translations.checkOut"/>
                                 </div>
                             </t>
                         </div>
@@ -207,7 +206,7 @@
                                  t-on-click="leaves_to_approve">
                                 <div class=" text-color">
                                     <div class="oh-card-body pb-0">
-                                        <p class="stat-title">Leave Requests</p>
+                                        <p class="stat-title" t-esc="this.translations.leaveRequests"/>
                                         <h4 class="mb-0">
                                             <p class="stat-count"><t t-esc="this.state.login_employee.leaves_to_approve"/></p>
                                         </h4>
@@ -220,7 +219,7 @@
                                          t-on-click="leaves_request_today">
                                         <div class=" text-color">
                                             <div class="oh-card-body">
-                                                 <p class="stat-title">Today</p>
+                                                 <p class="stat-title" t-esc="this.translations.today"/>
                                                 <h4 class="mb-0">
                                                     <p class="stat-count"><t t-esc="this.state.login_employee.leaves_today"/>
                                                     </p>
@@ -232,7 +231,7 @@
                                          t-on-click="leaves_request_month">
                                         <div class=" text-color">
                                             <div class="oh-card-body">
-                                                <p class="stat-title">This Month</p>
+                                                <p class="stat-title" t-esc="this.translations.thisMonth"/>
                                                 <h4 class="mb-0">
                                                     <p class="stat-count"><t t-esc="this.state.login_employee.leaves_this_month"/></p>
                                                 </h4>
@@ -250,7 +249,7 @@
                                  t-on-click="leave_allocations_to_approve">
                                 <div class="oh-card text-color">
                                     <div class="oh-card-body pb-0">
-                                         <p class="stat-title">Leave Allocation Requests</p>
+                                         <p class="stat-title" t-esc="this.translations.leaveAllocationRequests"/>
                                         <h4 class="mb-0">
                                             <p class="stat-count"><t t-esc="this.state.login_employee.leaves_alloc_req"/></p>
                                         </h4>
@@ -261,7 +260,7 @@
                                  t-on-click="job_applications_to_approve">
                                 <div class="oh-card text-color">
                                     <div class="oh-card-body pb-0">
-                                        <p class="stat-title">Job Applications</p>
+                                        <p class="stat-title" t-esc="this.translations.jobApplications"/>
                                         <h4 class="mb-0">
                                             <p class="stat-count"><t t-esc="this.state.login_employee.job_applications"/></p>
                                         </h4>
@@ -278,7 +277,7 @@
                             <div class="oh-card-body pb-0">
                                 <h4 class="mb-0">
                                 </h4>
-                                <div class="oh-ribbon"><span>Departments</span></div>
+                                <div class="oh-ribbon"><span t-esc="this.translations.departments"/></div>
                             </div>
                             <div class="emp_graph" t-ref="emp_graph">
                                 <canvas id="employeePieChart"
@@ -295,7 +294,7 @@
                         <div class="oh-card-body pb-0">
                             <h4 class="mb-0">
                             </h4>
-                            <p class="stat-head" style="padding : 0px;">Monthly Leave Analysis</p>
+                            <p class="stat-head" style="padding : 0px;" t-esc="this.translations.monthlyLeaveAnalysis"/>
                         </div>
                         <div class="leave_graph" t-ref="leave_graph">
                             <canvas id="leave_barChart"
@@ -313,7 +312,7 @@
                         <div class="oh-card-body pb-0">
                             <h4 class="mb-0">
                             </h4>
-                            <p class="stat-head" style="padding : 0px;">Monthly Join/Resign Analysis</p>
+                            <p class="stat-head" style="padding : 0px;" t-esc="this.translations.monthlyJoinResignAnalysis"/>
                         </div>
                         <div class="join_resign_trend"
                              t-ref="join_resign_trend">
@@ -326,7 +325,7 @@
                         <div class="oh-card-body pb-0">
                             <h4 class="mb-0">
                             </h4>
-                            <p class="stat-head" style="padding : 0px;">Attrition Rate</p>
+                            <p class="stat-head" style="padding : 0px;" t-esc="this.translations.attritionRate"/>
                         </div>
                         <div class="attrition_rate" t-ref="attrition_rate">
                             <canvas id="attritionRateChart"/>
@@ -344,7 +343,7 @@
             <div class="col-sm-5 col-lg-5 user_attendance">
                 <div class="oh-card text-color">
                     <div class="oh-card-body pb-0">
-                        <p class="stat_head" style="padding : 0px;">ATTENDANCE
+                        <p class="stat_head" style="padding : 0px;"><t t-esc="this.translations.attendance"/>
                             <div class="add_lines"
                                  t-on-click="add_attendance">
                                 <i class="fa fa-plus"/>
@@ -353,10 +352,10 @@
                     </div>
                     <div class="attendance_table">
                         <thead>
-                            <th>Date</th>
-                            <th>Sign In</th>
-                            <th>Sign Out</th>
-                            <th>Worked Hours</th>
+                            <th t-esc="this.translations.date"/>
+                            <th t-esc="this.translations.signIn"/>
+                            <th t-esc="this.translations.signOut"/>
+                            <th t-esc="this.translations.workedHours"/>
                         </thead>
                         <tbody>
                             <tr class="attendance_lines"
@@ -374,7 +373,7 @@
             <div class="col-sm-5 col-lg-5 user_leaves">
                 <div class="oh-card text-color">
                     <div class="oh-card-body pb-0">
-                        <p class="stat_head" style="padding : 0px;">LEAVES</p>
+                        <p class="stat_head" style="padding : 0px;" t-esc="this.translations.leaves"/>
                         <div class="add_lines"
                              t-on-click="add_leave">
                                 <i class="fa fa-plus"/>
@@ -382,10 +381,10 @@
                     </div>
                     <div class="leaves_table">
                         <thead>
-                            <th>From Date</th>
-                            <th>To Date</th>
-                            <th>Type</th>
-                            <th style="min-width:120px;">Status</th>
+                            <th t-esc="this.translations.fromDate"/>
+                            <th t-esc="this.translations.toDate"/>
+                            <th t-esc="this.translations.type"/>
+                            <th style="min-width:120px;" t-esc="this.translations.status"/>
                         </thead>
                         <tbody>
                             <tr class="leave_lines"
@@ -411,7 +410,7 @@
     <div class="col-sm-5 col-lg-5 user_expense">
         <div class="oh-card text-color">
             <div class="oh-card-body pb-0">
-                <p class="stat_head" style="padding : 0px;">EXPENSES</p>
+                <p class="stat_head" style="padding : 0px;" t-esc="this.translations.expenses"/>
                 <div class="add_lines"
                      t-on-click="add_expense">
                     <i class="fa fa-plus"/>
@@ -421,10 +420,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Subject</th>
-                            <th>Amount</th>
-                            <th style="min-width:120px;">Status</th>
+                            <th t-esc="this.translations.date"/>
+                            <th t-esc="this.translations.subject"/>
+                            <th t-esc="this.translations.amount"/>
+                            <th style="min-width:120px;" t-esc="this.translations.status"/>
                         </tr>
                     </thead>
                     <tbody>
@@ -448,7 +447,7 @@
     <div class="col-sm-5 col-lg-5 projects">
         <div class="oh-card text-color">
             <div class="oh-card-body pb-0">
-                <p class="stat_head" style="padding : 0px;">PROJECTS</p>
+                <p class="stat_head" style="padding : 0px;" t-esc="this.translations.projects"/>
                 <div class="add_lines"
                      t-on-click="add_project_task">
                     <i class="fa fa-plus"/>
@@ -458,10 +457,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Project</th>
-                            <th>Task</th>
-                            <th>Due Date</th>
-                            <th style="min-width:120px;">Stage</th>
+                            <th t-esc="this.translations.project"/>
+                            <th t-esc="this.translations.task"/>
+                            <th t-esc="this.translations.dueDate"/>
+                            <th style="min-width:120px;" t-esc="this.translations.stage"/>
                         </tr>
                     </thead>
                     <tbody>
@@ -493,7 +492,7 @@
             <div class="col-md-4 col-lg-3">
                 <div class="hr_notification">
                     <div class="hr_notification-head">
-                        Upcoming Birthdays
+                        <t t-esc="this.translations.upcomingBirthdays"/>
                     </div>
                     <div class="col-xs-12 text-align">
                         <t t-if="this.state.employee_birthday and this.state.employee_birthday.length > 0">
@@ -517,12 +516,12 @@
                                                 </h2>
                                                 <p t-att-style="employee['is_birthday'] ? 'color: white; font-weight:500' : ''"><t t-esc="employee['birthday']"/></p>
                                                 <t t-if="employee['is_birthday']">
-                                                    <span class="birthday">Happy Birthday..!! 🎁</span>
+                                                    <span class="birthday"><t t-esc="this.translations.happyBirthday"/> 🎁</span>
                                                 </t>
                                                 <t t-if="employee['days']">
                                                     <span class="days_left"> <t
                                                             t-esc="employee['days']"/>
-                                                        Days Left</span>
+                                                        <t t-esc="this.translations.daysLeft"/></span>
                                                 </t>
                                             </div>
                                         </div>
@@ -534,8 +533,8 @@
                         <t t-else="">
                             <div class="text-center" style="padding: 20px; color: #6c757d;">
                                 <div style="font-size: 48px; margin-bottom: 10px;">🎂</div>
-                                <h4 style="margin-bottom: 8px; color: #495057;">No Upcoming Birthdays</h4>
-                                <p style="margin: 0; font-size: 14px;">There are no birthdays in the coming days.</p>
+                                <h4 style="margin-bottom: 8px; color: #495057;" t-esc="this.translations.noUpcomingBirthdays"/>
+                                <p style="margin: 0; font-size: 14px;" t-esc="this.translations.noBirthdaysMessage"/>
                             </div>
                         </t>
                     </div>
@@ -545,7 +544,7 @@
                 <div class="col-xs-12  hr_notification" style="padding: 0;">
                     <div class="col-xs-12" style="padding:0;">
                         <div class="hr_notification-head">
-                            Upcoming Events
+                            <t t-esc="this.translations.upcomingEvents"/>
                         </div>
                     </div>
                     <div class="col-xs-12 text-align">
@@ -562,15 +561,15 @@
 
                     <!-- Event Date -->
                     <p>
-                        Date:
+                        <t t-esc="this.translations.date"/>:
                         <t t-esc="event['date_begin']"/> -
                         <t t-esc="event['date_end']"/>
                     </p>
 
                     <!-- Venue -->
                     <p>
-                        Venue:
-                        <t t-esc="event['address_id'] and event['address_id'][1] or 'Online'"/>
+                        <t t-esc="this.translations.venue"/>:
+                        <t t-esc="event['address_id'] and event['address_id'][1] or this.translations.online"/>
                     </p>
                 </div>
             </div>
@@ -582,8 +581,8 @@
                         <t t-else="">
                             <div class="text-center" style="padding: 20px; color: #6c757d;">
                                 <div style="font-size: 48px; margin-bottom: 10px;">📅</div>
-                                <h4 style="margin-bottom: 8px; color: #495057;">No Upcoming Events</h4>
-                                <p style="margin: 0; font-size: 14px;">No events scheduled for the coming days.</p>
+                                <h4 style="margin-bottom: 8px; color: #495057;" t-esc="this.translations.noUpcomingEvents"/>
+                                <p style="margin: 0; font-size: 14px;" t-esc="this.translations.noEventsMessage"/>
                             </div>
                         </t>
                     </div>
@@ -593,7 +592,7 @@
                 <div class="col-xs-12  hr_notification" style="padding: 0;">
                     <div class="col-xs-12" style="padding:0;">
                         <div class="hr_notification-head">
-                            Announcements
+                            <t t-esc="this.translations.announcements"/>
                         </div>
                     </div>
                     <div class="col-xs-12 text-align">
@@ -607,7 +606,7 @@
                                             <div class="media-body">
                                                 <h2 class="text-color display-6"
                                                     style="font-size: 15px;"><t t-esc="announcement['announcement_reason']"/> </h2>
-                                                <p>Date : <t t-esc="announcement['date_start']"/>
+                                                <p><t t-esc="this.translations.date"/> : <t t-esc="announcement['date_start']"/>
                                                     ---
                                                     <t t-esc="announcement['date_end']"/>
                                                 </p>
@@ -621,8 +620,8 @@
                         <t t-else="">
                             <div class="text-center" style="padding: 20px; color: #6c757d;">
                                 <div style="font-size: 48px; margin-bottom: 10px;">📢</div>
-                                <h4 style="margin-bottom: 8px; color: #495057;">No Announcements</h4>
-                                <p style="margin: 0; font-size: 14px;">No announcements available at this time.</p>
+                                <h4 style="margin-bottom: 8px; color: #495057;" t-esc="this.translations.noAnnouncements"/>
+                                <p style="margin: 0; font-size: 14px;" t-esc="this.translations.noAnnouncementsMessage"/>
                             </div>
                         </t>
                     </div>
@@ -636,7 +635,7 @@
                     <div class="oh-card-body pb-0">
                         <h4 class="mb-0">
                         </h4>
-                        <p class="stat-head" style="padding : 0px;">My Leave Analysis</p>
+                        <p class="stat-head" style="padding : 0px;" t-esc="this.translations.myLeaveAnalysis"/>
                     </div>
                     <div class="leave_trend" t-ref="leave_trend"
                          style="display: ruby-text;">
@@ -650,7 +649,7 @@
                     <div class="oh-card-body pb-0">
                         <h4 class="mb-0">
                         </h4>
-                        <p class="stat-head" style="padding : 0px;">My Skill Analysis</p>
+                        <p class="stat-head" style="padding : 0px;" t-esc="this.translations.mySkillAnalysis"/>
                     </div>
                     <div class="skill">
                         <canvas id="skillChart" style="height: 275px;"/>
@@ -663,8 +662,8 @@
     <!-- EmployeeWarning Done -->
     <t t-name="EmployeeWarning">
         <div>
-            <p>Error : Could not find employee linked to user</p>
-            <p>Please contact system admin for the setup</p>
+            <p t-esc="this.translations.errorMessage"/>
+            <p t-esc="this.translations.contactAdmin"/>
         </div>
     </t>
 

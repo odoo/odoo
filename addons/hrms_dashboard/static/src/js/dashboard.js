@@ -62,6 +62,65 @@ export class HrDashboard extends Component{
             this.render_graphs();
         });
     }
+    // Translation helper for templates
+    get translations() {
+        return {
+            addJobTitle: _t("Add job title"),
+            joined: _t("Joined"),
+            ago: _t("Ago"),
+            address: _t("Address"),
+            payslips: _t("Payslips"),
+            timesheets: _t("Timesheets"),
+            contracts: _t("Contracts"),
+            broadFactor: _t("Broad Factor"),
+            checkIn: _t("Check In"),
+            checkOut: _t("Check Out"),
+            leaveRequests: _t("Leave Requests"),
+            today: _t("Today"),
+            thisMonth: _t("This Month"),
+            leaveAllocationRequests: _t("Leave Allocation Requests"),
+            jobApplications: _t("Job Applications"),
+            departments: _t("Departments"),
+            monthlyLeaveAnalysis: _t("Monthly Leave Analysis"),
+            monthlyJoinResignAnalysis: _t("Monthly Join/Resign Analysis"),
+            attritionRate: _t("Attrition Rate"),
+            attendance: _t("ATTENDANCE"),
+            date: _t("Date"),
+            signIn: _t("Sign In"),
+            signOut: _t("Sign Out"),
+            workedHours: _t("Worked Hours"),
+            leaves: _t("LEAVES"),
+            fromDate: _t("From Date"),
+            toDate: _t("To Date"),
+            type: _t("Type"),
+            status: _t("Status"),
+            expenses: _t("EXPENSES"),
+            subject: _t("Subject"),
+            amount: _t("Amount"),
+            projects: _t("PROJECTS"),
+            project: _t("Project"),
+            task: _t("Task"),
+            dueDate: _t("Due Date"),
+            stage: _t("Stage"),
+            upcomingBirthdays: _t("Upcoming Birthdays"),
+            happyBirthday: _t("Happy Birthday..!!"),
+            daysLeft: _t("Days Left"),
+            noUpcomingBirthdays: _t("No Upcoming Birthdays"),
+            noBirthdaysMessage: _t("There are no birthdays in the coming days."),
+            upcomingEvents: _t("Upcoming Events"),
+            venue: _t("Venue"),
+            online: _t("Online"),
+            noUpcomingEvents: _t("No Upcoming Events"),
+            noEventsMessage: _t("No events scheduled for the coming days."),
+            announcements: _t("Announcements"),
+            noAnnouncements: _t("No Announcements"),
+            noAnnouncementsMessage: _t("No announcements available at this time."),
+            myLeaveAnalysis: _t("My Leave Analysis"),
+            mySkillAnalysis: _t("My Skill Analysis"),
+            errorMessage: _t("Error : Could not find employee linked to user"),
+            contactAdmin: _t("Please contact system admin for the setup"),
+        };
+    }
     add_project_task() {
             console.log("add_project_task:", user)
                 this.action.doAction({
@@ -173,7 +232,7 @@ export class HrDashboard extends Component{
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Total Leaves',
+                        label: _t('Total Leaves'),
                         data: barData,
                         backgroundColor: barColor,
                     }]
@@ -270,14 +329,14 @@ export class HrDashboard extends Component{
                             type: 'category',
                             title: {
                                 display: true,
-                                text: 'Month'
+                                text: _t('Month')
                             }
                         },
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Count'
+                                text: _t('Count')
                             }
                         }
                     }
@@ -297,7 +356,7 @@ export class HrDashboard extends Component{
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Attrition Rate',
+                        label: _t('Attrition Rate'),
                         data: attritionData,
                         backgroundColor: colors[0],
                         borderColor: colors[0],
@@ -314,7 +373,7 @@ export class HrDashboard extends Component{
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
-                                    return `Attrition Rate: ${context.raw}`;
+                                    return _t('Attrition Rate') + ': ' + context.raw;
                                 }
                             }
                         },
@@ -330,14 +389,14 @@ export class HrDashboard extends Component{
                         x: {
                             title: {
                                 display: true,
-                                text: 'Month'
+                                text: _t('Month')
                             }
                         },
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Attrition Rate'
+                                text: _t('Attrition Rate')
                             }
                         }
                     }
@@ -356,7 +415,7 @@ export class HrDashboard extends Component{
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Leaves Taken',
+                        label: _t('Leaves Taken'),
                         data: leaveData,
                         backgroundColor: 'rgba(70, 140, 193, 0.4)',
                         borderColor: 'rgba(70, 140, 193, 1)',
@@ -373,7 +432,7 @@ export class HrDashboard extends Component{
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
-                                    return `Leaves: ${context.raw}`;
+                                    return _t('Leaves') + ': ' + context.raw;
                                 }
                             }
                         },
@@ -389,14 +448,14 @@ export class HrDashboard extends Component{
                         x: {
                             title: {
                                 display: true,
-                                text: 'Month'
+                                text: _t('Month')
                             }
                         },
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Number of Leaves'
+                                text: _t('Number of Leaves')
                             }
                         }
                     }
@@ -416,7 +475,7 @@ export class HrDashboard extends Component{
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Skill ',
+                        label: _t('Skill'),
                         data: skillData,
                         backgroundColor: colors,
                         borderColor: ['white'],
@@ -430,7 +489,7 @@ export class HrDashboard extends Component{
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
-                                    return `Skill: ${context.raw}`;
+                                    return _t('Skill') + ': ' + context.raw;
                                 }
                             }
                         },
@@ -644,13 +703,13 @@ export class HrDashboard extends Component{
             var attendance_state = this.state.login_employee.attendance_state;
             var message = ''
             if (attendance_state == 'checked_in'){
-                message = 'Checked In'
+                message = _t('Checked In')
                 this.env.bus.trigger('signin_signout', {
                     mode: "checked_in",
                 });
             }
             else if (attendance_state == 'checked_out'){
-                message = 'Checked Out'
+                message = _t('Checked Out')
                 this.env.bus.trigger('signin_signout', {
                     mode: false,
                 });
