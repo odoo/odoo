@@ -328,6 +328,13 @@ function getFiltersDescription(modifierInfo) {
 
 /**
  * @param {Node} node
+ */
+function getInlineNodeText(node) {
+    return getNodeText(node, { inline: true });
+}
+
+/**
+ * @param {Node} node
  * @returns {NodeValue}
  */
 function getNodeContent(node) {
@@ -353,6 +360,23 @@ function getNodeIframe(node) {
 /** @type {NodeFilter} */
 function getNodeShadowRoot(node) {
     return node.shadowRoot;
+}
+
+/**
+ * @param {string} pseudoClass
+ */
+function getQueryFilter(pseudoClass, content) {
+    const makeQueryFilter = customPseudoClasses.get(pseudoClass);
+    try {
+        return makeQueryFilter(content);
+    } catch (err) {
+        let message = `error while parsing pseudo-class ':${pseudoClass}'`;
+        const cause = String(err?.message || err);
+        if (cause) {
+            message += `: ${cause}`;
+        }
+        throw new HootDomError(message);
+    }
 }
 
 /**
@@ -488,28 +512,27 @@ function isWhiteSpace(char) {
 }
 
 /**
- * @param {string} pseudoClass
  * @param {(node: Node) => NodeValue} getContent
+ * @param {boolean} exact
  */
-function makePatternBasedPseudoClass(pseudoClass, getContent) {
-    return (content) => {
-        let regex;
-        try {
-            regex = parseRegExp(content);
-        } catch (err) {
-            throw selectorError(pseudoClass, err.message);
-        }
+function makePseudoClassMatcher(getContent, exact) {
+    return function makePartialMatcher(content) {
+        const regex = parseRegExp(content);
         if (isInstanceOf(regex, RegExp)) {
-            return function containsRegExp(node) {
+            return function stringMatches(node) {
                 return regex.test(String(getContent(node)));
             };
         } else {
             const lowerContent = content.toLowerCase();
-            return function containsString(node) {
-                return getStringContent(String(getContent(node)))
-                    .toLowerCase()
-                    .includes(lowerContent);
-            };
+            if (exact) {
+                return function stringEquals(node) {
+                    return String(getContent(node)).toLowerCase() === lowerContent;
+                };
+            } else {
+                return function stringContains(node) {
+                    return String(getContent(node)).toLowerCase().includes(lowerContent);
+                };
+            }
         }
     };
 }
@@ -720,7 +743,6 @@ function parseSelector(selector) {
         if (currentPseudo) {
             if (parens[0] === parens[1]) {
                 const [pseudo, content] = currentPseudo;
-                const makeFilter = customPseudoClasses.get(pseudo);
                 if (pseudo === "iframe" && !currentPart[0].startsWith("iframe")) {
                     // Special case: to optimise the ":iframe" pseudo class, we
                     // always select actual `iframe` elements.
@@ -728,7 +750,7 @@ function parseSelector(selector) {
                     // but this pseudo won't work on non-iframe elements anyway.
                     currentPart[0] = `iframe${currentPart[0]}`;
                 }
-                const filter = makeFilter(getStringContent(content));
+                const filter = getQueryFilter(pseudo, getStringContent(content));
                 selectorFilterDescriptors.set(filter, [pseudo, content]);
                 currentPart.push(filter);
                 currentPseudo = null;
@@ -884,14 +906,6 @@ function registerQueryMessage(filteredNodes, expectedCount) {
 }
 
 /**
- * @param {string} pseudoClass
- * @param {string} message
- */
-function selectorError(pseudoClass, message) {
-    return new HootDomError(`invalid selector \`:${pseudoClass}\`: ${message}`);
-}
-
-/**
  * Wrapper around '_queryAll' calls to ensure global variables are properly cleaned
  * up on any thrown error.
  *
@@ -960,8 +974,7 @@ function _queryAll(target, options) {
         if (content === false || !customPseudoClasses.has(modifier)) {
             continue;
         }
-        const makeFilter = customPseudoClasses.get(modifier);
-        const filter = makeFilter(content);
+        const filter = getQueryFilter(modifier, content);
         modifierFilters.push(filter);
         globalFilterDescriptors.set(filter, [modifier, content]);
     }
@@ -1095,14 +1108,11 @@ let queryAllLevel = 0;
 const customPseudoClasses = new Map();
 
 customPseudoClasses
-    .set("contains", makePatternBasedPseudoClass("contains", getNodeText))
+    .set("contains", makePseudoClassMatcher(getInlineNodeText, false))
     .set("count", (strCount) => {
         const count = $parseInt(strCount);
         if (!$isInteger(count) || count <= 0) {
-            throw selectorError(
-                "count",
-                `expected count to be a positive integer (got ${strCount})`
-            );
+            throw new HootDomError(`expected count to be a positive integer (got "${strCount}")`);
         }
         return hasNodeCount.bind(null, count);
     })
@@ -1111,7 +1121,7 @@ customPseudoClasses
     .set("eq", (strIndex) => {
         const index = $parseInt(strIndex);
         if (!$isInteger(index)) {
-            throw selectorError("eq", `expected index to be an integer (got ${strIndex})`);
+            throw new HootDomError(`expected index to be an integer (got "${strIndex}")`);
         }
         return index;
     })
@@ -1127,7 +1137,8 @@ customPseudoClasses
     .set("scrollable", (axis) => isNodeScrollable.bind(null, axis))
     .set("selected", () => isNodeSelected)
     .set("shadow", () => getNodeShadowRoot)
-    .set("value", makePatternBasedPseudoClass("value", getNodeValue))
+    .set("text", makePseudoClassMatcher(getInlineNodeText, true))
+    .set("value", makePseudoClassMatcher(getNodeValue, false))
     .set("viewPort", () => isNodeInViewPort)
     .set("visible", () => isNodeVisible);
 
@@ -1883,12 +1894,9 @@ export function observe(target, callback) {
  * This function allows all string selectors supported by the native {@link Element.querySelector}
  * along with some additional custom pseudo-classes:
  *
- * - `:contains(text)`: matches nodes whose *content* matches the given *text*;
- *      * given *text* supports regular expression syntax (e.g. `:contains(/^foo.+/)`)
- *          and is case-insensitive;
- *      * given *text* will be matched against:
- *          - an `<input>`, `<textarea>` or `<select>` element's **value**;
- *          - or any other element's **inner text**.
+ * - `:contains(text)`: matches nodes whose *text content* includes the given *text*.
+ *      * The match is **partial** and **case-insensitive**;
+ *      * Given *text* also supports regular expressions (e.g. `:contains(/^foo.+/)`).
  * - `:count`: return nodes if their count match the given *count*.
  *      If not matching, an error is thrown;
  * - `:displayed`: matches nodes that are "displayed" (see {@link isDisplayed});
@@ -1906,20 +1914,21 @@ export function observe(target, callback) {
  * - `:selected`: matches nodes that are selected (e.g. `<option>` elements);
  * - `:shadow`: matches nodes that have shadow roots, and returns their shadow root;
  * - `:scrollable(axis)`: matches nodes that are scrollable (see {@link isScrollable});
+ * - `:text(text)`: matches nodes whose *content* is strictly equal to the given *text*;
+ *      * The match is **exact**, and **case-insensitive**;
+ *      * Given *text* also supports regular expressions (e.g. `:text(/^foo.+/)`).
+ * - `:value(value)`: matches nodes whose *value* is strictly equal to the given *value*;
+ *      * The match is **partial**, and **case-insensitive**;
+ *      * Given *value* also supports regular expressions (e.g. `:value(/^foo.+/)`).
  * - `:viewPort`: matches nodes that are contained in the current view port (see
  *  {@link isInViewPort});
  * - `:visible`: matches nodes that are "visible" (see {@link isVisible});
  *
  * An `options` object can be specified to filter[1] the results:
- * - `count`: the exact number of nodes to match (throws an error if the number of
- *  nodes doesn't match);
- * - `displayed`: whether the nodes must be "displayed" (see {@link isDisplayed});
- * - `focusable`: whether the nodes must be "focusable" (see {@link isFocusable});
  * - `root`: the root node to query the selector in (defaults to the current fixture);
- * - `viewPort`: whether the nodes must be partially visible in the current viewport
- *  (see {@link isInViewPort});
- * - `visible`: whether the nodes must be "visible" (see {@link isVisible}).
- *      * This option implies `displayed`
+ * - any of the *custom pseudo-classes* can be given as an option, with the value
+ *  being a boolean for standalone pseudo-classes (e.g. `{ empty: true }`), or a
+ *  string for the others (e.g. `{ contains: "text" }`).
  *
  * [1] these filters (except for `count` and `root`) achieve the same result as
  *  using their homonym pseudo-classes on the final group of the given selector
@@ -1945,8 +1954,9 @@ export function observe(target, callback) {
  *  // with options
  *  queryAll(`div:first`, { count: 1 }); // -> [div]
  *  queryAll(`div`, { root: queryOne`iframe` }); // -> [div, div, ...]
- *  // redundant, but possible
- *  queryAll(`button:visible`, { visible: true }); // -> [button, button, ...]
+ *  // the next 2 queries will return the same results
+ *  queryAll(`button:visible`); // -> [button, button, ...]
+ *  queryAll(`button`, { visible: true }); // -> [button, button, ...]
  */
 export function queryAll(target, options) {
     [target, options] = parseRawArgs(arguments);
