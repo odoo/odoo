@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,
+    actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
     condition: ({ channel, owner }) =>
         channel &&

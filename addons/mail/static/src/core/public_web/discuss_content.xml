@@ -72,7 +72,7 @@
                             <Composer t-if="thread.model !== 'mail.box' or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="true" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                         </div>
                         <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0" t-att-class="{ 'w-100': ui.isSmall }">
-                            <t t-component="threadActions.activeAction.actionPanelComponent" thread="thread" t-props="threadActions.activeAction.actionPanelComponentProps"/>
+                            <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
                     <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'notification') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100">

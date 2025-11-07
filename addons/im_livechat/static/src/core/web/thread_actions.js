@@ -7,6 +7,7 @@ import { joinChannelAction } from "@mail/discuss/core/web/thread_actions";
 
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
+    actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     condition: ({ channel, owner }) =>
         channel?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
@@ -17,6 +18,7 @@ registerThreadAction("livechat-info", {
 });
 registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
+    actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     condition: ({ channel, owner }) =>
         channel?.channel_type === "livechat" && !channel.livechat_end_dt && !owner.isDiscussContent,
