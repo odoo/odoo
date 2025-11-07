@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { renderToElement } from "@web/core/utils/render";
 import { withSequence } from "@html_editor/utils/resource";
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import {
@@ -73,13 +72,23 @@ export class SyntaxHighlightingPlugin extends Plugin {
         );
         for (const pre of nonEmbeddedPres) {
             const isPreInSelection = !targetedNodes.some((node) => !pre.contains(node));
-            const codeBlock = renderToElement("html_editor.EmbeddedSyntaxHighlightingBlueprint", {
-                embeddedProps: JSON.stringify({
-                    value: getPreValue(pre),
-                    languageId: pre.dataset.languageId || DEFAULT_LANGUAGE_ID,
-                }),
+            const embeddedProps = JSON.stringify({
+                value: getPreValue(pre),
+                languageId: pre.dataset.languageId || DEFAULT_LANGUAGE_ID,
             });
-            codeBlock.dataset.syntaxHighlightingAutofocus = preserveFocus && isPreInSelection;
+            const codeBlock = this.dependencies.embeddedComponents.renderBlueprintToElement(
+                "html_editor.EmbeddedSyntaxHighlightingBlueprint",
+                { embeddedProps },
+                () => {
+                    if (preserveFocus && isPreInSelection) {
+                        const textarea = codeBlock.querySelector("textarea");
+                        if (textarea !== codeBlock.ownerDocument.activeElement) {
+                            textarea.focus();
+                            this.dependencies.history.stageFocus();
+                        }
+                    }
+                }
+            );
             pre.before(codeBlock);
             if (isPreInSelection) {
                 // Removing the pre will make us lose the selection. The DOM
@@ -94,7 +103,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
     setupNewCodeBlock({ name, props }) {
         if (name === "syntaxHighlighting") {
             Object.assign(props, {
-                autofocus: props.host.dataset.syntaxHighlightingAutofocus === "true",
                 onTextareaFocus: () => this.dependencies.history.stageFocus(),
             });
             props.host.removeAttribute("data-syntax-highlighting-autofocus");
