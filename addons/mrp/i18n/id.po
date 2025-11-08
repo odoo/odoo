@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-11 02:15+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -6836,6 +6836,12 @@ msgstr "Anda hanya dapat menggabungkan manufaktur dengan status yang sama."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot cancel a manufacturing order that is already done."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You cannot change the workcenter of a work order that is in progress or done."
@@ -6855,6 +6861,12 @@ msgstr "Anda tidak dapat membuat BoM baru dari sini."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot create cyclic dependency."
 msgstr "Anda tidak dapat membuat ketergantungan siklus."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot delete a manufacturing order that is already done."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
