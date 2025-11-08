@@ -57,7 +57,7 @@ registerWebsitePreviewTour('shop_list_view_b2c', {
         },
         {
             content: "check price is 825",
-            trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^825.00$/)",
+            trigger: ":iframe .product_price .oe_price .oe_currency_value:text(825.00)",
         },
         {
             content: "switch to another variant",
@@ -66,7 +66,7 @@ registerWebsitePreviewTour('shop_list_view_b2c', {
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^880.44$/)",
+            trigger: ":iframe .product_price .oe_price .oe_currency_value:text(880.44)",
         },
         {
             content: "click on 'Add to Cart' button",
@@ -76,7 +76,7 @@ registerWebsitePreviewTour('shop_list_view_b2c', {
         goToCart({ backend: true, expectUnloadPage: false }),
         {
             content: "check price on /cart",
-            trigger: ":iframe #cart_products .oe_currency_value:contains(/^880.44$/)",
+            trigger: ":iframe #cart_products .oe_currency_value:text(880.44)",
         },
     ],
 );
