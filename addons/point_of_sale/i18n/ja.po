@@ -7,13 +7,14 @@
 # Junko Augias, 2025
 #
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:36+0000\n"
-"PO-Revision-Date: 2025-10-30 10:16+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 22:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "point_of_sale/ja/>\n"
 "Language: ja\n"
@@ -550,7 +551,7 @@ msgstr "この名前のメモは既に存在します"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "この uuid による支払いはすでに存在します"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -1060,12 +1061,12 @@ msgstr "プリンタの内部識別"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_unique_uuid
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "このUUIDを持つオーダ明細はすでに存在します"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_unique_uuid
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "このUUIDを持つオーダはすでに存在します"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1119,7 +1120,7 @@ msgstr "表面カリっと、中はふわふわ職人技のサワードウブレ
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "As of"
-msgstr "以下の時点で:"
+msgstr "時点:"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
@@ -4253,7 +4254,7 @@ msgstr "POS設定を作成する権限がないようです。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "It seems like you don't have enough rights to load data."
-msgstr ""
+msgstr "データを読み込む権限がないようです。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5509,7 +5510,7 @@ msgstr "オーダ番号"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "オーダが古くなっています"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -5549,6 +5550,12 @@ msgstr "このオーダで返金が行われたプロダクトのオーダ"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
 msgstr "オーダ明細"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order saved for later"
+msgstr "後に保存されたオーダ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -7995,7 +8002,7 @@ msgstr "プレビュー画面をスキップ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Slot"
-msgstr ""
+msgstr "スロット"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
@@ -8020,7 +8027,7 @@ msgstr "いくつかのシリアル/ロット番号がありません"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Some orders are already being invoiced. Please try again later."
-msgstr ""
+msgstr "一部のオーダはすでに請求処理中です。しばらくしてからもう一度お試しください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8645,6 +8652,10 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"このオーダは、別のデバイスで変更されています。既存のオーダ明細を編集している"
+"場合は、変更内容が上書きされていないかご確認ください。\n"
+"\n"
+"このデバイス上で最後に行った変更内容が、サーバに送信されます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10409,7 +10420,7 @@ msgstr "qx9h1"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "return"
-msgstr "戻る"
+msgstr "返品"
 
 #. module: point_of_sale
 #. odoo-javascript
