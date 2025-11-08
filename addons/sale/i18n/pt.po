@@ -19,13 +19,14 @@
 # Maitê Dietze, 2025
 # Wil Odoo, 2025
 # Camille Dantinne <cmd@odoo.com>, 2025.
+# Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-11 18:39+0000\n"
-"PO-Revision-Date: 2025-09-24 22:20+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
+"PO-Revision-Date: 2025-11-05 15:05+0000\n"
+"Last-Translator: Humberto Sousa <humberto.sousa@smartimprove.pt>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/sale/"
 "pt/>\n"
 "Language: pt\n"
@@ -39,7 +40,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "Dados Recolhidos"
+msgstr " Dados Recolhidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
@@ -773,12 +774,16 @@ msgstr ""
 "        Caro <t t-out=\"object.partner_id.name or ''\">utilizador</t>,\n"
 "        <br/><br/>\n"
 "        Informamos que o seu\n"
-"        orçamento <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-out=\"doc_name or ''\">orçamento</t> <strong t-out="
+"\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
-"            (com a referência: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            (com a referência: <t t-out=\"object.origin or ''\">S00052</t> )"
+"\n"
 "        </t>\n"
-"        foi cancelado. Assim sendo, não deverá ser cobrado mais nenhum valor relativo a esta encomenda.\n"
-"        Se for necessário algum crédito, isso será efetuado da forma mais conveniente.\n"
+"        foi cancelado. Assim sendo, não deverá ser cobrado mais nenhum valor "
+"relativo a esta encomenda.\n"
+"        Se for necessário algum crédito, isso será efetuado o mais "
+"brevemente possível.\n"
 "        <br/><br/>\n"
 "        Não hesite em contactar-nos se tiver alguma questão.\n"
 "        <br/>\n"
@@ -4309,7 +4314,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr "Avisos de Ordem de  Venda"
+msgstr "Avisos de Ordem de Venda"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
