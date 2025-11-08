@@ -9,13 +9,14 @@
 # Wil Odoo, 2025
 # Junko Augias, 2025
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 18:35+0000\n"
-"PO-Revision-Date: 2025-10-15 01:41+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"POT-Creation-Date: 2025-11-06 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/account/"
 "ja/>\n"
 "Language: ja\n"
@@ -2097,6 +2098,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"%(date)s: %(accrual_entry)sに作成された未収計上。                "
+"およびその逆仕訳: %(reverse_entry)s。"
 
 #. module: account
 #. odoo-python
@@ -7233,6 +7236,9 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"'%(engine)s' エンジンでは groupby "
+"機能はサポートされていません。'%(report_line)s' の groupby "
+"値を削除してください"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
@@ -8842,7 +8848,7 @@ msgstr "6月"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "KPIプロバイダー"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -11649,14 +11655,14 @@ msgstr "購買"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
-msgstr "仕入受領書"
+msgstr "仕入伝票"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Purchase Receipt Created"
-msgstr "購買領収書が作成されました"
+msgstr "仕入伝票が作成されました"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -11666,7 +11672,7 @@ msgstr "購買担当者"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "購入税"
+msgstr "仕入税"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -14353,6 +14359,13 @@ msgstr "配送先住所は会計ポジションの計算に使われます。"
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
 msgstr "請求書を生成した文書。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is using accounts from a different company."
+msgstr ""
 
 #. module: account
 #. odoo-python

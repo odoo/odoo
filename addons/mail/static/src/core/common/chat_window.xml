@@ -89,7 +89,7 @@
         'ms-3': threadActions.actions.length lte 4 and !isMobileFoldedForLivechatVisitor,
         'me-1': !isMobileFoldedForLivechatVisitor,
     }">
-        <img t-att-class="{ 'o-isMobileFoldedForLivechatVisitor rounded-circle': isMobileFoldedForLivechatVisitor, 'rounded': !isMobileFoldedForLivechatVisitor }" t-att-src="thread.imgUrl" alt="Thread Image"/>
+        <img t-att-class="{ 'o-isMobileFoldedForLivechatVisitor rounded-circle o_object_fit_cover': isMobileFoldedForLivechatVisitor, 'rounded o_object_fit_cover': !isMobileFoldedForLivechatVisitor }" t-att-src="thread.imgUrl" alt="Thread Image"/>
     </div>
     <ThreadIcon t-if="thread and thread.type === 'chat' and thread.chatPartner" thread="thread"/>
     <div t-if="!state.editingName and !isMobileFoldedForLivechatVisitor" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
