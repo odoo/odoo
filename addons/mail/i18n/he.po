@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mail
+# * mail
 #
 # Translators:
 # Orel Nahmany, 2024
@@ -32,21 +32,22 @@
 # Martin Trigaux, 2025
 # Ha Ketem <haketem@gmail.com>, 2025
 # or balmas, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-09 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: or balmas, 2025\n"
-"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 16:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-2/mail/"
+"he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
-"1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 2) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -88,13 +89,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "\"%(activity_name)s: %(summary)s\" assigned to you"
-msgstr ""
+msgstr "\"%(activity_name)s:%(summary)s\" הקצה אותך ל"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 msgid "\"%(hostname)s\" needs to access your microphone"
-msgstr ""
+msgstr "\"%(hostname)s\" צריך גישה למיקרופון שלך"
 
 #. module: mail
 #. odoo-javascript
@@ -139,13 +140,13 @@ msgstr "%(email)s לא מוכר ככתובת מייל מאומתת. זה דרו�
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
 msgid "%(emoji)s reacted by %(person)s"
-msgstr ""
+msgstr "%(emoji)s  נדחה ע\"י %(person)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
 msgid "%(emoji)s reacted by %(person1)s and %(person2)s"
-msgstr ""
+msgstr "%(emoji)s נדחה ע\"י %(person1)s וגם %(person2)s"
 
 #. module: mail
 #. odoo-javascript
@@ -184,7 +185,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%(name)s: %(message)s)"
-msgstr ""
+msgstr "%(name)s: %(message)s)"
 
 #. module: mail
 #. odoo-python
@@ -246,7 +247,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/base_recipients_list.js:0
 #: code:addons/mail/static/src/core/web/mail_composer_bcc_list.js:0
 msgid "%(recipientCount)s more"
-msgstr ""
+msgstr "%(recipientCount)s עוד"
 
 #. module: mail
 #. odoo-javascript
@@ -284,7 +285,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "%s (Email Template)"
-msgstr ""
+msgstr "%s(תבנית דוא\"ל)"
 
 #. module: mail
 #. odoo-python
@@ -315,13 +316,13 @@ msgstr "1%s מקליד/ה..."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_result.js:0
 msgid "%s messages found"
-msgstr ""
+msgstr "%s נמצאה"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_patch.js:0
 msgid "%s new messages"
-msgstr ""
+msgstr "%s הודעות חדשות"
 
 #. module: mail
 #. odoo-javascript
@@ -428,6 +429,7 @@ msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
 msgstr ""
+"<b invisible=\"not no_record\" class=\"text-warning\"> אין רשומה למודל זה</b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -444,11 +446,13 @@ msgid ""
 "<button>Change your preferences</button> to receive new notifications in "
 "your inbox."
 msgstr ""
+"<button>שנה את ההעדפות שלך </button>כדי לקבל התראות חדשות בתיבת הדואר הנכנס "
+"שלך."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 msgid "<i class=\"fa fa-check\"/> Done"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> בוצע"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
@@ -456,6 +460,8 @@ msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
 msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
+"title=\"Steps count\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -465,7 +471,7 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
 msgid "<i class=\"fa fa-times\"/> Cancel"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> בטל"
 
 #. module: mail
 #. odoo-javascript
@@ -525,19 +531,19 @@ msgstr "<span class=\"d-block w-75 py-2\">צבע כותרת עליונה</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"me-1\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "<span class=\"o_stat_text\">Open Document</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">מסמך פתוח</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
@@ -610,7 +616,7 @@ msgstr "<span><b>עבודה מעולה!</b> עברת על כל השלבים של
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "<span>Open Record</span>"
-msgstr ""
+msgstr "<span>רשומה פתוחה</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -698,7 +704,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "A scheduled message could not be sent"
-msgstr ""
+msgstr "הודעה מתוזמנת לא נשלחה"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__google_translate_api_key
@@ -850,7 +856,7 @@ msgstr "פעילויות"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Create"
-msgstr ""
+msgstr "פעילויות ליצירה"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
@@ -888,12 +894,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.ui.menu,name:mail.menu_mail_activities
 msgid "Activity Overview"
-msgstr ""
+msgstr "סקירת פעילות"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr ""
+msgstr "תוכנית פעילות"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_plan_action
@@ -960,7 +966,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "אשף תכנון פעילויות"
 
 #. module: mail
 #. odoo-javascript
@@ -972,12 +978,12 @@ msgstr "סוג פעילות"
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Activity: %s"
-msgstr ""
+msgstr "פעילות: %s"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_followers_edit__operation__add
 msgid "Add"
-msgstr ""
+msgstr "הוסף"
 
 #. module: mail
 #. odoo-javascript
@@ -1019,7 +1025,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reactions.xml:0
 msgid "Add Reaction"
-msgstr ""
+msgstr "הוסף תגובה"
 
 #. module: mail
 #. odoo-javascript
@@ -1064,7 +1070,7 @@ msgstr "הוספת מייל לרשימה השחורה"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Add contacts"
-msgstr ""
+msgstr "הוסף אנשי קשר"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
@@ -1087,7 +1093,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "הוספת עוקבים: %(partner_names)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1103,7 +1109,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
 msgid "Add signature"
-msgstr ""
+msgstr "הוסף חתימה"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1113,7 +1119,7 @@ msgstr "הוסף את אישורי twilio שלך עבור שרתי ICE"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "הוספה/הסרה של עוקבים"
 
 #. module: mail
 #. odoo-python
@@ -1324,7 +1330,7 @@ msgstr "הכל"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__custom_notifications__all
 #: model:ir.model.fields.selection,name:mail.selection__res_users_settings__channel_notifications__all
 msgid "All Messages"
-msgstr ""
+msgstr "כל ההודעות"
 
 #. module: mail
 #. odoo-javascript
@@ -1566,7 +1572,7 @@ msgstr "קבצים מצורפים"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Audio player:"
-msgstr ""
+msgstr "נגן שמע:"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__partners
@@ -1646,7 +1652,7 @@ msgstr "פעולה אוטומטית"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Automated message"
-msgstr ""
+msgstr "הודעות אוטומטיות"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__triggered_next_type_id
@@ -1718,12 +1724,12 @@ msgstr "בסיס"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__base_template
 msgid "Base Template"
-msgstr ""
+msgstr "תבנית בסיס"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Base Templates"
-msgstr ""
+msgstr "תבניות בסיס"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__sfu_server_key
@@ -1754,7 +1760,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
 msgid "Before Plan Date"
-msgstr ""
+msgstr "לפני תאריך התכנון"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__is_blacklisted
@@ -1786,6 +1792,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
+"%(portal_user_name)sנחסם עקב מחיקת חשבון פורטל ע\"י"
+"%(user_name)s(#%(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -1811,7 +1819,7 @@ msgstr "גוף"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body_has_template_value
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "תוכן הגוף זהה לתבנית."
 
 #. module: mail
 #. odoo-javascript
@@ -1889,7 +1897,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Browser"
-msgstr ""
+msgstr "דפדפן"
 
 #. module: mail
 #. odoo-javascript
@@ -1939,7 +1947,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "יכול לבטל"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -1950,7 +1958,7 @@ msgstr "ניתן לערוך גוף"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "יכול לשלוח"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -1996,7 +2004,7 @@ msgstr "ביטול הדוא\"ל"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
 msgid "Cancel Message"
-msgstr ""
+msgstr "בטל הודעה"
 
 #. module: mail
 #. odoo-javascript
@@ -2169,7 +2177,7 @@ msgstr "חבר בערוץ"
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__channel_notifications
 msgid "Channel Notifications"
-msgstr ""
+msgstr "התראות ערוץ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_type
@@ -2236,7 +2244,7 @@ msgstr "צ'אט"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Chat Options"
-msgstr ""
+msgstr "אופציות צ'אט"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_type
@@ -2293,7 +2301,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "City, Region, Country"
-msgstr ""
+msgstr "עיר,מחוז,מדינה"
 
 #. module: mail
 #. odoo-javascript
@@ -2340,7 +2348,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Close Search"
-msgstr ""
+msgstr "סגור חיפוש"
 
 #. module: mail
 #. odoo-javascript
@@ -2371,7 +2379,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
 msgid "Close search"
-msgstr ""
+msgstr "סגור חיפוש"
 
 #. module: mail
 #. odoo-javascript
@@ -2388,7 +2396,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Collect replies on a specific email address"
-msgstr ""
+msgstr "איסוף תגובות לכתובת אימייל ספציפית"
 
 #. module: mail
 #. odoo-javascript
@@ -2547,7 +2555,7 @@ msgstr "ברכות, תיבת הדואר הנכנס שלך ריקה!"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 msgid "Connection failed"
-msgstr ""
+msgstr "חיבור נכשל"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_smtp
@@ -2572,13 +2580,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Connection type:"
-msgstr ""
+msgstr "סוג חיבור"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Connection:"
-msgstr ""
+msgstr "חיבור:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__is_ssl
@@ -2687,7 +2695,7 @@ msgstr "יצירה"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 msgid "Create %s"
-msgstr ""
+msgstr "צור %s"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
@@ -2718,7 +2726,7 @@ msgstr "תאריך יצירה"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "Create Group Chat"
-msgstr ""
+msgstr "יצירת צ'אט קבוצתי"
 
 #. module: mail
 #. odoo-javascript
@@ -2735,13 +2743,13 @@ msgstr "צור מזהה ייחודי"
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "יצירת לקוח"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Create a Mail Template"
-msgstr ""
+msgstr "צור תבנית דוא\"ל"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__object_id
@@ -2752,7 +2760,7 @@ msgstr "יצירת רשומה חדשה"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "יצירת פעילות: %(activity_name)s"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -2906,12 +2914,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
 msgid "Custom Template"
-msgstr ""
+msgstr "תבנית מותאמת  אישית"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Custom Templates"
-msgstr ""
+msgstr "תבניות מותאמות אישית"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
@@ -2956,7 +2964,7 @@ msgstr "תאריך"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "Date:"
-msgstr ""
+msgstr "תאריך:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_schedule__scheduled_datetime
@@ -2982,7 +2990,7 @@ msgstr "תאריך יעד"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Deadline:"
-msgstr ""
+msgstr "מועד אחרון:"
 
 #. module: mail
 #. odoo-python
@@ -3007,18 +3015,18 @@ msgstr "יקר"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "Dear Sender"
-msgstr ""
+msgstr "שולח יקר"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Dear Sender,"
-msgstr ""
+msgstr "שולח יקר,"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "Decline"
-msgstr ""
+msgstr "דחה"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
@@ -3041,7 +3049,7 @@ msgstr "מצב תצוגה ברירת מחדל"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from_email
 #: model:ir.model.fields,field_description:mail.field_res_company__default_from_email
 msgid "Default From"
-msgstr ""
+msgstr "טופס ברירת מחדל"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__default_from
@@ -3061,7 +3069,7 @@ msgstr "תיאור ברירת מחדל"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Default Summary:"
-msgstr ""
+msgstr "סיכום ברירת מחדל:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
@@ -3078,7 +3086,7 @@ msgstr "ערכי ברירת מחדל"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Default deadline for the activities..."
-msgstr ""
+msgstr "מועד אחרון ברירת מחדל לפעילויות..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -3108,7 +3116,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
 msgid "Default user"
-msgstr ""
+msgstr "משתמש ברירת מחדל"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -3155,7 +3163,7 @@ msgstr "מחק הודעות דוא\"ל"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 msgid "Delete all previews"
-msgstr ""
+msgstr "מחק את כל התצוגות מקדימות"
 
 #. module: mail
 #. odoo-javascript
@@ -3226,7 +3234,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app_model_patch.js:0
 msgid "Direct messages"
-msgstr ""
+msgstr "הודעות ישירות"
 
 #. module: mail
 #. odoo-javascript
@@ -3427,7 +3435,7 @@ msgstr "שם מסמך"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
-msgstr ""
+msgstr "מסמך: \""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -3462,7 +3470,7 @@ msgstr "בצע ותזמן פעילות הבאה"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_done
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Done Date"
-msgstr ""
+msgstr "תאריך ביצוע"
 
 #. module: mail
 #. odoo-javascript
@@ -3482,7 +3490,7 @@ msgstr "הורד"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Download Files"
-msgstr ""
+msgstr "הורד קבצים"
 
 #. module: mail
 #. odoo-javascript
@@ -3494,13 +3502,13 @@ msgstr "הורדת יומנים"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Download:"
-msgstr ""
+msgstr "הורד:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/mail_attachment_dropzone.xml:0
 msgid "Drop Files here"
-msgstr ""
+msgstr "גרירת קבצים לכאן"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -3518,7 +3526,7 @@ msgstr "תאריך יעד "
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Due in"
-msgstr ""
+msgstr "מתוזמן ל"
 
 #. module: mail
 #. odoo-javascript
@@ -3605,7 +3613,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Edit Tags"
-msgstr ""
+msgstr "ערכית תגיות"
 
 #. module: mail
 #. odoo-javascript
@@ -3692,7 +3700,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Email Failure: %(modelName)s"
-msgstr ""
+msgstr "כישלון דוא\"ל: %(modelName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
@@ -3871,7 +3879,7 @@ msgstr "עובדים וצוות בלבד"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Enable"
-msgstr ""
+msgstr "אפשר"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
@@ -3888,7 +3896,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Enter Full Screen"
-msgstr ""
+msgstr "כניסה למסך מלא"
 
 #. module: mail
 #. odoo-javascript
@@ -4002,13 +4010,13 @@ msgstr "אחר"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "יציאה ממסך מלא"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Expand"
-msgstr ""
+msgstr "הרחב"
 
 #. module: mail
 #. odoo-javascript
@@ -4035,12 +4043,12 @@ msgstr "מסננים מורחבים..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Extra Comments ..."
-msgstr ""
+msgstr "תגובות נוספות..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Extra info"
-msgstr ""
+msgstr "מידע נוסף"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -4056,7 +4064,7 @@ msgstr "נכשל"
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
 msgid "Failed to enable push notifications"
-msgstr ""
+msgstr "הפעלת ההתראות (Push) נכשלה"
 
 #. module: mail
 #. odoo-javascript
@@ -4095,7 +4103,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Failed to render template: %(view_ref)s"
-msgstr ""
+msgstr "נכשל עיבוד התבנית: %(view_ref)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -4127,7 +4135,7 @@ msgstr "סוג שגיאה"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Failure: %(modelName)s"
-msgstr ""
+msgstr "נכשל :%(modelName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -4213,7 +4221,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_upload_service.js:0
 msgid "File too large"
-msgstr ""
+msgstr "קובץ גדול מידי"
 
 #. module: mail
 #. odoo-javascript
@@ -4312,12 +4320,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to add"
-msgstr ""
+msgstr "עוקבים להוספה"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to remove"
-msgstr ""
+msgstr "עוקבים להסרה"
 
 #. module: mail
 #. odoo-python
@@ -4382,12 +4390,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 msgid "Force Send"
-msgstr ""
+msgstr "אלץ שליחה"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language:"
-msgstr ""
+msgstr "אלץ שפה:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -4400,7 +4408,7 @@ msgstr "דוא\"ל מעוצב"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_comment_option__forward
 #: model:ir.model.fields.selection,name:mail.selection__mail_scheduled_message__composition_comment_option__forward
 msgid "Forward"
-msgstr ""
+msgstr "קדימה"
 
 #. module: mail
 #. odoo-javascript
@@ -4432,7 +4440,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "From:"
-msgstr ""
+msgstr "מ:"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__default_display_mode__video_full_screen
@@ -4663,7 +4671,7 @@ msgstr "נסתר"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__hidden_template
 msgid "Hidden Template"
-msgstr ""
+msgstr "תבנית חבויה"
 
 #. module: mail
 #. odoo-javascript
@@ -4934,7 +4942,7 @@ msgstr "אם מסומן, בחלק מההודעות קיימת שגיאת משל�
 msgid ""
 "If set every modification done to this field is tracked. Value is used to "
 "order tracking values."
-msgstr ""
+msgstr "אם מסומן, כל שינוי שמתבצע בשדה זה יתועד. הערך משמש לסדר את ערכי המעקב."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__mute_until_dt
@@ -5011,7 +5019,7 @@ msgstr ""
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr ""
+msgstr "אם אינך מזהה זאת, עליך לשנות את הסיסמה שלך מיד באמצעות הקישור הבא:<br/>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -5028,7 +5036,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
-msgstr ""
+msgstr "התעלם מהכל"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
@@ -5071,7 +5079,7 @@ msgstr "התמונה היא קישור"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "In %(country)s"
-msgstr ""
+msgstr "ב- %(country)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__scheduled_date
@@ -5110,7 +5118,7 @@ msgstr "שיחה נכנסת..."
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
-msgstr ""
+msgstr "הודעת דוא\"ל נכנסת"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5233,7 +5241,7 @@ msgstr "כתובת אימייל לא חוקית"
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "כתובת מייל לא חוקית “%s”"
 
 #. module: mail
 #. odoo-python
@@ -5255,7 +5263,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_from_invalid
 msgid "Invalid from address"
-msgstr ""
+msgstr "כתובת שולח לא חוקית"
 
 #. module: mail
 #. odoo-python
@@ -5276,6 +5284,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"שם שרת לא חוקי!\n"
+"%s"
 
 #. module: mail
 #. odoo-python
@@ -5352,7 +5362,7 @@ msgstr "להזמין אנשים"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 msgid "Invite a User"
-msgstr ""
+msgstr "הזמן משתמש"
 
 #. module: mail
 #. odoo-javascript
@@ -5505,7 +5515,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "JSON that maps ids from a many2one field to seconds spent"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -5632,12 +5642,12 @@ msgstr "עניין אחרון"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "סקר אחרון"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_presence
 msgid "Last Presence"
-msgstr ""
+msgstr "נוכחות אחרונה"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__seen_message_id
@@ -5780,13 +5790,13 @@ msgstr "עזוב"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Leave Channel"
-msgstr ""
+msgstr "עזוב ערוץ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leave Conversation"
-msgstr ""
+msgstr "עזוב שיחה"
 
 #. module: mail
 #. odoo-javascript
@@ -5808,7 +5818,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Link copied!"
-msgstr ""
+msgstr "קישור הועתק!"
 
 #. module: mail
 #. odoo-javascript
@@ -5840,14 +5850,14 @@ msgstr "טען עוד"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 msgid "Loading..."
-msgstr ""
+msgstr "טוען..."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/navigable_list.xml:0
 #: code:addons/mail/static/src/core/public_web/messaging_menu.xml:0
 msgid "Loading…"
-msgstr ""
+msgstr "טוען…"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__server_type__local
@@ -6198,7 +6208,7 @@ msgstr "סמן לביצוע  "
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_actions.js:0
 msgid "Mark as Unread"
-msgstr ""
+msgstr "סמן כלא נקרא"
 
 #. module: mail
 #. odoo-javascript
@@ -6244,7 +6254,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_command_palette_patch.js:0
 msgid "Mentions"
-msgstr ""
+msgstr "אזכורים"
 
 #. module: mail
 #. odoo-javascript
@@ -6296,7 +6306,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message #%(threadName)s…"
-msgstr ""
+msgstr "הודעה #%(threadName)s…"
 
 #. module: mail
 #. odoo-javascript
@@ -6325,13 +6335,13 @@ msgstr "מספר זיהוי הודעה"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copied!"
-msgstr ""
+msgstr "קישור הודעה הועתק!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copy Failed (Permission denied?)!"
-msgstr ""
+msgstr "לא ניתן להעתיק את קישור ההודעה (הרשאה נחסמה?)!"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -6359,7 +6369,7 @@ msgstr "שם רשומת הודעה"
 #: model:ir.model,name:mail.model_mail_message_translation
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Message Translation"
-msgstr ""
+msgstr "תרגום הודעה"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__google_translate_api_key
@@ -6499,7 +6509,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_voice_metadata
 msgid "Metadata for voice attachments"
-msgstr ""
+msgstr "מטא דאטה להודעות קוליות"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
@@ -6601,7 +6611,7 @@ msgstr "השתק"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Mute Conversation"
-msgstr ""
+msgstr "השתקת שיחה"
 
 #. module: mail
 #. odoo-javascript
@@ -6812,7 +6822,7 @@ msgstr "אין שגיאה"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
 msgid "No Followers"
-msgstr ""
+msgstr "אין עוקבים"
 
 #. module: mail
 #. odoo-javascript
@@ -6829,7 +6839,7 @@ msgstr "אין רשומה"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
 msgid "No activities."
-msgstr ""
+msgstr "אין פעילויות."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
@@ -6905,7 +6915,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "No saved templates"
-msgstr ""
+msgstr "לא נשמרו תבניות"
 
 #. module: mail
 #. odoo-javascript
@@ -7098,7 +7108,7 @@ msgstr "התראות"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_permission_service.js:0
 msgid "Notifications allowed"
-msgstr ""
+msgstr "אפשר התראות"
 
 #. module: mail
 #. odoo-javascript
@@ -7119,7 +7129,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__notify
 msgid "Notify Recipients"
-msgstr ""
+msgstr "יידע נמענים"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_skip_followers
@@ -7130,7 +7140,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Notify everyone"
-msgstr ""
+msgstr "יידע את כולם"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
@@ -7230,7 +7240,7 @@ msgstr "לא מקוון"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 msgid "Offline - %(offline_count)s"
-msgstr ""
+msgstr "לא מקוון -%(offline_count)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -7266,7 +7276,7 @@ msgstr "ערכים ישנים"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "On"
-msgstr ""
+msgstr "מופעל"
 
 #. module: mail
 #. odoo-javascript
@@ -7294,7 +7304,7 @@ msgstr "מקוון"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 msgid "Online - %(online_count)s"
-msgstr ""
+msgstr "מקוון- %(online_count)s"
 
 #. module: mail
 #. odoo-python
@@ -7421,7 +7431,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__operation
 msgid "Operation"
-msgstr ""
+msgstr "פעולה"
 
 #. module: mail
 #. odoo-python
@@ -7513,7 +7523,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "אחרת, תוכל להתעלם מדוא\"ל זה."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7807,7 +7817,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/message_pin/common/thread_actions.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__pinned_message_ids
 msgid "Pinned Messages"
-msgstr ""
+msgstr "הודעות מוצמדות"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__plan_id
@@ -8052,7 +8062,7 @@ msgstr "כתובת מועדפת למענה"
 #: model:ir.model.fields,field_description:mail.field_mail_guest__presence_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__presence_ids
 msgid "Presence"
-msgstr ""
+msgstr "נוכחות"
 
 #. module: mail
 #. odoo-javascript
@@ -8296,7 +8306,7 @@ msgstr "נמען"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Recipient Followers"
-msgstr ""
+msgstr "עוקבים של נמענים"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
@@ -8611,13 +8621,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Reset Password"
-msgstr ""
+msgstr "אפס סיסמה"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
 msgid "Reset Template"
-msgstr ""
+msgstr "אפס תבנית"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -8737,7 +8747,7 @@ msgstr "שמור"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 msgid "Save Template"
-msgstr ""
+msgstr "שמור תבנית"
 
 #. module: mail
 #. odoo-javascript
@@ -8835,7 +8845,7 @@ msgstr "תאריך מתוזמן"
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Scheduled Message"
-msgstr ""
+msgstr "הודעה מתוזמנת"
 
 #. module: mail
 #. odoo-javascript
@@ -8929,13 +8939,13 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search button"
-msgstr ""
+msgstr "כפתור חיפוש"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search by name"
-msgstr ""
+msgstr "חיפוש לפי שם"
 
 #. module: mail
 #. odoo-javascript
@@ -8960,7 +8970,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search in progress"
-msgstr ""
+msgstr "חיפוש בתהליך"
 
 #. module: mail
 #. odoo-javascript
@@ -9003,13 +9013,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "See Error Details"
-msgstr ""
+msgstr "צפה בפרטי שגיאה"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "See all pinned messages."
-msgstr ""
+msgstr "צפה בכל ההודעות המוצמדות"
 
 #. module: mail
 #. odoo-javascript
@@ -9051,19 +9061,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_seen_indicator.xml:0
 msgid "Seen by:"
-msgstr ""
+msgstr "נצפה ע\"י:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Select a Template"
-msgstr ""
+msgstr "בחירת תבנית"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Select a language"
-msgstr ""
+msgstr "בחירת שפה"
 
 #. module: mail
 #. odoo-javascript
@@ -9092,7 +9102,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Send & close"
-msgstr ""
+msgstr "שלח & סגור"
 
 #. module: mail
 #. odoo-javascript
@@ -9111,7 +9121,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_field.xml:0
 msgid "Send Later"
-msgstr ""
+msgstr "שלח מאוחר יותר"
 
 #. module: mail
 #. odoo-python
@@ -9132,7 +9142,7 @@ msgstr "שלח כעת"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/composer_patch.js:0
 msgid "Send a message to followers…"
-msgstr ""
+msgstr "שלח הודעה לעוקבים…"
 
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_mail_mail
@@ -9188,7 +9198,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_field.xml:0
 msgid "Sending"
-msgstr ""
+msgstr "שולח"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__send_context
@@ -9316,7 +9326,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Share Screen"
-msgstr ""
+msgstr "שיתוף מסך"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
@@ -9326,7 +9336,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Shared with all users."
-msgstr ""
+msgstr "משותף עם כל המשתמשים."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
@@ -9360,14 +9370,14 @@ msgstr "הצגת הודעה עזרה"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_button.js:0
 msgid "Show activities"
-msgstr ""
+msgstr "הצגת פעילויות"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/base_recipients_list.xml:0
 #: code:addons/mail/static/src/core/web/mail_composer_bcc_list.xml:0
 msgid "Show all recipients"
-msgstr ""
+msgstr "הצגה לכל המשתתפים"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -9437,7 +9447,7 @@ msgstr "מקור"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__source_lang
 msgid "Source Language"
-msgstr ""
+msgstr "שפת מקור"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__followers_type__specific
@@ -9482,7 +9492,7 @@ msgstr "התחל שיחה"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Start a Conversation"
-msgstr ""
+msgstr "התחל שיחה"
 
 #. module: mail
 #. odoo-javascript
@@ -9561,7 +9571,7 @@ msgstr "כמות צעדים"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Stop"
-msgstr ""
+msgstr "עצור"
 
 #. module: mail
 #. odoo-javascript
@@ -9734,7 +9744,7 @@ msgstr "ח.פ / ע.מ"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Technical Settings"
-msgstr ""
+msgstr "הגדרות טכניות"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__initial_res_model
@@ -9751,12 +9761,12 @@ msgstr "תבנית"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_category
 msgid "Template Category"
-msgstr ""
+msgstr "קטגורית תבנית"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
 msgid "Template Description"
-msgstr ""
+msgstr "תיאור תבנית"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
@@ -9830,7 +9840,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
-msgstr ""
+msgstr "בדוק"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -9922,7 +9932,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss.js:0
 msgid "The avatar has been updated!"
-msgstr ""
+msgstr "האווטאר עודכן !"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
@@ -9933,7 +9943,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
-msgstr ""
+msgstr "השיחה ריקה."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
@@ -10037,7 +10047,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
 msgid "The message the channel was created from."
-msgstr ""
+msgstr "ההודעה שממנה נוצר הערוץ ."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -10100,7 +10110,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "השרת \"%s\" לא ניתן לשימוש היות והוא בארכיון."
 
 #. module: mail
 #. odoo-javascript
@@ -10225,7 +10235,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message_model.js:0
 msgid "This message has already been sent."
-msgstr ""
+msgstr "ההודעה כבר נשלחה."
 
 #. module: mail
 #. odoo-javascript
@@ -10359,7 +10369,7 @@ msgstr ""
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To-Do"
-msgstr ""
+msgstr "מטלה"
 
 #. module: mail
 #. odoo-javascript
@@ -10731,6 +10741,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Unnamed"
+msgstr "ללא שם"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr ""
 
 #. module: mail
@@ -11072,7 +11088,7 @@ msgstr "שם משתמש"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__user_id
 msgid "Users"
-msgstr ""
+msgstr "משתמשים"
 
 #. module: mail
 #. odoo-python
@@ -11182,7 +11198,7 @@ msgstr "צפיה או הצטרפות לערוצים"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "גלוי לכולם"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__voice_ids
@@ -11635,7 +11651,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Your account password has been updated"
-msgstr ""
+msgstr "הסיסמה של החשבון שלך עודכנה"
 
 #. module: mail
 #. odoo-javascript
@@ -11966,7 +11982,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "id"
-msgstr ""
+msgstr "מספר זיהוי"
 
 #. module: mail
 #. odoo-javascript
@@ -11996,7 +12012,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "joined the channel"
-msgstr ""
+msgstr "הצטרף לערוץ"
 
 #. module: mail
 #. odoo-python
@@ -12008,7 +12024,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "list"
-msgstr ""
+msgstr "רשימה"
 
 #. module: mail
 #. odoo-javascript
@@ -12195,7 +12211,7 @@ msgstr "צוות."
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "template"
-msgstr ""
+msgstr "תבנית"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__turn

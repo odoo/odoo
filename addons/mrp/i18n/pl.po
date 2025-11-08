@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-17 18:36+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -6921,6 +6921,12 @@ msgstr "Można połączyć produkcję tylko z tym samym stanem."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot cancel a manufacturing order that is already done."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
@@ -6949,6 +6955,12 @@ msgstr "W tym miejscu nie można utworzyć nowego zestawienia materiałów."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot create cyclic dependency."
 msgstr "Nie można tworzyć zależności cyklicznych."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot delete a manufacturing order that is already done."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
