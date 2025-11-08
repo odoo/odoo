@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2023
@@ -43,20 +43,22 @@
 # Tiffany Chang, 2025
 # akadesign117, 2025
 # ebrahim khorami, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 18:35+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ebrahim khorami, 2025\n"
-"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2025-11-06 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/account/"
+"fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #. odoo-python
@@ -2182,6 +2184,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"سند تعهدی ایجادشده در تاریخ %(date)s: %(accrual_entry)s.                و "
+"سند معکوس آن: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -5880,7 +5884,7 @@ msgstr "تخفیف از %(amount)sاگر امروز پرداخت شود"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Discount of %(amount)s if paid within %(days)s days"
-msgstr ""
+msgstr "تخفیف به مبلغ %(amount)s در صورت پرداخت ظرف %(days)s روز"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -7340,6 +7344,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"قابلیت گروه بندی توسط موتور '%(engine)s' پشتیبانی نمی‌شود. لطفاً مقدار گروه "
+"بندی را در '%(report_line)s' حذف کنید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
@@ -8548,7 +8554,7 @@ msgstr "میان ... قرار دارد"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "آیا جدول حساب‌های معین (Chart of Accounts) نصب شده است"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -8655,7 +8661,7 @@ msgstr "قبلاً '%(previous)s' بود و اکنون '%(current)s' است."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "اقلام دارای توزیع تحلیلیِ ناقص"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -8966,7 +8972,7 @@ msgstr "ژوئن"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "ارائه‌دهندهٔ شاخص‌های کلیدی عملکرد (KPI)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -14499,6 +14505,13 @@ msgstr "نشانی تحویل در محاسبه‌ی موقعیت مالی مو�
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
 msgstr "مدرک(ها) که این فاکتور را ایجاد کرده است."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is using accounts from a different company."
+msgstr ""
 
 #. module: account
 #. odoo-python

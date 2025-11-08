@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Jarnhold Nattestad <nattestads@gmail.com>, 2023
@@ -19,20 +19,22 @@
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # Wil Odoo, 2025
 # Sanne Kristensen <sanne@vkdata.dk>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 18:35+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"POT-Creation-Date: 2025-11-06 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/account/"
+"da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #. odoo-python
@@ -7360,6 +7362,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"'Gruppér efter funktion' understøttes ikke af motoren '%(engine)s'. Fjern "
+"venligst grupperingsværdien fra '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
@@ -9000,7 +9004,7 @@ msgstr "Juni"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "KPI-udbyder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -13602,7 +13606,7 @@ msgstr "Lager vurdering"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Storno Accounting"
-msgstr ""
+msgstr "Storno-regnskab"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
@@ -14266,6 +14270,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
+"Journalposteringssekvensen stemmer ikke overens med det nuværende format. "
+"Kun bogholderen kan ændre det."
 
 #. module: account
 #. odoo-python
@@ -14538,6 +14544,13 @@ msgstr "Dokument(erne) der oprettede fakturaen."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is using accounts from a different company."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "The entry %s (id %s) must be in draft."
 msgstr "Posteringen %s (id %s) skal være i kladde."
 
@@ -14726,7 +14739,7 @@ msgstr ""
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "The journal item is not linked to the correct financial account"
-msgstr ""
+msgstr "Journalposten er ikke knyttet til den aktuelle finansielle konto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -16394,7 +16407,7 @@ msgstr "Værktøjsfelt til at vise valutabeløbet"
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr ""
+msgstr "Felt til angivelse af, om journalposten indgår i storno-regnskab"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -17028,6 +17041,9 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
+"Du kan ikke slette en bogført journalpost. For at beskytte dine "
+"regnskabsdata skal journalposteringen først nulstilles til kladde, før den "
+"kan slettes."
 
 #. module: account
 #. odoo-python
@@ -17440,6 +17456,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
+"Du kan ikke fjerne eller deaktivere konti, der er sat til \"%s\" på en "
+"skattefordelingslinje."
 
 #. module: account
 #. odoo-python
@@ -17605,6 +17623,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du skal konfigurere journalen for 'valutakursgevinster eller -tab' i "
+"virksomhedsindstillingerne for at kunne håndtere automatisk bogføring af "
+"posteringer ved valutakursforskelle."
 
 #. module: account
 #. odoo-python

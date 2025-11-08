@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 18:35+0000\n"
+"POT-Creation-Date: 2025-11-06 18:35+0000\n"
 "PO-Revision-Date: 2025-11-03 20:30+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-17/account/"
@@ -2199,8 +2199,9 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"Abgrenzungsbuchung erstellt am %(date)s: %(accrual_entry)"
-"s.                    Und seine Gegenbuchung %(reverse_entry)s."
+"Abgrenzungsbuchung erstellt am %(date)s: "
+"%(accrual_entry)s.                    Und seine Gegenbuchung "
+"%(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -14697,6 +14698,13 @@ msgstr "Die Lieferadresse wird in der Berechnung der Steuerposition verwendet."
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
 msgstr "Das/die Dokument(e), das/die die Rechnung generiert hat/haben."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is using accounts from a different company."
+msgstr ""
 
 #. module: account
 #. odoo-python
