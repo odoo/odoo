@@ -89,3 +89,31 @@ registerWebsitePreviewTour('snippet_translation_changing_lang', {
         trigger: ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
     },
 ]);
+registerWebsitePreviewTour(
+    "snippet_dialog_rtl",
+    {
+        url: "/",
+    },
+    () => [
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Select a category snippet to show the snippet dialog",
+            trigger: `#snippet_groups .oe_snippet.o_we_draggable[name="Intro"] .oe_snippet_thumbnail`,
+            run: "click",
+        },
+        {
+            content: "Check that the snippets preview is in rtl",
+            trigger: ".o_dialog :iframe .o_snippets_preview_row[style='direction: rtl;']",
+        },
+        {
+            content: "Check that web.assets_frontend CSS bundle is in rtl",
+            trigger:
+                ".o_dialog :iframe link[type='text/css'][href*='/web.assets_frontend.rtl']:not(:visible)",
+        },
+        {
+            content: "Check that website.assets_all_wysiwyg_inside CSS bundle is there but not in rtl",
+            trigger:
+                ".o_dialog :iframe link[type='text/css'][href*='/website.assets_all_wysiwyg_inside']:not([href*='/website.assets_all_wysiwyg_inside.rtl']):not(:visible)",
+        },
+    ],
+);

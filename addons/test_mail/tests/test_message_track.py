@@ -498,15 +498,17 @@ class TestTrackingInternals(MailCommon):
                 (0, 0, {'name': 'Child1'}),
                 (0, 0, {'name': 'Child2'}),
                 (0, 0, {'name': 'Child3'}),
+                (0, 0, {'name': False}),
             ],
         })
+        child4_tracking = f'Unnamed Sub-model: pseudo tags for tracking ({test_record.one2many_field[3].id})'
         self.flush_tracking()
         last_message = test_record.message_ids[0]
         self.assertTracking(
             last_message,
             [
                 ('many2many_field', 'many2many', ', '.join(test_tags[:2].mapped('name')), ', '.join((test_tags[1] + test_tags[2]).mapped('name'))),
-                ('one2many_field', 'one2many', '', ', '.join(('Child1', 'Child2', 'Child3'))),
+                ('one2many_field', 'one2many', '', f'Child1, Child2, Child3, {child4_tracking}'),
             ]
         )
 
@@ -516,7 +518,7 @@ class TestTrackingInternals(MailCommon):
         last_message = test_record.message_ids[0]
         self.assertTracking(
             last_message,
-            [('one2many_field', 'one2many', ', '.join(('Child1', 'Child2', 'Child3')), ', '.join(('Child2', 'Child3')))]
+            [('one2many_field', 'one2many', f'Child1, Child2, Child3, {child4_tracking}', f'Child2, Child3, {child4_tracking}')]
         )
 
     @users('employee')

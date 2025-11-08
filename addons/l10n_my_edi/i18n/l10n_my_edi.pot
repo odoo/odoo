@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 08:19+0000\n"
-"PO-Revision-Date: 2025-05-23 08:19+0000\n"
+"POT-Creation-Date: 2025-11-03 15:45+0000\n"
+"PO-Revision-Date: 2025-11-03 15:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -257,16 +257,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_my_edi
-#: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_company_form_inherit_l10n_my_myinvois
-msgid "202001234567"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
-msgid "202001234568"
-msgstr ""
-
-#. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
 msgid ""
 "<span class=\"text-success fa fa-check\" title=\"Validation Successful\" invisible=\"not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'valid'\"/>\n"
@@ -293,7 +283,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "An error occurred while validating the invoice: \"%(property_name)s\" is "
 "invalid."
@@ -302,14 +291,12 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "An unexpected error has occurred."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/res_config_settings.py:0
-#, python-format
 msgid ""
 "An unexpected error occurred while unregistering. Please try again later."
 msgstr ""
@@ -317,7 +304,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/res_partner.py:0
-#, python-format
 msgid ""
 "An unexpected error occurred while validating the TIN. Please try again "
 "later."
@@ -336,7 +322,6 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_exemption_reason
 #: model:ir.model.fields,help:l10n_my_edi.field_account_move__l10n_my_edi_exemption_reason
-#: model:ir.model.fields,help:l10n_my_edi.field_account_payment__l10n_my_edi_exemption_reason
 msgid ""
 "Buyer’s sales tax exemption certificate number, special exemption as per gazette orders, etc.\n"
 "Only applicable if you are using a tax with a type 'Exempt'."
@@ -345,13 +330,18 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "Cancel Document"
 msgstr ""
 
 #. module: l10n_my_edi
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__account_move__l10n_my_edi_state__cancelled
 msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/account_move_send.py:0
+msgid "Check Invoice(s)"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -394,7 +384,6 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_custom_form_reference
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__l10n_my_edi_custom_form_reference
-#: model:ir.model.fields,field_description:l10n_my_edi.field_account_payment__l10n_my_edi_custom_form_reference
 msgid "Customs Form Reference Number"
 msgstr ""
 
@@ -431,30 +420,31 @@ msgid "E-Invoicing"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model,name:l10n_my_edi.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_my_edi
 #. odoo-python
-#: code:addons/l10n_my_edi/wizard/account_move_send.py:0
-#, python-format
+#: code:addons/l10n_my_edi/models/account_move_send.py:0
 msgid "Error when fetching statuses from the E-invoicing service."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
-#: code:addons/l10n_my_edi/wizard/account_move_send.py:0
-#, python-format
+#: code:addons/l10n_my_edi/models/account_move_send.py:0
 msgid "Error when generating MyInvois file:"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
-#: code:addons/l10n_my_edi/wizard/account_move_send.py:0
-#, python-format
+#: code:addons/l10n_my_edi/models/account_move_send.py:0
 msgid "Error when sending the invoices to the E-invoicing service."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_proxy_user.py:0
-#, python-format
 msgid "Failed to contact the E-Invoicing service. Please try again later."
 msgstr ""
 
@@ -495,9 +485,13 @@ msgid "Identification"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields,help:l10n_my_edi.field_res_config_settings__l10n_my_edi_company_vat
+msgid "Identification Number for selected type"
+msgstr ""
+
+#. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/res_partner.py:0
-#, python-format
 msgid ""
 "In order to validate the TIN, you must provide the Identification type and "
 "number."
@@ -517,7 +511,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "It has been more than 72h since the invoice validation, you can no longer cancel it.\n"
 "Instead, you should issue a debit or credit note."
@@ -526,7 +519,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "It has been more than 72h since the invoice validation, you can no longer update it.\n"
 "Instead, you should issue or request a debit or credit note."
@@ -535,6 +527,11 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model,name:l10n_my_edi.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.ubl_21_InvoiceType_my
+msgid "K2"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -549,11 +546,6 @@ msgid "L10N My Edi Display Tin Warning"
 msgstr ""
 
 #. module: l10n_my_edi
-#: model:ir.model.fields,field_description:l10n_my_edi.field_account_move_send__l10n_my_edi_enable
-msgid "L10N My Edi Enable"
-msgstr ""
-
-#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_edi_mode
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_mode
 msgid "L10N My Edi Mode"
@@ -563,6 +555,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_edi_proxy_user_id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_proxy_user_id
 msgid "L10N My Edi Proxy User"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_identification_number_placeholder
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_partner__l10n_my_identification_number_placeholder
+#: model:ir.model.fields,field_description:l10n_my_edi.field_res_users__l10n_my_identification_number_placeholder
+msgid "L10N My Identification Number Placeholder"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -616,7 +615,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Multiple different supplier TIN were found in the invoices.\n"
 "If the company TIN changed, you may need to delete your invoice attachments and regenerate them."
@@ -625,7 +623,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Multiple different supplier identification information were found in the invoices.\n"
 "If the company identification information changed, you may need to delete your invoice attachments and regenerate them."
@@ -639,7 +636,6 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_external_uuid
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__l10n_my_edi_external_uuid
-#: model:ir.model.fields,field_description:l10n_my_edi.field_account_payment__l10n_my_edi_external_uuid
 msgid "MyInvois ID"
 msgstr ""
 
@@ -651,7 +647,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "MyInvois could not match your TIN with the identification information you "
 "provided on the company."
@@ -665,7 +660,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/res_partner.py:0
-#, python-format
 msgid ""
 "MyInvois was not able to match the TIN with the provided identification number.\n"
 "This may happen when using generic TIN and will not prevent you from invoicing."
@@ -709,7 +703,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Permission to do this action has not been granted. Please ensure that Odoo "
 "has sufficient permissions on the MyInvois platform."
@@ -718,7 +711,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_proxy_user.py:0
-#, python-format
 msgid ""
 "Please fill the TIN of company \"%(company_name)s\" before enabling the "
 "integration with MyInvois."
@@ -727,7 +719,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Please make sure that your company TIN is correct, and that you gave Odoo "
 "sufficient permissions on the MyInvois platform."
@@ -737,7 +728,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
 #: code:addons/l10n_my_edi/models/res_partner.py:0
-#, python-format
 msgid "Please register for the E-Invoicing service in the settings first."
 msgstr ""
 
@@ -779,8 +769,10 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_custom_form_reference
 #: model:ir.model.fields,help:l10n_my_edi.field_account_move__l10n_my_edi_custom_form_reference
-#: model:ir.model.fields,help:l10n_my_edi.field_account_payment__l10n_my_edi_custom_form_reference
-msgid "Reference Number of Customs Form No.1, 9, etc."
+msgid ""
+"Reference Number of Customs Forms\n"
+"Customs form No. 2 for Customer Invoices\n"
+"Customs form No. 1, 9, etc for Vendor Bills"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -796,7 +788,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "Reject Document"
 msgstr ""
 
@@ -817,14 +808,14 @@ msgid "Sales Tax on Low Value Goods"
 msgstr ""
 
 #. module: l10n_my_edi
-#: model:ir.model.fields,field_description:l10n_my_edi.field_account_move_send__l10n_my_edi_send_checkbox
+#. odoo-python
+#: code:addons/l10n_my_edi/models/account_move_send.py:0
 msgid "Send to MyInvois"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Server error; If the problem persists, please contact the Odoo support."
 msgstr ""
@@ -837,7 +828,6 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_state
 #: model:ir.model.fields,help:l10n_my_edi.field_account_move__l10n_my_edi_state
-#: model:ir.model.fields,help:l10n_my_edi.field_account_payment__l10n_my_edi_state
 msgid ""
 "State of this invoice on the MyInvois portal.\n"
 "An invoice awaiting validation will be automatically updated once the validation status is available."
@@ -846,19 +836,12 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_submission_uid
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__l10n_my_edi_submission_uid
-#: model:ir.model.fields,field_description:l10n_my_edi.field_account_payment__l10n_my_edi_submission_uid
 msgid "Submission UID"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model:ir.model,name:l10n_my_edi.model_account_tax
-msgid "Tax"
 msgstr ""
 
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_exemption_reason
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__l10n_my_edi_exemption_reason
-#: model:ir.model.fields,field_description:l10n_my_edi.field_account_payment__l10n_my_edi_exemption_reason
 msgid "Tax Exemption Reason"
 msgstr ""
 
@@ -883,7 +866,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The MyInvois platform returned an \"Invalid\" status for this invoice for "
 "reason: %(reason)s"
@@ -897,7 +879,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The TIN number of the supplier in the invoices does not match with the one provided at the time of registering for the e-invoice service.\n"
 "If the TIN of the supplier's record changed after that, you will need to archive your EDI Proxy User and re-register.\n"
@@ -905,17 +886,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_my_edi
-#: model:ir.model.fields,help:l10n_my_edi.field_res_config_settings__l10n_my_edi_company_vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-
-#. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The api request limit has been reached. Please wait until "
 "%(limit_reset_datetime)s to try again."
@@ -924,7 +896,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "The document provided in the request does not exist."
 msgstr ""
 
@@ -935,8 +906,16 @@ msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
+#: code:addons/l10n_my_edi/models/account_move_send.py:0
+msgid ""
+"The following invoice(s) are waiting for validation from MyInvois: "
+"%(move_name_list)s.Their status will be updated later on, or you can do it "
+"manually from the form view."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
 "The following line must have their item classification code set: "
 "%(line_name)s"
@@ -945,21 +924,18 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid "The following partner's city is missing: %(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid "The following partner's country is missing: %(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
 "The following partner's identification type or number is missing: "
 "%(partner_name)s"
@@ -968,14 +944,12 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid "The following partner's phone number is missing: %(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
 "The following partner's phone number should follow the E.164 format: "
 "%(partner_name)s"
@@ -984,7 +958,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
 "The following partner's should have at most two SST numbers, separated by a "
 "semicolon : %(partner_name)s"
@@ -993,21 +966,18 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid "The following partner's state is missing: %(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid "The following partner's street is missing: %(partner_name)s"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
 "The following product must have their item classification code set: "
 "%(product_name)s"
@@ -1025,7 +995,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
 "The industrial classification must be defined on company: %(company_name)s"
 msgstr ""
@@ -1033,7 +1002,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The invoice has been canceled on MyInvois, But the cancellation in Odoo failed with error: %(error)s\n"
 "Please resolve the problem manually, and then cancel the invoice."
@@ -1042,7 +1010,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The invoice has been sent to MyInvois with uuid \"%(uuid)s\" and submission id \"%(submission_id)s\".\n"
 "Validation results will be available shortly."
@@ -1059,29 +1026,24 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "The search params are invalid."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "The submission is too large, try to send fewer invoices at once."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "The validation failed with the following errors:"
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "This document has already been submitted and was deemed invalid.\n"
 "Please correct the document based on the previous error, or wait before retrying."
@@ -1090,9 +1052,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#: code:addons/l10n_my_edi/models/account_move.py:0
-#: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "This invoice has been %(status)s for reason: %(reason)s"
 msgstr ""
 
@@ -1104,14 +1063,12 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_submission_uid
 #: model:ir.model.fields,help:l10n_my_edi.field_account_move__l10n_my_edi_submission_uid
-#: model:ir.model.fields,help:l10n_my_edi.field_account_payment__l10n_my_edi_submission_uid
 msgid "Unique ID assigned to a batch of invoices when sent to MyInvois."
 msgstr ""
 
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_external_uuid
 #: model:ir.model.fields,help:l10n_my_edi.field_account_move__l10n_my_edi_external_uuid
-#: model:ir.model.fields,help:l10n_my_edi.field_account_payment__l10n_my_edi_external_uuid
 msgid "Unique ID assigned to a specific invoice when sent to MyInvois."
 msgstr ""
 
@@ -1148,15 +1105,19 @@ msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
+#: code:addons/l10n_my_edi/models/account_move_send.py:0
+msgid "View Invoice(s)"
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "You can only update the status of invoices in the valid state."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
 "You cannot send a debit / credit note for invoice %(invoice_number)s as it "
 "has not yet been sent to MyInvois."
@@ -1165,7 +1126,6 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "You cannot update this invoice, has it has been referenced by a debit or credit note.\n"
 "If you still want to update it, you must first update the debit/credit note."
@@ -1174,30 +1134,42 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_move.py:0
-#, python-format
 msgid "You do not have the permission to update this invoice."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
+#: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
+msgid ""
+"You must have a commercial partner named 'General Public' with a VAT number "
+"set to 'EI00000000010' in order to proceed."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
 #: code:addons/l10n_my_edi/wizard/l10n_my_edi_status_update_wizard.py:0
-#, python-format
 msgid "You must provide a reason for updating the document."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
 msgid ""
-"You must set a Tax Exemption Reason on the invoice : %(invoice_name)s as "
-"some taxes have the type 'Tax exemption'."
+"You must set a Tax Exemption Reason on each tax exempt taxes in order to use"
+" them in a Myinvois Document."
 msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
-#, python-format
+msgid ""
+"You must set a Tax Exemption Reason on the invoice : %(invoice_name)s as "
+"some taxes have the type 'Tax exemption' without a reason set."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
 msgid ""
 "You must set a tax on the line : %(line_name)s.\n"
 "If taxes are not applicable, please set a 0%% tax with a tax type 'Not Applicable'."

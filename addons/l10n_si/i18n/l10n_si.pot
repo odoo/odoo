@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-26 09:22+0000\n"
-"PO-Revision-Date: 2024-06-26 09:22+0000\n"
+"POT-Creation-Date: 2025-11-03 15:46+0000\n"
+"PO-Revision-Date: 2025-11-03 15:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -362,7 +362,7 @@ msgid "35. Cost of other fixed assets"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_dobave_3_svet_s_pravico_do_odb_ddv
+#: model:account.report.line,name:l10n_si.tax_report_ir_3rd_world_deliveries_with_right_withdrawal
 msgid "3rd world deliveries with right of withdrawal VAT"
 msgstr ""
 
@@ -442,17 +442,21 @@ msgstr ""
 #: model:account.report.column,name:l10n_si.tax_report_ir_balance
 #: model:account.report.column,name:l10n_si.tax_report_pd_balance
 #: model:account.report.column,name:l10n_si.tax_report_pr_balance
-#: model:account.report.column,name:l10n_si.tax_report_rp_balance
 msgid "Balance"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_pr_odbitni_ddv
+#: model:ir.model.fields,field_description:l10n_si.field_account_journal__invoice_reference_model
+msgid "Communication Standard"
+msgstr ""
+
+#. module: l10n_si
+#: model:account.report.line,name:l10n_si.tax_report_pr_deductible_vat
 msgid "Deductible VAT"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_oproscen_promet_eu
+#: model:account.report.line,name:l10n_si.tax_report_ir_exempt_turnover_eu
 msgid "EXEMPTED TURNOVER - EU"
 msgstr ""
 
@@ -477,78 +481,90 @@ msgid "IV. VAT deduction"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_pr_neodbitni_ddv
+#: model:ir.model,name:l10n_si.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_si
+#: model:ir.model,name:l10n_si.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_si
+#: model:account.report.line,name:l10n_si.tax_report_pr_non_deductible_vat
 msgid "Non-deductible VAT"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_obrnjeno_davcno_breme_osnova
+#: model:account.report,name:l10n_si.tax_report_ir
+msgid "Payable VAT (IR)"
+msgstr ""
+
+#. module: l10n_si
+#: model:account.report.line,name:l10n_si.tax_report_ir_reverse_charge_base
 msgid "REVERSE CHARGE - BASE"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report,name:l10n_si.tax_report_ir
-msgid "Report IR"
-msgstr ""
-
-#. module: l10n_si
-#: model:account.report,name:l10n_si.tax_report_pd
-msgid "Report PD-O"
-msgstr ""
-
-#. module: l10n_si
 #: model:account.report,name:l10n_si.tax_report_pr
-msgid "Report PR"
+msgid "Receivable VAT (PR) "
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report,name:l10n_si.tax_report_rp
-msgid "Report rp_O"
-msgstr ""
-
-#. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_samoobdavcitev_3_svet_uvoz
+#: model:account.report.line,name:l10n_si.tax_report_ir_self_taxation_3rd_world_imports
 msgid "Self-taxation - 3rd world imports"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_samoobdavcitev_eu
+#: model:account.report.line,name:l10n_si.tax_report_ir_self_taxation_eu
 msgid "Self-taxation - EU"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_samoobdavcitev_slo_na_podlagi_76_a_clena
+#: model:account.report.line,name:l10n_si.tax_report_ir_self_taxation_slo_under_article_761
 msgid "Self-taxation - SLO under Article 76a"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_obdavcen_promet
+#: model:account.report,name:l10n_si.tax_report_pd
+msgid "Slovenia VAT RC (PD-O)"
+msgstr ""
+
+#. module: l10n_si
+#: model:ir.model.fields.selection,name:l10n_si.selection__account_journal__invoice_reference_model__si
+msgid "Slovenian 01 (SI01 25-1235-8403)"
+msgstr ""
+
+#. module: l10n_si
+#: model:account.report.line,name:l10n_si.tax_report_ir_taxed_turnover
 msgid "TAXED TURNOVER"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report,name:l10n_si.tax_report
-msgid "Tax Report"
-msgstr ""
-
-#. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_ir_promet_v_sloveniji
+#: model:account.report.line,name:l10n_si.tax_report_ir_transport_slovenia
 msgid "Transport in Slovenia"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_pr_vrednost_oproscene_nabave_osnova
+#: model:account.report,name:l10n_si.tax_report
+msgid "VAT Return (DDV-O)"
+msgstr ""
+
+#. module: l10n_si
+#: model:account.report.line,name:l10n_si.tax_report_pr_value_exempt_purchases_base
 msgid "Value of exempt purchases - base"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_pr_vrednost_obdavcenih_nabav_osnova
+#: model:account.report.line,name:l10n_si.tax_report_pr_value_taxes_purchases_base
 msgid "Value of taxed purchases - base"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_rp_a3
-msgid "a3. Value of supplies of goods"
+#: model:ir.model.fields,help:l10n_si.field_account_journal__invoice_reference_model
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
 msgstr ""
 
 #. module: l10n_si
@@ -557,21 +573,26 @@ msgid "a3. Value of supplies of goods and services"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_rp_a4
-msgid "a4. Value of supplies of goods under customs procedures 42 and 63"
+#: model:account.account.tag,name:l10n_si.account_account_tag_l10n_si_rp_A3
+msgid "rp_a3"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_rp_a5
-msgid "a5. Value of triangular supplies of goods"
+#: model:account.account.tag,name:l10n_si.account_account_tag_l10n_si_rp_A4
+msgid "rp_a4"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_rp_a6
-msgid "a6. Value of services provided"
+#: model:account.account.tag,name:l10n_si.account_account_tag_l10n_si_rp_A5
+msgid "rp_a5"
 msgstr ""
 
 #. module: l10n_si
-#: model:account.report.line,name:l10n_si.tax_report_rp_a7
-msgid "a7. Value of deliveries of goods after storage on call"
+#: model:account.account.tag,name:l10n_si.account_account_tag_l10n_si_rp_A6
+msgid "rp_a6"
+msgstr ""
+
+#. module: l10n_si
+#: model:account.account.tag,name:l10n_si.account_account_tag_l10n_si_rp_A7
+msgid "rp_a7"
 msgstr ""

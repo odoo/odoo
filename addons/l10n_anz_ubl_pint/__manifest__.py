@@ -9,5 +9,6 @@
     """,
     'depends': ['account_edi_ubl_cii_tax_extension'],
     'installable': True,
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3'
 }

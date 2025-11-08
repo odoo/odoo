@@ -41,6 +41,9 @@ class StockPicking(models.Model):
                 ).stock_valuation_layer_ids
             else:
                 subcontract_svls = move.move_orig_ids.stock_valuation_layer_ids
+            # the subcontract_svls should not have a remaining_value or remaining_qty because they are part of a dropship
+            subcontract_svls.remaining_value = 0
+            subcontract_svls.remaining_qty = 0
             subcontract_value = sum(subcontract_svls.mapped('value'))
             dropship_value = abs(sum(dropship_svls.mapped('value')))
             diff = subcontract_value - dropship_value

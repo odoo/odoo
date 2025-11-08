@@ -45,6 +45,8 @@ class Vote(models.Model):
         if not self.env.is_admin():
             for vals in vals_list:
                 vals.pop('user_id', None)
+                vals.pop('recipient_id', None)
+            self = self.with_context({k: v for k, v in self.env.context.items() if k not in ['default_user_id', 'default_recipient_id']})  # noqa: PLW0642
 
         votes = super(Vote, self).create(vals_list)
 
@@ -60,6 +62,7 @@ class Vote(models.Model):
         # can't modify owner of a vote
         if not self.env.is_admin():
             values.pop('user_id', None)
+            values.pop('recipient_id', None)
 
         for vote in self:
             vote._check_general_rights(values)

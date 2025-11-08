@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 09:14+0000\n"
-"PO-Revision-Date: 2024-02-26 09:14+0000\n"
+"POT-Creation-Date: 2025-11-03 15:44+0000\n"
+"PO-Revision-Date: 2025-11-03 15:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/overrides/components/pos_receipt.xml:0
-msgid "--- HSN Summary ---"
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.res_config_settings_view_form_l10n_in_pos_inherit
+msgid ""
+"<span>Please note that the kiosk for INR currency only works with Razorpay "
+"terminal</span>"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -34,9 +35,20 @@ msgid "CGST"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-python
-#: code:addons/l10n_in_pos/models/pos_config.py:0
-msgid "Go to Company configuration"
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/company_state_dialog/company_state_dialog.xml:0
+msgid "Company address is missing"
+msgstr ""
+
+#. module: l10n_in_pos
+#: model:ir.model,name:l10n_in_pos.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/company_state_dialog/company_state_dialog.xml:0
+msgid "Go to company configuration"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -52,6 +64,12 @@ msgid "HSN Code:"
 msgstr ""
 
 #. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/overrides/components/pos_receipt.xml:0
+msgid "HSN Summary"
+msgstr ""
+
+#. module: l10n_in_pos
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_line__l10n_in_hsn_code
 msgid "HSN/SAC Code"
 msgstr ""
@@ -63,14 +81,20 @@ msgid "IGST"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/overrides/components/pos_receipt.xml:0
-msgid "Phone:"
+#: model:ir.model,name:l10n_in_pos.model_account_move
+msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_in_pos
-#: model:ir.model,name:l10n_in_pos.model_pos_config
-msgid "Point of Sale Configuration"
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/company_state_dialog/company_state_dialog.xml:0
+msgid "Ok"
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/overrides/components/pos_receipt.xml:0
+msgid "Phone:"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -84,8 +108,8 @@ msgid "Point of Sale Orders"
 msgstr ""
 
 #. module: l10n_in_pos
-#: model:ir.model,name:l10n_in_pos.model_pos_session
-msgid "Point of Sale Session"
+#: model:ir.model,name:l10n_in_pos.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -101,9 +125,19 @@ msgid "SGST"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-python
-#: code:addons/l10n_in_pos/models/pos_config.py:0
-msgid ""
-"Your company %s needs to have a correct address in order to open the session.\n"
-"Set the address of your company (Don't forget the State field)"
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/company_state_dialog/company_state_dialog.xml:0
+msgid "Set the address of your company (Don't forget the State field)"
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/company_state_dialog/company_state_dialog.xml:0
+msgid "Your company"
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/company_state_dialog/company_state_dialog.xml:0
+msgid "needs to have a correct address in order validate the invoice."
 msgstr ""

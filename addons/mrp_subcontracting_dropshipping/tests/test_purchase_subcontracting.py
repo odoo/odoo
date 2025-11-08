@@ -492,6 +492,53 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         delivery = self.env["stock.move"].search([("product_id", "=", self.comp1.id)]).picking_id
         self.assertEqual(delivery.partner_id, p1)
 
+    def test_mrp_subcontracting_dropshipping_svl(self):
+        """Check that svls created from a subcontracted dropshipped product delivery
+        do not a have a remainging value  and quantity (just like svls created from a
+        dropshipped product delivery would not have a remaining value and quantity)
+        """
+
+        dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')])
+        self.finished.write({'route_ids': [(4, dropship_route.id)]})
+        self.finished.standard_price = 5
+        self.comp1.type = "consu"
+        self.comp2.type = "consu"
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse For subcontract',
+            'code': 'WFS'
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.finished.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Toto'
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = partner
+        so_form.warehouse_id = warehouse
+        with so_form.order_line.new() as line:
+            line.product_id = self.finished
+            line.product_uom_qty = 1
+        so = so_form.save()
+        so.action_confirm()
+
+        po = self.env['purchase.order'].search([('origin', 'ilike', so.name)])
+        self.assertTrue(po)
+        po.button_approve()
+
+        picking_dropshipped = po.picking_ids
+        picking_dropshipped.button_validate()
+        subcontracted_svl = self.env['mrp.production'].search([('incoming_picking', '=', picking_dropshipped.id)]).move_finished_ids.stock_valuation_layer_ids
+        dropship_svl = picking_dropshipped.move_ids.stock_valuation_layer_ids
+        self.assertRecordValues(dropship_svl, [
+            {'product_id': self.finished.id, 'value': -5.0, 'unit_cost': 5.0, 'quantity': -1.0, 'remaining_qty': 0, 'remaining_value': 0},
+        ])
+        self.assertRecordValues(subcontracted_svl, [
+            {'product_id': self.finished.id, 'value': 5.0, 'unit_cost': 5.0, 'quantity': 1.0, 'remaining_qty': 0, 'remaining_value': 0},
+        ])
+
 
 class TestSubcontractingDropshippingPortal(TestSubcontractingPortal):
 

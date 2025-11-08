@@ -55,7 +55,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "click Send an Email",
-        trigger: "span:contains(/^Send an email$/)",
+        trigger: "span:text(Send an email)",
         run: "click",
     },
     {
@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "check the mail is sent, grab the recovery link, and logout",
-        trigger: ".o-mail-Message-body a:contains(/^Resume order$/)",
+        trigger: ".o-mail-Message-body a:text(Resume order)",
         run: function () {
             var link = queryOne('.o-mail-Message-body a:contains("Resume order")').getAttribute('href');
             browser.localStorage.setItem(recoveryLinkKey, link);

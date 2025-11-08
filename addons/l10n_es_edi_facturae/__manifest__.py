@@ -40,4 +40,5 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
     'installable': True,
     'auto_install': ['l10n_es'],
     'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
 }
