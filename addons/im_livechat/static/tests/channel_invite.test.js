@@ -51,7 +51,7 @@ test("Can invite a partner to a livechat channel", async () => {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });
     await contains(
-        ".o-discuss-ChannelInvitation-selectable:contains('James\nEnglish\nFrench\nGerman\npricing\nevents')"
+        ".o-discuss-ChannelInvitation-selectable:contains('James English French German pricing events')"
     );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {

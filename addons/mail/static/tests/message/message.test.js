@@ -145,7 +145,7 @@ test.skip("Can add reaction to a message on an ipad", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click("button:contains('Add a Reaction')");
     await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
-    await contains(".o-mail-MessageReaction:contains('😀\n1')");
+    await contains(".o-mail-MessageReaction:contains('😀 1')");
 });
 
 test("Editing message keeps the mentioned channels", async () => {
