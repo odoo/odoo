@@ -18,7 +18,7 @@ class MakeInvoice(models.TransientModel):
             repairs = self.env['repair.order'].browse(self._context['active_ids'])
             new_invoice = repairs._create_invoices(group=wizard.group)
 
-            # We have to udpate the state of the given repairs, otherwise they remain 'to be invoiced'.
+            # We have to update the state of the given repairs, otherwise they remain 'to be invoiced'.
             # Note that this will trigger another call to the method '_create_invoices',
             # but that second call will not do anything, since the repairs are already invoiced.
             repairs.action_repair_invoice_create()
