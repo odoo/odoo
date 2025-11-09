@@ -56,3 +56,26 @@ class TestName(TransactionCase):
         res_ids = [r[0] for r in res]
         self.assertIn(template_dyn.id, res_ids)
         self.assertIn(product.product_tmpl_id.id, res_ids)
+
+    def test_search_vendor_code_other_product_same_code(self):
+        main_product = self.env['product.product'].create({
+            'name': 'Main Product',
+            'default_code': 'other ref',
+        })
+        other_product = self.product
+        other_product.default_code = '1234567'
+        other_product.name = 'Other Product'
+        partner = self.env['res.partner'].create({'name': 'Wood Corner'})
+        self.env['product.supplierinfo'].create([
+            {
+                'partner_id': partner.id,
+                'product_tmpl_id': main_product.product_tmpl_id.id,
+                'delay': 3,
+                'min_qty': 0,
+                'price': 750,
+                'product_code': '1234567'
+            }
+        ])
+        search_products = self.env['product.product'].with_context(partner_id=partner.id).name_search('1234567')
+        self.assertEqual(search_products[0], (other_product.id, "[1234567] Other Product"))
+        self.assertEqual(search_products[1], (main_product.id, "[1234567] Main Product"))
