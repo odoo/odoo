@@ -95,37 +95,21 @@ class GamificationBadge(models.Model):
             'granted_users_count': 0,
             'unique_owner_ids': [],
         }
-        if not self.ids:
+        if not self:
             self.update(defaults)
             return
 
-        Users = self.env["res.users"]
-        query = Users._search([])
-        badge_alias = query.join("res_users", "id", "gamification_badge_user", "user_id", "badges")
-
-        rows = self.env.execute_query(SQL(
-            """
-              SELECT %(badge_alias)s.badge_id, count(res_users.id) as stat_count,
-                     count(distinct(res_users.id)) as stat_count_distinct,
-                     array_agg(distinct(res_users.id)) as unique_owner_ids
-                FROM %(from_clause)s
-               WHERE %(where_clause)s
-                 AND %(badge_alias)s.badge_id IN %(ids)s
-            GROUP BY %(badge_alias)s.badge_id
-            """,
-            from_clause=query.from_clause,
-            where_clause=query.where_clause or SQL("TRUE"),
-            badge_alias=SQL.identifier(badge_alias),
-            ids=tuple(self.ids),
-        ))
-
+        rows = self.env['gamification.badge.user']._read_group([
+            ('badge_id', 'in', self.ids),
+            ('user_id', 'any', []),
+        ], ['badge_id'], ['user_id:count', 'user_id:recordset'])
         mapping = {
-            badge_id: {
+            badge.id: {
                 'granted_count': count,
-                'granted_users_count': distinct_count,
-                'unique_owner_ids': owner_ids,
+                'granted_users_count': len(owners),
+                'unique_owner_ids': owners.ids,
             }
-            for (badge_id, count, distinct_count, owner_ids) in rows
+            for (badge, count, owners) in rows
         }
         for badge in self:
             badge.update(mapping.get(badge.id, defaults))
