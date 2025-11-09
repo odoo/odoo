@@ -5,3 +5,6 @@ export const BASE_ONLY_BG_IMAGE_SELECTOR = "footer .oe_structure > *:not(.o_foot
 
 export const CARD_DISABLE_WIDTH_APPLY_TO = ":scope > .s_card:not(.s_carousel_cards_card)";
 export const WEBSITE_BG_APPLY_TO = ":scope > .s_carousel_cards_card";
+
+export const QUOTE_CAROUSEL_SLIDE_SELECTOR =
+    "section[data-snippet='s_quotes_carousel'] .row > div, section[data-snippet='s_quotes_carousel_minimal'] .row > div";

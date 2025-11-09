@@ -13,7 +13,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Control" level="1">
+    <BuilderRow t-if="!this.state?.shouldHide" label.translate="Control" level="1">
         <BuilderSelect>
             <BuilderSelectItem classAction="''">Indicators Inside</BuilderSelectItem>
             <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators Outside</BuilderSelectItem>
@@ -29,7 +29,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Indicators" applyTo="'.carousel-indicators'" level="1">
+    <BuilderRow t-if="!this.state?.shouldHide" label.translate="Indicators" applyTo="'.carousel-indicators'" level="1">
         <BuilderSelect>
             <BuilderSelectItem classAction="''">Bars</BuilderSelectItem>
             <BuilderSelectItem classAction="'s_carousel_indicators_dots'">Dots</BuilderSelectItem>

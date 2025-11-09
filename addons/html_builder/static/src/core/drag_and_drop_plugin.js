@@ -8,6 +8,7 @@ import { rowSize } from "@html_builder/utils/grid_layout_utils";
 import { isEditable, isVisible } from "@html_builder/utils/utils";
 import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { quoteCarouselSelector } from "@html_builder/plugins/utils";
 
 /**
  * @typedef {{
@@ -465,6 +466,14 @@ export class DragAndDropPlugin extends Plugin {
 
                 dragAndDropResolve();
                 this.dependencies.builderOptions.updateContainers(this.overlayTarget);
+                // Update index of each quote carousel slide after reordering.
+                const quoteCarouselEl = this.overlayTarget.closest(quoteCarouselSelector);
+                if (quoteCarouselEl) {
+                    const carouselSlideEls = quoteCarouselEl.querySelectorAll(".carousel-slide");
+                    carouselSlideEls.forEach((carouselSlideEl, index) => {
+                        carouselSlideEl.dataset.index = index;
+                    });
+                }
             },
         };
 
