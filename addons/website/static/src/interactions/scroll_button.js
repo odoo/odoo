@@ -20,6 +20,4 @@ export class ScrollButton extends AnchorSlide {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.scroll_button", ScrollButton);
+registry.category("public.interactions").add("website.scroll_button", ScrollButton);

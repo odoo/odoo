@@ -234,3 +234,16 @@ export function back() {
         run: "click",
     };
 }
+export function checkCameraIsOpen() {
+    return {
+        content: "Verify that the camera view is visible in the left pane.",
+        trigger: ".ticket-screen .leftpane .o_crop_container",
+    };
+}
+
+export function noOrderIsThere() {
+    return {
+        content: "No orders should be visible on the Ticket Screen",
+        trigger: ".ticket-screen:not(:has(.order-row))",
+    };
+}

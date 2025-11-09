@@ -76,6 +76,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/others/embedded_component_utils.js',
             'html_editor/static/src/others/embedded_components/core/**/*',
             'html_editor/static/src/utils/**/*',
+            'html_editor/static/src/others/qweb_plugin.scss',
         ],
         "web.assets_web_dark": [
             'html_editor/static/src/**/*.dark.scss',

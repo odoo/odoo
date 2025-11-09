@@ -13,8 +13,8 @@
             </t>
             <textarea t-att-rows="props.rows" class="form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder" t-on-keydown="onKeydown" />
             <t t-set-slot="footer">
-                <button class="btn btn-primary btn-lg lh-lg o-default-button" t-on-click="confirm">Apply</button>
-                <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="close">Discard</button>
+                <button class="btn btn-primary btn-lg lh-lg" t-on-click="confirm">Apply</button>
+                <button class="btn btn-secondary btn-lg lh-lg" t-on-click="close">Discard</button>
             </t>
         </Dialog>
     </t>

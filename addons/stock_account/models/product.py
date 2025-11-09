@@ -135,7 +135,7 @@ class ProductProduct(models.Model):
              "to the totaled value of the product's valuation layers")
 
     @api.depends_context('to_date', 'company')
-    @api.depends('cost_method', 'stock_move_ids.value')
+    @api.depends('cost_method', 'stock_move_ids.value', 'standard_price')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
@@ -143,7 +143,9 @@ class ProductProduct(models.Model):
 
         for product in self:
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
-            qty_available = product.sudo(False).with_context(at_date=at_date).qty_available
+            if at_date:
+                product = product.with_context(at_date=at_date)
+            qty_available = product.sudo(False)._with_valuation_context().qty_available
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
             elif product.cost_method == 'standard':
@@ -187,14 +189,16 @@ class ProductProduct(models.Model):
             })
         return
 
-    def _get_standard_price_at_date(self, date):
+    def _get_standard_price_at_date(self, date=None):
         self.ensure_one()
-        product_value = self.env['product.value'].search([
+        product_value_domain = Domain([
             ('product_id', '=', self.id),
-            ('date', '<=', date),
             ('move_id', '=', False),
             ('lot_id', '=', False),
-        ], limit=1, order="date DESC, id DESC")
+        ])
+        if date:
+            product_value_domain &= Domain([('date', '<=', date)])
+        product_value = self.env['product.value'].search(product_value_domain, limit=1, order="date DESC, id DESC")
         if not product_value:
             # If there is no history then get the first value
             product_value = self.env['product.value'].search([
@@ -202,7 +206,17 @@ class ProductProduct(models.Model):
                 ('move_id', '=', False),
                 ('lot_id', '=', False),
             ], limit=1, order="date, id")
-        return product_value.value if product_value else self.standard_price
+        if self.cost_method != 'fifo':
+            return product_value.value if product_value else self.standard_price
+        last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id)])
+        if date:
+            last_in_domain &= Domain([('date', '<=', date)])
+        last_in = self.env['stock.move'].search(last_in_domain, order='date desc, id desc', limit=1)
+        if not product_value and not last_in:
+            return self.standard_price
+        if (product_value and last_in and product_value.date > last_in.date) or not last_in:
+            return product_value.value
+        return last_in._get_value(at_date=date) / last_in._get_valued_qty()
 
     def _get_value_from_lots(self):
         lots = self.env['stock.lot'].search([
@@ -210,6 +224,10 @@ class ProductProduct(models.Model):
             ('product_qty', '!=', 0),
         ])
         return sum(lots.mapped('total_value'))
+
+    def _with_valuation_context(self):
+        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        return self.with_context(location=valued_locations.ids)
 
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
@@ -266,8 +284,12 @@ class ProductProduct(models.Model):
         moves = moves.sorted('date, id')
 
         # If the last value was defined by the user just return it
+        if product_values and not moves_in:
+            quantity = self._with_valuation_context().with_context(to_date=at_date).qty_available
+            last_value = product_values[-1]
+            return last_value.value, last_value.value * quantity
         if product_values and moves_in and product_values[-1].date > moves_in[-1].date:
-            quantity = self.with_context(to_date=at_date).qty_available
+            quantity = self._with_valuation_context().with_context(to_date=at_date).qty_available
             if lot:
                 quantity = lot.product_qty
             avco_value = product_values[-1].value
@@ -275,7 +297,7 @@ class ProductProduct(models.Model):
 
         # TODO Only browse from last product_value
         for move in moves:
-            if product_values and move.date > product_values[0].date:
+            while product_values and move.date >= product_values[0].date:
                 product_value = product_values[0]
                 product_values = product_values[1:]
                 avco_value = product_value.value
@@ -312,6 +334,10 @@ class ProductProduct(models.Model):
     def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
         self.ensure_one()
+        if self.uom_id.compare(quantity, 0) <= 0:
+            if at_date:
+                return quantity * self._get_standard_price_at_date(at_date)
+            return quantity * self.standard_price
         external_location = location and location.is_valued_external
 
         fifo_cost = 0
@@ -321,16 +347,17 @@ class ProductProduct(models.Model):
         while quantity > 0 and fifo_stack:
             move = fifo_stack.pop(0)
             last_move = move
+            move_value = move.value
+            if at_date:
+                move_value = move._get_value(at_date=at_date)
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
-                in_value = move.value * in_qty / valued_qty
+                in_value = move_value * in_qty / valued_qty
                 qty_on_first_move = 0
             else:
                 in_qty = move._get_valued_qty()
-                in_value = move.value
-            if at_date and not external_location:
-                in_value = move._get_value(at_date=at_date)
+                in_value = move_value
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
                 in_qty = quantity
@@ -354,7 +381,7 @@ class ProductProduct(models.Model):
         if lot:
             fifo_stack_size = lot.product_qty
         else:
-            fifo_stack_size = int(self.with_context(to_date=at_date).qty_available)
+            fifo_stack_size = int(self._with_valuation_context().with_context(to_date=at_date).qty_available)
         if fifo_stack_size <= 0:
             return fifo_stack, 0
 
@@ -402,12 +429,12 @@ class ProductProduct(models.Model):
         for product in self:
             if product.cost_method == 'standard':
                 continue
-            elif product.cost_method == 'fifo':
-                fifo_price = product.total_value / product.qty_available if product.qty_available else 0
-                if fifo_price != 0:
-                    product.with_context(disable_auto_revaluation=True).standard_price = fifo_price
-                elif last_in := self.env['stock.move'].search([('is_in', '=', True), ('product_id', '=', product.id)], order='date desc, id desc', limit=1):
-                    product.with_context(disable_auto_revaluation=True).standard_price = last_in._get_price_unit()
+            if product.cost_method == 'fifo':
+                qty_available = product._with_valuation_context().qty_available
+                if product.uom_id.compare(qty_available, 0) > 0:
+                    product.with_context(disable_auto_revaluation=True).standard_price = product.total_value / qty_available
+                else:
+                    product.with_context(disable_auto_revaluation=True).standard_price = product._get_standard_price_at_date()
                 continue
             new_standard_price = product._run_avco()[0]
             if new_standard_price:

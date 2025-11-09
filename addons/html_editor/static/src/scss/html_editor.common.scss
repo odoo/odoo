@@ -569,6 +569,10 @@ pre {
                 }
             }
         }
+
+        .btn-close {
+            filter: unset;
+        }
     }
 }
 @for $index from 1 through length($o-color-combinations) {
@@ -676,6 +680,12 @@ pre {
                     border-color: $-btn-primary-color;
                 }
             }
+
+            .btn-close {
+                @if (lightness($-bg-color) < 50) {
+                    @include btn-close-white();
+                }
+            }
         }
     }
 }
@@ -724,7 +734,7 @@ pre {
 
     &.o_bg_img_opt_repeat {
         background-size: auto;
-        background-repeat: repeat;
+        background-repeat: repeat !important;
     }
     &.o_bg_img_center {
         background-position: center;

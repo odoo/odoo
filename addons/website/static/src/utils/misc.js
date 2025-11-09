@@ -13,7 +13,7 @@ export class EventBus extends EventTarget {
 export function unhideConditionalElements() {
     // Create CSS rules in a dedicated style tag according to the snippet
     // visibility option's computed ones (saved as data attributes).
-    const styleEl = document.createElement('style');
+    const styleEl = document.createElement("style");
     styleEl.id = "conditional_visibility";
     document.head.appendChild(styleEl);
     const conditionalEls = document.querySelectorAll('[data-visibility="conditional"]');
@@ -24,22 +24,22 @@ export function unhideConditionalElements() {
 
     // Now remove the classes that makes them always invisible
     for (const conditionalEl of conditionalEls) {
-        conditionalEl.classList.remove('o_conditional_hidden');
+        conditionalEl.classList.remove("o_conditional_hidden");
     }
 }
 
 export function setUtmsHtmlDataset() {
     const htmlEl = document.documentElement;
     const cookieNamesToDataNames = {
-        'utm_source': 'utmSource',
-        'utm_medium': 'utmMedium',
-        'utm_campaign': 'utmCampaign',
+        utm_source: "utmSource",
+        utm_medium: "utmMedium",
+        utm_campaign: "utmCampaign",
     };
     for (const [name, dsName] of Object.entries(cookieNamesToDataNames)) {
         const cookie = cookieManager.get(`odoo_${name}`);
         if (cookie) {
             // Remove leading and trailing " and '
-            htmlEl.dataset[dsName] = cookie.replace(/(^["']|["']$)/g, '');
+            htmlEl.dataset[dsName] = cookie.replace(/(^["']|["']$)/g, "");
         }
     }
 }

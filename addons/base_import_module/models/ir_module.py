@@ -7,6 +7,7 @@ import lxml
 import os
 import pathlib
 import sys
+import traceback
 import zipfile
 from babel.messages import extract
 from collections import defaultdict
@@ -19,7 +20,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
-from odoo.tools import SQL, convert_file, exception_to_unicode
+from odoo.tools import SQL, convert_file
 from odoo.tools import file_open, file_path, file_open_temporary_directory, ormcache
 from odoo.tools.misc import OrderedSet, topological_sort
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
@@ -382,7 +383,7 @@ class IrModuleModule(models.Model):
                     except Exception as e:
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
-                            module=mod_name, error_message=exception_to_unicode(e),
+                            module=mod_name, error_message=traceback.format_exc(),
                         )) from e
         return "", module_names
 

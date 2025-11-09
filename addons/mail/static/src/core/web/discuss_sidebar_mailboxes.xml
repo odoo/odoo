@@ -36,7 +36,7 @@
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
         >
-            <ThreadIcon className="'bg-inherit opacity-75 ' + (store.discuss.isSidebarCompact ? '' : 'mx-2 pt-1')" thread="mailbox" size="store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
+            <ThreadIcon className="'bg-inherit opacity-75 ' + (store.discuss.isSidebarCompact ? '' : 'o-ms-1_5 me-2 pt-1')" thread="mailbox" size="store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
             <t t-if="!store.discuss.isSidebarCompact">
                 <div class="me-2 text-truncate small opacity-75 opacity-100-hover" t-esc="mailbox.display_name"/>
                 <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>

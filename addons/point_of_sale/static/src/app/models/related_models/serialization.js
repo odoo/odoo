@@ -1,4 +1,4 @@
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { X2MANY_TYPES, DATE_TIME_TYPE } from "./utils";
 
 const deepSerialization = (
@@ -158,7 +158,10 @@ const deepSerialization = (
             continue;
         }
         if (DATE_TIME_TYPE.has(field.type) && typeof record[fieldName] === "object") {
-            result[fieldName] = serializeDateTime(record[fieldName]);
+            result[fieldName] =
+                field.type === "datetime"
+                    ? serializeDateTime(record[fieldName])
+                    : serializeDate(record[fieldName]);
             continue;
         }
         if (fieldName === "id") {

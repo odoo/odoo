@@ -102,9 +102,9 @@ export class MegaMenuDropdown extends Interaction {
     onTriggerMegaMenu(ev, currentTargetEl) {
         // Hoverable menus are clicked in mobile view
         if (
-            this.el.classList.contains("o_hoverable_dropdown")
-            && !currentTargetEl.closest(".o_header_mobile")
-            && ev.type !== "keyup"
+            this.el.classList.contains("o_hoverable_dropdown") &&
+            !currentTargetEl.closest(".o_header_mobile") &&
+            ev.type !== "keyup"
         ) {
             return;
         }
@@ -118,8 +118,8 @@ export class MegaMenuDropdown extends Interaction {
     onHoverMegaMenu(ev, currentTargetEl) {
         // Hoverable menus are clicked in mobile view
         if (
-            !this.el.classList.contains("o_hoverable_dropdown")
-            || currentTargetEl.closest(".o_header_mobile")
+            !this.el.classList.contains("o_hoverable_dropdown") ||
+            currentTargetEl.closest(".o_header_mobile")
         ) {
             return;
         }
@@ -139,10 +139,8 @@ export class MegaMenuDropdown extends Interaction {
         const megaMenuToggleEls = ev.target
             .closest(".o_extra_menu_items")
             .querySelectorAll(".o_mega_menu_toggle");
-        megaMenuToggleEls.forEach(el => this.moveMegaMenu(el));
+        megaMenuToggleEls.forEach((el) => this.moveMegaMenu(el));
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.mega_menu_dropdown", MegaMenuDropdown);
+registry.category("public.interactions").add("website.mega_menu_dropdown", MegaMenuDropdown);

@@ -79,6 +79,14 @@ class WebRtcClient(Thread):
                         'time': time.time(),
                         'status': 'success',
                     })
+                elif message_type == "restart_odoo":
+                    self.send({
+                        'owner': message['session_id'],
+                        'device_identifier': helpers.get_identifier(),
+                        'time': time.time(),
+                        'status': 'success',
+                    })
+                    await self.event_loop.run_in_executor(None, helpers.odoo_restart)
 
             @channel.on("close")
             def on_close():

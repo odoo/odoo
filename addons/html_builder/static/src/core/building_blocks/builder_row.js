@@ -23,6 +23,7 @@ export class BuilderRow extends Component {
         initialExpandAnim: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
         observeCollapseContent: { type: Boolean, optional: true },
+        disabled: { type: Boolean, optional: true },
     };
     static defaultProps = { expand: false, observeCollapseContent: false };
 
@@ -64,7 +65,9 @@ export class BuilderRow extends Component {
                 const isFirstMount = !isMounted;
                 isMounted = true;
                 const contentEl = this.collapseContentRef.el;
-                if (!contentEl) return;
+                if (!contentEl) {
+                    return;
+                }
 
                 const setHeightAuto = () => {
                     contentEl.style.height = "auto";
@@ -79,7 +82,7 @@ export class BuilderRow extends Component {
                 switch (stage) {
                     case "enter-active": {
                         contentEl.style.height = contentEl.scrollHeight + "px";
-                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true});
+                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true });
                         break;
                     }
                     case "leave": {

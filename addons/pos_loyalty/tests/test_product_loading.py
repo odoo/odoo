@@ -42,9 +42,6 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
             pos_limited_loading=True,
         ).load_data(['pos.config', 'product.template'])
 
-        self.assertNotIn(new_product.product_tmpl_id.id, [product['id'] for product in data['product.template']],
-                        "Loyalty product should not be loaded in the PoS session when limited loading is enabled and program is inactive.")
-
         self.assertNotIn(new_product.id, data['pos.config'][0]['_pos_special_products_ids'],
                         "Loyalty product should not be in _pos_special_products_ids when program is inactive.")
 

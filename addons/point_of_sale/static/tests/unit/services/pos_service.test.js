@@ -8,21 +8,6 @@ import { imageUrl } from "@web/core/utils/urls";
 definePosModels();
 
 describe("pos_store.js", () => {
-    test("getProductPrice", async () => {
-        const store = await setupPosEnv();
-        const order = store.addNewOrder();
-        const product = store.models["product.template"].get(5);
-        const price = store.getProductPrice(product);
-        expect(price).toBe(3.45);
-        order.setPricelist(null);
-
-        const newPrice = store.getProductPrice(product);
-        expect(newPrice).toBe(115.0);
-
-        const formattedPrice = store.getProductPrice(product, false, true);
-        expect(formattedPrice).toBe("$\u00a0115.00");
-    });
-
     test("setTip", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store); // Should have 2 lines
@@ -209,6 +194,7 @@ describe("pos_store.js", () => {
             uuid: order.lines[0].uuid,
             name: "TEST",
             basic_name: "TEST",
+            combo_parent_uuid: undefined,
             customer_note: "Test Orderline Customer Note",
             product_id: 5,
             attribute_value_names: [],
@@ -218,12 +204,13 @@ describe("pos_store.js", () => {
             pos_categ_sequence: 1,
             display_name: "TEST",
             group: undefined,
-            isCombo: undefined,
+            isCombo: false,
         });
         expect(receiptsData[0].changes.data[1]).toEqual({
             uuid: order.lines[1].uuid,
             name: "TEST 2",
             basic_name: "TEST 2",
+            combo_parent_uuid: undefined,
             customer_note: "",
             product_id: 6,
             attribute_value_names: [],
@@ -233,8 +220,47 @@ describe("pos_store.js", () => {
             pos_categ_sequence: 2,
             display_name: "TEST 2",
             group: undefined,
-            isCombo: undefined,
+            isCombo: false,
         });
+    });
+
+    test("filterChangeByCategories", async () => {
+        const store = await setupPosEnv();
+        const allowedCategories = [1];
+
+        const productA = store.models["product.product"].get(5);
+        const productB = store.models["product.product"].get(6);
+        productA.parentPosCategIds = [1];
+        productB.parentPosCategIds = [2];
+
+        const currentOrderChange = {
+            new: [
+                { uuid: "combo-parent-uuid", isCombo: true },
+                {
+                    uuid: "combo-child-a-uuid",
+                    combo_parent_uuid: "combo-parent-uuid",
+                    product_id: productA.id,
+                    isCombo: false,
+                },
+                {
+                    uuid: "combo-child-b-uuid",
+                    combo_parent_uuid: "combo-parent-uuid",
+                    product_id: productB.id,
+                    isCombo: false,
+                },
+                { uuid: "line1", product_id: productA.id, isCombo: false },
+                { uuid: "line2", product_id: productB.id, isCombo: false },
+            ],
+            cancelled: [],
+            noteUpdate: [],
+        };
+
+        const filtered = store.filterChangeByCategories(allowedCategories, currentOrderChange);
+
+        const expectedUuids = ["combo-parent-uuid", "combo-child-a-uuid", "line1"];
+        const actualUuids = filtered.new.map((c) => c.uuid);
+
+        expect(actualUuids.sort()).toEqual(expectedUuids.sort());
     });
 
     test("deleteOrders", async () => {
@@ -242,7 +268,7 @@ describe("pos_store.js", () => {
         const order1 = await getFilledOrder(store);
         await store.syncAllOrders();
         await store.deleteOrders([order1]);
-        expect(store.models["pos.order"].getBy("uuid", order1.uuid).state).toBe("cancel");
+        expect(store.models["pos.order"].getBy("uuid", order1.uuid)).toBeEmpty();
     });
 
     test("deleteOrders multiple orders", async () => {
@@ -289,7 +315,7 @@ describe("pos_store.js", () => {
         store.selectedCategory = store.models["pos.category"].get(1);
         store.searchProductWord = "TEST";
         products = store.productsToDisplay;
-        expect(products.length).toBe(2);
+        expect(products.length).toBe(4);
         expect(products[0].id).toBe(5);
         expect(products[1].id).toBe(6);
         expect(store.selectedCategory).toBe(undefined);
@@ -307,7 +333,7 @@ describe("pos_store.js", () => {
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); //Only one group
         expect(grouped[0][0]).toBe(0);
-        expect(grouped[0][1].length).toBe(10); //10 products in same group
+        expect(grouped[0][1].length).toBe(12); //10 products in same group
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;
@@ -387,16 +413,10 @@ describe("pos_store.js", () => {
         }
 
         test("correctly cached", async () => {
-            onRpc(
-                getCompanyLogo256Url("<int:id>"),
-                async (request, { id }) => {
-                    expect.step(`Company logo ${id} fetched`);
-                    return `Company logo ${id}`;
-                },
-                {
-                    pure: true,
-                }
-            );
+            onRpc(getCompanyLogo256Url("<int:id>"), async (request, { id }) => {
+                expect.step(`Company logo ${id} fetched`);
+                return `Company logo ${id}`;
+            });
             const store = await setupPosEnv();
             const companyId = store.company.id;
             expect.verifySteps([`Company logo ${companyId} fetched`]);
@@ -406,16 +426,10 @@ describe("pos_store.js", () => {
         });
 
         test("fetch failed", async () => {
-            onRpc(
-                getCompanyLogo256Url("<int:id>"),
-                async (request, { id }) => {
-                    expect.step(`Company logo ${id} fetched`);
-                    throw new Error("Fetch failed");
-                },
-                {
-                    pure: true,
-                }
-            );
+            onRpc(getCompanyLogo256Url("<int:id>"), async (request, { id }) => {
+                expect.step(`Company logo ${id} fetched`);
+                throw new Error("Fetch failed");
+            });
             const store = await setupPosEnv();
             const companyId = store.company.id;
             expect.verifySteps([`Company logo ${companyId} fetched`]);

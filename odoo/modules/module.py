@@ -380,9 +380,15 @@ def get_module_icon(module: str) -> str:
     """ Get the path to the module's icon. Invalid module names are accepted. """
     manifest = Manifest.for_addon(module, display_warning=False)
     if manifest and 'icon' in manifest.__dict__:
+        # we have a value in the cached property
         return manifest.icon
-    try:
+    fpath = ''
+    if manifest:
+        fpath = manifest.raw_value('icon') or ''
+        fpath = fpath.lstrip('/')
+    if not fpath:
         fpath = f"{module}/static/description/icon.png"
+    try:
         tools.file_path(fpath)
         return "/" + fpath
     except FileNotFoundError:

@@ -124,7 +124,7 @@ class PurchaseOrder(models.Model):
             'vendor_suggest_days': self.partner_id.suggest_days,
             'vendor_suggest_based_on': self.partner_id.suggest_based_on,
             'vendor_suggest_percent': self.partner_id.suggest_percent,
-            'po_state': self.state,
+            'product_catalog_order_state': self.state,
         }
 
     def action_purchase_order_suggest(self):
@@ -134,9 +134,8 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         ctx = self.env.context
         domain = [('type', '=', 'consu')]
-        if ctx.get("domain"):
-            domain = fields.Domain.AND([domain, ctx.get("domain")])
-
+        if ctx.get("suggest_domain"):
+            domain = fields.Domain.AND([domain, ctx.get("suggest_domain")])
         products = self.env['product.product'].search(domain)
 
         self.partner_id.write({
@@ -155,17 +154,24 @@ class PurchaseOrder(models.Model):
                 self.partner_id,
                 self
             )
-            existing_po_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
-            if existing_po_lines:
+            existing_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
+            if section_id := ctx.get("section_id"):
+                existing_lines = existing_lines.filtered(lambda pol: pol.get_parent_section_line().id == section_id)
+                suggest_line["sequence"] = self._get_new_line_sequence("order_line", section_id)
+            else:
+                existing_lines = existing_lines.filtered(lambda pol: not pol.parent_id)  # lines with no sections
+            if existing_lines:
                 # Collapse into 1 or 0 po line, discarding previous data in favor of suggested qtys
-                to_unlink = existing_po_lines if product.suggested_qty == 0 else existing_po_lines[:-1]
+                to_unlink = existing_lines if product.suggested_qty == 0 else existing_lines[:-1]
                 po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
                 if product.suggested_qty > 0:
-                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
+                    po_lines_commands.append(Command.update(existing_lines[-1].id, suggest_line))
             elif product.suggested_qty > 0:
                 po_lines_commands.append(Command.create(suggest_line))
 
         self.order_line = po_lines_commands
+        # Return the change in number of po_lines for the given section
+        return sum({"CREATE": 1, "UNLINK": -1}.get(line[0].name, 0) for line in po_lines_commands)
 
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)

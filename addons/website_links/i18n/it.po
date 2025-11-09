@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-14 21:13+0000\n"
+"PO-Revision-Date: 2025-10-23 15:40+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "website_links/it/>\n"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_links
@@ -36,6 +36,9 @@ msgid ""
 "<a class=\"copy-to-clipboard btn btn-sm btn-primary o_translate_inline\" t-"
 "att-data-clipboard-text=\"short_url\"><i class=\"fa fa-copy me-2\"/>Copy</a>"
 msgstr ""
+"<a class=\"copy-to-clipboard btn btn-sm btn-primary o_translate_inline\" t"
+"-att-data-clipboard-text=\"short_url\"><i class=\"fa fa-copy me-2\""
+"/>Copia</a>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -43,11 +46,13 @@ msgid ""
 "<a class=\"copy-to-clipboard btn btn-success text-nowrap "
 "o_translate_inline\"><i class=\"fa fa-copy me-2\"/>Copy</a>"
 msgstr ""
+"<a class=\"copy-to-clipboard btn btn-success text-nowrap o_translate_inline\""
+"><i class=\"fa fa-copy me-2\"/>Copia</a>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<i class=\"fa fa-copy me-2\"/>Copy"
-msgstr ""
+msgstr "<i class=\"fa fa-copy me-2\"/>Copia"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -61,6 +66,13 @@ msgid ""
 "a>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_website_links_edit_tools\">\n"
+"                                        <a role=\"button\" class="
+"\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" href="
+"\"#\">ok</a> o\n"
+"                                        <a class="
+"\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">annulla</a>\n"
+"                                    </span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -78,11 +90,22 @@ msgid ""
 "a>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_website_links_short_url d-flex align-items-center text-"
+"nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" class"
+"=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
+"                                        <span class="
+"\"o_website_links_edit_tools text-nowrap\" style=\"display:none;\">\n"
+"                                            <a role=\"button\" class="
+"\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" href="
+"\"#\">ok</a> o\n"
+"                                            <a class="
+"\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">annulla</a>\n"
+"                                        </span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "<span class=\"text-muted me-1\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"text-muted me-1\">Ordina per:</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -97,7 +120,7 @@ msgstr "<strong>Mezzo</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Name</strong>"
-msgstr ""
+msgstr "<strong>Nome</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -127,7 +150,7 @@ msgstr "In assoluto"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Campaign"
-msgstr ""
+msgstr "Campagna"
 
 #. module: website_links
 #. odoo-javascript
@@ -138,23 +161,23 @@ msgstr "Copia"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Create a Link tracker"
-msgstr ""
+msgstr "Crea un link di monitoraggio"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Create another Tracker"
-msgstr ""
+msgstr "Crea un altro link di monitoraggio"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/xml/website_links_tags_wrapper.xml:0
 msgid "Create option \""
-msgstr ""
+msgstr "Crea l'opzione \""
 
 #. module: website_links
 #: model:ir.model.fields,field_description:website_links.field_link_tracker__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -165,17 +188,17 @@ msgstr "Modifica codice"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Generate Link Tracker"
-msgstr ""
+msgstr "Genera link di monitoraggio"
 
 #. module: website_links
 #: model:ir.model.fields,field_description:website_links.field_link_tracker__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Last Clicks"
-msgstr ""
+msgstr "Ultimi clic"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -192,7 +215,7 @@ msgstr "Ultima settimana"
 #: code:addons/website_links/static/src/interactions/website_links.js:0
 #: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
 msgid "Link Copied!"
-msgstr ""
+msgstr "Link copiato!"
 
 #. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
@@ -204,12 +227,12 @@ msgstr "Monitoraggio link"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Medium"
-msgstr ""
+msgstr "Media"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -219,12 +242,12 @@ msgstr "Più recenti"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Number of Clicks"
-msgstr ""
+msgstr "Numero clic"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Read More"
-msgstr ""
+msgstr "Leggi di più"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -238,7 +261,7 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Source"
-msgstr ""
+msgstr "Sorgente"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -249,7 +272,7 @@ msgstr "Statistiche"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Target Link"
-msgstr ""
+msgstr "Link bersaglio"
 
 #. module: website_links
 #. odoo-javascript
@@ -282,7 +305,7 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Tracked Link"
-msgstr ""
+msgstr "Link tracciato"
 
 #. module: website_links
 #. odoo-javascript
@@ -294,7 +317,7 @@ msgstr "Non definita"
 #. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "Visit Link"
-msgstr ""
+msgstr "Visita link"
 
 #. module: website_links
 #. odoo-python
@@ -318,12 +341,12 @@ msgstr "clic"
 #. odoo-javascript
 #: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 msgid "countries"
-msgstr ""
+msgstr "paesi"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. \"Black Friday Mailing Campaign\""
-msgstr ""
+msgstr "ad es. \"Campagna e-mail black friday\""
 
 #. module: website_links
 #. odoo-javascript

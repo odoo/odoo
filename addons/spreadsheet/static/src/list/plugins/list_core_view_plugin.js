@@ -276,6 +276,9 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             return undefined;
         }
         const cell = this.getters.getCell(position);
+        if (!cell?.isFormula) {
+            return undefined;
+        }
         const { functionName, args } = getFirstListFunction(cell.compiledFormula.tokens);
         const fieldArg = functionName === "ODOO.LIST.HEADER" ? args[1] : args[2];
         const dataSource = this.getters.getListDataSource(listId);
@@ -289,11 +292,11 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     getListSortDirection(position) {
-        const field = this.getters.getListFieldFromPosition(position);
         const listId = this.getters.getListIdFromPosition(position);
         if (!listId) {
             return "none";
         }
+        const field = this.getters.getListFieldFromPosition(position);
         const orderBy = this.getters.getListDefinition(listId).orderBy[0];
         if (!orderBy || !field || orderBy.name !== field.name) {
             return "none";
@@ -303,8 +306,11 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
 
     isSortableListHeader(position) {
         const listId = this.getters.getListIdFromPosition(position);
-        const cell = this.getters.getCell(position);
         if (!listId) {
+            return false;
+        }
+        const cell = this.getters.getCell(position);
+        if (!cell?.isFormula) {
             return false;
         }
         const { functionName } = getFirstListFunction(cell.compiledFormula.tokens);

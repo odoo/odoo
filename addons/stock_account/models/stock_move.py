@@ -79,6 +79,7 @@ class StockMove(models.Model):
         for move in self:
             move.value_manual = move.value
 
+    @api.depends('quantity', 'product_id.stock_move_ids.value')
     def _compute_remaining_qty(self):
         products = self.product_id
         remaining_by_product = products._get_remaining_moves()
@@ -153,6 +154,7 @@ class StockMove(models.Model):
         account_move = self.env['account.move'].create({
             'journal_id': self.company_id.account_stock_journal_id.id,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
+            'date': self.env.context.get('force_period_date') or fields.Date.context_today(self),
         })
         self.env['stock.move'].browse(move_to_link).account_move_id = account_move.id
         account_move._post()
@@ -207,9 +209,16 @@ class StockMove(models.Model):
         """
         return ['in', 'out', 'dropshipped', 'dropshipped_returned']
 
-    def _set_value(self):
-        """Set the value of the move"""
-        # TODO groupby product to avoid using twice the same stack
+    def _set_value(self, correction_quantity=None):
+        """Set the value of the move.
+
+        :param correction_quantity: if set, it means that the quantity of the move has been
+            changed by this amount (can be positive or negative). In that case, we just update
+            the value of the move based on the ratio of extra_quantity / quantity. It only applies
+            on out_move since their value is computed during action_done, and it's used to get a
+            more accurate value for COGS. In case of in move correction, you have to call _set_value
+            without arguments.
+        """
         products_to_recompute = set()
         lots_to_recompute = set()
 
@@ -225,6 +234,11 @@ class StockMove(models.Model):
             # Outgoing moves
             if not move._is_out():
                 continue
+            if correction_quantity:
+                previous_qty = move.quantity - correction_quantity
+                ratio = correction_quantity / previous_qty if previous_qty else 0
+                move.value += ratio * move.value
+                continue
             if move.product_id.lot_valuated:
                 value = 0.0
                 for move_line in move.move_line_ids:
@@ -236,9 +250,10 @@ class StockMove(models.Model):
                 continue
 
             if move.product_id.cost_method == 'fifo':
-                move.value = move.product_id._run_fifo(move.quantity)
+                move.value = move.product_id._run_fifo(move._get_valued_qty())
             else:
-                move.value = move.product_id.standard_price * move.quantity
+                qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+                move.value = move.product_id.standard_price * qty
 
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
@@ -317,14 +332,14 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if self.is_in:
-            return sum(self._get_in_move_lines(lot).mapped('quantity'))
-        if self.is_out:
-            return sum(self._get_out_move_lines(lot).mapped('quantity'))
+        if self._is_in():
+            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
+        if self._is_out():
+            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
         if self.is_dropship:
             if lot:
-                return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity'))
-            return self.quantity
+                return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
+            return self.product_qty
         return 0
 
     def _get_manual_value(self, quantity, at_date=None):
@@ -362,7 +377,9 @@ class StockMove(models.Model):
         return dict(VALUATION_DICT)
 
     def _get_value_from_std_price(self, quantity, std_price=False, at_date=None):
-        std_price = std_price or self.product_id._get_standard_price_at_date(at_date)
+        std_price = std_price if std_price else self.product_id.standard_price
+        if at_date:
+            std_price = std_price or self.product_id._get_standard_price_at_date(at_date)
         return {
             'value': std_price * quantity,
             'quantity': quantity,

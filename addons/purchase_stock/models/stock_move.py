@@ -147,24 +147,24 @@ class StockMove(models.Model):
 
     def _get_value_from_account_move(self, quantity, at_date=None):
         valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
-        if not (self.purchase_line_id and self.purchase_line_id):
+        if not self.purchase_line_id:
             return valuation_data
 
         aml_quantity = 0
         value = 0
         aml_ids = set()
         for aml in self.purchase_line_id.invoice_lines:
-            if at_date and fields.Datetime.to_datetime(aml.date) > at_date:
+            if at_date and aml.date > at_date:
                 continue
             if aml.move_id.state != 'posted':
                 continue
             aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
-                aml_quantity += aml.quantity
-                value += aml.price_subtotal
+                aml_quantity += aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
+                value += aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
             elif aml.move_type == 'in_refund':
-                aml_quantity -= aml.quantity
-                value -= aml.price_subtotal
+                aml_quantity -= aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
+                value -= aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
 
         if aml_quantity <= 0:
             return valuation_data

@@ -271,7 +271,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
                 Command.create({
                     'label': 'balance',
                     'engine': 'aggregation',
-                    'formula': 'Dudu',
+                    'formula': 'Dudu.balance',
                 }),
             ],
         })
@@ -281,9 +281,9 @@ class TaxReportTest(AccountTestInvoicingCommon):
 
         aggregation_line.expression_ids.engine = 'tax_tags'
 
-        tags_after = self._get_tax_tags(self.test_country_1, tag_name='Dudu')
+        tags_after = self._get_tax_tags(self.test_country_1, tag_name='Dudu.balance')
         self.assertEqual(len(tags_after), 1, "Changing the engine should have created a tag")
-        self.assertEqual(tags_after.mapped('name'), ['Dudu'])
+        self.assertEqual(tags_after.mapped('name'), ['Dudu.balance'])
 
     def test_change_engine_shared_tags(self):
         aggregation_line = self.env['account.report.line'].create({
@@ -293,7 +293,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
                 Command.create({
                     'label': 'balance',
                     'engine': 'aggregation',
-                    'formula': 'Dudu',
+                    'formula': 'Dudu.balance',
                 }),
             ],
         })

@@ -7,12 +7,13 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-14 21:14+0000\n"
+"PO-Revision-Date: 2025-10-23 09:15+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "website_livechat/fr/>\n"
@@ -36,12 +37,14 @@ msgid ""
 "%(visitor)s started a conversation with %(operator)s.\n"
 "The chat request has been cancelled"
 msgstr ""
+"%(visitor)s a commencé une conversation avec %(operator)s.\n"
+"La demande de chat a été annulée"
 
 #. module: website_livechat
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
 msgid "(closed on: %(date)s)"
-msgstr ""
+msgstr "(clôturé(s) le : %(date)s)"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -62,7 +65,7 @@ msgstr "Nom du canal"
 #. odoo-python
 #: code:addons/website_livechat/models/im_livechat_channel.py:0
 msgid "Channel created: %(name)s"
-msgstr ""
+msgstr "Canal créé : %(name)s"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -119,7 +122,7 @@ msgstr "Canal de discussion"
 #: model:ir.model.fields,field_description:website_livechat.field_website_page__display_name
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_ir_http
@@ -137,7 +140,7 @@ msgstr "Routage HTTP"
 #: model:ir.model.fields,field_description:website_livechat.field_website_page__id
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -187,13 +190,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent conversations"
-msgstr ""
+msgstr "Conversations récentes"
 
 #. module: website_livechat
 #. odoo-javascript
 #: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 msgid "Recent page views"
-msgstr ""
+msgstr "Pages consultées récemment"
 
 #. module: website_livechat
 #. odoo-python
@@ -245,7 +248,7 @@ msgstr "Visiteur"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "Visitor #%(id)d left the conversation."
-msgstr ""
+msgstr "Le visiteur #%(id)d a quitté la conversation."
 
 #. module: website_livechat
 #. odoo-python
@@ -258,7 +261,7 @@ msgstr "Visiteur #%d"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid "Visitor left the conversation."
-msgstr ""
+msgstr "Le visiteur a quitté la conversation."
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
@@ -305,6 +308,8 @@ msgid ""
 "When created from an operator, whether the channel is yet to be opened on "
 "the visitor side."
 msgstr ""
+"Lorsqu’il est créé par un opérateur, indique si le canal n’a pas encore été "
+"ouvert côté visiteur."
 
 #. module: website_livechat
 #. odoo-python

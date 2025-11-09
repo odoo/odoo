@@ -29,7 +29,12 @@ export default class IndexedDB {
         }
 
         this.dbInstance = indexedDB;
-        const dbInstance = indexedDB.open(this.dbName, this.dbVersion);
+        let dbInstance;
+        if (this.dbVersion) {
+            dbInstance = indexedDB.open(this.dbName, this.dbVersion);
+        } else {
+            dbInstance = indexedDB.open(this.dbName);
+        }
         dbInstance.onerror = (event) => {
             logPosMessage(
                 "IndexedDB",
@@ -40,6 +45,39 @@ export default class IndexedDB {
         };
         dbInstance.onsuccess = (event) => {
             this.db = event.target.result;
+
+            const actualStoreNames = this.db.objectStoreNames;
+            let needsUpgrade = false;
+
+            for (const [, storeName] of this.dbStores) {
+                if (!actualStoreNames.contains(storeName)) {
+                    logPosMessage(
+                        "IndexedDB",
+                        "onsuccess",
+                        `Schema mismatch: Store '${storeName}' is missing. Triggering upgrade.`,
+                        CONSOLE_COLOR
+                    );
+                    needsUpgrade = true;
+                    break;
+                }
+            }
+
+            if (needsUpgrade) {
+                const newVersion = this.db.version + 1;
+                this.db.close();
+                this.dbVersion = newVersion;
+
+                logPosMessage(
+                    "IndexedDB",
+                    "onsuccess",
+                    `Upgrading from v${newVersion - 1} to v${newVersion}...`,
+                    CONSOLE_COLOR
+                );
+
+                this.databaseEventListener(whenReady);
+                return;
+            }
+
             logPosMessage(
                 "IndexedDB",
                 "databaseEventListener",

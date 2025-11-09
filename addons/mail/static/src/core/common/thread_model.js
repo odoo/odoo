@@ -321,7 +321,7 @@ export class Thread extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return persona.displayName || persona.name;
+        return persona?.displayName || persona?.name;
     }
 
     get hasAttachmentPanel() {

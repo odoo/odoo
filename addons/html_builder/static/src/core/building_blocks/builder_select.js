@@ -29,6 +29,7 @@ export class BuilderSelect extends Component {
         ...basicContainerBuilderComponentProps,
         className: { type: String, optional: true },
         dropdownContainerClass: { type: String, optional: true },
+        disabled: { type: Boolean, optional: true },
         slots: {
             type: Object,
             shape: {

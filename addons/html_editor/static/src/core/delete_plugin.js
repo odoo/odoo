@@ -16,6 +16,7 @@ import {
     isZWS,
     nextLeaf,
     previousLeaf,
+    isEmptyBlock,
 } from "../utils/dom_info";
 import { getState, isFakeLineBreak, observeMutations, prepareUpdate } from "../utils/dom_state";
 import {
@@ -500,8 +501,7 @@ export class DeletePlugin extends Plugin {
             // @todo: mind Icons?
             // Probably need to get deepest position's element
             // @todo: update fillEmpty
-            // @todo: check if nodes does not already have a ZWS/ZWNBSP
-            if (!isBlock(node) && !isTangible(node)) {
+            if (!isBlock(node) && !isTangible(node) && !isZWS(node) && !isZwnbsp(node)) {
                 node.appendChild(this.document.createTextNode("\u200B"));
                 node.setAttribute("data-oe-zws-empty-inline", "");
             }
@@ -1074,14 +1074,18 @@ export class DeletePlugin extends Plugin {
             const nodeClosestBlock = closestBlock(node);
             let leaf = adjacentLeafFromPos(node, offset, editableRoot);
             while (leaf) {
-                blockSwitch ||= closestBlock(leaf) !== nodeClosestBlock;
+                const leafClosestBlock = closestBlock(leaf);
+                blockSwitch ||= leafClosestBlock !== nodeClosestBlock;
 
                 if (this.shouldSkip(leaf, blockSwitch)) {
                     leaf = adjacentLeaf(leaf, editableRoot);
                     continue;
                 }
 
-                if (leaf.nodeType === Node.TEXT_NODE) {
+                if (
+                    leaf.nodeType === Node.TEXT_NODE &&
+                    !(blockSwitch && isEmptyBlock(leafClosestBlock))
+                ) {
                     const [char, index] = findVisibleChar(...textEdgePos(leaf));
                     if (char) {
                         const idx = (blockSwitch ? indexBeforeChar : indexAfterChar)(index, char);

@@ -9,6 +9,7 @@ import { SocialMediaLinks } from "./social_media_links";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /**
  * @typedef { Object } SocialMediaInfo
@@ -106,6 +107,11 @@ const socialMediaInfo = new Map(
 
 const defaultAriaLabel = _t("Other social network");
 
+export class SocialMediaOption extends BaseOptionComponent {
+    static template = "website.SocialMediaOption";
+    static selector = ".s_share, .s_social_media";
+}
+
 class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
     static dependencies = ["history"];
@@ -117,21 +123,13 @@ class SocialMediaOptionPlugin extends Plugin {
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
+        "getRecordedSocialMediaNames",
+        "reorderSocialMediaLink",
     ];
     resources = {
         builder_options: [
-            withSequence(TITLE_LAYOUT_SIZE, {
-                template: "website.SocialMediaOption",
-                selector: ".s_share, .s_social_media",
-            }),
-            withSequence(SNIPPET_SPECIFIC, {
-                OptionComponent: SocialMediaLinks,
-                props: {
-                    getRecordedSocialMediaNames: this.getRecordedSocialMediaNames.bind(this),
-                    reorderSocialMediaLink: this.reorderSocialMediaLink.bind(this),
-                },
-                selector: ".s_social_media",
-            }),
+            withSequence(TITLE_LAYOUT_SIZE, SocialMediaOption),
+            withSequence(SNIPPET_SPECIFIC, SocialMediaLinks),
         ],
         so_content_addition_selector: [".s_share", ".s_social_media"],
         builder_actions: {
@@ -143,20 +141,14 @@ class SocialMediaOptionPlugin extends Plugin {
         },
         normalize_handlers: this.normalize.bind(this),
         save_handlers: this.saveRecordedSocialMedia.bind(this),
-        extra_contenteditable_handlers: this.extraContentEditableHandlers.bind(this),
-        force_not_editable_selector: [".s_share"],
-        force_editable_selector: [".s_share a > i", ".s_share .s_share_title"],
+        content_not_editable_selectors: [".s_share"],
+        content_editable_selectors: [
+            ".s_share a > i",
+            ".s_share .s_share_title",
+            ".s_social_media a > i",
+            ".s_social_media .s_social_media_title",
+        ],
     };
-
-    extraContentEditableHandlers(filteredContentEditableEls) {
-        // To fix db in stable
-        // grep: SOCIAL_MEDIA_TITLE_CONTENTEDITABLE
-        return filteredContentEditableEls.flatMap((filteredContentEditableEl) => [
-            ...filteredContentEditableEl.querySelectorAll(
-                ".s_social_media a > i, .s_social_media .s_social_media_title"
-            ),
-        ]);
-    }
 
     /** The social media's name for which there is an entry in the orm */
     async getRecordedSocialMediaNames() {

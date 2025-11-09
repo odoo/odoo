@@ -10,6 +10,4 @@ export class SearchModal extends Interaction {
     };
 }
 
-registry
-    .category("public.interactions")
-    .add("website.search_modal", SearchModal);
+registry.category("public.interactions").add("website.search_modal", SearchModal);

@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { removeClass } from "@html_editor/utils/dom";
-import { isProtected, isProtecting, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
 /*
     This plugin solves selection issues around links (allowing the cursor at the
@@ -48,31 +48,7 @@ export class LinkSelectionPlugin extends Plugin {
     addFeffsToLinks(root, cursors) {
         return [...selectElements(root, "a")]
             .filter(this.isLinkEligibleForZwnbsp.bind(this))
-            .flatMap((link) => this.addFeffs(link, cursors));
-    }
-
-    addFeffs(link, cursors) {
-        const addFeff = (position) => {
-            // skip cursor update for append, we want to keep it before the added FEFF
-            const c = position === "append" ? null : cursors;
-            return this.dependencies.feff.addFeff(link, position, c);
-        };
-
-        const zwnbspNodes = [];
-        for (const [position, relation] of [
-            ["before", "previousSibling"],
-            ["after", "nextSibling"],
-            ["prepend", "firstChild"],
-            ["append", "lastChild"],
-        ]) {
-            const candidate = link[relation];
-            const feff =
-                isZwnbsp(candidate) && !zwnbspNodes.includes(candidate)
-                    ? candidate
-                    : addFeff(position);
-            zwnbspNodes.push(feff);
-        }
-        return zwnbspNodes;
+            .flatMap((link) => this.dependencies.feff.surroundWithFeffs(link, cursors));
     }
 
     /**
@@ -83,7 +59,7 @@ export class LinkSelectionPlugin extends Plugin {
      */
     padLinkWithZwnbsp(link) {
         const cursors = this.dependencies.selection.preserveSelection();
-        this.addFeffs(link, cursors);
+        this.dependencies.feff.surroundWithFeffs(link, cursors);
         cursors.restore();
     }
 

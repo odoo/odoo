@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 02:35+0000\n"
+"PO-Revision-Date: 2025-10-22 11:28+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "website_forum/ru/>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_forum
@@ -332,10 +332,10 @@ msgid ""
 "to include links to other questions or answers providing relevant additional "
 "information."
 msgstr ""
-"<b>Ответы не должны просто указывать на другие вопросы</b>. Вместо этого "
-"добавьте вопрос комментария указание  \"Можно дублировать из...\". Однако "
-"это нормально, чтобы включить ссылки на другие вопросы и ответы, представляя "
-"соответствующую дополнительную информацию."
+"<b>Ответы не должны просто указывать на другие вопросы.</b> Вместо этого "
+"добавьте комментарий к вопросу с пометкой «Возможный дубликат...». Однако "
+"можно включать ссылки на другие вопросы или ответы, которые содержат "
+"полезную дополнительную информацию."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -346,10 +346,10 @@ msgid ""
 "include links to other questions or answers providing relevant additional "
 "information."
 msgstr ""
-"<b>Ответы не должны просто указывать на другие вопросы</b>. Вместо этого "
-"добавьте комментарий <i>\"Возможный дубликат...\"</i>. Однако не помешает "
-"включить ссылки на другие вопросы или ответы, содержащие соответствующую "
-"дополнительную информацию."
+"<b>Ответы не должны просто указывать на другие вопросы.</b> Вместо этого "
+"добавьте комментарий к вопросу с пометкой <i>«Возможный дубликат...»</i>. "
+"Однако можно включать ссылки на другие вопросы или ответы, которые содержат "
+"полезную дополнительную информацию."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -575,7 +575,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "<i class=\"fa fa-reply me-1\"/>Reply"
-msgstr ""
+msgstr "<i class=\"fa fa-reply me-1\"/>Ответить"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -669,7 +669,7 @@ msgstr "<small class=\"fw-bold\">Голоса</small>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "<small>(View all)</small>"
-msgstr ""
+msgstr "<small>(Смотреть все)</small>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
@@ -699,19 +699,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid ""
 "<span class=\"flex-grow-1\">What kind of questions can I ask here?</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">Какие вопросы здесь можно задавать?</span>"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "<span class=\"flex-grow-1\">What should I avoid in my answers?</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">Чего следует избегать в ответах?</span>"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "<span class=\"flex-grow-1\">What should I avoid in my questions?</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">Чего следует избегать в вопросах?</span>"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -720,6 +720,8 @@ msgid ""
 "<span class=\"flex-grow-1\">Why can other people edit my questions/answers?</"
 "span>"
 msgstr ""
+"<span class=\"flex-grow-1\">Почему другие пользователи могут редактировать "
+"мои вопросы/ответы?</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -728,6 +730,8 @@ msgid ""
 "<span class=\"form-text small text-muted d-block\">consider adding an "
 "example.</span>"
 msgstr ""
+"<span class=\"form-text small text-muted d-block\">попробуйте добавить "
+"пример.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -736,6 +740,8 @@ msgid ""
 "<span class=\"form-text small text-muted d-block\">select text to format it."
 "</span>"
 msgstr ""
+"<span class=\"form-text small text-muted d-block\">выделите текст, чтобы его "
+"отформатировать.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -744,6 +750,8 @@ msgid ""
 "<span class=\"form-text small text-muted d-block\">use '/' to insert images."
 "</span>"
 msgstr ""
+"<span class=\"form-text small text-muted d-block\">используйте /, чтобы "
+"вставить изображение.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -752,6 +760,8 @@ msgid ""
 "<span class=\"form-text small text-muted me-1\"><i class=\"fa fa-lightbulb-"
 "o\"/> Tip:</span>"
 msgstr ""
+"<span class=\"form-text small text-muted me-1\"><i class="
+"\"fa fa-lightbulb-o\"/> Совет:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -777,7 +787,7 @@ msgstr "<span class=\"text-muted\">Пока нет активности.</span>"
 #. module: website_forum
 #: model_terms:web_tour.tour,rainbow_man_message:website_forum.question
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
-msgstr ""
+msgstr "<b>Отличная работа!</b> Вы прошли все этапы этого тура."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -899,7 +909,7 @@ msgstr "Все"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
 msgid "All Posts"
-msgstr ""
+msgstr "Все посты"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -1036,7 +1046,7 @@ msgstr "Архивировано"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/interactions/website_forum.js:0
 msgid "Are you sure you want to delete this comment?"
-msgstr ""
+msgstr "Вы уверены, что хотите удалить этот комментарий?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -1301,7 +1311,7 @@ msgstr "Нажмите, чтобы опубликовать ваш вопрос.
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to reply."
-msgstr ""
+msgstr "Нажмите, чтобы ответить."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
@@ -1364,7 +1374,7 @@ msgstr "Причина закрытия"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__color
 msgid "Color"
-msgstr ""
+msgstr "Цвет"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -1423,7 +1433,7 @@ msgstr "Содержание"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
 msgid "Convert all comments to answers"
-msgstr ""
+msgstr "Преобразовать все комментарии в ответы"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
@@ -1433,12 +1443,12 @@ msgstr "Конвертировать комментарий в ответ"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_own
 msgid "Convert own comments to answers"
-msgstr ""
+msgstr "Преобразовать свои комментарии в ответы"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
 msgid "Convert to Comment"
-msgstr ""
+msgstr "Преобразовать в комментарий"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
@@ -1483,6 +1493,8 @@ msgid ""
 "Create an account today to enjoy exclusive features and engage with our "
 "awesome community!"
 msgstr ""
+"Создайте аккаунт сегодня, чтобы получить доступ к эксклюзивным функциям и "
+"стать частью нашего замечательного сообщества!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
@@ -1493,7 +1505,7 @@ msgstr "Создавать новые теги"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
 msgid "Create option \""
-msgstr ""
+msgstr "Создать опцию «"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_32
@@ -1575,7 +1587,7 @@ msgstr "Удалить"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_all
 msgid "Delete all comments"
-msgstr ""
+msgstr "Удалить все комментарии"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
@@ -1585,7 +1597,7 @@ msgstr "Удалить все сообщения"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
 msgid "Delete own comments"
-msgstr ""
+msgstr "Удалить свои комментарии"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
@@ -1756,7 +1768,7 @@ msgstr "Пустой блок"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_sign_up_cta
 msgid "Enjoying the discussion? Don't just read, join in!"
-msgstr ""
+msgstr "Не оставайтесь в стороне – присоединяйтесь к обсуждению!"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
@@ -1780,7 +1792,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1999,7 +2011,7 @@ msgstr "Тег форума"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_tag_action
 msgid "Forum Tags"
-msgstr ""
+msgstr "Теги форума"
 
 #. module: website_forum
 #. odoo-javascript
@@ -2349,7 +2361,7 @@ msgstr "Карма для снятия ссылки"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post
 msgid "Last Activity"
-msgstr ""
+msgstr "Последняя активность"
 
 #. module: website_forum
 #. odoo-javascript
@@ -2405,7 +2417,7 @@ msgstr "Ссылки на вопросы с тегом"
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #. module: website_forum
 #. odoo-javascript
@@ -3031,7 +3043,7 @@ msgstr "Отказаться"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
 msgid "Related Posts"
-msgstr ""
+msgstr "Похожие посты"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
@@ -3090,7 +3102,7 @@ msgstr "Ответить на собственный вопрос"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Ограничить конкретным веб-сайтом."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.profile_access_denied
@@ -3626,7 +3638,7 @@ msgstr "Отслеживание изменений кармы"
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav

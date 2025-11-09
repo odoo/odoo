@@ -19,8 +19,6 @@ class MessageMailLinkPreview(models.Model):
     author_id = fields.Many2one(related="message_id.author_id")
 
     _unique_message_link_preview = models.UniqueIndex("(message_id, link_preview_id)")
-    _message_id_not_null = models.Constraint("CHECK(message_id IS NOT NULL)")
-    _link_preview_id_not_null = models.Constraint("CHECK(link_preview_id IS NOT NULL)")
 
     def _bus_channel(self):
         return self.message_id._bus_channel()

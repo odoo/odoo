@@ -60,7 +60,9 @@ class PosOrder(models.Model):
             orders_by_company[order.company_id.id].append(order)
 
         for company_id, orders in orders_by_company.items():
-            prev_seq = [o.l10n_fr_secure_sequence_number - 1 for o in orders]
+            # Since sequence number can't be zero, we don't consider
+            # it as a posible previous sequence number
+            prev_seq = [o.l10n_fr_secure_sequence_number - 1 for o in orders if o.l10n_fr_secure_sequence_number > 1]
             prev_orders = self.search([
                 ('state', 'in', ['paid', 'done']),
                 ('company_id', '=', company_id),

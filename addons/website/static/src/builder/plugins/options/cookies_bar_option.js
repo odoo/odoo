@@ -1,19 +1,19 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 
+export class CookiesBarOption extends BaseOptionComponent {
+    static template = "website.CookiesBarOption";
+    static selector = "#website_cookies_bar";
+    static applyTo = ".modal";
+}
 class CookiesBarOptionPlugin extends Plugin {
     static id = "CookiesBarOptionPlugin";
     static shared = ["getSavedSelectors"];
     resources = {
-        builder_options: [
-            {
-                template: "website.CookiesBarOption",
-                selector: "#website_cookies_bar",
-                applyTo: ".modal",
-            },
-        ],
+        builder_options: [CookiesBarOption],
         builder_actions: {
             SelectLayoutAction,
         },

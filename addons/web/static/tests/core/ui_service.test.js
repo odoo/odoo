@@ -157,6 +157,29 @@ test("do not become UI active element if no element to focus", async () => {
     expect(getService("ui").activeElement).toBe(document);
 });
 
+test("become UI active element if no element to focus but the container is focusable", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <div>
+                <h1>My Component</h1>
+                <input type="text" placeholder="outerUIActiveElement"/>
+                <div id="idActiveElement" t-ref="delegatedRef" tabindex="-1">
+                    <div>
+                        <span> No focus element </span>
+                    </div>
+                </div>
+            </div>
+        `;
+        static props = ["*"];
+        setup() {
+            useActiveElement("delegatedRef");
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(getService("ui").activeElement).toBe(queryOne("#idActiveElement"));
+});
+
 test("UI active element: trap focus - first or last tabable changes", async () => {
     class MyComponent extends Component {
         static template = xml`

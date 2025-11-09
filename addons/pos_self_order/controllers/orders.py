@@ -158,19 +158,25 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
+        table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
+        domain = False
 
-        domain = [
-            Domain([
+        if not table_identifier or pos_config.self_ordering_pay_after == 'each':
+            domain = [(False, '=', True)]
+        else:
+            domain = ['&', '&',
+                ('table_id', '=', table.id),
+                ('state', '=', 'draft'),
+                ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
+            ]
+
+        for data in order_access_tokens:
+            domain = Domain.OR([domain, ['&',
                 ('access_token', '=', data['access_token']),
                 '|',
                 ('write_date', '>', data.get('write_date')),
                 ('state', '!=', data.get('state')),
-            ]) for data in order_access_tokens
-        ]
-
-        domain = Domain.OR(domain) if domain else False
-        if not domain:
-            return {}
+            ]])
 
         # Do not use session.order_ids, it may fail if there is shared sessions
         orders = pos_config.env['pos.order'].search(domain)

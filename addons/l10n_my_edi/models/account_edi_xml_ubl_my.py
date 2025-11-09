@@ -149,14 +149,21 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             tax = tax_data and tax_data['tax']
             myinvois_document = base_line['myinvois_document']
 
-            is_exempt_tax = not tax or tax.l10n_my_tax_type == 'E'
+            if (
+                not tax
+                and not myinvois_document._is_consolidated_invoice()
+                and not myinvois_document._is_consolidated_invoice_refund()
+            ):
+                return None  # Triggers UserError for missing tax on simple invoice.
+
+            is_exempt_tax = tax and tax.l10n_my_tax_type == 'E'
             tax_exemption_reason = is_exempt_tax and (
                 myinvois_document.myinvois_exemption_reason
                 or tax.l10n_my_tax_exemption_reason
             )
 
             return {
-                'tax_category_code': tax.l10n_my_tax_type if tax else 'E',
+                'tax_category_code': tax.l10n_my_tax_type if tax else '06',
                 'tax_exemption_reason': tax_exemption_reason,
                 'amount': tax.amount if tax else 0.0,
                 'amount_type': tax.amount_type if tax else 'percent',
@@ -564,7 +571,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             line_item = line_vals['cac:Item']
             if 'cac:CommodityClassification' not in line_item:
                 self._l10n_my_edi_make_validation_error(constraints, 'class_code_required', line_vals['cbc:ID']['_text'], line_item['cbc:Name']['_text'])
-            if 'cac:ClassifiedTaxCategory' not in line_item:
+            if not line_item.get('cac:ClassifiedTaxCategory'):
                 self._l10n_my_edi_make_validation_error(constraints, 'tax_ids_required', line_vals['cbc:ID']['_text'], line_item['cbc:Name']['_text'])
             for tax_category in line_item['cac:ClassifiedTaxCategory']:
                 if tax_category['cbc:ID']['_text'] == 'E' and not tax_category['cbc:TaxExemptionReason']['_text']:

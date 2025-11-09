@@ -8,7 +8,9 @@ patch(NewContentSystrayItem.prototype, {
     setup() {
         super.setup();
 
-        const newBlogElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_blog');
+        const newBlogElement = this.state.newContentElements.find(
+            (element) => element.moduleXmlId === "base.module_website_blog"
+        );
         newBlogElement.createNewContent = () =>
             this.onAddContent(
                 "website_blog.blog_post_action_add",
@@ -16,7 +18,7 @@ patch(NewContentSystrayItem.prototype, {
                 this.getCurrentBlogContext()
             );
         newBlogElement.status = MODULE_STATUS.INSTALLED;
-        newBlogElement.model = 'blog.post';
+        newBlogElement.model = "blog.post";
     },
 
     getCurrentBlogContext() {

@@ -215,3 +215,15 @@ test("should apply color to a list containing sublist if list contents are fully
             '<ol><li style="color: rgb(255, 0, 0);"><p>[abc]</p><ol class="o_default_color"><li>def</li></ol></li></ol>',
     });
 });
+
+test("should apply gradient color style only on font inside list item", async () => {
+    await testEditor({
+        contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%)",
+            "color"
+        ),
+        contentAfter:
+            '<ol><li><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%);">[abc]</font></li><li>def</li></ol>',
+    });
+});

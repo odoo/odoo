@@ -70,8 +70,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.isInternalUpdate = false;
         this.wasCombo = false;
         let isMounted = false;
-        this.isInternalUpdate = false;
-        this.wasCombo = false;
         useEffect(value => {
             if (!isMounted) {
                 isMounted = true;
@@ -135,7 +133,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return {
             ...super.sectionAndNoteClasses,
             "text-warning":
-                !this.isSection() && !this.isNote() && !this.productName && !this.isDownpayment,
+                !this.isSectionOrSubSection && !this.isNote() && !this.productName && !this.isDownpayment,
         };
     }
 
@@ -170,7 +168,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         }
         return {
             ...p,
-            canOpen: this.props.canOpen || !this.props.readonly || this.isProductClickable,
+            canOpen: this.props.canOpen && (!this.props.readonly || this.isProductClickable),
             update: (value) => {
                 this.isInternalUpdate = true;
                 this.wasCombo = this.isCombo;

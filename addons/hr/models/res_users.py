@@ -271,7 +271,18 @@ class ResUsers(models.Model):
             user.employee_id = employee_per_user.get(user)
 
     def _search_company_employee(self, operator, value):
-        return [('employee_ids', operator, value)]
+        # Equivalent to `[('employee_ids', operator, value)]`,
+        # but we inline the ids directly to simplify final queries and improve performance,
+        # as it's part of a few ir.rules.
+        # If we're going to inject too many `ids`, we fall back on the default behavior
+        # to avoid a performance regression.
+        IN_MAX = 10_000
+        domain = [('employee_ids', operator, value)]
+        user_ids = self.env['res.users'].with_context(active_test=False)._search(domain, limit=IN_MAX).get_result_ids()
+        if len(user_ids) < IN_MAX:
+            return [('id', 'in', user_ids)]
+
+        return domain
 
     def action_create_employee(self):
         self.ensure_one()

@@ -9,7 +9,7 @@ export class CarouselSlider extends Interaction {
             "t-on-slide.bs.carousel": this.onSlideCarousel,
             "t-on-slid.bs.carousel": this.onSlidCarousel,
         },
-        "img": {
+        img: {
             "t-on-load": this.computeMaxHeight,
         },
         _window: {
@@ -29,7 +29,7 @@ export class CarouselSlider extends Interaction {
         this.maxHeight = undefined;
         this.hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
         if (!["true", "carousel", "false"].includes(this.el.dataset.bsRide)) {
-            this.el.dataset.bsRide = this.hasInterval ? "carousel": "false";
+            this.el.dataset.bsRide = this.hasInterval ? "carousel" : "false";
         }
         if (this.el.dataset.bsRide === "false") {
             window.Carousel.getOrCreateInstance(this.el, { ride: false, pause: true });
@@ -46,16 +46,18 @@ export class CarouselSlider extends Interaction {
 
         this.carouselInnerEl = this.el.querySelector(".carousel-inner");
 
-        const itemWidth = getComputedStyle(this.el).getPropertyValue("--o-carousel-item-width-percentage");
+        const itemWidth = getComputedStyle(this.el).getPropertyValue(
+            "--o-carousel-item-width-percentage"
+        );
         const itemsPerSlide = itemWidth ? Math.round(100 / parseFloat(itemWidth)) : 1;
         this.options = {
-            scrollMode: this.el.classList.contains('o_carousel_multi_items') ? 'single' : 'all',
+            scrollMode: this.el.classList.contains("o_carousel_multi_items") ? "single" : "all",
             itemsPerSlide: itemsPerSlide,
         };
 
         // Preload first items only when carousel is on screen
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     this.loadItemsToAppear();
                     observer.unobserve(this.el);
@@ -89,7 +91,7 @@ export class CarouselSlider extends Interaction {
      */
     onSlideCarousel(ev) {
         const imageEls = [...this.carouselInnerEl.querySelectorAll("img")];
-        const isLoading = imageEls.some(el => el.loading !== "lazy" && !el.complete);
+        const isLoading = imageEls.some((el) => el.loading !== "lazy" && !el.complete);
         if (isLoading) {
             // If images are loading, prevent the slide transition. It will
             // slide once the next images are loaded.
@@ -127,7 +129,9 @@ export class CarouselSlider extends Interaction {
         // We need to keep the active element at the beginning of the carousel-items elements
         // This allows to have a smooth transition when the carousel is sliding
         if (ev.direction === "right") {
-            const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
+            const carouselItemsEls = Array.from(
+                this.carouselInnerEl.querySelectorAll(".carousel-item")
+            );
             this.carouselInnerEl.prepend(carouselItemsEls.pop());
         }
     }
@@ -160,12 +164,16 @@ export class CarouselSlider extends Interaction {
             return;
         }
         const itemEls = Array.from(this.carouselInnerEl.children);
-        const index = itemEls.findIndex(el => el.classList.contains("active"));
+        const index = itemEls.findIndex((el) => el.classList.contains("active"));
         const activeItemIndex = index >= 0 ? index : 0;
 
         // Load "Next" items: nbItemsToLoad items after the active element
-        const nbItemElsOnScreen = this.options.scrollMode === "single" ? this.options.itemsPerSlide + 1 : 1;
-        const nextEndIndex = Math.min(activeItemIndex + nbItemElsOnScreen + nbItemsToLoad + 1, itemEls.length);
+        const nbItemElsOnScreen =
+            this.options.scrollMode === "single" ? this.options.itemsPerSlide + 1 : 1;
+        const nextEndIndex = Math.min(
+            activeItemIndex + nbItemElsOnScreen + nbItemsToLoad + 1,
+            itemEls.length
+        );
         const nextItemElsToLoad = itemEls.slice(activeItemIndex, nextEndIndex);
 
         // load "Prev" items : nbItemsToLoad items before the active element (circular wrapping)
@@ -173,16 +181,21 @@ export class CarouselSlider extends Interaction {
         let prevItemElsToLoad = [];
         if (activeItemIndex - nbItemsToLoad < 0) {
             const wrapAmount = Math.abs(activeItemIndex - nbItemsToLoad);
-            prevItemElsToLoad = itemEls.slice(itemEls.length - wrapAmount, itemEls.length).reverse().concat(itemEls.slice(0, activeItemIndex).reverse());
+            prevItemElsToLoad = itemEls
+                .slice(itemEls.length - wrapAmount, itemEls.length)
+                .reverse()
+                .concat(itemEls.slice(0, activeItemIndex).reverse());
         } else {
-            prevItemElsToLoad = itemEls.slice(Math.max(0, activeItemIndex - nbItemsToLoad), activeItemIndex).reverse();
+            prevItemElsToLoad = itemEls
+                .slice(Math.max(0, activeItemIndex - nbItemsToLoad), activeItemIndex)
+                .reverse();
         }
 
         // Set the `loading` attribute of lazy-loaded images to `eager` for the
         // given carousel items. This forces the browser to load the images
         // immediately.
         const itemsToLoad = nextItemElsToLoad.concat(prevItemElsToLoad);
-        for (let carouselItemEl of itemsToLoad) {
+        for (const carouselItemEl of itemsToLoad) {
             const imageEls = carouselItemEl.querySelectorAll("img[loading='lazy']");
             for (const imageEl of imageEls) {
                 // Note that we remove the attribute with the goal of forcing it
@@ -195,6 +208,4 @@ export class CarouselSlider extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.carousel_slider", CarouselSlider);
+registry.category("public.interactions").add("website.carousel_slider", CarouselSlider);

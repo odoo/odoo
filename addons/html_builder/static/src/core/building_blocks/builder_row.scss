@@ -38,6 +38,13 @@
     align-items: center;
     color: var(--o-hb-row-color, #{$o-we-fg-dark});
 
+    &[data-disabled] {
+        .hb-row-label {
+            opacity: 0.5;
+        }
+        cursor: not-allowed;
+    }
+
     .hb-container-subtitle {
         padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
     }

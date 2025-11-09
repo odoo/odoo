@@ -21,20 +21,15 @@ export class ThemeFontFamilyOption extends BaseOptionComponent {
             this.env.getEditingElement()
         );
         if (this.props.cssVariable === "headings-font") {
-            this.state = useDomState(() => {
-                return {
-                    isFontSpecified:
-                        getCSSVariableValue("headings-font", htmlStyle) !==
-                        getCSSVariableValue("default-headings-font", htmlStyle),
-                };
-            });
+            this.state = useDomState(() => ({
+                isFontSpecified:
+                    getCSSVariableValue("headings-font", htmlStyle) !==
+                    getCSSVariableValue("default-headings-font", htmlStyle),
+            }));
         } else {
-            this.state = useDomState(() => {
-                return {
-                    isFontSpecified: 
-                        !!getCSSVariableValue("set-" + this.props.cssVariable, htmlStyle),
-                };
-            });
+            this.state = useDomState(() => ({
+                isFontSpecified: !!getCSSVariableValue("set-" + this.props.cssVariable, htmlStyle),
+            }));
         }
     }
 }

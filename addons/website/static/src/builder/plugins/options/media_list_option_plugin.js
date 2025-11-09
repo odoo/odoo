@@ -4,26 +4,26 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { MediaListItemOption } from "./media_list_item_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class MediaListOption extends BaseOptionComponent {
+    static template = "website.MediaListOption";
+    static selector = ".s_media_list";
+}
 
 class MediaListOptionPlugin extends Plugin {
     static id = "mediaListOption";
     mediaListItemOptionSelector = ".s_media_list_item";
     resources = {
         builder_options: [
-            withSequence(BEGIN, {
-                template: "website.MediaListOption",
-                selector: ".s_media_list",
-            }),
-            withSequence(END, {
-                OptionComponent: MediaListItemOption,
-                selector: this.mediaListItemOptionSelector,
-            }),
+            withSequence(BEGIN, MediaListOption),
+            withSequence(END, MediaListItemOption),
         ],
         builder_actions: {
             SetMediaLayoutAction,
         },
         mark_color_level_selector_params: [
-            { selector: this.mediaListItemOptionSelector, applyTo: ":scope > .row" },
+            { selector: MediaListItemOption.selector, applyTo: ":scope > .row" },
         ],
     };
 }

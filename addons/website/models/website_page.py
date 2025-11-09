@@ -457,7 +457,7 @@ class WebsitePage(models.Model):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('request.httprequest.path', cache='templates.cached_values'),
+        tools.ormcache('(request.httprequest.path, self.env.context.get("website_id"))', cache='templates.cached_values'),
     )
     @api.model
     def _get_page_info(self, request) -> dict | None:

@@ -215,6 +215,11 @@ class AccountMove(models.Model):
         column2='payment_id',
         copy=False,
     )
+    reconciled_payment_ids = fields.Many2many('account.payment', string="Reconciled Payments",
+        compute='_compute_reconciled_payment_ids',
+        search='_search_reconciled_payment_ids',
+        help='Payments that have been reconciled with this invoice.'
+    )
     payment_count = fields.Integer(compute='_compute_payment_count')
 
     # === Statement fields === #
@@ -664,6 +669,7 @@ class AccountMove(models.Model):
         ],
         string='Sent',
         compute='compute_move_sent_values',
+        search='_search_move_sent_values',
     )
     invoice_user_id = fields.Many2one(
         string='Salesperson',
@@ -808,6 +814,11 @@ class AccountMove(models.Model):
     def compute_move_sent_values(self):
         for move in self:
             move.move_sent_values = 'sent' if move.is_move_sent else 'not_sent'
+
+    def _search_move_sent_values(self, operator, value):
+        if operator != 'in' or value - {'sent', 'not_sent'}:
+            return NotImplemented
+        return [('is_move_sent', 'in', [elem == 'sent' for elem in value])]
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -1199,7 +1210,7 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
 
-    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids.state')
+    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'reconciled_payment_ids.state')
     def _compute_payment_state(self):
         def _invoice_qualifies(move):
             currency = move.currency_id or move.company_id.currency_id or self.env.company.currency_id
@@ -1297,11 +1308,16 @@ class AccountMove(models.Model):
     @api.depends('payment_state', 'state', 'is_move_sent')
     def _compute_status_in_payment(self):
         for move in self:
-            if move.state == 'posted' and move.payment_state == 'not_paid' and move.is_move_sent:
-                move.status_in_payment = 'sent'
-            elif move.state == 'posted' and move.payment_state in ('partial', 'in_payment', 'paid', 'reversed'):
-                move.status_in_payment = move.payment_state
-            else:
+            if move.state == 'posted':
+                if move.payment_state in ('partial', 'in_payment', 'paid', 'reversed'):
+                    move.status_in_payment = move.payment_state
+                elif move.is_move_sent:
+                    move.status_in_payment = 'sent'
+            elif move.state == 'draft':
+                if move.payment_state in ('partial', 'in_payment', 'paid'):
+                    move.status_in_payment = move.payment_state
+
+            if not move.status_in_payment:
                 move.status_in_payment = move.state
 
     def _field_to_sql(self, alias: str, fname: str, query=None) -> SQL:
@@ -1322,10 +1338,10 @@ class AccountMove(models.Model):
             )
         return super()._field_to_sql(alias, fname, query=query)
 
-    @api.depends('matched_payment_ids')
+    @api.depends('reconciled_payment_ids')
     def _compute_payment_count(self):
         for invoice in self:
-            invoice.payment_count = len(invoice.matched_payment_ids)
+            invoice.payment_count = len(invoice.reconciled_payment_ids)
 
     @api.depends('adjusting_entries_move_ids')
     def _compute_adjusting_entries_count(self):
@@ -1915,7 +1931,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda move: move.is_invoice()):
             move.access_url = '/my/invoices/%s' % (move.id)
 
-    @api.depends('move_type', 'partner_id', 'company_id')
+    @api.depends('move_type', 'partner_id', 'partner_id.lang', 'company_id')
     def _compute_narration(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         invoice_to_update_terms = self.filtered(lambda m: use_invoice_terms and m.is_sale_document(include_receipts=True))
@@ -2292,6 +2308,43 @@ class AccountMove(models.Model):
         for move in self:
             move.highlight_send_button = not move.is_being_sent and not move.invoice_pdf_report_id
 
+    @api.depends('line_ids.matched_debit_ids', 'line_ids.matched_credit_ids', 'matched_payment_ids')
+    def _compute_reconciled_payment_ids(self):
+        ''' Retrieve the payments reconciled to the invoices through the reconciliation (account.partial.reconcile) '''
+        self.env['account.payment'].flush_model(fnames=['move_id'])
+        self.env['account.move'].flush_model(fnames=['move_type'])
+        self.env['account.move.line'].flush_model(fnames=['move_id', 'account_id'])
+        self.env['account.partial.reconcile'].flush_model(fnames=['debit_move_id', 'credit_move_id'])
+        self.env['account.account'].flush_model(fnames=['account_type'])
+
+        invoice_payment_links = dict(self.env.execute_query(SQL(
+            """
+            SELECT
+                invoice.id,
+                ARRAY_AGG(DISTINCT payment.id) AS payment_ids
+            FROM account_payment payment
+            JOIN account_move move ON move.id = payment.move_id
+            JOIN account_move_line line ON line.move_id = move.id
+            JOIN account_partial_reconcile part ON
+                part.debit_move_id = line.id
+                OR
+                part.credit_move_id = line.id
+            JOIN account_move_line counterpart_line ON
+                part.debit_move_id = counterpart_line.id
+                OR
+                part.credit_move_id = counterpart_line.id
+            JOIN account_move invoice ON invoice.id = counterpart_line.move_id
+            JOIN account_account account ON account.id = line.account_id
+            WHERE account.account_type IN ('asset_receivable', 'liability_payable')
+                AND invoice.id IN %(invoice_ids)s
+                AND line.id != counterpart_line.id
+            GROUP BY invoice.id, invoice.move_type
+            """,
+            invoice_ids=tuple(self.ids),
+        ))) if self.ids else {}
+        for move in self:
+            move.reconciled_payment_ids = self.env['account.payment'].browse(invoice_payment_links.get(move.id)) | move.matched_payment_ids
+
     def _search_next_payment_date(self, operator, value):
         if operator not in ('in', '<', '<='):
             return NotImplemented
@@ -2396,6 +2449,13 @@ class AccountMove(models.Model):
         field = 'name' if 'like' in operator else 'id'
         journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
         return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
+
+    def _search_reconciled_payment_ids(self, operator, value):
+        if operator not in ('in', '='):
+            return NotImplemented
+        payment_ids = self.env['account.payment'].browse(value).reconciled_invoice_ids.ids
+        return [('id', 'in', payment_ids)]
+
     # -------------------------------------------------------------------------
     # INVERSE METHODS
     # -------------------------------------------------------------------------
@@ -4438,7 +4498,7 @@ class AccountMove(models.Model):
         chains_to_hash = self._get_chains_to_hash(**kwargs)
         grant_secure_group_access = False
         for chain in chains_to_hash:
-            move_hashes = chain['moves']._calculate_hashes(chain['previous_hash'])
+            move_hashes = chain['moves'].sudo()._calculate_hashes(chain['previous_hash'])
             for move, move_hash in move_hashes.items():
                 move.inalterable_hash = move_hash
             # If any secured entries belong to journals without 'hash on post', the user should be granted access rights
@@ -5610,7 +5670,8 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def open_payments(self):
-        return self.matched_payment_ids._get_records_action(name=_("Payments"))
+        payments = self.reconciled_payment_ids
+        return payments._get_records_action(name=_("Payments"))
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
@@ -5754,6 +5815,13 @@ class AccountMove(models.Model):
             'type': 'ir.actions.act_url',
             'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/pdf',
             'target': target,
+        }
+
+    def action_move_download_all(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_move_attachments/{",".join(str(move_id) for move_id in self.ids)}',
+            'target': 'download',
         }
 
     def action_print_pdf(self):
@@ -6061,7 +6129,11 @@ class AccountMove(models.Model):
             ('sending_data', '!=', False),
             ('state', '=', 'posted'),
         ]
-        to_process = self.search(domain, limit=job_count).try_lock_for_update()
+        to_process = self.search(
+            domain,
+            order='date asc, invoice_date asc, sequence_number asc, id asc',
+            limit=job_count)
+        to_process.try_lock_for_update()
         if not to_process:
             return
 
@@ -6380,7 +6452,7 @@ class AccountMove(models.Model):
             # No eligible method could be found; we can't generate the QR-code
             return None
 
-        unstruct_ref = self.ref if self.ref else self.name
+        unstruct_ref = self.payment_reference or self.name
         rslt = self.partner_bank_id.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
 
         # We only set qr_code_method after generating the url; otherwise, it
@@ -6629,9 +6701,14 @@ class AccountMove(models.Model):
     def _routing_check_route(self, message, message_dict, route, raise_exception=True):
         if route[0] == 'account.move' and len(message_dict['attachments']) < 1:
             # Don't create the move if no attachment.
+            company_id = route[2].get('company_id', self.env.company.id)
+            if not isinstance(company_id, int):
+                raise ValueError(_("Default value for 'company_id' for %(record)s is not an integer",
+                                  record=route[4]))
+            journal_alias_company = self.env['res.company'].search([['id', '=', company_id]])
             body = self.env['ir.qweb']._render('account.email_template_mail_gateway_failed', {
-                'company_email': self.env.company.email,
-                'company_name': self.env.company.name,
+                'company_email': journal_alias_company.email or self.env.company.email,
+                'company_name': journal_alias_company.name or self.env.company.name,
             })
             self._routing_create_bounce_email(
                 message_dict['from'], body, message,
@@ -6940,20 +7017,24 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
-        # TO OVERRIDE
+        if posted_moves := self.filtered(lambda m: m.state == 'posted'):
+            return [
+                {
+                    'key': 'download_all',
+                    'description': _("Export ZIP"),
+                    **posted_moves.action_move_download_all(),
+                },
+            ]
         return []
 
     def _get_move_lines_to_report(self):
         def show_line(line):
             return (
                 line.display_type == 'line_section'
-                or (not (
-                    line.parent_id.collapse_composition
-                    or line.parent_id.parent_id.collapse_composition
-                ) and not (
-                    line.parent_id.collapse_prices
-                    or line.parent_id.parent_id.collapse_prices
-                ))
+                or (
+                    not any([line.parent_id.collapse_composition, line.parent_id.parent_id.collapse_composition]) and
+                    not any([line.parent_id.collapse_prices, line.parent_id.parent_id.collapse_prices])
+                )
             )
 
         return self.invoice_line_ids.filtered(show_line).sorted('sequence')

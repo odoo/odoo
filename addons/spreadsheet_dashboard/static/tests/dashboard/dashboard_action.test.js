@@ -138,15 +138,11 @@ test("display no dashboard message", async () => {
 
 test("display error message", async () => {
     expect.errors(1);
-    onRpc(
-        "/spreadsheet/dashboard/data/2",
-        () => {
-            const error = new RPCError();
-            error.data = {};
-            throw error;
-        },
-        { pure: true }
-    );
+    onRpc("/spreadsheet/dashboard/data/2", () => {
+        const error = new RPCError();
+        error.data = {};
+        throw error;
+    });
     await createSpreadsheetDashboard();
     expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
     await contains(".o_search_panel li:eq(1)").click();

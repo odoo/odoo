@@ -23,7 +23,7 @@ export class UrlAutoComplete extends Component {
         for (const key in this.props.options?.classes) {
             classList.push(key, this.props.options.classes[key]);
         }
-        return classList.join(" ")
+        return classList.join(" ");
     }
 
     get dropdownOptions() {

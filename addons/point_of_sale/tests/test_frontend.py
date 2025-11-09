@@ -399,6 +399,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
                 'product_id': cls.wall_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'applied_on': '0_product_variant',
+                'min_quantity': 5,
+                'product_id': cls.monitor_stand.product_variant_id.id,
             })],
         })
 
@@ -562,6 +568,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
         })
 
+        cls.printer = cls.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+        })
+
         # Set customers
         partners = cls.env['res.partner'].create([
             {'name': 'Partner Test 1'},
@@ -615,7 +627,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_pricelist', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_02_decimal_order_quantity', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_03_tax_position', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FloatingOrderTour', login="pos_user")
@@ -649,6 +660,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
         # Check if session name contains config name as prefix
         self.assertEqual(self.main_pos_config.name in last_order.session_id.name, True)
+
+    def test_03_pos_with_lots(self):
+
+        # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.monitor_stand.tracking = 'lot'
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_03_pos_with_lots', login="pos_user")
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
@@ -785,6 +804,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'rounding_method': rouding_method.id,
             'cash_rounding': True,
+            'only_round_cash_method': True,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -807,48 +827,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'rounding_method': rouding_method.id,
             'cash_rounding': True,
+            'only_round_cash_method': True,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="pos_user")
         self.env["pos.order"].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenTotalDueWithOverPayment', login="pos_user")
-
-    def test_rounding_half_up(self):
-        rouding_method = self.env['account.cash.rounding'].create({
-            'name': 'Rounding HALF-UP',
-            'rounding': 0.5,
-            'rounding_method': 'HALF-UP',
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 1.20',
-            'available_in_pos': True,
-            'list_price': 1.2,
-            'taxes_id': False,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 1.25',
-            'available_in_pos': True,
-            'list_price': 1.25,
-            'taxes_id': False,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 1.4',
-            'available_in_pos': True,
-            'list_price': 1.4,
-            'taxes_id': False,
-        })
-
-        self.main_pos_config.write({
-            'rounding_method': rouding_method.id,
-            'cash_rounding': True,
-        })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="pos_user")
 
     def test_pos_closing_cash_details(self):
         """Test cash difference *loss* at closing.
@@ -1418,6 +1403,36 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_restricted_categories_combo_product', login="pos_user")
 
+    def test_printer_restricts_to_allowed_categories_for_combo(self):
+        setup_product_combo_items(self)
+        self.printer.write({
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([('name', '=', 'Category 2')]).ids)],
+        })
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.printer.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_printer_restricts_to_allowed_categories_for_combo', login="pos_user")
+
+    def test_printer_not_linked_to_any_combo_category(self):
+        setup_product_combo_items(self)
+        new_category = self.env['pos.category'].create({
+            'name': 'New Category',
+        })
+        self.wall_shelf.write({
+            'pos_categ_ids': [Command.set(new_category.ids)],
+        })
+        self.printer.write({
+            'product_categories_ids': [Command.set(new_category.ids)],
+        })
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.printer.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_printer_not_linked_to_any_combo_category', login="pos_user")
+
     def test_multi_product_options(self):
         self.pos_user.write({
             'group_ids': [
@@ -1520,6 +1535,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_customer_display(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTour', login="pos_user")
+
+    def test_customer_display_scroll(self):
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTourScroll', login="pos_user")
 
     def test_customer_display_with_qr(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTourWithQr', login="pos_user")
@@ -1675,27 +1693,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'ProductComboDiscountTour',
             login="pos_user",
         )
-
-    def test_cash_rounding_payment(self):
-        """Verify than an error popup is shown if the payment value is more precise than the rounding method"""
-        rounding_method = self.env['account.cash.rounding'].create({
-            'name': 'Down 0.10',
-            'rounding': 0.10,
-            'strategy': 'add_invoice_line',
-            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
-            'loss_account_id': self.company_data['default_account_expense'].copy().id,
-            'rounding_method': 'DOWN',
-        })
-
-        self.main_pos_config.write({
-            'cash_rounding': True,
-            'only_round_cash_method': False,
-            'rounding_method': rounding_method.id,
-        })
-
-        self.env['ir.config_parameter'].sudo().set_param('barcode.max_time_between_keys_in_ms', 1)
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
 
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
@@ -3083,6 +3080,45 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_pos_large_amount_confirmation_dialog')
+
+    def test_product_info_product_inventory(self):
+        """ Test that the product variant inventory info is correctly displayed in the POS. """
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'value_ids': [
+                Command.create({'name': 'Small'}),
+                Command.create({'name': 'Large'})
+            ],
+            'create_variant': 'always',
+        })
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': size_attribute.id,
+                    'value_ids': [Command.link(id) for id in size_attribute.value_ids.ids]
+                })
+            ]
+        })
+
+        for variant in range(len(product_template.product_variant_ids)):
+            self.env['stock.quant']._update_available_quantity(product_template.product_variant_ids[variant], self.main_pos_config.warehouse_id.lot_stock_id, (variant + 1) * 100)
+            product_template.product_variant_ids[variant].write({'barcode': f'product_variant_{variant}'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_product_info_product_inventory')
+
+    def test_add_money_button_with_different_decimal_separator(self):
+        """
+        Tests that the buttons such as +10 or +50 work even in languages such as
+        french that have ',' as a decimal separator.
+        """
+        self.env['res.lang']._activate_lang('fr_BE')
+        self.pos_user.write({'lang': 'fr_BE'})
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_add_money_button_with_different_decimal_separator', login="pos_user")
 
 
 # This class just runs the same tests as above but with mobile emulation

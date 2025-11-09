@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 13:43+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 12:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "website_profile/ar/>\n"
 "Language: ar\n"
@@ -56,11 +57,13 @@ msgstr ". تجربة بحث آخر."
 msgid ""
 "<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</a>"
 msgstr ""
+"<a class=\"o_translate_inline\" t-attf-href=\"/\">العودة إلى الموقع "
+"الإلكتروني.</a>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "<i class=\"fa fa-arrow-right\"/> Get Badges"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> احصل على الشارات"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -70,7 +73,7 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>تحرير"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>تحرير"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -271,6 +274,135 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; color: #454748; width: 100%; border-"
+"collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">"
+"\n"
+"                            تصديق الملف التعريفي<t t-out="
+"\"object.company_id.name or ''\">لبشركتك</t>\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td t-if=\"not user.company_id.uses_default_logo\" "
+"valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src="
+"\"/logo.png?company={{ user.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
+"\"user.company_id.name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <p style="
+"\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                            مرحباً <t t-out=\"object.name or ''\">مارك "
+"ديمو</t>،<br/><br/>\n"
+"                            لقد تمت دعوتك إلى تصديق بريدك الإلكتروني حتى "
+"تتمكن من الوصول إلى موقع \"<t t-out=\"object.company_id.name or ''"
+"\">شركتك</t>\".\n"
+"                            لتصديق بريدك الإلكتروني، يرجى الضغط على الرابط "
+"التالي:\n"
+"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t"
+"-attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                    تصديق حسابي\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            شكراً لمشاركتك!\n"
+"                        </p>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: "
+"590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; "
+"border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\">\n"
+"                         <t t-out=\"user.company_id.name or ''\">شركتك</t>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style="
+"\"opacity: 0.7;\">\n"
+"                        <t t-out=\"user.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                        <t t-if=\"user.company_id.email\">\n"
+"                            | <a t-attf-href="
+"\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"user.company_id.email or ''\""
+">info@yourcompany.com</a>\n"
+"                        </t>\n"
+"                        <t t-if=\"user.company_id.website\">\n"
+"                            | <a t-attf-href="
+"\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>"
+"\n"
+"                        </t>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
+" 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"            مشغل بواسطة <a target=\"_blank\" href="
+"\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" t-attf-style="
+"\"color: {{object.company_id.email_secondary_color or '#875A7B'}};\">أودو</a>"
+"\n"
+"        </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -319,7 +451,7 @@ msgstr "الشارات"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "Badges are your collection of achievements. Wear them proudly! <br/>"
-msgstr ""
+msgstr "الشارات هي مجموعتك من الإنجازات. ارتديها بفخر! <br/>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -350,7 +482,7 @@ msgstr "بإمكانه النشر"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "City"
-msgstr ""
+msgstr "المدينة"
 
 #. module: website_profile
 #. odoo-javascript
@@ -367,26 +499,26 @@ msgstr "إغلاق"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Country"
-msgstr ""
+msgstr "الدولة"
 
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Country..."
-msgstr ""
+msgstr "الدولة..."
 
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "إهمال"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__display_name
 #: model:ir.model.fields,field_description:website_profile.field_res_users__display_name
 #: model:ir.model.fields,field_description:website_profile.field_website__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: website_profile
 #. odoo-javascript
@@ -404,7 +536,7 @@ msgstr "تحرير الملف الشخصي"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Email"
-msgstr ""
+msgstr "البريد الإلكتروني"
 
 #. module: website_profile
 #. odoo-python
@@ -447,7 +579,7 @@ msgstr "كيف يمكنني إحراز المزيد من النقاط؟"
 #: model:ir.model.fields,field_description:website_profile.field_res_users__id
 #: model:ir.model.fields,field_description:website_profile.field_website__id
 msgid "ID"
-msgstr ""
+msgstr "المُعرف"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
@@ -478,7 +610,7 @@ msgstr "المزيد من المعلومات"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Name"
-msgstr ""
+msgstr "الاسم"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -510,12 +642,13 @@ msgstr "لم يتم العثور على مستخدم لـ"
 #: code:addons/website_profile/controllers/main.py:0
 msgid "Not have enough karma to view other users' profile."
 msgstr ""
+"لا تملك ما يكفي من نقاط الكارما لرؤية الملفات التعريفية للمستخدمين الآخرين."
 
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Public Profile"
-msgstr ""
+msgstr "ملف تعريفي عام"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -547,12 +680,12 @@ msgstr ""
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "رابطURL الكامل المطلق للوصول إلى المستند من خلال الموقع الإلكتروني."
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "رابطURL الكامل ذو الصلة للوصول إلى المستند من خلال الموقع الإلكتروني."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -623,7 +756,7 @@ msgstr "الموقع الإلكتروني"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "رابط URL المطلق للموقع الإلكتروني"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
@@ -639,7 +772,7 @@ msgstr "عند إنهائك لدورة أو وصولك إلى مؤشرات تق�
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
 msgid "Write a few words about yourself..."
-msgstr ""
+msgstr "حدثنا عن نفسك باختصار..."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card

@@ -3,13 +3,14 @@
 # * stock_delivery
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 02:31+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-31 12:58+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "stock_delivery/de/>\n"
 "Language: de\n"
@@ -49,7 +50,7 @@ msgstr "<span>Versandgewicht: </span>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr ""
+msgstr "<strong>Transportunternehmen:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
@@ -96,16 +97,18 @@ msgid ""
 "<strong>Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Gewicht:</strong>\n"
+"                <br/>"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Aktion bei der Validierung von Lieferaufträgen"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
 msgid "Allowed Carrier"
-msgstr ""
+msgstr "Zulässige Zusteller"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
@@ -142,7 +145,7 @@ msgstr "Code des Zustellers"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
 msgid "Carrier Type"
-msgstr ""
+msgstr "Typ des Zustellers"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
@@ -257,7 +260,7 @@ msgstr "ID"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Integrationslevel"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
@@ -331,7 +334,7 @@ msgstr "Anbieter"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_put_in_pack
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "Verpackungsassistent"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
@@ -487,6 +490,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "its package type. Please choose another package."
 msgstr ""
+"Das Gewicht Ihres Pakets überschreitet das für diesen Pakettyp zulässige "
+"Höchstgewicht. Wählen Sie ein anderes Paket aus."
 
 #. module: stock_delivery
 #. odoo-python
@@ -626,12 +631,12 @@ msgstr "^FO310,200"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
 msgid "^FO35, 180 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 180 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FO35, 220 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 220 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label

@@ -1,20 +1,21 @@
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-class BlogPageOption extends Plugin {
+export class BlogPageOption extends BaseOptionComponent {
+    static template = "website_blog.BlogPageOption";
+    static selector = "main:has(#o_wblog_post_main)";
+    static title = _t("Blog Page");
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
+}
+
+export class BlogPageOptionPlugin extends Plugin {
     static id = "blogPageOption";
     resources = {
-        builder_options: [
-            {
-                template: "website_blog.BlogPageOption",
-                selector: "main:has(#o_wblog_post_main)",
-                editableOnly: false,
-                title: _t("Blog Page"),
-                groups: ["website.group_website_designer"],
-            },
-        ],
+        builder_options: [BlogPageOption],
     };
 }
 
-registry.category("website-plugins").add(BlogPageOption.id, BlogPageOption);
+registry.category("website-plugins").add(BlogPageOptionPlugin.id, BlogPageOptionPlugin);

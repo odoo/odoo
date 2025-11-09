@@ -2,7 +2,6 @@ import { Component, onWillUnmount, useState, useSubEnv, useRef, onMounted } from
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
-import { computeProductPrice } from "../../services/card_utils";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 
 export class ProductPage extends Component {
@@ -63,6 +62,16 @@ export class ProductPage extends Component {
         return this.props.productTemplate;
     }
 
+    shouldShowMissingDetails() {
+        const el = this.scrollContainerRef?.el;
+        if (!el) {
+            return false;
+        }
+        return (
+            el.scrollHeight > el.clientHeight && this.productTemplate.attribute_line_ids.length > 1
+        );
+    }
+
     changeQuantity(increase) {
         const currentQty = this.state.qty;
 
@@ -112,12 +121,21 @@ export class ProductPage extends Component {
     }
 
     getProductPrice() {
-        return computeProductPrice(
-            this.selfOrder,
-            this.props.productTemplate,
-            this.getSelectedAttributesValues(),
-            this.state.qty
+        const productTmplAttrModel = this.selfOrder.models["product.template.attribute.value"];
+        const attributeIds = this.getSelectedAttributesValues();
+        const attributes = productTmplAttrModel.readMany(attributeIds);
+        const priceExtra = attributes.reduce((sum, attr) => sum + attr.price_extra, 0);
+        const price = this.props.productTemplate.getPrice(
+            this.selfOrder.currentOrder.pricelist_id,
+            1,
+            priceExtra
         );
+        const taxDetails = this.props.productTemplate.getTaxDetails({
+            overridedValues: { price_unit: price, quantity: this.state.qty },
+        });
+        return this.selfOrder.isTaxesIncludedInPrice()
+            ? taxDetails.total_included
+            : taxDetails.total_excluded;
     }
 
     getSelectedAttributesValues() {

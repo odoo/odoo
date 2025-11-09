@@ -3,13 +3,14 @@
 # * sale_project
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-17 17:24+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-17 15:00+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/it/>\n"
 "Language: it\n"
@@ -45,7 +46,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's %(action_name)s"
-msgstr ""
+msgstr "%(action_name)s di %(name)s"
 
 #. module: sale_project
 #. odoo-python
@@ -116,17 +117,17 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Projects</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Progetti</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Lavori</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Anteprima</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -147,6 +148,14 @@ msgid ""
 "the project is billable.</span>\n"
 "                </span>"
 msgstr ""
+"<span name=\"rating_status_helper\">\n"
+"                    <span invisible=\"rating_status == 'periodic'\">Una "
+"richiesta di valutazione viene inviata non appena un lavoro raggiunge questa "
+"fase, a condizione che il progetto sia fatturabile.</span>\n"
+"                    <span invisible=\"rating_status == 'stage'\">Le "
+"richieste di valutazione saranno inviate fintanto che l'attività rimarrà in "
+"questa fase, a condizione che il progetto sia fatturabile.</span>\n"
+"                </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -162,6 +171,10 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"È necessario indicare un progetto sul preventivo %(order)s o nel modulo dei "
+"prodotti che creano un lavoro su ordine.\n"
+"I seguenti prodotti necessitano di un progetto nel quale inserire il lavoro: "
+"%(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -223,7 +236,7 @@ msgstr "Annullato"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
 msgid "Confirm & Close"
-msgstr ""
+msgstr "Conferma e chiudi"
 
 #. module: sale_project
 #. odoo-python
@@ -232,18 +245,20 @@ msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
 msgstr ""
+"La conversione di questo modello in un progetto regolare annullerà il "
+"collegamento a tutti i prodotti a esso associati."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold"
-msgstr ""
+msgstr "Costo dei beni venduti"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Costo articoli beni venduti"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -254,18 +269,18 @@ msgstr "Crea progetto"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Crea ordine di vendita"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
-msgstr ""
+msgstr "Creazione progetto"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Crea un lavoro"
 
 #. module: sale_project
 #. odoo-python
@@ -368,7 +383,7 @@ msgstr "Campagna marketing digitale (progetto)"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
 msgid "Discard"
-msgstr ""
+msgstr "Annulla"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
@@ -388,7 +403,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -435,7 +450,7 @@ msgstr "Pavimenti"
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_project
 #. odoo-python
@@ -447,7 +462,7 @@ msgstr "In corso"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Internal link"
-msgstr ""
+msgstr "Collegamento interno"
 
 #. module: sale_project
 #. odoo-python
@@ -543,7 +558,7 @@ msgstr "Nuovo articolo ordine di vendita"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
 msgid "New project"
-msgstr ""
+msgstr "Nuovo progetto"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -576,7 +591,7 @@ msgstr "Pittura"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -596,7 +611,7 @@ msgstr "Servizi idraulici"
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Ordine di vendita portale"
 
 #. module: sale_project
 #. odoo-python
@@ -665,12 +680,12 @@ msgstr "Modello progetto"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "Procedura guidata creazione modello progetto"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_update
 msgid "Project Update"
-msgstr ""
+msgstr "Aggiornamento del progetto"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
@@ -696,7 +711,7 @@ msgstr "Riga modello di preventivo"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr ""
+msgstr "Ruolo per utenti"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -818,7 +833,7 @@ msgstr "Ricerca in fattura"
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Ricerca articolo dell'ordine di vendita"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -864,13 +879,13 @@ msgstr "Ricorrenza lavoro"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "Fase lavoro"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
 msgid "Task Template"
-msgstr ""
+msgstr "Modello lavoro"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -886,7 +901,7 @@ msgstr "Analisi lavori"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "L'ordine di vendita deve contenere almeno un prodotto servizio."
 
 #. module: sale_project
 #. odoo-python
@@ -925,6 +940,8 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
 msgstr ""
+"Non è stato possibile creare il progetto in quanto l'ordine di vendita deve "
+"essere confermato oppure è già collegato a un progetto."
 
 #. module: sale_project
 #. odoo-python
@@ -964,6 +981,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Usa queste parole chiave nel titolo per configurare nuovi lavori:\n"
+"\n"
+"        30h per assegnare 30 ore al lavoro\n"
+"        #tags per configurare tag nel lavoro\n"
+"        @user per assegnare il lavoro a un utente\n"
+"        ! per impostare la priorità su media\n"
+"        !! per impostare la priorità su alta\n"
+"        !!! per impostare la priorità su urgente\n"
+"\n"
+"        Assicurati di utilizzare il formato e l'ordine corretti, ad es. "
+"Migliorare la schermata di configurazione 5h #feature #v16 @Mitchell!"
 
 #. module: sale_project
 #. odoo-python
@@ -1002,19 +1030,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "[Project] %(task_name)s"
-msgstr ""
+msgstr "[Project] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "delivered_manual"
-msgstr ""
+msgstr "delivered_manual"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
-msgstr ""
+msgstr "sale_line_id"
 
 #~ msgid ""
 #~ "<span class=\"o_stat_text\">Customer</span>\n"

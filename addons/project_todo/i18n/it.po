@@ -3,13 +3,14 @@
 # * project_todo
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-17 17:19+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-21 12:30+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "project_todo/it/>\n"
 "Language: it\n"
@@ -37,6 +38,11 @@ msgid ""
 "invitations #event @Mitchell !\n"
 "    </span>"
 msgstr ""
+"<br/>\n"
+"    <span style=\"font-size: 14px;\">\n"
+"        Assicurati di adottare il formato e l'ordine corretti. Ad esempio: "
+"invia inviti #evento @Mitchell !\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -260,6 +266,10 @@ msgid ""
 "    </span>\n"
 "    <br/>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Usa queste parole chiave nel titolo per ottimizzare i to-do: \n"
+"    </span>\n"
+"    <br/>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -327,6 +337,10 @@ msgid ""
 "            </span>\n"
 "            Mark the to-do as urgent"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">!!!:</font>\n"
+"            </span>\n"
+"            Contrassegna il to-do come urgente"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -336,6 +350,10 @@ msgid ""
 "            </span>\n"
 "            Mark the to-do as high priority"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">!!:</font>\n"
+"            </span>\n"
+"            Contrassegna il to-do con priorità alta"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -345,6 +363,10 @@ msgid ""
 "            </span>\n"
 "            Mark the to-do as medium priority"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">!:</font>\n"
+"            </span>\n"
+"            Contrassegna il to-do con priorità media"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -354,6 +376,10 @@ msgid ""
 "            </span>\n"
 "            Add tags to categorize the to-do"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">#tags:</font>\n"
+"            </span>\n"
+"            Aggiungi tag per categorizzare il to-do"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -363,6 +389,10 @@ msgid ""
 "            </span>\n"
 "            Assign the to-do to a specific user"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">@user:</font>\n"
+"            </span>\n"
+"            Assegna il to-do a un utente specifico"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -523,7 +553,7 @@ msgstr "Data scadenza"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Enhance Your To-Dos with Shortcuts &amp;#9889;"
-msgstr ""
+msgstr "Migliora le tue cose da fare con le scelte rapide &amp;#9889;"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -665,7 +695,7 @@ msgstr "Lavoro"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 msgid "Task Title..."
-msgstr ""
+msgstr "Titolo del lavoro..."
 
 #. module: project_todo
 #. odoo-javascript
@@ -750,6 +780,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Usa queste parole chiave nel titolo per configurare nuovi lavori:\n"
+"\n"
+"        30h per assegnare 30 ore al lavoro\n"
+"        #tags per configurare tag nel lavoro\n"
+"        @user per assegnare il lavoro a un utente\n"
+"        ! per impostare la priorità su media\n"
+"        !! per impostare la priorità su alta\n"
+"        !!! per impostare la priorità su urgente\n"
+"\n"
+"        Assicurati di utilizzare il formato e l'ordine corretti, ad es. "
+"Migliorare la schermata di configurazione 5h #feature #v16 @Mitchell!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
@@ -765,6 +806,16 @@ msgid ""
 "                             Ensure you follow the correct format and order. "
 "For example: \"Send invitations #event @Mitchell !\""
 msgstr ""
+"Usa queste parole chiave nel titolo per configurare nuovi to-do:\n"
+"\n"
+"        #tags: per categorizzare i to-do\n"
+"        @user: per assegnare il to-do a un utente specifico\n"
+"        ! per impostare la priorità su media\n"
+"        !! per impostare la priorità su alta\n"
+"        !!! per impostare la priorità su urgente\n"
+"\n"
+"        Assicurati di utilizzare il formato e l'ordine corretti, ad es. "
+"\"Invia inviti #evento @Mitchell !\""
 
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_res_users

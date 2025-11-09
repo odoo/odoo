@@ -23,7 +23,7 @@
                     t-if="!this.currentOrder.isDirectSale and this.displayCategoryCount.length"
                     t-att-disabled="doSubmitOrder.status === 'loading'"
                 >
-                    <div t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)" class="text-truncate text-start">Order</div>
+                    <div t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)" class="text-truncate text-start">Send</div>
                     <div t-attf-class="{{ !(displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ isCategoryCountOverflow ? 'mt-n3' : ''}}">
                         <t t-if="displayCategoryCount.length">
                             <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">

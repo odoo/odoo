@@ -4,6 +4,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick, undo } from "./_helpers/user_actions";
 import { animationFrame } from "@odoo/hoot-mock";
+import { defineStyle } from "@web/../tests/web_test_helpers";
 
 function setTag(tagName) {
     return (editor) => editor.shared.dom.setBlock({ tagName });
@@ -51,6 +52,32 @@ describe("to paragraph", () => {
             contentBefore: `<div>[ab]</div>`,
             stepFunction: setTag("p"),
             contentAfter: "<p>[ab]</p>",
+        });
+    });
+
+    test("should turn a block <small> element into a paragraph", async () => {
+        defineStyle("small { display: block; }");
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("p"),
+            contentAfter: "<p>[abc]</p>",
+        });
+    });
+
+    test("shouldn't turn a normal <small> element into a paragraph", async () => {
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("p"),
+            contentAfter: "<p><small>[]abc</small></p>",
+        });
+    });
+
+    test("shouldn't turn a div into a paragraph (if div isn't eligible for a baseContainer)", async () => {
+        await testEditor({
+            contentBefore: "<div><small>[abc]</small></div>",
+            stepFunction: setTag("p"),
+            contentAfter: "<div><p><small>[abc]</small></p></div>",
+            config: { baseContainers: ["P"] },
         });
     });
 
@@ -129,7 +156,7 @@ describe("to paragraph", () => {
             contentBefore:
                 '<h3 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h3>',
             stepFunction: setTag("p"),
-            contentAfter: '<p style="text-align: center;">[abcde<strong>fg]</strong></p>',
+            contentAfter: '<p style="text-align: center;">[abcde<strong>fg</strong>]</p>',
         });
     });
 });
@@ -191,6 +218,32 @@ describe("to heading 1", () => {
         });
     });
 
+    test("should turn a block <small> element into a heading", async () => {
+        defineStyle("small { display: block; }");
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<h1>[abc]</h1>",
+        });
+    });
+
+    test("shouldn't turn a normal <small> element into a heading", async () => {
+        await testEditor({
+            contentBefore: "<small>[abc]</small>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<h1><small>[]abc</small></h1>",
+        });
+    });
+
+    test("shouldn't turn a div into a heading (if div isn't eligible for a baseContainer)", async () => {
+        await testEditor({
+            contentBefore: "<div><small>[abc]</small></div>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<div><h1><small>[abc]</small></h1></div>",
+            config: { baseContainers: ["P"] },
+        });
+    });
+
     test("should turn a div into a heading 1 (if div is eligible for a baseContainer)", async () => {
         await testEditor({
             contentBefore: "<div>[ab]</div>",
@@ -223,7 +276,7 @@ describe("to heading 1", () => {
             contentBefore:
                 '<h2 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h2>',
             stepFunction: setTag("h1"),
-            contentAfter: '<h1 style="text-align: center;">[abcde<strong>fg]</strong></h1>',
+            contentAfter: '<h1 style="text-align: center;">[abcde<strong>fg</strong>]</h1>',
         });
     });
 });
@@ -293,7 +346,7 @@ describe("to heading 2", () => {
             contentBefore:
                 '<h3 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h3>',
             stepFunction: setTag("h2"),
-            contentAfter: '<h2 style="text-align: center;">[abcde<strong>fg]</strong></h2>',
+            contentAfter: '<h2 style="text-align: center;">[abcde<strong>fg</strong>]</h2>',
         });
     });
 });
@@ -439,7 +492,7 @@ describe("to pre", () => {
             contentBefore:
                 '<h3 class="h4-fs" style="text-align: center;">[abc<span style="font-size: 32px;">de</span><strong>fg</strong>]</h3>',
             stepFunction: setTag("pre"),
-            contentAfter: '<pre style="text-align: center;">[abcde<strong>fg]</strong></pre>',
+            contentAfter: '<pre style="text-align: center;">[abcde<strong>fg</strong>]</pre>',
         });
     });
 });

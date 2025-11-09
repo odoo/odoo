@@ -9,9 +9,9 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
 
     const { Interaction } = e.detail.module;
 
-    const localStorageKey = 'interactionAndWysiwygLifecycle';
+    const localStorageKey = "interactionAndWysiwygLifecycle";
     if (!localStorage.getItem(localStorageKey)) {
-        localStorage.setItem(localStorageKey, '[]');
+        localStorage.setItem(localStorageKey, "[]");
     }
 
     function addLifecycleStep(step) {
@@ -23,29 +23,25 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
     class CountdownPatch extends Interaction {
         static selector = ".s_countdown";
         dynamicContent = {
-            "_root": {
+            _root: {
                 "t-att-class": () => ({
-                    "interaction_started": true,
+                    interaction_started: true,
                 }),
             },
         };
 
         start() {
-            addLifecycleStep('interactionStart');
+            addLifecycleStep("interactionStart");
         }
 
         destroy() {
-            addLifecycleStep('interactionStop');
+            addLifecycleStep("interactionStop");
         }
     }
 
-    registry
-        .category("public.interactions")
-        .add("website.countdown_patch", CountdownPatch);
+    registry.category("public.interactions").add("website.countdown_patch", CountdownPatch);
 
-    registry
-        .category("public.interactions.edit")
-        .add("website.countdown_patch", {
-            Interaction: CountdownPatch,
-        });
+    registry.category("public.interactions.edit").add("website.countdown_patch", {
+        Interaction: CountdownPatch,
+    });
 });

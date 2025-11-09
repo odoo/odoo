@@ -11,13 +11,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 class DynamicSvgOptionPlugin extends Plugin {
     static id = "DynamicSvgOption";
     resources = {
-        builder_options: [
-            withSequence(DYNAMIC_SVG, {
-                OptionComponent: DynamicSvgOption,
-                props: {},
-                selector: "img[src^='/html_editor/shape/'], img[src^='/web_editor/shape/']",
-            }),
-        ],
+        builder_options: [withSequence(DYNAMIC_SVG, DynamicSvgOption)],
         builder_actions: {
             SvgColorAction,
         },
