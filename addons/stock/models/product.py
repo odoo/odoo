@@ -386,9 +386,8 @@ class ProductProduct(models.Model):
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
             dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
         elif locations:
-            alias = locations._table + '_inner'
-            paths_query = models.Query(locations.env, alias, SQL.identifier(locations._table))
-            paths_query.add_where(alias + '.parent_path LIKE ANY(%s)', [[loc.parent_path + '%' for loc in locations]])
+            paths_query = models.Query(locations)
+            paths_query.add_where(SQL('%s LIKE ANY(%s)', paths_query.table.parent_path, [[loc.parent_path + '%' for loc in locations]]))
             loc_domain = Domain('location_id', 'in', paths_query)
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
