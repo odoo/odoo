@@ -35,7 +35,7 @@
     <record id="sale_order_line_rule_portal" model="ir.rule">
         <field name="name">Portal Sales Orders Line</field>
         <field name="model_id" ref="sale.model_sale_order_line"/>
-        <field name="domain_force">[('order_id.partner_id','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="domain_force">[('order_id', 'access', 'read')]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
@@ -126,20 +126,6 @@
         <field name="name">All Invoices</field>
         <field name="model_id" ref="model_account_move"/>
         <field name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund'))]</field>
-        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
-    </record>
-
-    <record id="account_invoice_line_rule_see_personal" model="ir.rule">
-        <field name="name">Personal Invoice Lines</field>
-        <field name="model_id" ref="model_account_move_line"/>
-        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
-        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
-    </record>
-
-    <record id="account_invoice_line_rule_see_all" model="ir.rule">
-        <field name="name">All Invoice Lines</field>
-        <field name="model_id" ref="model_account_move_line"/>
-        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 

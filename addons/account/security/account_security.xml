@@ -280,6 +280,13 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="base_user_account_move_line_rule" model="ir.rule">
+        <field name="name">Normal User Account Move Line</field>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="domain_force">[('move_id', 'access', 'read')]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
     <!-- Some modules (i.e. sale) restrict the access for some users
     We want the invoice group to still have all access on all moves.-->
     <record id="account_move_rule_group_invoice" model="ir.rule">
