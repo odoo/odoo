@@ -675,14 +675,14 @@ class HrEmployee(models.Model):
     def create_version(self, values):
         self.ensure_one()
 
-        if 'date_version' not in values:
+        date = values.get('date_version', False)
+        if not date:
             raise ValueError("date_version is required")
-        if isinstance(values['date_version'], str):
-            date = fields.Date.to_date(values['date_version'])
-        elif isinstance(values['date_version'], datetime):
-            date = values['date_version'].date()
-        else:
-            date = values['date_version']
+
+        if isinstance(date, str):
+            date = fields.Date.to_date(date)
+        elif isinstance(date, datetime):
+            date = date.date()
 
         version_to_copy = self._get_version(date)
         if not version_to_copy:
@@ -691,19 +691,18 @@ class HrEmployee(models.Model):
             return version_to_copy
 
         date_from, date_to = self.sudo()._get_contract_dates(date)
-        contract_date_start = values['contract_date_start'] = values.get('contract_date_start', date_from)
-        contract_date_end = values['contract_date_end'] = values.get('contract_date_end', date_to)
+        contract_date_start = values.get('contract_date_start', date_from)
+        contract_date_end = values.get('contract_date_end', date_to)
+        employee_id = values.get('employee_id', self.id)
+
         if isinstance(contract_date_start, str):
             contract_date_start = fields.Date.to_date(contract_date_start)
         if isinstance(contract_date_end, str):
             contract_date_end = fields.Date.to_date(contract_date_end)
 
-        if 'employee_id' not in values:
-            values['employee_id'] = self.id
-
         if contract_date_start == date_from and contract_date_end != date_to:
             versions_sudo_to_sync = self.env['hr.version'].with_context(sync_contract_dates=True).sudo().search([
-                ('employee_id', '=', values['employee_id']),
+                ('employee_id', '=', employee_id),
                 ('contract_date_start', '=', date_from),
             ])
             if versions_sudo_to_sync:
@@ -712,8 +711,32 @@ class HrEmployee(models.Model):
                 })
         self.check_access('write')
         version_to_copy.check_access('write')
-        new_version = version_to_copy.sudo().copy(values)
-        return new_version.sudo(False)
+        # to be sure even if the user has no access to certain fields, we can still copy the verison without any issues.
+        copy_vals = {
+            'date_version': date,
+            'employee_id': employee_id,
+            'contract_date_start': contract_date_start,
+            'contract_date_end': contract_date_end,
+        }
+        if 'active' in values:
+            copy_vals['active'] = values['active']
+        if calendar_id := values.get('resource_calendar_id'):
+            copy_vals['resource_calendar_id'] = calendar_id
+        # apply the changes on the new versions.
+        new_version_vals = {
+            field_name: field_value
+            for field_name, field_value in values.items()
+            if field_name not in copy_vals
+        }
+        version_fields = self.env['hr.version']._fields
+        copy_vals = {
+            k: v
+            for k, v in version_to_copy.sudo().copy_data()[0].items()
+            if not (k in new_version_vals and version_fields[k].type in ['one2many', 'many2many'])
+        } | copy_vals
+        new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
+        new_version.write(new_version_vals)
+        return new_version
 
     def create_contract(self, date):
         # Here we can assume that there is no existing contract on the date given
@@ -1321,7 +1344,7 @@ class HrEmployee(models.Model):
         raise RedirectWarning(
             message=_(
             """You are not allowed to access "Employee" (hr.employee) records.
-We can redirect you to the public employee list."""
+    We can redirect you to the public employee list."""
             ),
             action=self.env.ref('hr.hr_employee_public_action').id,
             button_text=_("Employees profile"),
