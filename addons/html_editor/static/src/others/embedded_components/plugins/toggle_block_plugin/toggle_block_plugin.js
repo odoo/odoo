@@ -53,7 +53,7 @@ export class ToggleBlockPlugin extends Plugin {
         move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
         selection_blocker_predicates: (blocker) => {
             // Prevent the insertion of selection placeholders around toggle blocks.
-            if (blocker.dataset.embedded === "toggleBlock") {
+            if (blocker.nodeType === Node.ELEMENT_NODE && blocker.dataset.embedded === "toggleBlock") {
                 return false;
             }
         },
