@@ -33,6 +33,7 @@ declare module "models" {
     }
     export interface Thread {
         _computeOfflineMembers: () => ChannelMember[];
+        allow_invite_by_email: Readonly<boolean>;
         areAllMembersLoaded: Readonly<boolean>;
         channel_member_ids: ChannelMember[];
         channel_name_member_ids: ChannelMember[];
@@ -52,8 +53,8 @@ declare module "models" {
         hasSeenFeature: boolean;
         hasSelfAsMember: Readonly<boolean>;
         invited_member_ids: ChannelMember[];
-        last_interest_dt: luxon.DateTime;
-        lastInterestDt: luxon.DateTime;
+        last_interest_dt: import("luxon").DateTime;
+        lastInterestDt: import("luxon").DateTime;
         lastMessageSeenByAllId: undefined|number;
         lastSelfMessageSeenByEveryone: Message;
         markedAsUnread: boolean;

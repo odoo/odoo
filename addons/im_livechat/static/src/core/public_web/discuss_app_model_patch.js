@@ -20,6 +20,28 @@ patch(DiscussApp.prototype, {
             },
             eager: true,
         });
+        this.livechatLookingForHelpCategory = fields.One("DiscussAppCategory", {
+            compute() {
+                return {
+                    extraClass: "o-mail-DiscussSidebarCategory-livechatNeedHelp",
+                    hideWhenEmpty: true,
+                    icon: "fa fa-exclamation-circle",
+                    id: `im_livechat.category_need_help`,
+                    name: _t("Looking for help"),
+                    sequence: 15,
+                };
+            },
+            eager: true,
+        });
+        this.lastThread = fields.One("Thread");
         this.livechats = fields.Many("Thread", { inverse: "appAsLivechats" });
+    },
+
+    _threadOnUpdate() {
+        if (this.lastThread?.unpinOnThreadSwitch && this.lastThread.notEq(this.thread)) {
+            this.lastThread.isLocallyPinned = false;
+        }
+        this.lastThread = this.thread;
+        super._threadOnUpdate();
     },
 });

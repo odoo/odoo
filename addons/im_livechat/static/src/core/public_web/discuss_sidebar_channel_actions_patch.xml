@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="replace">
+            <div t-if="!store.discuss.isSidebarCompact and thread.discussAppCategory.eq(store.discuss.livechatLookingForHelpCategory) and thread.matchesSelfExpertise" class="d-flex justify-content-between align-items-baseline o-min-width-0">
+                <t>$0</t>
+                <i class="fa fa-star o-mail-starred me-2" role="image" title="Relevant to your expertise"/>
+            </div>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

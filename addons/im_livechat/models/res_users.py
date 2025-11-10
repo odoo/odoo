@@ -154,3 +154,5 @@ class ResUsers(models.Model):
                     lambda u: u.has_group("im_livechat.im_livechat_group_manager"),
                 ),
             )
+        if self.env.user.has_access_livechat:
+            store.add(self.env.user, Store.Many("livechat_expertise_ids", ["name"]))

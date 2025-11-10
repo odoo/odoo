@@ -58,7 +58,7 @@ export class DiscussApp extends Record {
     thread = fields.One("Thread", {
         /** @this {import("models").DiscussApp} */
         onUpdate() {
-            this.lastActiveId = this.store.Thread.localIdToActiveId(this.thread?.localId);
+            this._threadOnUpdate();
         },
     });
     hasRestoredThread = false;
@@ -82,6 +82,10 @@ export class DiscussApp extends Record {
         if (ev.key === NO_MEMBERS_DEFAULT_OPEN_LS) {
             this.isMemberPanelOpenByDefault = ev.newValue !== "true";
         }
+    }
+
+    _threadOnUpdate() {
+        this.lastActiveId = this.store.Thread.localIdToActiveId(this.thread?.localId);
     }
 }
 

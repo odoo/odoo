@@ -1,3 +1,5 @@
+import { waitForChannels } from "@bus/../tests/bus_test_helpers";
+
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 
 import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
@@ -7,9 +9,51 @@ import { tick } from "@odoo/hoot-dom";
 
 import { Deferred } from "@web/core/utils/concurrency";
 import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { rpc } from "@web/core/network/rpc";
 
 defineLivechatModels();
 describe.current.tags("desktop");
+
+test("Show looking for help in the sidebar while active or still seeking help", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const bobPartnerId = pyEnv["res.partner"].create({
+        name: "bob",
+        user_ids: [Command.create({ name: "bob" })],
+    });
+    const bobChannelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [Command.create({ partner_id: bobPartnerId })],
+        livechat_status: "need_help",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
+    await waitForChannels([`discuss.channel_${bobChannelId}`]);
+    await rpc("/im_livechat/session/update_status", {
+        channel_id: bobChannelId,
+        livechat_status: "in_progress",
+    });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
+    await rpc("/im_livechat/session/update_status", {
+        channel_id: bobChannelId,
+        livechat_status: "need_help",
+    });
+    await click(".o-mail-DiscussSidebarChannel", { text: "bob" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "bob" });
+    await rpc("/im_livechat/session/update_status", {
+        channel_id: bobChannelId,
+        livechat_status: "in_progress",
+    });
+    await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
+    await click(".o-mail-Mailbox[data-mailbox-id=starred");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
+});
 
 test("Show join button when help is required and self is not a member", async () => {
     const pyEnv = await startServer();
