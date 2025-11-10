@@ -35,7 +35,7 @@ export class VersionsTimeline extends StatusBarField {
                         record.evalContext
                     );
                 }
-                return orm.searchRead(relation, domain, fieldNames);
+                return orm.searchRead(relation, domain, fieldNames.filter((fName) => fName in record.fields));
             });
         }
 
@@ -48,6 +48,12 @@ export class VersionsTimeline extends StatusBarField {
                 return { type: "date" };
             },
         });
+    }
+
+    displayContractLines() {
+        return ["contract_type_id", "contract_date_start", "contract_date_end"].every(
+            (fieldName) => fieldName in this.props.record.fields
+        );
     }
 
     async createVersion(date) {
@@ -88,7 +94,9 @@ export class VersionsTimeline extends StatusBarField {
             return luxon.DateTime.fromISO(dateString).toFormat("MMM dd, yyyy");
         }
         const items = super.getAllItems();
-
+        if (!this.displayContractLines) {
+            return items;
+        }
         const dataById = new Map(this.specialData.data.map(d => [d.id, d]));
 
         const selectedVersion = items.find(item => item.isSelected)?.value;

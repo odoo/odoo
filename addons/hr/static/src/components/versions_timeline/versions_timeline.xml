@@ -62,6 +62,7 @@
                         t-esc="item.label"
                         t-on-click="() => this.selectItem(item)"/>
                     <div
+                        t-if="displayContractLines"
                         t-att-class="{
                             o_first: item_first,
                             o_last: item_last,
