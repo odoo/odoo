@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 
 from datetime import timedelta
 from freezegun import freeze_time
-from psycopg2.errors import ForeignKeyViolation
+from psycopg2.errors import IntegrityError
 import pytz
 
 
@@ -1103,7 +1103,7 @@ class TestPurchase(AccountTestInvoicingCommon):
                 })],
         })
 
-        with (self.assertRaises(ForeignKeyViolation), self.cr.savepoint(), mute_logger("odoo.sql_db")):
+        with (self.assertRaises(IntegrityError), self.cr.savepoint(), mute_logger("odoo.sql_db")):
             uom_test.unlink()
 
         self.assertEqual(po.order_line[0].product_uom, uom_test)
