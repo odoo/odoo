@@ -1450,7 +1450,10 @@ select {
 .o_input {
     border: none !important;
     color: #fff !important;
+    background-color: none !important;
+  /* REMOVE
     background-color: #333342 !important;
+  */
 }
 
 .o_form_view .oe_button_box .btn.oe_stat_button>.o_stat_info .o_stat_value,
@@ -1462,8 +1465,7 @@ select {
     color: #83d8ae;
 }
 
-.o_required_modifier .o_input,
-.o_required_modifier .o_input {
+.o_required_modifier {
     background-color: #333342 !important;
 }
 
@@ -1933,10 +1935,11 @@ input {
     background-color: #333342 !important;
 }
 
+/* REMOVE
 .o_required_modifier.o_input,
 .o_required_modifier.o_input {
     color: #e9f0f2 !important;
-}
+}*/
 
 .o_datepicker.o_field_date.o_field_widget.o_required_modifier>input {
     color: #e9f0f2 !important;
