@@ -80,17 +80,20 @@
     <t t-name="point_of_sale.PaymentScreenValidate">
         <button class="validation-button next btn btn-primary btn-lg py-3 lh-lg"
             t-on-click="() => this.validateOrder()"
-            t-att-hidden="pos.config.set_tip_after_payment and !currentOrder.isPaid()"
+            t-att-hidden="pos.config.set_tip_after_payment and !currentOrder.toBeValidate()"
             t-attf-class="
                 {{ ui.isSmall ? 'btn-switchpane flex-fill' : 'button next w-50' }}
                 {{ currentOrder.canBeValidated() and !currentOrder.isRefundInProcess() ? 'highlight' : 'disabled' }}
             "
         >
-            <t t-if="pos.config.set_tip_after_payment and currentOrder.isPaid()">
+            <t t-if="pos.config.set_tip_after_payment and currentOrder.toBeValidate()">
                 <span class="back_text">Close Tab</span>
             </t>
-            <t t-else="">
+            <t t-elif="this.paymentLines.length">
                 <span>Validate</span>
+            </t>
+            <t t-else="">
+                <span t-out="this.payment_methods_from_config[0].name"/>
             </t>
         </button>
     </t>

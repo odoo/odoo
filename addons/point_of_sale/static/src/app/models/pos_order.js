@@ -542,8 +542,13 @@ export class PosOrder extends PosOrderAccounting {
         );
     }
 
-    isPaid() {
-        return this.orderHasZeroRemaining;
+    toBeValidate() {
+        // Return true if order has payment lines and no due is remaining.
+        if (this.payment_ids.length > 0) {
+            return this.orderHasZeroRemaining;
+        }
+        // Check if multiple payment methods are configured.
+        return this.config_id.payment_method_ids.length;
     }
 
     isRefundInProcess() {
@@ -689,7 +694,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     canBeValidated() {
-        return this.isPaid() && this._isValidEmptyOrder() && !this.isCustomerRequired;
+        return this.toBeValidate() && this._isValidEmptyOrder() && !this.isCustomerRequired;
     }
 
     // NOTE: Overrided in pos_loyalty to put loyalty rewards at this end of array.

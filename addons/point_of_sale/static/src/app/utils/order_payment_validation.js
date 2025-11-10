@@ -333,7 +333,7 @@ export default class OrderPaymentValidation {
             return false;
         }
 
-        if (!this.order.isPaid() || this.invoicing) {
+        if (!this.order.toBeValidate() || this.invoicing) {
             return false;
         }
 

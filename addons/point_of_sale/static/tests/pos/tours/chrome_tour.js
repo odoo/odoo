@@ -300,6 +300,11 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
             FeedbackScreen.checkTicketData({
                 total_amount: "100",
             }),
+            FeedbackScreen.clickNextOrder(),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            // To verify first payment method is clicked by default
+            PaymentScreen.clickValidate(),
         ].flat(),
 });
 

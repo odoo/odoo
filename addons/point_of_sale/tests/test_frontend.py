@@ -2415,6 +2415,8 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.payment_ids[0].payment_method_id.name, "Bank")
 
     def test_barcode_search_attributes_preset(self):
         product = self.env['product.template'].create({
