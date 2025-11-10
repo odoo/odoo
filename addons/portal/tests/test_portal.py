@@ -91,9 +91,12 @@ class TestUsersHttp(HttpCase):
 
     def test_submit_address_from_anonymous_partner(self):
         login = 'test_portal_user'
-        mail_new_test_user(self.env, login, name='Portal User')
+        portal_user = mail_new_test_user(self.env, login, name='Portal User')
         self.authenticate(login, login)
-        anonymous_partner = self.env['res.partner'].create({'type': 'invoice'})
+        anonymous_partner = self.env['res.partner'].create({
+            'type': 'invoice',
+            'parent_id': portal_user.commercial_partner_id.id,
+        })
         common_data = {
             'phone': '1234567890',
             'email': 'anonymous-user@example.com',
