@@ -7,7 +7,7 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
-import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
 import { DynamicGroupList } from "./dynamic_group_list";
@@ -202,11 +202,11 @@ export class RelationalModel extends Model {
             this.config = config;
         }
         this.hooks.onWillLoadRoot(config);
-        const rootLoadDef = new Deferred();
-        const cache = this._getCacheParams(config, rootLoadDef);
+        const { promise, resolve } = Promise.withResolvers();
+        const cache = this._getCacheParams(config, promise);
         const data = await this.keepLast.add(this._loadData(config, cache));
         this.root = this._createRoot(config, data);
-        rootLoadDef.resolve({ root: this.root, loadId: config.loadId });
+        resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
     }
@@ -279,7 +279,7 @@ export class RelationalModel extends Model {
         return new this.constructor.DynamicRecordList(this, config, data);
     }
 
-    _getCacheParams(config, rootLoadDef) {
+    _getCacheParams(config, rootLoadProm) {
         if (!this.withCache) {
             return;
         }
@@ -296,7 +296,7 @@ export class RelationalModel extends Model {
                     if (!hasChanged) {
                         return;
                     }
-                    const { root, loadId } = await rootLoadDef;
+                    const { root, loadId } = await rootLoadProm;
                     if (root.id !== this.root.id) {
                         // The root id might have changed, either because:
                         //  1) the user already changed the domain and a second load has been done

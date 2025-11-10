@@ -5,7 +5,6 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     click as webClick,
     getFixture,
-    makeDeferred,
     triggerEvents as webTriggerEvents,
 } from "@web/../tests/helpers/utils";
 
@@ -241,7 +240,7 @@ class Contains {
      */
     run() {
         this.done = false;
-        this.def = makeDeferred();
+        this.def = Promise.withResolvers();
         this.scrollListeners = new Set();
         this.onScroll = () => this.runOnce("after scroll");
         if (!this.runOnce("immediately")) {
@@ -267,7 +266,7 @@ class Contains {
                 }
             });
         }
-        return this.def;
+        return this.def.promise;
     }
 
     /**

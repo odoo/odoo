@@ -23,7 +23,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Deferred } from "../utils/concurrency";
 import { Dialog } from "../dialog/dialog";
 import { getTemplate } from "@web/core/templates";
 
@@ -554,13 +553,13 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     function open(ref, openProps) {
         state.isOpen = true;
         if (ui.isSmall || isMobileOS()) {
-            const def = new Deferred();
+            const { promise, resolve } = Promise.withResolvers();
             const pickerMobileProps = {
                 PickerComponent,
                 onSelect: (...args) => {
                     const func = openProps?.onSelect ?? props?.onSelect;
                     const res = func?.(...args);
-                    def.resolve(true);
+                    resolve(true);
                     return res;
                 },
             };
@@ -585,11 +584,11 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     context: component,
                     onClose: () => {
                         state.isOpen = false;
-                        return def.resolve(false);
+                        return resolve(false);
                     },
                 });
             }
-            return def;
+            return promise;
         }
         return popover.open(ref.el, { ...props, ...openProps });
     }

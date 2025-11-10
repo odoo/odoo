@@ -27,6 +27,8 @@ export function debounce(func, wait, immediate) {
 }
 
 /**
+ * @deprecated Use Promise.withResolvers() instead.
+ *
  * Deferred is basically a resolvable/rejectable extension of Promise.
  */
 export class Deferred extends Promise {

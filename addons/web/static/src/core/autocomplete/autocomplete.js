@@ -1,4 +1,3 @@
-import { Deferred } from "@web/core/utils/concurrency";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
@@ -362,7 +361,7 @@ export class AutoComplete extends Component {
     }
     async onInput() {
         this.inEdition = true;
-        this.pendingPromise = this.pendingPromise || new Deferred();
+        this.pendingPromise = this.pendingPromise || Promise.withResolvers();
         this.loadingPromise = this.pendingPromise;
         this.debouncedProcessInput();
     }
@@ -400,7 +399,7 @@ export class AutoComplete extends Component {
                 ev.preventDefault();
             }
 
-            await this.loadingPromise;
+            await this.loadingPromise.promise;
         }
 
         switch (hotkey) {
