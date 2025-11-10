@@ -47,7 +47,7 @@
                 <div t-attf-class="col-md-auto text-center #{props.docs.virtual_available &lt; 0 and 'text-danger'}" name="forecasted_value">
                     <div class="h3">
                         <span t-out="_formatFloat(this.virtualAvailable)"/>
-                        <span t-out="' ' + this.uom" groups="uom.group_uom"/>
+                        <span t-out="' ' + this.uom"/>
                     </div>
                     <div>Forecasted</div>
                 </div>
