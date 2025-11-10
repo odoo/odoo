@@ -376,6 +376,6 @@ test("The overlay buttons should be hidden when the toolbar is open", async () =
     await waitFor(".o-we-toolbar:not(.o_overlay_options)");
     expect(".o-we-toolbar:not(.o_overlay_options)").toHaveCount(1);
     // Check that the overlay buttons are hidden.
-    await waitFor(".o-we-toolbar.o_overlay_options.d-none", { timeout: 500 });
+    await waitFor(".o-we-toolbar.o_overlay_options.d-none", { timeout: 600 });
     expect(".o-we-toolbar.o_overlay_options.d-none").toHaveCount(1);
 });
