@@ -360,9 +360,12 @@ class HrAttendanceOvertimeRule(models.Model):
 
         attendances_by_employee = attendances.grouped('employee_id')
         for employee, emp_attendance in attendances_by_employee.items():
-            attendances_intervals_by_employee[employee] = Intervals([
-                (*(attendance._get_localized_times()), attendance)
-            for attendance in emp_attendance], keep_distinct=True)
+            attendance_intervals = []
+            for attendance in emp_attendance:
+                start, stop = attendance._get_overtime_localized_times()
+                if stop > start:
+                    attendance_intervals.append((start, stop, attendance))
+            attendances_intervals_by_employee[employee] = Intervals(attendance_intervals, keep_distinct=True)
 
         for timing_type, rules in self.grouped('timing_type').items():
             if timing_type == 'leave':

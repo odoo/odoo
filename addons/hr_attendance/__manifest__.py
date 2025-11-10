@@ -43,11 +43,6 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/**/*.js',
             'hr_attendance/static/src/**/*.xml',
             'hr_attendance/static/src/scss/views/*.scss',
-            # Don't include dark mode files in light mode
-            ('remove', 'hr_attendance/static/src/**/*.dark.scss'),
-        ],
-        'web.assets_web_dark': [
-            'hr_attendance/static/src/**/*.dark.scss',
         ],
         'web.assets_unit_tests': [
             'hr_attendance/static/tests/*.test.js',

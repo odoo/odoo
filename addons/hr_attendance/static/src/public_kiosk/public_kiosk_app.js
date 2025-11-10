@@ -4,6 +4,7 @@ import { KioskManualSelection } from "@hr_attendance/components/manual_selection
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from "@web/core/templates";
 import { _t, appTranslateFn } from "@web/core/l10n/translation";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
@@ -16,8 +17,11 @@ import { browser } from "@web/core/browser/browser";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog/new_employee_dialog";
+import { BreakDurationDialog } from "@hr_attendance/components/break_duration_dialog/break_duration_dialog";
 import { session } from "@web/session";
 import { services } from "@web/core/services";
+
+const { DateTime } = luxon;
 
 class kioskAttendanceApp extends Component {
     static template = "hr_attendance.public_kiosk_app";
@@ -31,6 +35,7 @@ class kioskAttendanceApp extends Component {
         fromTrialMode: { type: Boolean },
         deviceTrackingEnabled: { type: Boolean },
         captureCheckInImage: { type: Boolean },
+        breakManagementEnabled: { type: Boolean },
     };
     static components = {
         KioskBarcodeScanner,
@@ -57,9 +62,12 @@ class kioskAttendanceApp extends Component {
                 browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false",
             streamAvailable: false,
             kioskMode: this.props.kioskMode,
+            employeeData: null,
         });
         this.lockScanner = false;
         this.cameraCapture = null;
+        this.lastManualSelection = null;
+        this.lastBarcodeSelection = null;
         if (this.state.kioskMode === "settings" || this.props.fromTrialMode) {
             this.manualKioskMode = false;
             useBus(this.barcode.bus, "barcode_scanned", (ev) =>
@@ -111,7 +119,7 @@ class kioskAttendanceApp extends Component {
             employee_id: employeeId,
         });
         if (employee && employee.employee_name) {
-            this.employeeData = employee;
+            this.state.employeeData = employee;
             return employee;
         }
         return null;
@@ -122,8 +130,10 @@ class kioskAttendanceApp extends Component {
         if (employee) {
             if (employee.use_pin) {
                 this.switchDisplay("pin");
-            } else {
+            } else if (this.props.captureCheckInImage && employee.attendance_state !== "checked_in") {
                 this.switchDisplay("confirmation");
+            } else {
+                await this.onManualSelection(employeeId, false);
             }
         }
     }
@@ -190,7 +200,10 @@ class kioskAttendanceApp extends Component {
     }
 
     async onManualSelection(employeeId, enteredPin) {
-        const checkInImage = await this.cameraCapture?.();
+        const pendingEmployee = this.state.employeeData;
+        const isCheckingIn = pendingEmployee?.attendance_state !== "checked_in";
+        const checkInImage =
+            isCheckingIn && this.props.captureCheckInImage ? await this.cameraCapture?.() : null;
         const result = await this.makeRpcWithGeolocation("manual_selection", {
             token: this.props.token,
             employee_id: employeeId,
@@ -198,7 +211,9 @@ class kioskAttendanceApp extends Component {
             check_in_image: checkInImage,
         });
         if (result && result.attendance) {
-            this.employeeData = result;
+            this.lastManualSelection = { employeeId, pinCode: enteredPin };
+            this.lastBarcodeSelection = null;
+            this.state.employeeData = result;
             this.displayServerNotification(result.notification);
             this.switchDisplay("greet");
         } else {
@@ -212,20 +227,35 @@ class kioskAttendanceApp extends Component {
         if (this.lockScanner || this.state.active_display !== "main") {
             return;
         }
-        const checkInImage = await this.cameraCapture?.();
         this.lockScanner = true;
         this.ui.block();
 
-        let result;
         try {
-            result = await rpc("attendance_barcode_scanned", {
+            const preview = this.props.breakManagementEnabled
+                ? await rpc("attendance_barcode_preview", {
+                      barcode: barcode,
+                      token: this.props.token,
+                  })
+                : null;
+            if (this.props.breakManagementEnabled && !(preview && preview.employee_name)) {
+                this.displayNotification(
+                    _t("No employee corresponding to Badge ID '%(barcode)s.'", { barcode })
+                );
+                return;
+            }
+            const isCheckingIn = !preview || preview.attendance_state !== "checked_in";
+            const checkInImage =
+                isCheckingIn && this.props.captureCheckInImage ? await this.cameraCapture?.() : null;
+            const result = await rpc("attendance_barcode_scanned", {
                 barcode: barcode,
                 token: this.props.token,
                 check_in_image: checkInImage,
             });
 
             if (result && result.employee_name) {
-                this.employeeData = result;
+                this.lastBarcodeSelection = { barcode, employeeId: result.id };
+                this.lastManualSelection = null;
+                this.state.employeeData = result;
                 this.displayServerNotification(result.notification);
                 this.switchDisplay("greet");
             } else {
@@ -234,9 +264,63 @@ class kioskAttendanceApp extends Component {
                 );
             }
         } catch (error) {
-            this.displayNotification(error.data.message);
+            this.displayNotification(error?.data?.message || error?.message);
         } finally {
             this.lockScanner = false;
+            this.ui.unblock();
+        }
+    }
+
+    async continueAsBreakTime() {
+        const employee = this.state.employeeData;
+        if (!employee?.id) {
+            this.kioskReturn(true);
+            return;
+        }
+
+        const minutes = await this.requestBreakDuration(
+            employee.employee_name,
+            this._getAttendanceMaxBreakMinutes(employee)
+        );
+        if (minutes === null) {
+            this.kioskReturn(true);
+            return;
+        }
+        const breakDurationHours = (Number(minutes) || 0) / 60;
+
+        this.ui.block();
+        try {
+            let result;
+            if (this.lastBarcodeSelection?.employeeId === employee.id) {
+                result = await rpc("update_last_break_duration", {
+                    barcode: this.lastBarcodeSelection.barcode,
+                    token: this.props.token,
+                    break_duration: breakDurationHours,
+                });
+            } else {
+                const pinCode = this.lastManualSelection?.employeeId === employee.id
+                    ? this.lastManualSelection.pinCode
+                    : false;
+                result = await rpc("update_last_break_duration", {
+                    token: this.props.token,
+                    employee_id: employee.id,
+                    pin_code: pinCode,
+                    break_duration: breakDurationHours,
+                });
+            }
+
+            if (result && result.attendance) {
+                this.state.employeeData = result;
+                this.displayServerNotification(result.notification);
+                this.kioskReturn(true);
+            } else {
+                this.displayNotification(_t("Could not save break duration. Please identify again."));
+                this.kioskReturn(true);
+            }
+        } catch (error) {
+            this.displayNotification(error?.data?.message || error?.message);
+            this.kioskReturn(true);
+        } finally {
             this.ui.unblock();
         }
     }
@@ -245,6 +329,45 @@ class kioskAttendanceApp extends Component {
         this.state.displayDemoMessage = false;
         browser.localStorage.setItem("hr_attendance.ShowDemoMessage", "false");
         return;
+    }
+
+    _getAttendanceMaxBreakMinutes(employeeData) {
+        const attendance = employeeData?.attendance;
+        if (!attendance?.check_in) {
+            return null;
+        }
+        const checkInDate = deserializeDateTime(attendance.check_in);
+        const checkOutDate = attendance.check_out ? deserializeDateTime(attendance.check_out) : DateTime.now();
+        if (!(checkInDate?.isValid && checkOutDate?.isValid)) {
+            return null;
+        }
+        const durationMinutes = checkOutDate.diff(checkInDate, "minutes").minutes;
+        return Math.max(Math.floor(durationMinutes || 0), 0);
+    }
+
+    async requestBreakDuration(employeeName, maxMinutes = null) {
+        return new Promise((resolve) => {
+            let settled = false;
+            const finalize = (value) => {
+                if (!settled) {
+                    settled = true;
+                    resolve(value);
+                }
+            };
+            this.dialogService.add(
+                BreakDurationDialog,
+                {
+                    employeeName,
+                    defaultMinutes: 0,
+                    maxMinutes: typeof maxMinutes === "number" ? maxMinutes : undefined,
+                    onConfirm: (minutes) => finalize(minutes),
+                    onCancel: () => finalize(null),
+                },
+                {
+                    onClose: () => finalize(null),
+                }
+            );
+        });
     }
 
     setCameraCapture(capturePicture) {
@@ -280,6 +403,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
             fromTrialMode: kiosk_backend_info.from_trial_mode,
             deviceTrackingEnabled: kiosk_backend_info.device_tracking_enabled,
             captureCheckInImage: kiosk_backend_info.capture_check_in_image,
+            breakManagementEnabled: kiosk_backend_info.break_management_enabled,
         },
     });
     return root.mount(document.body);

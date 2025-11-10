@@ -429,6 +429,39 @@ class TestHrAttendanceOvertime(HttpCase):
         attendance.check_out = datetime(2021, 1, 4, 18, 0)
         self.assertEqual(self.employee.total_overtime, 1, 'There should be overtime since the employee worked through the lunch period.')
 
+    def test_break_duration_reduces_overtime_hours(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 2, 8, 0),
+            'check_out': datetime(2023, 1, 2, 18, 0),
+        })
+        self.assertAlmostEqual(attendance.worked_hours, 10.0, 2)
+        self.assertAlmostEqual(attendance.overtime_hours, 2.0, 2)
+
+        attendance.break_duration = 2.0
+
+        self.assertAlmostEqual(attendance.worked_hours, 8.0, 2)
+        self.assertAlmostEqual(attendance.overtime_hours, 0.0, 2)
+        self.assertFalse(self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2023, 1, 2)),
+        ]))
+
+    def test_break_duration_can_remove_full_overtime_interval(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 2, 8, 0),
+            'check_out': datetime(2023, 1, 2, 12, 0),
+            'break_duration': 4.0,
+        })
+
+        self.assertAlmostEqual(attendance.worked_hours, 0.0, 2)
+        self.assertAlmostEqual(attendance.overtime_hours, 0.0, 2)
+        self.assertFalse(self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2023, 1, 2)),
+        ]))
+
     def test_overtime_hours_inside_attendance(self):
         # 1 Attendance case
         _, attendance = self.env['hr.attendance'].create([

@@ -45,6 +45,11 @@ class ResCompany(models.Model):
     absence_management = fields.Boolean(string="Absence Management", default=False)
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
     attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
+    attendance_break_management = fields.Boolean(
+        string="Break Management on Checkout",
+        help="If enabled, employees are prompted to enter their total break duration whenever they check out.",
+        default=False,
+    )
 
     _check_auto_check_out_specific_time_range = models.Constraint(
         "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",

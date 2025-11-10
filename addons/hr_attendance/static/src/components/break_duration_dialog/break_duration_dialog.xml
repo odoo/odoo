@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.BreakDurationDialog">
+        <Dialog title="this.dialogTitle">
+            <div class="o_break_duration_dialog">
+                <p t-out="this.promptText"/>
+                <div class="row">
+                    <div class="col-12 col-sm-8 col-md-6 col-lg-5">
+                        <div class="input-group">
+                            <input
+                                class="form-control"
+                                type="number"
+                                min="0"
+                                t-att-max="this.maxMinutes"
+                                step="1"
+                                t-att-value="this.state.minutes"
+                                t-on-input="(ev) => this.state.minutes = ev.target.value"
+                                required="1"
+                            />
+                            <span class="input-group-text">minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-primary" t-on-click="this.confirm">Confirm</button>
+                <button type="button" class="btn btn-secondary" t-on-click="this.cancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
