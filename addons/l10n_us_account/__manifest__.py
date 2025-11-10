@@ -19,6 +19,7 @@
         'demo/demo_company.xml',
     ],
     'installable': True,
+    'uninstall_hook': 'uninstall_hook',
     'auto_install': ['account'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
