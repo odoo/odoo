@@ -664,6 +664,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.set_sequence('2101-02-01', 'MISC/01-02/00001')
         move = self.assertNameAtDate('2101-03-01', 'MISC/01-03/00001')
 
+        move.name = '/'
         move.journal_id.sequence_override_regex = move._sequence_year_range_regex
         move.name = 'MISC/00-01/00001'
         self.assertNameAtDate('2101-03-01', 'MISC/00-01/00002')
@@ -797,10 +798,10 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_unlink(self):
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True, False])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, False])
         self.all_moves[1].button_draft()
         self.all_moves[1].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_unlink_2(self):
         self.all_moves[1].button_draft()
@@ -808,7 +809,7 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_change_sequence(self):
         previous = self.all_moves[1].name
@@ -820,12 +821,12 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_change_multi(self):
         self.all_moves[0].name = '/'
         self.all_moves[1].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_change_multi_2(self):
         self.all_moves[1].name = '/'
         self.all_moves[0].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_null_change(self):
         self.all_moves[1].name = self.all_moves[1].name
@@ -849,6 +850,54 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         new_move = self.create_move(name=format_string.format(**format_values))
         new_move.action_post()
         self.assertEqual(new_move.made_sequence_gap, True)
+
+    def test_draft1(self):
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft2(self):
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft3(self):
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4_2(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft6(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft6_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft7(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
 
 @tagged('post_install', '-at_install')
@@ -1027,6 +1076,7 @@ class TestSequenceMixinBankStatementLoadImport(TestSequenceMixinCommon):
         with (
             patch.object(self.env.registry['account.bank.statement.line'], '_load_records_create', side_effect=new_load_records_create),
             patch.object(self.env.registry['sequence.mixin'], '_get_sequence_cache', side_effect=count_empty_cache),
+            patch.object(self.env.registry['account.move'], '_update_sequence_made_gap', side_effect=lambda *args, **kwargs: None),
         ):
             results = self.env['account.bank.statement.line'].load(fields_list, data)
 
