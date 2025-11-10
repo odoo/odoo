@@ -298,7 +298,7 @@
 
                     <!-- Used to customize layout if the only available attribute value is custom -->
                     <t t-set="single_and_custom" t-value="single and ptavs[0].is_custom"/>
-                    <h6 class="attribute_name mb-2">
+                    <div class="attribute_name mb-2 h6">
                         <span t-field="ptal.attribute_id.name"/>
                         <span t-if="attribute.display_type in ['color', 'image']" class="text-muted">
                             -
@@ -310,7 +310,7 @@
                                 <span class="attribute_value" name="attribute_value" t-field="ptav.name"/>
                             </t>
                         </span>
-                    </h6>
+                    </div>
 
                     <t t-if="attribute.display_type == 'select'">
                         <select

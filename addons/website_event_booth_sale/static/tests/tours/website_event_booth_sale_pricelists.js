@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
     // Init: registering the booth
     {
         content: 'Open "Test Event Booths" event',
-        trigger: 'h5.card-title span:contains("Test Event Booths")',
+        trigger: 'h2.card-title span:contains("Test Event Booths")',
         run: "click",
         expectUnloadPage: true,
     },

@@ -10,7 +10,7 @@
             },
             {
                 content: 'Open "Test Event Booths" event',
-                trigger: `h5.card-title span:contains(${eventName})`,
+                trigger: `h2.card-title span:contains(${eventName})`,
                 run: "click",
                 expectUnloadPage: true,
             },
