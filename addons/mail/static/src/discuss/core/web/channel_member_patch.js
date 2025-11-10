@@ -8,8 +8,13 @@ patch(ChannelMember.prototype, {
     setup() {
         super.setup(...arguments);
         this.avatarCard = usePopover(AvatarCardPopover, {
-            position: "right",
+            arrow: false,
+            popoverClass: "mx-2",
+            position: "right-start",
         });
+    },
+    get attClass() {
+        return { ...super.attClass, "o-active": this.avatarCard.isOpen };
     },
     onClickAvatar(ev) {
         if (!this.canOpenChat) {
