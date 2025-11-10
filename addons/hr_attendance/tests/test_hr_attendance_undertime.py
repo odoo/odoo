@@ -358,17 +358,32 @@ class TestHrAttendanceUndertime(HttpCase):
         # Check that the employee's timezones take priority and that overtimes and attendances dates are consistent
         self.europe_employee.tz = 'America/New_York'
 
+        """
+        Attendnace splitted acording to employee local midnight into 2 records:
+        1st record : 30/5 03:00 (UTC) -> 30/5 04:00 (UTC) (1 hours worked, -7 hours overtime)
+        2nd record : 30/5 04:00 (UTC) -> 30/5 10:00 (UTC) (6 hours worked, -2 hours overtime)
+        """
         early_attendance2 = self.env['hr.attendance'].create({
             'employee_id': self.europe_employee.id,
             'check_in': datetime(2024, 5, 30, 3, 0),  # 23:00 NY prev day
             'check_out': datetime(2024, 5, 30, 10, 0),  # 6:00 NY
         })
-        # First day you only work 1 hour and second day you work 6 hours, that's a total of -9 hours of overtime
-        self.assertAlmostEqual(early_attendance2.overtime_hours, -9, 2)
 
-        overtime_record2 = early_attendance2.linked_overtime_ids
+        # First Attendance  (30th) -> 03:00 - 04:00
+        # Second Attendance (30th) -> 04:00 - 10:00
+        self.assertItemsEqual(early_attendance2.mapped('worked_hours'), [1.0, 6.0])
+        self.assertItemsEqual(early_attendance2.mapped('overtime_hours'), [-7.0, -2.0])
+
+        # First day you only work 1 hour and second day you work 6 hours, that's a total of -9 hours of overtime
+        self.assertAlmostEqual(sum(early_attendance2.mapped('overtime_hours')), -9, 2)
+
+        overtime_record1 = early_attendance2[0].linked_overtime_ids
+        self.assertEqual(len(overtime_record1), 1, "One undertime records should be created for that attendance.")
+        self.assertAlmostEqual(overtime_record1.duration, -7, 2)
+
+        overtime_record2 = early_attendance2[1].linked_overtime_ids
         self.assertEqual(len(overtime_record2), 1, "One undertime records should be created for that attendance.")
-        self.assertAlmostEqual(overtime_record2.duration, -9, 2)
+        self.assertAlmostEqual(overtime_record2.duration, -2, 2)
 
         early_attendance3 = self.env['hr.attendance'].create({
             'employee_id': self.europe_employee.id,
@@ -535,13 +550,14 @@ class TestHrAttendanceUndertime(HttpCase):
         self.assertEqual(len(overtime), 2, 'There should be 2 overtime records for that attendance.')
         self.assertEqual(sum(overtime.mapped('duration')), 11, 'There should be a total of 11 hours of overtime for that attendance.')
 
-        attendance.write({
+        first_day_attendance = attendance[0]
+        first_day_attendance.write({
             'check_out': datetime(2021, 1, 8, 20, 0),
         })
+        first_day_overtime = first_day_attendance._linked_overtimes()
 
-        overtime = attendance._linked_overtimes()
-        self.assertEqual(len(overtime), 1, 'There should have only 1 overtime for that attendance after modification.')
-        self.assertEqual(sum(overtime.mapped('duration')), 4, 'There should be a total of 4 hours of overtime for that attendance after modification.')
+        self.assertEqual(len(first_day_overtime), 1, 'There should have only 1 overtime for that attendance after modification.')
+        self.assertEqual(sum(first_day_overtime.mapped('duration')), 4, 'There should be a total of 4 hours of overtime for that attendance after modification.')
 
         all_overtimes = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
-        self.assertEqual(len(all_overtimes), 1, 'There should be only 1 overtime record in total for that employee.')
+        self.assertEqual(len(all_overtimes), 2, 'There should be 2 overtime record in total for that employee.')
