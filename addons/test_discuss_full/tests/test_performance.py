@@ -420,6 +420,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {
                     "id": self.users[0].id,
                     "is_admin": False,
+                    "is_livechat_manager": False,
                     "notification_type": "inbox",
                     "partner_id": partner_0.id,
                     "share": False,

@@ -10,5 +10,10 @@ export class ResUsers extends mailModels.ResUsers {
         store.add({
             has_access_livechat: this.env.user?.group_ids.includes(serverState.groupLivechatId),
         });
+        store.add(this.browse(this.env.uid), {
+            is_livechat_manager: this.env.user?.group_ids.includes(
+                serverState.groupLivechatManagerId
+            ),
+        });
     }
 }

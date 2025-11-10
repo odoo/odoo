@@ -3,7 +3,7 @@ import {
     parseRequestParams,
     registerRoute,
 } from "@mail/../tests/mock_server/mail_mock_server";
-import { makeKwArgs } from "@web/../tests/web_test_helpers";
+import { Command, makeKwArgs } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";
 
@@ -63,7 +63,9 @@ async function get_session(request) {
         });
         return { store_data: store.get_result(), channel_id: -1 };
     }
-    const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(channel_id, {'agent': agent});
+    const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(channel_id, {
+        agent: agent,
+    });
     channelVals.country_id = country_id;
     const channelId = DiscussChannel.create(channelVals);
     const store = new mailDataHelpers.Store();
@@ -184,6 +186,42 @@ async function session_update_note(request) {
         livechat_note: note,
     });
     return true;
+}
+
+registerRoute("/im_livechat/conversation/write_expertises", livechat_conversation_write_expertises);
+/** @type {RouteCallback} */
+async function livechat_conversation_write_expertises(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    const { channel_id, orm_commands } = await parseRequestParams(request);
+    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
+    if (!channel) {
+        return false;
+    }
+    DiscussChannel.write(channel_id, { livechat_expertise_ids: orm_commands });
+}
+
+registerRoute(
+    "/im_livechat/conversation/create_and_link_expertise",
+    livechat_conversation_create_and_link_expertise
+);
+/** @type {RouteCallback} */
+async function livechat_conversation_create_and_link_expertise(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").ImLivechatExpertise} */
+    const ImLivechatExpertise = this.env["im_livechat.expertise"];
+    const { channel_id, expertise_name } = await parseRequestParams(request);
+    const [channel] = DiscussChannel.search([["id", "=", channel_id]]);
+    if (!channel) {
+        return false;
+    }
+    const [expertise] = ImLivechatExpertise.search([["name", "=", expertise_name]]);
+    let expertiseId = expertise?.id;
+    if (!expertise) {
+        expertiseId = ImLivechatExpertise.create({ name: expertise_name });
+    }
+    DiscussChannel.write(channel_id, { livechat_expertise_ids: [Command.link(expertiseId)] });
 }
 
 patch(mailDataHelpers, {
