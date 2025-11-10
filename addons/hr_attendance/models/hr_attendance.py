@@ -13,11 +13,10 @@ from random import randint
 from odoo.http import request
 from odoo import models, fields, api, exceptions, _
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
 from odoo.tools import convert, format_duration, format_time, format_datetime
 from odoo.tools.intervals import Intervals
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_round
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -89,10 +88,28 @@ class HrAttendance(models.Model):
             tz = timezone(attendance.employee_id._get_tz())
             attendance.date = utc.localize(attendance.check_in).astimezone(tz).date()
 
-    @api.depends("worked_hours", "overtime_hours")
+    @api.depends("employee_id", "date")
     def _compute_expected_hours(self):
         for attendance in self:
-            attendance.expected_hours = attendance.worked_hours - attendance.overtime_hours
+            if not attendance.employee_id or not attendance.date:
+                attendance.expected_hours = 0.0
+                continue
+
+            employee = attendance.employee_id
+
+            day_start = datetime.combine(attendance.date, datetime.min.time())
+            day_end = day_start + timedelta(days=1)
+
+            expected_intervals = employee._employee_attendance_intervals(
+                pytz.utc.localize(day_start),
+                pytz.utc.localize(day_end)
+            )
+
+            total_seconds = sum(
+                (interval[1] - interval[0]).total_seconds()
+                for interval in expected_intervals
+            )
+            attendance.expected_hours = float_round(total_seconds / 3600.0, precision_digits=2)
 
     def _compute_color(self):
         for attendance in self:

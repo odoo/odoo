@@ -1015,6 +1015,32 @@ class TestHrAttendanceOvertime(TransactionCase):
             },
         ])
 
+    def test_expected_hours_from_schedule(self):
+        """ Test that expected_hours is calculated from employee's schedule, not from worked hours."""
+
+        attendance_undertime = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 11, 10, 8, 0),
+            'check_out': datetime(2025, 11, 10, 10, 0),
+        })
+        self.assertEqual(attendance_undertime.expected_hours, 8.0, 'Expected hours should be 8 from schedule, not 2 from worked hours')
+
+        attendance_overtime = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 11, 11, 8, 0),
+            'check_out': datetime(2025, 11, 11, 19, 0),
+        })
+
+        self.assertAlmostEqual(attendance_overtime.expected_hours, 8.0, 2, 'Expected hours should be 8 from schedule, not affected by overtime')
+
+        attendance_exact = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 11, 12, 8, 0),
+            'check_out': datetime(2025, 11, 12, 17, 0),
+        })
+
+        self.assertAlmostEqual(attendance_exact.expected_hours, 8.0, 2, 'Expected hours matches worked hours when exact')
+
     def test_overtime_rule_combined(self):
         # TODO
         pass
