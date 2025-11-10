@@ -480,6 +480,8 @@ class TestOrmRelated(models.Model):
     foo_binary_bin = fields.Binary(related='foo_id.binary_bin', related_sudo=False)
     foo_binary_bin_sudo = fields.Binary(related='foo_id.binary_bin', related_sudo=True, string='Binary Bin Sudo')
 
+    foo_float_id = fields.Float(related='foo_id.test_float')
+
 
 class TestOrmRelated_Foo(models.Model):
     _name = 'test_orm.related_foo'
@@ -499,6 +501,8 @@ class TestOrmRelated_Foo(models.Model):
 
     bar_names = fields.Char(related='bar_ids.name', related_sudo=False, string="Bar Names")
     bar_names_sudo = fields.Char(related='bar_ids.name', related_sudo=True, string="Bar Names Sudo")
+
+    test_float = fields.Float(digits='ORM Precision')
 
 
 class TestOrmRelated_Bar(models.Model):
