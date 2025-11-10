@@ -1040,3 +1040,52 @@ class TestProcurement(TestMrpCommon):
 
         # Check the generated MO
         self.assertEqual(mo.product_qty, 45)
+
+    def test_update_mo_producing_qty_with_mtso_rule_and_some_available_stock(self):
+        """
+        We set up for 3 step manufacturing and have some component in stock in pre-prod location.
+        We set the pre-prod -> prod rule to MTSO.
+        When confirming a MO, we expect a procurement for the missing component from stock to pre-prod.
+        When updating the producing quantity on the MO, we expect the procurement to be updated to match the demand.
+        """
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        # 3 steps Manufacture
+        warehouse.write({'manufacture_steps': 'pbm_sam'})
+        # Set the pre-prod -> prod rule to 'mts_else_mto'
+        pre_prod_to_prod_rule = warehouse.pbm_route_id.rule_ids.filtered(lambda r: 'Pre-Production' in r.location_src_id.name)
+        self.assertTrue(pre_prod_to_prod_rule)
+        pre_prod_to_prod_rule.procure_method = 'mts_else_mto'
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.productA.id,
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': self.productB.id, 'product_qty': 1}),
+            ],
+        })
+        # Update component stock in pre-prod
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.productB.id,
+            'inventory_quantity': 2,
+            'location_id': warehouse.pbm_loc_id.id,
+        }).action_apply_inventory()
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.productA.id,
+            'bom_id': bom.id,
+            'product_qty': 5,
+            'location_src_id': warehouse.pbm_loc_id.id,
+        })
+        mo.action_confirm()
+        replenishment = self.env['stock.move'].search([('product_id', '=', self.productB.id), ('product_uom_qty', '=', 3), ('location_dest_id', '=', warehouse.pbm_loc_id.id)])
+        self.assertTrue(replenishment)
+
+        # Update producing quantity through the wizard
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 9,
+        })
+        update_quantity_wizard.change_prod_qty()
+        self.assertEqual(replenishment.product_uom_qty, 7)
