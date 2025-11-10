@@ -525,6 +525,7 @@ class ResConfigSettings(models.TransientModel):
         # values will trigger the write of all related values. This in turn may
         # trigger chain of further recomputation. To avoid it, delete values
         # that were not changed.
+        self = self.browse()
         for vals in vals_list:
             for field in self._fields.values():
                 if not (field.name in vals and field.related and not field.readonly):

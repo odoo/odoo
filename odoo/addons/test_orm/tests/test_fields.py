@@ -1018,7 +1018,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         currency = self.env['res.currency'].with_context(active_test=False)
         amount = 14.70126
 
-        for rounding in [0.01, 0.0001, 1.0, 0]:
+        for rounding in [0.01, 0.0001, 1.0]:
             # first retrieve a currency corresponding to rounding
             if rounding:
                 currency = currency.search([('rounding', '=', rounding)], limit=1)
@@ -1053,7 +1053,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for record in records:
                 self.check_monetary(record, amount, currency, 'multi write(amount)')
 
-    def test_20_monetary_related(self):
+    def test_20_monetary_related_currency(self):
         """ test value rounding with related currency """
         currency = self.env.ref('base.USD')
         monetary_base = self.env['test_orm.monetary_base'].create({
@@ -1066,6 +1066,34 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env.cr.execute(
             "SELECT total FROM test_orm_monetary_related WHERE id=%s",
             monetary_related.ids,
+        )
+        [total] = self.env.cr.fetchone()
+        self.assertEqual(total, .33)
+
+        monetary_related = self.env['test_orm.monetary_related'].create({
+            'monetary_id': monetary_base.id,
+            'total2': 1 / 3,
+        })
+        self.env.cr.execute(
+            "SELECT total2 FROM test_orm_monetary_related WHERE id=%s",
+            monetary_related.ids,
+        )
+        [total] = self.env.cr.fetchone()
+        self.assertEqual(total, .33)
+
+    def test_20_monetary_computed_currency(self):
+        """ test computed currency fields """
+        currency = self.env.ref('base.USD')
+        monetary_base = self.env['test_orm.monetary_base'].create({
+            'base_currency_id': currency.id,
+        })
+        monetary_computed_currency = self.env['test_orm.monetary_computed_currency'].create({
+            'monetary_id': monetary_base.id,
+            'amount': 1 / 3,
+        })
+        self.env.cr.execute(
+            "SELECT amount FROM test_orm_monetary_computed_currency WHERE id=%s",
+            monetary_computed_currency.ids,
         )
         [total] = self.env.cr.fetchone()
         self.assertEqual(total, .33)

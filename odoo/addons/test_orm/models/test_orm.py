@@ -1122,9 +1122,32 @@ class TestOrmMonetary_Related(models.Model):
     _description = 'Monetary Related'
 
     monetary_id = fields.Many2one('test_orm.monetary_base')
-    currency_id = fields.Many2one('res.currency', related='monetary_id.base_currency_id')
+    currency_id = fields.Many2one('res.currency', string='Currency', related='monetary_id.base_currency_id')
     amount = fields.Monetary(related='monetary_id.amount')
     total = fields.Monetary()
+
+    currency2_id = fields.Many2one('res.currency', string='Currency 2', related='monetary_id.base_currency_id', store=True)
+    total2 = fields.Monetary(currency_field='currency2_id')
+
+
+class TestOrmMonetary_Computed_Currency(models.Model):
+    _name = 'test_orm.monetary_computed_currency'
+    _description = 'Monetary Computed Currency'
+
+    monetary_id = fields.Many2one('test_orm.monetary_base')
+    computed_monetary_id = fields.Many2one('test_orm.monetary_base', compute='_compute_computed_monetary_id')
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency_id')
+    amount = fields.Monetary()
+
+    @api.depends('computed_monetary_id')
+    def _compute_currency_id(self):
+        for record in self:
+            record.currency_id = record.computed_monetary_id.base_currency_id
+
+    @api.depends('monetary_id')
+    def _compute_computed_monetary_id(self):
+        for record in self:
+            record.computed_monetary_id = record.monetary_id
 
 
 class TestOrmMonetary_Custom(models.Model):

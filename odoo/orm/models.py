@@ -2375,6 +2375,7 @@ class BaseModel(metaclass=MetaModel):
         """ Initialize the value of the given column for existing rows. """
         # get the default value; ideally, we should use default_get(), but it
         # fails due to ir.default not being ready
+        self = self.browse()
         field = self._fields[column_name]
         if field.default:
             value = field.default(self)
@@ -4158,7 +4159,7 @@ class BaseModel(metaclass=MetaModel):
         records = self.browse(ids)
         inverses_update = defaultdict(list)     # {(field, value): ids}
         common_set_vals = set(LOG_ACCESS_COLUMNS + ['id', 'parent_path'])
-        for data, record in zip(data_list, records.with_context(bin_size=False)):
+        for data, record in zip(data_list, records.with_context(bin_size=False, check_monetary_non_computed_currency=False)):
             data['record'] = record
             # DLE P104: test_inherit.py, test_50_search_one2many
             vals = dict({k: v for d in data['inherited'].values() for k, v in d.items()}, **data['stored'])
@@ -4206,10 +4207,28 @@ class BaseModel(metaclass=MetaModel):
                 # mark fields to recompute
                 records.modified([field.name for field in other_fields], create=True)
 
+        records._reround_monetary_fields(data_list)
+
         # check Python constraints for stored fields
         records._validate_fields(name for data in data_list for name in data['stored'])
         records.check_access('create')
         return records
+
+    def _reround_monetary_fields(self, data_list: list[ValuesType]) -> None:
+        """
+        reround monetary fields if its currency field is computed which may not be correct before INSERT query.
+        """
+        monetary_fields = {
+            field
+            for field in self._fields.values()
+            if field.type == 'monetary'
+            and (currency_field := self._fields[field.get_currency_field(self)])
+            and (currency_field.compute or currency_field.related)
+        }
+        for record, data in zip(self, data_list):
+            vals = {k: v for k, v in data['stored'].items() if k in monetary_fields}
+            if vals:
+                record.write(vals)
 
     def _compute_field_value(self, field: Field) -> None:
         determine(field.compute, self)
