@@ -5,6 +5,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import float_round
+from odoo.addons.website.structured_data import StructuredData
 
 
 class ProductProduct(models.Model):
@@ -154,40 +155,39 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
-        """ Generate JSON-LD markup data for the current product.
+    def _to_structured_data(self, website):
+        """ Generate JSON-LD structured data for the current product.
 
         :param website website: The current website.
-        :return: The JSON-LD markup data.
-        :rtype: dict
+        :return: The JSON-LD structured data.
+        :rtype: StructuredData
         """
         self.ensure_one()
 
         base_url = website.get_base_url()
-        markup_data = {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            'name': self.with_context(display_default_code=False).display_name,
-            'url': f'{base_url}{self.website_url}',
-            'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'offers': {
-                '@type': 'Offer',
-                'price': float_round(request.pricelist._get_product_price(
-                    self, quantity=1, target_currency=website.currency_id
-                ), 2),
-                'priceCurrency': website.currency_id.name,
-            },
-        }
+        structured_data = StructuredData(
+            "Product",
+            name=self.with_context(display_default_code=False).display_name,
+            url=f'{base_url}{self.website_url}',
+            image=f'{base_url}{website.image_url(self, "image_1920")}',
+            offers=StructuredData(
+                "Offer",
+                price=float_round(request.pricelist._get_product_price(
+                            self, quantity=1, target_currency=website.currency_id
+                        ), 2),
+                price_currency=website.currency_id.name
+            )
+        )
         if self.website_meta_description or self.description_sale:
-            markup_data['description'] = self.website_meta_description or self.description_sale
+            structured_data.add('description', self.website_meta_description or self.description_sale)
         if website.is_view_active('website_sale.product_comment') and self.rating_count:
-            markup_data['aggregateRating'] = {
-                '@type': 'AggregateRating',
+            structured_data.add('aggregateRating', StructuredData(
+                'AggregateRating',
                 # sudo: product.product - visitor can access product average rating
-                'ratingValue': self.sudo().rating_avg,
-                'reviewCount': self.rating_count,
-            }
-        return markup_data
+                rating_value=self.sudo().rating_avg,
+                review_count=self.rating_count,
+            ))
+        return structured_data
 
     def _get_image_1920_url(self):
         """ Returns the local url of the product main image.

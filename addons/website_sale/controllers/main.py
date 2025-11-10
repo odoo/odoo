@@ -22,6 +22,7 @@ from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.structured_data import StructuredData
 from odoo.addons.website_sale.const import SHOP_PATH
 from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
@@ -784,14 +785,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _prepare_product_values(self, product, category, **kwargs):
         ProductCategory = request.env['product.public.category']
-        product_markup_data = [product._to_markup_data(request.website)]
+        product_structured_data = [product._to_structured_data(request.website)]
         category = (
             (category and ProductCategory.browse(int(category)).exists())
             or product.public_categ_ids[:1]
         )
         if category:
             # Add breadcrumb's SEO data.
-            product_markup_data.append(self._prepare_breadcrumb_markup_data(
+            product_structured_data.append(self._prepare_breadcrumb_structured_data(
                 request.website.get_base_url(), category, product.name
             ))
 
@@ -833,11 +834,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'product_variant': request.env['product.product'].browse(combination_info['product_id']),
             'view_track': view_track,
-            'product_markup_data': json_scriptsafe.dumps(product_markup_data, indent=2),
+            'product_structured_data': StructuredData.list_dumps(product_structured_data),
             'shop_path': SHOP_PATH,
         }
 
-    def _prepare_breadcrumb_markup_data(self, base_url, category, product_name):
+    def _prepare_breadcrumb_structured_data(self, base_url, category, product_name):
         """ Generate JSON-LD markup data for the given product category.
 
         See https://schema.org/BreadcrumbList.
@@ -848,29 +849,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The JSON-LD markup data.
         :rtype: dict
         """
-        return {
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-                {
-                    '@type': 'ListItem',
-                    'position': 1,
-                    'name': 'All Products',
-                    'item': f'{base_url}{self._get_shop_path()}',
-                },
-                {
-                    '@type': 'ListItem',
-                    'position': 2,
-                    'name': category.name,
-                    'item': f'{base_url}{self._get_shop_path(category)}',
-                },
-                {
-                    '@type': 'ListItem',
-                    'position': 3,
-                    'name': product_name,
-                }
-            ]
-        }
+        items = [
+            (_('All Products'), f'{base_url}{self._get_shop_path()}'),
+            (category.name, f'{base_url}{self._get_shop_path(category)}'),
+            (product_name, None),
+        ]
+        return StructuredData.breadcrumb_list(items)
 
     @route(
         '/shop/change_pricelist/<model("product.pricelist"):pricelist>',

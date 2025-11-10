@@ -5,8 +5,9 @@ import pytz
 import babel.dates
 from collections import defaultdict
 
-from odoo import http, fields, tools, models
+from odoo import http, fields, tools, models, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.structured_data import StructuredData
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import html2plaintext
@@ -165,6 +166,42 @@ class WebsiteBlog(http.Controller):
             'original_search': fuzzy_search_term and search,
         }
 
+    def _prepare_blog_listing_structured_data(self, website, blog, posts):
+        if not posts:
+            return []
+
+        posts_sd = posts._to_structured_data(website=website)
+        if not posts_sd:
+            return []
+
+        structured_data = []
+
+        if blog:
+            blog_sd = blog._to_structured_data(website=website)
+            blog_sd.add('blogPost', posts_sd)
+            structured_data.extend((blog_sd, self._get_blog_breadcrumb_structured_data(website, blog=blog)))
+        else:
+            structured_data.extend(
+                (StructuredData.collection_page(
+                    name=_('Blog'),
+                    url=f"{website.get_base_url()}{request.httprequest.path}",
+                    has_part=posts_sd),
+                self._get_blog_breadcrumb_structured_data(website))
+            )
+        return structured_data
+
+    def _get_blog_breadcrumb_structured_data(self, website, blog=None):
+        base_url = website.get_base_url()
+        blog_listing_url = f'{base_url}/blog'
+        items = [
+            (website.name or base_url, base_url),
+            (_('Blog'), blog_listing_url),
+        ]
+        if blog:
+            slug = request.env['ir.http']._slug(blog)
+            items.append((blog.name, f'{blog_listing_url}/{slug}'))
+        return StructuredData.breadcrumb_list(items)
+
     @http.route([
         '/blog',
         '/blog/page/<int:page>',
@@ -201,6 +238,10 @@ class WebsiteBlog(http.Controller):
         if blog:
             values['main_object'] = blog
         values['blog_url'] = QueryURL('/blog', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
+
+        structured_data = self._prepare_blog_listing_structured_data(request.website, blog, values.get('posts'))
+        if structured_data:
+            values['blog_ld_json'] = StructuredData.list_dumps(structured_data)
 
         return request.render("website_blog.blog_post_short", values)
 
@@ -284,6 +325,17 @@ class WebsiteBlog(http.Controller):
             'date': date_begin,
             'blog_url': blog_url,
         }
+
+        post_data = blog_post._to_structured_data(website=request.website)
+        breadcrumb_data = blog_post._to_breadcrumb_structured_data(website=request.website)
+        structured_data = []
+        if post_data:
+            structured_data.extend(post_data)
+        if breadcrumb_data:
+            structured_data.append(breadcrumb_data)
+        if structured_data:
+            values['blog_post_ld_json'] = StructuredData.list_dumps(structured_data)
+
         response = request.render("website_blog.blog_post_complete", values)
 
         if blog_post.id not in request.session.get('posts_viewed', []):

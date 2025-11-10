@@ -31,6 +31,7 @@ from odoo.tools import SQL
 from odoo.tools.image import image_process
 from odoo.tools.sql import escape_psql
 from odoo.tools.translate import _
+from odoo.addons.website.structured_data import StructuredData
 
 logger = logging.getLogger(__name__)
 
@@ -217,6 +218,22 @@ class Website(models.Model):
         'unique(domain)',
         'Website Domain should be unique.',
     )
+
+    def _to_structured_data(self, company=None):
+        self.ensure_one()
+        company = company or self.company_id
+        if not company:
+            return False
+        base_url = self.get_base_url()
+        logo_path = self.image_url(company, 'logo')
+        logo = f'{base_url}{logo_path}' if logo_path else False
+        structured_data = StructuredData(
+            "Organization",
+            name=company.name,
+            url=base_url,
+            logo=logo,
+        )
+        return structured_data
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):

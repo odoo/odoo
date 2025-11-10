@@ -5,7 +5,8 @@ from collections import OrderedDict
 from random import randint, sample
 from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo import http, _
+from odoo.addons.website.structured_data import StructuredData
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.fields import Domain
 from odoo.http import request
@@ -172,7 +173,57 @@ class ExhibitorController(WebsiteEventController):
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
+            'exhibitor_ld_json': self._get_exhibitor_ld_json(event, sponsor)
         }
+
+    def _get_exhibitors_ld_json(self, event, sponsors):
+        website = request.website
+        structured_data = []
+        sponsor_structured_data = []
+        for sponsor in sponsors:
+            payload = sponsor._to_structured_data(website)
+            if payload:
+                sponsor_structured_data.append(payload)
+        base_url = website.get_base_url()
+        event_url = event.website_url or f"/event/{request.env['ir.http']._slug(event)}"
+        list_url = f"/event/{request.env['ir.http']._slug(event)}/exhibitors"
+        if sponsor_structured_data:
+            name = _('Exhibitors')
+            if event.name:
+                name = _('%s Exhibitors', event.name)
+            collection = StructuredData.collection_page(
+                name=name,
+                url=list_url if list_url.startswith('http') else f"{base_url}{list_url}",
+                has_part=sponsor_structured_data,
+            )
+            structured_data.append(collection)
+        breadcrumb = StructuredData.breadcrumb_list([
+            (_('Events'), f"{base_url}/event"),
+            (event.name or '', event_url if event_url.startswith('http') else f"{base_url}{event_url}"),
+            (_('Exhibitors'), None),
+        ])
+        if breadcrumb:
+            structured_data.append(breadcrumb)
+        return structured_data and StructuredData.list_dumps(structured_data)
+
+    def _get_exhibitor_ld_json(self, event, sponsor):
+        website = request.website
+        structured_data = []
+        sponsor_structured_data = sponsor._to_structured_data(website)
+        if sponsor_structured_data:
+            structured_data.append(sponsor_structured_data)
+        base_url = website.get_base_url()
+        event_url = event.website_url or f"/event/{request.env['ir.http']._slug(event)}"
+        list_url = f"/event/{request.env['ir.http']._slug(event)}/exhibitors"
+        breadcrumb = StructuredData.breadcrumb_list([
+            (_('Events'), f"{base_url}/event"),
+            (event.name or '', event_url if event_url.startswith('http') else f"{base_url}{event_url}"),
+            (_('Exhibitors'), list_url if list_url.startswith('http') else f"{base_url}{list_url}"),
+            (sponsor.name or sponsor.partner_name or '', None),
+        ])
+        if breadcrumb:
+            structured_data.append(breadcrumb)
+        return structured_data and StructuredData.list_dumps(structured_data)
 
     # ------------------------------------------------------------
     # BUSINESS / MISC

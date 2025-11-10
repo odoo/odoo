@@ -8,6 +8,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.structured_data import StructuredData
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -165,6 +166,13 @@ class WebsiteEventController(http.Controller):
             'website': website
         }
 
+        structured_events = [event._to_structured_data(website) for event in events]
+        structured_events = [data for data in structured_events if data]
+        if structured_events:
+            values['events_ld_json'] = StructuredData.list_dumps(structured_events)
+        else:
+            values['events_ld_json'] = False
+
         return request.render("website_event.index", values)
 
     # ------------------------------------------------------------
@@ -218,7 +226,7 @@ class WebsiteEventController(http.Controller):
     def _prepare_event_register_values(self, event, **post):
         """Return the require values to render the template."""
         urls = lazy(event._get_event_resource_urls)
-        return {
+        retval = {
             'event': event,
             'slots': event.event_slot_ids.filtered(
                         lambda s: s.start_datetime > datetime.now()
@@ -236,6 +244,10 @@ class WebsiteEventController(http.Controller):
             'registration_error_code': post.get('registration_error_code'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
+        event_structured_data = event._to_structured_data(request.website)
+        breadcrumb_structured_data = event._to_breadcrumb_structured_data(request.website)
+        retval['event_ld_json'] = StructuredData.list_dumps([event_structured_data, breadcrumb_structured_data])
+        return retval
 
     def _process_tickets_form(self, event, form_details):
         """ Process posted data about ticket order. Generic ticket are supported
