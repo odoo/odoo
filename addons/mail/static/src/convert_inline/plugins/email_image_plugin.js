@@ -2,12 +2,23 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { getImageSrc } from "@html_editor/utils/image";
 import { loadImage } from "@html_editor/utils/image_processing";
+import { useShorthands } from "@mail/convert_inline/plugins/hooks";
 
 export class EmailImagePlugin extends Plugin {
     static id = "image";
+    static dependencies = ["computeStyle"];
     resources = {
         load_reference_content_handlers: () => this.loadImages(this.config.reference),
     };
+
+    setup() {
+        useShorthands(this, "computeStyle", [
+            "getComputedStyle",
+            "getHeight",
+            "getStylePropertyValue",
+            "getWidth",
+        ]);
+    }
 
     /**
      * Return promises for every image to control when they have their final
