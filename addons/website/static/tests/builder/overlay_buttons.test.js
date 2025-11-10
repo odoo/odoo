@@ -1,7 +1,7 @@
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
-import { animationFrame, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, expect, test } from "@odoo/hoot";
 import { Deferred, tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -376,6 +376,6 @@ test("The overlay buttons should be hidden when the toolbar is open", async () =
     await waitFor(".o-we-toolbar:not(.o_overlay_options)");
     expect(".o-we-toolbar:not(.o_overlay_options)").toHaveCount(1);
     // Check that the overlay buttons are hidden.
-    await waitFor(".o-we-toolbar.o_overlay_options.d-none", { timeout: 500 });
+    await advanceTime(550); // wait for the toolbar hide delay
     expect(".o-we-toolbar.o_overlay_options.d-none").toHaveCount(1);
 });
