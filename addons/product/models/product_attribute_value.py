@@ -79,9 +79,17 @@ class ProductAttributeValue(models.Model):
 
     @api.depends('default_extra_price')
     def _compute_default_extra_price_changed(self):
+        company_domain = self.env['product.template']._check_company_domain(self.env.companies)
+        # `sudo` required to know which products we lack access to
+        ptavs_by_pav = self.env['product.template.attribute.value'].sudo().search_fetch([
+            ('product_attribute_value_id', 'in', self.ids),
+            ('product_tmpl_id', 'any', company_domain),
+        ], ['price_extra', 'product_attribute_value_id']).grouped('product_attribute_value_id')
         for pav in self:
+            ptavs = ptavs_by_pav.get(pav, [])
             pav.default_extra_price_changed = (
                 pav.default_extra_price != pav._origin.default_extra_price
+                or any(pav.default_extra_price != ptav.price_extra for ptav in ptavs)
             )
 
     # === CRUD METHODS === #
