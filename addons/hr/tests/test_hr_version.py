@@ -701,6 +701,17 @@ class TestHrVersion(TestHrCommon):
             f"The following hr.version fields should have tracking=True: {fields_without_tracking}",
         )
 
+    def test_related_fields_on_version_onchange(self):
+        """ This test is to ensure that each _onchange method on version has a corresponding _onchange on employee that calls it. """
+        version_methods = {method for method in dir(self.env['hr.version']) if method.startswith('_onchange')}
+        employee_methods = {method for method in dir(self.env['hr.employee']) if method.startswith('_onchange')}
+        not_implemented_onchanges = version_methods - employee_methods
+        self.assertFalse(
+            not_implemented_onchanges,
+            f"""The following _onchange methods on hr.version should have corresponding methods implemented on hr.employee: {not_implemented_onchanges}\n
+                You might need to implement methods with the same name on hr.employee and call the corresponding self.version_id._onchange inside"""
+        )
+
     def test_search_on_version_fields(self):
         Department = self.env['hr.department'].with_context(tracking_disable=True)
         rd_dep = Department.create({
