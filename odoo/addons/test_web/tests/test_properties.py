@@ -1254,7 +1254,6 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         Model = self.env['test_orm.message']
 
         hour_min = " 00:00:00" if date_type == "datetime" else ""
-        hour_max = " 00:00:59" if date_type == "datetime" else ""
 
         # Initial web_read_group everything folded (list view)
         self.assertEqual(
@@ -1266,12 +1265,12 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             {
                 "groups": [
                     {
-                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2023-01-01{hour_min}'), ('attributes.mydate', '<', f'2024-01-01{hour_max}')],
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2023-01-01{hour_min}'), ('attributes.mydate', '<', f'2024-01-01{hour_min}')],
                         "attributes.mydate:year": (f'2023-01-01{hour_min}', "2023"),
                         "__count": 4,
                     },
                     {
-                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2077-01-01{hour_min}'), ('attributes.mydate', '<', f'2078-01-01{hour_max}')],
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2077-01-01{hour_min}'), ('attributes.mydate', '<', f'2078-01-01{hour_min}')],
                         "attributes.mydate:year": (f'2077-01-01{hour_min}', "2077"),
                         "__count": 1,
                     },
@@ -1307,12 +1306,12 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             {
                 "groups": [
                     {
-                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2023-01-01{hour_min}'), ('attributes.mydate', '<', f'2024-01-01{hour_max}')],
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2023-01-01{hour_min}'), ('attributes.mydate', '<', f'2024-01-01{hour_min}')],
                         "attributes.mydate:year": (f'2023-01-01{hour_min}', "2023"),
                         "__count": 4,
                     },
                     {
-                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2077-01-01{hour_min}'), ('attributes.mydate', '<', f'2078-01-01{hour_max}')],
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2077-01-01{hour_min}'), ('attributes.mydate', '<', f'2078-01-01{hour_min}')],
                         "attributes.mydate:year": (f'2077-01-01{hour_min}', "2077"),
                         '__records': [{'id': self.message_5.id}],
                         "__count": 1,
