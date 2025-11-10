@@ -56,6 +56,7 @@ export class AvatarCardPopover extends Component {
 
     get canSetAdmin() {
         return (
+            this.props.channelMember &&
             this.currentChannelRole !== "admin" &&
             (this.store.self_user?.is_admin ||
                 (this.selfChannelRole === "owner" && this.currentChannelRole !== "owner") ||
@@ -65,6 +66,7 @@ export class AvatarCardPopover extends Component {
 
     get canRemoveAdmin() {
         return (
+            this.props.channelMember &&
             this.currentChannelRole === "admin" &&
             (this.store.self_user?.is_admin || this.selfChannelRole === "owner")
         );
@@ -72,6 +74,7 @@ export class AvatarCardPopover extends Component {
 
     get canSetOwner() {
         return (
+            this.props.channelMember &&
             this.currentChannelRole !== "owner" &&
             (this.store.self_user?.is_admin || this.selfChannelRole === "owner")
         );
@@ -79,6 +82,7 @@ export class AvatarCardPopover extends Component {
 
     get canRemoveOwner() {
         return (
+            this.props.channelMember &&
             this.currentChannelRole === "owner" &&
             (this.store.self_user?.is_admin || this.props.channelMember?.threadAsSelf)
         );
@@ -86,8 +90,9 @@ export class AvatarCardPopover extends Component {
 
     get canRemoveMember() {
         return (
-            this.store.self_user?.is_admin ||
-            (this.selfChannelRole && this.currentChannelRole !== "owner")
+            this.props.channelMember &&
+            (this.store.self_user?.is_admin ||
+                (this.selfChannelRole && this.currentChannelRole !== "owner"))
         );
     }
 
