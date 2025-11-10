@@ -22,3 +22,7 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code in ["de_skr03", "de_skr04"]:
             company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_de.tag_de_asset_bs_B_II_4')
             company.transfer_account_id.tag_ids = self.env.ref('l10n_de.tag_de_asset_bs_B_IV')
+
+    def _get_template_models(self):
+        template_models = super()._get_template_models()
+        return template_models + ('account.asset',)
