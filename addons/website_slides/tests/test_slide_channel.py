@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.exceptions import UserError
-from odoo.tests.common import users
+from odoo.tests.common import HttpCase, users
 from unittest.mock import patch
 
 
-class TestSlidesManagement(slides_common.SlidesCase):
+class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
 
     @users('user_officer')
     def test_get_categorized_slides(self):
@@ -232,6 +232,45 @@ class TestSlidesManagement(slides_common.SlidesCase):
             user_error.exception.args[0],
             f'Impossible to send emails. Select a "Share Template" for courses {channel_without_template.name} first'
         )
+
+    @users('user_manager')
+    def test_slides_prepare_preview(self):
+        """Ensure archived slides are not used during slide preview.
+
+            1) Create a channel and category for it
+            2) Go to website > courses > Open the channel
+            3) Add content > video > Add video link > Save and publish > delete
+            4) Repeat above step
+            5) Add content > video > Add any text in video link > Save and publish
+        """
+        self.authenticate("admin", "admin")
+
+        for _ in range(2):
+            self.make_jsonrpc_request('/slides/add_slide',
+                {
+                    "channel_id": self.channel.id,
+                    "name": "Test name",
+                    "slide_category": "video",
+                    "source_type": "external",
+                    "video_url": "test",
+                    "category_id": [self.category.id],
+                }, headers={'Content-Type': 'application/json'})
+
+            self.make_jsonrpc_request('/slides/slide/archive',
+                {"slide_id": self.channel.slide_ids[-1].id}, headers={'Content-Type': 'application/json'})
+
+        self.make_jsonrpc_request(
+            '/slides/prepare_preview',
+            {
+                'channel_id': self.channel.id,
+                'slide_category': 'video',
+                'url': 'test',
+            },
+            headers={'Content-Type': 'application/json'},
+        )
+
+        slide = self.channel.slide_ids.filtered(lambda slide: slide.name == 'memory_record_for_computed_fields')
+        self.assertFalse(slide)
 
     def test_unlink_slide_channel(self):
         self.assertTrue(self.channel.slide_content_ids.mapped('question_ids').exists(),
