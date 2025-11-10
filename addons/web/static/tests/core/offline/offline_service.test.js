@@ -1,7 +1,8 @@
 import { Component, xml } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 
-import { advanceTime, animationFrame, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, expect, test, tick } from "@odoo/hoot";
 import {
     getService,
     makeMockEnv,
@@ -36,6 +37,54 @@ test("RPC:RESPONSE: any succesfull rpc turns offline off", async () => {
 
     await rpc("/rpc/thatworks");
     expect(env.services.offline.status.offline).toBe(false);
+});
+
+test("'offline' and 'online' events fired on window", async () => {
+    let offline = false;
+    onRpc(
+        "/web/webclient/version_info",
+        () => {
+            expect.step("version_info");
+            if (offline) {
+                return new Response("", { status: 502 });
+            }
+            return new Response("true", { status: 200 });
+        },
+        { pure: true }
+    );
+
+    const env = await makeMockEnv();
+
+    offline = true;
+    browser.dispatchEvent(new Event("offline"));
+    await tick();
+    expect.verifySteps(["version_info"]);
+    expect(env.services.offline.status.offline).toBe(true);
+
+    offline = false;
+    browser.dispatchEvent(new Event("online"));
+    await tick();
+    expect.verifySteps(["version_info"]);
+    expect(env.services.offline.status.offline).toBe(false);
+});
+
+test("'offline' and 'online' events fired on window (false positive)", async () => {
+    onRpc("/web/webclient/version_info", () => expect.step("version_info"));
+
+    const env = await makeMockEnv();
+
+    // "online" event triggered when we're online
+    browser.dispatchEvent(new Event("online"));
+    await tick();
+    expect.verifySteps([]);
+    expect(env.services.offline.status.offline).toBe(false);
+
+    // "offline" event triggered when we're already offline
+    env.services.offline.status.offline = true;
+    browser.dispatchEvent(new Event("offline"));
+    await tick();
+    expect.waitForSteps([]);
+    expect(env.services.offline.status.offline).toBe(true);
 });
 
 test("offlineUI: disable interactive elements except [data-available-offline]", async () => {

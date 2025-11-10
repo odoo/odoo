@@ -82,6 +82,17 @@ export const offlineService = {
             status.offline = ev.detail.error instanceof ConnectionLostError;
         });
 
+        browser.addEventListener("offline", () => {
+            if (!status.offline) {
+                checkConnection();
+            }
+        });
+        browser.addEventListener("online", () => {
+            if (status.offline) {
+                checkConnection();
+            }
+        });
+
         return {
             status,
             checkConnection,
