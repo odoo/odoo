@@ -2,6 +2,7 @@ import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -78,7 +79,12 @@ describe("replicate changes", () => {
     });
 
     test("contact", async () => {
-        const { getEditor } = await setupHTMLBuilder("", {
+        onRpc(
+            "ir.qweb.field.contact",
+            "get_record_to_html",
+            ({ args: [[id]] }) => `<span>The contact info of ${id}</span>`
+        );
+        await setupHTMLBuilder("", {
             headerContent: `
             <div class="test-1">
                 <span data-oe-xpath="/t[1]/div[1]/div[2]/span[1]" data-oe-model="blog.post" data-oe-id="1" data-oe-field="author_id" data-oe-type="contact" data-oe-expression="blog_post.author_id" data-oe-many2one-id="3" data-oe-many2one-model="res.partner" data-oe-contact-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;], &quot;tagName&quot;: &quot;span&quot;, &quot;expression&quot;: &quot;blog_post.author_id&quot;, &quot;type&quot;: &quot;contact&quot;, &quot;inherit_branding&quot;: true, &quot;translate&quot;: false}">
@@ -106,11 +112,15 @@ describe("replicate changes", () => {
             </div>
         `,
         });
-        queryOne(":iframe .test-1 > *").append("changed");
-        const editor = getEditor();
-        editor.shared.history.addStep();
-        expect(":iframe .test-1 > *").toHaveText(/changed/);
-        expect(":iframe .test-2 > *").toHaveText(/changed/);
+        await contains(":iframe .test-1 > span").click();
+        await contains("button.btn.dropdown").click();
+        // TODO: remove in 19.0 (The autofocus of select menu does not work well here, we click 2 extra times to ensure we fetch what we need)
+        await contains("button.btn.dropdown").click();
+        await contains("button.btn.dropdown").click();
+        await contains("span.o-dropdown-item.dropdown-item").click();
+
+        expect(":iframe .test-1 > *").toHaveAttribute("data-oe-many2one-id", 1);
+        expect(":iframe .test-2 > *").toHaveAttribute("data-oe-many2one-id", 1);
     });
 
     test("should not add o_dirty marks on the ones receiving the replicated changes", async () => {
