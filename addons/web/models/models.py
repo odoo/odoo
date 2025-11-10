@@ -46,7 +46,12 @@ class Base(models.AbstractModel):
         if len(specification) == 1 and 'display_name' in specification:
             return [{'id': id, 'display_name': name, '__formatted_display_name': self.with_context(formatted_display_name=True).browse(id).display_name} for id, name in id_name_pairs]
         records = self.browse([id for id, _ in id_name_pairs])
-        return records.web_read(specification)
+        results = records.with_context(formatted_display_name=True).web_read(specification)
+        if 'display_name' in specification:
+            for i, result in enumerate(results):
+                result["__formatted_display_name"] = result.get("display_name")
+                result["display_name"] = records[i].display_name
+        return results
 
     @api.model
     @api.readonly
