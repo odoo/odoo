@@ -13,7 +13,7 @@ from operator import attrgetter
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.tools import Query, SQL, sql
+from odoo.tools import Query, SQL, lazy_property, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, OrderedSet, Sentinel, unique
 
@@ -538,7 +538,8 @@ class Field(typing.Generic[T]):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).', stacklevel=1)
 
             self._setup_done = True
-
+            # column_type might be changed during Field.setup
+            lazy_property.reset_all(self)
     #
     # Setup of non-related fields
     #
