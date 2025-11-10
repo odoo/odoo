@@ -1904,12 +1904,22 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should delete if first element and append in paragraph", async () => {
+    test("should convert empty blockquote into base container regardless of its position in editable", async () => {
         await testEditor({
             contentBefore: `<blockquote><br>[]</blockquote>`,
             stepFunction: deleteBackward,
-            contentAfter: `<p>[]<br></p>`,
+            contentAfter: `<div>[]<br></div>`,
+            config: { baseContainer: "DIV" },
         });
+        await testEditor({
+            contentBefore: `<div><br></div><blockquote><br>[]</blockquote>`,
+            stepFunction: deleteBackward,
+            contentAfter: `<div><br></div><div>[]<br></div>`,
+            config: { baseContainer: "DIV" },
+        });
+    });
+
+    test("should delete if first element and append in paragraph", async () => {
         await testEditor({
             contentBefore: `<h1><br>[]</h1>`,
             stepFunction: deleteBackward,
