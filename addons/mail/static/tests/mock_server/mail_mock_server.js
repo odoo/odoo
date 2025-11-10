@@ -941,7 +941,7 @@ export async function mail_data(request) {
 registerRoute("/discuss/search", search);
 /** @type {RouteCallback} */
 async function search(request) {
-    const { term, limit = 8 } = await parseRequestParams(request);
+    const { term, limit = 10 } = await parseRequestParams(request);
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
