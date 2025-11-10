@@ -127,7 +127,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item", { text: "Search Messages" });
     await contains(".o-dropdown-item", { text: "Rename Thread" });
     await contains(".o-dropdown-item", { text: "Notification Settings" });
-    await contains(".o-dropdown-item", { text: "Set favorite" });
+    await contains(".o-dropdown-item", { text: "Add to Favorites" });
     await contains(".o-dropdown-item", { text: "Call Settings" });
     await contains(".o-dropdown-item", { text: "Leave Channel" });
 });
