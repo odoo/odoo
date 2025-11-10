@@ -148,7 +148,7 @@ export class Chatbot extends Record {
      * Go to the next step of the chatbot, fetch it if needed.
      */
     async _goToNextStep() {
-        if (!this.channel_id || this.currentStep?.isLast) {
+        if (!this.channel_id) {
             return;
         }
         if (this.steps.at(-1)?.eq(this.currentStep)) {

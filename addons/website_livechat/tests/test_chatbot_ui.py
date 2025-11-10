@@ -327,6 +327,29 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         self.env.ref("website.default_website").channel_id = livechat_channel.id
         self.start_tour("/", "website_livechat.chatbot_continue_tour")
 
+    def test_chatbot_user_input_saved_on_last_step(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Test User Input Bot"})
+        _, email_step = self.env["chatbot.script.step"].create([
+            {
+                "step_type": "question_phone",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Enter your phone number",
+            },
+            {
+                "step_type": "question_email",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Enter your email address",
+            },
+        ])
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create({"chatbot_script_id": chatbot_script.id})
+        self.start_tour("/", "website_livechat.chatbot_user_input_saved_on_last_step")
+        user_answer_message = self.env["chatbot.message"].search([
+            ("script_step_id", "=", email_step.id),
+            ("discuss_channel_id.livechat_channel_id", "=", self.livechat_channel.id),
+        ], limit=1)
+        self.assertIn("test@example.com", user_answer_message.user_raw_answer, "Email was saved on last step")
+        self.assertTrue(user_answer_message.discuss_channel_id.livechat_end_dt, "Livechat ended after last step")
+
 
 class TestLivechatChatbotUIMoblie(TestLivechatChatbotUICommon):
     browser_size = '375x667'
