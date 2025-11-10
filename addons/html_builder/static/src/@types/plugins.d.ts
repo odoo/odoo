@@ -8,6 +8,7 @@ declare module "plugins" {
     import { CustomizeTabShared } from "@html_builder/core/customize_tab_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
     import { dropzone_selector, DropZoneShared, filter_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
+    import { after_replication_handlers } from "@html_builder/core/field_change_replication_plugin";
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
@@ -61,6 +62,7 @@ declare module "plugins" {
     export type BuilderResources = ResourcesDeclarationsFactory<BuilderResourcesAccess>;
     export interface BuilderResourcesList {
         // Handlers
+        after_replication_handlers: after_replication_handlers;
         after_save_handlers: after_save_handlers;
         after_setup_editor_handlers: after_setup_editor_handlers;
         before_save_handlers: before_save_handlers;
