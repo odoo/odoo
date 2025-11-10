@@ -1167,7 +1167,7 @@ test("swap sections and subsections", async () => {
         "C",
         "C1",
     ]);
-    await contains(".o_list_section_options:eq(2) button").click();
+    await contains(".o_list_section_options:eq(1) button").click();
     await contains(".o-dropdown-item:contains(Add a subsection)").click();
     await edit("Bb");
     await contains(getFixture()).click();
