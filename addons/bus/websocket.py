@@ -545,8 +545,9 @@ class Websocket:
             return
         self.state = ConnectionState.CLOSING
         self._close_sent = True
-        if frame.code not in CLEAN_CLOSE_CODES or self._close_received:
-            return self._terminate()
+        if frame.code is CloseCode.ABNORMAL_CLOSURE or self._close_received:
+            self._terminate()
+            return
         # After sending a control frame indicating the connection
         # should be closed, a peer does not send any further data.
         self.__selector.unregister(self.__notif_sock_r)
@@ -629,7 +630,10 @@ class Websocket:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
                 _logger.error(exc, exc_info=True)
-        self.disconnect(code, reason)
+        if self.state is ConnectionState.OPEN:
+            self.disconnect(code, reason)
+        else:
+            self._terminate()
 
     def _limit_rate(self):
         """
