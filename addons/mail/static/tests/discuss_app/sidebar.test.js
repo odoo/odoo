@@ -1167,8 +1167,8 @@ test("add and remove channel from favorites updates sidebar", async () => {
     await start();
     await openDiscuss();
     await click(`${channelContainerSelector} ${generalChannelSelector} button .oi-ellipsis-h`);
-    await click(".o-dropdown-item:contains('Set favorite')");
+    await click(".o-dropdown-item:contains('Add to Favorites')");
     await click(`${favoriteContainerSelector} ${generalChannelSelector} button .oi-ellipsis-h`);
-    await click(".o-dropdown-item:contains('Unset favorite')");
+    await click(".o-dropdown-item:contains('Remove from Favorites')");
     await contains(`${channelContainerSelector} ${generalChannelSelector}`);
 });

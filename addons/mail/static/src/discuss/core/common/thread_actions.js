@@ -22,7 +22,7 @@ class ChannelActionDialog extends Component {
     `;
 }
 
-registerThreadAction("set-favorite", {
+registerThreadAction("add-to-favorites", {
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -33,7 +33,7 @@ registerThreadAction("set-favorite", {
         !channel.self_member_id.is_favorite &&
         !owner.isDiscussContent,
     icon: "fa fa-fw fa-star",
-    name: _t("Set favorite"),
+    name: _t("Add to Favorites"),
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -49,7 +49,7 @@ registerThreadAction("set-favorite", {
     sequence: 5, // before notification-settings
     sequenceGroup: 30,
 });
-registerThreadAction("unset-favorite", {
+registerThreadAction("remove-from-favorites", {
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -57,7 +57,7 @@ registerThreadAction("unset-favorite", {
     condition: ({ channel, owner }) =>
         channel?.self_member_id?.is_favorite && !owner.isDiscussContent,
     icon: "fa fa-fw fa-star-o",
-    name: _t("Unset favorite"),
+    name: _t("Remove from Favorites"),
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
