@@ -67,8 +67,10 @@ import {
     patchWithCleanup,
     quickCreateKanbanColumn,
     quickCreateKanbanRecord,
+    removeFacet,
     serverState,
     stepAllNetworkCalls,
+    switchView,
     toggleKanbanColumnActions,
     toggleKanbanRecordDropdown,
     toggleMenuItem,
@@ -84,6 +86,7 @@ import { FileInput } from "@web/core/file_input/file_input";
 import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
@@ -13946,4 +13949,57 @@ test(`kanban with custom cog action that has a confirmation target="new" action`
         "get_views",
         "web_read",
     ]);
+});
+
+test.tags("desktop");
+test("limit is reset when restoring a view after ungrouping", async () => {
+    Partner._views["kanban"] = `
+        <kanban sample="1">
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`;
+    Partner._views["list"] = '<list><field name="foo"/></list>';
+    Partner._views.search = `
+        <search>
+            <group>
+                <filter name="foo" string="Foo" context="{'group_by': 'foo'}"/>
+            </group>
+        </search>
+    `;
+
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        const { domain, limit } = kwargs;
+        if (!domain.length) {
+            expect.step(`limit=${limit}`);
+        }
+    });
+
+    patchWithCleanup(user, {
+        hasGroup: () => true,
+    });
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction({
+        type: "ir.actions.act_window",
+        id: 450,
+        xml_id: "action_450",
+        name: "Partners",
+        res_model: "partner",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+            [false, "form"],
+        ],
+        context: { search_default_foo: true },
+    });
+
+    await switchView("list");
+    await removeFacet("Foo");
+    expect.verifySteps(["limit=80"]);
+    await switchView("kanban");
+    expect.verifySteps(["limit=40"]);
 });
