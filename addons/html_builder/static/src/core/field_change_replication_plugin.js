@@ -2,6 +2,10 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {((arg: { sourceEl: HTMLElement, targetEl: HTMLElement }) => void)[]} after_replication_handlers
+ */
+
 export class FieldChangeReplicationPlugin extends Plugin {
     static id = "fieldChangeReplication";
     static dependencies = ["dom"];
@@ -17,9 +21,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
     }
 
     /**
-     * @typedef { import("./history_plugin").HistoryMutationRecord } HistoryMutationRecord
-     *
-     * @param { HistoryMutationRecord[] } records
+     * @param { import("@html_editor/core/history_plugin").HistoryMutationRecord[] } records
      */
     handleMutations(records) {
         records
@@ -107,6 +109,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
                             touchedEls.add(targetEl);
                         }
                     }
+                    this.dispatchTo("after_replication_handlers", { sourceEl, targetEl });
                 }
             }
         }
