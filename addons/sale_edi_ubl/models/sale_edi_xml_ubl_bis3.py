@@ -271,7 +271,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='sale')
         # adapt each line to sale.order.line
         for line in lines_vals:
-            line['product_uom_qty'] = line.pop('quantity')
             # remove invoice line fields
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)
@@ -303,3 +302,10 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             'variant_barcode': './cac:Item/cac:StandardItemIdentification/cbc:ExtendedID',
             'variant_default_code': './cac:Item/cac:SellersItemIdentification/cbc:ExtendedID',
         }
+
+    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+        """Override of `account.edi.common` to adapt dictionary keys from the base method to be
+        compatible with the `sale.order.line` model."""
+        line_vals = super()._retrieve_line_vals(tree, document_type, qty_factor)
+        line_vals['product_uom_qty'] = line_vals.pop('quantity')
+        return line_vals
