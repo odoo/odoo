@@ -53,6 +53,7 @@ function _getValidSrc(src) {
  */
 export async function loadImage(src, img = new Image()) {
     const source = await _getValidSrc(src);
+    console.log("After _getValidSrc");
     return new Promise((resolve, reject) => {
         img.addEventListener("load", () => resolve(img), { once: true });
         img.addEventListener("error", reject, { once: true });
@@ -126,7 +127,10 @@ export function getImageSizeFromCache(src) {
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
 export async function activateCropper(image, aspectRatio, dataset) {
+    console.log("activateCropper");
+
     await loadBundle("html_editor.assets_image_cropper");
+
     const oldSrc = image.src;
     const newSrc = await _loadImageObjectURL(image.getAttribute("src"));
     image.src = newSrc;
@@ -153,6 +157,7 @@ export async function activateCropper(image, aspectRatio, dataset) {
         return;
     }
     await readyPromise;
+    console.log("Ready Cropper ");
     return cropper;
 }
 
