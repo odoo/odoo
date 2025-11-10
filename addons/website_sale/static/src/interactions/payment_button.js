@@ -7,7 +7,7 @@ patch(PaymentButton.prototype, {
      * Verify that the payment button is ready to be enabled.
      *
      * The conditions are that:
-     * - a delivery carrier is selected and ready (the price is computed) if deliveries are enabled;
+     * - a delivery method is selected and ready (the price is computed) if deliveries are enabled;
      * - the "Terms and Conditions" checkbox is ticked if it is present.
      *
      * @override method from @payment/interactions/payment_button

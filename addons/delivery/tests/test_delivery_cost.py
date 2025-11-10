@@ -274,7 +274,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
     def test_estimated_weight(self):
         """
         Test that negative qty SO lines are not included in the estimated weight calculation
-        of delivery carriers (since it's used when calculating their rates).
+        of delivery method (since it's used when calculating their rates).
         """
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,

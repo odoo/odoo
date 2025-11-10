@@ -69,7 +69,7 @@ class DeliveryCarrier(models.Model):
     state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
     zip_prefix_ids = fields.Many2many(
         'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes',
-        help="Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')")
+        help="Prefixes of zip codes that this delivery method applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')")
 
     max_weight = fields.Float('Max Weight', help="If the total weight of the order is over this weight, the method won't be available.")
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
@@ -81,7 +81,7 @@ class DeliveryCarrier(models.Model):
                                         help="The method is NOT available if at least one product of the order has one of these tags.")
 
     carrier_description = fields.Text(
-        'Carrier Description', translate=True,
+        'Description', translate=True,
         help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
              "E.g. instructions for customers to follow.")
 
@@ -122,7 +122,7 @@ class DeliveryCarrier(models.Model):
     def _check_tags(self):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
-                raise UserError(_("Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags.") % carrier.name)
+                raise UserError(_("Delivery method %(name)s cannot have the same tag in both Must Have Tags and Excluded Tags."), name=carrier.name)
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -286,7 +286,7 @@ class DeliveryCarrier(models.Model):
     def _get_delivery_type(self):
         """Return the delivery type.
 
-        This method needs to be overridden by a delivery carrier module if the delivery type is not
+        This method needs to be overridden by a delivery method module if the delivery type is not
         stored on the field `delivery_type`.
         """
         self.ensure_one()
