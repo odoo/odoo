@@ -140,7 +140,7 @@ const threadPatch = {
             /** @this {import("models").Thread} */
             compute() {
                 return this.channel?.channel_member_ids
-                    .filter((member) => this.store.onlineMemberStatuses.includes(member.im_status))
+                    .filter((member) => member.isOnline)
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
         });
@@ -171,9 +171,7 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
-        return this.channel?.channel_member_ids.filter(
-            (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
-        );
+        return this.channel?.channel_member_ids.filter((member) => !member.isOnline);
     },
     /** Equivalent to DiscussChannel._allow_invite_by_email */
     get allow_invite_by_email() {

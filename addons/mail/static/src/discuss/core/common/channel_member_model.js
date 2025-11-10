@@ -134,6 +134,10 @@ export class ChannelMember extends Record {
         return this.partner_id?.im_status || this.guest_id?.im_status;
     }
 
+    get isOnline() {
+        return this.store.onlineMemberStatuses.includes(this.im_status);
+    }
+
     /**
      * @returns {string}
      */
