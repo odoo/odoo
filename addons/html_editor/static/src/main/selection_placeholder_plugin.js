@@ -37,7 +37,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
             }
         },
         selection_blocker_predicates: (blocker) => {
-            if (blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE) || !isBlock(blocker)) {
+            if ((blocker.nodeType === Node.ELEMENT_NODE && blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE)) || !isBlock(blocker)) {
                 return false;
             } else if (isNotEditableNode(blocker)) {
                 return true;
