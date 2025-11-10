@@ -221,6 +221,7 @@ class HrAttendance(models.Model):
         """ Computes the worked hours of the attendance record.
             The worked hours of resource with flexible calendar is computed as the difference
             between check_in and check_out, without taking into account the lunch_interval"""
+        """ lunch_intervals is subtracted from the attendance_intervals, so the lunch_interval is taken into account """
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
                 calendar = attendance._get_employee_calendar()
@@ -353,9 +354,58 @@ class HrAttendance(models.Model):
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
 
+    def _split_attendance_intervals(self, employee, check_in, check_out):
+        if check_out < check_in:
+            return
+        tz = pytz.timezone(employee._get_tz())
+        current_start_utc = check_in
+        while current_start_utc < check_out:
+            local_start = pytz.utc.localize(current_start_utc).astimezone(tz)
+            next_day_date = local_start.date() + timedelta(days=1)
+            local_midnight = tz.localize(datetime.combine(next_day_date, datetime.min.time()))
+            midnight_utc = local_midnight.astimezone(pytz.utc).replace(tzinfo=None)
+            current_end_utc = min(midnight_utc, check_out)
+            yield (current_start_utc, current_end_utc)
+            current_start_utc = current_end_utc
+
+    def _check_cross_day_shift(self, vals, attendance=None):
+        employee_id = None
+        if vals.get('employee_id'):
+            employee_id = self.env['hr.employee'].browse(vals['employee_id'])
+        elif attendance:
+            employee_id = attendance.employee_id
+        check_in = fields.Datetime.from_string(vals.get('check_in')) if vals.get('check_in') else attendance.check_in if attendance else None
+        check_out = fields.Datetime.from_string(vals.get('check_out')) if vals.get('check_out') else attendance.check_out if attendance else None
+
+        if not (employee_id and check_in and check_out):
+            return [vals]
+        tz = pytz.timezone(employee_id._get_tz())
+        if check_out.astimezone(tz).date() <= check_in.astimezone(tz).date():
+            return [{
+                'employee_id': employee_id.id,
+                'check_in': check_in,
+                'check_out': check_out,
+            }]
+
+        # Cross Day Shift
+        intervals = list(self._split_attendance_intervals(employee_id, check_in, check_out))
+        new_vals_list = []
+        for current_check_in, current_check_out in intervals:
+            current_vals = vals.copy()
+            current_vals.update({
+                'employee_id': employee_id.id,
+                'check_in': fields.Datetime.to_string(current_check_in),
+                'check_out': fields.Datetime.to_string(current_check_out),
+            })
+            new_vals_list.append(current_vals)
+        return new_vals_list
+
     @api.model_create_multi
     def create(self, vals_list):
-        res = super().create(vals_list)
+        final_vals_list = []
+        for vals in vals_list:
+            final_vals_list.extend(self._check_cross_day_shift(vals))
+        res = super().create(final_vals_list)
         res._update_overtime()
         no_validation = res.filtered(lambda att: att.employee_id.company_id.attendance_overtime_validation == 'no_validation')
         return res
@@ -366,6 +416,15 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not his own."))
         domain_pre = self._get_overtimes_to_update_domain()
+
+        if ('check_out' in vals):
+            for attendance in self:
+                new_vals_list = self._check_cross_day_shift(vals, attendance)
+                vals['check_in'] = new_vals_list[0]['check_in']
+                vals['check_out'] = new_vals_list[0]['check_out']
+                vals['employee_id'] = new_vals_list[0].get('employee_id', attendance.employee_id.id)
+                for extra_vals in new_vals_list[1:]:
+                    self.env['hr.attendance'].create(extra_vals)
         result = super(HrAttendance, self).write(vals)
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
