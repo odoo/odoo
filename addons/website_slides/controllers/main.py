@@ -1405,7 +1405,6 @@ class WebsiteSlides(WebsiteProfile):
             })
 
             if not slide.video_source_type:
-                slide.unlink()
                 return {'error': _("Could not find your video. Please check if your link is correct and if the video can be accessed.")}
 
             if slide.video_source_type == 'youtube':
