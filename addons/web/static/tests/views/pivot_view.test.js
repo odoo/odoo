@@ -4550,3 +4550,24 @@ test("missing deleted property field definition is created", async function (ass
     expect.verifySteps([`["properties.my_char"]`]);
     expect(getCurrentValues()).toBe("4,2,1");
 });
+
+test("do not count distinct a measure field if we are grouping by it", async () => {
+    onRpc("read_group", ({ kwargs }) => {
+        expect(kwargs.fields.length).toBe(1);
+        if (kwargs.groupby.length === 0) {
+            expect(kwargs.fields).toEqual(["product_id:count_distinct"]);
+        }
+        if (kwargs.groupby.length === 1) {
+            expect(kwargs.fields).toEqual(["product_id"]);
+        }
+    });
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot>
+				<field name="product_id" type="measure"/>
+			</pivot>`,
+        groupBy: ["product_id"],
+    });
+});
