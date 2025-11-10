@@ -33,13 +33,9 @@
                     </div>
                 </t>
             </div>
-            <div t-if="expertiseTags.length" class="d-flex flex-column bg-inherit gap-1">
+            <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Expertise</h6>
-                <div class="d-flex flex-wrap gap-1">
-                    <t t-foreach="expertiseTags" t-as="tag" t-key="tag.id">
-                        <BadgeTag cssClass="'me-1 mb-1'" text="tag.text"/>
-                    </t>
-                </div>
+                <ExpertiseTagsAutocomplete channel="props.thread"/>
             </div>
             <t t-name="extra_infos"/>
             <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
