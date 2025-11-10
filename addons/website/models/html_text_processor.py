@@ -42,7 +42,7 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
         )
 
     def _get_processing_cache(self, cache_key):
-        """Get cached data from context, similar to website._get_cached() pattern
+        """Get cached data from context.
         :param cache_key: Key to get cached data from context
         :return: Cached data from context
         :rtype: dict

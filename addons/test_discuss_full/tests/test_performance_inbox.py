@@ -19,7 +19,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #   - search website_rewrite (_get_rewrites) sometimes occurs depending on the routing cache
         #   - insert res_device_log
         #   - _xmlid_lookup (_get_public_users)
-        #   - fetch website (_get_cached_values)
+        #   - fetch website (_cached_data)
         #   - _get ir_config_parameter (_pre_dispatch website_sale)
         #   4 _message_fetch:
         #       2 _search_needaction:
