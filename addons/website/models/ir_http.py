@@ -163,7 +163,7 @@ class IrHttp(models.AbstractModel):
         public_users = super()._get_public_users()
         website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').get_current_website()  # sudo
         if website:
-            public_users.append(website._get_cached('user_id'))
+            public_users.append(website.user_id.id)
         return public_users
 
     @classmethod
@@ -174,7 +174,7 @@ class IrHttp(models.AbstractModel):
         if not request.session.uid:
             website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').get_current_website()  # sudo
             if website:
-                request.update_env(user=website._get_cached('user_id'))
+                request.update_env(user=website.user_id.id)
 
         if not request.env.uid:
             super()._auth_method_public()
@@ -247,8 +247,8 @@ class IrHttp(models.AbstractModel):
         # propagate to the global context of the tab. If the company of
         # the website is not in the allowed companies of the user, set
         # the main company of the user.
-        website_company_id = website._get_cached('company_id')
-        if user.id == website._get_cached('user_id'):
+        website_company_id = website.company_id.id
+        if user == website.user_id:
             # avoid a read on res_company_user_rel in case of public user
             allowed_company_ids = [website_company_id]
         elif website_company_id in user._get_company_ids():
@@ -285,7 +285,7 @@ class IrHttp(models.AbstractModel):
     def _get_default_lang(cls):
         if getattr(request, 'is_frontend', True):
             website = request.env['website'].sudo().get_current_website()
-            return request.env['res.lang']._get_data(id=website._get_cached('default_lang_id'))
+            return request.env['res.lang']._get_data(id=website.default_lang_id.id)
         return super()._get_default_lang()
 
     @classmethod
@@ -413,7 +413,7 @@ class IrHttp(models.AbstractModel):
         if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({
                 'website_id': request.website.id,
-                'website_company_id': request.website._get_cached('company_id'),
+                'website_company_id': request.website.company_id.id,
             })
         session_info['bundle_params']['website_id'] = request.website.id
         return session_info

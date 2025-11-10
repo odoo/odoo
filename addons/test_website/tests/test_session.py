@@ -49,7 +49,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         self.assertEqual(res.status_code, 303)
         self.assertTrue(res.next.path_url.startswith("/web/login/totp"))
 
-    def test_04_ensure_website_get_cached_values_can_be_called(self):
+    def test_04_ensure_website_cached_data_can_be_called(self):
         session = self.authenticate('admin', 'admin')
 
         # Force a browser language that is not installed
@@ -57,8 +57,8 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         http.root.session_store.save(session)
 
         # Disable cache in order to make sure that values would be fetched at any time
-        get_cached_values_without_cache = Website._get_cached_values.__cache__.method
-        with patch.object(Website, '_get_cached_values',
+        get_cached_values_without_cache = Website._cached_data.__cache__.method
+        with patch.object(Website, '_cached_data',
                           side_effect=get_cached_values_without_cache, autospec=True):
 
             # ensure that permissions on logout are OK

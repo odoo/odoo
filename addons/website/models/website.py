@@ -94,11 +94,34 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
 ])
 
 
-class Website(models.Model):
+class Website(models.CachedModel):
     _name = 'website'
-
     _description = "Website"
     _order = "sequence, id"
+
+    # ir.http:_match is called by ir.http:_serve_db at a time when the
+    # environment hasn't been completely initialized (i.e. before the method
+    # ir.http:_authenticate is called by ir.http:_serve_ir_http), and its
+    # context language hasn't been checked against activated languages yet.
+    #
+    # Inside ir.http:_match, the http_routing module is trying to retrieve the
+    # default language via _get_default_lang, which is overridden by the
+    # website module and accesses website.default_lang_id.
+    #
+    # Here, we cache the needed fields only to avoid prefetching any
+    # translatable field, such as contact_us_button_url by website_sale, as
+    # translating to an invalid language would result in an error.
+    _clear_cache_name = 'default'
+    _cached_data_fields = (
+        'user_id', 'company_id', 'default_lang_id', 'homepage_url',
+        'domain', 'cookies_bar',
+    )
+
+    @tools.ormcache(cache='default')
+    def _cached_data(self):
+        # method is overridden to use cache 'default' instead of 'stable'
+        # hack: retrieve the original method to skip the ormcache wrapper
+        return super()._cached_data.__cache__.method(self)
 
     def website_domain(self):
         return Domain('website_id', 'in', [False, *self.ids])
@@ -336,9 +359,6 @@ class Website(models.Model):
         values = vals
         self._handle_create_write(values)
 
-        if any(self._ids):
-            self.env.registry.clear_cache()
-
         if 'company_id' in values and 'user_id' not in values:
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
             if public_user_to_change_websites:
@@ -443,6 +463,7 @@ class Website(models.Model):
 
         companies = self.company_id
         res = super().unlink()
+        self.env.registry.clear_cache()
         companies._compute_website_id()
         return res
 
@@ -1498,7 +1519,7 @@ class Website(models.Model):
 
     @api.model
     def is_public_user(self):
-        return request.env.user.id == request.website._get_cached('user_id')
+        return request.env.user == request.website.user_id
 
     @api.model
     def viewref(self, view_id, raise_if_not_found=True):
@@ -1816,33 +1837,6 @@ class Website(models.Model):
         # and canonical url is always quoted, so it is never possible to tell
         # if the current URL is indeed canonical or not.
         return current_url == canonical_url
-
-    @tools.ormcache('self.id')
-    def _get_cached_values(self):
-        self.ensure_one()
-        # ir.http:_match is called by ir.http:_serve_db at a time when the
-        # environment hasn't been completely initialized (i.e. before the method
-        # ir.http:_authenticate is called by ir.http:_serve_ir_http), and its
-        # context language hasn't been checked against activated languages yet.
-
-        # Inside ir.http:_match, the http_routing module is trying to retrieve
-        # the default language via _get_default_lang, which is overridden by the
-        # website module and calls website._get_cached('default_lang_id'), which
-        # eventually calls this method.
-
-        # Here, we manually prefetch the needed fields only to avoid prefetching
-        # any translatable field, such as contact_us_button_url by website_sale,
-        # as translating to an invalid language would result in an error.
-        self.fetch(['user_id', 'company_id', 'default_lang_id', 'homepage_url'])
-        return {
-            'user_id': self.user_id.id,
-            'company_id': self.company_id.id,
-            'default_lang_id': self.default_lang_id.id,
-            'homepage_url': self.homepage_url,
-        }
-
-    def _get_cached(self, field):
-        return self._get_cached_values()[field]
 
     def _get_html_fields_blacklist(self):
         return (

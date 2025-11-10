@@ -295,10 +295,10 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        query_count = 50  # To increase this number you must ask the permission to al
+        query_count = 49  # To increase this number you must ask the permission to al
         queries = {
             'orm_signaling_registry': 1,
-            'website': 2,
+            'website': 1,
             'res_company': 2,
             'product_pricelist': 4,
             'product_template': 6,
