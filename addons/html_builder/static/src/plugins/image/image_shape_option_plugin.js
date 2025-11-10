@@ -19,6 +19,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetype } from "@html_editor/utils/image";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
@@ -38,6 +39,7 @@ export class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
     static dependencies = ["history", "userCommand", "imagePostProcess", "imageToolOption"];
     static shared = [
+        "getImageShapeClass",
         "getImageShapeGroups",
         "isTransformableShape",
         "isTechnicalShape",
@@ -186,6 +188,7 @@ export class ImageShapeOptionPlugin extends Plugin {
             // after the first crop to ensure that the ratio of the shape and the
             // image are the same.
             postProcessCroppedCanvas: imgAspectRatio && postProcessCroppedCanvas,
+            imageShapeClass: !!this.imageShapes[shapeId].imageShapeClass,
 
             svg,
             svgAspectRatio,
@@ -193,8 +196,8 @@ export class ImageShapeOptionPlugin extends Plugin {
         };
     }
     async processImagePost(b64url, handlerDataset, processContext) {
-        const { svg, svgAspectRatio, svgWidth } = processContext;
-        if (!svg) {
+        const { imageShapeClass, svg, svgAspectRatio, svgWidth } = processContext;
+        if (imageShapeClass || !svg) {
             return;
         }
         svg.querySelectorAll("image").forEach((image) => {
@@ -348,8 +351,14 @@ export class ImageShapeOptionPlugin extends Plugin {
         );
     }
     applyShapeColors(editingElement, newColors) {}
-    isTransformableShape(shapeId) {
+    getImageShapeClass(shapeId) {
         if (!shapeId) {
+            return false;
+        }
+        return this.imageShapes[shapeId].imageShapeClass;
+    }
+    isTransformableShape(shapeId) {
+        if (!shapeId || !!this.getImageShapeClass(shapeId)) {
             return false;
         }
         const canTransform = this.imageShapes[shapeId].transform;
@@ -368,7 +377,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         return this.imageShapes[shapeId].selectLabel || _t("None");
     }
     isAnimableShape(shape) {
-        if (!shape) {
+        if (!shape || !!this.getImageShapeClass(shape)) {
             return false;
         }
         return this.imageShapes[shape].animated;
@@ -402,7 +411,7 @@ export class ImageShapeOptionPlugin extends Plugin {
     }
 }
 
-export class SetImageShapeAction extends BuilderAction {
+export class SetImageShapeAction extends ClassAction {
     static id = "setImageShape";
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, value: shapeId }) {
@@ -422,10 +431,35 @@ export class SetImageShapeAction extends BuilderAction {
         // todo nby: re-read the old option method `setImgShape` and be sure all the logic is in there
         return this.dependencies.imageShapeOption.loadShape(img, params);
     }
-    apply({ editingElement: img, loadResult: updateImageAttributes }) {
-        updateImageAttributes();
-        const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
-        img.dataset.fileName = `${imgFilename}.svg`;
+    isApplied({ params: { mainParam: imageShapeClass } }) {
+        if (imageShapeClass) {
+            return super.isApplied(...arguments);
+        } else {
+            return false;
+        }
+    }
+    apply({ editingElement: img, loadResult: updateImageAttributes, params: { mainParam: imageShapeClass }, value: shapeId }) {
+        const currentImageShapeClass = this.dependencies.imageShapeOption.getImageShapeClass(img.dataset.shape);
+        if (currentImageShapeClass) {
+            this.clean({ editingElement: img, params: { mainParam: currentImageShapeClass } });
+        }
+
+        if (imageShapeClass) {
+            super.apply(...arguments);
+            img.dataset.shape = shapeId;
+        } else {
+            updateImageAttributes();
+            const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
+            img.dataset.fileName = `${imgFilename}.svg`;
+        }
+    }
+    clean({ editingElement: img, isPreviewing, value: shapeId }) {
+        const currentShape = img.dataset.shape;
+        if ( currentShape === shapeId || isPreviewing) {
+            return;
+        }
+        super.clean(...arguments);
+        delete img.dataset.shape;
     }
 }
 export class SetImgShapeColorAction extends BuilderAction {

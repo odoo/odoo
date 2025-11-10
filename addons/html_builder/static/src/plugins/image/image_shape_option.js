@@ -22,6 +22,7 @@ export class ImageShapeOption extends BaseOptionComponent {
             const shape = editingElement.dataset.shape;
             return {
                 hasShape: !!shape && !this.imageShapeOption.isTechnicalShape(shape),
+                imageShapeClass: this.imageShapeOption.getImageShapeClass(shape),
                 shapeLabel: this.imageShapeOption.getShapeLabel(shape),
                 showImageShape0: this.isShapeVisible(editingElement, 0),
                 showImageShape1: this.isShapeVisible(editingElement, 1),
@@ -71,6 +72,7 @@ export class ImageShapeOption extends BaseOptionComponent {
             this.env.getEditingElements(),
             {
                 shapeActionId: "setImageShape",
+                getShapeActionParam: (shape) => shape[1].imageShapeClass,
                 buttonWrapperClassName: "o-hb-img-shape-btn",
                 selectorTitle: _t("Shapes"),
                 shapeGroups: this.getFilteredGroups(),
