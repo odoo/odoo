@@ -505,7 +505,8 @@ class Field(typing.Generic[T]):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).', stacklevel=1)
 
             self._setup_done = True
-
+            # column_type might be changed during Field.setup
+            lazy_property.reset_all(self)
     #
     # Setup of non-related fields
     #
