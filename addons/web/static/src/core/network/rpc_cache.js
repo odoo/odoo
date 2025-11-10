@@ -1,4 +1,3 @@
-import { Deferred } from "@web/core/utils/concurrency";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { deepCopy } from "../utils/objects";
 
@@ -140,7 +139,7 @@ export class RPCCache {
 
             // execute the fallback and write the result in the caches
             const prom = new Promise((resolve, reject) => {
-                const fromCache = new Deferred();
+                const fromCache = Promise.withResolvers();
                 let fromCacheValue;
                 const onFullfilled = (result) => {
                     resolve(result);
@@ -161,7 +160,7 @@ export class RPCCache {
                     return result;
                 };
                 const onRejected = async (error) => {
-                    await fromCache;
+                    await fromCache.promise;
                     if (!request.invalidated) {
                         delete this.pendingRequests[requestKey];
                         if (!fromCacheValue) {

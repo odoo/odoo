@@ -323,7 +323,7 @@ export class ListController extends Component {
         if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
             // If the view isn't grouped and the list is editable, a new record row will be added,
             // in edition. In this situation, we must wait for the model to be ready.
-            await this.model.whenReady;
+            await this.model.whenReady.promise;
         }
         const list = (group && group.list) || this.model.root;
         if (this.editable && !list.isGrouped) {

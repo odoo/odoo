@@ -157,7 +157,7 @@ export const PublicRoot = publicWidget.Widget.extend({
      *        only initialize the public widgets whose `selector` matches the
      *        element or one of its descendant (default to the wrapwrap element)
      * @param {Object} [options]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _startWidgets: function ($from, options) {
         var self = this;

@@ -2,7 +2,6 @@ import { markup } from "@odoo/owl";
 
 import { formatList } from "@web/core/l10n/utils";
 import { isIterable } from "@web/core/utils/arrays";
-import { Deferred } from "@web/core/utils/concurrency";
 import { htmlSprintf } from "@web/core/utils/html";
 import { isObject } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
@@ -17,7 +16,8 @@ export const translatedTerms = {
  * found within the module's context, or when the context is not known.
  */
 export const translatedTermsGlobal = {};
-export const translationIsReady = new Deferred();
+export const translationResolvers = Promise.withResolvers();
+export const translationIsReady = translationResolvers.promise;
 
 const Markup = markup().constructor;
 

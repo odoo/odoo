@@ -6,7 +6,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
@@ -1119,16 +1119,16 @@ export function makeActionManager(env, router = _router) {
         }
 
         if (options.clearBreadcrumbs && !options.noEmptyTransition) {
-            const def = new Deferred();
+            const { promise, resolve } = Promise.withResolvers();
             env.bus.trigger("ACTION_MANAGER:UPDATE", {
                 id: ++id,
                 Component: BlankComponent,
                 componentProps: {
-                    onMounted: () => def.resolve(),
+                    onMounted: () => resolve(),
                     withControlPanel: action.type === "ir.actions.act_window",
                 },
             });
-            await def;
+            await promise;
         }
         if (options.onActionReady) {
             options.onActionReady(action);
