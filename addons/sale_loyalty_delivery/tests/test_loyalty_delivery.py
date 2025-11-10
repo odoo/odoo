@@ -94,7 +94,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
 
     def test_free_delivery_cost_with_ewallet(self):
         """
-        Automatic free shipping of a delivery carrier should not be affected by the
+        Automatic free shipping of a delivery method should not be affected by the
         use of an ewallet when paying.
         Paying for an order of value 200 with an ewallet should still trigger the
         free shipping of the selected carrier if the free shipping is for amounts

@@ -5,7 +5,7 @@
         <field name="name">delivery.carrier.list</field>
         <field name="model">delivery.carrier</field>
         <field name="arch" type="xml">
-            <list string="Carrier">
+            <list string="Delivery Method">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="delivery_type"/>
@@ -23,8 +23,8 @@
         <field name="name">delivery.carrier.search</field>
         <field name="model">delivery.carrier</field>
         <field name="arch" type="xml">
-            <search string="Delivery Carrier">
-                <field name="name" string="Carrier" />
+            <search string="Delivery Method">
+                <field name="name" string="Delivery Method" />
                 <field name="delivery_type"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
@@ -39,7 +39,7 @@
         <field name="name">delivery.carrier.form</field>
         <field name="model">delivery.carrier</field>
         <field name="arch" type="xml">
-            <form string="Carrier">
+            <form string="Delivery Method">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_prod_environment"

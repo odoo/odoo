@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 class ChooseDeliveryCarrier(models.TransientModel):
     _name = 'choose.delivery.carrier'
-    _description = 'Delivery Carrier Selection Wizard'
+    _description = 'Delivery Method Selection Wizard'
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
