@@ -51,10 +51,7 @@ export class PaymentScreen extends Component {
         return this.pos.config.payment_method_ids.slice().sort((a, b) => a.sequence - b.sequence);
     }
     async validateOrder(isForceValidate = false) {
-        const validation = new OrderPaymentValidation({
-            pos: this.pos,
-            orderUuid: this.currentOrder.uuid,
-        });
+        const validation = new OrderPaymentValidation(this.validationOptions);
         await validation.validateOrder(isForceValidate);
     }
 
@@ -68,10 +65,6 @@ export class PaymentScreen extends Component {
             }
         }
 
-        if (this.payment_methods_from_config.length == 1 && this.paymentLines.length == 0) {
-            this.addNewPaymentLine(this.payment_methods_from_config[0]);
-        }
-
         //Activate the invoice option for refund orders if the original order was invoiced.
         if (
             this.currentOrder.isRefund &&
@@ -79,6 +72,27 @@ export class PaymentScreen extends Component {
         ) {
             this.currentOrder.setToInvoice(true);
         }
+    }
+
+    get validationOptions() {
+        const opts = {
+            pos: this.pos,
+            orderUuid: this.currentOrder.uuid,
+        };
+        // Fast payment should be applied in the following cases:
+        // 1. When there are no existing payment lines, but a payment method is configured.
+        // 2. When the customer's due has been settled (i.e., a negative payment entry exists).
+        //    In this case, the negative payment line is present in `paymentLines` but not shown in the UI,
+        //    so `fastPayment` should still be triggered by passing `opts`.
+        if (
+            !this.paymentLines.length ||
+            (!this.currentOrder.is_refund &&
+                this.paymentLines.length === 1 &&
+                this.pos.currency.isNegative(this.paymentLines[0].amount))
+        ) {
+            opts.fastPaymentMethod = this.payment_methods_from_config[0];
+        }
+        return opts;
     }
 
     getNumpadButtons() {
@@ -106,7 +120,7 @@ export class PaymentScreen extends Component {
         });
     }
     get uiBackText() {
-        return this.pos.config.set_tip_after_payment && this.currentOrder.isPaid()
+        return this.pos.config.set_tip_after_payment && this.currentOrder.toBeValidate()
             ? _t("Keep Open")
             : _t("Back");
     }
@@ -364,7 +378,7 @@ export class PaymentScreen extends Component {
         const currentOrder = line.pos_order_id;
         if (
             isPaymentSuccessful &&
-            currentOrder.isPaid() &&
+            currentOrder.toBeValidate() &&
             config.auto_validate_terminal_payment &&
             !currentOrder.isRefundInProcess()
         ) {
@@ -404,7 +418,7 @@ export class PaymentScreen extends Component {
         const config = this.pos.config;
         const currentOrder = line.pos_order_id;
         if (
-            currentOrder.isPaid() &&
+            currentOrder.toBeValidate() &&
             config.auto_validate_terminal_payment &&
             !currentOrder.isRefundInProcess()
         ) {

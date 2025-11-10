@@ -83,7 +83,13 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
 
             // check that ship later button is present
             { trigger: ".payment-buttons button:contains('Ship Later')" },
-
+            // payment line is been in case of mobile as paymentlines are required to manually enter the amount
+            {
+                isActive: ["mobile"],
+                content: "click payment method",
+                trigger: `.paymentmethod`,
+                run: "click",
+            },
             PaymentScreen.enterPaymentLineAmount("Bank", "99"),
             // trying to put 99 as an amount should throw an error. We thus confirm the dialog.
             Dialog.confirm(),
