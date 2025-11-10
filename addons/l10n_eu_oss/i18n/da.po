@@ -17,9 +17,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. module: l10n_eu_oss
-#: model:ir.model,name:l10n_eu_oss.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "Kontoplansskabelon"
+#. odoo-python
+#: code:addons/l10n_eu_oss/models/res_company.py:0
+msgid "%(tax_name)s (Copy)"
+msgstr ""
 
 #. module: l10n_eu_oss
 #: model:ir.model,name:l10n_eu_oss.model_res_company
@@ -32,21 +33,23 @@ msgid "Config Settings"
 msgstr "Konfigurér indstillinger"
 
 #. module: l10n_eu_oss
+#: model:ir.model.fields,field_description:l10n_eu_oss.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_eu_oss.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_eu_oss
+#: model:ir.model.fields,field_description:l10n_eu_oss.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_eu_oss.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_eu_oss
 #: model:ir.model.fields,field_description:l10n_eu_oss.field_res_config_settings__l10n_eu_oss_eu_country
 msgid "Is European country?"
 msgstr "Er det et europæisk land?"
 
 #. module: l10n_eu_oss
-#: model:account.account.tag,name:l10n_eu_oss.tag_oss
-msgid "OSS"
-msgstr "OSS"
-
-#. module: l10n_eu_oss
 #: model_terms:ir.ui.view,arch_db:l10n_eu_oss.res_config_settings_view_form
 msgid "Refresh tax mapping"
 msgstr "Genindlæs skatteallokering"
-
-#. module: l10n_eu_oss
-#: model:account.account.tag,name:l10n_eu_oss.tag_eu_import
-msgid "non-EU origin"
-msgstr "Oprindelse uden for EU"
