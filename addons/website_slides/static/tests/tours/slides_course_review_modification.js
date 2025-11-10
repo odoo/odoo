@@ -36,6 +36,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click",
         },
         {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='4']:contains(100%)",
+        },
+        {
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(First review)",
             run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
         },
@@ -46,6 +50,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger: "#chatterRoot:shadow button:contains(Confirm)",
             run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Thread:contains(The conversation is empty.)",
@@ -83,6 +91,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='3']:contains(100%)",
+        },
+        {
+            trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Second review) .o_website_rating_static[title='3 stars on 5']",
         },
         {
@@ -108,6 +120,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger: "a[id=review-tab]:contains(Reviews (1))",
             run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='2']:contains(100%)",
         },
         {
             trigger:
@@ -169,6 +185,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger: "#chatterRoot:shadow button:contains(Confirm)",
             run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
         },
         {
             trigger: "span:contains(Add Review)",
