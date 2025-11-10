@@ -466,6 +466,8 @@ class TestOrmRelated(models.Model):
     foo_bar_sudo_id = fields.Many2one(string='foo_bar_sudo_id', related='foo_id.bar_id', related_sudo=True)
     foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
 
+    foo_float_id = fields.Float(related='foo_id.test_float')
+
 
 class TestOrmRelated_Foo(models.Model):
     _name = 'test_orm.related_foo'
@@ -475,6 +477,8 @@ class TestOrmRelated_Foo(models.Model):
     bar_id = fields.Many2one('test_orm.related_bar')
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
     bar_alias = fields.Many2one(related='bar_id', string='bar_alias')
+
+    test_float = fields.Float(digits='ORM Precision')
 
 
 class TestOrmRelated_Bar(models.Model):
