@@ -151,7 +151,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Check message has correct recipients",
             trigger:
-                ".o-mail-MessageNotificationPopover:contains('Not A Demo User (NotADemoUser@mail.com)\nJane (jane@example.com)')",
+                ".o-mail-MessageNotificationPopover:contains('Not A Demo User (NotADemoUser@mail.com) Jane (jane@example.com)')",
         },
         {
             content: "Check message contains the first attachment",
