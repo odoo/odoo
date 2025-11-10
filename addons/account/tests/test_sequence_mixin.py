@@ -783,10 +783,10 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_unlink(self):
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True, False])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, False])
         self.all_moves[1].button_draft()
         self.all_moves[1].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_unlink_2(self):
         self.all_moves[1].button_draft()
@@ -794,7 +794,7 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_change_sequence(self):
         previous = self.all_moves[1].name
@@ -806,12 +806,12 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_change_multi(self):
         self.all_moves[0].name = '/'
         self.all_moves[1].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_change_multi_2(self):
         self.all_moves[1].name = '/'
         self.all_moves[0].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_null_change(self):
         self.all_moves[1].name = self.all_moves[1].name
@@ -836,6 +836,53 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         new_move.action_post()
         self.assertEqual(new_move.made_sequence_gap, True)
 
+    def test_draft1(self):
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft2(self):
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft3(self):
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4_2(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft6(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft6_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft7(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
