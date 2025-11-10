@@ -1796,6 +1796,46 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
     return parent_ids
 
 
+@operator_optimization(['access'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _operator_access_rule_domain(condition, model):
+    operation = condition.value
+    field = condition._field(model)
+    if condition.field_expr != field.name:
+        condition._raise("The 'access' operator does not work for properties")
+    if field.relational and field.comodel_name:
+        comodel = model.env[field.comodel_name]
+    elif field.name == 'id':
+        comodel = model
+    else:
+        condition._raise("The 'access' operator works only for relational fields")
+        assert False, "no return above"  # for pylint
+    if not comodel.sudo(False).has_access(operation):
+        # no access to the comodel for any record
+        return Domain.FALSE
+    if comodel.sudo(False).env.su:
+        # edge-case for super user
+        return Domain.TRUE
+    comodel = comodel.sudo()
+
+    def filtered_access(record):
+        if field.name == 'id':
+            corecords = record
+        else:
+            if not record.has_access('read'):
+                return False
+            corecords = field.__get__(record.sudo())
+        return corecords.sudo(False).has_access(operation)
+
+    def optimize_sql(custom, model):
+        model = model.sudo(False)
+        # get the record rule
+        codomain = model.env['ir.rule']._compute_domain(comodel._name, operation)
+        codomain = codomain.optimize_full(comodel)
+        return DomainCondition(field.name, 'any!', codomain)
+
+    return DomainCustom(filtered=filtered_access, optimize_func=optimize_sql)
+
+
 @operator_optimization(['any', 'not any'], level=OptimizationLevel.FULL)
 def _optimize_any_with_rights(condition, model):
     if model.env.su or condition._field(model).bypass_search_access:
