@@ -40,3 +40,13 @@ class TestWebSearchRead(common.TransactionCase):
         result = self.env["res.partner"].web_name_search("", {"display_name": {}})[0]
         self.assertTrue("display_name" in result)
         self.assertTrue("__formatted_display_name" in result)
+
+        result = self.env["res.partner"].web_name_search("", {"display_name": {}, "street": {}})[0]
+        self.assertTrue("display_name" in result)
+        self.assertTrue("street" in result)
+        self.assertTrue("__formatted_display_name" in result)
+
+        result = self.env["res.partner"].web_name_search("", {"street": {}})[0]
+        self.assertTrue("display_name" not in result)
+        self.assertTrue("street" in result)
+        self.assertTrue("__formatted_display_name" not in result)
