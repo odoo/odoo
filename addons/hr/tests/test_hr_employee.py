@@ -730,7 +730,12 @@ class TestVersionCron(TransactionCase):
 
         # Saving current employee data to compare later on
         employee_values = {}
-        employee_fields = self.env['hr.employee']._fields.keys()
+        # some fields cannot be accessed. We need to filter them out
+        employee_fields = [
+            field
+            for field in self.env['hr.employee']._fields
+            if hasattr(self.employee, field)
+        ]
         for field in employee_fields:
             employee_values[field] = self.employee[field]
 
