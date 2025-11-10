@@ -61,24 +61,32 @@
                         <group name="resource_working_hours">
                             <field name="flexible_hours"/>
                             <label for="full_time_required_hours" invisible="flexible_hours"/>
-                            <label for="full_time_required_hours" string="Hours per Week" invisible="not flexible_hours"/>
+                            <label for="full_time_required_hours" string="Required Full Time" invisible="not flexible_hours"/>
                             <div>
                                 <field name="full_time_required_hours" style="width: 6ch;" widget="float_time"/>
                                 <span>hours/week</span>
                             </div>
                             <field name="hours_per_day" widget="float_time" readonly="not flexible_hours"/>
-                            <label for="work_time_rate" string="Work Time Rate" invisible="flexible_hours"/>
-                            <div invisible="flexible_hours">
-                                <field name="work_time_rate" nolabel="1"  style="width: 5ch;"/>
+                            <label for="work_time_rate" string="Work Time Rate"/>
+                            <div>
+                                <field name="work_time_rate" nolabel="1" style="width: 5ch;"/>
                                 <span class="ms-1">%</span>
                             </div>
                             <field name="is_fulltime" invisible="1"/>
                         </group>
-                        <group name="resource_company">
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
-                            <field name="tz_offset" invisible="1"/>
+                        <group>
+                            <group name="resource_company" colspan="2">
+                                <field name="company_id" placeholder="Visible to all"/>
+                                <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}"/>
+                                <field name="tz_offset" invisible="1"/>
+                            </group>
+                            <group name="flex_details" invisible="not flexible_hours" colspan="2">
+                                <label for="hours_per_week" string="Total"/>
+                                <div class="d-flex">
+                                    <field name="hours_per_week" nolabel="1" style="width: 6ch;" widget="float_time"/>
+                                    <span class="ms-2">hours/week</span>
+                                </div>
+                            </group>
                         </group>
                     </group>
                     <notebook>
