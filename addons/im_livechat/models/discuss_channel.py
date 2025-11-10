@@ -202,7 +202,9 @@ class DiscussChannel(models.Model):
         result = super().write(vals)
         needing_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
         if needing_help_before != needing_help_after:
-            self.env.ref("im_livechat.im_livechat_group_user")._bus_send(
+            group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
+            Store(bus_channel=group_livechat_user).add(self).bus_send()
+            group_livechat_user._bus_send(
                 "im_livechat.looking_for_help/update",
                 {
                     "added_channel_ids": (needing_help_after - needing_help_before).ids,
