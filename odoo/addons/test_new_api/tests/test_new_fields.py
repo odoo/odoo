@@ -3230,6 +3230,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for index, record in enumerate(records):
                 record.write({'harry': index + 2})
 
+    def test_related_column_type(self):
+        related_float_field = self.env['test_new_api.related']._fields['foo_float_id']
+        self.assertEqual(related_float_field.column_type[1], 'numeric')
+
 
 class TestX2many(TransactionExpressionCase):
 
