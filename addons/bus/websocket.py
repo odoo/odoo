@@ -811,7 +811,9 @@ class TimeoutManager:
 
     def __init__(self):
         super().__init__()
-        self._awaited_opcode = None
+        # Maps an awaited response opcode (i.e. PONG, CLOSE) to the
+        # time by which the response must be received.
+        self._expiration_time_by_opcode = {}
         # Time in which the connection was opened.
         self._opened_at = time.time()
         # Custom keep alive timeout for each TimeoutManager to avoid multiple
@@ -820,28 +822,19 @@ class TimeoutManager:
             self.KEEP_ALIVE_TIMEOUT + random.uniform(0, self.KEEP_ALIVE_TIMEOUT / 2)
         )
         self.timeout_reason = None
-        # Start time recorded when we started awaiting an answer to a
-        # PING/CLOSE frame.
-        self._waiting_start_time = None
 
     def acknowledge_frame_receipt(self, frame):
-        if self._awaited_opcode is frame.opcode:
-            self._awaited_opcode = None
-            self._waiting_start_time = None
+        self._expiration_time_by_opcode.pop(frame.opcode, None)
 
     def acknowledge_frame_sent(self, frame):
         """
         Acknowledge a frame was sent. If this frame is a PING/CLOSE
         frame, start waiting for an answer.
         """
-        if self.has_timed_out():
-            return
-        if frame.opcode is Opcode.PING:
-            self._awaited_opcode = Opcode.PONG
-        elif frame.opcode is Opcode.CLOSE:
-            self._awaited_opcode = Opcode.CLOSE
-        if self._awaited_opcode is not None:
-            self._waiting_start_time = time.time()
+        if frame.opcode in (Opcode.PING, Opcode.CLOSE):
+            self._expiration_time_by_opcode[
+                Opcode.PONG if frame.opcode is Opcode.PING else Opcode.CLOSE
+            ] = time.time() + self.TIMEOUT
 
     def has_timed_out(self):
         """
@@ -854,10 +847,7 @@ class TimeoutManager:
         if now - self._opened_at >= self._keep_alive_timeout:
             self.timeout_reason = TimeoutReason.KEEP_ALIVE
             return True
-        if self._awaited_opcode and now - self._waiting_start_time >= self.TIMEOUT:
-            self.timeout_reason = TimeoutReason.NO_RESPONSE
-            return True
-        return False
+        return any(now >= expiration for expiration in self._expiration_time_by_opcode.values())
 
 
 # ------------------------------------------------------
