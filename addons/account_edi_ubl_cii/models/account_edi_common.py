@@ -797,10 +797,10 @@ class AccountEdiCommon(models.AbstractModel):
         # price_unit
         charge_amount = sum(d['amount'] for d in charges)
         allow_charge_amount = discount_amount - charge_amount
-        if gross_price_unit is not None:
-            price_unit = gross_price_unit / basis_qty
-        elif net_price_unit is not None:
-            price_unit = (net_price_unit + rebate) / basis_qty
+        if net_price_unit is not None:
+            price_unit = net_price_unit / basis_qty
+        elif gross_price_unit is not None:
+            price_unit = (gross_price_unit - rebate) / basis_qty
         elif price_subtotal is not None:
             price_unit = (price_subtotal + allow_charge_amount) / (delivered_qty or 1)
         else:
