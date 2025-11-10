@@ -781,9 +781,12 @@ class DomainCustom(Domain):
     def _as_predicate(self, records):
         if self._filtered is not None:
             return self._filtered
-        # by default, run the SQL query
-        query = records._search(DomainCondition('id', 'in', records.ids) & self, order='id')
-        return DomainCondition('id', 'any', query)._as_predicate(records)
+        # by default, run the SQL query on accessible records
+        query = records._filtered_access('read')._as_query(ordered=False)
+        if query.is_empty():
+            return Domain.FALSE._as_predicate(records)
+        query.add_where(self.optimize_full(records)._to_sql(query.table))
+        return DomainCondition('id', 'any!', query)._as_predicate(records)
 
     def __eq__(self, other):
         return (
@@ -1080,7 +1083,9 @@ class DomainCondition(Domain):
                 operator = 'not any!'
             positive_operator = 'any!'
             field_expr = 'id'
-            value = records.with_context(active_test=False)._search(DomainCondition('id', 'in', OrderedSet(records.ids)) & condition)
+            # similar to a search with [('id', 'in', records.ids), *condition]
+            value = records._filtered_access('read')._as_query(ordered=False)
+            value.add_where(condition.optimize_full(records)._to_sql(value.table))
             assert isinstance(value, Query)
 
         if isinstance(value, Query):
@@ -1753,7 +1758,9 @@ def _operator_child_of_domain(comodel: BaseModel, parent):
         child_ids: OrderedSet[int] = OrderedSet()
         while comodel:
             child_ids.update(comodel._ids)
-            query = comodel._search(DomainCondition(parent, 'in', OrderedSet(comodel.ids)))
+            # same as searching with the condition and bypassing all rules and overrides
+            query = Query(comodel)
+            query.add_where(DomainCondition(parent, 'in', comodel._ids).optimize_full(comodel)._to_sql(query.table))
             comodel = comodel.browse(OrderedSet(query.get_result_ids()) - child_ids)
     return child_ids
 
