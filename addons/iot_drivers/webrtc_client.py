@@ -19,7 +19,7 @@ class WebRtcClient(Thread):
         super().__init__()
         self.connections: set[RTCDataChannel] = set()
         self.chunked_message_in_progress: dict[RTCDataChannel, str] = {}
-        self.event_loop = asyncio.get_event_loop_policy().get_event_loop()
+        self.event_loop = asyncio.new_event_loop()
 
     def offer(self, request: dict):
         return asyncio.run_coroutine_threadsafe(
