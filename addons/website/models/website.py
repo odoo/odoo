@@ -530,6 +530,7 @@ class Website(models.Model):
 
         snippet_classes = el.get('class', '').split()
 
+        breakpoint()
         filter_name = customizations.get('filter_xmlid') or default_settings.get('filter_xmlid')
         if filter_name:
             selected_filter = self.env.ref(filter_name)

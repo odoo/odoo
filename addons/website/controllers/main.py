@@ -464,6 +464,13 @@ class Website(Home):
             t['thumb'] = attribs.get('data-thumb')
         return templates
 
+    @http.route('/web_editor/get_snippet_data', type='jsonrpc', auth='public', website=True)
+    def get_snippet_data(self, template_data, **kwargs):
+        results = {}
+        for key, value in template_data.items():
+            results[key] = request.env['website.snippet.filter'].get_dummy_records(key, value)
+        return results
+
     @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True, readonly=True)
     def get_current_currency(self, **kwargs):
         return {

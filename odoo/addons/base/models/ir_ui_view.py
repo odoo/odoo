@@ -27,6 +27,7 @@ from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
+from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -2520,6 +2521,7 @@ actual arch.
     @api.model
     def render_public_asset(self, template, values=None):
         self._get_template_view(template).sudo()._check_view_access()
+        values['html2plaintext'] = html2plaintext
         return self.env['ir.qweb'].sudo()._render(template, values)
 
     def _render_template(self, template, values=None):
