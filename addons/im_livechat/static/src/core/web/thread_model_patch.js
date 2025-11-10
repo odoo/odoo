@@ -10,8 +10,6 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.hasFetchedLivechatSessionData = false;
-        /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
-        this.livechat_status = undefined;
         this.livechat_note = fields.Html();
         /** @type {string|undefined} */
         this.livechatNoteText = fields.Attr(undefined, {
@@ -24,7 +22,6 @@ patch(Thread.prototype, {
         });
         /** @type {"no_answer"|"no_agent"|"no_failure"|"escalated"|undefined} */
         this.livechat_outcome = undefined;
-        this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
     },
     get livechatStatusLabel() {
         if (this.livechat_end_dt) {

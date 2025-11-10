@@ -20,8 +20,9 @@ export class DiscussAppCategory extends Record {
 
     get isVisible() {
         return (
-            !this.hideWhenEmpty ||
-            this.threads.some((thread) => thread.displayToSelf || thread.isLocallyPinned)
+            !this.hidden &&
+            (!this.hideWhenEmpty ||
+                this.threads.some((thread) => thread.displayToSelf || thread.isLocallyPinned))
         );
     }
 
@@ -33,6 +34,20 @@ export class DiscussAppCategory extends Record {
     id;
     /** @type {string} */
     name;
+    // Hide categories from the devtools if really bothered.
+    hidden = fields.Attr(undefined, {
+        compute() {
+            return Boolean(localStorage.getItem(`mail.sidebar_category_${this.id}_hidden`));
+        },
+        onUpdate() {
+            if (!this.hidden && this.hidden !== undefined) {
+                localStorage.removeItem(`mail.sidebar_category_${this.id}_hidden`);
+            } else {
+                localStorage.setItem(`mail.sidebar_category_${this.id}_hidden`, true);
+            }
+        },
+        eager: true,
+    });
     hideWhenEmpty = false;
     canView = false;
     app = fields.One("DiscussApp", {

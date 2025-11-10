@@ -1,6 +1,8 @@
 declare module "models" {
     export interface DiscussApp {
         defaultLivechatCategory: DiscussAppCategory;
+        lastThread: Thread;
+        livechatLookingForHelpCategory: DiscussAppCategory;
         livechats: Thread[];
     }
     export interface DiscussAppCategory {
@@ -14,5 +16,9 @@ declare module "models" {
         appAsLivechats: DiscussApp;
         country_id: Country;
         livechat_channel_id: LivechatChannel;
+        livechat_expertise_ids: LivechatExpertise[];
+        livechat_status: "in_progress"|"waiting"|"need_help"|undefined;
+        matchesSelfExpertise: Readonly<boolean>;
+        wasLookingForHelp: boolean;
     }
 }

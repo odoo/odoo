@@ -413,7 +413,6 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
     await click("[title='Chat Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
-    await click("button:contains('Leave Conversation')");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
