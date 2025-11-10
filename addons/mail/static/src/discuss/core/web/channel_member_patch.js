@@ -1,26 +1,26 @@
-import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 
-patch(ChannelMemberList.prototype, {
+patch(ChannelMember.prototype, {
     setup() {
         super.setup(...arguments);
         this.avatarCard = usePopover(AvatarCardPopover, {
             position: "right",
         });
     },
-    onClickAvatar(ev, member) {
-        if (!this.canOpenChatWith(member)) {
+    onClickAvatar(ev) {
+        if (!this.canOpenChat) {
             return;
         }
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: member.partner_id.main_user_id?.id,
-                channelMember: member,
+                id: this.member.partner_id.main_user_id?.id,
+                channelMember: this.member,
             });
         }
     },
 });
-Object.assign(ChannelMemberList.components, { AvatarCardPopover });
+Object.assign(ChannelMember.components, { AvatarCardPopover });
