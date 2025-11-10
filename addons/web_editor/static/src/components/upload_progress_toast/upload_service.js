@@ -39,6 +39,37 @@ export const uploadService = {
                 progressToast.isVisible = false;
             }
         };
+
+        const convertWebpToJpeg = async (dataURL, name, attachmentId) => {
+            const image = document.createElement("img");
+            image.src = `data:image/webp;base64,${dataURL.split(",")[1]}`;
+            await new Promise((res, rej) => {
+                image.onload = res;
+                image.onerror = rej;
+            });
+
+            const canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0);
+
+            const altDataURL = canvas.toDataURL("image/jpeg", 0.75);
+
+            await rpc("/web_editor/attachment/add_data", {
+                name: name.replace(/\.webp$/, ".jpg"),
+                data: altDataURL.split(",")[1],
+                res_id: attachmentId,
+                res_model: "ir.attachment",
+                is_image: true,
+                width: 0,
+                quality: 0,
+            });
+        };
+
         return {
             get progressToast() {
                 return progressToast;
@@ -135,26 +166,11 @@ export const uploadService = {
                         } else {
                             if (attachment.mimetype === 'image/webp') {
                                 // Generate alternate format for reports.
-                                const image = document.createElement('img');
-                                image.src = `data:image/webp;base64,${dataURL.split(',')[1]}`;
-                                await new Promise(resolve => image.addEventListener('load', resolve));
-                                const canvas = document.createElement('canvas');
-                                canvas.width = image.width;
-                                canvas.height = image.height;
-                                const ctx = canvas.getContext('2d');
-                                ctx.fillStyle = 'rgb(255, 255, 255)';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                ctx.drawImage(image, 0, 0);
-                                const altDataURL = canvas.toDataURL('image/jpeg', 0.75);
-                                await rpc('/web_editor/attachment/add_data', {
-                                    'name': file.name.replace(/\.webp$/, '.jpg'),
-                                    'data': altDataURL.split(',')[1],
-                                    'res_id': attachment.id,
-                                    'res_model': 'ir.attachment',
-                                    'is_image': true,
-                                    'width': 0,
-                                    'quality': 0,
-                                }, {xhr});
+                                await convertWebpToJpeg(
+                                    dataURL,
+                                    file.name,
+                                    attachment.id
+                                );
                             }
                             file.uploaded = true;
                             await onUploaded(attachment);
