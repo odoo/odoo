@@ -14,30 +14,33 @@
 <template id="s_blog_posts_big_picture" name="Blog Posts Big Picture">
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_big_picture s_blog_posts_effect_marley s_blog_posts_post_picture_size_default'"/>
     <t t-call="website_blog.s_blog_posts">
-        <div class="temp">
-            <t t-set="html_val" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=3)"/>
-            <t t-if="html_val">
-                <div t-out="html2plaintext(html_val[0])"/>
-            </t>
-        </div>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_big_picture">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=3)"/>
+        </t>
     </t>
 </template>
 <template id="s_blog_posts_card" name="Blog Posts Card">
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_card s_blog_posts_post_picture_size_default'"/>
     <t t-call="website_blog.s_blog_posts">
-        <t t-call="website_blog.s_dynamic_snippet_blog_posts_card_preview_data"/>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_card">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=4)"/>
+        </t>
     </t>
 </template>
 <template id="s_blog_posts_horizontal" name="Blog Posts Horizontal">
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_horizontal s_blog_posts_post_picture_size_default'"/>
     <t t-call="website_blog.s_blog_posts">
-        <t t-call="website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data"/>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_horizontal">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=3)"/>
+        </t>
     </t>
 </template>
 <template id="s_blog_posts_list" name="Blog Posts List">
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_list'"/>
     <t t-call="website_blog.s_blog_posts">
-        <t t-call="website_blog.s_dynamic_snippet_blog_posts_list_preview_data"/>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_list">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=6)"/>
+        </t>
     </t>
 </template>
 <!-- Single record snippets -->
@@ -45,14 +48,18 @@
     <t t-set="is_single_record" t-value="True"/>
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_aside'"/>
     <t t-call="website_blog.s_blog_posts">
-        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data"/>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_single_aside">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=1)"/>
+        </t>
     </t>
 </template>
 <template id="s_blog_posts_single_full" name="Single Blog Post Full">
     <t t-set="is_single_record" t-value="True"/>
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_full o_cc o_cc5'"/>
     <t t-call="website_blog.s_blog_posts">
-        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data"/>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_single_full">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=1)"/>
+        </t>
     </t>
 </template>
 <template id="s_blog_posts_single_circle" name="Single Blog Post Circle">
@@ -60,14 +67,18 @@
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_circle o_cc o_cc2'"/>
     <t t-set="container_classes" t-value="'o_container_small'"/>
     <t t-call="website_blog.s_blog_posts">
-        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data"/>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_single_circle">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=1)"/>
+        </t>
     </t>
 </template>
 <template id="s_blog_posts_single_badge" name="Single Blog Post Badge">
     <t t-set="is_single_record" t-value="True"/>
     <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_badge'"/>
     <t t-call="website_blog.s_blog_posts">
-        <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_badge_preview_data"/>
+        <t t-call="website_blog.dynamic_filter_template_blog_post_single_badge">
+            <t t-set="records" t-value="request.env['blog.blog'].get_dummy_records(template_key='website_blog.dynamic_filter_template_blog_post_list', limit=1)"/>
+        </t>
     </t>
 </template>
 
