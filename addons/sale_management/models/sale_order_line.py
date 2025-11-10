@@ -10,7 +10,7 @@ class SaleOrderLine(models.Model):
 
     sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'order_id')
     def _compute_name(self):
         # Take the description on the order template if the product is present in it
         super()._compute_name()
@@ -21,7 +21,10 @@ class SaleOrderLine(models.Model):
                         # If a specific description was set on the template, use it
                         # Otherwise the description is handled by the super call
                         lang = line.order_id.partner_id.lang
-                        line.name = template_line.with_context(lang=lang).name + line.with_context(lang=lang)._get_sale_order_line_multiline_description_variants()
+                        name = template_line.with_context(lang=lang).product_id.display_name
+                        name += '\n' + template_line.with_context(lang=lang).name
+                        name += line.with_context(lang=lang)._get_sale_order_line_multiline_description_variants()
+                        line.name = name
                         break
 
     def _use_template_name(self):

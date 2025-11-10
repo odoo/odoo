@@ -377,7 +377,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'linked_line_id', 'linked_line_ids')
     def _compute_name(self):
         for line in self:
-            if not line.product_id and not line.is_downpayment:
+            if (not line.product_id and not line.is_downpayment) or not line.order_id:
                 continue
 
             lang = line.order_id._get_lang()
