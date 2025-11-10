@@ -10,7 +10,7 @@
         </t>
         <t t-else="">
           <t t-foreach="Object.keys(state.grouped)" t-as="groupKey" t-key="groupKey">
-            <div class="card mb-3 p-3 shadow-sm">
+            <div class="card mb-3 p-3 shadow-sm" t-if="Object.keys(this.state.grouped[groupKey]).length &gt; 0">
               <!-- group title -->
               <t t-set="ids" t-value="groupKey.split('_')"/>
               <t t-set="project_id" t-value="projectName(parseId(ids[0]))"/>
@@ -26,7 +26,7 @@
                   <tbody>
                     <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
                       <tr
-                        t-if="state.grouped[groupKey][title] >= 120"
+                        t-if="state.grouped[groupKey][title].duration >= 120"
                         t-att-class="{
                           'table-danger': this.isSelected(groupKey, title),
                         }"
@@ -41,7 +41,7 @@
 
                         <!-- Minutes -->
                         <td class="text-end text-muted">
-                          <t t-esc="(state.grouped[groupKey][title] / 60).toFixed(1)"/> min
+                          <t t-esc="(state.grouped[groupKey][title].duration / 60).toFixed(1)"/> min
                         </td>
 
                         <!-- Actions -->
