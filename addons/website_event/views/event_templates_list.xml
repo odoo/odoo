@@ -388,9 +388,9 @@
                                 </t>
                             </div>
                             <!-- Title -->
-                            <h5 t-attf-class="card-title my-2 #{not event.website_published and 'text-danger'} #{not opt_events_list_columns and not event.event_registrations_open and 'text-muted'}">
+                            <h2 t-attf-class="card-title my-2 h5 #{not event.website_published and 'text-danger'} #{not opt_events_list_columns and not event.event_registrations_open and 'text-muted'}">
                                 <span t-field="event.name" itemprop="name"/>
-                            </h5>
+                            </h2>
                             <div t-if="not opt_events_list_columns" class="d-inline-flex flex-wrap gap-3">
                                 <!-- Location (List View) -->
                                 <div class="d-flex align-items-center">

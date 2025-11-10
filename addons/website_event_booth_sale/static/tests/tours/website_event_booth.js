@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
     steps: () => [
 {
     content: 'Open "Test Event Booths" event',
-    trigger: 'h5.card-title span:contains("Test Event Booths")',
+    trigger: 'h2.card-title span:contains("Test Event Booths")',
     run: "click",
     expectUnloadPage: true,
 }, {

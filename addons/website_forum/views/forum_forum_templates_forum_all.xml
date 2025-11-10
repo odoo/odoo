@@ -39,7 +39,7 @@
                 <div class="o_we_bg_filter o_wforum_background_gradient"/>
                 <div t-if="forum_badge" class="badge position-absolute top-0 end-0 m-3 text-bg-secondary" t-out="forum_badge"></div>
                 <div class="mt-5 pt-5">
-                    <h3 class="mb-0 fw-bold" t-field="forum.name"/>
+                    <h2 class="mb-0 fw-bold h3" t-field="forum.name"/>
                     <t t-if="is_view_active('website_forum.opt_post_count')">
                         <span t-if="forum.total_posts > 0" class="badge text-bg-info">
                             <span t-out="forum.total_posts" class="me-1"/>

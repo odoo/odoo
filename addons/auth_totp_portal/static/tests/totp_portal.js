@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     expectUnloadPage: true,
 }, {
     content: "check we're logged in",
-    trigger: "h3:contains(My account)",
+    trigger: "h1:contains(My account)",
 }, {
     content: "go back to security",
     trigger: "a:contains(Security)",
@@ -132,5 +132,5 @@ registry.category("web_tour.tours").add('totportal_login_disabled', {
     expectUnloadPage: true,
 }, {
     content: "check we're logged in",
-    trigger: "h3:contains(My account)",
+    trigger: "h1:contains(My account)",
 }]});
