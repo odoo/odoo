@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.3+e\n"
+"Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-19 15:25+0000\n"
-"PO-Revision-Date: 2025-06-19 15:25+0000\n"
+"POT-Creation-Date: 2025-11-10 09:18+0000\n"
+"PO-Revision-Date: 2025-11-10 09:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -102,11 +102,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Attached file is empty"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_ir_attachment
-msgid "Attachment"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -245,6 +240,11 @@ msgid "Contract"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model,website_form_label:l10n_it_edi.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__create_uid
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__create_uid
 msgid "Created by"
@@ -298,7 +298,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__display_name
@@ -309,6 +308,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.l10n_it_document_type_form
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.l10n_it_document_type_tree
 msgid "Document Type"
 msgstr ""
@@ -374,11 +374,6 @@ msgid "Fattura Electronica (FatturaPA)"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_partner__invoice_edi_format__it_edi_xml
-msgid "FatturaPA"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_attachment_id
 msgid "FatturaPA Attachment"
@@ -400,7 +395,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_attachment__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_document_type__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__id
@@ -450,29 +444,7 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "Invoices must have %s one %s tax set per line."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "VAT"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "at most"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "exactly"
+msgid "Invoices must have %(number)s one %(kind)s tax set per line."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -499,6 +471,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__l10n_it_payment_method
 msgid "Italian Payment Method"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_partner__invoice_edi_format__it_edi_xml
+msgid "Italy (Factura PA)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1258,6 +1235,12 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "This invoice was retrieved from the SdI."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "This move is not waiting for updates from the SdI."
 msgstr ""
 
@@ -1322,6 +1305,12 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_it_edi.field_account_move__l10n_it_edi_header
 msgid ""
 "User description of the current state, with hints to make the flow progress"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "VAT"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1504,6 +1493,12 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "at most"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 msgid "city"
@@ -1520,6 +1515,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__invoice_edi_format
 msgid "eInvoice format"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "exactly"
 msgstr ""
 
 #. module: l10n_it_edi

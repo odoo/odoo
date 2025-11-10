@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-25 14:42+0000\n"
+"POT-Creation-Date: 2025-11-10 09:16+0000\n"
 "PO-Revision-Date: 2021-07-29 13:09+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,13 +18,6 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 
 #. module: l10n_de
-#. odoo-python
-#: code:addons/l10n_de/models/ir_attachment.py:0
-#, python-format
-msgid "%(attachment_name)s (detached by %(user)s on %(date)s)"
-msgstr "%(attachment_name)s (getrennt von %(user)s am %(date)s)"
-
-#. module: l10n_de
 #: model:ir.model.fields,help:l10n_de.field_account_tax__l10n_de_datev_code
 msgid "4 digits code use by Datev"
 msgstr "4-stelliger Code zur Verwendung durch Datev"
@@ -34,11 +27,13 @@ msgstr "4-stelliger Code zur Verwendung durch Datev"
 msgid ""
 "<i>By securing entries, you make them unchangeable.</i>\n"
 "                        <br/>\n"
-"                        <i>This is required by law to ensure complete and traceable bookkeeping in accordance with GoBD.</i>"
+"                        <i>This is required by law to ensure complete and "
+"traceable bookkeeping in accordance with GoBD.</i>"
 msgstr ""
 "<i>Mit der Festschreibung machen Sie Ihre Buchungen unveränderbar.</i>\n"
 "                        <br/>\n"
-"                        <i>Dies verlangt der Gesetzgeber für eine lückenlose und nachvollziehbare Buchhaltung gemäß GoBD.</i>"
+"                        <i>Dies verlangt der Gesetzgeber für eine lückenlose "
+"und nachvollziehbare Buchhaltung gemäß GoBD.</i>"
 
 #. module: l10n_de
 #: model:ir.model,name:l10n_de.model_account_account
@@ -51,11 +46,6 @@ msgid "Account Chart Template"
 msgstr "Kontenplan Vorlage"
 
 #. module: l10n_de
-#: model:ir.model,name:l10n_de.model_ir_attachment
-msgid "Attachment"
-msgstr "Dateianhang"
-
-#. module: l10n_de
 #: model:ir.model.fields,help:l10n_de.field_res_company__l10n_de_widnr
 msgid "Business identification number."
 msgstr "Wirtschafts-Identifikationsnummer."
@@ -64,6 +54,35 @@ msgstr "Wirtschafts-Identifikationsnummer."
 #: model:ir.model,name:l10n_de.model_res_company
 msgid "Companies"
 msgstr "Unternehmen"
+
+#. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_account_account__display_name
+#: model:ir.model.fields,field_description:l10n_de.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_de.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_de.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_de.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_de.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:l10n_de.field_product_template__display_name
+#: model:ir.model.fields,field_description:l10n_de.field_res_company__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_account_account__id
+#: model:ir.model.fields,field_description:l10n_de.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_de.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_de.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_de.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_de.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:l10n_de.field_product_template__id
+#: model:ir.model.fields,field_description:l10n_de.field_res_company__id
+msgid "ID"
+msgstr ""
 
 #. module: l10n_de
 #: model:ir.model,name:l10n_de.model_account_journal
@@ -96,18 +115,13 @@ msgid "St.-Nr."
 msgstr "St.-Nr."
 
 #. module: l10n_de
-#: model:ir.model,name:l10n_de.model_account_tax
-msgid "Tax"
-msgstr "Steuer"
-
-#. module: l10n_de
 #: model:ir.model.fields,help:l10n_de.field_res_company__l10n_de_stnr
 msgid ""
-"Tax number. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 "
-"https://de.wikipedia.org/wiki/Steuernummer"
+"Tax number. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 https://"
+"de.wikipedia.org/wiki/Steuernummer"
 msgstr ""
-"Steuernummer. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 "
-"https://de.wikipedia.org/wiki/Steuernummer"
+"Steuernummer. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 https://"
+"de.wikipedia.org/wiki/Steuernummer"
 
 #. module: l10n_de
 #: model:ir.model.fields,field_description:l10n_de.field_res_company__l10n_de_widnr
@@ -117,28 +131,18 @@ msgstr "W-IdNr."
 #. module: l10n_de
 #. odoo-python
 #: code:addons/l10n_de/models/account_account.py:0
-#, python-format
 msgid "You can not change the code of an account."
 msgstr "Sie können den Code eines Kontos nicht ändern."
 
 #. module: l10n_de
 #. odoo-python
 #: code:addons/l10n_de/models/res_company.py:0
-#, python-format
 msgid "You cannot change the fiscal country."
 msgstr "Sie können das Steuerland nicht ändern."
 
 #. module: l10n_de
 #. odoo-python
-#: code:addons/l10n_de/models/ir_attachment.py:0
-#, python-format
-msgid "You cannot remove parts of the audit trail."
-msgstr "Sie können keine Teile des Prüfpfads entfernen."
-
-#. module: l10n_de
-#. odoo-python
 #: code:addons/l10n_de/models/res_company.py:0
-#, python-format
 msgid "Your company's SteuerNummer is not compatible with your state"
 msgstr ""
 "Die Steuernummer Ihres Unternehmens ist nicht mit Ihrem Bundesland "
@@ -147,6 +151,5 @@ msgstr ""
 #. module: l10n_de
 #. odoo-python
 #: code:addons/l10n_de/models/res_company.py:0
-#, python-format
 msgid "Your company's SteuerNummer is not valid"
 msgstr "Die Steuernummer Ihres Unternehmens ist nicht gültig."

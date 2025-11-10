@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 12:20+0000\n"
+"POT-Creation-Date: 2025-11-10 09:20+0000\n"
 "PO-Revision-Date: 2025-06-20 12:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,8 +20,10 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_move__l10n_ro_edi_state
 msgid ""
-"- Not indexed: Invoice index was not received on time due to a server timeout\n"
-"                - Sent: Successfully sent to the SPV, waiting for validation\n"
+"- Not indexed: Invoice index was not received on time due to a server "
+"timeout\n"
+"                - Sent: Successfully sent to the SPV, waiting for "
+"validation\n"
 "                - Validated: Sent & validated by the SPV\n"
 "                - Refused: Validation error from the SPV\n"
 "        "
@@ -30,7 +33,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid ""
 ".\n"
-"                                        Login or Sign Up if you don't have an account yet"
+"                                        Login or Sign Up if you don't have "
+"an account yet"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -39,7 +43,8 @@ msgid ""
 "<span class=\"o_form_label\">\n"
 "                                    E-Factura Details\n"
 "                                </span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
+"                                <span class=\"fa fa-lg fa-building-o\" "
+"title=\"Values set here are company-specific.\"/>"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -106,11 +111,6 @@ msgid "CIUS-RO XML attachment not found."
 msgstr ""
 
 #. module: l10n_ro_edi
-#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__res_partner__invoice_edi_format__ciusro
-msgid "CIUSRO"
-msgstr ""
-
-#. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid "Check Invoice(s)"
@@ -152,6 +152,11 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Copy the generated Client ID and Client Secret to the fields below"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model:ir.model,website_form_label:l10n_ro_edi.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -463,6 +468,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields.selection,name:l10n_ro_edi.selection__res_partner__invoice_edi_format__ciusro
+msgid "Romania (CIUS RO)"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Romanian E-Factura"
 msgstr ""
@@ -565,24 +575,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid ""
-"The e-Factura has been sent and is now being validated by the SPV with index"
-" key: %s"
+"The e-Factura has been sent and is now being validated by the SPV with index "
+"key: %s"
 msgstr ""
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move_send.py:0
 msgid ""
-"The following invoice(s) are waiting for answer from the Romanian SPV: %s.We"
-" won't send them again."
+"The following invoice(s) are waiting for answer from the Romanian SPV: %s.We "
+"won't send them again."
 msgstr ""
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_edi_xml_ubl_ciusro.py:0
 msgid ""
-"The following partner doesn't have a VAT nor Company ID: %s. At least one of"
-" them is required. "
+"The following partner doesn't have a VAT nor Company ID: %s. At least one of "
+"them is required. "
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -642,8 +652,10 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid ""
-"To benefit from this feature, you must have a digital signature USB token from\n"
-"                                        Romania connected with an ANAF account"
+"To benefit from this feature, you must have a digital signature USB token "
+"from\n"
+"                                        Romania connected with an ANAF "
+"account"
 msgstr ""
 
 #. module: l10n_ro_edi
