@@ -21,7 +21,7 @@ class LayoutColumnOptionPlugin extends Plugin {
             }
         },
         selection_blocker_predicates: (blocker) => {
-            if (blocker.classList.contains("row")) {
+            if (blocker.nodeType === Node.ELEMENT_NODE && blocker.classList.contains("row")) {
                 return false;
             }
         },
