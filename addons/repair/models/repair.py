@@ -577,6 +577,8 @@ class RepairOrder(models.Model):
             raise UserError(_("Repair must be under repair in order to end reparation."))
         partial_moves = set()
         picked_moves = set()
+        if self.quality_check_fail:
+            self.product_location_dest_id = self.quality_check_ids.failure_location_id
         for move in self.move_ids:
             if move.product_uom.compare(move.quantity, move.product_uom_qty) < 0:
                 partial_moves.add(move.id)
