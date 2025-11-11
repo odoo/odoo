@@ -562,7 +562,7 @@ class ExportFormat(object):
 
         groupby = params.get('groupby')
         if not import_compat and groupby:
-            groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
+            groupby_type = [Model._fields[x.split(':', 1)[0].split('.', 1)[0]].type for x in groupby]
             if ids:
                 domain = [('id', 'in', ids)]
                 SearchModel = Model.with_context(active_test=False)

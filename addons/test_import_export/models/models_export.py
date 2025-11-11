@@ -17,6 +17,9 @@ class ExportAggregator(models.Model):
     many2one = fields.Many2one('export.integer')
     one2many = fields.One2many('export.aggregator.one2many', 'parent_id')
     active = fields.Boolean(default=True)
+    parent_id = fields.Many2one('export.aggregator', string='Parent')
+    definition_properties = fields.PropertiesDefinition('Definitions')
+    properties = fields.Properties('Properties', definition='parent_id.definition_properties')
 
 
 class ExportAggregatorOne2many(models.Model):
