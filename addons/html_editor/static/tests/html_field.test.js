@@ -928,10 +928,14 @@ test("Embed video by pasting video URL", async () => {
 
     // Press Enter to select first option in the powerbox ("Embed Youtube Video").
     await press("Enter");
-    await animationFrame();
+    // Insertion triggers selectionchange & addStep creates selection
+    // placeholder.fixSelectionInsideEditableRoot moves selection into it,
+    // trigger another selectionchange that removes selection placeholder.
+    // So we must wait for the o-we-hint.
+    await waitFor(".o-we-hint");
     const videoIframe = queryOne("div.media_iframe_video");
     expect(videoIframe.nextElementSibling).toHaveOuterHTML(
-        '<div class="o-paragraph" data-selection-placeholder=""><br></div>'
+        `<div class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands"><br></div>`
     );
     expect(
         `div.media_iframe_video iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
@@ -1180,13 +1184,11 @@ test("add Vimeo video link in 'Videos' tab of MediaDialog", async () => {
     });
     setSelectionInHtmlField();
 
-    await onRpc("/html_editor/video_url/data", async () => {
-        return {
-            video_id: "1128489814",
-            platform: "vimeo",
-            embed_url: vimeoVideoLink,
-        };
-    });
+    await onRpc("/html_editor/video_url/data", async () => ({
+        video_id: "1128489814",
+        platform: "vimeo",
+        embed_url: vimeoVideoLink,
+    }));
 
     // Insert Vimeo video link
     await insertText(htmlEditor, "/video");

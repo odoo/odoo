@@ -1,7 +1,7 @@
 import { baseContainerGlobalSelector } from "./base_container";
 import { closestBlock, isBlock } from "./blocks";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
-import { DIRECTIONS, nodeSize } from "./position";
+import { childNodeIndex, DIRECTIONS, nodeSize } from "./position";
 
 export function isEmpty(el) {
     if (isProtecting(el) || isProtected(el)) {
@@ -681,6 +681,76 @@ export function getDeepestPosition(node, offset) {
         next = !isSelfClosingElement(next) && next;
     }
     return [node, offset];
+}
+
+/**
+ * Return the deepest editable position from a given DOM position.
+ *
+ * This resolves a [node, offset] pair to the deepest descendant that is
+ * allowed to contain the caret. If the resolved deepest position is inside
+ * a non-editable element, the function walks up the DOM until it reaches
+ * an editable ancestor and adjusts the offset so the caret sits just before
+ * or after the non-editable region.
+ *
+ * Example:
+ *   <div contenteditable="true">
+ *       <span contenteditable="false">X</span>
+ *   </div>
+ *   getDeepestEditablePosition(div, 1)
+ *   → [div, 1]
+ *
+ * @param {node} node   - Node in which the position is being resolved.
+ * @param {number} offset - Offset within node.
+ * @returns {[Node, number]} A corrected editable node and offset.
+ */
+export function getDeepestEditablePosition(node, offset) {
+    const [deepNode, deepOffset] = getDeepestPosition(node, offset);
+
+    // If deepest node is already editable, nothing to correct.
+    if (isContentEditable(deepNode)) {
+        return [deepNode, deepOffset];
+    }
+
+    // The direct child of root that contains the deepest resolved node.
+    const nodeLevelAncestor =
+        isTextNode(deepNode) && deepNode.parentElement === node
+            ? deepNode
+            : closestElement(deepNode, (el) => el.parentElement === node);
+
+    // The closest non-editable ancestor whose parent is editable.
+    const closestNonEditable = closestElement(
+        deepNode,
+        (el) => !isContentEditable(el) && isContentEditable(el.parentElement)
+    );
+
+    const nodeLevelAncestorIndex = childNodeIndex(nodeLevelAncestor);
+    const closestNonEditableIndex = childNodeIndex(closestNonEditable);
+
+    // Decide whether the caret should be placed before or after
+    // the non-editable element based on the requested offset.
+    const deepEditableNode = closestNonEditable.parentElement;
+    const deepEditableOffset =
+        nodeLevelAncestorIndex < offset ? closestNonEditableIndex + 1 : closestNonEditableIndex;
+
+    // If caret lands on non-editable, resolve it from previous sibling.
+    if (deepEditableOffset === closestNonEditableIndex) {
+        const previousSiblingOfNonEditable = closestNonEditable.previousSibling;
+        if (previousSiblingOfNonEditable) {
+            if (isTextNode(previousSiblingOfNonEditable)) {
+                return [previousSiblingOfNonEditable, nodeSize(previousSiblingOfNonEditable)];
+            } else if (
+                isElement(previousSiblingOfNonEditable) &&
+                previousSiblingOfNonEditable.childNodes.length
+            ) {
+                return getDeepestEditablePosition(
+                    previousSiblingOfNonEditable,
+                    nodeSize(previousSiblingOfNonEditable)
+                );
+            }
+        }
+    }
+
+    return [deepEditableNode, deepEditableOffset];
 }
 
 export function previousLeaf(node, editable, skipInvisible = false) {

@@ -1,5 +1,6 @@
 import {
     areSimilarElements,
+    getDeepestEditablePosition,
     getDeepestPosition,
     isEmptyBlock,
     isShrunkBlock,
@@ -10,6 +11,7 @@ import {
 } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { insertTestHtml } from "../_helpers/editor";
+import { unformat } from "../_helpers/format";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -363,6 +365,172 @@ describe("getDeepestPosition", () => {
         const zwnbsp = editable.firstChild;
         const [node, offset] = getDeepestPosition(editable, 0);
         expect([node, offset]).toEqual([zwnbsp, 0]);
+    });
+});
+
+describe("getDeepestEditablePosition", () => {
+    test("should get deepest editable position on the paragraph itself", () => {
+        const [p] = insertTestHtml(`<p><span contenteditable="false"><span>test</span></span></p>`);
+
+        expect(getDeepestEditablePosition(p, 0)).toEqual([p, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([p, 1]);
+    });
+
+    test("should get deepest editable position before or after a non-editable sibling", () => {
+        const [p] = insertTestHtml(
+            `<p>abc<span contenteditable="false"><span>test</span></span>def</p>`
+        );
+
+        const abc = p.firstChild;
+        const def = p.lastChild;
+
+        expect(getDeepestEditablePosition(p, 0)).toEqual([abc, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([abc, 3]);
+        expect(getDeepestEditablePosition(p, 2)).toEqual([def, 0]);
+        expect(getDeepestEditablePosition(p, 3)).toEqual([def, 3]);
+    });
+
+    test("should get deepest editable position inside nested formatting on both sides of a non-editable", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <strong><i>abc</i></strong>
+                    <span contenteditable="false"><span>test</span></span>
+                    <u><em>def</em></u>
+                </p>
+            `)
+        );
+
+        const abc = p.querySelector("strong i").firstChild;
+        const def = p.querySelector("u em").firstChild;
+
+        expect(getDeepestEditablePosition(p, 0)).toEqual([abc, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([abc, 3]);
+        expect(getDeepestEditablePosition(p, 2)).toEqual([def, 0]);
+        expect(getDeepestEditablePosition(p, 3)).toEqual([def, 3]);
+    });
+
+    test("should get deepest editable position when previous editable sibling ends with non-editable leaf", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <strong contenteditable="true">
+                        <span contenteditable="false">A</span>
+                    </strong>
+                    <span contenteditable="false">B</span>
+                </p>
+            `)
+        );
+
+        const strong = p.firstChild;
+        expect(getDeepestEditablePosition(p, 1)).toEqual([strong, 1]);
+    });
+
+    test("should get deepest editable position when non-editable content following text", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    abc
+                    <span contenteditable="false">B</span>
+                </p>
+            `)
+        );
+
+        const abc = p.firstChild;
+        expect(getDeepestEditablePosition(p, 1)).toEqual([abc, 3]);
+    });
+
+    test("should get deepest editable position inside an editable descendant wrapped by non-editable ancestors", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <span contenteditable="false"><strong><u contenteditable="true">test</u></strong></span>
+                    <span contenteditable="false">test</span>
+                </p>
+            `)
+        );
+
+        const test = p.querySelector("u").firstChild;
+        expect(getDeepestEditablePosition(p, 0)).toEqual([test, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([test, 4]);
+        expect(getDeepestEditablePosition(p, 2)).toEqual([p, 2]);
+    });
+
+    test("should get deepest editable position on the paragraph when non-editable descendants contain only text nodes", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <span contenteditable="false">test</span>
+                    <span contenteditable="false">test</span>
+                </p>
+            `)
+        );
+
+        expect(getDeepestEditablePosition(p, 0)).toEqual([p, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([p, 1]);
+        expect(getDeepestEditablePosition(p, 2)).toEqual([p, 2]);
+    });
+
+    test("should get deepest editable position on the paragraph when non-editable descendants contain elements", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <span contenteditable="false"><strong>test</strong></span>
+                    <span contenteditable="false">test</span>
+                </p>
+            `)
+        );
+
+        expect(getDeepestEditablePosition(p, 0)).toEqual([p, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([p, 1]);
+        expect(getDeepestEditablePosition(p, 2)).toEqual([p, 2]);
+    });
+
+    test("should get deepest editable position on the paragraph when previous sibling is empty and non-editable", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <span contenteditable="false"></span>
+                    <span contenteditable="false">test</span>
+                </p>
+            `)
+        );
+
+        expect(getDeepestEditablePosition(p, 1)).toEqual([p, 1]);
+    });
+
+    test("should get deepest editable position around a shallow inline ancestor containing a non-editable child", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <i>
+                        <span contenteditable="false">test</span>
+                    </i>
+                </p>
+            `)
+        );
+
+        const italic = p.firstChild;
+        expect(getDeepestEditablePosition(p, 0)).toEqual([italic, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([italic, 1]);
+    });
+
+    test("should get deepest editable position around a deep inline ancestor containing a non-editable descendant", () => {
+        const [p] = insertTestHtml(
+            unformat(`
+                <p>
+                    <i>
+                        <u>
+                            <span contenteditable="false">test</span>
+                        </u>
+                    </i>
+                </p>
+            `)
+        );
+
+        const underline = p.querySelector("u");
+        expect(getDeepestEditablePosition(p, 0)).toEqual([underline, 0]);
+        expect(getDeepestEditablePosition(p, 1)).toEqual([underline, 1]);
     });
 });
 

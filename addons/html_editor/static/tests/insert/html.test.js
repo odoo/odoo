@@ -8,6 +8,7 @@ import { cleanHints } from "../_helpers/dispatch";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { addStep } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
+import { waitFor } from "@odoo/hoot-dom";
 
 function span(text) {
     const span = document.createElement("span");
@@ -267,9 +268,17 @@ describe("collapsed selection", () => {
             parseHTML(editor.document, `<p data-oe-protected="true">in</p>`).firstElementChild
         );
         editor.shared.history.addStep();
+        // Insertion triggers selectionchange & addStep creates selection
+        // placeholder.fixSelectionInsideEditableRoot moves selection into it,
+        // trigger another selectionchange that removes selection placeholder.
+        // So we must wait for the o-we-hint.
+        await waitFor(".o-we-hint");
         cleanHints(editor);
         expect(getContent(editor.editable, { sortAttrs: true })).toBe(
-            `<p data-selection-placeholder=""><br></p><p contenteditable="false" data-oe-protected="true">in[]</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <p contenteditable="false" data-oe-protected="true">in</p>
+                <p>[]<br></p>`)
         );
     });
 
