@@ -265,6 +265,10 @@
                                             invisible="ttype != 'one2many'"
                                             readonly="ttype != 'one2many'"
                                             required="ttype == 'one2many'"/>
+                                        <field name="relation_model_field"
+                                            invisible="ttype != 'many2one_reference'"
+                                            readonly="ttype != 'many2one_reference'"
+                                            required="ttype == 'many2one_reference'"/>
                                         <field name="relation_table" groups="base.group_no_one"
                                             invisible="ttype != 'many2many' or state != 'manual'"
                                             readonly="ttype != 'many2many' or state != 'manual'"/>
