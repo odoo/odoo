@@ -566,7 +566,7 @@ class ExportFormat(object):
         groupby = params.get('groupby')
         if not import_compat and groupby:
             export_data = records.export_data(['.id'] + field_names).get('datas', [])
-            groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
+            groupby_type = [Model._fields[x.split(':', 1)[0].split('.', 1)[0]].type for x in groupby]
             tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             if ids:
                 domain = [('id', 'in', ids)]
