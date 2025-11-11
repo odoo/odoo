@@ -8,6 +8,10 @@ class StockRule(models.Model):
         res = super()._prepare_mo_vals(product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom)
         if values.get('sale_line_id'):
             res['sale_line_id'] = values['sale_line_id']
+        else:
+            sale_line = values.get('move_dest_ids') and values['move_dest_ids'].sale_line_id or False
+            if sale_line:
+                res['sale_line_id'] = sale_line.id
         return res
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values):
