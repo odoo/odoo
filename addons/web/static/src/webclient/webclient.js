@@ -1,4 +1,5 @@
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { Deferred } from "@web/core/utils/concurrency";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { localization } from "@web/core/l10n/localization";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -59,6 +60,7 @@ export class WebClient extends Component {
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
         useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        this.serviceWorkerActivatedDeferred = new Deferred();
         onWillStart(this.registerServiceWorker);
     }
 
@@ -168,6 +170,19 @@ export class WebClient extends Component {
         if (navigator.serviceWorker) {
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/odoo" })
+                .then((registration) => {
+                    if (registration.active && registration.active.state === "activated") {
+                        this.serviceWorkerActivatedDeferred.resolve();
+                    } else {
+                        const sw =
+                            registration.installing || registration.waiting || registration.active;
+                        sw.addEventListener("statechange", (e) => {
+                            if (e.target.state === "activated") {
+                                this.serviceWorkerActivatedDeferred.resolve();
+                            }
+                        });
+                    }
+                })
                 .catch((error) => {
                     console.error("Service worker registration failed, error:", error);
                 });
