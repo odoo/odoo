@@ -43,7 +43,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
     def assertTrail(self, trail, expected):
         self.assertEqual(len(trail), len(expected))
         for message, expected_needle in zip(trail, expected[::-1]):
-            self.assertIn(expected_needle, message.account_audit_log_preview)
+            self.assertIn(expected_needle, message.audit_log_preview)
 
     def test_can_reset_deferred_invoice(self):
         customer = self.env['res.partner'].create({'name': 'Rob Odoo'})
