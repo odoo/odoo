@@ -18,27 +18,54 @@ class AccountMove(models.Model):
         string="Indian TDS Entries"
     )
 
+    def _get_all_reconciled_invoice_partials(self):
+        """ Override to add more data to be used in the payments widget. """
+        reconciled_partials = super()._get_all_reconciled_invoice_partials()
+        for i, reconciled_partial in enumerate(reconciled_partials):
+            if reconciled_partial['aml'].move_id.l10n_withholding_ref_move_id:
+                reconciled_partials[i]['is_withhold_payment'] = True
+            else:
+                reconciled_partials[i]['is_withhold_payment'] = False
+        return reconciled_partials
+
     def _compute_payments_widget_reconciled_info(self):
         """Add withhold field in the reconciled vals to be able to show the payment method in the invoice."""
         super()._compute_payments_widget_reconciled_info()
         for move in self:
             if move.invoice_payments_widget:
-                print("\n\n----------------------------")
-                print(move.invoice_payments_widget)
-                print("----------------------------\n\n")
                 if move.state == 'posted' and move.is_invoice(include_receipts=True):
                     reconciled_partials = move._get_all_reconciled_invoice_partials()
                     for i, reconciled_partial in enumerate(reconciled_partials):
-                        print("======")
-                        print(i)
-                        print(reconciled_partial)
-                        print(reconciled_partial['aml'])
-                        print("======")
-                        # counterpart_line = reconciled_partial['aml']
-                        # pos_payment = counterpart_line.move_id.sudo().pos_payment_ids[:1]
-                        # move.invoice_payments_widget['content'][i].update({
-                        #     'pos_payment_name': pos_payment.payment_method_id.name,
-                        # })
+                        if reconciled_partial['aml'].move_id.l10n_withholding_ref_move_id:
+                            move.invoice_payments_widget['content'][i].update({
+                                'is_withhold_payment': True,
+                            })
+                        else:
+                            move.invoice_payments_widget['content'][i].update({
+                                'is_withhold_payment': False,
+                            })
+
+    # def _compute_payments_widget_reconciled_info(self):
+    #     """Add withhold field in the reconciled vals to be able to show the payment method in the invoice."""
+    #     super()._compute_payments_widget_reconciled_info()
+    #     for move in self:
+    #         if move.invoice_payments_widget:
+    #             print("\n\n----------------------------")
+    #             print(move.invoice_payments_widget)
+    #             print("----------------------------\n\n")
+    #             if move.state == 'posted' and move.is_invoice(include_receipts=True):
+    #                 reconciled_partials = move._get_all_reconciled_invoice_partials()
+    #                 for i, reconciled_partial in enumerate(reconciled_partials):
+    #                     print("======")
+    #                     print(i)
+    #                     print(reconciled_partial)
+    #                     print(reconciled_partial['aml'])
+    #                     print("======")
+    #                     # counterpart_line = reconciled_partial['aml']
+    #                     # pos_payment = counterpart_line.move_id.sudo().pos_payment_ids[:1]
+    #                     # move.invoice_payments_widget['content'][i].update({
+    #                     #     'pos_payment_name': pos_payment.payment_method_id.name,
+    #                     # })
 
     def _get_withhold_account_by_sum(self):
         print("======= Withhold Data =======")
