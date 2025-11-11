@@ -30,3 +30,9 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
+
+    def _prepare_resource_calendar_values(self):
+        vals = super()._prepare_resource_calendar_values()
+        if self.country_id and self.country_id.code == 'IN':
+            vals['tz'] = 'Asia/Kolkata'
+        return vals
