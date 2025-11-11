@@ -880,6 +880,7 @@ class HolidaysAllocation(models.Model):
             return
         self.lastcall = self.date_from
         self.nextcall = False
+        self.already_accrued = False
         self.number_of_days_display = 0.0
         self.number_of_hours_display = 0.0
         self.number_of_days = 0.0
