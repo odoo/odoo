@@ -19,9 +19,14 @@
 <template id="index" name="Find Resellers">
     <t t-call="website_crm_partner_assign.layout">
         <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-            <h1 class="me-auto mb-0 h4 h2-fs">
-                Find a reseller <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
-            </h1>
+            <div class="d-flex me-auto mb-0 align-items-baseline h4 h2-fs">
+                <h1>Find a reseller</h1>
+                <t t-foreach="countries" t-as="country">
+                    <span
+                        t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">
+                        &amp;nbsp; in <t t-out="country['country_id'][1]"/></span>
+                </t>
+            </div>
             <t t-set='all_categories_label'>All Categories</t>
             <div class="dropdown d-none d-lg-block">
                 <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
