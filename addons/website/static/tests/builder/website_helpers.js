@@ -102,7 +102,6 @@ export async function setupWebsiteBuilder(
         const pyEnv = await startServer();
         pyEnv["website"].create({});
     }
-    mockImageRequests();
     registry.category("services").remove("website_edit");
     let editor;
     let editableContent;
@@ -280,7 +279,14 @@ export async function setupWebsiteBuilder(
 
 async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
-    await Promise.all([getWebsiteSnippets(), loadBundle("website.website_builder_assets")]);
+    await Promise.all([
+        getWebsiteSnippets(),
+        mockImageRequests(),
+        loadBundle("website.website_builder_assets"),
+        loadBundle("html_editor.assets_image_cropper"),
+    ]);
+
+    // debugger
 
     await click(".o-website-btn-custo-primary");
     await editAssetsLoaded;
