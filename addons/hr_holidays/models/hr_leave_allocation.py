@@ -1,3 +1,4 @@
+
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
@@ -875,6 +876,7 @@ class HrLeaveAllocation(models.Model):
             return
         self.lastcall = self.date_from
         self.nextcall = False
+        self.already_accrued = False
         self.number_of_days_display = 0.0
         self.number_of_hours_display = 0.0
         self.number_of_days = 0.0
