@@ -86,7 +86,6 @@ class HrJob(models.Model):
 
     job_properties = fields.Properties('Properties', definition='company_id.job_properties_definition', groups="hr_recruitment.group_hr_recruitment_interviewer")
 
-    applicant_properties_definition = fields.PropertiesDefinition('Applicant Properties', groups="hr_recruitment.group_hr_recruitment_interviewer")
     no_of_hired_employee = fields.Integer(
         compute='_compute_no_of_hired_employee',
         string='Hired', copy=False, groups="hr_recruitment.group_hr_recruitment_interviewer",

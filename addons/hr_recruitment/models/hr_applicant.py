@@ -148,7 +148,7 @@ class HrApplicant(models.Model):
         ('archived', 'Archived'),
     ], compute="_compute_application_status", search="_search_application_status")
     application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email or phone or mobile')
-    applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
+    applicant_properties = fields.Properties('Properties', definition='company_id.applicant_properties_definition', precompute=False, copy=True)
     applicant_notes = fields.Html()
     refuse_date = fields.Datetime('Refuse Date')
     talent_pool_ids = fields.Many2many(comodel_name="hr.talent.pool", string="Talent Pools")
