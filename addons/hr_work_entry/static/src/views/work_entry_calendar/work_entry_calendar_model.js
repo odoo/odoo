@@ -102,7 +102,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
     async resetWorkEntries(dates, recordIds) {
         const cellsFormattedData = dates.map((date) => ({
             date,
-            employee_id: this.meta.context.active_id,
+            employee_id: this.meta.context.default_employee_id,
         }));
         await this.orm.call("hr.work.entry.regeneration.wizard", "regenerate_work_entries", [
             [],
