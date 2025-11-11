@@ -1,7 +1,7 @@
 import pytz
 from stdnum.in_ import pan, gstin
 
-from odoo import _, api, fields, models 
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import RedirectWarning
 
 
@@ -156,6 +156,12 @@ class ResCompany(models.Model):
         for company in companies_need_update_fp:
             ChartTemplate = self.env['account.chart.template'].with_company(company)
             fiscal_position_data = ChartTemplate._get_in_account_fiscal_position()
+            for values in fiscal_position_data.values():
+                values['tax_ids'] = [Command.set([
+                    xml_id
+                    for xml_id in values['tax_ids'][0][2]
+                    if ChartTemplate.ref(xml_id, raise_if_not_found=False)
+                ])]
             ChartTemplate._load_data({'account.fiscal.position': fiscal_position_data})
 
     def _update_l10n_in_is_gst_registered(self):
