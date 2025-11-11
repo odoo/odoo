@@ -50,7 +50,7 @@ class MailPluginController(http.Controller):
         company, enrichment_info = self._create_company_from_iap(normalized_email)
 
         if company:
-            partner.write({'parent_id': company})
+            partner.write({'parent_id': company.id})
 
         return {
             'enrichment_info': enrichment_info,
