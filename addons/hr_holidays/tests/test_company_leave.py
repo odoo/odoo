@@ -45,7 +45,7 @@ class TestCompanyLeave(TransactionCase):
         # Add a company leave on the second day.
         # Check that leave is split into 2.
 
-        leave = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
@@ -64,22 +64,12 @@ class TestCompanyLeave(TransactionCase):
         company_leave.action_generate_time_off()
 
         all_leaves = self.env['hr.leave'].search([('employee_id', '=', self.employee.id)], order='id')
-        self.assertEqual(len(all_leaves), 3)
-        # Before Time Off
+        self.assertEqual(len(all_leaves), 1)
+        # As the employee has the overlapping leave, the wizard will not create a new one
         self.assertEqual(all_leaves[0].date_from, datetime(2020, 1, 7, 7, 0))
-        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 7, 16, 0))
-        self.assertEqual(all_leaves[0].number_of_days, 1)
+        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 9, 16, 0))
+        self.assertEqual(all_leaves[0].number_of_days, 3)
         self.assertEqual(all_leaves[0].state, 'confirm')
-        # After Time Off
-        self.assertEqual(all_leaves[1].date_from, datetime(2020, 1, 9, 7, 0))
-        self.assertEqual(all_leaves[1].date_to, datetime(2020, 1, 9, 16, 0))
-        self.assertEqual(all_leaves[1].number_of_days, 1)
-        self.assertEqual(all_leaves[1].state, 'confirm')
-        # Company Time Off
-        self.assertEqual(all_leaves[2].date_from, datetime(2020, 1, 8, 7, 0))
-        self.assertEqual(all_leaves[2].date_to, datetime(2020, 1, 8, 16, 0))
-        self.assertEqual(all_leaves[2].number_of_days, 1)
-        self.assertEqual(all_leaves[2].state, 'validate')
 
     def test_02_leave_whole_company(self):
         # TEST CASE 2: Leaves taken in half-days. Take a 3 days leave
@@ -104,26 +94,15 @@ class TestCompanyLeave(TransactionCase):
             'date_from': date(2020, 1, 8),
             'date_to': date(2020, 1, 8),
         })
-
         company_leave.action_generate_time_off()
 
         all_leaves = self.env['hr.leave'].search([('employee_id', '=', self.employee.id)], order='id')
-        self.assertEqual(len(all_leaves), 3)
-        # Before Time Off
+        self.assertEqual(len(all_leaves), 1)
         self.assertEqual(all_leaves[0].date_from, datetime(2020, 1, 7, 7, 0))
-        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 7, 16, 0))
-        self.assertEqual(all_leaves[0].number_of_days, 1)
+        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 9, 16, 0))
+        self.assertEqual(all_leaves[0].number_of_days, 3)
         self.assertEqual(all_leaves[0].state, 'confirm')
-        # After Time Off
-        self.assertEqual(all_leaves[1].date_from, datetime(2020, 1, 9, 7, 0))
-        self.assertEqual(all_leaves[1].date_to, datetime(2020, 1, 9, 16, 0))
-        self.assertEqual(all_leaves[1].number_of_days, 1)
-        self.assertEqual(all_leaves[1].state, 'confirm')
-        # Company Time Off
-        self.assertEqual(all_leaves[2].date_from, datetime(2020, 1, 8, 7, 0))
-        self.assertEqual(all_leaves[2].date_to, datetime(2020, 1, 8, 16, 0))
-        self.assertEqual(all_leaves[2].number_of_days, 1)
-        self.assertEqual(all_leaves[2].state, 'validate')
+
 
     def test_03_leave_whole_company(self):
         # TEST CASE 3: Time Off taken in half-days. Take a 0.5 days leave
@@ -154,14 +133,12 @@ class TestCompanyLeave(TransactionCase):
         company_leave.action_generate_time_off()
 
         all_leaves = self.env['hr.leave'].search([('employee_id', '=', self.employee.id)], order='id')
-        self.assertEqual(len(all_leaves), 2)
+        self.assertEqual(len(all_leaves), 1)
         # Original Time Off
-        self.assertEqual(leave.state, 'refuse')
-        # Company Time Off
-        self.assertEqual(all_leaves[1].date_from, datetime(2020, 1, 7, 7, 0))
-        self.assertEqual(all_leaves[1].date_to, datetime(2020, 1, 7, 16, 0))
-        self.assertEqual(all_leaves[1].number_of_days, 1)
-        self.assertEqual(all_leaves[1].state, 'validate')
+        self.assertEqual(all_leaves[0].date_from, datetime(2020, 1, 7, 7, 0))
+        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 7, 11, 0))
+        self.assertEqual(all_leaves[0].number_of_days, 0.5)
+        self.assertEqual(all_leaves[0].state, 'confirm')
 
     def test_04_leave_whole_company(self):
         # TEST CASE 4: Leaves taken in days. Take a 1 days leave
@@ -191,14 +168,12 @@ class TestCompanyLeave(TransactionCase):
         company_leave.action_generate_time_off()
 
         all_leaves = self.env['hr.leave'].search([('employee_id', '=', self.employee.id)], order='id')
-        self.assertEqual(len(all_leaves), 2)
+        self.assertEqual(len(all_leaves), 1)
         # Original Time Off
-        self.assertEqual(leave.state, 'refuse')
-        # Company Time Off
-        self.assertEqual(all_leaves[1].date_from, datetime(2020, 1, 9, 7, 0))
-        self.assertEqual(all_leaves[1].date_to, datetime(2020, 1, 9, 16, 0))
-        self.assertEqual(all_leaves[1].number_of_days, 1)
-        self.assertEqual(all_leaves[1].state, 'validate')
+        self.assertEqual(all_leaves[0].date_from, datetime(2020, 1, 9, 7, 0))
+        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 9, 16, 0))
+        self.assertEqual(all_leaves[0].number_of_days, 1)
+        self.assertEqual(all_leaves[0].state, 'confirm')
 
     def test_06_leave_whole_company(self):
         # Test case 6: Leaves taken in days. But the employee
@@ -238,17 +213,12 @@ class TestCompanyLeave(TransactionCase):
         company_leave.action_generate_time_off()
 
         all_leaves = self.env['hr.leave'].search([('employee_id', '=', self.employee.id)], order='id')
-        self.assertEqual(len(all_leaves), 2)
+        self.assertEqual(len(all_leaves), 1)
         # Before Time Off
         self.assertEqual(all_leaves[0].date_from, datetime(2020, 1, 6, 7, 0))
-        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 9, 16, 0))
-        self.assertEqual(all_leaves[0].number_of_days, 2)
+        self.assertEqual(all_leaves[0].date_to, datetime(2020, 1, 10, 16, 0))
+        self.assertEqual(all_leaves[0].number_of_days, 3)
         self.assertEqual(all_leaves[0].state, 'confirm')
-        # Company Time Off
-        self.assertEqual(all_leaves[1].date_from, datetime(2020, 1, 10, 7, 0))
-        self.assertEqual(all_leaves[1].date_to, datetime(2020, 1, 10, 16, 0))
-        self.assertEqual(all_leaves[1].number_of_days, 1)
-        self.assertEqual(all_leaves[1].state, 'validate')
 
     @warmup
     def test_07_leave_whole_company(self):

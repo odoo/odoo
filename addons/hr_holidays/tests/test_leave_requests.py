@@ -1700,8 +1700,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 13.0)
 
     def test_group_leave_conflicting_days_computation(self):
-        """Test that a group leave that overrides existing approved time off days
-        correctly computes the duration of each leave.
+        """Test that a group leave skips employees with existing approved time off
+        and leaves the original time off durations unchanged.
         """
         LeaveType = self.env['hr.leave.type'].with_user(self.user_hrmanager_id)
         self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
@@ -1742,9 +1742,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'leave_validation_type': 'no_validation',
         })
 
-        # Use the Wizard to create a Training for the whole company: Feb 24 - Feb 26
-        # This overlaps with two days of approved allocated leaves
-        # Last day of leave 1 and first day of leave 2
+        # Use the Wizard to create a Training for the whole company: Feb 24 - Feb 26.
+        # This overlaps with two days of approved allocated leaves:
+        # the last day of leave 1 and the first day of leave 2.
         leave_wizard_form = Form(self.env['hr.leave.generate.multi.wizard'].with_user(self.user_hrmanager_id))
         leave_wizard_form.allocation_mode = 'company'
         leave_wizard_form.company_id = self.env.company
@@ -1752,7 +1752,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_wizard_form.date_from = date(2026, 2, 24)
         leave_wizard_form.date_to = date(2026, 2, 26)
         leave_wizard = leave_wizard_form.save()
-        leave_wizard.action_generate_time_off()
+        action = leave_wizard.action_generate_time_off()
 
         generated_training = self.env['hr.leave'].search([
             ('employee_id', '=', self.employee_emp_id),
@@ -1761,26 +1761,26 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         ])
 
         # ASSERTS
-        # Assert correct duration calculation for the training leave
-        self.assertEqual(generated_training.number_of_days, 3.0,
-            "The training (Feb 25-27) should be 3 days, since it overrides other leaves.")
+        self.assertFalse(generated_training,
+            "No training leave should be created for employees with overlapping time off.")
+        self.assertIn(action['params']['type'], ['warning', 'danger'])
+        self.assertIn(self.env['hr.employee'].browse(self.employee_emp_id).name, action['params']['message'])
 
-        # Assert the original time off was split correctly
-        # It should now only cover Feb 23 (1 day) and Feb 27 (1 day)
-        leave1.invalidate_recordset(['number_of_days', 'request_date_to'])
-        self.assertEqual(leave1.request_date_to, date(2026, 2, 23),
-            "Leave 1 should have been shortened to end before the training.")
-        self.assertEqual(leave1.number_of_days, 1.0,
-            "Leave 1 duration should have been updated to 1 day.")
+        # Assert the original time off was not split or shortened.
+        leave1.invalidate_recordset(['number_of_days', 'request_date_from', 'request_date_to'])
+        self.assertEqual(leave1.request_date_from, date(2026, 2, 23),
+            "Leave 1 should keep its original start date.")
+        self.assertEqual(leave1.number_of_days, 2.0,
+            "Leave 1 duration should not be changed.")
 
-        leave2.invalidate_recordset(['number_of_days', 'request_date_to'])
-        self.assertEqual(leave2.request_date_from, date(2026, 2, 27),
-            "Leave 2 should have been shortened to start after the training.")
-        self.assertEqual(leave2.number_of_days, 1.0,
-            "Leave 2 duration should have been updated to 1 day.")
+        leave2.invalidate_recordset(['number_of_days', 'request_date_from', 'request_date_to'])
+        self.assertEqual(leave2.request_date_from, date(2026, 2, 26),
+            "Leave 2 should keep its original start date.")
+        self.assertEqual(leave2.number_of_days, 2.0,
+            "Leave 2 duration should not be changed.")
 
     def test_group_leave_hourly_conflict(self):
-        """Ensure batch generation fails if overlapping hourly time off exists
+        """Ensure batch generation skips employees with overlapping hourly time off
         and does not unlink the related calendar leaves."""
 
         # Create an hourly leave and validate it
@@ -1811,10 +1811,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         # Create a group leave that overlaps with the hourly leave
         training_type = LeaveType.create({
-                    'name': 'Training',
-                    'requires_allocation': 'no',
-                    'leave_validation_type': 'no_validation',
-                })
+            'name': 'Training',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
+        })
         leave_wizard_form = Form(self.env['hr.leave.generate.multi.wizard'].with_user(self.user_hrmanager_id))
         leave_wizard_form.allocation_mode = 'company'
         leave_wizard_form.company_id = self.env.company
@@ -1824,11 +1824,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_wizard = leave_wizard_form.save()
 
         # ASSERTIONS
-        # Should raise an error and the approved leave should not be changed or removed
-        with self.assertRaises(UserError):
-            leave_wizard.action_generate_time_off()
+        action = leave_wizard.action_generate_time_off()
 
-        self.assertTrue(calendar_leave.exists(), "Calendar leaves should not be unlinked on error")
+        generated_training = self.env['hr.leave'].search([
+            ('employee_id', '=', self.employee_emp_id),
+            ('holiday_status_id', '=', training_type.id),
+            ('request_date_from', '=', '2026-02-24'),
+        ])
+
+        self.assertFalse(generated_training,
+            "No training leave should be created for employees with overlapping hourly time off.")
+        self.assertIn(action['params']['type'], ['warning', 'danger'])
+        self.assertIn(self.env['hr.employee'].browse(self.employee_emp_id).name, action['params']['message'])
+        self.assertTrue(calendar_leave.exists(), "Calendar leaves should not be unlinked when the employee is skipped.")
 
         hourly_leave.invalidate_recordset()
         self.assertEqual(hourly_leave.state, 'validate')
