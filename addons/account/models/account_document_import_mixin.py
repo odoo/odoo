@@ -10,7 +10,7 @@ from struct import error as StructError
 
 from odoo import api, models, modules
 from odoo.exceptions import RedirectWarning
-from odoo.tools import groupby
+from odoo.tools import BinaryBytes, BinaryValue, groupby
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
 
@@ -431,7 +431,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         for attachment in attachments:
             file_data = {
                 'name': attachment.name,
-                'raw': attachment.raw or b'',
+                'raw': attachment.raw.content,
                 'mimetype': attachment.mimetype,
                 'origin_attachment': attachment,
                 'attachment': attachment,
@@ -465,13 +465,16 @@ class AccountDocumentImportMixin(models.AbstractModel):
         """ Parse file_data['raw'] into an lxml.etree.ElementTree.
             Can be overridden if custom decoding is needed.
         """
+        data = file_data['raw']
+        if not isinstance(data, BinaryValue):
+            data = BinaryBytes(data)
         if (
             # XML attachments received by mail have a 'text/plain' mimetype.
-            'text/plain' in file_data['mimetype'] and (guess_mimetype(file_data['raw'] or b'').endswith('/xml') or file_data['name'].endswith('.xml'))
+            ('text/plain' in file_data['mimetype'] and (data.mimetype.endswith('/xml') or file_data['name'].endswith('.xml')))
             or file_data['mimetype'].endswith('/xml')
         ):
             try:
-                return etree.fromstring(file_data['raw'])
+                return etree.fromstring(data.content)
             except etree.ParseError as e:
                 _logger.info('Error when reading the xml file "%s": %s', file_data['name'], e)
 

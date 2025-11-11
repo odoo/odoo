@@ -4,13 +4,12 @@ import logging
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import http, tests
+from odoo import tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-from odoo.addons.base.tests.files import JPG_RAW, JPG_B64, PDF_B64
+from odoo.addons.base.tests.files import JPG_RAW, PDF_RAW
 from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.fields import Command, Datetime
-from odoo.tools import mute_logger
-import unittest
+from odoo.tools import BinaryBytes, mute_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -45,26 +44,26 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
                 (0, 0, {
                     'name': 'Gardening: The Know-How',
                     'sequence': 1,
-                    'binary_content': PDF_B64,
+                    'binary_content': BinaryBytes(PDF_RAW),
                     'slide_category': 'document',
                     'is_published': True,
                     'is_preview': True,
                 }), (0, 0, {
                     'name': 'Home Gardening',
                     'sequence': 2,
-                    'image_1920': JPG_B64,
+                    'image_1920': BinaryBytes(JPG_RAW),
                     'slide_category': 'infographic',
                     'is_published': True,
                 }), (0, 0, {
                     'name': 'Mighty Carrots',
                     'sequence': 3,
-                    'image_1920': JPG_B64,
+                    'image_1920': BinaryBytes(JPG_RAW),
                     'slide_category': 'infographic',
                     'is_published': True,
                 }), (0, 0, {
                     'name': 'How to Grow and Harvest The Best Strawberries | Basics',
                     'sequence': 4,
-                    'binary_content': PDF_B64,
+                    'binary_content': BinaryBytes(PDF_RAW),
                     'slide_category': 'document',
                     'is_published': True,
                 }), (0, 0, {

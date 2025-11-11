@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 
 from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import _, models
-from odoo.tools import float_compare
+from odoo.tools import BinaryBytes, float_compare
+from odoo.tools.image import image_data_uri
 
 
 class PosOrder(models.Model):
@@ -176,7 +176,7 @@ class PosOrder(models.Model):
                 'program_name': coupon.program_id.name,
                 'expiration_date': coupon.expiration_date,
                 'code': coupon.code,
-                'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', coupon.code)).decode('utf-8'),
+                'barcode_base64': image_data_uri(self.env['ir.actions.report'].barcode('Code128', coupon.code)),
             } for coupon in new_coupons if (
                 coupon.program_id.applies_on == 'future'
                 # Don't send the coupon code for the gift card and ewallet programs.
@@ -298,7 +298,7 @@ class PosOrder(models.Model):
                         gift_card_pdf = self.env['ir.attachment'].create({
                             'name': filename,
                             'type': 'binary',
-                            'raw': report[0],
+                            'raw': BinaryBytes(report[0]),
                             'store_fname': filename,
                             'res_model': 'pos.order',
                             'res_id': self.ids[0],

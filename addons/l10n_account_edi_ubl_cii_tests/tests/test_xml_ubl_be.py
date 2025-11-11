@@ -1,6 +1,3 @@
-import base64
-from lxml import etree
-
 from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
@@ -312,7 +309,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         attachment = invoice.ubl_cii_xml_id
         self.assertTrue(attachment)
 
-        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_content = attachment.raw.content
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         self.assertEqual(

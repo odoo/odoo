@@ -1,9 +1,7 @@
-import base64
-import io
 from markupsafe import Markup
 
 from odoo.tests import common, tagged
-from odoo.tools.misc import file_open, mute_logger, file_path
+from odoo.tools.misc import mute_logger, file_path
 from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, translation_file_reader
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
@@ -110,13 +108,10 @@ class TestImport(common.TransactionCase):
 
     def test_import_from_po_file(self):
         """Test the import from a single po file works"""
-        with file_open('test_translation/i18n/tlh.po', 'rb') as f:
-            po_file = base64.encodebytes(f.read())
-
         import_tlh = self.env["base.language.import"].create({
             'name': 'Klingon',
             'code': 'tlh',
-            'data': po_file,
+            'data': self.read_file_contents('test_translation/i18n/tlh.po'),
             'filename': 'tlh.po',
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
@@ -137,13 +132,10 @@ class TestImport(common.TransactionCase):
 
     def test_lazy_translation(self):
         """Test the import from a single po file works"""
-        with file_open('test_translation/i18n/tlh.po', 'rb') as f:
-            po_file = base64.encodebytes(f.read())
-
         import_tlh = self.env["base.language.import"].create({
             'name': 'Klingon',
             'code': 'tlh',
-            'data': po_file,
+            'data': self.read_file_contents('test_translation/i18n/tlh.po'),
             'filename': 'tlh.po',
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
@@ -180,13 +172,10 @@ class TestImport(common.TransactionCase):
 
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
-        with file_open('test_translation/i18n/dot.csv', 'rb') as f:
-            po_file = base64.encodebytes(f.read())
-
         import_tlh = self.env["base.language.import"].create({
             'name': 'Dothraki',
             'code': 'dot',
-            'data': po_file,
+            'data': self.read_file_contents('test_translation/i18n/dot.csv'),
             'filename': 'dot.csv',
         })
         with mute_logger('odoo.addons.base.models.res_lang'):
@@ -277,7 +266,7 @@ class TestTranslationFlow(common.TransactionCase):
         pot_file_data = export.data
         self.assertIsNotNone(pot_file_data)
 
-        with io.BytesIO(base64.b64decode(pot_file_data)) as pot_file:
+        with pot_file_data.open() as pot_file:
             pot_file.name = f'{module_name}.pot'
             for line1, line2 in zip(translation_file_reader(pot_file, 'po'), translation_file_reader(file_path(f'{module_name}/i18n/{module_name}.pot'), 'po')):
                 self.assertEqual(line1, line2)
@@ -302,7 +291,7 @@ class TestTranslationFlow(common.TransactionCase):
         # test code translations
         new_code_translations = CodeTranslations()
         # a hack to load code translations for new_code_translations
-        with io.BytesIO(base64.b64decode(po_file_data)) as po_file:
+        with po_file_data.open() as po_file:
             po_file.name = 'fr_FR.po'
 
             def filter_func_for_python(row):

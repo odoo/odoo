@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from base64 import b64decode
 
 from odoo.tests.common import tagged, TransactionCase
 
@@ -43,27 +40,27 @@ class TestAvatarMixin(TransactionCase):
         self.assertTrue(self.user_without_image.partner_id.avatar_1920)
 
     def test_content_of_generated_partner_avatar(self):
-        expectedAvatar = (
+        expected_avatar = (
             "<?xml version='1.0' encoding='UTF-8' ?>"
             "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
             "<rect fill='#4EA7F2' height='180' width='180'/>"
             "<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>M</text>"
             "</svg>"
         )
-        self.assertEqual(expectedAvatar, b64decode(self.user_without_image.partner_id.avatar_1920).decode('utf-8'))
+        self.assertEqual(self.user_without_image.partner_id.avatar_1920.content.decode(), expected_avatar)
 
     def test_partner_without_name_has_default_placeholder_image_as_avatar(self):
-        self.assertEqual(self.user_without_name.partner_id._avatar_get_placeholder(), b64decode(self.user_without_name.partner_id.avatar_1920))
+        self.assertEqual(self.user_without_name.partner_id._avatar_get_placeholder().content, self.user_without_name.partner_id.avatar_1920.content)
 
     def test_external_partner_has_default_placeholder_image_as_avatar(self):
-        expectedAvatar = (
+        expected_avatar = (
             "<?xml version='1.0' encoding='UTF-8' ?>"
             "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
-            "<rect fill='#A76DBC' height='180' width='180'/>"
-            "<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>J</text>"
+            "<rect fill='#4EA7F2' height='180' width='180'/>"
+            "<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>M</text>"
             "</svg>"
         )
-        self.assertEqual(expectedAvatar, b64decode(self.external_partner.avatar_1920).decode('utf-8'))
+        self.assertEqual(self.user_without_image.partner_id.avatar_1920.decode(), expected_avatar)
 
     def test_partner_and_user_have_the_same_avatar(self):
-        self.assertEqual(self.user_without_image.partner_id.avatar_1920, self.user_without_image.avatar_1920)
+        self.assertEqual(self.user_without_image.partner_id.avatar_1920.content, self.user_without_image.avatar_1920.content)

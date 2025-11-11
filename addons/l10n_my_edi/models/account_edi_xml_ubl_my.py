@@ -703,7 +703,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         vals = {}
         try:
-            root = etree.fromstring(attachment.raw)
+            root = etree.fromstring(attachment.raw.content)
             invoice_id_node = get_node(root, "//*[local-name()='Invoice']/*[local-name()='ID']")
         except etree.XMLSyntaxError:
             # Not an xml

@@ -120,7 +120,7 @@ class DocController(http.Controller):
                     {'modules': modules, 'models': models},
                     ensure_ascii=False,
                     default=json_default,
-                ),
+                ).encode(),
                 'public': False,
             })
             logger.info("new index attachment: %s", filename)

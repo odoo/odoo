@@ -1,13 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
-import os
 import re
 
 from odoo.tests import common, tagged
-from odoo.tools.misc import file_open
-
-directory = os.path.dirname(__file__)
 
 
 class TestExport(common.TransactionCase):
@@ -224,26 +220,22 @@ class TestBinaryExport(TestBasicExport):
     def test_image(self):
         converter = self.env['ir.qweb.field.image']
 
-        with file_open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
-            content = f.read()
-
-        encoded_content = base64.b64encode(content)
-        value = converter.value_to_html(encoded_content, {})
+        binary = self.read_file_contents('test_orm/tests/test_vectors/image')
+        binary_b64 = base64.b64encode(binary.content).decode()
+        value = converter.value_to_html(binary, {})
 
         self.assertEqual(
-            value, '<img src="data:image/jpeg;base64,%s">' % encoded_content.decode('ascii'))
+            str(value), f'<img src="data:image/jpg;base64,{binary_b64}">')
 
-        with file_open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:
-            content = f.read()
-
-        with self.assertRaises(ValueError):
-            converter.value_to_html(base64.b64encode(content), {})
-
-        with file_open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
-            content = f.read()
+        binary = self.read_file_contents('test_orm/tests/test_vectors/pdf')
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(base64.b64encode(content), {})
+            converter.value_to_html(binary, {})
+
+        binary = self.read_file_contents('test_orm/tests/test_vectors/pptx')
+
+        with self.assertRaises(ValueError):
+            converter.value_to_html(binary, {})
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

@@ -1381,7 +1381,7 @@ class TestNoThread(MailCommon, TestRecipients):
         })
         with self.mock_mail_gateway():
             mail_compose_message.action_send_mail()
-        self.assertEqual(self._new_mails.attachment_ids.raw, b'This is test attachment content',
+        self.assertEqual(self._new_mails.attachment_ids.raw.content, b'This is test attachment content',
             "The attachment was not included correctly in the sent message")
 
     @users('employee')

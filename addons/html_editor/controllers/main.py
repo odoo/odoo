@@ -1,7 +1,7 @@
 import contextlib
 import re
 import uuid
-from base64 import b64decode, b64encode
+from base64 import b64decode
 from datetime import datetime
 from os.path import join as opj
 from urllib.parse import urlparse, urljoin
@@ -529,17 +529,17 @@ class HTML_Editor(Controller):
                     resized = attachment.create_unique([{
                         'name': attachment.name,
                         'description': 'resize: %s' % size,
-                        'datas': per_type['image/webp'],
+                        'raw': per_type['image/webp'],
                         'res_id': reference_id,
                         'res_model': 'ir.attachment',
                         'mimetype': 'image/webp',
                     }])
-                    reference_id = resized[0]
+                    reference_id = resized[0].id
                 if 'image/jpeg' in per_type:
                     attachment.create_unique([{
                         'name': re.sub(r'\.webp$', '.jpg', attachment.name, flags=re.I),
                         'description': 'format: jpeg',
-                        'datas': per_type['image/jpeg'],
+                        'raw': per_type['image/jpeg'],
                         'res_id': reference_id,
                         'res_model': 'ir.attachment',
                         'mimetype': 'image/jpeg',
@@ -693,7 +693,7 @@ class HTML_Editor(Controller):
         # Update default color palette on shape SVG.
         svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
         # Add image in base64 inside the shape.
-        uri = image_data_uri(b64encode(image))
+        uri = image_data_uri(image)
         svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
 
         return request.make_response(svg, [

@@ -1,11 +1,10 @@
-import base64
 import json
 import requests
 
 from unittest import mock
 
 from odoo import _, release, Command
-from odoo.tools import file_open, html_sanitize, misc, zeep
+from odoo.tools import html_sanitize, zeep
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -28,7 +27,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
         certificate_path = 'l10n_es_edi_verifactu/demo/certificates/Certificado_RPJ_A39200019_CERTIFICADO_ENTIDAD_PRUEBAS_5_Pre.p12'
         cls.certificate = cls.env['certificate.certificate'].create({
-            'content': base64.encodebytes(misc.file_open(certificate_path, 'rb').read()),
+            'content': cls.read_file_contents(certificate_path),
             'pkcs12_password': '1234',
             'scope': 'verifactu',
         })
@@ -87,21 +86,15 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         # Do avoid updating the test files for every version we just assume that we are in 17.0
         cls.startClassPatcher(mock.patch.object(release, 'version', '17.0+e'))
 
-    @classmethod
-    def _read_file(cls, path, *args):
-        with file_open(path, *args) as f:
-            content = f.read()
-        return content
-
     def _json_file_to_dict(self, json_file):
-        json_string = self._read_file(json_file, 'rb')
+        json_string = self.read_file_contents(json_file).content
         res = json.loads(json_string)
         return self.replace_ignore(res)
 
     def _mock_response(self, status_code, response_file, content_type='text/xml;charset=UTF-8'):
         response = mock.Mock(spec=requests.Response)
         response.status_code = status_code
-        response.text = self._read_file(response_file)
+        response.text = self.read_file_contents(response_file).content
         response.content = response.text.encode()
         response.headers = {
             'content-type': content_type,
@@ -125,7 +118,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
     def _mock_zeep_registration_operation(self, response_file_json, name=""):
         # Note: The real result is of type 'odoo.tools.zeep.client.SerialProxy'; here it is a dict
-        zeep_response_dict = json.loads(self._read_file(response_file_json))
+        zeep_response_dict = json.loads(self.read_file_contents(response_file_json).content)
         if name:
             zeep_response_dict['RespuestaLinea'][0]['IDFactura']['NumSerieFactura'] = name
         return self._mock_get_zeep_operation(registration_return_value=lambda *args, **kwargs: zeep_response_dict)
@@ -198,7 +191,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
     def _mock_zeep_registration_operation_single_accept_no_wait(self):
         # Note: The real result is of type 'odoo.tools.zeep.client.SerialProxy'; here it is a dict
-        zeep_response_dict = json.loads(self._read_file('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'))
+        zeep_response_dict = json.loads(self.read_file_contents('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json').content)
         self.env.company.sudo().l10n_es_edi_verifactu_next_batch_time = False  # to not get blocked by the wait time
 
         def _mock_register_accept(*args, **kwargs):

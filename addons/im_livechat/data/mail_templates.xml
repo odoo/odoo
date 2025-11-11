@@ -23,7 +23,7 @@
                         <tr>
                             <td style="width: 50px; vertical-align: top; padding-right: 12px;">
                                 <t t-if="message.author_avatar">
-                                    <img style="width:40px; height:40px; border-radius:0.5rem; display:block;" t-attf-src="data:image/png;base64,{{message.author_avatar}}" t-attf-alt="{{author_name}}"/>
+                                    <img style="width:40px; height:40px; border-radius:0.5rem; display:block;" t-attf-src="data:image/png;base64,{{message.author_avatar.to_base64()}}" t-attf-alt="{{author_name}}"/>
                                 </t>
                                 <t t-else="">
                                     <img style="width:40px; height:40px; border-radius:0.5rem; display:block;" src="/mail/static/src/img/smiley/avatar.jpg" t-attf-alt="{{author_name}}"/>

@@ -3,9 +3,7 @@ from odoo.tests.common import tagged
 from odoo.addons.l10n_hu_edi.tests.common import L10nHuEdiTestCommon
 
 from freezegun import freeze_time
-import base64
 import zipfile
-import io
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -133,8 +131,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
             })
             tax_audit_export.action_export()
 
-            export_file = base64.b64decode(tax_audit_export.export_file)
-            with io.BytesIO(export_file) as zip_buffer:
+            with tax_audit_export.export_file.open() as zip_buffer:
                 with zipfile.ZipFile(zip_buffer) as zip_file:
                     filenames = zip_file.namelist()
                     with zip_file.open(filenames[0]) as invoice_file:

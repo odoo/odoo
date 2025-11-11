@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
-from odoo.exceptions import UserError
-import base64
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -283,7 +280,7 @@ class TestUBLDE(TestUBLCommon):
 
         self.assertTrue(attachment)
 
-        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_content = attachment.raw.content
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         # Export: BuyerReference is in the out_invoice xml
@@ -323,6 +320,6 @@ class TestUBLDE(TestUBLCommon):
 
         self.assertTrue(attachment)
 
-        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_content = attachment.raw.content
         xml_etree = self.get_xml_tree_from_string(xml_content)
         self.assertEqual(xml_etree.find('{*}BuyerReference').text, '123456789')

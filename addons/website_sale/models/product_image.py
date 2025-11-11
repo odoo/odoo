@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import BinaryBytes
 from odoo.tools.image import is_image_size_above
 
 from odoo.addons.html_editor.tools import get_video_embed_code, get_video_thumbnail
@@ -56,7 +55,7 @@ class ProductImage(models.Model):
     def _onchange_video_url(self):
         if not self.image_1920:
             thumbnail = get_video_thumbnail(self.video_url)
-            self.image_1920 = thumbnail and base64.b64encode(thumbnail) or False
+            self.image_1920 = BinaryBytes(thumbnail or b'')
 
     #=== CONSTRAINT METHODS ===#
 

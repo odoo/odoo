@@ -1445,8 +1445,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(len(msg.attachment_ids), 5)
         self.assertEqual(set(msg.attachment_ids.mapped('res_model')), {test_record._name})
         self.assertEqual(set(msg.attachment_ids.mapped('res_id')), {test_record.id})
-        self.assertEqual(set(msg.attachment_ids.mapped('raw')),
-                         set([b'AttContent_00', b'AttContent_01', b'AttContent_02', _attachments[0][1], _attachments[1][1]]))
+        self.assertEqual({raw.content for raw in msg.attachment_ids.mapped('raw')},
+                         {b'AttContent_00', b'AttContent_01', b'AttContent_02', _attachments[0][1], _attachments[1][1]})
         self.assertTrue(set(_attachment_records.ids).issubset(msg.attachment_ids.ids),
                         'message_post: mail.message attachments duplicated')
 

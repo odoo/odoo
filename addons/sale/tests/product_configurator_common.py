@@ -1,10 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo.fields import Command
 from odoo.tests import HttpCase
-from odoo.tools.misc import file_open
 
 from odoo.addons.uom.tests.common import UomCommon
 
@@ -81,10 +78,9 @@ class TestProductConfiguratorCommon(UomCommon, HttpCase):
 
         # Setup a first optional product
         img_path = 'product/static/img/product_product_11-image.jpg'
-        img_content = base64.b64encode(file_open(img_path, "rb").read())
         cls.product_product_conf_chair = cls.env['product.template'].create({
             'name': 'Conference Chair (TEST)',
-            'image_1920': img_content,
+            'image_1920': cls.read_file_contents(img_path),
             'list_price': 16.50,
             'attribute_line_ids': [
                 Command.create({

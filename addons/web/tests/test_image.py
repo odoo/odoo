@@ -1,15 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
-import base64
-
 from datetime import datetime, timedelta
 from freezegun import freeze_time
-from PIL import Image
 from werkzeug.urls import url_unquote_plus
 
 from odoo.addons.base.tests.files import GIF_RAW
 from odoo.tests.common import HttpCase, new_test_user, tagged
+from odoo.tools.image import binary_to_image
 from odoo.tools.misc import limited_field_access_token
 
 
@@ -22,31 +19,31 @@ class TestImage(HttpCase):
         # CASE: resize placeholder, given size but original ratio is always kept
         response = self.url_open('/web/image/0/200x150')
         response.raise_for_status()
-        image = Image.open(io.BytesIO(response.content))
+        image = binary_to_image(response.content)
         self.assertEqual(image.size, (150, 150))
 
         # CASE: resize placeholder to 128
         response = self.url_open('/web/image/fake/0/image_128')
         response.raise_for_status()
-        image = Image.open(io.BytesIO(response.content))
+        image = binary_to_image(response.content)
         self.assertEqual(image.size, (128, 128))
 
         # CASE: resize placeholder to 256
         response = self.url_open('/web/image/fake/0/image_256')
         response.raise_for_status()
-        image = Image.open(io.BytesIO(response.content))
+        image = binary_to_image(response.content)
         self.assertEqual(image.size, (256, 256))
 
         # CASE: resize placeholder to 1024 (but placeholder image is too small)
         response = self.url_open('/web/image/fake/0/image_1024')
         response.raise_for_status()
-        image = Image.open(io.BytesIO(response.content))
+        image = binary_to_image(response.content)
         self.assertEqual(image.size, (256, 256))
 
         # CASE: no size found, use placeholder original size
         response = self.url_open('/web/image/fake/0/image_no_size')
         response.raise_for_status()
-        image = Image.open(io.BytesIO(response.content))
+        image = binary_to_image(response.content)
         self.assertEqual(image.size, (256, 256))
 
     def test_02_content_image_Etag_304(self):
@@ -61,7 +58,7 @@ class TestImage(HttpCase):
         response = self.url_open('/web/image/%s' % attachment.id, timeout=None)
         response.raise_for_status()
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(base64.b64encode(response.content), attachment.datas)
+        self.assertEqual(response.content, attachment.raw.content)
 
         etag = response.headers.get('ETag')
 

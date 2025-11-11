@@ -1,5 +1,3 @@
-import base64
-
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, ed25519, rsa
@@ -7,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
-from odoo.tools import file_open
+from odoo.tools import BinaryBytes
 
 
 @tagged('post_install', '-at_install')
@@ -28,7 +26,7 @@ class TestKeysCertificates(TransactionCase):
         private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         cls.test_key_1 = cls.env['certificate.key'].create({
             'name': 'Test key',
-            'content': base64.b64encode(private_key.private_bytes(
+            'content': BinaryBytes(private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
                 encryption_algorithm=serialization.NoEncryption()
@@ -55,7 +53,7 @@ class TestKeysCertificates(TransactionCase):
         private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         cls.test_key_2_private = cls.env['certificate.key'].create({
             'name': 'Test key',
-            'content': base64.b64encode(private_key.private_bytes(
+            'content': BinaryBytes(private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
                 encryption_algorithm=serialization.NoEncryption(),
@@ -63,7 +61,7 @@ class TestKeysCertificates(TransactionCase):
         })
         cls.test_key_2_public = cls.env['certificate.key'].create({
             'name': 'Test key',
-            'content': base64.b64encode(private_key.public_key().public_bytes(
+            'content': BinaryBytes(private_key.public_key().public_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PublicFormat.SubjectPublicKeyInfo,
             )),
@@ -71,25 +69,25 @@ class TestKeysCertificates(TransactionCase):
 
     def test_ec_key_generated(self):
         private_key = self.env['certificate.key']._generate_ec_private_key(self.env.company)
-        private_key_obj = serialization.load_pem_private_key(base64.b64decode(private_key.pem_key), None)
+        private_key_obj = serialization.load_pem_private_key(private_key.pem_key.content, None)
         self.assertTrue(isinstance(private_key_obj, ec.EllipticCurvePrivateKey))
 
     def test_rsa_key_generated(self):
         private_key = self.env['certificate.key']._generate_rsa_private_key(self.env.company)
-        private_key_obj = serialization.load_pem_private_key(base64.b64decode(private_key.pem_key), None)
+        private_key_obj = serialization.load_pem_private_key(private_key.pem_key.content, None)
         self.assertTrue(isinstance(private_key_obj, rsa.RSAPrivateKey))
 
     def test_ed25519_key_generated(self):
         private_key = self.env['certificate.key']._generate_ed25519_private_key(self.env.company)
-        private_key_obj = serialization.load_pem_private_key(base64.b64decode(private_key.pem_key), None)
+        private_key_obj = serialization.load_pem_private_key(private_key.pem_key.content, None)
         self.assertTrue(isinstance(private_key_obj, ed25519.Ed25519PrivateKey))
 
     def test_key_loading_wrong_password(self):
         correct_password = 'foobar'
         wrong_password = 'barfoo'
-        content = file_open('certificate/tests/data/encrypted_private.key', 'rb').read()
+        key_path = 'certificate/tests/data/encrypted_private.key'
         key = self.env['certificate.key'].create({
-            'content': base64.b64encode(content),
+            'content': self.read_file_contents(key_path),
             'password': wrong_password,
         })
         self.assertEqual(key.loading_error, 'This key could not be loaded. Either its content or its password is erroneous.')
@@ -101,7 +99,7 @@ class TestKeysCertificates(TransactionCase):
     def test_der_certificate(self):
         certificate = self.env['certificate.certificate'].create({
             'name': 'Test DER Certificate',
-            'content': base64.b64encode(self.certificate_1.public_bytes(encoding=serialization.Encoding.DER)),
+            'content': BinaryBytes(self.certificate_1.public_bytes(encoding=serialization.Encoding.DER)),
             'private_key_id': self.test_key_1.id,
         })
         self.assertEqual(certificate.content_format, 'der')
@@ -109,7 +107,7 @@ class TestKeysCertificates(TransactionCase):
     def test_pem_certificate(self):
         certificate = self.env['certificate.certificate'].create({
             'name': 'Test PEM Certificate',
-            'content': base64.b64encode(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
+            'content': BinaryBytes(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
             'private_key_id': self.test_key_1.id,
         })
         self.assertEqual(certificate.content_format, 'pem')
@@ -118,13 +116,13 @@ class TestKeysCertificates(TransactionCase):
         certificate = self.env['certificate.certificate'].create({
             'name': 'Test PKCS12 Certificate',
             'pkcs12_password': 'example',
-            'content': base64.b64encode(file_open('certificate/tests/data/cert.pfx', 'rb').read()),
+            'content': self.read_file_contents('certificate/tests/data/cert.pfx'),
         })
         self.assertEqual(certificate.content_format, 'pkcs12')
 
     def test_is_valid(self):
         private_key = serialization.load_pem_private_key(
-            base64.b64decode(self.test_key_1.pem_key),
+            self.test_key_1.pem_key.content,
             None
         )
 
@@ -147,7 +145,7 @@ class TestKeysCertificates(TransactionCase):
 
         expired_cert = self.env['certificate.certificate'].create({
             'name': 'Test expired Certificate',
-            'content': base64.b64encode(old_certificate.public_bytes(encoding=serialization.Encoding.PEM)),
+            'content': BinaryBytes(old_certificate.public_bytes(encoding=serialization.Encoding.PEM)),
             'private_key_id': self.test_key_1.id,
         })
         self.assertFalse(expired_cert.is_valid)
@@ -156,13 +154,13 @@ class TestKeysCertificates(TransactionCase):
         with self.assertRaises(UserError, msg="The certificate and private key are not compatible."):
             self.env['certificate.certificate'].create({
                 'name': "Test PEM Certificate and key don't match",
-                'content': base64.b64encode(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
+                'content': BinaryBytes(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
                 'private_key_id': self.test_key_2_private.id,
             })
 
         with self.assertRaises(UserError, msg="The certificate and public key are not compatible."):
             self.env['certificate.certificate'].create({
                 'name': "Test PEM Certificate and key don't match",
-                'content': base64.b64encode(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
+                'content': BinaryBytes(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
                 'public_key_id': self.test_key_2_public.id,
             })

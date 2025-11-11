@@ -533,7 +533,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         })
         xml_attachment = self.env['ir.attachment'].create({
             'name': 'xml attachment',
-            'raw': "<?xml version='1.0' encoding='UTF-8'?><test/>",
+            'raw': b"<?xml version='1.0' encoding='UTF-8'?><test/>",
             'mimetype': 'application/xml',
         })
         txt_attachment = self.env['ir.attachment'].create({

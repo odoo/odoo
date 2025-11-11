@@ -352,7 +352,6 @@ structure.
 """
 from __future__ import annotations
 
-import base64
 import fnmatch
 import io
 import logging
@@ -370,7 +369,7 @@ import werkzeug
 
 from markupsafe import Markup, escape
 from collections import defaultdict
-from collections.abc import Sized, Mapping, Sequence, Iterator
+from collections.abc import Buffer, Sized, Mapping, Sequence, Iterator
 from copy import deepcopy
 from itertools import count, chain
 from lxml import etree
@@ -384,12 +383,12 @@ from types import FunctionType
 from odoo import api, models, tools
 from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import config, safe_eval, OrderedSet, frozendict, json
+from odoo.tools import BinaryValue, config, safe_eval, OrderedSet, frozendict, json
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
-from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
+from odoo.tools.image import image_data_uri
 from odoo.tools.profiler import ExecutionContext
 from odoo.tools.translate import FORMAT_REGEX
 from odoo.http import request
@@ -654,6 +653,8 @@ class QwebJSON(json.JSON):
     def default(self, obj):
         if isinstance(obj, Mapping):
             return dict(obj)
+        if isinstance(obj, BinaryValue):
+            return obj.decode()
         return obj
 
     def dumps(self, *args, **kwargs):
@@ -1262,14 +1263,13 @@ class IrQweb(models.AbstractModel):
 
     # values for running time
 
-    def _get_converted_image_data_uri(self, base64_source):
+    def _get_converted_image_data_uri(self, raw):
         if self.env.context.get('webp_as_jpg'):
-            mimetype = FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png')
+            mimetype = raw.mimetype
             if 'webp' in mimetype:
                 # Use converted image so that is recognized by wkhtmltopdf.
-                bin_source = base64.b64decode(base64_source)
                 Attachment = self.env['ir.attachment']
-                checksum = Attachment._compute_checksum(bin_source)
+                checksum = Attachment._compute_checksum(raw)
                 origins = Attachment.sudo().search([
                     ['id', '!=', False],  # No implicit condition on res_field.
                     ['checksum', '=', checksum],
@@ -1283,8 +1283,8 @@ class IrQweb(models.AbstractModel):
                     ]
                     converted = Attachment.sudo().search(converted_domain, limit=1)
                     if converted:
-                        base64_source = converted.datas
-        return image_data_uri(base64_source)
+                        raw = converted.raw
+        return image_data_uri(raw)
 
     def _prepare_environment(self, values):
         """ Prepare the values and context that will sent to the
@@ -1616,8 +1616,8 @@ class IrQweb(models.AbstractModel):
 
         if isinstance(expr, str):
             return expr
-        elif isinstance(expr, bytes):
-            return expr.decode()
+        elif isinstance(expr, Buffer):
+            return bytes(expr).decode()
         else:
             return str(expr)
 

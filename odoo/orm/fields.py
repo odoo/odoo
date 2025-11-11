@@ -26,7 +26,7 @@ from .query import Query
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids, parse_field_expr
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
+    from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping, Sequence
     from typing import Self
 
     from .environments import Environment
@@ -1532,7 +1532,7 @@ class Field[T]:
         if not self.column_type:
             raise NotImplementedError("Method read() undefined on %s" % self)
 
-    def create(self, record_values: Collection[tuple[BaseModel, typing.Any]]) -> None:
+    def create(self, record_values: Sequence[tuple[BaseModel, typing.Any]]) -> None:
         """ Write the value of ``self`` on the given records, which have just
         been created.
 

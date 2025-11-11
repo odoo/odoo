@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import io
 import xlrd
-import base64
 
 from odoo import Command
 from odoo.tests import tagged
@@ -65,8 +63,6 @@ class TestBIR2307Generation(TestPhCommon):
         wizard = self.env['l10n_ph_2307.wizard'].with_context(context).create({})
         wizard.action_generate()
 
-        bir_2307 = base64.b64decode(wizard.xls_file)
-
         # 2: Build the expected values
         expected_values = {
             # Header
@@ -75,8 +71,8 @@ class TestBIR2307Generation(TestPhCommon):
             1: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', 'Commission/rebates/discounts', 'WC516', 100.0, 10.0, 10.0],
         }
 
-        report_file = io.BytesIO(bir_2307)
-        xls = xlrd.open_workbook(file_contents=report_file.read())
+        content = wizard.xls_file.content
+        xls = xlrd.open_workbook(file_contents=content)
         sheet = xls.sheet_by_index(0)
         for row, values in expected_values.items():
             row_values = sheet.row_values(row)
@@ -94,8 +90,8 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
+        content = wizard.xls_file.content
+        xl = xlrd.open_workbook(file_contents=content)
         sheet = xl.sheet_by_index(0)
 
         result = []
@@ -116,8 +112,8 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
+        content = wizard.xls_file.content
+        xl = xlrd.open_workbook(file_contents=content)
         sheet = xl.sheet_by_index(0)
 
         result = []
@@ -142,8 +138,8 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
+        content = wizard.xls_file.content
+        xl = xlrd.open_workbook(file_contents=content)
         sheet = xl.sheet_by_index(0)
 
         result = []
@@ -168,8 +164,8 @@ class TestBIR2307Generation(TestPhCommon):
         bill.action_post()
         wizard = self.env['l10n_ph_2307.wizard'].with_context(default_moves_to_export=bill.ids).create({})
         wizard.action_generate()
-        report_file = io.BytesIO(base64.b64decode(wizard.xls_file))
-        xl = xlrd.open_workbook(file_contents=report_file.read())
+        content = wizard.xls_file.content
+        xl = xlrd.open_workbook(file_contents=content)
         sheet = xl.sheet_by_index(0)
 
         result = []

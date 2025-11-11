@@ -308,7 +308,7 @@ class TestMailComposerUI(MailCommon, HttpCase):
         message_1, message_2, message_3 = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
         self.assertIn(user.partner_id, message_1.partner_ids)
         self.assertEqual(
-            sorted(message_1.attachment_ids.mapped('raw')),
+            sorted([a.raw.content for a in message_1.attachment_ids]),
             sorted([b'hello, world', b'hi there']))
 
         signature_pattern = r'<span data-o-mail-quote="1">--\nErnest</span>'

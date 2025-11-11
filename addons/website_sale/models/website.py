@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 import logging
 import re
@@ -14,7 +13,7 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import file_open, ormcache
+from odoo.tools import BinaryBytes, file_open, ormcache
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
 
@@ -568,13 +567,13 @@ class Website(models.Model):
             for idx, cat in enumerate(category_specs['categories']):
                 image_name = images_names[idx]
                 img_path = 'website_sale/static/src/img/categories/' + image_name
-                with file_open(img_path, 'rb') as file:
-                    image_base64 = base64.b64encode(file.read())
+                with file_open(img_path, 'rb') as f:
+                    image_bin = BinaryBytes(f.read())
                 categories.append({
                     'name': cat['name'],
                     'website_description': cat['description'],
-                    'image_1920': image_base64,
-                    'cover_image': image_base64,
+                    'image_1920': image_bin,
+                    'cover_image': image_bin,
                 })
             self.env['product.public.category'].sudo().create(categories)
         return res

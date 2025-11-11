@@ -278,7 +278,7 @@ class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
         self.assertEqual(self.campaign.card_count, 20)
         self.assertEqual(self.campaign.card_click_count, 0)
         self.assertEqual(self.campaign.card_share_count, 0)
-        self.assertListEqual(cards.mapped('image'), [base64.b64encode(VALID_JPEG)] * 20)
+        self.assertListEqual([i.content for i in cards.mapped('image')], [VALID_JPEG] * 20)
         self.assertListEqual(cards.mapped('share_status'), [False] * 20)
         self.assertListEqual(cards.mapped('requires_sync'), [False] * 20)
 

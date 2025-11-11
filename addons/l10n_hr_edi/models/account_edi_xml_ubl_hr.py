@@ -350,8 +350,9 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
 
     def _retrieve_rejection_reference(self, attachment):
         string_to_find = b'Rejected</cbc:StatusReasonCode>'
-        if string_to_find in attachment['raw']:
-            tree = etree.fromstring(attachment['raw'])
+        raw = bytes(attachment['raw'])
+        if string_to_find in raw:
+            tree = etree.fromstring(raw)
             reason_node = tree.findtext('.//{*}Response/{*}Status/{*}StatusReason')
             if "Electronic ID:" in reason_node:
                 original_document_id = reason_node[reason_node.find("Electronic ID:") + 15:reason_node.find("Electronic ID:") + 22]

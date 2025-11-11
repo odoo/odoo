@@ -32,6 +32,7 @@ from odoo.addons.mail.tools.web_push import (
 from odoo.exceptions import MissingError, AccessError
 from odoo.fields import Domain
 from odoo.tools import (
+    BinaryBytes,
     is_html_empty, html_escape, html2plaintext,
     clean_context, split_every, SQL,
     ormcache, is_list_of,
@@ -2214,8 +2215,8 @@ class MailThread(models.AbstractModel):
             by incoming email;
         :param str incoming_email_cc: comma-separated list of emails, already notified
             by incoming email;
-        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
-            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
+        :param list(tuple(str, bytes), tuple(str, bytes, dict)) attachments : list of attachment
+            tuples in the form ``(name, content)`` or ``(name, content, info)`` where content
             is NOT base64 encoded;
         :param list attachment_ids: list of existing attachments to link to this message
             Should not be a list of commands. Attachment records attached to mail
@@ -2466,7 +2467,7 @@ class MailThread(models.AbstractModel):
                     continue
                 attachement_values = {
                     'name': name,
-                    'raw': content,
+                    'raw': BinaryBytes(content),
                     'type': 'binary',
                     'description': name,
                     'res_model': model,

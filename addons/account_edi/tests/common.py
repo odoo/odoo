@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 from contextlib import contextmanager
 from functools import wraps
 from unittest.mock import patch
-
-import base64
 
 
 def _generate_mocked_needs_web_services(needs_web_services):
@@ -18,6 +15,7 @@ def _mocked_get_move_applicability(edi_format, move):
         'post': edi_format._post_invoice_edi,
         'cancel': edi_format._cancel_invoice_edi,
     }
+
 
 def _mocked_check_move_configuration_success(edi_format, move):
     return []
@@ -104,7 +102,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         attachment = invoice._get_edi_attachment(self.edi_format)
         if not attachment:
             raise ValueError('No attachment was generated after posting EDI')
-        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_content = attachment.raw.content
         current_etree = self.get_xml_tree_from_string(xml_content)
         expected_etree = self.get_xml_tree_from_string(expected_values)
         if applied_xpath:
@@ -135,11 +133,8 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         moves.edi_document_ids._process_documents_web_services(with_commit=False)
 
         documents_to_return = moves.edi_document_ids
-        if formats_to_return != None:
+        if formats_to_return:
             documents_to_return = documents_to_return.filtered(lambda x: x.edi_format_id.code in formats_to_return)
 
         attachments = documents_to_return.attachment_id
-        data_str_list = []
-        for attachment in attachments.with_context(bin_size=False):
-            data_str_list.append(base64.decodebytes(attachment.datas))
-        return data_str_list
+        return [attachment.raw.content for attachment in attachments]

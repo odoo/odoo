@@ -9,7 +9,7 @@ import unittest
 from PIL import Image
 
 from odoo.tests.common import tagged, TransactionCase, can_import, RecordCapturer
-from odoo.tools import file_open, mute_logger, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import BinaryBytes, mute_logger, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.base_import.models.base_import import ImportValidationError
 
 
@@ -370,7 +370,7 @@ class TestColumnMapping(TransactionCase):
         )
         import_record = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv',
             'file_name': 'data.csv',
         })
@@ -417,7 +417,7 @@ class TestPreview(TransactionCase):
     def make_import(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.users',
-            'file': base64.b64encode("로그인,언어\nbob,1\n".encode('euc_kr')),
+            'file': BinaryBytes("로그인,언어\nbob,1\n".encode('euc_kr')),
             'file_type': 'text/csv',
             'file_name': 'kr_data.csv',
         })
@@ -457,7 +457,7 @@ class TestPreview(TransactionCase):
         )
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
 
@@ -480,8 +480,7 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
-        with file_open('test_import_export/data/test_import.xls', 'rb') as f:
-            file_content = base64.b64encode(f.read())
+        file_content = self.read_file_contents('test_import_export/data/test_import.xls')
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
             'file': file_content,
@@ -504,8 +503,7 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd.xlsx') or can_import('openpyxl'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
-        with file_open('test_import_export/data/test_import.xlsx', 'rb') as f:
-            file_content = base64.b64encode(f.read())
+        file_content = self.read_file_contents('test_import_export/data/test_import.xlsx')
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
             'file': file_content,
@@ -528,8 +526,7 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
-        with file_open('test_import_export/data/test_import.ods', 'rb') as f:
-            file_content = base64.b64encode(f.read())
+        file_content = self.read_file_contents('test_import_export/data/test_import.ods')
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
             'file': file_content,
@@ -565,7 +562,7 @@ class test_convert_import_data(TransactionCase):
         )
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
 
         })
@@ -588,7 +585,7 @@ class test_convert_import_data(TransactionCase):
         ).encode()
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.complex',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
 
         })
@@ -616,7 +613,7 @@ class test_convert_import_data(TransactionCase):
         ).encode()
         import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
             'res_model': 'import.complex',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv',
         })
 
@@ -651,7 +648,7 @@ class test_convert_import_data(TransactionCase):
         ).encode()
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.complex',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
 
         })
@@ -705,7 +702,7 @@ class test_convert_import_data(TransactionCase):
         )
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
         data, fields = import_wizard._convert_import_data(
@@ -732,7 +729,7 @@ class test_convert_import_data(TransactionCase):
         )
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
         data, fields = import_wizard._convert_import_data(
@@ -757,7 +754,7 @@ class test_convert_import_data(TransactionCase):
         )
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
         data, fields = import_wizard._convert_import_data(
@@ -778,7 +775,7 @@ class test_convert_import_data(TransactionCase):
         )
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
 
         })
@@ -791,7 +788,7 @@ class test_convert_import_data(TransactionCase):
         )
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(content),
+            'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
 
@@ -815,7 +812,7 @@ class test_convert_import_data(TransactionCase):
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(output.getvalue().encode()),
+            'file': BinaryBytes(output.getvalue().encode()),
             'file_type': 'text/csv',
         })
         data, _ = import_wizard._convert_import_data(
@@ -829,7 +826,7 @@ class test_convert_import_data(TransactionCase):
         partners_before = self.env['res.partner'].search([])
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
-            'file': base64.b64encode(b"""\
+            'file': BinaryBytes(b"""\
 foo,US\n
 foo1,Invalid Country\n
 foo2,US\n"""),
@@ -860,7 +857,7 @@ foo2,US\n"""),
         partners_before = self.env['res.partner'].search([])
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
-            'file': base64.b64encode(b"""\
+            'file': BinaryBytes(b"""\
 foo,US\n
 foo1,Invalid Country\n
 foo2,Invalid Country\n
@@ -907,7 +904,7 @@ foo3,Invalid Country\n"""),
         with RecordCapturer(self.env['res.partner']) as capture:
             import_wizard = self.env['base_import.import'].create({
                 'res_model': 'res.partner',
-                'file': base64.b64encode('\n'.join([';'.join(partner_values) for partner_values in file_partner_values]).encode()),
+                'file': BinaryBytes('\n'.join([';'.join(partner_values) for partner_values in file_partner_values]).encode()),
                 'file_type': 'text/csv',
             })
 
@@ -937,7 +934,7 @@ foo3,Invalid Country\n"""),
     def test_multi_mapping_hmtl(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.complex',
-            'file': base64.b64encode(b'html,html\n"<p>foo</p>","<p>bar</p>"\n'),
+            'file': BinaryBytes(b'html,html\n"<p>foo</p>","<p>bar</p>"\n'),
             'file_type': 'text/csv',
         })
 
@@ -1010,7 +1007,7 @@ foo3,Invalid Country\n"""),
             ]:
                 import_wizard = self.env['base_import.import'].create({
                     'res_model': 'import.preview',
-                    'file': base64.b64encode(file_content),
+                    'file': BinaryBytes(file_content),
                     'file_type': file_type,
                 })
                 result = import_wizard.parse_preview({'has_headers': True})
@@ -1042,7 +1039,7 @@ foo3,Invalid Country\n"""),
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
-            'file': base64.b64encode(file_content),
+            'file': BinaryBytes(file_content),
             'file_type': file_type,
         })
 
@@ -1073,7 +1070,7 @@ foo3,Invalid Country\n"""),
         file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         import_wizard = self.env["base_import.import"].create({
             'res_model': "import.o2m",
-            'file': base64.b64encode(file_content),
+            'file': BinaryBytes(file_content),
             'file_type': file_type,
         })
         import_wizard.parse_preview({'has_headers': True})
@@ -1110,7 +1107,7 @@ foo3,Invalid Country\n"""),
         file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.properties',
-            'file': base64.b64encode(file_content),
+            'file': BinaryBytes(file_content),
             'file_type': file_type,
         })
         import_wizard.parse_preview({'has_headers': True})
@@ -1147,7 +1144,7 @@ class TestBatching(TransactionCase):
             'file_type': 'text/csv',
         })
 
-        import_wizard.file = base64.b64encode(self._makefile(10))
+        import_wizard.file = BinaryBytes(self._makefile(10))
         result = import_wizard.parse_preview({
             'quoting': '"',
             'separator': ',',
@@ -1193,7 +1190,7 @@ class TestBatching(TransactionCase):
             'res_model': 'import.o2m',
             'file_type': 'text/csv',
             'file_name': 'things.csv',
-            'file': base64.b64encode(f.getvalue().encode()),
+            'file': BinaryBytes(f.getvalue().encode()),
         })
         opts = {'quoting': '"', 'separator': ',', 'has_headers': True}
         preview = import_wizard.parse_preview({**opts, 'limit': 15})
@@ -1223,7 +1220,7 @@ class TestBatching(TransactionCase):
             'res_model': 'res.partner',
             'file_type': 'text/csv',
             'file_name': 'clients.csv',
-            'file': base64.b64encode(b"""name,email
+            'file': BinaryBytes(b"""name,email
 a,a@example.com
 b,b@example.com
 ,
@@ -1277,7 +1274,7 @@ class test_failures(TransactionCase):
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'ir.attachment',
-            'file': base64.b64encode(fout.getvalue().encode()),
+            'file': BinaryBytes(fout.getvalue().encode()),
             'file_type': 'text/csv'
         })
         results = import_wizard.execute_import(

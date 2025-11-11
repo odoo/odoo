@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -10,6 +9,7 @@ import re
 import socket
 import time
 import email.utils
+from collections.abc import Buffer
 from email.utils import getaddresses as orig_getaddresses
 from urllib.parse import urlparse
 from typing import Literal
@@ -293,8 +293,8 @@ def fromstring(html_, base_url=None, parser=None, **kw):
     """
     if parser is None:
         parser = html_parser
-    if isinstance(html_, bytes):
-        is_full_html = _looks_like_full_html_bytes(html_)
+    if isinstance(html_, Buffer):
+        is_full_html = _looks_like_full_html_bytes(bytes(html_))
     else:
         is_full_html = _looks_like_full_html_unicode(html_)
     doc = document_fromstring(html_, parser=parser, base_url=base_url, **kw)
@@ -558,8 +558,8 @@ def html2plaintext(
     if not (html and html.strip()):
         return ''
 
-    if isinstance(html, bytes):
-        html = html.decode(encoding)
+    if isinstance(html, Buffer):
+        html = bytes(html).decode(encoding)
     else:
         assert isinstance(html, str), f"expected str got {html.__class__.__name__}"
 

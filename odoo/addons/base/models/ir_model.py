@@ -15,7 +15,7 @@ from psycopg2.extras import Json
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import frozendict, reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
+from odoo.tools import BinaryBytes, frozendict, reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import FIELD_TRANSLATE, LazyTranslate, _
 
@@ -40,6 +40,7 @@ RE_ORDER_FIELDS = re.compile(r'"?(\w+)"?\s*(?:asc|desc)?', flags=re.I)
 
 # base environment for doing a safe_eval
 SAFE_EVAL_BASE = {
+    'BinaryBytes': BinaryBytes,
     'datetime': datetime,
     'dateutil': dateutil,
     'time': time,

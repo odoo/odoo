@@ -14,7 +14,7 @@ from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import LockError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import safe_eval
+from odoo.tools import BinaryBytes, safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -707,6 +707,7 @@ class BaseAutomation(models.Model):
         self.ensure_one()
         model = self.env[self.model_name]
         eval_context = {
+            'BinaryBytes': BinaryBytes,
             'datetime': safe_eval.datetime,
             'dateutil': safe_eval.dateutil,
             'time': safe_eval.time,

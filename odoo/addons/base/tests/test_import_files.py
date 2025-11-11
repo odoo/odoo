@@ -1,8 +1,6 @@
-import base64
 import unittest
 
 from odoo.tests import TransactionCase, can_import, loaded_demo_data, tagged
-from odoo.tools.misc import file_open
 
 
 @tagged("post_install", "-at_install")
@@ -17,7 +15,7 @@ class TestImportFiles(TransactionCase):
         model = "res.partner"
         filename = "contacts_import_template.xlsx"
 
-        file_content = base64.b64encode(file_open(f"base/static/xls/{filename}", "rb").read())
+        file_content = self.read_file_contents(f"base/static/xls/{filename}")
         import_wizard = self.env["base_import.import"].create(
             {
                 "res_model": model,

@@ -3143,25 +3143,17 @@ class BaseModel(metaclass=MetaModel):
             assert field.store or field.compute_sql
             (column_fields if field.column_type else other_fields).add(field)
 
-        context = self.env.context
-
         if column_fields:
             # the query may involve several tables: we need fully-qualified names
             sql_terms = [SQL.identifier(self._table, 'id')]
             for field in column_fields:
-                if field.type == 'binary' and (
-                        context.get('bin_size') or context.get('bin_size_' + field.name)):
-                    # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
-                    sql = query.table[field.name]
-                    sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
-                else:
-                    sql = query.table[field.name]
-                    # flushing is necessary to retrieve the en_US value of fields without a translation
-                    # otherwise, re-create the SQL without flushing
-                    if not field.translate:
-                        sql_code, sql_params, to_flush = sql._sql_tuple
-                        to_flush = (f for f in to_flush if f != field)
-                        sql = SQL(sql_code, *sql_params, to_flush=to_flush)
+                sql = query.table[field.name]
+                # flushing is necessary to retrieve the en_US value of fields without a translation
+                # otherwise, re-create the SQL without flushing
+                if not field.translate:
+                    sql_code, sql_params, to_flush = sql._sql_tuple
+                    to_flush = (f for f in to_flush if f != field)
+                    sql = SQL(sql_code, *sql_params, to_flush=to_flush)
                 sql_terms.append(sql)
 
             # select the given columns from the rows in the query
@@ -4205,11 +4197,10 @@ class BaseModel(metaclass=MetaModel):
             ids.extend(id_ for id_, in cr.fetchall())
 
         # put the new records in cache, and update inverse fields, for many2one
-        # (using bin_size=False to put binary values in the right place)
         records = self.browse(ids)
         inverses_update = defaultdict(list)     # {(field, value): ids}
         common_set_vals = set(LOG_ACCESS_COLUMNS + ['id', 'parent_path'])
-        for data, record in zip(data_list, records.with_context(bin_size=False)):
+        for data, record in zip(data_list, records):
             data['record'] = record
             # DLE P104: test_inherit.py, test_50_search_one2many
             vals = dict({k: v for d in data['inherited'].values() for k, v in d.items()}, **data['stored'])

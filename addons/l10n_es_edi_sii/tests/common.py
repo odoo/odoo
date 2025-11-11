@@ -1,8 +1,5 @@
-# coding: utf-8
-import base64
 from datetime import datetime, UTC
 
-from odoo.tools import misc
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 
@@ -27,8 +24,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
 
         cls.certificate = cls.env['certificate.certificate'].create({
             'name': 'Test ES certificate',
-            'content': base64.b64encode(
-                misc.file_open("l10n_es_edi_sii/demo/certificates/aeat_1234.p12", 'rb').read()),
+            'content': cls.read_file_contents("l10n_es_edi_sii/demo/certificates/aeat_1234.p12"),
             'pkcs12_password': '1234',
             'scope': 'sii',
             'company_id': cls.company_data['company'].id,

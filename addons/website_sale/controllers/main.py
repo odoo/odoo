@@ -249,7 +249,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                                                                                limit=None,
                                                                                order=self._get_search_order(post),
                                                                                options=options)
-        search_result = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
+        search_result = details[0].get('results', request.env['product.template'])
 
         return fuzzy_search_term, product_count, search_result
 
@@ -390,7 +390,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
-            Product = request.env['product.template'].with_context(bin_size=True)
+            Product = request.env['product.template']
             search_term = fuzzy_search_term if fuzzy_search_term else search
             domain = self._get_shop_domain(search_term, category, attribute_value_dict)
 
@@ -659,9 +659,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             image_ids = request.env["ir.attachment"].browse(i['id'] for i in media)
             media_create_data = [Command.create({
                 'name': image.name,   # Images uploaded from url do not have any datas. This recovers them manually
-                'image_1920': image.datas
-                    if image.datas
-                    else request.env['ir.qweb.field.image'].load_remote_url(image.url),
+                'image_1920': image.raw or request.env['ir.qweb.field.image'].load_remote_url(image.url),
             }) for image in image_ids]
         elif type == 'video':  # Video case
             video_data = media[0]
@@ -1961,7 +1959,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             raise Forbidden()
         category = request.env['product.public.category'].browse(category_id).exists()
         if category:
-            image_data = request.env['ir.attachment'].browse(attachment_id).datas
+            image_data = request.env['ir.attachment'].browse(attachment_id).raw
             category.cover_image = image_data
 
     @staticmethod

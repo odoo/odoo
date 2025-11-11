@@ -109,8 +109,6 @@ class ProductProduct(models.Model):
     )
     all_product_tag_ids = fields.Many2many('product.tag', compute='_compute_all_product_tag_ids', search='_search_all_product_tag_ids')
 
-    # all image fields are base64 encoded and PIL-supported
-
     # all image_variant fields are technical and should not be displayed to the user
     image_variant_1920 = fields.Image("Variant Image", max_width=1920, max_height=1920)
 

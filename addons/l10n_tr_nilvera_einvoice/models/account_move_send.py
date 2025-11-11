@@ -234,7 +234,6 @@ class AccountMoveSend(models.AbstractModel):
             if invoice.company_id.country_code == 'TR':
                 invoice.is_move_sent = invoice.l10n_tr_nilvera_send_status == 'sent'
 
-
     @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
@@ -242,12 +241,9 @@ class AccountMoveSend(models.AbstractModel):
 
         for invoice, invoice_data in invoices_data.items():
             if 'tr_nilvera' in invoice_data['extra_edis']:
-                if attachment_values := invoice_data.get('ubl_cii_xml_attachment_values'):
-                    xml_file = BytesIO(attachment_values.get('raw'))
-                    xml_file.name = attachment_values['name']
-                else:
-                    xml_file = BytesIO(invoice.ubl_cii_xml_id.raw or b'')
-                    xml_file.name = invoice.ubl_cii_xml_id.name or ''
+                attachment_values = invoice_data.get('ubl_cii_xml_attachment_values', {})
+                xml_file = BytesIO(attachment_values.get('raw'))
+                xml_file.name = attachment_values.get('name')
 
                 if not invoice.partner_id.l10n_tr_nilvera_customer_alias_id:
                     # If no alias is saved, the user is either an E-Archive user or we haven't checked before. Check again

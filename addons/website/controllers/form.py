@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest
 from odoo import http, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
-from odoo.tools import plaintext2html
+from odoo.tools import BinaryBytes, plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
 from odoo.tools.translate import _, LazyTranslate
@@ -189,7 +189,7 @@ class WebsiteForm(http.Controller):
                 # If it's an actual binary field, convert the input file
                 # If it's not, we'll use attachments instead
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':
-                    data['record'][field_name] = base64.b64encode(field_value.read())
+                    data['record'][field_name] = field_value.read()
                     field_value.stream.seek(0)  # do not consume value forever
                     if authorized_fields[field_name]['manual'] and field_name + "_filename" in dest_model:
                         data['record'][field_name + "_filename"] = field_value.filename
@@ -307,7 +307,7 @@ class WebsiteForm(http.Controller):
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
                 'name': file.filename,
-                'raw': file.read(),
+                'raw': BinaryBytes(file.read()),
                 'res_model': model_name,
                 'res_id': record.id,
             }

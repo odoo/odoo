@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
-from base64 import b64decode
 from unittest import skipIf
 
-import odoo
 import odoo.tests
 
 try:
@@ -115,7 +112,7 @@ class TestReports(odoo.tests.TransactionCase):
         attach_2 = get_attachments(partner_id)
         self.assertEqual(attach_2.id, attach_1.id)
 
-        self.assertEqual(b64decode(attach_1.datas), b"1")
+        self.assertEqual(attach_1.raw.content, b"1")
         self.assertEqual(pdf[0], b"2")
 
 

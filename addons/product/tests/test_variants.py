@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import io
 import unittest.mock
 
@@ -13,7 +12,7 @@ from PIL import Image
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, TransactionCase, tagged
-from odoo.tools import mute_logger
+from odoo.tools import BinaryBytes, mute_logger
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
 
@@ -809,7 +808,7 @@ class TestVariantsImages(ProductVariantsCommon):
             f = io.BytesIO()
             Image.new('RGB', (800, 500), cls.colors[color_value.name]).save(f, 'PNG')
             f.seek(0)
-            cls.images.update({color_value.name: base64.b64encode(f.read())})
+            cls.images.update({color_value.name: BinaryBytes(f.read())})
 
             cls.template._get_variant_for_combination(color_value).write({
                 'image_variant_1920': cls.images[color_value.name],
@@ -840,7 +839,7 @@ class TestVariantsImages(ProductVariantsCommon):
         f = io.BytesIO()
         Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')
         f.seek(0)
-        image_black = base64.b64encode(f.read())
+        image_black = BinaryBytes(f.read())
 
         images = self.variants.mapped('image_1920')
         self.assertEqual(len(set(images)), 4)
@@ -856,9 +855,9 @@ class TestVariantsImages(ProductVariantsCommon):
         self.assertTrue(all(images[1:]))
 
         # template image is the same as this one, since it has no image variant
-        self.assertEqual(variant_no_image.image_1920, self.template.image_1920)
+        self.assertEqual(variant_no_image.image_1920.content, self.template.image_1920.content)
         # having changed the template image should not have changed these
-        self.assertEqual(images[1:], self.variants.mapped('image_1920')[1:])
+        self.assertEqual([img.content for img in images[1:]], [var.image_1920.content for var in self.variants[1:]])
 
         # last update changed for the variant without image
         self.assertLess(old_last_update, new_last_update)
@@ -867,9 +866,9 @@ class TestVariantsImages(ProductVariantsCommon):
         """Update images after variants have been archived"""
         self.variants[1:].write({'active': False})
         self.variants[0].image_1920 = self.images['red']
-        self.assertEqual(self.template.image_1920, self.images['red'])
-        self.assertEqual(self.variants[0].image_variant_1920, False)
-        self.assertEqual(self.variants[0].image_1920, self.images['red'])
+        self.assertEqual(self.template.image_1920.content, self.images['red'].content)
+        self.assertFalse(self.variants[0].image_variant_1920)
+        self.assertEqual(self.variants[0].image_1920.content, self.images['red'].content)
 
 
 @tagged('post_install', '-at_install')

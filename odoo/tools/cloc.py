@@ -269,13 +269,13 @@ class Cloc(object):
             if ext not in VALID_EXTENSION:
                 continue
 
-            if len(attach.datas) > MAX_FILE_SIZE:
+            if attach.raw.size > MAX_FILE_SIZE:
                 self.book(module_name, attach.url, (-1, "Max file size exceeded"))
                 continue
 
             # Decode using latin1 to avoid error that may raise by decoding with utf8
             # The chars not correctly decoded in latin1 have no impact on how many lines will be counted
-            content = attach.raw.decode('latin1')
+            content = attach.raw.content.decode('latin1')
             self.book(
                 module_name,
                 attach.url,

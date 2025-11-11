@@ -1,4 +1,3 @@
-import base64
 import datetime
 import hashlib
 import io
@@ -80,8 +79,8 @@ class PdfSigner:
             return None, None
 
         certificate = self.company.signing_certificate_id
-        cert_bytes = base64.decodebytes(certificate.pem_certificate)
-        private_key_bytes = base64.decodebytes(certificate.private_key_id.content)
+        cert_bytes = certificate.pem_certificate.content
+        private_key_bytes = certificate.private_key_id.content.content
         return load_pem_private_key(private_key_bytes, None), load_pem_x509_certificate(cert_bytes)
 
     def _setup_form(self, visible_signature: bool, field_name: str, signer: ResUsers | None = None) -> tuple[DictionaryObject, DictionaryObject] | None:

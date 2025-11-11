@@ -65,7 +65,7 @@ class QuotationDocument(models.Model):
 
     @api.depends('raw')
     def _compute_form_field_ids(self):
-        # Empty the linked form fields as we want all and only those from the current datas
+        # Empty the linked form fields as we want all and only those from the current raw data
         self.form_field_ids = [Command.clear()]
         document_to_parse = self.filtered(lambda doc: doc.raw)
         if document_to_parse:

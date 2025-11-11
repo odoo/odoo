@@ -1,9 +1,9 @@
-# coding: utf-8
 import json
 from base64 import b64decode
 
 from odoo import Command
 from odoo.tests import tagged
+from odoo.tools import BinaryBytes
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 
@@ -150,7 +150,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         PCSID_Data = json.loads(cls.customer_invoice_journal.l10n_sa_production_csid_json)
         pcsid_certificate = cls.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',
-            'content': b64decode(PCSID_Data['binarySecurityToken']),
+            'content': BinaryBytes(b64decode(b64decode(PCSID_Data['binarySecurityToken']))),
         })
         cls.customer_invoice_journal.l10n_sa_production_csid_certificate_id = pcsid_certificate
 

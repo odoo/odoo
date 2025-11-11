@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from collections import defaultdict
 from hashlib import sha512
 from secrets import choice
@@ -15,7 +14,7 @@ from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.addons.web.models.models import lazymapping
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import format_list, email_normalize, html_escape
+from odoo.tools import BinaryBytes, format_list, email_normalize, html_escape
 from odoo.tools.misc import hash_sign, OrderedSet
 from odoo.tools.sql import SQL
 
@@ -265,9 +264,9 @@ class DiscussChannel(models.Model):
         if self.channel_type not in ('channel', 'group'):
             return False
         avatar = group_avatar if self.channel_type == 'group' else channel_avatar
-        bgcolor = get_random_ui_color_from_seed(self.uuid)
+        bgcolor = get_random_ui_color_from_seed((self.uuid or '').encode())
         avatar = avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')
-        return base64.b64encode(avatar.encode())
+        return BinaryBytes(avatar.encode())
 
     @api.depends('channel_member_ids.partner_id')
     def _compute_channel_partner_ids(self):

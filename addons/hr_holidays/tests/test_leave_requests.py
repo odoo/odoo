@@ -1191,7 +1191,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         with freeze_time('2025-10-21'):
             attachment = self.env['ir.attachment'].create({
                 'name': "an attachment",
-                'datas': 'My attachment',
+                'raw': b'My attachment',
                 'res_model': 'hr.leave',
             })
             leave = self.env['hr.leave'].create({

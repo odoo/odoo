@@ -1,4 +1,3 @@
-import base64
 from lxml import etree
 
 from odoo import Command, fields, tools
@@ -52,12 +51,6 @@ class TestL10nPlEdi(AccountTestInvoicingCommon):
 
         cls.env['ir.config_parameter'].sudo().set_str('l10n_pl_edi_ksef.mode', 'test')
 
-        def read_certificate_file(filename, b64=False):
-            path = f'l10n_pl_edi/tests/certificate/{filename}'
-            with tools.file_open(path, mode='rb') as fd:
-                content = fd.read()
-                return base64.b64encode(content) if b64 else content
-
         # This Certificate will NOT work for the current test VAT with KSEF (not even in test mode),
         # AND will even expire, but it's useful to have something to test with when we mock
         # the API calls
@@ -65,13 +58,13 @@ class TestL10nPlEdi(AccountTestInvoicingCommon):
         key = cls.env['certificate.key'].create(dict(
             company_id=cls.company.id,
             name=key_filename,
-            content=read_certificate_file(key_filename, b64=True),
+            content=cls.read_file_contents(f'l10n_pl_edi/tests/certificate/{key_filename}'),
             password='Qwertyuiop@12345',
         ))
         cert = cls.env['certificate.certificate'].create(dict(
             company_id=cls.company.id,
             name=cert_filename,
-            content=read_certificate_file(cert_filename, b64=True),
+            content=cls.read_file_contents(f'l10n_pl_edi/tests/certificate/{cert_filename}'),
             private_key_id=key.id,
         ))
         cls.company.sudo().write({

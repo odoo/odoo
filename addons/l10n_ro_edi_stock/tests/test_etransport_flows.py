@@ -1,5 +1,3 @@
-import base64
-
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import misc
@@ -113,7 +111,7 @@ class TestETransportFlows(TestL10nRoEdiStockCommon):
                 tag.attrib['codTarifar'] = self.default_intrastat_code.code
 
         self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(base64.b64decode(document.attachment)),
+            self.get_xml_tree_from_string(document.attachment.content),
             expected_tree,
         )
 

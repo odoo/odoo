@@ -90,7 +90,7 @@ class TestControllers(tests.HttpCase):
             'Cache-Control': 'public, max-age=31536000, immutable',
         }
         self.assertEqual(submap(res.headers, headers.keys()), headers)
-        self.assertEqual(res.content, attachment.raw)
+        self.assertEqual(res.content, attachment.raw.content)
 
     def test_04_website_partner_avatar(self):
         partner = self.env['res.partner'].create({'name': "Jack O'Neill"})

@@ -1,17 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
 
 import base64
-import binascii
 import contextlib
 import hashlib
 import logging
 import mimetypes
 import os
 import re
+import stat
+import typing
 import uuid
 import warnings
 from collections import defaultdict
-from collections.abc import Collection
 
 import psycopg2
 import werkzeug.security
@@ -26,19 +27,23 @@ from odoo.tools import (
     OrderedSet,
     config,
     consteq,
-    human_size,
     image,
     split_every,
     str2bool,
 )
+from odoo.tools.binary import EMPTY_BINARY, BinaryValue, BinaryBytes
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.mimetypes import (
     MIMETYPE_HEAD_SIZE,
     _olecf_mimetypes,
     fix_filename_extension,
+    guess_file_mimetype,
     guess_mimetype,
 )
 from odoo.tools.misc import limited_field_access_token
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection
 
 _logger = logging.getLogger(__name__)
 SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
@@ -146,15 +151,14 @@ class IrAttachment(models.Model):
         return fname, full_path
 
     @api.model
-    def _file_read(self, fname, size=None):
+    def _file_read(self, fname: str) -> BinaryValue:
         assert isinstance(self, IrAttachment)
-        full_path = self._full_path(fname)
         try:
-            with open(full_path, 'rb') as f:
-                return f.read(size)
+            return LocalBinaryFile(fname, self)
         except OSError:
-            _logger.info("_read_file reading %s", full_path, exc_info=True)
-        return b''
+            full_path = self._full_path(fname)
+            _logger.info("_file_read reading %s", full_path, exc_info=True)
+            return EMPTY_BINARY
 
     @api.model
     def _file_write(self, bin_value, checksum):
@@ -253,16 +257,13 @@ class IrAttachment(models.Model):
 
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
 
-    @api.depends('store_fname', 'db_datas', 'file_size')
-    @api.depends_context('bin_size')
+    @api.depends('raw')
     def _compute_datas(self):
-        if self.env.context.get('bin_size'):
-            for attach in self:
-                attach.datas = human_size(attach.file_size)
-            return
-
         for attach in self:
-            attach.datas = base64.b64encode(attach.raw or b'')
+            value = attach.raw
+            if value:
+                value = BinaryBytes(base64.b64encode(value))
+            attach.datas = value
 
     @api.depends('store_fname', 'db_datas')
     def _compute_raw(self):
@@ -273,18 +274,19 @@ class IrAttachment(models.Model):
                 attach.raw = attach.db_datas
 
     def _inverse_raw(self):
-        self._set_attachment_data(lambda a: a.raw or b'')
+        self._set_attachment_data(lambda a: a.raw or EMPTY_BINARY)
 
     def _inverse_datas(self):
-        self._set_attachment_data(lambda attach: base64.b64decode(attach.datas or b''))
+        warnings.warn("Since 20.0, assign directly to ir.attachment.raw instead of datas", DeprecationWarning)
+        self._set_attachment_data(lambda attach: BinaryBytes(base64.b64decode(attach.datas or b'')))
 
-    def _set_attachment_data(self, asbytes):
+    def _set_attachment_data(self, get_data):
         old_fnames = []
         checksum_raw_map = {}
 
         for attach in self:
             # compute the fields that depend on datas
-            bin_data = asbytes(attach)
+            bin_data = get_data(attach)
             vals = self._get_datas_related_values(bin_data, attach.mimetype)
             if bin_data:
                 checksum_raw_map[vals['checksum']] = bin_data
@@ -305,18 +307,21 @@ class IrAttachment(models.Model):
             for checksum, raw in checksum_raw_map.items():
                 self._file_write(raw, checksum)
 
-    def _get_datas_related_values(self, data, mimetype):
+    def _get_datas_related_values(self, data: BinaryValue, mimetype):
         checksum = self._compute_checksum(data)
         try:
-            index_content = self._index(data, mimetype, checksum=checksum)
+            if data:
+                index_content = self._index(data, mimetype, checksum=checksum)
+            else:
+                index_content = False
         except TypeError:
             index_content = self._index(data, mimetype)
         values = {
-            'file_size': len(data),
+            'file_size': data.size,
             'checksum': checksum,
             'index_content': index_content,
             'store_fname': False,
-            'db_datas': data,
+            'db_datas': data or False,
         }
         if data and self._storage() != 'db':
             values['store_fname'], _full_path = self._get_path(data, checksum)
@@ -333,6 +338,7 @@ class IrAttachment(models.Model):
     @api.model
     def _same_content(self, bin_data, filepath):
         BLOCK_SIZE = 1024
+        bin_data = memoryview(bin_data)
         with open(filepath, 'rb') as fd:
             i = 0
             while True:
@@ -358,14 +364,20 @@ class IrAttachment(models.Model):
             mimetype = mimetypes.guess_type(values['url'].split('?')[0])[0]
         if not mimetype or mimetype == 'application/octet-stream':
             if raw := values.get('raw'):
+                if isinstance(raw, BinaryValue):
+                    if mimetype := raw.mimetype:
+                        return mimetype
+                    raw = raw.content
                 assert isinstance(raw, bytes), f"Expecting raw bytes, got {type(raw)}"
                 mimetype = guess_mimetype(raw)
         return mimetype.lower() if mimetype else 'application/octet-stream'
 
+    @api.model
     def _postprocess_contents(self, values):
         ICP = self.env['ir.config_parameter'].sudo()
         supported_subtype = (ICP.get_str('base.image_autoresize_extensions') or 'png,jpeg,bmp,tiff').split(',')
 
+        assert 'mimetype' in values and 'datas' not in values, '_check_contents should handle that'
         type_, subtype = values['mimetype'].split('/', 1)
         if type_ != 'image' or subtype not in supported_subtype:
             return values
@@ -389,9 +401,10 @@ class IrAttachment(models.Model):
                     img = img.resize(nw, nh)
                     if subtype == 'jpeg':  # Do not affect PNGs color palette
                         quality = ICP.get_int('base.image_autoresize_quality', 80)
-                        values['raw'] = img.image_quality(quality)
+                        output = img.image_quality(quality)
                     else:
-                        values['raw'] = img.image_quality()
+                        output = img.image_quality()
+                    values['raw'] = BinaryBytes(output)
             except UserError as e:
                 # Catch error during test where we provide fake image
                 # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
@@ -399,15 +412,22 @@ class IrAttachment(models.Model):
                 _logger.info('Post processing ignored : %s', msg)
         return values
 
-    def _check_contents(self, values):
-        if d := values.pop('datas', None):
+    @api.model
+    def _check_contents(self, values, *, accept_datas=False):
+        # get raw and remove db_datas and datas
+        datas = values.pop('datas', None)
+        if datas and not accept_datas:
             warnings.warn(
                 "Passing `datas` to `_check_contents` is deprecated, decode and move it to `raw`",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
-            if not values.get('raw'):
-                values['raw'] = base64.b64decode(d)
+        raw = values.pop('db_datas', None)
+        raw = values.get('raw', raw) or base64.b64decode(datas or b'')
+        # make sure we have a BinaryValue in raw (if we have data)
+        raw = self._fields['raw'].convert_to_cache(raw, self) or EMPTY_BINARY
+        if raw or 'raw' in values:
+            values['raw'] = raw
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
@@ -424,7 +444,7 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _index(self, bin_data: bytes, file_type: str, checksum=None) -> str | None:
+    def _index(self, bin_data: BinaryValue, file_type: str, checksum=None) -> str | None:
         """ compute the index content of the given binary data.
         This is a python implementation of the unix command 'strings'.
         """
@@ -462,7 +482,7 @@ class IrAttachment(models.Model):
 
     # the field 'datas' is computed and may use the other fields below
     raw = fields.Binary(string="File Content (raw)", compute='_compute_raw', inverse='_inverse_raw')
-    datas = fields.Binary(string='File Content (base64)', compute='_compute_datas', inverse='_inverse_datas')
+    datas = fields.Binary(string='File Content (base64, deprecated)', compute='_compute_datas', inverse='_inverse_datas')
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename', index=True)
     file_size = fields.Integer('File Size', readonly=True)
@@ -705,13 +725,10 @@ class IrAttachment(models.Model):
                     model_and_ids[vals.get('res_model', record.res_model)].add(vals.get('res_id', record.res_id))
             if any(self._inaccessible_comodel_records(model_and_ids, 'write')):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
-        # remove computed field depending of datas
+        # remove computed field depending of raw
         for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
-            if d := vals.pop('datas', None):
-                if not vals.get('raw'):
-                    vals['raw'] = base64.b64decode(d)
             vals = self._check_contents(vals)
         res = super().write(vals)
         if 'url' in vals or 'type' in vals:
@@ -753,20 +770,10 @@ class IrAttachment(models.Model):
         checksum_raw_map = {}
 
         for values in vals_list:
-            # needs to be popped in all cases to bypass `_inverse_datas`
-            datas = values.pop('datas', None)
-            if raw := (values.get('raw') or values.get('db_datas')):
-                if isinstance(raw, str):
-                    values['raw'] = raw.encode()
-            elif datas:
-                values['raw'] = base64.b64decode(datas)
-            else:
-                values['raw'] = b''
-
-            values = self._check_contents(values)
-            if raw := values.pop('raw'):
+            values = self._check_contents(values, accept_datas=True)
+            if raw := values.pop('raw', None):
                 values.update(self._get_datas_related_values(raw, values['mimetype']))
-                checksum_raw_map[values['checksum']] = raw
+                checksum_raw_map[values['checksum']] = raw.content
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when
@@ -812,29 +819,21 @@ class IrAttachment(models.Model):
         return limited_field_access_token(self, "raw", scope="binary")
 
     @api.model
-    def create_unique(self, values_list):
-        ids = []
-        for values in values_list:
-            # Create only if record does not already exist for checksum and size.
+    def create_unique(self, vals_list):
+        result = self.browse()
+        for vals in vals_list:
             try:
-                bin_data = base64.b64decode(values.get('datas', '')) or False
-            except binascii.Error:
+                vals = self._check_contents(vals, accept_datas=True)
+            except self.Error:
                 raise UserError(_("Attachment is not encoded in base64."))
-            checksum = self._compute_checksum(bin_data)
-            existing_domain = [
+            checksum = self._compute_checksum(vals['raw'] or b'')
+            # Create only if record does not already exist for checksum and mimetype
+            result += self.sudo().search([
                 ['id', '!=', False],  # No implicit condition on res_field.
                 ['checksum', '=', checksum],
-                ['file_size', '=', len(bin_data)],
-                ['mimetype', '=', values['mimetype']],
-            ]
-            existing = self.sudo().search(existing_domain)
-            if existing:
-                for attachment in existing:
-                    ids.append(attachment.id)
-            else:
-                attachment = self.create(values)
-                ids.append(attachment.id)
-        return ids
+                ['mimetype', '=', vals['mimetype']],
+            ], limit=1) or self.create(vals)
+        return result
 
     def _generate_access_token(self):
         return str(uuid.uuid4())
@@ -937,7 +936,7 @@ class IrAttachment(models.Model):
                 kw.update(type='url', url=self.url)
 
         else:
-            data = self.raw or b''
+            data = self.raw.content
             kw.update(
                 type='data',
                 data=data,
@@ -971,3 +970,52 @@ class IrAttachment(models.Model):
             return
         if self.type == 'url':
             raise ValidationError(_("URL attachment (%s) shouldn't be migrated to local.", self.id))
+
+
+class LocalBinaryFile(BinaryValue):
+    """Lazily loaded file."""
+    __slots__ = ('__content', '__mimetype', '__path', '__stat')
+
+    def __init__(self, path: str, model: IrAttachment):
+        """ Open a file as a binary value.
+
+        :param path: absolute path to the file
+        :param model: model to check the path
+        :raise OSError: if the file cannot be opened
+        """
+        path = model._full_path(path)
+        self.__path = path
+        self.__stat = os.stat(path)  # checks that the file exists
+        if not stat.S_ISREG(self.__stat.st_mode):
+            raise FileNotFoundError(f"Path is not a regular file: {path}")
+        self.__content: bytes | None = None
+        self.__mimetype: str | None = None
+
+    def open(self):
+        if self.__content is not None:
+            return super().open()
+        # open the file
+        return open(self.__path, 'rb')
+
+    @property
+    def content(self) -> bytes:
+        if self.__content is None:
+            with self.open() as f:
+                self.__content = f.read()
+        return self.__content
+
+    @property
+    def mimetype(self):
+        if self.__mimetype is None:
+            if self.__content is not None:
+                self.__mimetype = BinaryBytes(self.__content).mimetype
+            else:
+                self.__mimetype = guess_file_mimetype(self.__path)
+        return self.__mimetype
+
+    @property
+    def size(self):
+        return self.__stat.st_size
+
+    def __repr__(self):
+        return f"LocalBinaryFile({self.__path!r})"

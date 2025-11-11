@@ -9,6 +9,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, tools
 from odoo.exceptions import ValidationError, MissingError
+from odoo.tools import BinaryBytes
 
 from odoo.addons.spreadsheet.utils.validate_data import fields_in_spreadsheet, menus_xml_ids_in_spreadsheet
 
@@ -20,7 +21,7 @@ class SpreadsheetMixin(models.AbstractModel):
 
     spreadsheet_binary_data = fields.Binary(
         string="Spreadsheet file",
-        default=lambda self: base64.b64encode(self._empty_spreadsheet_data_bin()).decode(),
+        default=lambda self: BinaryBytes(self._empty_spreadsheet_data_bin()),
     )
     spreadsheet_data = fields.Text(compute='_compute_spreadsheet_data', inverse='_inverse_spreadsheet_data')
     spreadsheet_file_name = fields.Char(compute='_compute_spreadsheet_file_name')
@@ -30,7 +31,7 @@ class SpreadsheetMixin(models.AbstractModel):
     def _check_spreadsheet_data(self):
         for spreadsheet in self.filtered("spreadsheet_binary_data"):
             try:
-                data = json.loads(base64.b64decode(spreadsheet.spreadsheet_binary_data).decode())
+                data = json.loads(spreadsheet.spreadsheet_binary_data.content)
             except (json.JSONDecodeError, UnicodeDecodeError):
                 raise ValidationError(_("Uh-oh! Looks like the spreadsheet file contains invalid data."))
             if not (tools.config['test_enable'] or tools.config['test_file']):
@@ -73,24 +74,15 @@ class SpreadsheetMixin(models.AbstractModel):
 
     @api.depends("spreadsheet_binary_data")
     def _compute_spreadsheet_data(self):
-        attachments = self.env['ir.attachment'].with_context(bin_size=False).search([
-            ('res_model', '=', self._name),
-            ('res_field', '=', 'spreadsheet_binary_data'),
-            ('res_id', 'in', self.ids),
-        ])
-        data = {
-            attachment.res_id: attachment.raw
-            for attachment in attachments
-        }
         for spreadsheet in self:
-            spreadsheet.spreadsheet_data = data.get(spreadsheet.id, False)
+            spreadsheet.spreadsheet_data = spreadsheet.spreadsheet_binary_data.decode()
 
     def _inverse_spreadsheet_data(self):
         for spreadsheet in self:
             if not spreadsheet.spreadsheet_data:
                 spreadsheet.spreadsheet_binary_data = False
             else:
-                spreadsheet.spreadsheet_binary_data = base64.b64encode(spreadsheet.spreadsheet_data.encode())
+                spreadsheet.spreadsheet_binary_data = BinaryBytes(spreadsheet.spreadsheet_data.encode())
 
     @api.depends('display_name')
     def _compute_spreadsheet_file_name(self):
@@ -121,7 +113,8 @@ class SpreadsheetMixin(models.AbstractModel):
 
     def _empty_spreadsheet_data_bin(self):
         """Create an empty spreadsheet workbook."""
-        return json.dumps(self._empty_spreadsheet_data()).encode()
+        data = json.dumps(self._empty_spreadsheet_data())
+        return data.encode()
 
     def _empty_spreadsheet_data(self):
         """Create an empty spreadsheet workbook.

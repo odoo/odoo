@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import base64
 import datetime
 import json
 
@@ -278,11 +276,11 @@ class MailComposeMessage(models.TransientModel):
                 if rendered_values.get('attachments'):
                     attachment_ids += self.env['ir.attachment'].create([
                         {'name': attach_fname,
-                         'datas': attach_datas,
+                         'raw': attach_raw,
                          'res_model': 'mail.compose.message',
                          'res_id': 0,
                          'type': 'binary',    # override default_type from context, possibly meant for another model!
-                        } for attach_fname, attach_datas in rendered_values.pop('attachments')
+                        } for attach_fname, attach_raw in rendered_values.pop('attachments')
                     ]).ids
                 if attachment_ids:
                     composer.attachment_ids = attachment_ids
@@ -1200,10 +1198,7 @@ class MailComposeMessage(models.TransientModel):
             # attachments as required by _process_attachments_for_post
             attachment_ids = self.attachment_ids.copy({'res_model': self._name, 'res_id': self.id}).ids
             attachment_ids.reverse()
-            decoded_attachments = [
-                (name, base64.b64decode(enc_cont))
-                for name, enc_cont in mail_values.pop('attachments', [])
-            ]
+            decoded_attachments = mail_values.pop('attachments', [])
             # email_mode: prepare processed attachments as commands for mail.mail
             if email_mode:
                 process_record = record if hasattr(record, "_process_attachments_for_post") else record.env["mail.thread"]
@@ -1415,7 +1410,7 @@ class MailComposeMessage(models.TransientModel):
           * 'body' comes from template 'body_html' generation;
           * 'attachments' is an additional key coming with 'attachment_ids' due
             to report generation (in the format [(report_name, data)] where data
-            is base64 encoded);
+            is a binary value);
           * 'partner_ids' is returned due to recipients generation that gives
             partner ids coming from default computation as well as from email
             to partner convert (see ``find_or_create_partners``);

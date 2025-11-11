@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from datetime import date, datetime, UTC
 from unittest.mock import Mock
 
@@ -67,8 +65,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
 
         cls.certificate = cls.env['certificate.certificate'].create({
             'name': 'Test ES TBAI certificate',
-            'content': base64.b64encode(
-                file_open("l10n_es_edi_tbai/demo/certificates/" + cert_name, 'rb').read()),
+            'content': cls.read_file_contents("l10n_es_edi_tbai/demo/certificates/" + cert_name),
             'pkcs12_password': cert_password,
             'scope': 'tbai',
             'company_id': cls.company_data['company'].id,

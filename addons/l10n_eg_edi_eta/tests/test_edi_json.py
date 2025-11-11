@@ -1,4 +1,3 @@
-import base64
 import json
 from unittest.mock import patch
 
@@ -6,7 +5,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import tagged
-from odoo import Command
+from odoo.tools import BinaryBytes
 
 from .common import TestEGEdiCommon
 
@@ -55,7 +54,7 @@ def mocked_action_post_sign_invoices(self):
                 'res_model': invoice._name,
                 'res_field': 'l10n_eg_eta_json_doc_file',
                 'type': 'binary',
-                'raw': json.dumps(dict(request=eta_invoice)),
+                'raw': json.dumps(dict(request=eta_invoice)).encode(),
                 'mimetype': 'application/json',
                 'description': ('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
             },
@@ -65,9 +64,9 @@ def mocked_action_post_sign_invoices(self):
 
 
 def mocked_l10n_eg_edi_post_invoice_web_service(self, invoice):
-    eta_invoice_json = json.loads(base64.b64decode(invoice.l10n_eg_eta_json_doc_file))
+    eta_invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
     eta_invoice_json['response'] = ETA_TEST_RESPONSE
-    invoice.l10n_eg_eta_json_doc_file = base64.b64encode(json.dumps(eta_invoice_json).encode())
+    invoice.l10n_eg_eta_json_doc_file = BinaryBytes(json.dumps(eta_invoice_json).encode())
     invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
     json_doc_attachment_id = self.env['ir.attachment'].search([
         ('res_model', '=', invoice._name),

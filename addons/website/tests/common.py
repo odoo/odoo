@@ -1,10 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo.fields import Command
 from odoo.tests import HttpCase
-from odoo.tools import file_open
 
 
 class HttpCaseWithWebsiteUser(HttpCase):
@@ -34,7 +31,7 @@ class HttpCaseWithWebsiteUser(HttpCase):
             "password": "website_user",
             "signature": "<span>-- <br/>+Mr Restricted</span>",
             "company_id": company.id,
-            "image_1920": base64.b64encode(file_open("website/static/src/img/user-restricted-image.png", "rb").read()),
+            "image_1920": cls.read_file_contents("website/static/src/img/user-restricted-image.png"),
             "group_ids": [
                 Command.unlink(cls.env.ref("website.group_website_designer").id),
                 Command.link(cls.env.ref("website.group_website_restricted_editor").id),

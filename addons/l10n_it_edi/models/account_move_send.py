@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
-import base64
+from odoo.tools import BinaryBytes
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -102,7 +102,7 @@ class AccountMoveSend(models.AbstractModel):
         # Prepare attachment data
         for move, move_data in moves_data.items():
             if attachment := move.l10n_it_edi_attachment_file:
-                attachments_vals[move] = {'name': move.l10n_it_edi_attachment_name, 'raw': base64.b64decode(attachment)}
+                attachments_vals[move] = {'name': move.l10n_it_edi_attachment_name, 'raw': attachment}
                 moves |= move
             elif edi_values := move_data.get('l10n_it_edi_values'):
                 attachments_vals[move] = edi_values
@@ -131,7 +131,7 @@ class AccountMoveSend(models.AbstractModel):
         move_ids_to_names = {}
         for move, data in invoices_data.items():
             if values := data.get('l10n_it_edi_values'):
-                move.l10n_it_edi_attachment_file = base64.b64encode(values['raw'])
+                move.l10n_it_edi_attachment_file = BinaryBytes(values['raw'])
                 move.l10n_it_edi_attachment_name = values['name']
                 move.invalidate_recordset(fnames=['l10n_it_edi_attachment_name', 'l10n_it_edi_attachment_file'])
                 move_ids_to_names[move.id] = values['name']

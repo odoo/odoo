@@ -1,6 +1,5 @@
 import logging
 import random
-from base64 import b64encode
 from datetime import datetime
 from hashlib import sha1
 from unittest.mock import patch
@@ -97,7 +96,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with freeze_time(cls.frozen_today), patch(f"{cls.certificate_module}.fields.Datetime.now", lambda x=None: cls.frozen_today):
             cls.certificate = cls.env["certificate.certificate"].create({
                 'name': 'Test ES certificate',
-                'content': b64encode(file_open('l10n_es_edi_facturae/tests/data/certificate_test.pfx', 'rb').read()),
+                'content': cls.read_file_contents('l10n_es_edi_facturae/tests/data/certificate_test.pfx'),
                 'pkcs12_password': 'test',
                 'company_id': cls.company_data['company'].id,
                 'scope': 'facturae',

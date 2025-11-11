@@ -1,6 +1,5 @@
 from typing import Literal
 
-import base64
 import markupsafe
 import requests
 
@@ -8,6 +7,7 @@ from odoo import api, fields, models, _
 from odoo.addons.l10n_ro_edi_stock.models.l10n_ro_edi_stock_document import DOCUMENT_STATES
 from odoo.addons.l10n_ro_edi_stock.models.etransport_api import ETransportAPI
 from odoo.exceptions import UserError
+from odoo.tools import BinaryBytes
 from odoo.tools.float_utils import float_round
 
 OPERATION_TYPES = [
@@ -607,7 +607,7 @@ class Picking(models.Model):
             'state': 'stock_sent',
             'l10n_ro_edi_stock_load_id': values['l10n_ro_edi_stock_load_id'],
             'l10n_ro_edi_stock_uit': values['l10n_ro_edi_stock_uit'],
-            'attachment': base64.b64encode(values['raw_xml'].encode('utf-8')),
+            'attachment': BinaryBytes(values['raw_xml'].encode('utf-8')),
         })
 
     def _l10n_ro_edi_stock_create_document_stock_sending_failed(self, values: dict[str, object]):
@@ -622,7 +622,7 @@ class Picking(models.Model):
 
         if 'raw_xml' in values:
             # when an error is thrown during data validation there will be no 'raw_xml'
-            document.attachment = base64.b64encode(values['raw_xml'].encode('utf-8'))
+            document.attachment = BinaryBytes(values['raw_xml'].encode('utf-8'))
 
         return document
 
@@ -633,7 +633,7 @@ class Picking(models.Model):
             'state': 'stock_validated',
             'l10n_ro_edi_stock_load_id': values['l10n_ro_edi_stock_load_id'],
             'l10n_ro_edi_stock_uit': values['l10n_ro_edi_stock_uit'],
-            'attachment': base64.b64encode(values['raw_xml'].encode('utf-8')),
+            'attachment': BinaryBytes(values['raw_xml'].encode('utf-8')),
         })
 
     ################################################################################
@@ -679,7 +679,7 @@ class Picking(models.Model):
                 document_values |= {
                     'l10n_ro_edi_stock_load_id': last_sent_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': last_sent_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': base64.b64decode(last_sent_document.attachment).decode(),
+                    'raw_xml': last_sent_document.attachment.content.decode(),
                 }
 
             self._l10n_ro_edi_stock_create_document_stock_sending_failed(document_values)
@@ -745,7 +745,7 @@ class Picking(models.Model):
                     'message': '\n'.join(errors),
                     'l10n_ro_edi_stock_load_id': current_sending_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': current_sending_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': base64.b64decode(current_sending_document.attachment).decode(),
+                    'raw_xml': current_sending_document.attachment.content.decode(),
                 })
                 continue
 
@@ -760,14 +760,14 @@ class Picking(models.Model):
                     'message': result['error'],
                     'l10n_ro_edi_stock_load_id': current_sending_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': current_sending_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': base64.b64decode(current_sending_document.attachment).decode(),
+                    'raw_xml': current_sending_document.attachment.content.decode(),
                 })
             else:
                 documents_to_delete |= picking._l10n_ro_edi_stock_get_all_documents(('stock_sent', 'stock_sending_failed'))
                 new_document_data = {
                     'l10n_ro_edi_stock_load_id': current_sending_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': current_sending_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': base64.b64decode(current_sending_document.attachment).decode(),
+                    'raw_xml': current_sending_document.attachment.content.decode(),
                 }
                 match state := result['content']['stare']:
                     case 'ok':

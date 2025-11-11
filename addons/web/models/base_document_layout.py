@@ -5,7 +5,7 @@ from math import ceil
 from odoo import api, fields, models
 from odoo.addons.base.models.assetsbundle import ScssStylesheetAsset
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
-from odoo.tools import html2plaintext, is_html_empty, image as tools
+from odoo.tools import BinaryBytes, html2plaintext, is_html_empty, image as tools
 
 try:
     from PIL.Image import Resampling
@@ -99,11 +99,7 @@ class BaseDocumentLayout(models.TransientModel):
     @api.depends('logo')
     def _compute_logo_colors(self):
         for wizard in self:
-            if wizard.env.context.get('bin_size'):
-                wizard_for_image = wizard.with_context(bin_size=False)
-            else:
-                wizard_for_image = wizard
-            wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
+            wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard.logo)
 
     @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'company_details', 'report_tables_id')
     def _compute_preview(self):
@@ -112,10 +108,6 @@ class BaseDocumentLayout(models.TransientModel):
 
         for wizard in self:
             if wizard.report_layout_id:
-                if wizard.env.context.get('bin_size'):
-                    # guarantees that bin_size is always set to False,
-                    # so the logo always contains the bin data instead of the binary size
-                    wizard = wizard.with_context(bin_size=False)
                 wizard.preview = wizard.env['ir.ui.view']._render_template(
                     wizard._get_preview_template(),
                     wizard._get_render_information(styles),
@@ -193,7 +185,7 @@ class BaseDocumentLayout(models.TransientModel):
         transparent colors and white-ish colors, then calls the averaging
         method twice to evaluate both primary and secondary colors.
 
-        :param logo: logo to process (base64 encoded)
+        :param logo: logo to process
         :param white_threshold: arbitrary value defining the maximum value a color can reach
         :param mitigate: arbitrary value defining the maximum value a band can reach
 
@@ -201,12 +193,12 @@ class BaseDocumentLayout(models.TransientModel):
         """
         if not logo:
             return False, False
-        # The "===" gives different base64 encoding a correct padding
-        logo += b'===' if isinstance(logo, bytes) else '==='
-        logo = base64.b64decode(logo)
+        if isinstance(logo, str):
+            logo = BinaryBytes(base64.b64decode(logo))
+
         try:
             # Catches exceptions caused by logo not being an image
-            image = tools.ImageProcess(logo).image
+            image = tools.ImageProcess(logo.content).image
         except Exception:
             return False, False
 

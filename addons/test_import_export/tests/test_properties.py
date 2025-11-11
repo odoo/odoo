@@ -1,8 +1,8 @@
-import base64
 import json
 
 from odoo.tests import new_test_user
 from odoo.tests.common import tagged, RecordCapturer, HttpCase
+from odoo.tools import BinaryBytes
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -353,7 +353,7 @@ class TestPropertiesExportImport(HttpCase):
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': self.ModelProperty._name,
-            'file': base64.b64encode('\n'.join([';'.join(values) for values in values_list]).encode()),
+            'file': BinaryBytes('\n'.join([';'.join(values) for values in values_list]).encode()),
             'file_type': 'text/csv',
         })
         opts = {'quoting': '"', 'separator': ';', 'has_headers': True}
@@ -437,7 +437,7 @@ class TestPropertiesExportImport(HttpCase):
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': self.ModelProperty._name,
-            'file': base64.b64encode('\n'.join([';'.join(values) for values in values_list]).encode()),
+            'file': BinaryBytes('\n'.join([';'.join(values) for values in values_list]).encode()),
             'file_type': 'text/csv',
         })
         opts = {'quoting': '"', 'separator': ';', 'has_headers': True}
@@ -505,7 +505,7 @@ class TestPropertiesExportImport(HttpCase):
 
         import_wizard = Import.create({
             'res_model': self.ModelProperty._name,
-            'file': base64.b64encode('\n'.join([';'.join(values) for values in values_list]).encode()),
+            'file': BinaryBytes('\n'.join([';'.join(values) for values in values_list]).encode()),
             'file_type': 'text/csv',
         })
         opts = {'quoting': '"', 'separator': ';', 'has_headers': True}
@@ -536,7 +536,7 @@ class TestPropertiesExportImport(HttpCase):
 
         import_wizard = Import.create({
             'res_model': self.ModelProperty._name,
-            'file': base64.b64encode('\n'.join([';'.join(values) for values in values_list]).encode()),
+            'file': BinaryBytes('\n'.join([';'.join(values) for values in values_list]).encode()),
             'file_type': 'text/csv',
         })
         opts = {'quoting': '"', 'separator': ';', 'has_headers': True}

@@ -1,6 +1,5 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
-from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import format_date
 
 import io
@@ -15,7 +14,7 @@ class IrAttachment(models.Model):
         buffer = io.BytesIO()
         with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as zipfile_obj:
             for attachment in self:
-                zipfile_obj.writestr(attachment.display_name, attachment.raw)
+                zipfile_obj.writestr(attachment.display_name, attachment.raw.content)
         return buffer.getvalue()
 
     @api.ondelete(at_uninstall=True)
@@ -25,7 +24,7 @@ class IrAttachment(models.Model):
             and attachment.res_id
             and attachment.raw
             and attachment.company_id.restrictive_audit_trail
-            and guess_mimetype(attachment.raw) in (
+            and attachment.raw.mimetype in (
                 'application/pdf',
                 'application/xml',
             )

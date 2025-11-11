@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 from datetime import datetime, timedelta
 from freezegun import freeze_time
@@ -15,7 +14,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase, users
-from odoo.tools import html_escape, mute_logger
+from odoo.tools import BinaryBytes, html_escape, mute_logger
 
 
 class TestChannelInternals(MailCommon, HttpCase):
@@ -641,11 +640,11 @@ class TestChannelInternals(MailCommon, HttpCase):
         expceted_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_channel}"')).encode()
         expected_avatar_group = (group_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_group}"')).encode()
 
-        self.assertEqual(base64.b64decode(test_channel.avatar_128), expceted_avatar_channel)
-        self.assertEqual(base64.b64decode(private_group.avatar_128), expected_avatar_group)
+        self.assertEqual(test_channel.avatar_128.content, expceted_avatar_channel)
+        self.assertEqual(private_group.avatar_128.content, expected_avatar_group)
 
-        test_channel.image_128 = base64.b64encode(("<svg/>").encode())
-        self.assertEqual(test_channel.avatar_128, test_channel.image_128)
+        test_channel.image_128 = BinaryBytes(b"<svg/>")
+        self.assertEqual(test_channel.avatar_128.content, test_channel.image_128.content)
 
     def test_channel_write_should_send_notification(self):
         channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
@@ -663,7 +662,7 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_write_should_send_notification_if_image_128_changed(self):
         channel = self.env['discuss.channel'].create({'name': '', 'uuid': 'test-uuid'})
         # do the operation once before the assert to grab the value to expect
-        channel.image_128 = base64.b64encode(("<svg/>").encode())
+        channel.image_128 = BinaryBytes(b"<svg/>")
         avatar_cache_key = channel.avatar_cache_key
         channel.image_128 = False
         with self.assertBus(
@@ -677,7 +676,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                 }
             ],
         ):
-            channel.image_128 = base64.b64encode(("<svg/>").encode())
+            channel.image_128 = BinaryBytes(b"<svg/>")
 
     def test_channel_notification(self):
         all_test_user = mail_new_test_user(

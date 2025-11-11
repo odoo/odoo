@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import time
@@ -6,7 +5,7 @@ from datetime import datetime, timedelta
 
 from odoo import api, models, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import file_open
+from odoo.addons.account.demo.account_demo import read_file_contents
 from odoo.addons.account.models.chart_template import template
 
 _logger = logging.getLogger(__name__)
@@ -534,18 +533,14 @@ class AccountChartTemplate(models.AbstractModel):
                     'name': 'in_invoice_demo_1.pdf',
                     'res_model': 'account.move',
                     'res_id': 'demo_invoice_to_extract',
-                    'raw': file_open(
-                        'l10n_in/static/demo/in_invoice_demo_1.pdf', 'rb'
-                    ).read()
+                    'raw': read_file_contents('l10n_in/static/demo/in_invoice_demo_1.pdf'),
                 },
                 'ir_attachment_in_invoice_2': {
                     'type': 'binary',
                     'name': 'in_invoice_demo_2.pdf',
                     'res_model': 'account.move',
                     'res_id': 'demo_invoice_service',
-                    'raw': file_open(
-                        'l10n_in/static/demo/in_invoice_demo_2.pdf', 'rb'
-                    ).read()
+                    'raw': read_file_contents('l10n_in/static/demo/in_invoice_demo_2.pdf'),
                 }
             }
         return super()._get_demo_data_attachment(chart_template)

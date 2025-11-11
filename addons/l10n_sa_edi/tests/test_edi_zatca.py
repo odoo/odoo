@@ -489,7 +489,7 @@ class TestEdiZatca(TestSaEdiCommon):
         })
 
         try:
-            csr_string = self.env['certificate.certificate'].sudo()._l10n_sa_get_csr_str(compliant_journal)
+            csr_string = self.env['certificate.certificate'].sudo()._l10n_sa_get_csr_bin(compliant_journal)
             self.assertTrue(csr_string, "a Valid CSR should not be empty")
         except UserError as e:
             self.fail(f"Compliant company should not raise error: {e}")
@@ -535,7 +535,7 @@ class TestEdiZatca(TestSaEdiCommon):
         })
 
         with self.assertRaises(UserError) as context:
-            self.env['certificate.certificate'].sudo()._l10n_sa_get_csr_str(non_compliant_journal)
+            self.env['certificate.certificate'].sudo()._l10n_sa_get_csr_bin(non_compliant_journal)
 
         error_message = str(context.exception)
         expected_error_fields = [

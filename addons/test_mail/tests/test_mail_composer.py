@@ -2917,7 +2917,7 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertEqual(message.attachment_ids.res_model, record._name)
             self.assertEqual(message.attachment_ids.res_id, record.id)
             self.assertEqual(composer.attachment_ids.name, message.attachment_ids.name)
-            self.assertEqual(composer.attachment_ids.datas, message.attachment_ids.datas)
+            self.assertEqual(composer.attachment_ids.raw.content, message.attachment_ids.raw.content)
             # post-related fields are void
             self.assertFalse(message.subtype_id)
             self.assertFalse(message.partner_ids)

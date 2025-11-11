@@ -1803,7 +1803,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     @mute_logger('odoo.addons.base.models.ir_asset')
-    def test_31(self):
+    def test_31_a_relative_path_in_addon(self):
         path_to_dummy = '../../tests/dummy.js'
         me = pathlib.Path(__file__).parent.absolute()
         file_path = me.joinpath("..", path_to_dummy)  # assuming me = test_assetsbundle/tests
@@ -1817,7 +1817,7 @@ class TestAssetsManifest(AddonManifestPatched):
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.irassetsec')
         with mute_logger('odoo.addons.base.models.assetsbundle'):
             attach = bundle.js()
-            self.assertIn(b"Could not get content for /test_assetsbundle/../../tests/dummy.js", attach.exists().raw)
+            self.assertIn(b"Could not get content for /test_assetsbundle/../../tests/dummy.js", attach.exists().raw.content)
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_32_a_relative_path_in_addon(self):

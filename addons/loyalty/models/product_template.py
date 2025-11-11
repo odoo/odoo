@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo import _, api, models
 from odoo.exceptions import UserError
-from odoo.tools import file_open
+from odoo.tools import BinaryBytes
 
 
 class ProductTemplate(models.Model):
@@ -15,9 +13,7 @@ class ProductTemplate(models.Model):
         """ Override of `product` to set a default image for gift cards. """
         templates = super().create(vals_list)
         if templates and self.env.context.get('loyalty_is_gift_card_product'):
-            with file_open('loyalty/static/img/gift_card.png', 'rb') as f:
-                gift_card_placeholder = base64.b64encode(f.read())
-            templates.image_1920 = gift_card_placeholder
+            templates.image_1920 = BinaryBytes('loyalty/static/img/gift_card.png')
         return templates
 
     @api.ondelete(at_uninstall=False)

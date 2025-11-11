@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-import base64
 import io
 
 from reportlab.platypus import Frame, Paragraph, KeepInFrame
@@ -13,6 +11,7 @@ from reportlab.pdfgen.canvas import Canvas
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
+from odoo.tools import BinaryBytes
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 from odoo.tools.safe_eval import safe_eval
 
@@ -44,7 +43,8 @@ class SnailmailLetter(models.Model):
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
 
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade', index='btree_not_null')
-    attachment_datas = fields.Binary('Document', related='attachment_id.datas')
+    attachment_raw = fields.Binary('Document', related='attachment_id.raw')
+    attachment_datas = fields.Binary('Document (deprecated)', related='attachment_id.datas')
     attachment_fname = fields.Char('Attachment Filename', related='attachment_id.name')
     color = fields.Boolean(string='Color', default=lambda self: self.env.company.snailmail_color)
     cover = fields.Boolean(string='Cover Page', default=lambda self: self.env.company.snailmail_cover)
@@ -174,7 +174,7 @@ class SnailmailLetter(models.Model):
                 pdf_bin = self._append_cover_page(pdf_bin)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
-                'raw': pdf_bin,
+                'raw': BinaryBytes(pdf_bin),
                 'res_model': 'snailmail.letter',
                 'res_id': self.id,
                 'type': 'binary',  # override default_type from context, possibly meant for another model!
@@ -276,13 +276,13 @@ class SnailmailLetter(models.Model):
             else:
                 # adding the web logo from the company for future possible customization
                 document.update({
-                    'company_logo': letter.company_id.logo_web and letter.company_id.logo_web.decode('utf-8') or False,
+                    'company_logo': letter.company_id.logo_web.to_base64() or False,
                 })
                 attachment = letter._fetch_attachment()
                 if attachment:
                     document.update({
-                        'pdf_bin': route == 'print' and attachment.datas.decode('utf-8'),
-                        'pages': route == 'estimate' and self._count_pages_pdf(base64.b64decode(attachment.datas)),
+                        'pdf_bin': route == 'print' and attachment.raw.to_base64(),
+                        'pages': route == 'estimate' and self._count_pages_pdf(attachment.raw),
                     })
                 else:
                     letter.write({

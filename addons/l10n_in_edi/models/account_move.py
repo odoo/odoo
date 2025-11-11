@@ -1,4 +1,3 @@
-import base64
 import json
 import logging
 import re
@@ -73,9 +72,7 @@ class AccountMove(models.Model):
                 and move.company_id.l10n_in_edi_feature
                 and move.is_sale_document(include_receipts=True)
                 and move.journal_id.type == 'sale'
-                and base64.b64encode(
-                    json.dumps(move._l10n_in_edi_generate_invoice_json()).encode()
-                )
+                and json.dumps(move._l10n_in_edi_generate_invoice_json())
             )
 
     #  Action Methods
@@ -161,7 +158,7 @@ class AccountMove(models.Model):
     def _get_l10n_in_edi_response_json(self):
         self.ensure_one()
         if self.l10n_in_edi_attachment_id:
-            return json.loads(self.l10n_in_edi_attachment_id.sudo().raw.decode("utf-8"))
+            return json.loads(self.l10n_in_edi_attachment_id.sudo().raw.content)
         return {}
 
     def _l10n_in_lock_invoice(self):

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import json
-import base64
 from datetime import datetime
 from collections import defaultdict
 from uuid import uuid4
@@ -1442,7 +1441,7 @@ class PosOrder(models.Model):
             receipt = self.env['ir.attachment'].create({
                 'name': 'Receipt-' + name + '.jpg',
                 'type': 'binary',
-                'datas': base64.b64encode(ticket),
+                'raw': ticket,
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'image/jpeg',
@@ -1453,7 +1452,7 @@ class PosOrder(models.Model):
             basic_receipt = self.env['ir.attachment'].create({
                 'name': 'Receipt-' + name + '-1' + '.jpg',
                 'type': 'binary',
-                'datas': base64.b64encode(basic_ticket),
+                'raw': basic_ticket,
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'image/jpeg',

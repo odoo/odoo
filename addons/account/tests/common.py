@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, Command
 from odoo.models import BaseModel
 from odoo.tests import HttpCase, new_test_user, tagged, save_test_file
-from odoo.tools import config, file_path, file_open
+from odoo.tools import BinaryValue, config, file_path, file_open
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.product.tests.common import ProductCommon
 
 import json
-import base64
 import copy
 import logging
 import re
@@ -1334,7 +1332,7 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     def assert_xml(
             self,
-            xml_element: str | bytes | etree._Element,
+            xml_element: str | bytes | BinaryValue | etree._Element,
             test_name: str,
             subfolder='',
     ):
@@ -1359,6 +1357,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         test_file_path = self._get_test_file_path(file_name, subfolder=subfolder)
         if isinstance(xml_element, str):
             xml_element = xml_element.encode()
+        elif isinstance(xml_element, BinaryValue):
+            xml_element = xml_element.content
         if isinstance(xml_element, bytes):
             xml_element = etree.fromstring(xml_element)
 
@@ -1501,7 +1501,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         :param attachment:  An ir.attachment.
         :return:            An instance of etree.
         '''
-        return etree.fromstring(base64.b64decode(attachment.with_context(bin_size=False).datas))
+        return etree.fromstring(attachment.raw.content)
 
     @classmethod
     def get_xml_tree_from_string(cls, xml_tree_str):

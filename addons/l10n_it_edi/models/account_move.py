@@ -1,15 +1,13 @@
-
+import base64
 import logging
 import re
 import uuid
-from base64 import b64encode, b64decode
-from collections import defaultdict
 from datetime import datetime
 
 from lxml import etree
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.exceptions import LockError, UserError
-from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
+from odoo.tools import BinaryBytes, cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
 from odoo.tools.sql import column_exists, create_column
 
 from odoo import _, api, Command, fields, models, modules
@@ -287,9 +285,11 @@ class AccountMove(models.Model):
         is_xml = (
             file_data['name'].endswith('.xml')
             or file_data['mimetype'].endswith('/xml')
-            or 'text/plain' in file_data['mimetype']
-            and file_data['raw']
-            and file_data['raw'].startswith(b'<?xml'))
+            or (
+                'text/plain' in file_data['mimetype']
+                and file_data['raw'].startswith(b'<?xml')
+            )
+        )
         is_p7m = file_data['mimetype'] == 'application/pkcs7-mime'
         return (is_xml or is_p7m) and re.search(FATTURAPA_FILENAME_RE, file_data['name'])
 
@@ -375,7 +375,7 @@ class AccountMove(models.Model):
             }
 
         attachment_vals = self._l10n_it_edi_get_attachment_values(pdf_values=None)
-        self.l10n_it_edi_attachment_file = b64encode(attachment_vals['raw'])
+        self.l10n_it_edi_attachment_file = attachment_vals['raw']
         self.l10n_it_edi_attachment_name = attachment_vals['name']
         self.invalidate_recordset(fnames=['l10n_it_edi_attachment_name', 'l10n_it_edi_attachment_file'])
         self.message_post(attachments=[(self.l10n_it_edi_attachment_name, attachment_vals['raw'])])
@@ -404,7 +404,7 @@ class AccountMove(models.Model):
                 return {
                     'filename': self.l10n_it_edi_attachment_name,
                     'filetype': 'xml',
-                    'content': b64decode(fatturapa_attachment),
+                    'content': fatturapa_attachment,
                 }
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
@@ -885,7 +885,7 @@ class AccountMove(models.Model):
             'balance_multiplicator': -1 if self.is_inbound() else 1,
             'abs': abs,
             'pdf_name': pdf_values['name'] if pdf_values else False,
-            'pdf': b64encode(pdf_values['raw']).decode() if pdf_values else False,
+            'pdf': pdf_values['raw'] if pdf_values else False,
             'withholding_values': withholding_values,
             'pension_fund_values': pension_fund_values,
         }
@@ -1565,10 +1565,10 @@ class AccountMove(models.Model):
                 raw_name = get_text(element, './/NomeAttachment') or ''
                 raw_ext = get_text(element, './/FormatoAttachment') or ''
                 self.l10n_it_edi_attachment_name = f"{raw_name}.{raw_ext}" if raw_ext else raw_name
-                self.l10n_it_edi_attachment_file = get_text(element, './/Attachment')
+                self.l10n_it_edi_attachment_file = BinaryBytes(base64.b64decode(get_text(element, './/Attachment')))
                 self.sudo().message_post(
                     body=(_("Attachment from XML")),
-                    attachments=[(self.l10n_it_edi_attachment_name, b64decode(self.l10n_it_edi_attachment_file))],
+                    attachments=[(self.l10n_it_edi_attachment_name, self.l10n_it_edi_attachment_file)],
                 )
 
             global_enasarco_lines = []
@@ -2013,7 +2013,7 @@ class AccountMove(models.Model):
             move.l10n_it_edi_header = False
             attachment = attachments_vals[move]
             filename = attachment['name']
-            content = b64encode(attachment['raw']).decode()
+            content = attachment['raw']
 
             try:
                 response = move._l10n_it_edi_upload([{

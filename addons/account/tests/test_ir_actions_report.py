@@ -4,7 +4,7 @@ import re
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.files import PDF_RAW
 from odoo.exceptions import RedirectWarning
-from odoo.tools import pdf
+from odoo.tools import BinaryBytes, pdf
 from odoo.tests import tagged
 from odoo.tools import file_open, mute_logger
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter
@@ -15,7 +15,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
 
     def setUp(self):
         super().setUp()
-        self.file = PDF_RAW
+        self.file = BinaryBytes(PDF_RAW)
         self.minimal_reader_buffer = io.BytesIO(self.file)
         self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer)
 
