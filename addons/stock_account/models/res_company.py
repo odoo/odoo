@@ -95,7 +95,8 @@ class ResCompany(models.Model):
         account_data = defaultdict(float)
         stock_valuation_accounts_ids = set()
         for dummy, accounts in accounts_by_product.items():
-            stock_valuation_accounts_ids.add(accounts['valuation'].id)
+            if accounts['valuation']:
+                stock_valuation_accounts_ids.add(accounts['valuation'].id)
         stock_valuation_accounts = self.env['account.account'].browse(stock_valuation_accounts_ids)
         domain = Domain([
             ('account_id', 'in', stock_valuation_accounts.ids),
