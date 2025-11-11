@@ -192,13 +192,34 @@ class ImageGalleryOption extends Plugin {
 
         for (let i = 0; i < columnsNumber; i++) {
             const column = document.createElement("div");
-            column.classList.add("o_masonry_col", "o_snippet_not_selectable", colClass);
+            column.classList.add("o_masonry_col", colClass);
             row.append(column);
             columns.push(column);
         }
 
+        // Unwrap images if they're already wrapped
+        const unwrappedImages = images.map((img) => {
+            if (
+                img.parentElement &&
+                img.parentElement.classList.contains("o_masonry_image_wrapper")
+            ) {
+                const wrapper = img.parentElement;
+                const parent = wrapper.parentElement;
+                if (parent) {
+                    parent.insertBefore(img, wrapper);
+                    wrapper.remove();
+                }
+            }
+            return img;
+        });
+
+        // Add data-index to track original order
+        unwrappedImages.forEach((img, index) => {
+            img.dataset.imageIndex = index;
+        });
+
         // Dispatch images in columns by always putting the next one in the smallest height column
-        for (const imageEl of images) {
+        for (const imageEl of unwrappedImages) {
             let min = Infinity;
             let smallestColEl;
             for (const colEl of columns) {
@@ -216,6 +237,228 @@ class ImageGalleryOption extends Plugin {
             }
             smallestColEl.append(imageEl);
         }
+
+        // After layout is complete, wrap images for drag and drop
+        const allImages = imageGalleryElement.querySelectorAll("img");
+        allImages.forEach((img) => {
+            if (!img.parentElement.classList.contains("o_masonry_image_wrapper")) {
+                this.createDraggableWrapper(img);
+            }
+        });
+
+        // Initialize drag and drop
+        this.initializeDragAndDrop(imageGalleryElement);
+    }
+
+    createDraggableWrapper(imageEl) {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("o_masonry_image_wrapper");
+        wrapper.style.position = "relative";
+        wrapper.style.cursor = "move";
+        wrapper.style.display = "inline-block";
+        wrapper.style.width = "100%";
+
+        // Create overlay for drag handle
+        const overlay = document.createElement("div");
+        overlay.classList.add("o_masonry_drag_overlay");
+        overlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.2s;
+            z-index: 10;
+            cursor: move;
+        `;
+
+        // Show overlay on hover
+        wrapper.addEventListener("mouseenter", () => {
+            overlay.style.background = "rgba(0, 0, 0, 0.3)";
+        });
+
+        wrapper.addEventListener("mouseleave", () => {
+            overlay.style.background = "rgba(0, 0, 0, 0)";
+        });
+
+        // Wrap the image in place
+        const parent = imageEl.parentElement;
+        parent.insertBefore(wrapper, imageEl);
+        wrapper.append(imageEl);
+        wrapper.append(overlay);
+
+        return wrapper;
+    }
+
+    initializeDragAndDrop(imageGalleryElement) {
+        let draggedWrapper = null;
+        // eslint-disable-next-line no-unused-vars
+        let draggedImage = null;
+
+        const wrappers = imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper");
+
+        wrappers.forEach((wrapper) => {
+            const overlay = wrapper.querySelector(".o_masonry_drag_overlay");
+
+            overlay.setAttribute("draggable", "true");
+
+            overlay.addEventListener("dragstart", (e) => {
+                draggedWrapper = wrapper;
+                draggedImage = wrapper.querySelector("img");
+                wrapper.style.opacity = "0.5";
+                e.dataTransfer.effectAllowed = "move";
+                e.dataTransfer.setData("text/html", wrapper.innerHTML);
+
+                // Show drop zones at all possible positions
+                setTimeout(() => {
+                    const allWrappers = imageGalleryElement.querySelectorAll(
+                        ".o_masonry_image_wrapper"
+                    );
+                    allWrappers.forEach((w, index) => {
+                        if (w !== draggedWrapper) {
+                            // Add drop zone before each wrapper
+                            const dropZoneBefore = document.createElement("div");
+                            dropZoneBefore.classList.add(
+                                "oe_drop_zone",
+                                "oe_insert",
+                                "oe_vertical"
+                            );
+                            dropZoneBefore.style.cssText = "float: none; height: 273.672px;";
+                            dropZoneBefore.dataset.dropPosition = "before";
+                            dropZoneBefore.dataset.targetIndex = index;
+                            w.parentElement.insertBefore(dropZoneBefore, w);
+                        }
+                    });
+
+                    // Add drop zone after the last wrapper
+                    const lastWrapper = allWrappers[allWrappers.length - 1];
+                    if (lastWrapper && lastWrapper !== draggedWrapper) {
+                        const dropZoneAfter = document.createElement("div");
+                        dropZoneAfter.classList.add("oe_drop_zone", "oe_insert", "oe_vertical");
+                        dropZoneAfter.style.cssText = "float: none; height: 273.672px;";
+                        dropZoneAfter.dataset.dropPosition = "after";
+                        dropZoneAfter.dataset.targetIndex = allWrappers.length - 1;
+                        lastWrapper.parentElement.insertBefore(
+                            dropZoneAfter,
+                            lastWrapper.nextSibling
+                        );
+                    }
+                }, 0);
+            });
+
+            overlay.addEventListener("dragend", (e) => {
+                wrapper.style.opacity = "1";
+                draggedWrapper = null;
+                draggedImage = null;
+
+                // Remove all drop zones
+                imageGalleryElement.querySelectorAll(".oe_drop_zone").forEach((dz) => dz.remove());
+            });
+
+            wrapper.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+
+                if (draggedWrapper && wrapper !== draggedWrapper) {
+                    // Remove existing drop zones
+                    imageGalleryElement
+                        .querySelectorAll(".oe_drop_zone")
+                        .forEach((dz) => dz.remove());
+
+                    const rect = wrapper.getBoundingClientRect();
+                    const midpoint = rect.top + rect.height / 2;
+
+                    // Create drop zone
+                    const dropZone = document.createElement("div");
+                    dropZone.classList.add("oe_drop_zone", "oe_insert", "oe_vertical");
+                    dropZone.style.cssText = "float: none; height: 273.672px;";
+
+                    if (e.clientY < midpoint) {
+                        wrapper.parentElement.insertBefore(dropZone, wrapper);
+                    } else {
+                        wrapper.parentElement.insertBefore(dropZone, wrapper.nextSibling);
+                    }
+                }
+
+                return false;
+            });
+
+            wrapper.addEventListener("dragleave", (e) => {
+                // Check if we're leaving the wrapper entirely (not just entering a child)
+                const relatedTarget = e.relatedTarget;
+                if (!wrapper.contains(relatedTarget)) {
+                    imageGalleryElement
+                        .querySelectorAll(".oe_drop_zone")
+                        .forEach((dz) => dz.remove());
+                }
+            });
+
+            wrapper.addEventListener("drop", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Remove all drop zones
+                imageGalleryElement.querySelectorAll(".oe_drop_zone").forEach((dz) => dz.remove());
+
+                if (draggedWrapper && wrapper !== draggedWrapper) {
+                    // Get all wrappers in current DOM order
+                    const allWrappers = Array.from(
+                        imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper")
+                    );
+
+                    // Find indices in the flat array
+                    const draggedIdx = allWrappers.indexOf(draggedWrapper);
+                    const targetIdx = allWrappers.indexOf(wrapper);
+
+                    // Swap the wrappers in the array
+                    if (draggedIdx !== -1 && targetIdx !== -1) {
+                        // Remove dragged item
+                        allWrappers.splice(draggedIdx, 1);
+                        // Insert at new position
+                        allWrappers.splice(targetIdx, 0, draggedWrapper);
+
+                        // Extract images from wrappers and rebuild
+                        const reorderedImages = allWrappers.map((w) => {
+                            const img = w.querySelector("img");
+                            // Remove wrapper to get clean image
+                            w.replaceChildren();
+                            return img;
+                        });
+
+                        // Update indices
+                        reorderedImages.forEach((img, index) => {
+                            img.dataset.imageIndex = index;
+                        });
+
+                        // Rebuild masonry with new order
+                        this.masonry(imageGalleryElement, reorderedImages);
+                    }
+                }
+
+                return false;
+            });
+        });
+    }
+
+    // Helper method to get current image order
+    getImageOrder(imageGalleryElement) {
+        const wrappers = imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper");
+        return Array.from(wrappers).map((wrapper) => {
+            const img = wrapper.querySelector("img");
+            return parseInt(img.dataset.imageIndex);
+        });
+    }
+
+    // Helper method to save order (you'll need to implement the backend call)
+    saveImageOrder(imageGalleryElement) {
+        const order = this.getImageOrder(imageGalleryElement);
+        console.log("New image order:", order);
+        // TODO: Send order to backend
+        // this.rpc('/web/dataset/resequence', {
+        //     model: 'ir.attachment',
+        //     ids: order,
+        // });
     }
 
     /**
