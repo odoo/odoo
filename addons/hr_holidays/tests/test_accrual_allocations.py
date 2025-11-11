@@ -2812,3 +2812,42 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             "accrual_plan_id should be cleared automatically when type becomes 'regular'."
         )
         self.assertEqual(accrual_plan.employees_count, 0, "Accrual plan should not have any linked employees.")
+
+    def test_accrual_allocation_immediate_monthly_start_day(self):
+        """ Test fix for incorrect accrued days when changing date_from on accrual allocations. """
+        with freeze_time('2024-11-15'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'accrued_gain_time': 'start',
+                'carryover_date': 'other',
+                'carryover_day': 1,
+                'carryover_month': 'jan',
+                'level_ids': [(0, 0, {
+                    'added_value': 2,
+                    'added_value_type': 'day',
+                    'frequency': 'monthly',
+                    'cap_accrued_time': True,
+                    'maximum_leave': 10000,
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'action_with_unused_accruals': 'all',
+                })],
+            })
+
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': datetime.date(2024, 11, 1),
+            })
+            allocation._onchange_date_from()
+            self.assertAlmostEqual(allocation.number_of_days_display, 2, places=2, msg="Accrued days should be 2 (2 days for Nov).")
+
+            allocation.date_from = datetime.date(2024, 10, 1)
+            allocation._onchange_date_from()
+            allocation._update_accrual()
+
+            self.assertAlmostEqual(allocation.number_of_days_display, 4, places=2, msg="Accrued days should be 4 (4 days for Nov).")
