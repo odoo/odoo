@@ -92,9 +92,10 @@
                         <list string="Variants" editable="bottom" decoration-info="value_count &lt;= 1">
                             <field name="value_count" column_invisible="True"/>
                             <field name="sequence" widget="handle"/>
-                            <field name="attribute_id" readonly="id"/>
+                            <field name="attribute_id" placeholder="Attribute name (e.g. Color, Size, ... )" readonly="id"/>
                             <field
                                     name="value_ids"
+                                    placeholder="List of possible values (e.g. Blue, Green, White, ... )"
                                     widget="many2many_tags"
                                     options="{
                                         'on_tag_click': 'open_form',
