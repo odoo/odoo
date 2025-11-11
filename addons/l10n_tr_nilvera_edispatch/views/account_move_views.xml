@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_l10n_tr_nilvera_edispatch" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_tr.nilvera.edispatch</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field 
+                    name="l10n_tr_nilvera_edispatch_ids"
+                    invisible="country_code != 'TR' or move_type != 'out_invoice' or l10n_tr_nilvera_company_einvoice_status != 'einvoice'"
+                    options="{'no_create': True}"
+                    context="{'search_default_partner_id': partner_id}"
+                    domain="[('picking_type_code', '=', 'outgoing'), ('state', '=', 'done'), ('l10n_tr_nilvera_dispatch_state', '=', 'sent')]"
+                    widget="many2many_tags"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

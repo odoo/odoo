@@ -2,11 +2,12 @@
     'name': "Türkiye - e-Irsaliye (e-Dispatch)",
     'description': "Allows the users to create the UBL 1.2.1 e-Dispatch file",
     'countries': ['tr'],
-    'depends': ['l10n_tr_nilvera', 'stock'],
+    'depends': ['l10n_tr_nilvera_einvoice', 'stock'],
     'license': "LGPL-3",
     'category': 'Accounting/Localizations',
     'data': [
         'security/ir.model.access.csv',
+        'views/account_move_views.xml',
         'views/l10n_tr_nilvera_trailer_plate_views.xml',
         'views/res_partner_views.xml',
         'views/stock_picking_views.xml',

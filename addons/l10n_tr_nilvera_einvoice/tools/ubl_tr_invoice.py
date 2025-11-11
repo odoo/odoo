@@ -44,6 +44,7 @@ TrInvoice = {
     'cac:InvoicePeriod': cac.Period,
     'cac:OrderReference': cac.OrderReference,
     'cac:BillingReference': cac.BillingReference,
+    'cac:DespatchDocumentReference': cac.DocumentReference,
     'cac:AdditionalDocumentReference': cac.DocumentReference,
     'cac:Signature': cac.Signature,
     'cac:AccountingSupplierParty': cac.SupplierParty,
