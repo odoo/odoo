@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import functools
 import logging
 import os
@@ -23,8 +22,8 @@ from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
-from odoo.tools import config, SQL
-from odoo.tools.misc import get_flag, topological_sort
+from odoo.tools import SQL, BinaryBytes, config
+from odoo.tools.misc import file_open, get_flag, topological_sort
 from odoo.tools.parse_version import parse_version
 from odoo.tools.translate import (
     TranslationImporter,
@@ -190,8 +189,8 @@ class IrModuleModule(models.Model):
                 continue
             path = os.path.join(module.name, 'static/description/index.html')
             try:
-                with tools.file_open(path, 'rb') as desc_file:
-                    doc = desc_file.read().decode()
+                with tools.file_open(path) as desc_file:
+                    doc = desc_file.read()
                     module.description_html = _apply_description_images(doc)
             except FileNotFoundError:
                 overrides = {
@@ -265,10 +264,10 @@ class IrModuleModule(models.Model):
             path = path.removeprefix("/")
             if path:
                 try:
-                    with tools.file_open(path, 'rb', filter_ext=('.png', '.svg', '.gif', '.jpeg', '.jpg')) as image_file:
-                        module.icon_image = base64.b64encode(image_file.read())
+                    with file_open(path, 'rb', filter_ext=('.png', '.svg', '.gif', '.jpeg', '.jpg')) as f:
+                        module.icon_image = BinaryBytes(f.read())
                 except OSError:
-                    module.icon_image = ''
+                    module.icon_image = False
             countries = manifest.get('countries', [])
             country_code = len(countries) == 1 and countries[0]
             module.icon_flag = get_flag(country_code.upper()) if country_code else ''

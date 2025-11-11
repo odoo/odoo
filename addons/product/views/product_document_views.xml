@@ -9,14 +9,14 @@
                 <sheet>
                     <field name="res_model" invisible="True"/>
                     <h1>
-                        <field name="name" readonly="not datas and type != 'url'"/>
+                        <field name="name" readonly="not raw and type != 'url'"/>
                     </h1>
                     <group>
                         <group>
-                            <field name="type" readonly="datas or id" class="oe_inline"/>
-                            <label for="datas"/>
+                            <field name="type" readonly="raw or id" class="oe_inline"/>
+                            <label for="raw"/>
                             <div class="o_row">
-                                <field name="datas"
+                                <field name="raw"
                                        filename="name"
                                        invisible="type == 'url'"
                                        required="type == 'binary'"

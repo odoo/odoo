@@ -1,10 +1,10 @@
 """
 Tests for various autodetection magics for CSV imports
 """
-import base64
 import codecs
 
 from odoo.tests import tagged, common
+from odoo.tools import BinaryBytes
 
 
 class ImportCase(common.TransactionCase):
@@ -13,7 +13,7 @@ class ImportCase(common.TransactionCase):
             'res_model': 'import.complex',
             'file_name': 'f',
             'file_type': 'text/csv',
-            'file': base64.b64encode(contents),
+            'file': BinaryBytes(contents),
         })
 
 

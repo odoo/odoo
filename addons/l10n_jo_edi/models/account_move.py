@@ -5,6 +5,7 @@ from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import BinaryBytes
 
 JOFOTARA_URL = "https://backend.jofotara.gov.jo/core/invoices/"
 
@@ -90,7 +91,7 @@ class AccountMove(models.Model):
         for invoice in self:
             if invoice.state == 'posted' and invoice.l10n_jo_edi_is_needed:
                 xml_content = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
-                invoice.l10n_jo_edi_computed_xml = base64.b64encode(xml_content)
+                invoice.l10n_jo_edi_computed_xml = BinaryBytes(xml_content)
             else:
                 invoice.l10n_jo_edi_computed_xml = False
 

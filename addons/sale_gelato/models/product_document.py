@@ -17,7 +17,7 @@ class ProductDocument(models.Model):
         :return: The file payload.
         :rtype: dict
         """
-        if not self.datas:
+        if not self.raw:
             raise UserError(_("Print images must be set on products before they can be ordered."))
 
         query_string = f'access_token={self.ir_attachment_id.generate_access_token()[0]}'

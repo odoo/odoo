@@ -15,7 +15,7 @@ from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.http.dispatcher import serialize_exception
 from odoo.http.stream import content_disposition
-from odoo.tools import osutil
+from odoo.tools import BinaryBytes, BinaryValue, osutil
 
 _logger = logging.getLogger(__name__)
 
@@ -214,13 +214,14 @@ class ExportXlsxWriter:
     def write_cell(self, row, column, cell_value):
         cell_style = self.base_style
 
-        if isinstance(cell_value, bytes):
+        if isinstance(cell_value, BinaryValue):
+            cell_value = cell_value.to_base64()
+        elif isinstance(cell_value, bytes):
             try:
                 # because xlsx uses raw export, we can get a bytes object
                 # here. xlsxwriter does not support bytes values in Python 3 ->
-                # assume this is base64 and decode to a string, if this
-                # fails note that you can't export
-                cell_value = cell_value.decode()
+                # encode to base64
+                cell_value = BinaryBytes(cell_value).to_base64()
             except UnicodeDecodeError:
                 raise UserError(request.env._("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.columns_headers[column])) from None
         elif isinstance(cell_value, (list, tuple, dict)):

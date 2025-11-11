@@ -378,7 +378,7 @@
             title.translate="Offline"
             head="head">
             <div class="card">
-                <img t-attf-src="data:image/png;base64,{{odoo_icon}}" alt="Odoo logo"/>
+                <img t-attf-src="data:image/png;base64,{{odoo_icon.to_base64()}}" alt="Odoo logo"/>
                 <h1>You are offline</h1>
                 <p>Check your network connection and come back here. Odoo will load as soon as you're back online.</p>
                 <button onclick="location.reload()">Check again</button>

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import logging
 import operator
 from tempfile import TemporaryFile
@@ -36,7 +35,7 @@ class BaseLanguageImport(models.TransientModel):
                     Lang._create_lang(base_lang_import.code, lang_name=base_lang_import.name)
                 try:
                     with TemporaryFile('wb+') as buf:
-                        buf.write(base64.decodebytes(base_lang_import.data))
+                        buf.write(base_lang_import.data)
                         fileformat = splitext(base_lang_import.filename)[-1][1:].lower()
                         translation_importer.load(buf, fileformat, base_lang_import.code)
                 except Exception as e:

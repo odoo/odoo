@@ -667,7 +667,7 @@ class AccountEdiFormat(models.Model):
                 attachment = self.env['ir.attachment'].create({
                     'type': 'binary',
                     'name': 'jsondump.json',
-                    'raw': json.dumps(info_list),
+                    'raw': json.dumps(info_list).encode(),
                     'mimetype': 'application/json',
                     'res_model': inv._name,
                     'res_id': inv.id,

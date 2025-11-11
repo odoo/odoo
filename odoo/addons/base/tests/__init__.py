@@ -6,6 +6,7 @@ from . import test_api
 from . import test_barcode
 from . import test_base
 from . import test_basecase
+from . import test_binary
 from . import test_cache
 from . import test_intervals
 from . import test_date_utils

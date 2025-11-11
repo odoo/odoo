@@ -16,10 +16,11 @@ from odoo.addons.l10n_ro_edi.models.account_move import HOLDING_DAYS
 
 
 def _patch_request_ciusro_download_answer(company, key_download, session):
+    # raw data is base64 encoded for signature and just XML for invoice
     answer_data = {
         '3029027561': {
             'signature': {
-                'attachment_raw': b'Y291Y291',
+                'attachment_raw': 'Y291Y291',  # coucou
                 'key_signature': 'KEY_SIG_1',
                 'key_certificate': 'KEY_CERT_1',
             },
@@ -29,7 +30,7 @@ def _patch_request_ciusro_download_answer(company, key_download, session):
         },
         '3029027562': {
             'signature': {
-                'attachment_raw': b'Y291Y291',
+                'attachment_raw': 'Y291Y291',
                 'key_signature': 'KEY_SIG_2',
                 'key_certificate': 'KEY_CERT_2',
             },
@@ -39,7 +40,7 @@ def _patch_request_ciusro_download_answer(company, key_download, session):
         },
         '3030159318': {
             'signature': {
-                'attachment_raw': b'Y291Y291',
+                'attachment_raw': 'Y291Y291',
                 'key_signature': 'KEY_SIG_3',
                 'key_certificate': 'KEY_CERT_3',
             },
@@ -49,7 +50,7 @@ def _patch_request_ciusro_download_answer(company, key_download, session):
         },
         '3030439533': {
             'signature': {
-                'attachment_raw': b'Y291Y291',
+                'attachment_raw': 'Y291Y291',
                 'key_signature': 'KEY_SIG_4',
                 'key_certificate': 'KEY_CERT_4',
             },

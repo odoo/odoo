@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from PIL import Image
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools import BinaryBytes
 from odoo.tools.image import binary_to_image, image_apply_opt
 
 
@@ -24,14 +23,14 @@ class TestWebsiteResetPassword(TransactionCase):
             'favicon': Website._default_favicon(),
         })
 
-        image = binary_to_image(base64.b64decode(website.favicon))
+        image = binary_to_image(website.favicon)
         self.assertEqual(image.format, 'ICO')
 
         # Test setting a JPEG file that is too big, done through write
         bg_color = (135, 90, 123)
         image = Image.new('RGB', (1920, 1080), color=bg_color)
-        website.favicon = base64.b64encode(image_apply_opt(image, 'JPEG'))
-        image = binary_to_image(base64.b64decode(website.favicon))
+        website.favicon = BinaryBytes(image_apply_opt(image, 'JPEG'))
+        image = binary_to_image(website.favicon)
         self.assertEqual(image.format, 'ICO')
         self.assertEqual(image.size, (256, 256))
         self.assertEqual(image.getpixel((0, 0)), bg_color)

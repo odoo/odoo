@@ -444,6 +444,6 @@ class TestAuditTrailAttachment(AccountTestInvoicingHttpCommon):
             'name': 'doc.pdf',
             'res_model': 'mail.compose.message',
             # Ensures a bytes-like object with guessed mimetype = 'application/pdf' (checked in _except_audit_trail())
-            'datas': attachment.datas,
+            'raw': attachment.raw,
         })
         invoice.message_post(message_type='comment', attachment_ids=another_attachment.ids)

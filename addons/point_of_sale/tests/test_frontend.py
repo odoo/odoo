@@ -3,7 +3,6 @@
 
 import inspect
 import logging
-import base64
 import io
 
 from PIL import Image
@@ -12,7 +11,7 @@ from unittest.mock import patch
 from unittest import skip
 from odoo import Command, api
 
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import BinaryBytes, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged, loaded_demo_data
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
@@ -28,7 +27,7 @@ def _create_image(color: int | str = 0, dims=(1920, 1080), format='JPEG'):
     f = io.BytesIO()
     Image.new('RGB', dims, color).save(f, format)
     f.seek(0)
-    return base64.b64encode(f.read())
+    return BinaryBytes(f.read())
 
 
 class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
@@ -1423,8 +1422,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("point_of_sale.test_printed_receipt_tour")
 
     def test_receipt_logo_config(self):
-        self.img_company_b64 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
-        self.img_custom_b64 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mnk5+dQAwAEsgKVw6M+4wAAAABJRU5ErkJggg=='
+        self.img_company_b64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+        self.img_custom_b64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mnk5+dQAwAEsgKVw6M+4wAAAABJRU5ErkJggg=='
         company = self.main_pos_config.company_id
         company.write({
             'phone': '123456789',
@@ -1800,7 +1799,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin_percent, 0)
 
     def test_customer_display_as_public(self):
-        self.main_pos_config.customer_display_bg_img = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+        self.main_pos_config.customer_display_bg_img = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
         response = self.url_open(f"/web/image/pos.config/{self.main_pos_config.id}/customer_display_bg_img")
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Shop.png' in response.headers['Content-Disposition'])

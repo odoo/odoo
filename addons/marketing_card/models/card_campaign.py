@@ -1,8 +1,8 @@
-import base64
 from datetime import date, datetime, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import _, api, exceptions, fields, models, modules
+from odoo.tools import BinaryBytes
 
 from .card_template import TEMPLATE_DIMENSIONS
 
@@ -141,7 +141,7 @@ class CardCampaign(models.Model):
     def _compute_image_preview(self):
         for campaign in self:
             if campaign.preview_record_ref and campaign.preview_record_ref.exists():
-                image = campaign._get_image_b64(campaign.preview_record_ref)
+                image = campaign._get_image_bin(campaign.preview_record_ref)
             else:
                 image = False
             campaign.image_preview = image
@@ -329,9 +329,9 @@ class CardCampaign(models.Model):
     # Image generation
     # ==========================================================================
 
-    def _get_image_b64(self, record):
+    def _get_image_bin(self, record):
         if not self.card_template_id.body:
-            return ''
+            return False
 
         image_bytes = self.env['ir.actions.report']._run_wkhtmltoimage(
             [self._render_field('body_html', record.ids, add_context={'card_campaign': self})[record.id]],
@@ -346,7 +346,9 @@ class CardCampaign(models.Model):
                 'Try again or check the server logs for more details.',
                 record_name=record.display_name
             ))
-        return image_bytes and base64.b64encode(image_bytes)
+        if not image_bytes:
+            return False
+        return BinaryBytes(image_bytes)
 
     # ==========================================================================
     # Card creation
@@ -383,7 +385,7 @@ class CardCampaign(models.Model):
             TargetModelPrefetch = TargetModel.with_prefetch(cards.mapped('res_id'))
             for card in cards.filtered('requires_sync'):
                 card.write({
-                    'image': self._get_image_b64(TargetModelPrefetch.browse(card.res_id)),
+                    'image': self._get_image_bin(TargetModelPrefetch.browse(card.res_id)),
                     'requires_sync': False,
                     'active': True,
                 })

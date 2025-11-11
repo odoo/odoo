@@ -95,7 +95,7 @@
             </style>
         </head>
         <t t-set="values" t-value="card_campaign._get_card_element_values(object)"/>
-        <body t-attf-style="background-image: url('data:image/png;base64,{{card_campaign.content_background or card_campaign.card_template_id.default_background}}');">
+        <body t-attf-style="background-image: url('data:image/png;base64,{{(card_campaign.content_background or card_campaign.card_template_id.default_background).to_base64()}}');">
         </body>
     </html>
 </template>
@@ -156,7 +156,7 @@
         <div class="footer">
             <div class="profile_section">
                 <img
-                t-attf-src="data:image/png;base64,{{values['image1']}}"
+                t-attf-src="data:image/png;base64,{{values['image1'].to_base64()}}"
                 alt="Profile Picture"
                 width="64px"
                 height="64px"
@@ -173,7 +173,7 @@
                 </div>
             </div>
             <img
-                t-attf-src="data:image/png;base64,{{values['image2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2'].to_base64()}}"
                 alt="Profile Picture"
                 height="auto"
                 class="logo"
@@ -238,7 +238,7 @@
     <xpath expr="//html/body" position="inside">
         <div class="logo_line">
             <img
-                t-attf-src="data:image/png;base64,{{values['image2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2'].to_base64()}}"
                 alt="Profile Picture"
                 class="logo"
                 t-if="values['image2']"
@@ -251,7 +251,7 @@
         <div class="footer">
             <div class="profile_section">
                 <img
-                    t-attf-src="data:image/png;base64,{{values['image1']}}"
+                    t-attf-src="data:image/png;base64,{{values['image1'].to_base64()}}"
                     alt="Profile Picture"
                     width="64px"
                     height="64px"
@@ -328,7 +328,7 @@
     </xpath>
     <xpath expr="//html/body" position="inside">
         <img
-            t-attf-src="data:image/png;base64,{{values['image2']}}"
+            t-attf-src="data:image/png;base64,{{values['image2'].to_base64()}}"
             alt="Profile Picture"
             class="logo"
             t-if="values['image2']"
@@ -353,7 +353,7 @@
             </div>
             <img
                 class="profile_image"
-                t-attf-src="data:image/png;base64,{{values['image1']}}"
+                t-attf-src="data:image/png;base64,{{values['image1'].to_base64()}}"
                 alt="Profile Picture"
                 width="106px"
                 height="106px"
@@ -441,7 +441,7 @@
     <xpath expr="//html/body" position="inside">
         <div class="logo_line">
             <img
-                t-attf-src="data:image/png;base64,{{values['image2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2'].to_base64()}}"
                 alt="Profile Picture"
                 class="logo"
                 t-if="values['image2']"
@@ -449,7 +449,7 @@
         </div>
         <img
             class="profile_image"
-            t-attf-src="data:image/png;base64,{{values['image1']}}"
+            t-attf-src="data:image/png;base64,{{values['image1'].to_base64()}}"
             alt="Profile Picture"
             width="106px"
             height="106px"
@@ -536,7 +536,7 @@
         <div class="logo_line">
             <img
                 class="profile_image"
-                t-attf-src="data:image/png;base64,{{values['image1']}}"
+                t-attf-src="data:image/png;base64,{{values['image1'].to_base64()}}"
                 alt="Profile Picture"
                 width="60px"
                 height="60px"
@@ -562,7 +562,7 @@
                 </div>
             </div>
             <img
-                t-attf-src="data:image/png;base64,{{values['image2']}}"
+                t-attf-src="data:image/png;base64,{{values['image2'].to_base64()}}"
                 alt="Profile Picture"
                 class="logo"
                 t-if="values['image2']"

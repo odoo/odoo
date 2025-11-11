@@ -4,6 +4,7 @@ import uuid
 from typing import Literal
 
 import requests
+from cryptography.fernet import Fernet
 
 from odoo import _, fields, models
 from odoo.exceptions import LockError, UserError
@@ -218,12 +219,16 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             _logger.error(response['error'])
         self.sudo().refresh_token = response['refresh_token']
 
-    def _decrypt_data(self, data, symmetric_key):
+    def _decrypt_data(self, data: str | bytes, symmetric_key) -> bytes:
         ''' Decrypt the data. Note that the data is encrypted with a symmetric key, which is encrypted with an asymmetric key.
         We must therefore decrypt the symmetric key.
 
         :param data:            The data to decrypt.
-        :param symmetric_key:   The symmetric_key encrypted with self.private_key_id.public_key()
+        :param symmetric_key:   The symmetric_key (base64-encoded) encrypted with self.private_key_id.public_key()
+        :return:                Decrypted raw bytes
         '''
         decrypted_key = self.sudo().private_key_id._decrypt(base64.b64decode(symmetric_key))
-        return self.env['certificate.key']._account_edi_fernet_decrypt(decrypted_key, base64.b64decode(data))
+        key = Fernet(decrypted_key)
+        if not isinstance(data, str):
+            data = bytes(data)
+        return key.decrypt(data)

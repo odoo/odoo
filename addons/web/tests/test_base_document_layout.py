@@ -1,10 +1,9 @@
-import base64
 import os
 from PIL import Image
 from functools import partial
 
 from odoo.tests import TransactionCase, tagged, Form
-from odoo.tools import frozendict
+from odoo.tools import BinaryBytes, frozendict
 from odoo.tools.image import image_apply_opt, hex_to_rgb
 
 
@@ -56,16 +55,16 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
             if not fname_split[0] in _file_cache:
                 with Image.open(os.path.join(dir_path, fname), 'r') as img:
                     img_bin = image_apply_opt(img, 'PNG')
-                    base64_img = base64.b64encode(img_bin)
-                    primary, secondary = self.env['base.document.layout'].extract_image_primary_secondary_colors(base64_img)
-                    _img = frozendict({
-                        'img': base64_img,
+                    img_val = BinaryBytes(img_bin)
+                    primary, secondary = self.env['base.document.layout'].extract_image_primary_secondary_colors(img_val)
+                    img_dict = frozendict({
+                        'img': img_val,
                         'colors': {
                             'primary_color': primary,
                             'secondary_color': secondary,
                         },
                     })
-                    _file_cache[fname_split[0]] = _img
+                    _file_cache[fname_split[0]] = img_dict
         self.company_imgs = frozendict(_file_cache)
 
     def _set_templates_and_layouts(self):
@@ -176,7 +175,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
 
         with Form(self.env['base.document.layout']) as doc_layout:
             self.assertColors(doc_layout, self.company)
-            doc_layout.logo = self.company_imgs['odoo']['img']
+            doc_layout.logo = self.company_imgs['odoo']['img'].to_base64()
             self.assertColors(doc_layout, self.company_imgs['odoo']['colors'])
 
     # Layout change tests
@@ -206,7 +205,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         with Form(self.env['base.document.layout']) as doc_layout:
             with Image.open(os.path.join(dir_path, 'logo_ci.png'), 'r') as img:
                 img_bin = image_apply_opt(img, 'PNG')
-                doc_layout.logo = base64.b64encode(img_bin)
+                doc_layout.logo = BinaryBytes(img_bin)
             self.assertNotEqual(None, doc_layout.primary_color)
 
 

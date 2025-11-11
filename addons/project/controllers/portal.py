@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import json
 
 from collections import OrderedDict
@@ -572,7 +571,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         values = IrAttachment._check_contents({
             'name': name,
-            'raw': base64.b64decode(data),
+            'raw': data,
             'res_model': 'project.task',
             'res_id': res_id,
             'access_token': IrAttachment._generate_access_token(),

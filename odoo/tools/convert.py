@@ -6,7 +6,6 @@ __all__ = [
     'convert_sql_import',
     'convert_xml_import'
 ]
-import base64
 import csv
 import io
 import logging
@@ -26,6 +25,7 @@ try:
 except ImportError:
     jingtrang = None
 
+from .binary import BinaryBytes
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from odoo.exceptions import ValidationError
@@ -137,14 +137,15 @@ def _eval_xml(self, node, env):
             return _process("".join(etree.tostring(n, method='html', encoding='unicode') for n in node))
 
         if node.get('file'):
+            node_file = node.get('file')
             if t == 'bytes':
-                with file_open(node.get('file'), 'rb', env=env) as f:
-                    return f.read()
+                with file_open(node_file, 'rb', env=env) as f:
+                    return BinaryBytes(f.read())
             if t == 'base64':
-                with file_open(node.get('file'), 'rb', env=env) as f:
-                    return base64.b64encode(f.read())
+                with file_open(node_file, 'rb', env=env) as f:
+                    return BinaryBytes(f.read()).to_base64()
 
-            with file_open(node.get('file'), env=env) as f:
+            with file_open(node_file, env=env) as f:
                 data = f.read()
         else:
             data = node.text or ''
