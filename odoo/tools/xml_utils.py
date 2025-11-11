@@ -4,6 +4,7 @@ import contextlib
 import logging
 import re
 import zipfile
+from collections.abc import Buffer
 from io import BytesIO
 
 from lxml import etree
@@ -57,7 +58,7 @@ class odoo_resolver(etree.Resolver):
         attachment_name = f'{self.prefix}.{url}' if self.prefix else url
         attachment = self.env['ir.attachment'].search([('name', '=', attachment_name)])
         if attachment:
-            return self.resolve_string(attachment.raw, context)
+            return self.resolve_string(attachment.raw.content, context)
 
 
 def _validate_xml(env, url, path, xmls):
@@ -167,9 +168,9 @@ def cleanup_xml_node(xml_node_or_string, remove_blank_text=True, remove_blank_no
     # Convert str/bytes to etree._Element
     if isinstance(xml_node, str):
         xml_node = xml_node.encode()  # misnomer: fromstring actually reads bytes
-    if isinstance(xml_node, bytes):
+    if isinstance(xml_node, Buffer):
         parser = etree.XMLParser(recover=True, resolve_entities=False)
-        xml_node = etree.fromstring(remove_control_characters(xml_node), parser=parser)
+        xml_node = etree.fromstring(remove_control_characters(bytes(xml_node)), parser=parser)
 
     # Process leaf nodes iteratively
     # Depth-first, so any inner node may become a leaf too (if children are removed)

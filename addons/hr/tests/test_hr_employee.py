@@ -165,7 +165,7 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(self.employee_without_image.avatar_1920)
 
     def test_employee_has_same_avatar_as_corresponding_user(self):
-        self.assertEqual(self.employee_without_image.avatar_1920, self.user_without_image.avatar_1920)
+        self.assertEqual(self.employee_without_image.avatar_1920.content, self.user_without_image.avatar_1920.content)
 
     def test_employee_member_of_department(self):
         dept, dept_sub, dept_sub_sub, dept_other, dept_parent = self.env['hr.department'].create([
@@ -479,8 +479,8 @@ class TestHrEmployee(TestHrCommon):
 
         # Check that linked employee got user image
         employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
-        self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
-        self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
+        self.assertEqual(employee_norbert.image_1920.content, user_norbert.image_1920.content)
+        self.assertEqual(employee_norbert.avatar_1920.content, user_norbert.avatar_1920.content)
 
     def test_badge_validation(self):
         # check employee's barcode should be a sequence of digits and alphabets

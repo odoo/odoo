@@ -702,7 +702,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         # We check the content of the invoice to make sure Product A/B/C only appears only once
         legal_documents = self.env['pos.order'].search([]).account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
         self.assertEqual(len(legal_documents), 1)
-        invoice_pdf_content = str(legal_documents[0]['content'])
+        invoice_pdf_content = legal_documents[0]['content'].decode()
         self.assertEqual(invoice_pdf_content.count('Down Payment of 20%'), 3)
 
         for order_line in sale_order.order_line.filtered(lambda l: l.product_id == self.downpayment_product):

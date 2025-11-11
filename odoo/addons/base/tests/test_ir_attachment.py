@@ -12,7 +12,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tools import mute_logger
+from odoo.tools import BinaryBytes, mute_logger
 from odoo.tests import tagged
 
 from odoo.tools.image import image_apply_opt
@@ -20,31 +20,28 @@ from odoo.tools.image import image_apply_opt
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrAttachment(TransactionCaseWithUserDemo):
     def setUp(self):
-        super(TestIrAttachment, self).setUp()
+        super().setUp()
         self.Attachment = self.env['ir.attachment']
         self.filestore = self.Attachment._filestore()
 
         # Blob1
         self.blob1 = b'blob1'
+        self.blob1_v = BinaryBytes(self.blob1)
         self.blob1_b64 = base64.b64encode(self.blob1)
         self.blob1_hash = hashlib.sha1(self.blob1).hexdigest()
         self.blob1_fname = self.blob1_hash[:HASH_SPLIT] + '/' + self.blob1_hash
 
         # Blob2
         self.blob2 = b'blob2'
+        self.blob2_v = BinaryBytes(self.blob2)
         self.blob2_b64 = base64.b64encode(self.blob2)
 
     def assertApproximately(self, value, expectedSize, delta=1):
-        # we don't used bin_size in context, because on write, the cached value is the data and not
-        # the size, so we need on each write to invalidate cache if we really want to get the size.
-        try:
-            value = base64.b64decode(value.decode())
-        except UnicodeDecodeError:
-            pass
-        size = len(value) / 1024 # kb
+        value = value.content
+        size = len(value) / 1024  # KB
 
         self.assertAlmostEqual(size, expectedSize, delta=delta)
 
@@ -53,24 +50,24 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.env['ir.config_parameter'].set_str('ir_attachment.location', 'db')
 
         # 'ir_attachment.location' is undefined test database storage
-        a1 = self.Attachment.create({'name': 'a1', 'raw': self.blob1})
-        self.assertEqual(a1.datas, self.blob1_b64)
+        a1 = self.Attachment.create({'name': 'a1', 'raw': self.blob1_v})
+        self.assertEqual(a1.datas.content, self.blob1_b64)
 
-        self.assertEqual(a1.db_datas, self.blob1)
+        self.assertEqual(a1.db_datas.content, self.blob1)
 
     def test_02_store_on_disk(self):
-        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1})
+        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1_v})
         self.assertEqual(a2.store_fname, self.blob1_fname)
         self.assertTrue(os.path.isfile(os.path.join(self.filestore, a2.store_fname)))
 
     def test_03_no_duplication(self):
-        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1})
-        a3 = self.Attachment.create({'name': 'a3', 'raw': self.blob1})
+        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1_v})
+        a3 = self.Attachment.create({'name': 'a3', 'raw': self.blob1_v})
         self.assertEqual(a3.store_fname, a2.store_fname)
 
     def test_04_keep_file(self):
-        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1})
-        a3 = self.Attachment.create({'name': 'a3', 'raw': self.blob1})
+        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1_v})
+        a3 = self.Attachment.create({'name': 'a3', 'raw': self.blob1_v})
 
         a2_fn = os.path.join(self.filestore, a2.store_fname)
 
@@ -78,7 +75,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertTrue(os.path.isfile(a2_fn))
 
     def test_05_change_data_change_file(self):
-        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1})
+        a2 = self.Attachment.create({'name': 'a2', 'raw': self.blob1_v})
         a2_store_fname1 = a2.store_fname
         a2_fn = os.path.join(self.filestore, a2_store_fname1)
 
@@ -142,42 +139,6 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         fullsize = 124.99
 
         ####################################
-        ### test create/write on 'datas'
-        ####################################
-        img_encoded = base64.b64encode(img_bin)
-        attach = Attachment.with_context(image_no_postprocess=True).create({
-            'name': 'image',
-            'datas': img_encoded,
-        })
-        self.assertApproximately(attach.datas, fullsize)  # no resize, no compression
-
-        attach = attach.with_context(image_no_postprocess=False)
-        attach.datas = img_encoded
-        self.assertApproximately(attach.datas, 12.06)  # default resize + default compression
-
-        # resize + default quality (80)
-        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '1024x768')
-        attach.datas = img_encoded
-        self.assertApproximately(attach.datas, 3.71)
-
-        # resize + quality 50
-        self.env['ir.config_parameter'].set_int('base.image_autoresize_quality', 50)
-        attach.datas = img_encoded
-        self.assertApproximately(attach.datas, 3.57)
-
-        # no resize + no quality implicit
-        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '0')
-        attach.datas = img_encoded
-        self.assertApproximately(attach.datas, fullsize)
-
-        # Check that we only compress quality when we resize. We avoid to compress again during a new write.
-        # no resize + quality -> should have no effect
-        self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '10000x10000')
-        self.env['ir.config_parameter'].set_int('base.image_autoresize_quality', 50)
-        attach.datas = img_encoded
-        self.assertApproximately(attach.datas, fullsize)
-
-        ####################################
         ### test create/write on 'raw'
         ####################################
 
@@ -218,7 +179,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.env['ir.config_parameter'].set_str('base.image_autoresize_max_px', '0x0')
         gif_bin = b'GIF89a\x01\x00\x01\x00\x00\xff\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x00;'
         attach.raw = gif_bin
-        self.assertEqual(attach.raw, gif_bin)
+        self.assertEqual(attach.raw.content, gif_bin)
 
     def test_11_copy(self):
         """
@@ -227,16 +188,16 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         document = self.Attachment.create({'name': 'document', 'raw': self.blob2})
         document2 = document.copy({'name': "document (copy)"})
         self.assertEqual(document2.name, "document (copy)")
-        self.assertEqual(document2.datas, document.datas)
-        self.assertEqual(document2.db_datas, document.db_datas)
+        self.assertEqual(document2.datas.content, document.datas.content)
+        self.assertEqual(document2.db_datas.content, document.db_datas.content)
         self.assertEqual(document2.store_fname, document.store_fname)
         self.assertEqual(document2.checksum, document.checksum)
 
         document3 = document.copy({'raw': self.blob1})
-        self.assertEqual(document3.datas, self.blob1_b64)
-        self.assertEqual(document3.raw, self.blob1)
+        self.assertEqual(document3.datas.content, self.blob1_b64)
+        self.assertEqual(document3.raw.content, self.blob1)
         self.assertTrue(self.filestore)  # no data in db but has a store_fname
-        self.assertEqual(document3.db_datas, False)
+        self.assertEqual(document3.db_datas.content, b'')
         self.assertEqual(document3.store_fname, self.blob1_fname)
         self.assertEqual(document3.checksum, self.blob1_hash)
 
@@ -266,10 +227,10 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         # test with fake svg with png mimetype
         unique_blob = b'<svg xmlns="http://www.w3.org/2000/svg"></svg>'
         a1 = self.Attachment.create({'name': 'a1', 'raw': unique_blob, 'mimetype': 'image/png'})
-        self.assertEqual(a1.raw, unique_blob)
+        self.assertEqual(a1.raw.content, unique_blob)
         self.assertEqual(a1.mimetype, 'image/png')
 
-    def test_15_read_bin_size_doesnt_read_datas(self):
+    def test_15_read_binary_bin_size_is_lazy(self):
         self.env.invalidate_all()
         IrAttachment = self.registry['ir.attachment']
         main_partner = self.env.ref('base.main_partner')

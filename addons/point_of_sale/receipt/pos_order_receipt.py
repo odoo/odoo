@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import qrcode
 from io import BytesIO
 from odoo import models, api, _
@@ -122,7 +121,7 @@ class PosOrderReceipt(models.AbstractModel):
         # Convert to base64
         buffer = BytesIO()
         img.save(buffer, format="PNG")
-        return 'data:image/png;base64,' + base64.b64encode(buffer.getvalue()).decode("utf-8")
+        return image_data_uri(buffer.getvalue())
 
     def order_receipt_generate_data(self, basic_receipt=False):
         self.ensure_one()

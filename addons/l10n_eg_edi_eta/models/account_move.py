@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import logging
 import json
 
@@ -38,7 +36,7 @@ class AccountMove(models.Model):
     @api.depends('l10n_eg_eta_json_doc_file')
     def _compute_eta_long_id(self):
         for rec in self:
-            response_data = rec.l10n_eg_eta_json_doc_file and json.loads(base64.b64decode(rec.l10n_eg_eta_json_doc_file)).get('response')
+            response_data = rec.l10n_eg_eta_json_doc_file and json.loads(rec.l10n_eg_eta_json_doc_file.content).get('response')
             if response_data:
                 rec.l10n_eg_long_id = response_data.get('l10n_eg_long_id')
             else:
@@ -58,7 +56,7 @@ class AccountMove(models.Model):
     @api.depends('l10n_eg_eta_json_doc_file')
     def _compute_eta_response_data(self):
         for rec in self:
-            response_data = rec.l10n_eg_eta_json_doc_file and json.loads(base64.b64decode(rec.l10n_eg_eta_json_doc_file)).get('response')
+            response_data = rec.l10n_eg_eta_json_doc_file and json.loads(rec.l10n_eg_eta_json_doc_file.content).get('response')
             if response_data:
                 rec.l10n_eg_uuid = response_data.get('l10n_eg_uuid')
                 rec.l10n_eg_submission_number = response_data.get('l10n_eg_submission_number')
@@ -106,7 +104,7 @@ class AccountMove(models.Model):
                     'res_model': invoice._name,
                     'res_field': 'l10n_eg_eta_json_doc_file',
                     'type': 'binary',
-                    'raw': json.dumps(dict(request=eta_invoice)),
+                    'raw': json.dumps(dict(request=eta_invoice)).encode(),
                     'mimetype': 'application/json',
                     'description': _('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
                 })

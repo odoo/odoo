@@ -285,7 +285,7 @@ def image_process(
     verify_resolution: bool = False,
     quality: int = 0,
     expand: bool = False,
-    crop: typing.Literal['top', 'bottom', ''] = '',
+    crop: typing.Literal['top', 'bottom', 'center', ''] = '',
     colorize: tuple[int, int, int] | None = None,
     output_format: str = '',
     padding: int = 0,
@@ -507,18 +507,19 @@ def get_webp_size(source: Buffer) -> tuple[int, int] | None:
     return None
 
 
-def is_image_size_above(base64_source_1, base64_source_2):
-    """Return whether or not the size of the given image `base64_source_1` is
-    above the size of the given image `base64_source_2`.
+def is_image_size_above(source1: Buffer, source2: Buffer) -> bool:
+    """Return whether or not the size of the given image `source1` is above the
+    size of the given image `source2`.
     """
-    if not base64_source_1 or not base64_source_2:
+    if not source1 or not source2:
         return False
-    if base64_source_1[:1] in (b'P', 'P') or base64_source_2[:1] in (b'P', 'P'):
+    source1 = memoryview(source1)
+    source2 = memoryview(source2)
+    if source1[:1] == b'<' or source2[:1] == b'<':
         # False for SVG
         return False
 
-    def get_image_size(base64_source):
-        source = base64.b64decode(base64_source)
+    def get_image_size(source):
         if (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
             size = get_webp_size(source)
             if size:
@@ -529,8 +530,8 @@ def is_image_size_above(base64_source_1, base64_source_2):
         else:
             return image_fix_orientation(binary_to_image(source))
 
-    image_source = get_image_size(base64_source_1)
-    image_target = get_image_size(base64_source_2)
+    image_source = get_image_size(source1)
+    image_target = get_image_size(source2)
     return image_source.width > image_target.width or image_source.height > image_target.height
 
 
@@ -558,11 +559,12 @@ def image_guess_size_from_field_name(field_name: str) -> tuple[int, int]:
     return (suffix, suffix)
 
 
-def image_data_uri(base64_source: bytes) -> str:
+def image_data_uri(source: Buffer) -> str:
     """This returns data URL scheme according RFC 2397
     (https://tools.ietf.org/html/rfc2397) for all kind of supported images
     (PNG, GIF, JPG and SVG), defaulting on PNG type if not mimetype detected.
     """
+    base64_source = base64.b64encode(source)
     return 'data:image/%s;base64,%s' % (
         FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png'),
         base64_source.decode(),

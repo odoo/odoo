@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
     def _compute_gelato_missing_images(self):
         for product in self:
             product.gelato_missing_images = any(
-                not image.datas for image in product.gelato_image_ids
+                not image.raw for image in product.gelato_image_ids
             )
 
     # === ACTION METHODS === #

@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 
 import base64
 import json
 import logging
 import requests
 from werkzeug.urls import url_quote
-from base64 import b64encode
 from json import JSONDecodeError
 from odoo.addons.account.tools import LegacyHTTPAdapter
 
 from odoo import api, models, _
+from odoo.tools import BinaryBytes
 from odoo.tools.float_utils import json_float_round
 
 _logger = logging.getLogger(__name__)
@@ -94,7 +92,7 @@ class AccountEdiFormat(models.Model):
         access_data = self._l10n_eg_eta_get_access_token(invoice)
         if access_data.get('error'):
             return access_data
-        invoice_json = json.loads(base64.b64decode(invoice.l10n_eg_eta_json_doc_file))
+        invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_file.content)
         request_url = '/api/v1.0/documentsubmissions'
         request_data = {
             'body': json.dumps({'documents': [invoice_json['request']]}, ensure_ascii=False, indent=4).encode('utf-8'),
@@ -117,7 +115,7 @@ class AccountEdiFormat(models.Model):
                 'l10n_eg_hash_key': response_data['acceptedDocuments'][0].get('hashKey'),
                 'l10n_eg_submission_number': response_data['submissionId'],
             }
-            invoice.l10n_eg_eta_json_doc_file = base64.b64encode(json.dumps(invoice_json).encode())
+            invoice.l10n_eg_eta_json_doc_file = BinaryBytes(json.dumps(invoice_json).encode())
             invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
             json_doc_attachment_id = self.env['ir.attachment'].search([
                 ('res_model', '=', invoice._name),
@@ -195,7 +193,7 @@ class AccountEdiFormat(models.Model):
         user = invoice.company_id.sudo().l10n_eg_client_identifier
         secret = invoice.company_id.sudo().l10n_eg_client_secret
         access = '%s:%s' % (user, secret)
-        user_and_pass = b64encode(access.encode()).decode()
+        user_and_pass = base64.b64encode(access.encode()).decode()
         request_url = '/connect/token'
         request_data = {'body': {'grant_type': 'client_credentials'}, 'header': {'Authorization': f'Basic {user_and_pass}'}}
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'POST', is_access_token_req=True, production_enviroment=invoice.company_id.l10n_eg_production_env)
@@ -446,7 +444,7 @@ class AccountEdiFormat(models.Model):
                     'blocking_level': 'error'
                 }
             }
-        invoice_json = json.loads(base64.b64decode(invoice.l10n_eg_eta_json_doc_file))['request']
+        invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_file.content)['request']
         if not invoice_json.get('signatures'):
             return {
                 invoice: {

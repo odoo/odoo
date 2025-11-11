@@ -7,7 +7,6 @@ as well as render a few fields differently.
 Also, adds methods to convert values back to Odoo models.
 """
 
-import base64
 import io
 import json
 import logging
@@ -379,7 +378,7 @@ class IrQwebFieldImage(models.AbstractModel):
             if url_id.isdigit():
                 model = 'ir.attachment'
                 oid = url_id
-                field = 'datas'
+                field = 'raw'
             # url of binary field on model: /web/image/<model>/<id>/<field>[/...]
             else:
                 model = query.get('model', fragments[3])
@@ -408,7 +407,7 @@ class IrQwebFieldImage(models.AbstractModel):
                 image = I.open(f)
                 image.load()
                 f.seek(0)
-                return base64.b64encode(f.read())
+                return f.read()
         except Exception:  # noqa: BLE001
             logger.exception("Failed to load local image %r", url)
             return None
@@ -440,7 +439,7 @@ class IrQwebFieldImage(models.AbstractModel):
         # luck PIL will remove some of it?
         out = io.BytesIO()
         image.save(out, image.format)
-        return base64.b64encode(out.getvalue())
+        return out.getvalue()
 
 
 class IrQwebFieldMonetary(models.AbstractModel):

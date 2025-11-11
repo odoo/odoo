@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-from base64 import b64decode
 
 from odoo import models
 from odoo.tools.facade import Proxy, ProxyAttr, ProxyFunc
@@ -85,7 +83,7 @@ class ResPartner(models.Model):
             function.value = self.function
         # Photo
         photo = vcard.add('photo')
-        photo.value = b64decode(self.avatar_512)
+        photo.value = self.avatar_512.content
         photo.encoding_param = 'B'
         photo.type_param = 'JPG'
         return VComponentProxy(vcard)

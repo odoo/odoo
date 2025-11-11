@@ -478,7 +478,7 @@ class AccountEdiFormat(models.Model):
             return
 
         attachment = edi_document.sudo().attachment_id
-        if not attachment or not attachment.datas:
+        if not attachment or not attachment.raw:
             _logger.warning("No attachment found for invoice %s", edi_document.move_id.name)
             return
 

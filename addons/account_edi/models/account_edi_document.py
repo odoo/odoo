@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import logging
 
 from odoo import models, fields, api, _
 from odoo.exceptions import LockError, UserError
+from odoo.tools import BinaryBytes
 
 
 _logger = logging.getLogger(__name__)
@@ -50,12 +50,12 @@ class AccountEdiDocument(models.Model):
                 move = doc.move_id
                 config_errors = doc.edi_format_id._check_move_configuration(move)
                 if config_errors:
-                    res = base64.b64encode('\n'.join(config_errors).encode('UTF-8'))
+                    res = '\n'.join(config_errors).encode()
                 else:
                     move_applicability = doc.edi_format_id._get_move_applicability(move)
                     if move_applicability and move_applicability.get('edi_content'):
-                        res = base64.b64encode(move_applicability['edi_content'](move))
-            doc.edi_content = res
+                        res = move_applicability['edi_content'](move)
+            doc.edi_content = BinaryBytes(res)
 
     def action_export_xml(self):
         self.ensure_one()
@@ -263,7 +263,7 @@ class AccountEdiDocument(models.Model):
         _action_send_mail in mail.compose.message).
         :param document: an edi document
         :return: dict {
-            'attachments': tuple with the name and base64 content of the attachment}
+            'attachments': tuple with the name and binary value of the attachment}
             'attachment_ids': list containing the id of the attachment
         }
         """
@@ -277,5 +277,5 @@ class AccountEdiDocument(models.Model):
         if len(self.env.context.get('active_ids', [])) > 1:
             # In mass mail mode 'attachments_ids' is removed from template values
             # as they should not be rendered
-            return {'attachments': [(attachment_sudo.name, attachment_sudo.datas)]}
+            return {'attachments': [(attachment_sudo.name, attachment_sudo.raw)]}
         return {'attachment_ids': attachment_sudo.ids}

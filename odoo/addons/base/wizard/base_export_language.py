@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import base64
 import io
 
 from odoo import api, fields, models, tools
+from odoo.tools import BinaryBytes
 from odoo.tools.translate import trans_export, trans_export_records
 
 NEW_LANG_KEY = '__new__'
@@ -46,7 +46,7 @@ class BaseLanguageExport(models.TransientModel):
             else:
                 mods = sorted(self.mapped('modules.name')) or ['all']
                 is_exported = trans_export(lang, mods, buf, self.format, self.env)
-            out = is_exported and base64.encodebytes(buf.getvalue())
+            out = is_exported and BinaryBytes(buf.getvalue())
 
         filename = 'new'
         if lang:

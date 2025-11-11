@@ -53,7 +53,7 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
         with self.mock_request(user=self.env.user):
             self.website_sale.set_category_image(self.category1.id, attachment.id)
             self.assertEqual(
-                self.category1.cover_image,
-                attachment.datas,
+                self.category1.cover_image.content,
+                attachment.raw.content,
                 "Cover image should match the uploaded attachment",
             )

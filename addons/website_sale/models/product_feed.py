@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import gzip
 import uuid
 from datetime import UTC
@@ -12,7 +11,7 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import float_is_zero, float_round, urls
+from odoo.tools import BinaryBytes, float_is_zero, float_round, urls
 
 from odoo.addons.website_sale import const, utils
 
@@ -139,13 +138,11 @@ class ProductFeed(models.Model):
             self.lock_for_update()
             gmc_xml = self._render_gmc_feed()
             compressed_gmc_xml = gzip.compress(gmc_xml.encode())
-            # The binary field stores the data in the `datas` field of an `ir.attachment` which is a
-            # base64 view of its `raw` data, therefore we encode the gzip content before saving it.
-            self.feed_cache = base64.b64encode(compressed_gmc_xml)
+            self.feed_cache = BinaryBytes(compressed_gmc_xml)
             self.cache_expiry = fields.Datetime.today() + relativedelta(days=1)
             return compressed_gmc_xml  # Avoid encoding and directly decoding
 
-        return base64.b64decode(self.feed_cache)
+        return self.feed_cache
 
     def _render_gmc_feed(self):
         """Render the Google Merchant Center feed.

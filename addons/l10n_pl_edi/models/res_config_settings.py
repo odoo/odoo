@@ -1,4 +1,3 @@
-import base64
 import stdnum.pl.nip
 
 from odoo import api, fields, models
@@ -83,8 +82,8 @@ class ResConfigSettings(models.TransientModel):
                 name=self.l10n_pl_edi_certificate.display_name
             ))
 
-        key_bytes = base64.b64decode(self.l10n_pl_edi_certificate.private_key_id.pem_key)
-        cert_bytes = base64.b64decode(self.l10n_pl_edi_certificate.pem_certificate)
+        key_bytes = self.l10n_pl_edi_certificate.private_key_id.pem_key.content
+        cert_bytes = self.l10n_pl_edi_certificate.pem_certificate.content
         private_key_password = (self.l10n_pl_edi_certificate.private_key_id.password or "").encode("utf-8") or None
         if key_bytes and cert_bytes:
             signer = XadesSigner(key_bytes, cert_bytes, private_key_password)
