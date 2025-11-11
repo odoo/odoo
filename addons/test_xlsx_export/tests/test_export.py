@@ -407,6 +407,34 @@ class TestGroupedExport(XlsxCreatorCase):
             ['1'                ,'86420.86'],
         ])
 
+    def test_groupby_properties_type_field(self):
+        """Test that exporting works for record grouped by a property field."""
+
+        property_def = [{'name': 'date', 'type': 'date', 'string': 'Date', 'default': '2025-11-11'}]
+        record = self.env['export.group_operator'].create({'definition_properties': property_def})
+        values = [
+            {'int_sum': 10, 'properties': {'date': '2025-11-09'}, 'parent_id': record.id, 'float_min': 86.8},
+            {'int_sum': 10, 'properties': {'date': '2025-11-12'}, 'parent_id': record.id, 'float_min': 82.8},
+            {'int_sum': 10, 'properties': {'date': '2025-09-09'}, 'parent_id': record.id, 'float_min': 20.8},
+        ]
+        export = self.export(
+            values,
+            fields=['int_sum', 'properties'],
+            params={
+                'groupby': ['properties.date:month'],
+                'domain': [('int_sum', '=', 10)],
+            },
+        )
+
+        self.assertExportEqual(export, [
+            ['Int Sum', 'Properties'],
+            ['September 2025 (1)', ''],
+            ['10', "{'date': '2025-09-09'}"],
+            ['November 2025 (2)', ''],
+            ['10', "{'date': '2025-11-09'}"],
+            ['10', "{'date': '2025-11-12'}"],
+        ])
+
 @tagged('-at_install', 'post_install')
 class TestExport(common.HttpCase):
 
