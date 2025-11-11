@@ -636,7 +636,7 @@ class MyInvoisDocument(models.Model):
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into QR Code.')
 
-        return image_data_uri(base64.b64encode(qr_code))
+        return image_data_uri(qr_code)
 
     def _is_refund_document(self):
         """
@@ -1131,7 +1131,7 @@ class MyInvoisDocument(models.Model):
         errors = self._myinvois_submit_documents({
             document: {
                 'name': document.name,
-                'xml': base64.b64decode(document.myinvois_file).decode('utf-8'),
+                'xml': document.myinvois_file.decode('utf-8'),
             } for document in valid_docs
         })
 

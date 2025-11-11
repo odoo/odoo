@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
 from odoo import fields, models
+from odoo.tools import BinaryBytes
 from odoo.addons.l10n_ph import utils
 
 
@@ -24,7 +23,7 @@ class L10n_Ph_2307Wizard(models.TransientModel):
         """
         self.ensure_one()
 
-        self.xls_file = base64.b64encode(utils._export_bir_2307('Form2307', self.moves_to_export, file_format='xls'))
+        self.xls_file = BinaryBytes(utils._export_bir_2307('Form2307', self.moves_to_export, file_format='xls'))
 
         return {
             "type": "ir.actions.act_url",

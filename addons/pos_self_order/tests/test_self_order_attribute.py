@@ -169,7 +169,7 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
                 'create_variant': "always",
                 'value_ids': [
                     Command.create({'name': "White", 'default_extra_price': 0, 'html_color': '#FAFAFA'}),
-                    Command.create({'name': "Blue", 'default_extra_price': 2, 'image': b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='}),
+                    Command.create({'name': "Blue", 'default_extra_price': 2, 'image': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='}),
                 ],
             },
         ])

@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import BinaryBytes
 from odoo.tools.sql import create_column, column_exists
 
 
@@ -149,7 +150,7 @@ class PosOrder(models.Model):
         for order in self:
             if order.country_code == 'JO' and not order.l10n_jo_edi_pos_error:
                 xml_content = order.env['pos.edi.xml.ubl_21.jo']._export_pos_order(order)[0]
-                order.l10n_jo_edi_pos_computed_xml = base64.b64encode(xml_content)
+                order.l10n_jo_edi_pos_computed_xml = BinaryBytes(xml_content)
             else:
                 order.l10n_jo_edi_pos_computed_xml = False
 

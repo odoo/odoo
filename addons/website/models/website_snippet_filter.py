@@ -260,7 +260,7 @@ class WebsiteSnippetFilter(models.Model):
                 field = model._fields.get(field_name)
                 if field and field.type in ('binary', 'image'):
                     if options.get('is_sample'):
-                        data[field_name] = record[field_name].decode('utf8') if field_name in record else '/web/image'
+                        data[field_name] = record[field_name].to_base64() if field_name in record else '/web/image'
                     else:
                         data[field_name] = Website.image_url(record, field_name)
                 elif field_widget == 'monetary':

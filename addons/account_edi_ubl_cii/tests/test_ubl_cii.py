@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from io import BytesIO
 from zipfile import ZipFile
@@ -7,7 +6,6 @@ from lxml import etree
 from unittest.mock import patch
 from odoo import fields, Command
 from odoo.tests import HttpCase, tagged
-from odoo.tools import file_open
 from odoo.tools.safe_eval import datetime
 
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
@@ -166,7 +164,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
                 print_wiz.action_send_and_print()
 
                 attachment = invoice.ubl_cii_xml_id
-                xml_tree = etree.fromstring(attachment.raw)
+                xml_tree = etree.fromstring(attachment.raw.content)
 
                 if ubl_cii_format == 'facturx':
                     # Testing the case where a product on the invoice has a UoM with a different category than the one in the DB
@@ -217,12 +215,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
         file_path = "bis3_bill_example.xml"
         file_path = f"{self.test_module}/tests/test_files/{file_path}"
-        with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'test_invoice.xml',
-                'raw': file.read(),
-            })
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_invoice.xml',
+            'raw': self.file_read(file_path),
+        })
 
         # Import the document for the first time
         bill = self._import_as_attachment_on(attachment=xml_attachment)
@@ -321,12 +318,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         " Test importing postal address when creating new partner from UBL xml."
         file_path = "bis3_bill_example.xml"
         file_path = f"{self.test_module}/tests/test_files/{file_path}"
-        with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'test_invoice.xml',
-                'raw': file.read(),
-            })
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_invoice.xml',
+            'raw': self.file_read(file_path),
+        })
 
         partner_vals = {
             'name': "ALD Automotive LU",
@@ -357,7 +353,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
             'name': 'test_invoice.xml',
         })
-        xml_tree = etree.fromstring(xml_attachment.raw)
+        xml_tree = etree.fromstring(xml_attachment.raw.content)
         actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual(actual_delivery_date.text, '20241231')
 
@@ -405,7 +401,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
             'name': 'test_invoice.xml',
         })
-        xml_tree = etree.fromstring(xml_attachment.raw)
+        xml_tree = etree.fromstring(xml_attachment.raw.content)
         start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
         end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual(start_date.text, '20241201')
@@ -445,7 +441,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
             'name': 'test_invoice.xml',
         })
-        xml_tree = etree.fromstring(xml_attachment.raw)
+        xml_tree = etree.fromstring(xml_attachment.raw.content)
 
         line_start_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual([date.text for date in line_start_dates], ['20241119', '20241201', '20241129'])
@@ -489,12 +485,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
         file_path = "bis3_bill_example.xml"
         file_path = f"{self.test_module}/tests/test_files/{file_path}"
-        with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'test_invoice.xml',
-                'raw': file.read(),
-            })
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_invoice.xml',
+            'raw': self.file_read(file_path),
+        })
 
         bill = self._import_as_attachment_on(attachment=xml_attachment)
 
@@ -649,7 +644,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
             'name': 'test_invoice.xml',
         })
-        xml_tree = etree.fromstring(xml_attachment.raw)
+        xml_tree = etree.fromstring(xml_attachment.raw.content)
         code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', self.namespaces)
         self.assertEqual(code.text, '42')
 
@@ -689,7 +684,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
                 'name': 'test_invoice.xml',
             })
-            xml_tree = etree.fromstring(xml_attachment.raw)
+            xml_tree = etree.fromstring(xml_attachment.raw.content)
             code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', self.namespaces)
             self.assertEqual(code.text, '59')
 
@@ -898,13 +893,11 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
 
         def create_attachment(file_name):
-            file_path = f"{self.test_module}/tests/test_files/{file_name}"
-            with file_open(file_path, 'rb') as file:
-                xml_attachment = self.env['ir.attachment'].create({
-                    'mimetype': 'application/xml',
-                    'name': file_name,
-                    'raw': file.read(),
-                })
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': file_name,
+                'raw': self.file_read(f"{self.test_module}/tests/test_files/{file_name}"),
+            })
             return xml_attachment
 
         # One VIN SN for the move, all lines should link the vehicle
@@ -923,15 +916,14 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
     def test_generate_pdf_when_xml_does_not_provide_one(self):
         def _run_wkhtmltopdf(*args, **kwargs):
-            return file_open(f'{self.test_module}/tests/test_files/invoice_example.pdf', 'rb').read()
+            return self.file_read(f'{self.test_module}/tests/test_files/invoice_example.pdf').content
 
         file_path = f"{self.test_module}/tests/test_files/bis3_bill_example_without_embedded_attachment.xml"
-        with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'test_invoice.xml',
-                'raw': file.read(),
-            })
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_invoice.xml',
+            'raw': self.file_read(file_path),
+        })
 
         # Import the document that doesn't contain an embedded PDF
         with patch.object(self.env.registry['ir.actions.report'], '_run_wkhtmltopdf', _run_wkhtmltopdf):
@@ -986,12 +978,11 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
         file_path = "bis3_bill_group_by_tax.xml"
         file_path = f"{self.test_module}/tests/test_files/{file_path}"
-        with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'bis3_bill_group_by_tax.xml',
-                'raw': file.read(),
-            })
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'bis3_bill_group_by_tax.xml',
+            'raw': self.file_read(file_path),
+        })
         bill = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_purchase"])
 
         # Should group lines by tax

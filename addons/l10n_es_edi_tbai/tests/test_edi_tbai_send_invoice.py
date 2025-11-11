@@ -4,7 +4,6 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from .common import TestEsEdiTbaiCommonGipuzkoa
-import base64
 from lxml import etree
 
 
@@ -220,6 +219,6 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
             self._get_invoice_send_wizard(credit_note).action_send_and_print()
 
-        tbai_xml = base64.b64decode(credit_note['l10n_es_tbai_post_file']).decode()
+        tbai_xml = credit_note.l10n_es_tbai_post_file.decode()
         value = etree.fromstring(tbai_xml).findtext(".//ImporteTotalFactura")
         self.assertEqual(value, '-4840.00')

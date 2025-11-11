@@ -161,8 +161,9 @@ class PortalAccount(CustomerPortal):
             # Download the official attachment(s) or a Pro Forma invoice
             docs_data = invoice_sudo._get_invoice_legal_documents_all(allow_fallback=True)
             if len(docs_data) == 1:
-                headers = self._get_http_headers(invoice_sudo, report_type, docs_data[0]['content'], download)
-                return request.make_response(docs_data[0]['content'], list(headers.items()))
+                raw = bytes(docs_data[0]['content'])
+                headers = self._get_http_headers(invoice_sudo, report_type, raw, download)
+                return request.make_response(raw, list(headers.items()))
             else:
                 filename = invoice_sudo._get_invoice_report_filename(extension='zip')
                 zip_content = _build_zip_from_data(docs_data)

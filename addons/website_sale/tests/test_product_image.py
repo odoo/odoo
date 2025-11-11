@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import io
 
 from PIL import Image
 
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
+from odoo.tools import BinaryBytes
+from odoo.tools.image import binary_to_image
 
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 
@@ -15,7 +16,7 @@ def _create_image(color='black', dims=(1920, 1080), format='JPEG'):
     f = io.BytesIO()
     Image.new('RGB', dims, color).save(f, format)  # type: ignore
     f.seek(0)
-    return base64.b64encode(f.read())
+    return BinaryBytes(f.read())
 
 
 @tagged('post_install', '-at_install')
@@ -71,7 +72,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         image_gif = _create_image(dims=(124, 147), format='GIF')
 
         # Template Extra Image 2
-        image_svg = base64.b64encode(b'<svg></svg>')
+        image_svg = BinaryBytes(b'<svg></svg>')
 
         # Red Variant Extra Image 1
         image_bmp = _create_image(dims=(767, 247), format='BMP')
@@ -115,7 +116,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
             'product_variant_image_ids': [(0, 0, {'name': 'image 2', 'image_1920': image_bmp})],
         })
 
-        self.assertEqual(template.image_1920, blue_image)
+        self.assertEqual(template.image_1920.content, blue_image.content)
 
         # Get the green variant
         product_green = template._get_variant_for_combination(value_green)
@@ -143,57 +144,57 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         jpeg_green = (34, 139, 34)
 
         # Verify original size: keep original
-        image = Image.open(io.BytesIO(base64.b64decode(template.image_1920)))
+        image = binary_to_image(template.image_1920)
         self.assertEqual(image.size, (1920, 1080))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = Image.open(io.BytesIO(base64.b64decode(product_red.image_1920)))
+        image = binary_to_image(product_red.image_1920)
         self.assertEqual(image.size, (800, 500))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = Image.open(io.BytesIO(base64.b64decode(product_green.image_1920)))
+        image = binary_to_image(product_green.image_1920)
         self.assertEqual(image.size, (1920, 1080))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify 1024 size: keep aspect ratio
-        image = Image.open(io.BytesIO(base64.b64decode(template.image_1024)))
+        image = binary_to_image(template.image_1024)
         self.assertEqual(image.size, (1024, 576))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = Image.open(io.BytesIO(base64.b64decode(product_red.image_1024)))
+        image = binary_to_image(product_red.image_1024)
         self.assertEqual(image.size, (800, 500))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = Image.open(io.BytesIO(base64.b64decode(product_green.image_1024)))
+        image = binary_to_image(product_green.image_1024)
         self.assertEqual(image.size, (1024, 576))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify 512 size: keep aspect ratio
-        image = Image.open(io.BytesIO(base64.b64decode(template.image_512)))
+        image = binary_to_image(template.image_512)
         self.assertEqual(image.size, (512, 288))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = Image.open(io.BytesIO(base64.b64decode(product_red.image_512)))
+        image = binary_to_image(product_red.image_512)
         self.assertEqual(image.size, (512, 320))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = Image.open(io.BytesIO(base64.b64decode(product_green.image_512)))
+        image = binary_to_image(product_green.image_512)
         self.assertEqual(image.size, (512, 288))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify 256 size: keep aspect ratio
-        image = Image.open(io.BytesIO(base64.b64decode(template.image_256)))
+        image = binary_to_image(template.image_256)
         self.assertEqual(image.size, (256, 144))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = Image.open(io.BytesIO(base64.b64decode(product_red.image_256)))
+        image = binary_to_image(product_red.image_256)
         self.assertEqual(image.size, (256, 160))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = Image.open(io.BytesIO(base64.b64decode(product_green.image_256)))
+        image = binary_to_image(product_green.image_256)
         self.assertEqual(image.size, (256, 144))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
         # Verify 128 size: keep aspect ratio
-        image = Image.open(io.BytesIO(base64.b64decode(template.image_128)))
+        image = binary_to_image(template.image_128)
         self.assertEqual(image.size, (128, 72))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_blue, "blue")
-        image = Image.open(io.BytesIO(base64.b64decode(product_red.image_128)))
+        image = binary_to_image(product_red.image_128)
         self.assertEqual(image.size, (128, 80))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_red, "red")
-        image = Image.open(io.BytesIO(base64.b64decode(product_green.image_128)))
+        image = binary_to_image(product_green.image_128)
         self.assertEqual(image.size, (128, 72))
         self.assertEqual(image.getpixel((image.size[0] / 2, image.size[1] / 2)), jpeg_green, "green")
 
@@ -213,28 +214,28 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # CASE: unlink move image to fallback if fallback image empty
         template.image_1920 = False
         product_red.unlink()
-        self.assertEqual(template.image_1920, red_image)
+        self.assertEqual(template.image_1920.content, red_image.content)
 
         # CASE: unlink does nothing special if fallback image already set
         self.env['product.product'].create({
             'product_tmpl_id': template.id,
             'image_1920': green_image,
         }).unlink()
-        self.assertEqual(template.image_1920, red_image)
+        self.assertEqual(template.image_1920.content, red_image.content)
 
         # CASE: display variant image first if set
-        self.assertEqual(product_green._get_images()[0].image_1920, green_image)
+        self.assertEqual(product_green._get_images()[0].image_1920.content, green_image.content)
 
         # CASE: display variant fallback after variant o2m, correct fallback
         # write on the variant field, otherwise it will write on the fallback
         product_green.image_variant_1920 = False
         images = product_green._get_images()
         # images on fields are resized to max 1920
-        image_png = Image.open(io.BytesIO(base64.b64decode(images[1].image_1920)))
-        self.assertEqual(images[0].image_1920, red_image)
+        image_png = binary_to_image(images[1].image_1920)
+        self.assertEqual(images[0].image_1920.content, red_image.content)
         self.assertEqual(image_png.size, (1268, 1920))
-        self.assertEqual(images[2].image_1920, image_gif)
-        self.assertEqual(images[3].image_1920, image_svg)
+        self.assertEqual(images[2].image_1920.content, image_gif.content)
+        self.assertEqual(images[3].image_1920.content, image_svg.content)
 
         # CASE: When uploading a product variant image
         # we don't want the default_product_tmpl_id from the context to be applied if we have a product_variant_id set
@@ -342,7 +343,7 @@ class TestWebsiteSaleRemoveImage(HttpCase):
             'public': True,
             'name': 'green.jpg',
             'type': 'binary',
-            'datas': _create_image(color=color_green)
+            'raw': _create_image(color=color_green)
         })
 
         # Create the color attribute.

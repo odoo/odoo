@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-import base64
-
 from freezegun import freeze_time
 from os.path import join as opj
 
@@ -180,7 +177,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         """
         self.assertTrue(attachment)
 
-        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_content = attachment.raw.content
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
@@ -239,4 +236,4 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         Generate an invoice, assert that the tag '<?xml version='1.0' encoding='UTF-8'?>' is present in the attachment
         """
         self.assertTrue(filename in attachment.name)
-        self.assertIn(b"<?xml version='1.0' encoding='UTF-8'?>", attachment.raw)
+        self.assertIn(b"<?xml version='1.0' encoding='UTF-8'?>", attachment.raw.content)

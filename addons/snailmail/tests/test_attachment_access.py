@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, TransactionCase
@@ -33,13 +32,13 @@ class testAttachmentAccess(TransactionCase):
         # As user, create a snailmail.letter linked to that attachment
         letter = env_user['snailmail.letter'].create({'attachment_id': attachment.id, **self.letter_defaults})
         # As user, ensure the content of the attachment can be read through the letter
-        self.assertEqual(base64.b64decode(letter.attachment_datas), b'foo')
+        self.assertEqual(letter.attachment_raw.content, b'foo')
         # As user, create another attachment without res_model/res_id
         attachment_2 = env_user['ir.attachment'].create({'name': 'foo', 'raw': b'bar'})
         # As user, change the attachment of the letter to this second attachment
         letter.write({'attachment_id': attachment_2.id})
         # As user, ensure the content of this second attachment can be read through the letter
-        self.assertEqual(base64.b64decode(letter.attachment_datas), b'bar')
+        self.assertEqual(letter.attachment_raw.content, b'bar')
 
     def test_user_letter_attachment_without_res_fields_created_by_admin(self):
         """Test an employee can read the content of the letter's attachment created by another user, the admin,
@@ -55,7 +54,7 @@ class testAttachmentAccess(TransactionCase):
         with self.assertRaises(AccessError):
             attachment.with_user(self.user).datas
         # But, as user, the content of the attachment can be read through the letter
-        self.assertEqual(base64.b64decode(letter.with_user(self.user).attachment_datas), b'foo')
+        self.assertEqual(letter.with_user(self.user).attachment_raw.content, b'foo')
 
         # As admin, create a second attachment without res_model/res_id
         attachment = self.env['ir.attachment'].create({'name': 'bar', 'raw': b'bar'})
@@ -65,9 +64,9 @@ class testAttachmentAccess(TransactionCase):
         # As user ensure the attachment itself cannot be read
         self.env.invalidate_all()
         with self.assertRaises(AccessError):
-            self.assertEqual(base64.b64decode(attachment.with_user(self.user).datas), b'bar')
+            self.assertEqual(attachment.with_user(self.user).raw.content, b'bar')
         # But, as user, the content of the attachment can be read through the letter
-        self.assertEqual(base64.b64decode(letter.with_user(self.user).attachment_datas), b'bar')
+        self.assertEqual(letter.with_user(self.user).attachment_raw.content, b'bar')
 
     def test_user_read_unallowed_attachment(self):
         """Test a user cannot access an attachment he is not supposed to through a snailmail.letter"""
@@ -88,7 +87,7 @@ class testAttachmentAccess(TransactionCase):
                 'attachment_id': attachment_forbidden.id,
                 **self.letter_defaults,
             })
-            letter.attachment_datas
+            letter.attachment_raw
 
         # As user, update the attachment of an existing letter to the unallowed attachment
         # and make sure it raises an access error
@@ -101,4 +100,4 @@ class testAttachmentAccess(TransactionCase):
         })
         with self.assertRaises(AccessError):
             letter.write({'attachment_id': attachment_forbidden.id})
-            letter.attachment_datas
+            letter.attachment_raw

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import base64
 import contextlib
 import mimetypes
 import os
@@ -118,8 +117,7 @@ class Stream:
     @classmethod
     def from_binary_field(cls, record: BaseModel, field_name: str) -> Self:
         """ Create a :class:`~Stream`: from a binary field. """
-        data_b64 = record[field_name]
-        data = base64.b64decode(data_b64) if data_b64 else b''
+        data = record[field_name].content
         return cls(
             type='data',
             data=data,

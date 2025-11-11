@@ -1,8 +1,6 @@
-import base64
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import file_open, file_path
+from odoo.tools import BinaryBytes, file_open
 
 
 class PosPaymentMethod(models.Model):
@@ -199,10 +197,10 @@ class PosPaymentMethod(models.Model):
                 record.image = record.custom_image
             elif record.payment_provider:
                 path = f'point_of_sale/static/img/providers/{record.payment_provider}.png'
-                if file_path(path):
+                try:
                     with file_open(path, 'rb') as image:
-                        record.image = base64.b64encode(image.read())
-                else:
+                        record.image = BinaryBytes(image.read())
+                except OSError:
                     record.image = False
 
     def _inverse_image(self):

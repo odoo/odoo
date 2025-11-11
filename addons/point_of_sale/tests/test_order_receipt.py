@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import logging
 from datetime import datetime
 
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, BinaryBytes
 from odoo.tests import tagged
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
@@ -194,7 +193,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             'receipt_header': 'This is a test header for receipt',
             'receipt_footer': 'This is a test footer for receipt',
             'ship_later': True,
-            'logo': base64.b64encode(image.encode()),
+            'logo': BinaryBytes(image.encode()),
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         data = {

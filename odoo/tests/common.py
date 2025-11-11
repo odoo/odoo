@@ -71,7 +71,8 @@ from odoo.http.session import (
 from odoo.http.session import Session as OdooHttpSession
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
-from odoo.tools import SQL, DotDict, config, float_compare, mute_logger, profiler
+from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
+from odoo.tools.binary import BinaryBytes
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import diff_zip, find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
@@ -735,6 +736,8 @@ class BaseCase(case.TestCase):
                     r[f] = float(vs[f])
                 elif t == 'integer':
                     r[f] = int(vs[f])
+                elif t == 'binary':
+                    r[f] = bytes(vs[f])
                 elif vs[f] is None:
                     r[f] = False
                 else:
@@ -757,6 +760,8 @@ class BaseCase(case.TestCase):
                         # don't round if there's no currency set
                         if c := record[currency_field_name]:
                             record_value = Approx(record_value, c, decorate=False)
+                    case odoo.fields.Binary() as field:
+                        record_value = record_value.content
 
                 r[field_name] = record_value
             record_reformatted.append(r)
@@ -828,6 +833,12 @@ class BaseCase(case.TestCase):
             description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
             profile_session=self.profile_session,
             **kwargs)
+
+    @classmethod
+    def file_read(cls, path: str) -> BinaryBytes:
+        """Read contents of a file using ``file_open``."""
+        with file_open(path, 'rb') as f:
+            return BinaryBytes(f.read())
 
     @classmethod
     def _registry_test_mode_patches(cls, *, cr: Cursor, registry: Registry):
@@ -2547,8 +2558,8 @@ class HttpCase(TransactionCase):
         with self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
             atexit.callback(self._wait_remaining_requests)
             if "bus.bus" in self.env.registry:
-                from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler  # noqa: PLC0415
                 from odoo.addons.bus.models.bus import BusBus  # noqa: PLC0415
+                from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler, _kick_all  # noqa: PLC0415
 
                 atexit.callback(_kick_all, CloseCode.KILL_NOW)
                 original_send_one = BusBus._sendone

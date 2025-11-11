@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from os.path import basename
@@ -12,7 +11,7 @@ from freezegun import freeze_time
 
 from odoo import api
 from odoo.tests import RecordCapturer, new_test_user, tagged
-from odoo.tools import config, file_open
+from odoo.tools import BinaryBytes, BinaryValue, config, file_open
 from odoo.tools.image import image_process
 from odoo.tools.misc import submap
 
@@ -39,6 +38,8 @@ class TestHttpStaticCommon(TestHttpBase):
         self.assertEqual(res.status_code, assert_status_code)
         self.assertEqual(submap(res.headers, assert_headers), assert_headers)
         if assert_content:
+            if isinstance(assert_content, BinaryValue):
+                assert_content = assert_content.content
             self.assertEqual(res.content, assert_content)
         return res
 
@@ -419,7 +420,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.authenticate('test user', 'test user')
         earth = env.ref('test_http.earth')
 
-        data = base64.b64encode(b'<html><body><div>Hello World</div></body></html>')
+        data = BinaryBytes(b'<html><body><div>Hello World</div></body></html>')
         for field in ('glyph_attach', 'glyph_inline', 'glyph_related', 'glyph_compute'):
             earth[field] = data
             res = self.url_open(f'/web/image/test_http.stargate/{earth.id}/{field}')
@@ -454,15 +455,15 @@ class TestHttpStatic(TestHttpStaticCommon):
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
     @staticmethod
-    def img_data_to_web_data(img_base_64):
-        return image_process(img_base_64, size=(180, 0))
+    def img_data_to_web_data(img_base):
+        return image_process(img_base, size=(180, 0))
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         ResCompany = cls.env['res.company']
-        cls.default_logo_data = cls.img_data_to_web_data(base64.b64decode(ResCompany._get_logo()))
-        cls.gizeh_data_b64 = base64.encodebytes(cls.gizeh_data)
+        cls.default_logo_data = cls.img_data_to_web_data(ResCompany._get_logo())
+        cls.gizeh_data_value = BinaryBytes(cls.gizeh_data)
         cls.logo_gizeh_data = cls.img_data_to_web_data(cls.gizeh_data)
         with file_open('web/static/img/nologo.png', 'rb') as file:
             cls.logo_no_logo_data = file.read()
@@ -528,7 +529,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(user=self.user_company2)
 
     def test_set_logo_company_of_superuser(self):
-        self.company_of_superuser.logo = self.gizeh_data_b64
+        self.company_of_superuser.logo = self.gizeh_data_value
         self.assertDownloadLogoGizeh()
         self.assertDownloadLogoGizeh(company=self.company_of_superuser)
         self.assertDownloadLogoGizeh(user=self.user_of_company_of_superuser)
@@ -536,7 +537,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(user=self.user_company2)
 
     def test_set_logo_other_company(self):
-        self.company2.logo = self.gizeh_data_b64
+        self.company2.logo = self.gizeh_data_value
         self.assertDownloadLogoDefault()
         self.assertDownloadLogoGizeh(company=self.company2)
         self.assertDownloadLogoGizeh(user=self.user_company2)
@@ -561,7 +562,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
 
     def test_company_param_win_on_current_user(self):
         """When company and user are specified, company wins (ex: in an email you see the company logo and not yours)"""
-        self.company_of_superuser.logo = self.gizeh_data_b64
+        self.company_of_superuser.logo = self.gizeh_data_value
         self.assertDownloadLogoGizeh(company=self.company_of_superuser, user=self.user_company2)
         self.assertDownloadLogoDefault(company=self.company2, user=self.user_of_company_of_superuser)
 
@@ -680,7 +681,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
 
         self.assertEqual(len(capture.records), 1, "An attachment should have been created")
         self.assertEqual(capture.records.name, 'gizeh.png')
-        self.assertEqual(capture.records.raw, file_content)
+        self.assertEqual(capture.records.raw.content, file_content)
         self.assertEqual(capture.records.mimetype, 'image/png')
 
         self.assertEqual(res.json(), [{

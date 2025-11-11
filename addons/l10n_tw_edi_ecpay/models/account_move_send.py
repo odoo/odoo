@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 
 from odoo import SUPERUSER_ID, api, models
@@ -64,7 +63,7 @@ class AccountMoveSend(models.AbstractModel):
                 file_name = f'{invoice.name.replace("/", "_")}_ecpay_issue_allowance.json'
             invoice_data['ecpay_attachments'] = {
                 'name': file_name,
-                'raw': json.dumps(json_content),
+                'raw': json.dumps(json_content).encode(),
                 'mimetype': 'application/json',
                 'res_model': invoice._name,
                 'res_id': invoice.id,
@@ -88,7 +87,7 @@ class AccountMoveSend(models.AbstractModel):
                     json_content = json.loads(invoice_data['ecpay_attachments']['raw'])
                 # If the invoice was downloaded but not sent, the json file could already be there.
                 elif invoice.l10n_tw_edi_file:
-                    json_content = json.loads(base64.b64decode(invoice.l10n_tw_edi_file))
+                    json_content = json.loads(invoice.l10n_tw_edi_file.content)
                 # If we don't have the file data and the file, we will regenerate it.
                 else:
                     self._l10n_tw_edi_generate_ecpay_json(invoice, invoice_data)

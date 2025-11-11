@@ -1,4 +1,5 @@
 from . import test_barcode
+from . import test_binary
 from . import test_cloc
 from . import test_config
 from . import test_date_utils

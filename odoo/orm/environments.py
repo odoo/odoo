@@ -491,8 +491,6 @@ class Environment(Mapping[str, "BaseModel"]):
                 return get_context('lang') or None
             elif key == 'active_test':
                 return get_context('active_test', field.context.get('active_test', True))
-            elif key.startswith('bin_size'):
-                return bool(get_context(key))
             else:
                 val = get_context(key)
                 if type(val) is list:
@@ -944,10 +942,6 @@ class Cache:
             query = Query(model)
             sql_id = query.table.id
             sql_field = query.table[field.name]
-            if field.type == 'binary' and (
-                model.env.context.get('bin_size') or model.env.context.get('bin_size_' + field.name)
-            ):
-                sql_field = SQL('pg_size_pretty(length(%s)::bigint)', sql_field)
             query.add_where(SQL("%s IN %s", sql_id, tuple(ids)))
             env.cr.execute(query.select(sql_id, sql_field))
 

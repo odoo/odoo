@@ -1,4 +1,3 @@
-import base64
 import re
 from collections import defaultdict
 from copy import deepcopy
@@ -867,7 +866,7 @@ class AccountMove(models.Model):
 
         signature_data.update({
             'document_id': document_id,
-            'x509_certificate': base64.encodebytes(base64.b64decode(certificate_sudo._get_der_certificate_bytes())).decode(),
+            'x509_certificate': certificate_sudo._get_der_certificate_bytes(formatting='encodebytes').decode(),
             'public_modulus': n.decode(),
             'public_exponent': e.decode(),
             'iso_now': fields.Datetime.now().isoformat(),
@@ -877,7 +876,7 @@ class AccountMove(models.Model):
             'reference_uri': f"Reference-{document_id}",
             'sigpolicy_url': "http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf",
             'sigpolicy_description': "Política de firma electrónica para facturación electrónica con formato Facturae",
-            'sigcertif_digest': certificate_sudo._get_fingerprint_bytes(formatting='base64').decode(),
+            'sigcertif_digest': certificate_sudo._get_fingerprint_bytes(formatting='encodebytes').decode(),
             'x509_issuer_description': issuer,
             'x509_serial_number': int(certificate_sudo.serial_number),
         })

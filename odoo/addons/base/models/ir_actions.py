@@ -16,7 +16,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.tools import _, frozendict, get_lang
+from odoo.tools import BinaryBytes, _, frozendict, get_lang
 from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
@@ -132,6 +132,7 @@ class IrActionsActions(models.Model):
             'float_compare': float_compare,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
+            'BinaryBytes': BinaryBytes,
             'Command': Command,
         }
 
@@ -334,7 +335,7 @@ class IrActionsAct_Window(models.Model):
                     eval_ctx = dict(self.env.context)
                     try:
                         ctx = safe_eval(values.get('context', '{}'), eval_ctx)
-                    except:
+                    except Exception:  # noqa: BLE001
                         ctx = {}
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result

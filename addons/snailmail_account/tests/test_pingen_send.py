@@ -1,7 +1,6 @@
 
 import requests
 import json
-import base64
 import logging
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -49,7 +48,7 @@ class TestPingenSend(AccountTestInvoicingCommon, HttpCase):
         attachment_id = self.letter.with_context(force_report_rendering=True)._fetch_attachment()
 
         files = {
-            'file': ('pingen_test_%s.pdf' % report_name, base64.b64decode(attachment_id.datas), 'application/pdf'),
+            'file': ('pingen_test_%s.pdf' % report_name, attachment_id.raw.content, 'application/pdf'),
         }
 
         response = requests.post(self.pingen_url, data=self.data, files=files)
@@ -63,7 +62,7 @@ class TestPingenSend(AccountTestInvoicingCommon, HttpCase):
             if response.status_code <= 499 or response.json()['error']:
                 raise requests.HTTPError(msg % "Client")
             else:
-                _logger.warning(msg % "Server")
+                _logger.warning(msg, "Server")
 
     def test_pingen_send_invoice(self):
         self.render_and_send('external_layout_standard')

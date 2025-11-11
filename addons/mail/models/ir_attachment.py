@@ -16,8 +16,8 @@ class IrAttachment(models.Model):
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):
-        for attachment in self.with_context(bin_size=True):
-            attachment.has_thumbnail = bool(attachment.thumbnail)
+        for attachment in self:
+            attachment.has_thumbnail = bool(attachment.thumbnail.size)
 
     def _has_attachments_ownership(self, attachment_tokens):
         """ Checks if the current user has ownership of all attachments in the recordset.

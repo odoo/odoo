@@ -142,7 +142,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertFalse(attachment_proforma)
         legal_documents = self.pos_order_pos0.account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
         self.assertEqual(len(legal_documents), 1)
-        invoice_str = str(legal_documents[0]['content'])
+        invoice_str = legal_documents[0]['content'].decode()
         self.assertTrue("invoice" in invoice_str)
         self.assertTrue("proforma" not in invoice_str)
 

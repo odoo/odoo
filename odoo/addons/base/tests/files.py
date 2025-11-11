@@ -3,10 +3,10 @@ from base64 import b64encode
 from odoo.tools import file_open
 
 
-def get_file_content(ext):
+def get_file_content(ext) -> tuple[bytes, str]:
     with file_open(f'base/tests/files/file.{ext}', 'rb') as file:
         raw = file.read()
-        return raw, b64encode(raw)
+        return raw, b64encode(raw).decode()
 
 
 XLSX_2025_RAW, XLSX_2025_B64 = get_file_content('2025.xlsx')

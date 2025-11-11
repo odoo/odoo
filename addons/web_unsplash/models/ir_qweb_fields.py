@@ -25,6 +25,6 @@ class IrQwebFieldImage(models.AbstractModel):
                     ('public', '=', True),
                     ('url', '=', url_object.path),
                 ], limit=1)
-                return attachment.datas
+                return attachment.raw
 
         return super().from_html(model, field, element)

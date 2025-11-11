@@ -1,4 +1,3 @@
-from base64 import b64decode
 from ssl import SSLError
 
 import requests
@@ -29,7 +28,7 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
         if self.ca_certificates:
             for cert in self.ca_certificates:
                 try:
-                    x509 = load_certificate(FILETYPE_PEM, b64decode(cert.pem_certificate))
+                    x509 = load_certificate(FILETYPE_PEM, cert.pem_certificate.content)
                     context._ctx.get_cert_store().add_cert(x509)
                 except (TypeError, CryptoError) as e:
                     raise SSLError(f"CA certificate {cert.name} is invalid: {e.message}")
@@ -55,7 +54,8 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
 
         def patched_load_cert_chain(certificate, keyfile=None, password=None):
             certificate = certificate.sudo()
-            pem, key = map(b64decode, (certificate.pem_certificate, certificate.private_key_id.pem_key))
+            pem = certificate.pem_certificate.content
+            key = certificate.private_key_id.pem_key.content
             context._ctx.use_certificate(load_certificate(FILETYPE_PEM, pem))
             context._ctx.use_privatekey(load_privatekey(FILETYPE_PEM, key))
 
