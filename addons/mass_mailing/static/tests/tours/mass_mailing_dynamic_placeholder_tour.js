@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('mass_mailing_dynamic_placeholder_tour',
         },
          {
             content: "Insert text inside editable",
-            trigger: ':iframe .odoo-editor-editable',
+            trigger: ":iframe .odoo-editor-editable .o_mail_no_options",
             async run(actions) {
                 await actions.editor(`/`);
                 const iframe = document.querySelector("iframe");
