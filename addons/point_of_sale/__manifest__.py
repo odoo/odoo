@@ -119,6 +119,7 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             ("include", "web._assets_bootstrap_backend"),
             ('include', 'web._assets_core'),
+            "point_of_sale/static/src/app/services/offline_service.js",
             ("remove", "web/static/src/core/browser/router.js"),
             ("remove", "web/static/src/core/debug/**/*"),
             ('include', 'web.icons_fonts'),
