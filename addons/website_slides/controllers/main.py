@@ -3,7 +3,6 @@
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 
-import base64
 import json
 import logging
 import math
@@ -1051,7 +1050,7 @@ class WebsiteSlides(WebsiteProfile):
                 type='http', auth="public", website=True, sitemap=False, handle_params_access_error=handle_wslide_error)
     def slide_get_pdf_content(self, slide):
         response = Response()
-        response.data = slide.binary_content and base64.b64decode(slide.binary_content) or b''
+        response.data = slide.binary_content.content
         response.mimetype = 'application/pdf'
         return response
 
@@ -1445,11 +1444,12 @@ class WebsiteSlides(WebsiteProfile):
     def create_slide(self, *args, **post):
         # check the size only when we upload a file.
         if post.get('binary_content'):
-            file_size = len(post['binary_content']) * 3 / 4  # base64
-            if (file_size / 1024.0 / 1024.0) > 25:
+            file_size = len(post['binary_content'])
+            # binary_content is encoded in base64 (33% bigger than the real size)
+            if file_size * 3 // 4 > 25 * (1 << 20):
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
-        values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
+        values = {fname: value for fname in self._get_valid_slide_post_values() if (value := post.get(fname))}
 
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide

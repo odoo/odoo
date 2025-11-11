@@ -2,10 +2,10 @@
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools import BinaryBytes
 from odoo.tools.image import binary_to_image
 from io import BytesIO
 from PIL import Image
-import base64
 
 
 @tagged('post_install', '-at_install')
@@ -60,7 +60,7 @@ class TestWebsiteEvent(TransactionCase):
             # Create a website record
             website = self.env['website'].create({
                 'name': 'Test Website',
-                'favicon': base64.b64encode(d)
+                'favicon': BinaryBytes(d)
             })
 
             # Call the method to compute app_icon
@@ -71,7 +71,7 @@ class TestWebsiteEvent(TransactionCase):
                 self.assertTrue(website.app_icon)
 
                 # Check if app_icon is a valid image
-                image = binary_to_image(base64.b64decode(website.app_icon))
+                image = binary_to_image(website.app_icon)
                 self.assertEqual(image.format.lower(), 'png')
             else:
                 # For SVG images, ensure that the app_icon is not set

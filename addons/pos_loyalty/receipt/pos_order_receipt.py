@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 
 from odoo import models, _
+from odoo.tools.image import image_data_uri
 
 
 class PosOrderReceipt(models.AbstractModel):
@@ -25,7 +25,7 @@ class PosOrderReceipt(models.AbstractModel):
                 'name': history.card_id.program_id.name,
                 'type': '',
                 'points': history.card_id.code,
-                'barcode_base64': 'data:image/png;base64,' + base64.b64encode(self.env['ir.actions.report'].barcode('Code128', history.card_id.code)).decode('utf-8'),
+                'barcode_base64': image_data_uri(self.env['ir.actions.report'].barcode('Code128', history.card_id.code)),
             } for history in histories if history.card_id.program_id.program_type == 'next_order_coupons']
             data['extra_data']['loyalties'] = issued + new_coupon
 

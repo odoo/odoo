@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 
 from odoo import SUPERUSER_ID, _, api, models
@@ -98,7 +97,7 @@ class AccountMoveSend(models.AbstractModel):
                         json_data = json.loads(invoice_data['sinvoice_attachments'][0]['raw'].decode('utf-8'))
                     # If the invoice was downloaded but not sent, the json file could already be there.
                     elif invoice.l10n_vn_edi_sinvoice_file:
-                        json_data = json.loads(base64.b64decode(invoice.l10n_vn_edi_sinvoice_file).decode('utf-8'))
+                        json_data = json.loads(invoice.l10n_vn_edi_sinvoice_file.content)
                     # If we don't have the file data and the file, we will regenerate it.
                     else:
                         self._generate_sinvoice_file_date(invoice, invoice_data)

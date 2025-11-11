@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from datetime import timedelta
 from itertools import islice
 
@@ -192,7 +191,7 @@ class ResCompany(models.Model):
                             # For performance, we first check the invoice name before trying to match the whole XML.
                             (
                                 m.name == invoice_name
-                                and etree.canonicalize(base64.b64decode(m.l10n_hu_edi_attachment).decode())
+                                and etree.canonicalize(m.l10n_hu_edi_attachment.decode())
                                     == canonicalized_attachment
                             )
                             or m.name == annulment_invoice_name

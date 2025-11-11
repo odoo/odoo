@@ -5,6 +5,7 @@ from functools import partial
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools import BinaryBytes, file_open
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -57,29 +58,33 @@ class WebsiteSnippetFilter(models.Model):
                 {**samples[i % len(samples)], **data_[i % len(data_)]}
                 for i in range(max(len(samples), len(data_)))
             ]
+
+        def read_file(path):
+            with file_open(path, 'rb') as file:
+                return BinaryBytes(file.read())
         if model._name == 'product.product':
             data = [{
-                'image_512': b'/product/static/img/product_chair.jpg',
+                'image_512': read_file('product/static/img/product_chair.jpg'),
                 'display_name': _("Chair"),
                 'description_sale': _("Sit comfortably"),
             }, {
-                'image_512': b'/product/static/img/product_lamp.png',
+                'image_512': read_file('product/static/img/product_lamp.png'),
                 'display_name': _("Lamp"),
                 'description_sale': _("Lightbulb sold separately"),
             }, {
-                'image_512': b'/product/static/img/product_product_20-image.png',
+                'image_512': read_file('product/static/img/product_product_20-image.png'),
                 'display_name': _("Whiteboard"),
                 'description_sale': _("With three feet"),
             }, {
-                'image_512': b'/product/static/img/product_product_27-image.jpg',
+                'image_512': read_file('product/static/img/product_product_27-image.jpg'),
                 'display_name': _("Drawer"),
                 'description_sale': _("On wheels"),
             }, {
-                'image_512': b'/product/static/img/product_product_7-image.png',
+                'image_512': read_file('product/static/img/product_product_7-image.png'),
                 'display_name': _("Box"),
                 'description_sale': _("Reinforced for heavy loads"),
             }, {
-                'image_512': b'/product/static/img/product_product_9-image.jpg',
+                'image_512': read_file('product/static/img/product_product_9-image.jpg'),
                 'display_name': _("Bin"),
                 'description_sale': _("Pedal-based opening system"),
             }]
@@ -87,19 +92,19 @@ class WebsiteSnippetFilter(models.Model):
         elif model._name == 'product.public.category':
             data = [{
                 'id': 1,
-                'cover_image': b'/website_sale/static/src/img/categories/desks.jpg',
+                'cover_image': read_file('website_sale/static/src/img/categories/desks.jpg'),
                 'name': _("Desks"),
             }, {
                 'id': 2,
-                'cover_image': b'/website_sale/static/src/img/categories/furnitures.jpg',
+                'cover_image': read_file('website_sale/static/src/img/categories/furnitures.jpg'),
                 'name': _("Furnitures"),
             }, {
                 'id': 3,
-                'cover_image': b'/website_sale/static/src/img/categories/boxes.jpg',
+                'cover_image': read_file('website_sale/static/src/img/categories/boxes.jpg'),
                 'name': _("Boxes"),
             }, {
                 'id': 4,
-                'cover_image': b'/website_sale/static/src/img/categories/drawers.jpg',
+                'cover_image': read_file('website_sale/static/src/img/categories/drawers.jpg'),
                 'name': _("Drawers"),
             }]
             samples = merge_samples_with_data(data)

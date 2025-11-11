@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import datetime
 import json
 import logging
@@ -10,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.tools import BinaryBytes
 from odoo.tools.misc import str2bool
 from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.profiler import make_session
@@ -88,7 +88,7 @@ class IrProfile(models.Model):
         # When expanding this, it should be select from an enum to input only the correct values
         params = self._parse_params(self.env.context)
         for execution in self:
-            execution.speedscope = base64.b64encode(execution._generate_speedscope(params))
+            execution.speedscope = BinaryBytes(execution._generate_speedscope(params))
 
     def _default_profile_params(self):
         has_sql = any(profile.sql for profile in self)

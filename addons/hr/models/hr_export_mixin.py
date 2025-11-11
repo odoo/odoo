@@ -1,9 +1,9 @@
-from base64 import b64encode
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools import BinaryBytes
 
 
 class HrExportMixin(models.AbstractModel):
@@ -69,14 +69,14 @@ class HrExportMixin(models.AbstractModel):
         file_content = self._generate_export_file()
         filename = self._generate_export_filename()
         self.write({
-            "export_file": b64encode(file_content),
+            "export_file": BinaryBytes(file_content),
             "export_filename": filename,
         })
 
     def _check_before_export(self):
         return True
 
-    def _generate_export_file(self):
+    def _generate_export_file(self) -> bytes:
         raise NotImplementedError()
 
     def _generate_export_filename(self):

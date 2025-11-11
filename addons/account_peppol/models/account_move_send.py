@@ -1,9 +1,8 @@
 import logging
-
-from base64 import b64encode
 from datetime import timedelta
 
 from odoo import api, fields, models, _
+from odoo.tools import BinaryBytes
 
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -167,7 +166,7 @@ class AccountMoveSend(models.AbstractModel):
             if 'peppol' in invoice_data['sending_methods'] and self._is_applicable_to_move('peppol', invoice, **invoice_data):
 
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
-                    xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+                    xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
                     filename = invoice_data['ubl_cii_xml_attachment_values']['name']
                 elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'done'):
                     xml_file = invoice.ubl_cii_xml_id.raw
@@ -183,10 +182,10 @@ class AccountMoveSend(models.AbstractModel):
 
                 if invoice.invoice_pdf_report_id and self._needs_ubl_postprocessing(invoice_data):
                     self._postprocess_invoice_ubl_xml(invoice, invoice_data)
-                    xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+                    xml_file = BinaryBytes(invoice_data['ubl_cii_xml_attachment_values']['raw'])
                     filename = invoice_data['ubl_cii_xml_attachment_values']['name']
 
-                if len(xml_file) > 64000000:
+                if xml_file.size > 64000000:
                     invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
                     continue
 
@@ -194,7 +193,7 @@ class AccountMoveSend(models.AbstractModel):
                 params['documents'].append({
                     'filename': filename,
                     'receiver': receiver_identification,
-                    'ubl': b64encode(xml_file).decode(),
+                    'ubl': xml_file.to_base64(),
                 })
                 invoices_data_peppol[invoice] = invoice_data
                 to_lock_peppol_invoices |= invoice

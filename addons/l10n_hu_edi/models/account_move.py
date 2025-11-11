@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import math
-import base64
 import logging
 import re
 
@@ -10,7 +8,7 @@ from lxml import etree
 from odoo import fields, models, api, _
 from odoo.http import request
 from odoo.exceptions import LockError, UserError, ValidationError
-from odoo.tools import formatLang, float_compare, float_is_zero, float_round, float_repr, cleanup_xml_node, groupby
+from odoo.tools import BinaryBytes, formatLang, float_round, float_repr, cleanup_xml_node, groupby
 from odoo.tools.misc import split_every
 from odoo.addons.account.tools import normalize_account_number
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import format_bool, L10nHuEdiConnection, L10nHuEdiConnectionError
@@ -476,7 +474,7 @@ class AccountMove(models.Model):
             invoice._l10n_hu_edi_set_chain_index()
 
             # Generate XML
-            invoice.l10n_hu_edi_attachment = base64.b64encode(invoice._l10n_hu_edi_generate_xml())
+            invoice.l10n_hu_edi_attachment = BinaryBytes(invoice._l10n_hu_edi_generate_xml())
 
             # Set name & mimetype on newly-created attachment.
             attachment = self.env['ir.attachment'].search([
@@ -527,7 +525,7 @@ class AccountMove(models.Model):
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
                 'operation': invoice._l10n_hu_edi_get_operation_type(),
-                'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
+                'invoice_data': invoice.l10n_hu_edi_attachment.content,
             }
             for invoice in self
         ]

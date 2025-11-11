@@ -13,7 +13,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="document_type"/>
                                 <field name="json_attachment_filename" invisible="1"/>  <!-- needed as `filename` attribute below -->
-                                <field name="json_attachment_base64" widget="binary" filename="json_attachment_filename"/>
+                                <field name="json_attachment_raw" widget="binary" filename="json_attachment_filename"/>
                             </group>
                             <group name="right_column">
                                 <field name="chain_index"/>

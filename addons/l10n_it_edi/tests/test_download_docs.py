@@ -1,4 +1,3 @@
-import base64
 from unittest.mock import patch
 
 from odoo.fields import Command
@@ -23,4 +22,4 @@ class TestDownloadDocs(HttpCase, TestItEdi):
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.content, base64.b64decode(invoice.l10n_it_edi_attachment_file))
+        self.assertEqual(res.content, invoice.l10n_it_edi_attachment_file.content)
