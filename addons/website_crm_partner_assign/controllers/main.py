@@ -185,9 +185,7 @@ class WebsiteAccount(CustomerPortal):
             })
 
 
-class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
-    _references_per_page = 40
-
+class WebsiteGMapDomains(GoogleMap):
     def _get_gmap_domains(self, **kw):
         if kw.get('dom', '') != "website_crm_partner_assign.partners":
             return super()._get_gmap_domains(**kw)
@@ -205,6 +203,10 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             domain += [('grade_id', '=', int(current_grade))]
 
         return domain
+
+
+class WebsiteCrmPartnerAssign(WebsitePartnerPage):
+    _references_per_page = 40
 
     def sitemap_partners(env, rule, qs):
         if not qs or qs.lower() in '/partners':
