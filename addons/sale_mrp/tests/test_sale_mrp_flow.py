@@ -2661,6 +2661,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(sale_order.mrp_production_count, 1)
         mo = sale_order.mrp_production_ids
         self.assertEqual(mo.sale_order_count, 1)
+        self.assertEqual(mo.sale_line_id, sale_order.order_line)
 
     def test_so_with_kit_and_multiple_same_component(self):
         """Test that a Sale Order with a kit product containing multiple identical components
