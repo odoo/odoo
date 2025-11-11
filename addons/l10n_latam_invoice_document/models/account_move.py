@@ -101,6 +101,7 @@ class AccountMove(models.Model):
     def _is_manual_document_number(self):
         return self.journal_id.type == 'purchase'
 
+    @api.depends('journal_id')
     def _compute_l10n_latam_use_documents(self):
         for rec in self:
             rec.l10n_latam_use_documents = rec.journal_id.l10n_latam_use_documents and rec.move_type != 'in_receipt'
