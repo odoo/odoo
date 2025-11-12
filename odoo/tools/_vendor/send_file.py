@@ -26,6 +26,10 @@ from werkzeug.urls import url_quote
 from werkzeug.wrappers import Response
 from werkzeug.wsgi import wrap_file
 
+if t.TYPE_CHECKING:
+    from wsgiref.types import WSGIEnvironment
+
+
 _logger = logging.getLogger(__name__)
 
 

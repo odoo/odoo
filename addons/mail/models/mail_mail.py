@@ -5,13 +5,12 @@ import ast
 import datetime
 import json
 import logging
-import psycopg2
-import pytz
 import re
 import smtplib
 from collections import defaultdict
-
 from datetime import timedelta
+
+import psycopg2
 from dateutil.parser import parse
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
@@ -313,10 +312,10 @@ class MailMail(models.Model):
         if parsed_datetime:
             parsed_datetime = parsed_datetime.replace(microsecond=0)
             if not parsed_datetime.tzinfo:
-                parsed_datetime = pytz.utc.localize(parsed_datetime)
+                parsed_datetime = parsed_datetime.replace(tzinfo=datetime.UTC)
             else:
                 try:
-                    parsed_datetime = parsed_datetime.astimezone(pytz.utc)
+                    parsed_datetime = parsed_datetime.astimezone(datetime.UTC)
                 except Exception:
                     pass
         return parsed_datetime

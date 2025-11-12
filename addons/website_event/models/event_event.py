@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from dateutil.relativedelta import relativedelta
 import json
-import werkzeug.urls
+from datetime import UTC
+from zoneinfo import ZoneInfo
 
+import werkzeug.urls
+from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from pytz import utc, timezone
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -207,10 +208,10 @@ class EventEvent(models.Model):
     def _compute_time_data(self):
         """ Compute start and remaining time. Do everything in UTC as we compute only
         time deltas here. """
-        now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
+        now_utc = fields.Datetime.now().replace(microsecond=0, tzinfo=UTC)
         for event in self:
-            date_begin_utc = utc.localize(event.date_begin, is_dst=False)
-            date_end_utc = utc.localize(event.date_end, is_dst=False)
+            date_begin_utc = event.date_begin.replace(tzinfo=UTC)
+            date_end_utc = event.date_end.replace(tzinfo=UTC)
             event.is_ongoing = date_begin_utc <= now_utc <= date_end_utc
             event.is_done = now_utc > date_end_utc
             event.start_today = date_begin_utc.date() == now_utc.date()
@@ -487,8 +488,8 @@ class EventEvent(models.Model):
         """
         start = slot.start_datetime if slot else self.date_begin
         end = slot.end_datetime if slot else self.date_end
-        url_date_start = start.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
-        url_date_stop = end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_start = start.astimezone(ZoneInfo(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_stop = end.astimezone(ZoneInfo(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
@@ -525,16 +526,16 @@ class EventEvent(models.Model):
         # To fetch the remaining events of the user's current day, the end of the user's day must
         # be localized and then converted in UTC, as it is the timezone used to record dates and
         # times in db.
-        tz = timezone(self.env.user.tz or self.env.context.get('tz') or 'UTC')
-        localized_today_begin = tz.localize(fields.Datetime.today())
-        utc_today_end = localized_today_begin.replace(hour=23, minute=59, second=59).astimezone(utc)
+        tz = self.env.tz
+        localized_today_begin = fields.Datetime.today().replace(tzinfo=tz)
+        utc_today_end = localized_today_begin.replace(hour=23, minute=59, second=59).astimezone(UTC)
 
         def sd(date):
             return fields.Datetime.to_string(date)
 
         def get_month_filter_domain(filter_name, months_delta):
             localized_month_begin = localized_today_begin.replace(day=1)
-            utc_months_delta_end = (localized_month_begin + relativedelta(months=months_delta + 1)).astimezone(utc)
+            utc_months_delta_end = (localized_month_begin + relativedelta(months=months_delta + 1)).astimezone(UTC)
             filter_string = _('This month') if months_delta == 0 \
                 else format_date(self.env, value=localized_today_begin + relativedelta(months=months_delta),
                     date_format='LLLL', lang_code=get_lang(self.env).code).capitalize()

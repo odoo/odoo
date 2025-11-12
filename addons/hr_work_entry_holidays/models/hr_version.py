@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import pytz
+import datetime
 
 from odoo import api, models
 from odoo.fields import Domain
@@ -35,8 +34,8 @@ class HrVersion(models.Model):
             if work_entry_types and work_entry_types[:1].code in bypassing_codes:
                 return work_entry_types[:1]
 
-        interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
-        interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
+        interval_start = interval[0].astimezone(datetime.UTC).replace(tzinfo=None)
+        interval_stop = interval[1].astimezone(datetime.UTC).replace(tzinfo=None)
         including_rcleaves = [l[2] for l in leaves if l[2] and interval_start >= l[2].date_from and interval_stop <= l[2].date_to]
         including_global_rcleaves = [l for l in including_rcleaves if not l.holiday_id]
         including_holiday_rcleaves = [l for l in including_rcleaves if l.holiday_id]

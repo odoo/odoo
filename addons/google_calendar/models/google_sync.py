@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import datetime
 import logging
 from contextlib import contextmanager
 from functools import wraps
-from requests import HTTPError
-import pytz
+
 from dateutil.parser import parse
 from markupsafe import Markup
+from requests import HTTPError
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
@@ -203,7 +203,7 @@ class GoogleCalendarSync(models.AbstractModel):
             # Use the record's write_date to apply Google updates only if they are newer than Odoo's write_date.
             odoo_record_write_date = write_dates.get(odoo_record.id, odoo_record.write_date)
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
-            if not odoo_record_write_date or updated >= pytz.utc.localize(odoo_record_write_date):
+            if not odoo_record_write_date or updated >= odoo_record_write_date.replace(tzinfo=datetime.UTC):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
                 odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
                 synced_records |= odoo_record

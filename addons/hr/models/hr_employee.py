@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-
 from collections import defaultdict
-
-from pytz import timezone, UTC, utc
-from datetime import datetime, time, timedelta, date
+from datetime import datetime, time, timedelta, date, UTC
 from random import choice
 from string import digits
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
@@ -951,8 +950,8 @@ class HrEmployee(models.Model):
                 res_employee_ids = employee_ids.sudo().filtered(lambda e: e.resource_calendar_id.id == calendar_id.id)
                 start_dt = fields.Datetime.now()
                 stop_dt = start_dt + timedelta(hours=1)
-                from_datetime = utc.localize(start_dt).astimezone(timezone(tz or 'UTC'))
-                to_datetime = utc.localize(stop_dt).astimezone(timezone(tz or 'UTC'))
+                from_datetime = start_dt.replace(tzinfo=UTC).astimezone(ZoneInfo(tz or 'UTC'))
+                to_datetime = stop_dt.replace(tzinfo=UTC).astimezone(ZoneInfo(tz or 'UTC'))
                 # Getting work interval of the first is working. Functions called on resource_calendar_id
                 # are waiting for singleton
                 work_interval = res_employee_ids[0].resource_calendar_id._work_intervals_batch(from_datetime, to_datetime)[False]
@@ -1025,7 +1024,7 @@ class HrEmployee(models.Model):
             tz = employee.tz
             # sudo: res.users - can access presence of accessible user
             if last_presence := employee.user_id.sudo().presence_ids.last_presence:
-                last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
+                last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(ZoneInfo(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
                 if employee.last_activity == fields.Date.today():
                     employee.last_activity_time = format_time(self.env, last_presence, time_format='short')
@@ -1782,7 +1781,7 @@ class HrEmployee(models.Model):
 
         employee_timezones = {}
         for tz, employee_ids in employees_by_tz.items():
-            date_at = timezone(tz).localize(dt).date()
+            date_at = dt.replace(tzinfo=ZoneInfo(tz)).date()
             calendars = self._get_calendars(date_at)
             employee_timezones |= {
                 emp_id: cal.sudo().tz or employees_by_id[emp_id].tz \
@@ -1811,16 +1810,10 @@ class HrEmployee(models.Model):
         versions = self.sudo()._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
         for version in versions:
             # if employee is under fully flexible contract, use timezone of the employee
-            calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(version.employee_id.resource_id.tz)
-            date_start = datetime.combine(
-                version.contract_date_start,
-                time(0, 0, 0)
-            ).replace(tzinfo=calendar_tz).astimezone(utc)
+            calendar_tz = ZoneInfo(version.resource_calendar_id.tz) if version.resource_calendar_id else ZoneInfo(version.employee_id.resource_id.tz)
+            date_start = datetime.combine(version.contract_date_start, time(0, 0, 0), tzinfo=calendar_tz).astimezone(UTC)
             if version.date_end:
-                date_end = datetime.combine(
-                    version.date_end + relativedelta(days=1),
-                    time(0, 0, 0)
-                ).replace(tzinfo=calendar_tz).astimezone(utc)
+                date_end = datetime.combine(version.date_end + relativedelta(days=1), time(0, 0, 0), tzinfo=calendar_tz).astimezone(UTC)
             else:
                 date_end = stop
             calendar_periods_by_employee[version.employee_id].append(
@@ -1845,8 +1838,8 @@ class HrEmployee(models.Model):
             # Checking the calendar directly allows to not grey out the leaves taken
             # by the employee or fallback to the company calendar
             return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
-                datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
-                datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC),
+                datetime.combine(fields.Date.from_string(date_from), time.min, tzinfo=UTC),
+                datetime.combine(fields.Date.from_string(date_to), time.max, tzinfo=UTC),
                 self.company_id,
             )
         unusual_days = {}
@@ -1854,8 +1847,8 @@ class HrEmployee(models.Model):
             tmp_date_from = max(date_from_date, version.date_start)
             tmp_date_to = min(date_to_date, version.date_end) if version.date_end else date_to_date
             unusual_days.update(version.resource_calendar_id.sudo(False)._get_unusual_days(
-                datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
-                datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC),
+                datetime.combine(fields.Date.from_string(tmp_date_from), time.min, tzinfo=UTC),
+                datetime.combine(fields.Date.from_string(tmp_date_to), time.max, tzinfo=UTC),
                 self.company_id,
             ))
         return unusual_days
@@ -1869,7 +1862,7 @@ class HrEmployee(models.Model):
             if not valid_versions:
                 calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
                 return calendar._attendance_intervals_batch(start, stop, self.resource_id, lunch=True)[self.resource_id.id]
-            employee_tz = timezone(self.tz) if self.tz else None
+            employee_tz = ZoneInfo(self.tz) if self.tz else None
             duration_data = Intervals()
             for version in valid_versions:
                 version_start = datetime.combine(version.date_start, time.min, employee_tz)
@@ -1886,7 +1879,7 @@ class HrEmployee(models.Model):
     def _get_expected_attendances(self, date_from, date_to):
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
-        employee_tz = timezone(self.tz) if self.tz else None
+        employee_tz = ZoneInfo(self.tz) if self.tz else None
         if not valid_versions:
             calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
             calendar_intervals = calendar._work_intervals_batch(
@@ -1918,7 +1911,7 @@ class HrEmployee(models.Model):
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
-        employee_tz = timezone(self.tz) if self.tz else None
+        employee_tz = ZoneInfo(self.tz) if self.tz else None
         if not valid_versions:
             calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
             return calendar.with_context(employee_timezone=employee_tz).get_work_duration_data(

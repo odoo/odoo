@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta, time
-import pytz
+from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -149,7 +149,7 @@ class HrLeave(models.Model):
                 for offset in range((leave.request_date_to - leave.request_date_from).days + 1)
             }
 
-        tz = pytz.timezone(self.env.context.get("tz") or self.env.user.tz or "UTC")
+        tz = ZoneInfo(self.env.context.get("tz") or self.env.user.tz or "UTC")
         public_holidays_dates_by_company = {
             company_id: {
                 (datetime.date(holiday.date_from.astimezone(tz)) + timedelta(days=offset)): holiday

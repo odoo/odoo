@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import timedelta
+from zoneinfo import ZoneInfo
 
 from freezegun import freeze_time
 from psycopg2.errors import IntegrityError
-from pytz import timezone
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -156,7 +155,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         # check date_planned is correctly set
         self.assertEqual(po.date_planned, date_planned)
-        po_tz = timezone(po.user_id.tz)
+        po_tz = ZoneInfo(po.user_id.tz)
         localized_date_planned = po.date_planned.astimezone(po_tz)
         self.assertEqual(localized_date_planned, po.get_localized_date_planned())
         # Ensure that the function get_localized_date_planned can accept a date in string format

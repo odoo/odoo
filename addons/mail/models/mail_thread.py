@@ -12,9 +12,7 @@ import hmac
 import json
 import lxml
 import logging
-import pytz
 import time
-
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from email import message_from_string
@@ -1872,9 +1870,9 @@ class MailThread(models.AbstractModel):
                     # naive datetime, so we arbitrarily decide to make it
                     # UTC, there's no better choice. Should not happen,
                     # as RFC2822 requires timezone offset in Date headers.
-                    stored_date = parsed_date.replace(tzinfo=pytz.utc)
+                    stored_date = parsed_date.replace(tzinfo=datetime.UTC)
                 else:
-                    stored_date = parsed_date.astimezone(tz=pytz.utc)
+                    stored_date = parsed_date.astimezone(tz=datetime.UTC)
             except Exception:
                 _logger.info('Failed to parse Date header %r in incoming mail '
                              'with message-id %r, assuming current date/time.',

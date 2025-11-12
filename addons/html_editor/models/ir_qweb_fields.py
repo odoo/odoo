@@ -13,10 +13,10 @@ import json
 import logging
 import os
 import re
-from datetime import datetime
+from datetime import datetime, UTC
+from zoneinfo import ZoneInfo
 
 import babel
-import pytz
 import requests
 from lxml import etree, html
 from PIL import Image as I
@@ -265,10 +265,7 @@ class IrQwebFieldDatetime(models.AbstractModel):
         tz_name = element.attrib.get('data-oe-original-tz') or self.env.context.get('tz') or self.env.user.tz
         if tz_name:
             try:
-                user_tz = pytz.timezone(tz_name)
-                utc = pytz.utc
-
-                dt = user_tz.localize(dt).astimezone(utc)
+                dt = dt.replace(tzinfo=ZoneInfo(tz_name)).astimezone(UTC)
             except Exception:  # noqa: BLE001
                 logger.warning(
                     "Failed to convert the value for a field of the model"

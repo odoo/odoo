@@ -1,8 +1,6 @@
-from datetime import datetime
-from pytz import timezone
+from datetime import datetime, UTC
 
 from odoo.fields import Command
-from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 
@@ -14,7 +12,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.frozen_today = datetime(year=2022, month=3, day=15, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
+        cls.frozen_today = datetime(year=2022, month=3, day=15, hour=0, minute=0, second=0, tzinfo=UTC)
 
         cls.currency_aed_id = cls.setup_other_currency('AED', rates=[('2022-03-14', 0.198117095128)])
 

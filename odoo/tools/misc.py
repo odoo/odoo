@@ -33,11 +33,11 @@ from functools import reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 from types import MappingProxyType
+from zoneinfo import ZoneInfo
 
 import babel
 import babel.dates
 import markupsafe
-import pytz
 from lxml import etree, objectify
 
 from odoo.loglevels import exception_to_unicode
@@ -1408,9 +1408,9 @@ def format_datetime(
         timestamp = value
 
     tz_name = tz or env.user.tz or 'UTC'
-    utc_datetime = pytz.utc.localize(timestamp, is_dst=False)
+    utc_datetime = timestamp.replace(tzinfo=datetime.UTC)
     try:
-        context_tz = pytz.timezone(tz_name)
+        context_tz = ZoneInfo(tz_name)
         localized_datetime = utc_datetime.astimezone(context_tz)
     except Exception:
         localized_datetime = utc_datetime
@@ -1461,9 +1461,9 @@ def format_time(
             value = Datetime.from_string(value)
         assert isinstance(value, datetime.datetime)
         tz_name = tz or env.user.tz or 'UTC'
-        utc_datetime = pytz.utc.localize(value, is_dst=False)
+        utc_datetime = value.replace(tzinfo=datetime.UTC)
         try:
-            context_tz = pytz.timezone(tz_name)
+            context_tz = ZoneInfo(tz_name)
             localized_time = utc_datetime.astimezone(context_tz).timetz()
         except Exception:
             localized_time = utc_datetime.timetz()

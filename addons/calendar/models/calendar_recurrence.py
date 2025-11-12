@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time
-import pytz
 import re
+from datetime import datetime, time, UTC
+from zoneinfo import ZoneInfo
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -353,7 +353,7 @@ class CalendarRecurrence(models.Model):
             until = self._get_start_of_period(event.start_date)
         else:
             until_datetime = self._get_start_of_period(event.start)
-            until_timezoned = pytz.utc.localize(until_datetime).astimezone(self._get_timezone())
+            until_timezoned = until_datetime.replace(tzinfo=UTC).astimezone(self._get_timezone())
             until = until_timezoned.date()
         self.write({
             'end_type': 'end_date',
@@ -406,7 +406,7 @@ class CalendarRecurrence(models.Model):
         rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":").lstrip(":;")
 
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
-            date_start = pytz.utc.localize(date_start)
+            date_start = date_start.replace(tzinfo=UTC)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
 
         data['rrule_type'] = freq_to_select(rule._freq)
@@ -460,8 +460,8 @@ class CalendarRecurrence(models.Model):
         # This is a hack to avoid duplication of events (for example on google calendar).
         if isinstance(dt, datetime):
             timezone = self._get_timezone()
-            dst_dt = timezone.localize(dt).dst()
-            dst_start = timezone.localize(start).dst()
+            dst_dt = dt.replace(tzinfo=timezone, fold=1).dst()
+            dst_start = start.replace(tzinfo=timezone, fold=1).dst()
             if dst_dt != dst_start:
                 start = dt
         return start
@@ -510,7 +510,7 @@ class CalendarRecurrence(models.Model):
         return ((start, start + event_duration) for start in starts)
 
     def _get_timezone(self):
-        return pytz.timezone(self.event_tz or self.env.context.get('tz') or 'UTC')
+        return ZoneInfo(self.event_tz or self.env.context.get('tz') or 'UTC')
 
     def _get_occurrences(self, dtstart):
         """
@@ -521,11 +521,12 @@ class CalendarRecurrence(models.Model):
         self.ensure_one()
         dtstart = self._get_start_of_period(dtstart)
         if self._is_allday():
-            return self._get_rrule(dtstart=dtstart)
+            yield from self._get_rrule(dtstart=dtstart)
+            return
 
         timezone = self._get_timezone()
         # Localize the starting datetime to avoid missing the first occurrence
-        dtstart = pytz.utc.localize(dtstart).astimezone(timezone)
+        dtstart = dtstart.replace(tzinfo=UTC).astimezone(timezone)
         # dtstart is given as a naive datetime, but it actually represents a timezoned datetime
         # (rrule package expects a naive datetime)
         occurences = self._get_rrule(dtstart=dtstart.replace(tzinfo=None))
@@ -545,7 +546,13 @@ class CalendarRecurrence(models.Model):
         # What should be stored is:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 10:00 - 2019/05/01 10:00 (UTC)
         #                                                  *****              *****
-        return (timezone.localize(occurrence, is_dst=False).astimezone(pytz.utc).replace(tzinfo=None) for occurrence in occurences)
+        for occurence in occurences:
+            # emulate pytz's `is_dst=False` semantics on std
+            yield min(
+                occurence.replace(tzinfo=timezone, fold=0),
+                occurence.replace(tzinfo=timezone, fold=1),
+                key=lambda d: d.utcoffset(),
+            ).astimezone(UTC).replace(tzinfo=None)
 
     def _get_events_from(self, dtstart):
         return self.env['calendar.event'].search([

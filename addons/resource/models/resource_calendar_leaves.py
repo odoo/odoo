@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time
+from datetime import datetime, time, UTC
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
-from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -23,12 +24,12 @@ class ResourceCalendarLeaves(models.Model):
             calendar = self.env.company.resource_calendar_id
             if 'calendar_id' in res:
                 calendar = self.env['resource.calendar'].browse(res['calendar_id'])
-            tz = timezone(calendar.tz or 'UTC')
-            date_from = tz.localize(datetime.combine(today, time.min))
-            date_to = tz.localize(datetime.combine(today, time.max))
+            tz = ZoneInfo(calendar.tz or 'UTC')
+            date_from = datetime.combine(today, time.min, tzinfo=tz)
+            date_to = datetime.combine(today, time.max, tzinfo=tz)
             res.update(
-                date_from=date_from.astimezone(utc).replace(tzinfo=None),
-                date_to=date_to.astimezone(utc).replace(tzinfo=None)
+                date_from=date_from.astimezone(UTC).replace(tzinfo=None),
+                date_to=date_to.astimezone(UTC).replace(tzinfo=None)
             )
         return res
 
@@ -64,13 +65,13 @@ class ResourceCalendarLeaves(models.Model):
     def _compute_date_to(self):
         user_tz = self.env.tz
         if not (self.env.user.tz or self.env.context.get('tz')):
-            user_tz = timezone(self.company_id.resource_calendar_id.tz or 'UTC')
+            user_tz = ZoneInfo(self.company_id.resource_calendar_id.tz or 'UTC')
         for leave in self:
             if not leave.date_from or (leave.date_to and leave.date_to > leave.date_from):
                 continue
-            local_date_from = utc.localize(leave.date_from).astimezone(user_tz)
+            local_date_from = leave.date_from.replace(tzinfo=UTC).astimezone(user_tz)
             local_date_to = local_date_from + relativedelta(hour=23, minute=59, second=59)
-            leave.date_to = local_date_to.astimezone(utc).replace(tzinfo=None)
+            leave.date_to = local_date_to.astimezone(UTC).replace(tzinfo=None)
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):

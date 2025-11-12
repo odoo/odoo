@@ -652,7 +652,7 @@ class AccountMove(models.Model):
         if self.company_currency_id != self.currency_id:
             json_payload["ValDtls"].update({
                 "TotInvValFc": in_round(
-                    (tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency")))
+                    tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency"))
             })
         if seller_buyer['seller_details'] != seller_buyer['dispatch_details']:
             json_payload['DispDtls'] = self._get_l10n_in_edi_partner_details(

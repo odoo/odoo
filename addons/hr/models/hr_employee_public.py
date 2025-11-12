@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
-from pytz import timezone, UTC
+from datetime import timedelta, UTC
+from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, tools
 from odoo.tools import format_time
@@ -101,7 +101,7 @@ class HrEmployeePublic(models.Model):
             tz = employee.tz
             # sudo: res.users - can access presence of accessible user
             if last_presence := employee.user_id.sudo().presence_ids.last_presence:
-                last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
+                last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(ZoneInfo(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
                 if employee.last_activity == fields.Date.today():
                     employee.last_activity_time = format_time(self.env, last_presence, time_format='short')

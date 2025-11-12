@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import datetime
 from collections import defaultdict
-import pytz
+from zoneinfo import ZoneInfo
 
 from odoo import models
 
@@ -17,14 +17,14 @@ class HrVersion(models.Model):
         fr_contracts = self.filtered(lambda c: c.company_id.country_id.code == 'FR' and c.resource_calendar_id != c.company_id.resource_calendar_id)
         if not fr_contracts:
             return result
-        start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
-        end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
+        start_dt = date_start.replace(tzinfo=datetime.UTC) if not date_start.tzinfo else date_start
+        end_dt = date_stop.replace(tzinfo=datetime.UTC) if not date_stop.tzinfo else date_stop
         # l10n_fr_date_to_changed is False when no adjustment had to be done
         all_leaves = self.env['hr.leave'].search([
             ('employee_id', 'in', fr_contracts.employee_id.ids),
             ('state', '=', 'validate'),
-            ('date_from', '<=', end_dt.astimezone(pytz.utc).replace(tzinfo=None)),
-            ('date_to', '>=', start_dt.astimezone(pytz.utc).replace(tzinfo=None)),
+            ('date_from', '<=', end_dt.astimezone(datetime.UTC).replace(tzinfo=None)),
+            ('date_to', '>=', start_dt.astimezone(datetime.UTC).replace(tzinfo=None)),
             ('l10n_fr_date_to_changed', '=', True),
         ])
         leaves_per_employee = defaultdict(lambda: self.env['hr.leave'])
@@ -36,7 +36,7 @@ class HrVersion(models.Model):
             company = contract.company_id
             company_calendar = company.resource_calendar_id
             resource = employee.resource_id
-            tz = pytz.timezone(employee_calendar.tz)
+            tz = ZoneInfo(employee_calendar.tz)
 
             for leave in leaves_per_employee[employee]:
                 leave_start_dt = max(start_dt, leave.date_from.astimezone(tz))
@@ -54,8 +54,8 @@ class HrVersion(models.Model):
                     employee_dates.add(vals['date_stop'].date())
                 leave_work_entry_type = leave.holiday_status_id.work_entry_type_id
                 result += [{
-                    'date_start': interval[0].astimezone(pytz.utc).replace(tzinfo=None),
-                    'date_stop': interval[1].astimezone(pytz.utc).replace(tzinfo=None),
+                    'date_start': interval[0].astimezone(datetime.UTC).replace(tzinfo=None),
+                    'date_stop': interval[1].astimezone(datetime.UTC).replace(tzinfo=None),
                     'work_entry_type_id': leave_work_entry_type.id,
                     'employee_id': employee.id,
                     'company_id': contract.company_id.id,

@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import logging
 import json
-from datetime import datetime
-from markupsafe import Markup
+from datetime import datetime, UTC
 from itertools import groupby
 from collections import defaultdict
 from uuid import uuid4
@@ -10,13 +10,12 @@ from random import randrange
 from pprint import pformat
 
 import psycopg2
-import pytz
+from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
-import base64
 
 
 _logger = logging.getLogger(__name__)
@@ -1687,8 +1686,8 @@ class PosOrderLine(models.Model):
             # because shipping_date is date and date_planned is datetime
             from_zone = self.env.tz
             shipping_date = fields.Datetime.to_datetime(self.order_id.shipping_date)
-            shipping_date = from_zone.localize(shipping_date)
-            date_deadline = shipping_date.astimezone(pytz.UTC).replace(tzinfo=None)
+            shipping_date = shipping_date.replace(tzinfo=from_zone)
+            date_deadline = shipping_date.astimezone(UTC).replace(tzinfo=None)
         else:
             date_deadline = self.order_id.date_order
 

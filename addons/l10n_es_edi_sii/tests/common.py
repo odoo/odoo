@@ -1,7 +1,6 @@
 # coding: utf-8
 import base64
-from pytz import timezone
-from datetime import datetime
+from datetime import datetime, UTC
 
 from odoo.tools import misc
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
@@ -19,7 +18,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.frozen_today = datetime(year=2019, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
+        cls.frozen_today = datetime(year=2019, month=1, day=1, hour=0, minute=0, second=0, tzinfo=UTC)
 
         # Allow to see the full result of AssertionError.
         cls.maxDiff = None

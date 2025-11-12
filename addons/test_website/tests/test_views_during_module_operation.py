@@ -164,7 +164,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
             ('website_id', 'in', (website_1 + website_2).ids),
         ])
         assert (
-            set((view_website_1 + view_website_2)).issubset(theme_child_view.copy_ids)
+            set(view_website_1 + view_website_2).issubset(theme_child_view.copy_ids)
             and view_website_1.website_id == website_1
             and view_website_2.website_id == website_2
         ), "Theme View should have been copied to the website."

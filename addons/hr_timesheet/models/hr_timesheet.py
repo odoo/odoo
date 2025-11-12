@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 from collections import defaultdict
 from datetime import datetime, time
 from statistics import mode
-import re
-
-import pytz
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError

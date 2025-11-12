@@ -1,9 +1,10 @@
 import logging
-import pytz
 
 from collections import defaultdict
 
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, UTC
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
 from math import ceil
 from markupsafe import Markup
@@ -115,11 +116,11 @@ class HrLeave(models.Model):
         client_tz = self.env.tz
         if values.get('date_from'):
             if not values.get('request_date_from'):
-                values['request_date_from'] = pytz.utc.localize(values['date_from']).astimezone(client_tz)
+                values['request_date_from'] = values['date_from'].replace(tzinfo=UTC).astimezone(client_tz)
             del values['date_from']
         if values.get('date_to'):
             if not values.get('request_date_to'):
-                values['request_date_to'] = pytz.utc.localize(values['date_to']).astimezone(client_tz)
+                values['request_date_to'] = values['date_to'].replace(tzinfo=UTC).astimezone(client_tz)
             del values['date_to']
         return values
 
@@ -797,7 +798,7 @@ class HrLeave(models.Model):
     @api.depends_context('short_name', 'hide_employee_name', 'groupby')
     def _compute_display_name(self):
         for leave in self:
-            user_tz = pytz.timezone(leave.tz)
+            user_tz = ZoneInfo(leave.tz)
             date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             time_off_type_display = leave.holiday_status_id.name
@@ -1064,8 +1065,8 @@ class HrLeave(models.Model):
             Holiday.browse(meeting.res_id).meeting_id = meeting
 
         for holiday in holidays:
-            user_tz = pytz.timezone(holiday.tz)
-            utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
+            user_tz = ZoneInfo(holiday.tz)
+            utc_tz = holiday.date_from.replace(tzinfo=UTC).astimezone(user_tz)
             notify_partner_ids = holiday.employee_id.user_id.partner_id.ids
             holiday.message_post(
                 body=_(
@@ -1631,8 +1632,8 @@ class HrLeave(models.Model):
 
     def _to_utc(self, date, hour, resource):
         hour = float_to_time(float(hour))
-        holiday_tz = pytz.timezone(resource.tz or self.env.user.tz or 'UTC')
-        return holiday_tz.localize(datetime.combine(date, hour)).astimezone(pytz.UTC).replace(tzinfo=None)
+        holiday_tz = ZoneInfo(resource.tz or self.env.user.tz or 'UTC')
+        return datetime.combine(date, hour, tzinfo=holiday_tz).astimezone(UTC).replace(tzinfo=None)
 
     def _get_hour_from_to(self, request_date_from, request_date_to, day_period=None):
         """

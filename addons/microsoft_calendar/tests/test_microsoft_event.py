@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, UTC
+
 from dateutil.relativedelta import relativedelta
-from pytz import UTC
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.tests import tagged

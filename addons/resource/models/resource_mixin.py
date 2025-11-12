@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from pytz import utc
+from datetime import UTC
 
 from odoo import api, fields, models
 from odoo.tools.date_utils import localized
@@ -196,9 +196,9 @@ class ResourceMixin(models.AbstractModel):
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
+            from_datetime = from_datetime.replace(tzinfo=UTC)
         if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+            to_datetime = to_datetime.replace(tzinfo=UTC)
         compute_leaves = self.env.context.get('compute_leaves', True)
 
         for calendar, records in records_by_calendar.items():
@@ -228,9 +228,9 @@ class ResourceMixin(models.AbstractModel):
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
+            from_datetime = from_datetime.replace(tzinfo=UTC)
         if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+            to_datetime = to_datetime.replace(tzinfo=UTC)
 
         attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, resource)[resource.id]
         leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]

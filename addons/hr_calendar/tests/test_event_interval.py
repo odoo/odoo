@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, UTC
+from zoneinfo import ZoneInfo
+
 from odoo.tests import tagged
-from datetime import datetime
-from pytz import timezone
 from odoo.addons.hr_calendar.tests.common import TestHrCalendarCommon
 
 
@@ -32,13 +33,13 @@ class TestEventInterval(TestHrCalendarCommon):
         self.assertEqual(result.get(event)._items, [])
         self.assertEqual(result.get(allday_event)._items, [
             (
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 8, 0, 0)),
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 12, 0, 0)),
+                datetime(2024, 7, 12, 8, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
+                datetime(2024, 7, 12, 12, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
                 self.env['resource.calendar']
             ),
             (
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 13, 0, 0)),
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 16, 0, 0)),
+                datetime(2024, 7, 12, 13, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
+                datetime(2024, 7, 12, 16, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
                 self.env['resource.calendar']
             )
         ])
@@ -55,13 +56,13 @@ class TestEventInterval(TestHrCalendarCommon):
         result = event._get_events_interval()
         self.assertEqual(result.get(event)._items, [
             (
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 8, 0, 0)),
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 12, 0, 0)),
+                datetime(2024, 7, 12, 8, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
+                datetime(2024, 7, 12, 12, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
                 self.env['resource.calendar']
             ),
             (
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 13, 0, 0)),
-                timezone('Europe/Brussels').localize(datetime(2024, 7, 12, 16, 0, 0)),
+                datetime(2024, 7, 12, 13, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
+                datetime(2024, 7, 12, 16, 0, 0).replace(tzinfo=ZoneInfo('Europe/Brussels')),
                 self.env['resource.calendar']
             )
         ])
@@ -117,8 +118,8 @@ class TestEventInterval(TestHrCalendarCommon):
         result = event._get_events_interval()
         self.assertEqual(result.get(event)._items, [
             (
-                timezone('UTC').localize(datetime(2024, 7, 12, 8, 30, 0)),
-                timezone('UTC').localize(datetime(2024, 7, 12, 9, 30, 0)),
+                datetime(2024, 7, 12, 8, 30, 0).replace(tzinfo=UTC),
+                datetime(2024, 7, 12, 9, 30, 0).replace(tzinfo=UTC),
                 self.env['resource.calendar']
             )
         ])

@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import requests
-
-from pytz import timezone
-from datetime import date, datetime
+from datetime import date, datetime, UTC
 from unittest.mock import Mock
+
+import requests
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
@@ -22,7 +21,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.frozen_today = datetime(year=2025, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
+        cls.frozen_today = datetime(year=2025, month=1, day=1, hour=0, minute=0, second=0, tzinfo=UTC)
 
         # Allow to see the full result of AssertionError.
         cls.maxDiff = None
