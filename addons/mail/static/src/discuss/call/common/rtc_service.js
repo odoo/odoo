@@ -838,9 +838,6 @@ export class Rtc extends Record {
     async toggleDeafen() {
         if (this.selfSession.is_deaf) {
             await this.undeafen();
-            if (this.selfSession.is_muted) {
-                await this.unmute();
-            }
         } else {
             await this.deafen();
         }

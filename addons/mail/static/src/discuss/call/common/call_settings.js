@@ -64,15 +64,6 @@ export class CallSettings extends Component {
         return _t("Test");
     }
 
-    get pushToTalkKeyText() {
-        const { shiftKey, ctrlKey, altKey, key } = this.store.settings.pushToTalkKeyFormat();
-        const f = (k, name) => (k ? name : "");
-        const keys = [f(ctrlKey, "Ctrl"), f(altKey, "Alt"), f(shiftKey, "Shift"), key].filter(
-            Boolean
-        );
-        return keys.join(" + ");
-    }
-
     get isMobileOS() {
         return isMobileOS();
     }
