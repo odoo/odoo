@@ -11,7 +11,7 @@
                     <t t-if="!props.message.parent_id.isEmpty">
                         <img class="o-mail-MessageInReply-avatar me-2 rounded object-fit-cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.authorName" alt="Avatar"/>
                         <span class="o-mail-MessageInReply-content overflow-hidden smaller">
-                            <b class="o-mail-MessageInReply-author"><t t-out="props.message.parent_id.authorName"/></b>:
+                            <b class="o-mail-MessageInReply-author o-fw-600"><t t-out="props.message.parent_id.authorName"/></b>:
                             <span class="o-mail-MessageInReply-message ms-1 text-break">
                                 <t t-if="!props.message.parent_id.isBodyEmpty">
                                     <t t-out="props.message.parent_id.inlineBody"/>
