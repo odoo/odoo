@@ -3,19 +3,21 @@
 
     <!-- /shop/payment route -->
     <template id="website_sale.payment" name="Payment">
-        <t t-call="website_sale.checkout_layout">
-            <t t-set="additional_title">Shop - Select Payment Method</t>
-            <t t-set='redirect' t-valuef="/shop/payment"/>
-            <t t-set="oe_structure">
-                <!-- This is the drag-and-drop area for website building blocs at the end of each
-                     checkout page. This is append at the of the page in `checkout_layout`. The
-                     templates created in the database to store blocs are hooked using XPath on the
-                     `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
-                     t-att-id) and each template needs to define a div element. -->
-                <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
-            </t>
+        <t t-set="hide_payment_button" t-value="True" t-if="errors or (website_sale_order.amount_total and not (payment_methods_sudo or tokens_sudo))"/>
+        <t t-set="oe_structure">
+            <!--
+                 checkout page. This is append at the of the page in `checkout_layout`. The
+                 templates created in the database to store blocs are hooked using XPath on the
+                 `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                 t-att-id) and each template needs to define a div element. -->
+            <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
+        </t>
+        <t t-call="website_sale.checkout_layout"
+            additional_title.translate="Shop - Select Payment Method"
+            redirect.f="/shop/payment"
+            hide_payment_button="hide_payment_button"
+            oe_structure="oe_structure">
             <div class="col-12" t-if="errors">
-                <t t-set="hide_payment_button" t-value="True"/>
                 <t t-foreach="errors" t-as="error">
                     <div class="alert alert-danger" t-if="error" role="alert">
                         <h4>
@@ -31,7 +33,6 @@
                 <div id="payment_method" class="o_not_editable mb-3">
                     <t t-call="payment.form"/>
                 </div>
-                <t t-if="not (payment_methods_sudo or tokens_sudo)" t-set="hide_payment_button" t-value="True"/>
             </div>
             <h4 t-else="" class="mb-3">
                 Confirm order
