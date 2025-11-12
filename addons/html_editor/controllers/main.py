@@ -7,7 +7,7 @@ import werkzeug.exceptions
 import werkzeug.urls
 import requests
 from os.path import join as opj
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
@@ -314,37 +314,87 @@ class HTML_Editor(http.Controller):
         return attachment
 
     @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='jsonrpc', auth='user', website=True)
-    def get_image_info(self, src=''):
+    def get_image_info(self, src='', href_base=''):
         """This route is used to determine the information of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
+        Params:
+            src (str): the src of the image.
+            href_base (str): the url of the page containing the image.
         """
         self._clean_context()
-        attachment = None
-        if src.startswith('/web/image'):
+
+        def _get_attachment_by_url(src):
+            """Find attachment by url. There can be multiple matches because of
+            default snippet images referencing the same image in /static/, so we
+            limit to 1.
+            """
+            return request.env['ir.attachment'].search([
+                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
+                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
+            ], limit=1)
+
+        def _extract_attachment_info(attachment):
+            original = (attachment.original_id or attachment)
+            return {
+                'attachment': attachment.read(['id'])[0],
+                'original': original.read(['id', 'image_src', 'mimetype'])[0],
+            }
+
+        # Try to retrieve the original attachment based on the given url.
+        attachment = _get_attachment_by_url(src)
+        if attachment:
+            return _extract_attachment_info(attachment)
+
+        # If no match, then search by url *path*. To do so, the src is first
+        # transformed into an absolute url in order to correctly handle relative
+        # url that does not begin with a '/' and protocol relative url.
+        absolute_url = urljoin(href_base, src)
+        path = urlparse(absolute_url).path
+
+        # Probably most common case: the standard '/web/image' route.
+        # Note that as this controller receive *potentially* an absolute URL,
+        # the checked path here could belong to an external website, so trying
+        # to match an internal ir.attachment based on it would not make much
+        # sense... but this is what we want to do. Indeed, the point is that we
+        # cannot know for sure that is an external website (we could try to
+        # guess (which we do a bit client-side), but it's not worth it here).
+        # The user can have set up a domain for their website which does not
+        # match the current one, or they used a XXXX.odoo.com URL, etc -> so we
+        # cannot guess 100% accurately based on the origin. So this is actually
+        # the point: most of the time, this route will receive a relative path,
+        # so there is no problem. But in the case where we receive something
+        # like https://www.something.com/web/image/xxx -> it might be from the
+        # user (either because he configured it that way, but also because we
+        # had some bugs in the past that wrongly forced an absolute URL form),
+        # or not. We just rely on preferring to not miss the ones that actually
+        # are. And the worse outcome from matching a wrong one is a website
+        # builder option appearing when it should not to (on an otherwise
+        # non-configurable external image), and making the external image switch
+        # to an internal image when that option is used.
+        if path.startswith('/web/image'):
             with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
-                _, args = request.env['ir.http']._match(src)
+                _, args = request.env['ir.http']._match(path)
                 record = request.env['ir.binary']._find_record(
                     xmlid=args.get('xmlid'),
                     res_model=args.get('model', 'ir.attachment'),
                     res_id=args.get('id'),
                 )
                 if record._name == 'ir.attachment':
-                    attachment = record
-        if not attachment:
-            # Find attachment by url. There can be multiple matches because of default
-            # snippet images referencing the same image in /static/, so we limit to 1
-            attachment = request.env['ir.attachment'].search([
-                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
-            ], limit=1)
-        if not attachment:
-            return {
-                'attachment': False,
-                'original': False,
-            }
+                    return _extract_attachment_info(record)
+
+        # Probably not a standard case, for example:
+        # - A relative src, wrongfully converted as absolute, whose path
+        # actually matches an attachment's url field.
+        # - A protocol relative url or a relative url that does not begin with a
+        # `/`, whose path actually matches an attachment's url field.
+        # Still possible and valid. And at least useful by compatibility.
+        attachment = _get_attachment_by_url(path)
+        if attachment:
+            return _extract_attachment_info(attachment)
+
         return {
-            'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+            'attachment': False,
+            'original': False,
         }
 
     @http.route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='jsonrpc', auth='user', website=True)
