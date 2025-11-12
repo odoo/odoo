@@ -715,7 +715,7 @@ export class HrDashboard extends Component{
                 });
             }
             this.effect.add({
-                message: _t("Successfully " + message),
+                message: _t("Pomyślnie " + message),
                 type: 'rainbow_man',
                 fadeout: "fast",
             })
