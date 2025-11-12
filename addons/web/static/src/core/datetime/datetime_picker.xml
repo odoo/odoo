@@ -9,7 +9,7 @@
                 >
                     <t t-foreach="month.daysOfWeek" t-as="dayOfWeek" t-key="dayOfWeek[0]">
                         <div
-                            class="o_day_of_week_cell bg-100 fw-bolder d-flex align-items-center justify-content-center"
+                            class="o_day_of_week_cell fw-bolder d-flex align-items-center justify-content-center"
                             t-att-title="dayOfWeek[1]"
                         >
                             <div class="text-nowrap overflow-hidden" t-esc="props.daysOfWeekFormat === 'narrow' ? dayOfWeek[2] : dayOfWeek[0]"/>
@@ -18,7 +18,7 @@
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
                         <t t-if="props.showWeekNumbers">
                             <div
-                                class="o_week_number_cell d-flex justify-content-end align-items-center pe-3 bg-100 fw-bolder"
+                                class="o_week_number_cell d-flex justify-content-center align-items-center fw-bolder"
                                 t-esc="week.number"
                             />
                         </t>
