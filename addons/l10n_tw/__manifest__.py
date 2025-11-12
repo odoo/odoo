@@ -19,6 +19,9 @@ This is the base module to manage the accounting chart for Taiwan in Odoo.
         'data/res_currency_data.xml',
         'data/res_country_data.xml',
         'data/res.city.csv',
+        'data/tax_report_401.xml',
+        'data/tax_report_403.xml',
+        'data/tax_report_404.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
