@@ -132,21 +132,6 @@ const threadPatch = {
         /** @type {string} name: only for channel. For generic thread, @see display_name */
         this.name = undefined;
         this.channel_name_member_ids = fields.Many("discuss.channel.member");
-        this.onlineMembers = fields.Many("discuss.channel.member", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.channel?.channel_member_ids
-                    .filter((member) => member.isOnline)
-                    .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-            },
-        });
-        this.offlineMembers = fields.Many("discuss.channel.member", {
-            compute() {
-                return this._computeOfflineMembers().sort(
-                    (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-                );
-            },
-        });
         this.self_member_id = fields.One("discuss.channel.member", {
             inverse: "threadAsSelf",
         });
@@ -165,10 +150,6 @@ const threadPatch = {
                 this.store.updateBusSubscription();
             },
         });
-    },
-    /** @returns {import("models").ChannelMember[]} */
-    _computeOfflineMembers() {
-        return this.channel?.channel_member_ids.filter((member) => !member.isOnline);
     },
     /** Equivalent to DiscussChannel._allow_invite_by_email */
     get allow_invite_by_email() {
