@@ -60,6 +60,7 @@ const {
     Object: {
         assign: $assign,
         defineProperties: $defineProperties,
+        defineProperty: $defineProperty,
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
         getPrototypeOf: $getPrototypeOf,
@@ -69,9 +70,11 @@ const {
     Reflect: { ownKeys: $ownKeys },
     Set,
     WeakMap,
+    WeakSet,
 } = globalThis;
 
 const { addEventListener, removeEventListener } = EventTarget.prototype;
+const { preventDefault } = Event.prototype;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -326,6 +329,11 @@ function mockedMatchMedia(mediaQueryString) {
     return new MockMediaQueryList(mediaQueryString);
 }
 
+function mockedPreventDefault() {
+    preventedEvents.add(this);
+    return preventDefault.call(this, ...arguments);
+}
+
 /** @type {typeof removeEventListener} */
 function mockedRemoveEventListener(...args) {
     if (getRunner().dry) {
@@ -443,6 +451,8 @@ const mockConsole = new MockConsole();
 const mockLocalStorage = new MockStorage();
 const mockMediaValues = { ...DEFAULT_MEDIA_VALUES };
 const mockSessionStorage = new MockStorage();
+/** @type {WeakSet<Event>} */
+const preventedEvents = new WeakSet();
 let mockTitle = "";
 
 // Mock descriptors
@@ -577,12 +587,28 @@ export function getViewPortWidth() {
 }
 
 /**
+ * @param {Event} event
+ */
+export function isPrevented(event) {
+    return event.defaultPrevented || preventedEvents.has(event);
+}
+
+/**
  * @param {Record<string, string>} name
  */
 export function mockMatchMedia(values) {
     $assign(mockMediaValues, values);
 
     callMediaQueryChanges($keys(values));
+}
+
+/**
+ * @param {Event} event
+ */
+export function mockPreventDefault(event) {
+    $defineProperty(event, "preventDefault", {
+        value: mockedPreventDefault,
+    });
 }
 
 /**
