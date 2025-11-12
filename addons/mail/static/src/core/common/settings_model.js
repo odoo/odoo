@@ -91,6 +91,18 @@ export class Settings extends Record {
         return constraints;
     }
 
+    get pushToTalkKeyText() {
+        if (!this.push_to_talk_key) {
+            return "";
+        }
+        const [shiftKey, ctrlKey, altKey, key] = this.push_to_talk_key.split(".");
+        const f = (k, name) => (k ? name : "");
+        const keys = [f(ctrlKey, "Ctrl"), f(altKey, "Alt"), f(shiftKey, "Shift"), key].filter(
+            Boolean
+        );
+        return keys.join(" + ");
+    }
+
     get NOTIFICATIONS() {
         return [
             {
@@ -293,18 +305,6 @@ export class Settings extends Record {
             return [...settingsKeySet].every((key) => eventKeySet.has(key));
         }
         return settingsKeySet.has(ev.key === "Meta" ? "Alt" : ev.key);
-    }
-    pushToTalkKeyFormat() {
-        if (!this.push_to_talk_key) {
-            return;
-        }
-        const [shiftKey, ctrlKey, altKey, key] = this.push_to_talk_key.split(".");
-        return {
-            shiftKey: !!shiftKey,
-            ctrlKey: !!ctrlKey,
-            altKey: !!altKey,
-            key: key || false,
-        };
     }
     setPushToTalk(value) {
         this.use_push_to_talk = value;
