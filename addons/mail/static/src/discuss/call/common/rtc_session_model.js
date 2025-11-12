@@ -110,6 +110,16 @@ export class RtcSession extends Record {
         compute() {
             return this.is_screen_sharing_on || this.is_camera_on;
         },
+        /** @this {import("models").RtcSession} */
+        onUpdate() {
+            if (
+                this.isVideoStreaming &&
+                this.channel?.channel_type === "chat" &&
+                this.store.rtc.selfSession?.in(this.channel.rtc_session_ids)
+            ) {
+                this.channel.focusAvailableVideo();
+            }
+        },
     });
     shortStatus = fields.Attr(undefined, {
         compute() {
