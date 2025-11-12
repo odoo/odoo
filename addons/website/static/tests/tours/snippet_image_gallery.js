@@ -62,7 +62,7 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     run: "click",
 }, {
     content: "Check that the Snippet Editor of the clicked image has been loaded with its size",
-    trigger: ".o-tab-content [data-container-title='Image']:has([title='Size']:contains(/^.+ kB$/)",
+    trigger: ".o-tab-content [data-container-title='Image']:has([title='Size']:text(.+ kB)",
 }, {
     content: "Click on Remove Block",
     trigger: ".o_customize_tab .options-container[data-container-title='Image Gallery'] .oe_snippet_remove",

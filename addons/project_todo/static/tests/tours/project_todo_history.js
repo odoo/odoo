@@ -102,11 +102,11 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         },
     }, {
         content: "Click on Restore History btn to get back to the selected revision in the previous step",
-        trigger: ".modal button.btn-primary:contains(/^Restore history$/)",
+        trigger: ".modal button.btn-primary:text(Restore history)",
         run: "click",
     }, {
         content: "Verify the confirmation dialog is opened",
-        trigger: ".modal button.btn-primary:contains(/^Restore$/)",
+        trigger: ".modal button.btn-primary:text(Restore)",
         run: "click",
     }, {
         content: "Verify that the description contains the right text after the restore",
