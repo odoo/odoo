@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 
 
 class SaleOrder(models.Model):
@@ -202,16 +202,19 @@ class SaleOrder(models.Model):
     def _get_estimated_weight(self):
         self.ensure_one()
         weight = 0.0
-        for order_line in self.order_line.filtered(
-            lambda ol: (
-                ol.product_id.type == "consu"
-                and not ol.is_delivery
-                and not ol.display_type
-                and ol.product_uom_qty > 0
-            )
-        ):
+        for order_line in self._get_deliverable_lines():
             weight += order_line.product_qty * order_line.product_id.weight
         return weight
+
+    def _get_deliverable_lines(self):
+        return self.order_line.filtered_domain(
+            Domain([
+                ("product_id.type", "=", "consu"),
+                ("is_delivery", "=", False),
+                ("display_type", "=", False),
+                ("product_uom_qty", ">", 0),
+            ])
+        )
 
     def _update_order_line_info(self, *args, **kwargs):
         """Override of `sale` to recompute the delivery prices."""

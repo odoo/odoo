@@ -264,11 +264,3 @@ class PaymentMethod(models.Model):
         return self.sorted(
             key=lambda pm: (pm.provider_id.sequence, pm.provider_id.name, pm.sequence, pm.name)
         )
-
-    def _is_postpaid(self):
-        """Return whether the payment method is postpaid.
-
-        :return: Whether the payment method is postpaid
-        :rtype: bool
-        """
-        return False

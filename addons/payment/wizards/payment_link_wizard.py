@@ -35,7 +35,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _compute_warning_message(self):
         self.warning_message = ""
         for wizard in self:
-            if wizard.amount <= 0:
+            if wizard.amount < 0:
                 wizard.warning_message = wizard.env._("Please set a positive amount.")
 
     @api.depends("res_model", "res_id")

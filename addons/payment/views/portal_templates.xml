@@ -134,11 +134,11 @@
                                         Please wait...
                                     </h1>
                                     <p>
-                                        <t t-if="tx.payment_method_id._is_postpaid()">
-                                            Your order is being processed.
+                                        <t t-if="tx._should_create_payment()">
+                                            Your payment is being processed.
                                         </t>
                                         <t t-else="">
-                                            Your payment is being processed.
+                                            Your order is being processed.
                                         </t>
                                     </p>
                                 </div>

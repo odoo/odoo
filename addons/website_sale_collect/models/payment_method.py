@@ -1,14 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 
 
 class PaymentMethod(models.Model):
     _inherit = "payment.method"
 
-    def _is_postpaid(self):
-        """Override of `payment` to mark Pay on Site as postpaid."""
-        if self.code != "pay_on_site":
-            return super()._is_postpaid()
-
-        return True
+    @api.model
+    def _get_pay_on_delivery_method_codes(self):
+        return super()._get_pay_on_delivery_method_codes() | {"pay_on_site"}

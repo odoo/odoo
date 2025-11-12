@@ -7,7 +7,7 @@
     >
         <t t-set="alert_class" position="after">
             <t
-                t-if="tx_sudo.state == 'pending' and tx_sudo.provider_id.custom_mode == 'on_site'"
+                t-if="tx_sudo.filtered_pending_delivery_payment()"
                 t-set="alert_class"
                 t-value="'alert-success'"
             />

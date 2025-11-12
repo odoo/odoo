@@ -71,10 +71,34 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
+    def _pre_action_done_hook(self):
+        # Override to collect payment, if needed, on the final pickings (dest = customer).
+        res = super()._pre_action_done_hook()
+        if res is not True or self.env.context.get('order_ids_to_confirm'):
+            # Super as an action to make first, or we already executed this hook.
+            return res
+
+        # Treat picked moves as validated during confirmation to ensure the amount on delivery is
+        # computed against the quantities about to be validated.
+        prevalidated_self = self.with_context(
+            prevalidated_move_ids=self.move_ids.filtered('picked').ids
+        )
+        orders_ids_to_confirm = (
+            prevalidated_self
+            .filtered(lambda picking: picking.location_dest_id.usage == 'customer')
+            .sale_id.filtered('amount_on_delivery')
+            .ids
+        )
+        if orders_ids_to_confirm:
+            return prevalidated_self.env['pay.on.delivery']._open_wizard(orders_ids_to_confirm)
+
+        return res
+
     def button_validate(self):
         res = super().button_validate()
         if res is not True:
             return res
+        # FIXME: this won't run if the next action is to print the picking report
         for picking in self:
             # `_get_new_picking_values` is used to propagate the carrier before a picking is created (i.e. carrier is set on an SO).
             # Whereas this case handles the propagation of carrier after the picking validation as the carrier maybe set

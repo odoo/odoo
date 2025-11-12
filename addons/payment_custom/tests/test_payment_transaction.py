@@ -22,7 +22,7 @@ class TestPaymentTransaction(PaymentCustomCommon):
             "list_price": cls.amount,
         })
 
-    def test_postpaid_transactions_are_confirmed(self):
+    def test_pay_on_invoice_transactions_are_confirmed(self):
         tx = self._create_transaction(
             "redirect",
             provider_id=self.pay_on_invoice_provider.id,
