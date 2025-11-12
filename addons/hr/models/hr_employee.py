@@ -619,6 +619,13 @@ class HrEmployee(models.Model):
         } | copy_vals
         new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
         with self.env.protecting([f for f_name, f in version_fields.items() if f_name not in new_version_vals and f.copy], new_version):
+            properties_fields_vals = {
+                field_name: field_value
+                for field_name, field_value in copy_vals.items()
+                if version_fields[field_name].type == 'properties' and field_name not in new_version_vals
+            }
+            if properties_fields_vals:  # make sure properties vals are correctly copied.
+                new_version.sudo().write(properties_fields_vals)
             new_version.write(new_version_vals)
         return new_version
 
