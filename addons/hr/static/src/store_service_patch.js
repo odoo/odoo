@@ -36,7 +36,7 @@ const storeServicePatch = {
                 }
                 user.partner_id = employeeData.user_partner_id[0];
                 this.Persona.insert({
-                    displayName: employeeData.user_partner_id[1],
+                    display_name: employeeData.user_partner_id[1],
                     id: employeeData.user_partner_id[0],
                     type: "partner",
                 });
