@@ -178,7 +178,7 @@ export class Navbar extends Component {
     }
 
     get mainButton() {
-        const screens = ["ProductScreen", "PaymentScreen", "ReceiptScreen", "TipScreen"];
+        const screens = ["ProductScreen", "PaymentScreen", "TipScreen"];
         return screens.includes(this.pos.router.state.current) ? "register" : "order";
     }
 }

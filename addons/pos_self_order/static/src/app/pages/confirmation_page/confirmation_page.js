@@ -2,7 +2,7 @@ import { Component, onMounted, onWillUnmount, useState, useEffect } from "@odoo/
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { rpc } from "@web/core/network/rpc";
 import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
 

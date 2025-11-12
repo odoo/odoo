@@ -1,6 +1,6 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as EventTourUtils from "@pos_event/../tests/tours/utils/event_tour_utils";
@@ -34,10 +34,10 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            EventTourUtils.printTicket("full"),
-            EventTourUtils.printTicket("badge"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -57,10 +57,10 @@ registry.category("web_tour.tours").add("test_selling_multiple_ticket_saved", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            EventTourUtils.printTicket("full"),
-            EventTourUtils.printTicket("badge"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -83,9 +83,9 @@ registry.category("web_tour.tours").add("test_orderline_price_remain_same_as_tic
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            EventTourUtils.printTicket("full"),
-            EventTourUtils.printTicket("badge"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });

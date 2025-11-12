@@ -703,7 +703,7 @@ patch(PosStore.prototype, {
             }
             if (!this.isOrderTransferMode) {
                 this.syncAllOrders();
-            } else if (order && this.previousScreen !== "ReceiptScreen") {
+            } else if (order && this.previousScreen !== "FeedbackScreen") {
                 await this.syncAllOrders({ orders: [order] });
             }
         }

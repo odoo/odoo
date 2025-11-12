@@ -82,7 +82,7 @@
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/app/components/epos_templates.xml",
             "point_of_sale/static/src/css/pos_receipts.css",
-            "point_of_sale/static/src/app/screens/receipt_screen/receipt/**/*",
+            "point_of_sale/static/src/app/components/receipt/**/*",
             "pos_self_order/static/src/overrides/components/receipt_header/*",
             "point_of_sale/static/src/app/utils/printer/*",
             "point_of_sale/static/src/app/services/printer_service.js",

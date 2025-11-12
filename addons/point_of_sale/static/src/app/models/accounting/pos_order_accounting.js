@@ -75,15 +75,15 @@ export class PosOrderAccounting extends Base {
         }
 
         const tolerance = this.orderIsRounded ? this.config.rounding_method.rounding : 0;
-        const amount = Math.abs(total - this.amountPaid) <= tolerance ? 0 : Math.abs(remaining);
-        return isNegative ? this.currency.round(-amount) : this.currency.round(amount);
+        const amount = Math.abs(remaining) <= tolerance ? 0 : remaining;
+        return this.currency.round(amount);
     }
     get change() {
         const isNegative = this.totalDue < 0;
         const roundingSanatizer = this.orderIsRounded ? this.appliedRounding : 0;
         const remaining = this.totalDue - this.amountPaid;
 
-        // Amount paid covers the total due
+        // Amount paid does not exceed total due
         if ((isNegative && remaining <= 0) || (!isNegative && remaining >= 0)) {
             return 0;
         }

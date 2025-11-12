@@ -213,20 +213,6 @@ export function tipContains(amount) {
         },
     ];
 }
-export function receiptTotalIs(amount) {
-    return [
-        {
-            trigger: `.receipt-screen .pos-receipt-amount:contains("${amount}")`,
-        },
-    ];
-}
-export function receiptChangeIs(amount) {
-    return [
-        {
-            trigger: `.receipt-screen .receipt-change:contains("${amount}")`,
-        },
-    ];
-}
 export function back() {
     return {
         isActive: ["mobile"],

@@ -1,7 +1,7 @@
 import * as PosHr from "@pos_hr/../tests/tours/utils/pos_hr_helpers";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
@@ -228,8 +228,10 @@ registry.category("web_tour.tours").add("test_cashier_changed_in_receipt", {
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.cashierNameExists("Test"), // Test Employee 3 (Take the first word)
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.checkTicketData({
+                cashier_name: "Test", // Test Employee 3 (Take the first word)
+            }),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 

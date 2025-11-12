@@ -1,0 +1,12 @@
+.print-popup .modal-header {
+    border: none;
+    padding-bottom: 8px !important;
+}
+
+.print-popup-modal {
+    grid-template-columns: repeat(2, 1fr);
+
+    @include media-breakpoint-down(sm) {
+        grid-template-columns: 1fr;
+    }
+}

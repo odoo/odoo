@@ -6,7 +6,7 @@ import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_w
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { _t } from "@web/core/l10n/translation";
 

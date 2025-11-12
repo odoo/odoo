@@ -18,9 +18,8 @@
                             <small t-if="vals.attributeString" t-out="vals.attributeString" class="attribute-line fst-italic" />
                         </span>
                     </div>
-                    <div t-if="vals.price" t-out="vals.price" class="product-price price" t-attf-class="{{ vals.isReceipt ? 'font-monospace' : 'fw-bolder' }}"
-                    />
-                    <div t-if="vals.taxGroup" t-esc="vals.taxGroup" class="text-end" style="width: 2rem"/>
+                    <div t-if="vals.price" t-out="vals.price" class="product-price price" t-attf-class="{{ vals.isReceipt ? 'font-monospace' : 'fw-bolder' }}"/>
+                    <div t-if="vals.taxGroup" t-esc="vals.taxGroup" class="text-end tax-group" style="width: 2rem"/>
                 </div>
                 <ul class="info-list d-flex flex-column mb-0 ms-2" t-att-style="vals.isReceipt and 'font-size: 75%;'" t-att-class="infoListClasses">
                     <li class="price-per-unit" t-if="vals.displayPriceUnit" t-out="vals.displayPriceUnit" />

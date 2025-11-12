@@ -104,7 +104,7 @@ export class TipScreen extends Component {
         if (!this.pos.config.module_pos_restaurant) {
             this.pos.addNewOrder();
         }
-        this.pos.navigate("ReceiptScreen", {
+        this.pos.navigate("FeedbackScreen", {
             orderUuid: this.pos.getOrder().uuid,
         });
     }

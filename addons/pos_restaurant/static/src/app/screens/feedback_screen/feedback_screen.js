@@ -1,7 +1,14 @@
-import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { FeedbackScreen } from "@point_of_sale/app/screens/feedback_screen/feedback_screen";
 import { patch } from "@web/core/utils/patch";
 
-patch(ReceiptScreen.prototype, {
+patch(FeedbackScreen.prototype, {
+    goNext() {
+        if (this.isContinueSplitting()) {
+            this.continueSplitting();
+        } else {
+            super.goNext();
+        }
+    },
     continueSplitting() {
         const originalOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
         this.currentOrder.uiState.screen_data.value = "";

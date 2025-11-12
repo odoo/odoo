@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, tick } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
@@ -40,6 +40,8 @@ test("validateOrder", async () => {
     validation.isOrderValid = async () => true;
 
     await validation.validateOrder();
+    // validateOrder launches a promise. We need to wait for its resolution.
+    await tick();
 
     expect(card.points).toBe(50);
     expect(loyaltyProgram.total_order_count).toBe(0);
