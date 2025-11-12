@@ -8,6 +8,7 @@ import {
     makeMockRtcNetwork,
     openDiscuss,
     patchUiSize,
+    setupChatHub,
     SIZES,
     start,
     startServer,
@@ -1140,4 +1141,34 @@ test("discuss sidebar call participant shows appropriate status icon", async () 
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('bob') .fa-microphone-slash");
     await bobRemote.updateInfo({ is_deaf: true });
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('bob') .fa-deaf");
+});
+
+test("auto-focus participant video in one-to-one call in chat window", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: serverState.partnerId,
+    });
+    const channelMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Batman" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const mockedRemote = network.makeMockRemote(channelMemberId);
+    await click("[title='Join Call']");
+    await contains(".o-discuss-CallParticipantCard", { count: 2 });
+    await mockedRemote.updateConnectionState("connected");
+    await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
+    await contains(".o-discuss-CallParticipantCard[title='Batman'] video");
+    await contains(".o-discuss-CallParticipantCard");
+    await mockedRemote.updateUpload("camera", null);
+    await click(".o-discuss-CallParticipantCard[title='Batman']");
+    await click("[title='Fullscreen']");
+    await contains(".o-mail-Meeting");
+    await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
+    await contains(".o-discuss-CallParticipantCard[title='Batman'] video");
+    await contains(".o-discuss-CallParticipantCard", { count: 2 }); // card does not get focused in meeting view
 });
