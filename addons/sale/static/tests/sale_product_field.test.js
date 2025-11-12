@@ -64,7 +64,7 @@ test("pressing tab with incomplete text will create a product", async () => {
     });
 
     // add a line and enter new product name
-    await contains(".o_field_x2many_list .o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list .o_field_x2many_list_row_add button").click();
     await contains("[name='product_template_id'] input").edit("new product");
     await press("tab");
     await runAllTimers();

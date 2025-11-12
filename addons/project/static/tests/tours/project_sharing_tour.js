@@ -11,7 +11,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Start editing the project.',
     run: "click",
 }, {
-    trigger: '.modal div[name="collaborator_ids"] .o_field_x2many_list_row_add > a',
+    trigger: '.modal div[name="collaborator_ids"] .o_field_x2many_list_row_add > button',
     content: 'Add a collaborator to the project.',
     run: "click",
 }, {

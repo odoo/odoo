@@ -3473,7 +3473,7 @@ test(`editable list view: click on last element after creation empty new line`, 
         `,
         resId: 1,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_data_row:last td.o_list_char`).click();
     // This test ensure that they aren't traceback when clicking on the last row.
     expect(`.o_data_row`).toHaveCount(2, { message: "list should have exactly 2 rows" });
@@ -6845,7 +6845,7 @@ test(`use default_order on editable tree: sort on save`, async () => {
     });
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["Value 1", "Value 3"]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_widget[name=o2m] .o_field_widget input`).edit("Value 2");
     await contains(`.o_form_view`).click();
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual([
@@ -6886,7 +6886,7 @@ test(`use default_order on editable tree: sort on demand`, async () => {
     });
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["Value 1", "Value 3"]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_widget[name=o2m] .o_field_widget input`).edit("Value 2");
     await contains(`.o_form_view`).click();
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual([
@@ -11049,7 +11049,7 @@ test(`list daterange in form: open/close picker`, async () => {
         resId: 1,
     });
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(".o_field_daterange[name=date]").click();
     await animationFrame();
     await animationFrame();
@@ -12514,7 +12514,7 @@ test(`editable form alongside html field: click out to unselect the row`, async 
     });
     expect(`.o_data_row`).toHaveCount(0);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.o_data_row`).toHaveCount(1);
     expect(`.o_data_row`).toHaveClass("o_selected_row");
 
@@ -18039,7 +18039,7 @@ test(`search nested many2one field with early option selection`, async () => {
             </form>
         `,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
 
     await edit("alu", { confirm: false });
     await runAllTimers();

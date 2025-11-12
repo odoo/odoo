@@ -138,7 +138,7 @@ test("formviewdialog buttons in footer are not duplicated", async () => {
     expect(".modal").toHaveCount(1);
     expect(".modal button.my_button").toHaveCount(1, { message: "should have 1 buttons in modal" });
 
-    await click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add button");
     await animationFrame();
     await press("escape");
     await animationFrame();

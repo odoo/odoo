@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("parent_child_menu", {
         },
         {
             content: "Click on Add a line button",
-            trigger: "div[name='child_id'] td.o_field_x2many_list_row_add a",
+            trigger: "div[name='child_id'] td.o_field_x2many_list_row_add button",
             run: "click",
         },
         {
