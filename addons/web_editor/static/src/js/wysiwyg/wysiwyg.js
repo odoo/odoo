@@ -1819,8 +1819,7 @@ const Wysiwyg = Widget.extend({
         }
         let coloredElements = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
         // Some nodes returned by applyColor can be removed of the document by the sanitization in historyStep
-        coloredElements = coloredElements.filter(element => this.odooEditor.document.contains(element));
-
+        coloredElements = coloredElements && coloredElements.filter(element => this.odooEditor.document.contains(element));
         const coloredTds = coloredElements && coloredElements.length && coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
         if (selectedTds.length === 1 && !previewMode) {
             const sel = this.odooEditor.document.getSelection();
