@@ -13,6 +13,7 @@ from zeroconf import (
 import logging
 import pyudev
 import re
+import subprocess
 import time
 
 from odoo.addons.iot_drivers.interface import Interface
@@ -88,7 +89,7 @@ class PrinterInterface(Interface):
 
         return identifier, device
 
-    def get_identifier(self, path):
+    def get_identifier(self, path: str):
         """
         Necessary because the path is not always a valid Cups identifier,
         as it may contain characters typically found in URLs or paths.
@@ -104,6 +105,11 @@ class PrinterInterface(Interface):
             Input: "uuid=1234-5678-90ab-cdef"
             Output: "1234-5678-90ab-cdef
         """
+        ip = self.get_ip(path)
+        if ip:
+            mac_address = self.get_mac_from_ip(ip)
+            if mac_address:
+                path = path.replace(ip, mac_address)
         return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
 
     def get_ip(self, device_path):
@@ -115,6 +121,15 @@ class PrinterInterface(Interface):
                 return self.printer_ip_map[zeroconf_name]
 
         return hostname
+
+    def get_mac_from_ip(self, ip):
+        if not ip:
+            return None
+        output = subprocess.run(["arp", "-n", ip], capture_output=True, text=True, check=False)
+        mac_address_match = re.search(r"\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}", output.stdout)
+        if mac_address_match:
+            return mac_address_match[0]
+        return None
 
     @staticmethod
     def get_usb_info(device_path):
