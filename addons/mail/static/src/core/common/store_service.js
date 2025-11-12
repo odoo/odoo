@@ -454,7 +454,7 @@ export class Store extends BaseStore {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import("models").Thread | undefined>}
+     * @returns {Promise<import("models").DiscussChannel | undefined>}
      */
     async getChat({ userId, partnerId }) {
         const partner = await this.getPartner({ userId, partnerId });

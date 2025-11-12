@@ -122,9 +122,9 @@ export class ResPartner extends Record {
     }
 
     searchChat() {
-        return Object.values(this.store["mail.thread"].records).find(
-            (thread) =>
-                thread.channel?.channel_type === "chat" && thread.correspondent?.persona.eq(this)
+        return Object.values(this.store["discuss.channel"].records).find(
+            (channel) =>
+                channel.channel_type === "chat" && channel.correspondent?.partner_id?.eq(this)
         );
     }
 
