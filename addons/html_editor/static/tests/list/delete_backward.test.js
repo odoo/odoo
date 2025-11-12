@@ -1963,7 +1963,7 @@ describe("Selection collapsed", () => {
             });
         });
         describe("Unordered to checklist", () => {
-            test("should merge an unordered list into an checklist list", async () => {
+            test("should merge an unordered list into an checklist list (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">a</li></ul><ul><li>[]b</li></ul>',
@@ -1974,6 +1974,8 @@ describe("Selection collapsed", () => {
                     },
                     contentAfter: '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                 });
+            });
+            test("should merge an unordered list into an checklist list (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">a</li></ul><ul><li><p>[]b</p></li></ul>',
@@ -1985,6 +1987,8 @@ describe("Selection collapsed", () => {
                     // Paragraphs in list items are treated as nonsense.
                     contentAfter: '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                 });
+            });
+            test("should merge an unordered list into an checklist list (3)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked"><p>a</p></li></ul><ul><li>[]b</li></ul>',
@@ -1997,6 +2001,8 @@ describe("Selection collapsed", () => {
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked"><p>a[]b</p></li></ul>',
                 });
+            });
+            test("should merge an unordered list into an checklist list (4)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked"><p>a</p></li></ul><ul><li><p>[]b</p></li></ul>',
