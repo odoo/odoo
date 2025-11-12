@@ -168,7 +168,6 @@ class HrVersion(models.Model):
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     wage = fields.Monetary('Wage', tracking=True, help="Employee's monthly gross wage.", aggregator="avg",
                            groups="hr.group_hr_manager")
-    contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage', groups="hr.group_hr_manager")
     # [XBO] TODO: remove me in master
     company_country_id = fields.Many2one('res.country', string="Company country",
                                          related='company_id.country_id', readonly=True)
@@ -451,11 +450,6 @@ class HrVersion(models.Model):
                 for field, value in contract_template_vals.items()
                 if field in whitelist and not self.env['hr.version']._fields[field].related
         }
-
-    @api.depends('wage')
-    def _compute_contract_wage(self):
-        for version in self:
-            version.contract_wage = version._get_contract_wage()
 
     def _get_contract_wage(self):
         if not self:
