@@ -15,13 +15,13 @@ patch(Thread.prototype, {
         this.country_id = fields.One("res.country");
         this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
-        this.wasLookingForHelp = false;
         /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
         this.livechat_status = fields.Attr(undefined, {
             onUpdate() {
                 if (this.livechat_status === "need_help") {
                     this.isLocallyPinned = true;
                     this.wasLookingForHelp = true;
+                    this.unpinOnThreadSwitch = false;
                     return;
                 }
                 if (this.wasLookingForHelp) {
@@ -34,6 +34,8 @@ patch(Thread.prototype, {
                 }
             },
         });
+        this.shadowedBySelf = false;
+        this.wasLookingForHelp = false;
     },
     get canLeave() {
         return (
@@ -98,7 +100,18 @@ patch(Thread.prototype, {
     },
 
     get inChathubOnNewMessage() {
-        return this.channel_type === "livechat" || super.inChathubOnNewMessage;
+        if (this.channel_type === "livechat") {
+            return Boolean(this.self_member_id);
+        }
+        return super.inChathubOnNewMessage;
+    },
+    get notifyWhenOutOfFocus() {
+        if (this.channel_type === "livechat") {
+            return (
+                this.self_member_id || this.shadowedBySelf || this.eq(this.store.discuss?.thread)
+            );
+        }
+        return super.notifyWhenOutOfFocus;
     },
     get matchesSelfExpertise() {
         return (

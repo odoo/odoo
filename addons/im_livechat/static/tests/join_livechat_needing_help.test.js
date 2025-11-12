@@ -2,14 +2,29 @@ import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 
-import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    click,
+    contains,
+    openDiscuss,
+    openFormView,
+    setupChatHub,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
 
-import { Deferred } from "@web/core/utils/concurrency";
-import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
+import { Deferred } from "@web/core/utils/concurrency";
 
 defineLivechatModels();
 describe.current.tags("desktop");
@@ -53,6 +68,64 @@ test("Show looking for help in the sidebar while active or still seeking help", 
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
     await click(".o-mail-Mailbox[data-mailbox-id=starred");
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
+});
+
+test("Do not auto-open chat window on new message when locally pinned", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    setupChatHub({
+        folded: [
+            pyEnv["discuss.channel"].create({
+                name: "General",
+                channel_type: "channel",
+            }),
+        ],
+        opened: [
+            pyEnv["discuss.channel"].create({
+                name: "Support",
+                channel_type: "channel",
+            }),
+        ],
+    });
+    const bobPartnerId = pyEnv["res.partner"].create({
+        name: "bob",
+        user_ids: [Command.create({ name: "bob" })],
+    });
+    const bobChannelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [Command.create({ partner_id: bobPartnerId })],
+        livechat_status: "need_help",
+    });
+    await start();
+    getService("bus_service").subscribe("discuss.channel/new_message", () =>
+        expect.step("discuss.channel/new_message")
+    );
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel", { text: "bob" });
+    await waitForChannels([`discuss.channel_${bobChannelId}`]);
+    await withUser(serverState.userId, async () => {
+        await rpc("/mail/message/post", {
+            post_data: {
+                body: "Hello, how can I help?",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: bobChannelId,
+            thread_model: "discuss.channel",
+        });
+    });
+    await contains(".o-mail-Message", { text: "Hello, how can I help?" });
+    await expect.waitForSteps(["discuss.channel/new_message"]);
+    await openFormView("res.partner", bobPartnerId);
+    await contains(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatBubble[name=General]");
+    await contains(".o-mail-ChatBubble", { count: 0, text: "bob" });
+    await contains(".o-mail-ChatWindow", { text: "Support" });
+    await contains(".o-mail-ChatWindow", { count: 0, text: "bob" });
 });
 
 test("Show join button when help is required and self is not a member", async () => {
