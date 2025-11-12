@@ -21,14 +21,20 @@ function isQRDisplayedinDialog() {
     ].flat();
 }
 
-function addProductandPay() {
+function addProductandPay(isPartialPay = false) {
     return [
         ProductScreen.addOrderline("Hand Bag", "10"),
         ProductScreen.selectedOrderlineHas("Hand Bag", "10"),
         ProductScreen.clickPayButton(),
 
         PaymentScreen.totalIs("48"),
-        PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" }),
+        ...(isPartialPay
+            ? [
+                  PaymentScreen.clickPaymentMethod("QR Code"),
+                  PaymentScreen.clickNumpad("⌫"),
+                  PaymentScreen.clickNumpad("+10"),
+              ]
+            : [PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" })]),
         {
             content: "Display QR Code Payment dialog",
             trigger: ".button.send_payment_request.highlight",
@@ -57,6 +63,8 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+
+            // --- FULL PAYMENT ---
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.cancel(),
@@ -70,6 +78,16 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
             Dialog.confirm(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
+
+            // --- PARTIAL PAYMENT ---
+            addProductandPay(true),
+            isQRDisplayedinDialog(),
+            Dialog.confirm(),
+            {
+                trigger: ".electronic_status:contains('Successful')",
+            },
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });
 
