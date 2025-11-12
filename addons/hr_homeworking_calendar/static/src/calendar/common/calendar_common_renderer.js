@@ -4,8 +4,8 @@ import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calenda
 import { AttendeeCalendarRenderer } from "@calendar/views/attendee_calendar/attendee_calendar_renderer";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
-import { renderToString } from "@web/core/utils/render";
 import { onPatched } from "@odoo/owl";
+import { renderToString } from "../../../../../web/static/src/core/utils/render";
 
 const { DateTime } = luxon;
 
@@ -35,6 +35,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             },
             dayCellDidMount: this.onDayCellDidMount,
             dayHeaderDidMount: this.onDayHeaderDidMount,
+            dayCellContent: this.dayCellContent,
             dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
         };
     },
@@ -81,14 +82,12 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             }
         }
     },
-    onDayCellDidMount(info){
-        if (this.props.model.scale === 'month'){
-            const box = info.el.querySelector(`.fc-daygrid-day-top`);
-            if (!box)
-                return;
-            const content = renderToString(this.constructor.ButtonWorklocationTemplate, this.headerTemplateProps(info.date));
-            box.insertAdjacentHTML("beforeend", content);
+    dayCellContent(arg) {
+        if (this.props.model.scale !== "month") {
+            return;
         }
+        const injectedContentStr = renderToString(this.constructor.ButtonWorklocationTemplate, this.headerTemplateProps(arg.date))
+        return { html: `<div class="o_day_label"><span>${arg.dayNumberText}</span></div>` + injectedContentStr }
     },
     onDateClick(info){
         if (info.jsEvent && info.jsEvent.target.closest(".o_worklocation_btn")) {
@@ -99,13 +98,13 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         }
     },
     headerTemplateProps(date) {
-        if (this.props.model.scale === "month") {
-            return super.headerTemplateProps(date);
-        }
         const parsedDate = DateTime.fromJSDate(date).toISODate();
         const multiCalendar = this.props.model.multiCalendar;
         const showLine = ["week", "month"].includes(this.props.model.scale);
         let worklocation = this.props.model.worklocations[parsedDate];
+        if (!worklocation) {
+            return super.headerTemplateProps(date);
+        }
         const workLocationSetForCurrentUser =
             multiCalendar ?
             Object.keys(worklocation).some(key => worklocation[key].some(wlItem => wlItem.userId === user.userId)
@@ -144,6 +143,5 @@ AttendeeCalendarCommonRenderer.props = {
     openWorkLocationWizard: { type: Function, optional: true }
 };
 
-AttendeeCalendarCommonRenderer.WorklocationTemplate = "hr_homeworking_calendar.CalendarCommonRenderer.worklocation";
 AttendeeCalendarCommonRenderer.ButtonWorklocationTemplate = "hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation";
 AttendeeCalendarCommonRenderer.headerTemplate = "hr_homeworking_calendar.CalendarCommonRendererHeader";

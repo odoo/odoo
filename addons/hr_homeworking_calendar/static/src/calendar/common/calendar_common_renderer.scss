@@ -5,6 +5,10 @@
     .o_worklocation_text, .o_worklocation_line {
         box-shadow: 0 1px 0 rgba(0,0,0, 0.3)
     }
+    .o_worklocation_text.o_cw_custom_highlight {
+      box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.3);
+      z-index: 2; // for the shadow to go over the events below
+    }
 }
 
 .o_worklocation_line {
@@ -29,6 +33,54 @@
     .o_worklocation_btn {
         margin-top: 0px;
     }
+}
+
+.fc-day {
+  .fc-daygrid-day-number {
+    width: 100%;
+    padding-right: 0;
+    color: var(--o-cw-color);
+    &:not(:has(.o_worklocation_text)) {
+      padding-left: 0;
+    }
+  }
+
+  .o_day_label {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .o_day_label:before {
+    content: "";
+    z-index: -1;
+    display: none;
+    @include o_position-absolute($top: 50%, $left: 50%);
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1/1;
+    height: 120%;
+    border-radius: 100%;
+    background: var(--o-cw-bg, none);
+    padding: var(--o-circle-padding);
+  }
+
+  .fc-daygrid-day-number:before {
+    display: none;
+  }
+
+  &.fc-day-today {
+    .fc-daygrid-day-number:before {
+        display: none !important;
+    }
+
+    .o_day_label:before {
+      --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
+      --o-cw-bg: #{$o-cw-color-today-accent};
+      display: block;
+    }
+  }
 }
 
 @include media-breakpoint-down(md) {
