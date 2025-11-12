@@ -40,6 +40,10 @@
 .history-view-inner {
     min-height: 0;
 
+    [data-embedded] {
+        pointer-events: none;
+    }
+
     .embedded-history-dialog-placeholder {
         border: $border-width * 2 dashed $border-color;
 
