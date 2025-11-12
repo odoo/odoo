@@ -43,7 +43,9 @@ patch(Thread.prototype, {
                     }
                 }
             }
-            this.store.env.services["mail.out_of_focus"].notify(message, this);
+            if (this.notifyWhenOutOfFocus) {
+                this.store.env.services["mail.out_of_focus"].notify(message, this);
+            }
         }
     },
     /** Condition for whether the conversation should become present in chat hub on new message */
@@ -52,6 +54,9 @@ patch(Thread.prototype, {
     },
     get autoOpenChatWindowOnNewMessage() {
         return false;
+    },
+    get notifyWhenOutOfFocus() {
+        return true;
     },
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {

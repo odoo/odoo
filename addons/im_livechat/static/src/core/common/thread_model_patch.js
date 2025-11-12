@@ -40,7 +40,15 @@ patch(Thread.prototype, {
     },
     get autoOpenChatWindowOnNewMessage() {
         return (
+<<<<<<< db80e85e2b89b55dd78ab180ba14663d817c3f4b
             (this.channel?.channel_type === "livechat" && !this.store.chatHub.compact) ||
+||||||| c758b93a57cd98ab76c26c03bd0097f2eef50961
+            (this.channel_type === "livechat" && !this.store.chatHub.compact) ||
+=======
+            (this.channel_type === "livechat" &&
+                !this.store.chatHub.compact &&
+                this.self_member_id) ||
+>>>>>>> b7f3f178138da3d91ff14f5acaf5724c51932ca9
             super.autoOpenChatWindowOnNewMessage
         );
     },
