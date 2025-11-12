@@ -28,6 +28,7 @@
                            invisible="not show_delivery_date or country_code != 'SA'"
                            readonly="state != 'draft'"
                            help="Date when the supply of the goods and services is performed. In case of multiple deliveries, you should take the date of the latest one."/>
+                    <field name="l10n_sa_confirmation_datetime" invisible="country_code != 'SA' or move_type not in ('out_invoice', 'out_refund')" />
                 </xpath>
             </field>
         </record>
