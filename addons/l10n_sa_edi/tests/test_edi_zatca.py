@@ -285,43 +285,43 @@ class TestEdiZatca(TestSaEdiCommon):
             final.invoice_line_ids.filtered('is_downpayment').name = 'Down Payment'
             final.invoice_date_due = '2022-09-22'
 
-        # Test invoices
-        for move, test_file in [
-            (downpayment, "downpayment_invoice"),
-            (final, "final_invoice")
-        ]:
-            with self.subTest(move=move, test_file=test_file):
-                self._test_document_generation(
-                    test_file_path=f'l10n_sa_edi/tests/test_files/{test_file}.xml',
-                    expected_xpath=self.invoice_applied_xpath,
-                    freeze_time_at=freeze,
-                    move=move,
-                )
+            # Test invoices
+            for move, test_file in [
+                (downpayment, "downpayment_invoice"),
+                (final, "final_invoice")
+            ]:
+                with self.subTest(move=move, test_file=test_file):
+                    self._test_document_generation(
+                        test_file_path=f'l10n_sa_edi/tests/test_files/{test_file}.xml',
+                        expected_xpath=self.invoice_applied_xpath,
+                        freeze_time_at=freeze,
+                        move=move,
+                    )
 
-        # Test credit notes
-        for move, test_file in [
-            (downpayment, "downpayment_credit_note"),
-            (final, "final_credit_note")
-        ]:
-            with self.subTest(move=move, test_file=test_file):
-                # Create refund
-                wiz_context = {
-                    'active_model': 'account.move',
-                    'active_ids': [move.id],
-                    'default_journal_id': move.journal_id.id,
-                }
-                refund_wizard = self.env['account.move.reversal'].with_context(wiz_context).create({
-                    'reason': 'please reverse :c',
-                    'date': '2022-09-05',
-                })
-                refund_invoice = self.env['account.move'].browse(refund_wizard.reverse_moves()['res_id'])
-                refund_invoice.invoice_date_due = '2022-09-22'
-                self._test_document_generation(
-                    test_file_path=f'l10n_sa_edi/tests/test_files/{test_file}.xml',
-                    expected_xpath=self.credit_note_applied_xpath,
-                    freeze_time_at=freeze,
-                    move=refund_invoice,
-                )
+            # Test credit notes
+            for move, test_file in [
+                (downpayment, "downpayment_credit_note"),
+                (final, "final_credit_note")
+            ]:
+                with self.subTest(move=move, test_file=test_file):
+                    # Create refund
+                    wiz_context = {
+                        'active_model': 'account.move',
+                        'active_ids': [move.id],
+                        'default_journal_id': move.journal_id.id,
+                    }
+                    refund_wizard = self.env['account.move.reversal'].with_context(wiz_context).create({
+                        'reason': 'please reverse :c',
+                        'date': '2022-09-05',
+                    })
+                    refund_invoice = self.env['account.move'].browse(refund_wizard.reverse_moves()['res_id'])
+                    refund_invoice.invoice_date_due = '2022-09-22'
+                    self._test_document_generation(
+                        test_file_path=f'l10n_sa_edi/tests/test_files/{test_file}.xml',
+                        expected_xpath=self.credit_note_applied_xpath,
+                        freeze_time_at=freeze,
+                        move=refund_invoice,
+                    )
 
     def testInvoiceWithRetention(self):
         """Test standard invoice generation."""
