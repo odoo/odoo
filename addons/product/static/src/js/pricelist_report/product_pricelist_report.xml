@@ -4,6 +4,11 @@
 
     <t t-name="product.ProductPricelistReport">
         <div class="o_action">
+            <style>
+                .o_control_panel_navigation {
+                    display: none !important;
+                }
+            </style>
             <Layout display="{ controlPanel: {} }">
                 <t t-set-slot="control-panel-buttons">
                     <button t-on-click="onClickPrint" type="button" class="btn btn-primary" title="Print">Print</button>
@@ -15,14 +20,14 @@
                 </t>
                 <t t-set-slot="control-panel-actions">
                     <form class="o_pricelist_report_form d-flex flex-row gap-1">
-                        <div class="d-flex align-items-center gap-3 w-100">
+                        <div class="d-flex align-items-center gap-3 w-75">
                             <label class="visually-hidden" for="pricelists">Username</label>
                             <div t-if="pricelists.length > 0" class="input-group w-auto">
                                 <div class="input-group-text fw-bold">Pricelist</div>
                                 <select
                                     name="pricelists"
                                     id="pricelists"
-                                    class="o_select form-select border-0"
+                                    class="o_select form-select"
                                     t-on-change="onSelectPricelist"
                                 >
                                     <option t-out="selectedPricelist.name" t-att-value="selectedPricelist.id"/>
@@ -42,8 +47,19 @@
                                 <label for="display_pricelist_title" class="form-check-label">Show Name</label>
                             </div>
                         </div>
+                        <div class="d-flex align-items-center gap-3 w-25 me-4">
+                            <div class="input-group" style="min-width: 180px">
+                                <span class="input-group-text fw-bold">Date</span>
+                                <DateTimeInput
+                                    type="'date'"
+                                    value="state.date"
+                                    onChange.bind="onDateChange"
+                                    class="'form-control px-2 border-1'"
+                                />
+                            </div>
+                        </div>
                         <div class="d-flex align-items-center gap-3 w-100">
-                            <div class="input-group d-flex flex-nowrap w-50" style="min-width:210px;">
+                            <div class="input-group d-flex flex-nowrap w-25" style="min-width:210px;">
                                 <span class="input-group-text fw-bold">
                                     Quantities
                                 </span>
@@ -70,7 +86,7 @@
                             </div>
                         </div>
                     </form>
-                    <div style="margin-left:300px;">
+                    <div style="margin-left:100px;">
                         <button t-on-click="onClickAddProducts" string="All Products" class="btn btn-link">
                             <i class="fa fa-pencil"/>
                             Add Products
