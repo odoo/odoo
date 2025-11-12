@@ -33,3 +33,29 @@ export function getSuggestToggleState(poState) {
     }
     return { isOn: false };
 }
+
+/** Toggles searchModel filters based on filter name and desired state
+ * @param {SearchModel} sm the view's searchModel
+ * @param {Array[string]} filterNames eg. "suggested_or_ordered"
+ * @param {boolean} turnOn eg. toggles filter "On" if turnOn = true and filter is currently "Off"
+ */
+export function toggleFilters(sm, filterNames, turnOn) {
+    const searchFilters = new Map(Object.values(sm.searchItems).map((i) => [i.name, i]));
+    const activeFilters = new Set(sm.query.map((q) => q.searchItemId));
+
+    const toToggle = [];
+    for (const name of filterNames) {
+        const item = searchFilters.get(name);
+        const isOn = activeFilters.has(item.id);
+        if ((turnOn && !isOn) || (!turnOn && isOn)) {
+            toToggle.push(item.id);
+        }
+    }
+
+    // Prevent toggleSearchItem from trying to reload with partial domain
+    for (let i = 0; i < toToggle.length; i++) {
+        const isLast = i === toToggle.length - 1;
+        sm.blockNotification = !isLast;
+        sm.toggleSearchItem(toToggle[i]);
+    }
+}
