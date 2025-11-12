@@ -440,7 +440,6 @@
             </div>
             <section name="portal_change_password">
                 <h4>Change Password</h4>
-                <t t-set="path">password</t>
                 <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
                     Password Updated!
                 </div>
@@ -498,7 +497,6 @@
             </section>
             <section name="portal_revoke_all_devices_popup">
             <h4>Revoke All Sessions</h4>
-                <t t-set="path"/>
                     <button type="button" class="btn btn-light" id="portal_revoke_all_sessions_popup">
                         Log out from all devices
                     </button>
