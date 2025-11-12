@@ -193,4 +193,23 @@ class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
             'default_carrier_id': self.non_restricted_carrier.id,
         }))
         choose_delivery_carrier = delivery_wizard.save()
+<<<<<<< 54bf092b87eb759c62d9e09d9724f5e4b86517fe
         self.assertFalse(self.carrier.id in choose_delivery_carrier.available_carrier_ids.ids, "Delivery method's excluded tag is set on one product in the order")
+||||||| 301ea72ab67ffe2c5a2e45fb0603bab2ba9db07c
+        self.assertFalse(self.carrier.id in choose_delivery_carrier.available_carrier_ids.ids, "Carrier excluded tag is set on one product in the order")
+=======
+        self.assertFalse(self.carrier.id in choose_delivery_carrier.available_carrier_ids.ids, "Carrier excluded tag is set on one product in the order")
+
+    def test_partner_carrier_is_set_in_wizard(self):
+        """Test that the partner's default delivery carrier is correctly preselected in the delivery wizard."""
+        self.sale_order.partner_id.property_delivery_carrier_id = self.carrier
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': self.sale_order.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        self.assertIn(
+            self.carrier,
+            choose_delivery_carrier.carrier_id,
+            "Delivery carrier set on the partner should be set in the delivery wizard",
+        )
+>>>>>>> 6901863d30f524c160971c9f5c97846ffd1fa5f5
