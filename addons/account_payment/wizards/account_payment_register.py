@@ -38,14 +38,16 @@ class AccountPaymentRegister(models.TransientModel):
             wizard.suitable_payment_token_ids = [Command.clear()]
             if wizard.can_edit_wizard and wizard.use_electronic_payment_method:
                 batch = wizard._get_batches()[0]
-                partner = batch['lines'].move_id.partner_id
-                if len(partner) == 1:
-                    wizard.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
-                        *self.env['payment.token']._check_company_domain(wizard.company_id),
-                        ('provider_id.capture_manually', '=', False),
-                        ('partner_id', '=', partner.id),
-                        ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
-                    ])
+                token_partners = wizard.partner_id
+                lines_partners = batch['lines'].move_id.partner_id
+                if len(lines_partners) == 1:
+                    token_partners |= lines_partners
+                wizard.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
+                    *self.env['payment.token']._check_company_domain(wizard.company_id),
+                    ('partner_id', 'in', token_partners.ids),
+                    ('provider_id.capture_manually', '=', False),
+                    ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
+                ])
 
     @api.depends('payment_method_line_id')
     def _compute_use_electronic_payment_method(self):

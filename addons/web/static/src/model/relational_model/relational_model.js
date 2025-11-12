@@ -290,7 +290,7 @@ export class RelationalModel extends Model {
                 delete config.groups;
             }
         }
-        if (!config.isMonoRecord && this.root && params.domain) {
+        if (!config.isMonoRecord && params.domain) {
             // always reset the offset to 0 when reloading from above with a domain
             const resetOffset = (config) => {
                 config.offset = 0;
@@ -298,8 +298,10 @@ export class RelationalModel extends Model {
                     resetOffset(group.list);
                 }
             };
-            resetOffset(config);
-            if (!!config.groupBy.length !== !!currentGroupBy.length) {
+            if (this.root) {
+                resetOffset(config);
+            }
+            if (!!config.groupBy?.length !== !!currentGroupBy?.length) {
                 // from grouped to ungrouped or the other way around -> force the limit to be reset
                 delete config.limit;
             }
