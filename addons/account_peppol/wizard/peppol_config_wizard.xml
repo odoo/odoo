@@ -33,25 +33,6 @@
                     <field name="peppol_activate_self_billing" invisible="account_peppol_proxy_state not in ('sender', 'receiver')"/>
                     <field name="peppol_self_billing_reception_journal_id" invisible="account_peppol_proxy_state != 'receiver'"/>
                 </group>
-                <!-- Note: Deprecated -->
-                <!-- Disabling services can lead to complicance issues and is not necessary -->
-                <!-- since all existing services should just work. -->
-                <group string="Configure your Peppol Services and allowed formats" invisible="1">
-                    <div colspan="2">
-                        <field name="service_info" role="status" class="o_field_html alert alert-info" invisible="not service_info"/>
-                        <field name="service_ids"
-                               nolabel="1"
-                               widget="one2many"
-                               columns="2">
-                            <list create="false" delete="false" edit="true">
-                                <field name="wizard_id" column_invisible="1"/>
-                                <field name="document_name" readonly="1"/>
-                                <field name="document_identifier" invisible="1"/>
-                                <field name="enabled" widget="boolean_toggle"/>
-                            </list>
-                        </field>
-                    </div>
-                </group>
                 <group string="Danger zone" invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
                     <button string="Remove from Peppol"
                             name="button_peppol_unregister"
