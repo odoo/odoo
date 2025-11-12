@@ -10,12 +10,14 @@ import { user } from "@web/core/user";
 const actionRegistry = registry.category("actions");
 import { ActivityMenu } from "@hr_attendance/components/attendance_menu/attendance_menu";
 import { patch } from "@web/core/utils/patch";
+import { KioskActionChoice } from "@hr_attendance_timesheet_project/components/kiosk_action_choice/kiosk_action_choice";
 export class HrDashboard extends Component{
     static template = 'HrDashboardMain';
     static props = ["*"];
     setup() {
         this.effect = useService("effect");
         this.action = useService("action");
+        this.dialog = useService("dialog");
         this.log_in_out = useRef("log_in_out")
         this.emp_graph = useRef("emp_graph")
         this.leave_graph = useRef("leave_graph")
@@ -685,16 +687,18 @@ export class HrDashboard extends Component{
             context:{'order':'duration_display'}
         })
     }
-     attendance_sign_in_out() {
+     async attendance_sign_in_out() {
         if (this.state.login_employee['attendance_state'] == 'checked_out') {
+            // Check in directly
             this.state.login_employee['attendance_state'] = 'checked_in'
+            this.update_attendance()
         }
         else{
             if (this.state.login_employee['attendance_state'] == 'checked_in') {
-                this.state.login_employee['attendance_state'] = 'checked_out'
+                // Show popup to choose between check out or change project
+                await this.showCheckOutDialog()
             }
         }
-        this.update_attendance()
     }
     async update_attendance() {
         var self = this;
@@ -720,6 +724,70 @@ export class HrDashboard extends Component{
                 fadeout: "fast",
             })
         }
+    }
+
+    async showCheckOutDialog() {
+        try {
+            // Get current attendance record
+            const attendanceRecords = await this.orm.searchRead(
+                'hr.attendance',
+                [['employee_id', '=', this.state.login_employee.id], ['check_out', '=', false]],
+                ['id', 'current_project_id'],
+                { limit: 1 }
+            );
+
+            if (!attendanceRecords || attendanceRecords.length === 0) {
+                console.warn("[Dashboard] No active attendance found");
+                // Fallback to direct check-out
+                this.state.login_employee['attendance_state'] = 'checked_out'
+                this.update_attendance()
+                return;
+            }
+
+            const attendance = attendanceRecords[0];
+            const currentProjectName = attendance.current_project_id ? attendance.current_project_id[1] : null;
+
+            // Show the dialog
+            this.dialog.add(KioskActionChoice, {
+                employeeId: this.state.login_employee.id,
+                attendanceId: attendance.id,
+                currentProjectName: currentProjectName,
+                onCheckOut: async () => {
+                    await this.handleCheckOut();
+                },
+                onProjectChanged: async (projectId) => {
+                    await this.handleProjectChanged(projectId);
+                },
+                onCancel: () => {
+                    // Do nothing, just close the dialog
+                },
+            });
+        } catch (error) {
+            console.error("[Dashboard] Error showing check-out dialog:", error);
+            // Fallback to direct check-out
+            this.state.login_employee['attendance_state'] = 'checked_out'
+            this.update_attendance()
+        }
+    }
+
+    async handleCheckOut() {
+        // Update local state
+        this.state.login_employee['attendance_state'] = 'checked_out'
+
+        // Perform check-out
+        await this.update_attendance()
+    }
+
+    async handleProjectChanged(projectId) {
+        // Show success message
+        this.effect.add({
+            message: _t("Project changed successfully"),
+            type: 'rainbow_man',
+            fadeout: "fast",
+        })
+
+        // Don't refresh employee data to avoid re-render issues
+        // The project change is already reflected in the backend
     }
 }
 registry.category("actions").add("hr_dashboard", HrDashboard)

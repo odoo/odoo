@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_attendance_timesheet_project.KioskActionChoice">
-        <div class="kiosk-action-choice-dialog">
-            <div class="kiosk-dialog-header">
-                <h2>What would you like to do?</h2>
-                <p t-if="props.currentProjectName" class="current-project-info">
-                    Currently working on: <strong t-esc="props.currentProjectName"/>
-                </p>
-            </div>
+        <Dialog title="'What would you like to do?'" size="'md'">
+            <t t-if="!state.closing">
+            <div class="kiosk-action-choice-dialog">
+                <t t-if="props.currentProjectName">
+                    <p class="current-project-info" style="text-align: center; margin-bottom: 1rem; font-size: 1.1rem; color: #666;">
+                        Currently working on: <strong t-esc="props.currentProjectName" style="color: #007bff;"/>
+                    </p>
+                </t>
 
-            <div class="kiosk-dialog-content">
+                <div class="kiosk-dialog-content">
                 <!-- Error message display -->
                 <t t-if="state.error">
                     <div class="alert alert-danger kiosk-error-message" role="alert">
@@ -61,7 +62,7 @@
                             </div>
                         </t>
 
-                        <t t-else="">
+                        <t t-elif="Array.isArray(state.projects)">
                             <div class="kiosk-projects-grid">
                                 <t t-foreach="state.projects" t-as="project" t-key="project.id">
                                     <button
@@ -84,9 +85,22 @@
                                 </button>
                             </div>
                         </t>
+
+                        <t t-else="">
+                            <div class="text-center">
+                                <p>Unable to load projects</p>
+                                <button
+                                    class="btn btn-secondary"
+                                    t-on-click="onClickBack">
+                                    <i class="fa fa-arrow-left"/> Back
+                                </button>
+                            </div>
+                        </t>
                     </div>
                 </t>
+                </div>
             </div>
-        </div>
+            </t>
+        </Dialog>
     </t>
 </templates>

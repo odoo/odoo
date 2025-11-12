@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
 import { Component, useState } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 
 export class KioskActionChoice extends Component {
     static template = "hr_attendance_timesheet_project.KioskActionChoice";
+    static components = { Dialog };
     static props = {
         employeeId: Number,
         attendanceId: Number,
@@ -22,6 +24,7 @@ export class KioskActionChoice extends Component {
             loading: false,
             selectedProjectId: null,
             error: null,
+            closing: false,
         });
 
         console.log("[KioskActionChoice] Component setup with props:", this.props);
@@ -32,6 +35,7 @@ export class KioskActionChoice extends Component {
         // Expand to show project list
         this.state.loading = true;
         this.state.error = null;
+        this.state.showProjectList = true;
 
         try {
             const result = await rpc("/hr_attendance/kiosk_get_employee_projects", {
@@ -41,7 +45,6 @@ export class KioskActionChoice extends Component {
             console.log("[KioskActionChoice] Projects loaded:", result);
 
             this.state.projects = result.projects || [];
-            this.state.showProjectList = true;
 
             if (this.state.projects.length === 0) {
                 this.state.error = "No projects available";
@@ -50,6 +53,7 @@ export class KioskActionChoice extends Component {
         } catch (error) {
             console.error("[KioskActionChoice] Failed to load projects:", error);
             this.state.error = "Failed to load projects. Please try again.";
+            this.state.projects = []; // Ensure it's always an array
         } finally {
             this.state.loading = false;
         }
@@ -74,17 +78,19 @@ export class KioskActionChoice extends Component {
                 throw new Error(result.error || "Failed to change project");
             }
 
-            // Close dialog first
+            // Notify parent component of success first
+            await this.props.onProjectChanged(projectId);
+
+            // Set closing flag to prevent further renders
+            this.state.closing = true;
+
+            // Close dialog last to avoid re-render issues
             if (this.props.close) {
                 this.props.close();
             }
-
-            // Notify parent component of success
-            await this.props.onProjectChanged(projectId);
         } catch (error) {
             console.error("[KioskActionChoice] Failed to change project:", error);
             this.state.error = error.message || "Failed to change project. Please try again.";
-        } finally {
             this.state.loading = false;
         }
     }
@@ -96,13 +102,16 @@ export class KioskActionChoice extends Component {
         this.state.error = null;
 
         try {
-            // Close dialog first
+            // Call parent's check-out handler first
+            await this.props.onCheckOut();
+
+            // Set closing flag to prevent further renders
+            this.state.closing = true;
+
+            // Close dialog last
             if (this.props.close) {
                 this.props.close();
             }
-
-            // Call parent's check-out handler
-            await this.props.onCheckOut();
         } catch (error) {
             console.error("[KioskActionChoice] Check out error:", error);
             this.state.error = "Failed to check out. Please try again.";
@@ -112,6 +121,9 @@ export class KioskActionChoice extends Component {
 
     onClickCancel() {
         console.log("[KioskActionChoice] Cancel button clicked");
+
+        // Set closing flag to prevent further renders
+        this.state.closing = true;
 
         // Close dialog
         if (this.props.close) {

@@ -49,6 +49,12 @@ Workflow:
             # Patch MUST load last - after all components including ours
             ('append', 'hr_attendance_timesheet_project/static/src/public_kiosk_patch/public_kiosk_app_patch.js'),
         ],
+        'web.assets_backend': [
+            # Make KioskActionChoice component available in backend (for Dashboard)
+            'hr_attendance_timesheet_project/static/src/components/kiosk_action_choice/kiosk_action_choice.js',
+            'hr_attendance_timesheet_project/static/src/components/kiosk_action_choice/kiosk_action_choice.xml',
+            'hr_attendance_timesheet_project/static/src/components/kiosk_action_choice/kiosk_action_choice.scss',
+        ],
     },
     'installable': True,
     'application': False,
