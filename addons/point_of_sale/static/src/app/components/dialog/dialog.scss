@@ -3,6 +3,7 @@
     --modal-header-border-width: 0;
 
     .modal-header {
+        padding-bottom: 0;
         &:has(.btn-close) {
             margin-right: var(--modal-header-padding-y);
         }
@@ -14,11 +15,15 @@
     }
 
     .modal-body {
-        --modal-padding: 0 16px;
+        --modal-padding: 16px;
 
         > p:last-child {
             margin-bottom: 4px;
         }
+    }
+
+    .modal-footer {
+        padding-top: 0;
     }
 }
 
