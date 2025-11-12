@@ -48,7 +48,7 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
                 lines.comodel_percentage_paid_factor = 0.0
                 continue
 
-            total_amounts_to_pay = wizard._get_total_amounts_to_pay(wizard.batches)
+            total_amounts_to_pay = wizard._get_total_amounts_to_pay(wizard._get_batches())
             moves_total_amount = wizard._get_total_amount_in_wizard_currency()
             if total_amounts_to_pay['full_amount']:
                 # We need to care about partial payment; for example if paid in two times.

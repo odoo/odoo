@@ -31,7 +31,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         compute="_compute_duplicate_applicant_ids",
         store=True, readonly=False,
     )
-    duplicate_applicant_ids_domain = fields.Binary(compute="_compute_duplicate_applicant_ids_domain")
+    duplicate_applicant_ids_domain = fields.Json(compute="_compute_duplicate_applicant_ids_domain")
     attachment_ids = fields.Many2many(
         'ir.attachment', string='Attachments',
         compute="_compute_from_template_id", readonly=False, store=True, bypass_search_access=True,
@@ -69,7 +69,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
                 & Domain('id', 'not in', self.applicant_ids.ids)
                 & Domain('application_status', 'not in', ['hired', 'refused', 'archived'])
             )
-            wizard.duplicate_applicant_ids_domain = domain
+            wizard.duplicate_applicant_ids_domain = list(domain)
             wizard.duplicates_count = self.env['hr.applicant'].search_count(wizard.duplicate_applicant_ids_domain)
 
     @api.depends('duplicates', 'duplicate_applicant_ids_domain')

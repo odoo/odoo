@@ -41,7 +41,8 @@ class AccountPaymentRegister(models.TransientModel):
                 and not provider.capture_manually
             ):
                 token_partners = wizard.partner_id
-                lines_partners = wizard.batches[0]['lines'].move_id.partner_id
+                batch = wizard._get_batches()[0]
+                lines_partners = batch['lines'].move_id.partner_id
                 if len(lines_partners) == 1:
                     token_partners |= lines_partners
                 wizard.suitable_payment_token_ids = self.env['payment.token'].sudo().search(

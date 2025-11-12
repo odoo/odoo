@@ -78,7 +78,7 @@ export class AccountPaymentField extends Component {
 
 export const accountPaymentField = {
     component: AccountPaymentField,
-    supportedTypes: ["binary"],
+    supportedTypes: ["json"],
 };
 
 registry.category("fields").add("payment", accountPaymentField);

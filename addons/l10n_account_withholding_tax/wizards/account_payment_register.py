@@ -140,7 +140,7 @@ class AccountPaymentRegister(models.TransientModel):
 
             # Compute the lines themselves once; when opening the wizard.
             if not wizard.withholding_line_ids:
-                batch = wizard.batches[0]
+                batch = wizard._get_batches()[0]
                 base_lines = []
                 for move in batch['lines'].move_id:
                     move_base_lines, _move_tax_lines = move._get_rounded_base_and_tax_lines()
@@ -231,7 +231,7 @@ class AccountPaymentRegister(models.TransientModel):
         if not self.can_edit_wizard:
             return 0.0
 
-        moves = self.batches[0]['lines'].move_id  # Use the move to get the TOTAL amount, including all installment.
+        moves = self._get_batches()[0]['lines'].move_id  # Use the move to get the TOTAL amount, including all installment.
         wizard_curr = self.currency_id
         comp_curr = self.company_currency_id
 

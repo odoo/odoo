@@ -121,6 +121,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             name: template
             for mapping in modules.mapped('account_templates')
+            if mapping
             for name, template in mapping.items()
             if get_all or template['visible']
         }

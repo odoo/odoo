@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import json
 import logging
 import re
@@ -130,7 +129,7 @@ class L10nInEwaybill(models.Model):
         ("error", "Error")],
         string="Blocking Level", readonly=True)
 
-    content = fields.Binary(compute='_compute_content', compute_sudo=True)
+    content = fields.Json(compute='_compute_content', compute_sudo=True)
     cancel_reason = fields.Selection(selection=[
         ("1", "Duplicate"),
         ("2", "Data Entry Mistake"),
@@ -257,7 +256,7 @@ class L10nInEwaybill(models.Model):
                 ewaybill_json = ewaybill._ewaybill_generate_direct_json()
             else:
                 ewaybill_json = {}
-            ewaybill.content = base64.b64encode(json.dumps(ewaybill_json).encode())
+            ewaybill.content = ewaybill_json
 
     @api.depends('name', 'state')
     def _compute_display_name(self):

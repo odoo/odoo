@@ -268,7 +268,7 @@ class IrActionsAct_Window(models.Model):
             can be set on the action.
         """
         for act in self:
-            act.views = [(view.view_id.id, view.view_mode) for view in act.view_ids]
+            views = [(view.view_id.id, view.view_mode) for view in act.view_ids]
             got_modes = [view.view_mode for view in act.view_ids]
             all_modes = act.view_mode.split(',')
             missing_modes = [mode for mode in all_modes if mode not in got_modes]
@@ -276,8 +276,9 @@ class IrActionsAct_Window(models.Model):
                 if act.view_id.type in missing_modes:
                     # reorder missing modes to put view_id first if present
                     missing_modes.remove(act.view_id.type)
-                    act.views.append((act.view_id.id, act.view_id.type))
-                act.views.extend([(False, mode) for mode in missing_modes])
+                    views.append((act.view_id.id, act.view_id.type))
+                views.extend([(False, mode) for mode in missing_modes])
+            act.views = views
 
     @api.constrains('view_mode')
     def _check_view_mode(self):
@@ -304,10 +305,11 @@ class IrActionsAct_Window(models.Model):
     usage = fields.Char(string='Action Usage',
                         help="Used to filter menu and home actions from the user form.")
     view_ids = fields.One2many('ir.actions.act_window.view', 'act_window_id', string='No of Views')
-    views = fields.Binary(compute='_compute_views',
-                          help="This function field computes the ordered list of views that should be enabled " \
-                               "when displaying the result of an action, federating view mode, views and " \
-                               "reference view. The result is returned as an ordered list of pairs (view_id,view_mode).")
+    views = fields.Json(compute='_compute_views',
+        help="This function field computes the ordered list of views that should be enabled "
+            "when displaying the result of an action, federating view mode, views and "
+            "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."
+    )
     limit = fields.Integer(default=80, help='Default limit for the list view')
     group_ids = fields.Many2many('res.groups', 'ir_act_window_group_rel',
                                  'act_id', 'gid', string='Groups')
@@ -1416,22 +1418,20 @@ class IrActionsClient(models.Model):
     target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
     res_model = fields.Char(string='Destination Model', help="Optional model, mostly used for needactions.")
     context = fields.Char(string='Context Value', default="{}", required=True, help="Context dictionary as Python expression, empty by default (Default: {})")
-    params = fields.Binary(compute='_compute_params', inverse='_inverse_params', string='Supplementary arguments',
-                           help="Arguments sent to the client along with "
-                                "the view tag")
-    params_store = fields.Binary(string='Params storage', readonly=True, attachment=False)
+    params = fields.Json(
+        compute='_compute_params', inverse='_inverse_params', string='Supplementary arguments',
+        help="Arguments sent to the client along with the view tag")
+    params_store = fields.Text(string='Params storage', readonly=True)
 
     @api.depends('params_store')
     def _compute_params(self):
-        self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
-        for record, record_bin in zip(self, self_bin):
-            record.params = record_bin.params_store and safe_eval(record_bin.params_store, {'uid': self.env.uid})
+        for record in self:
+            record.params = record.params_store and safe_eval(record.params_store, {'uid': self.env.uid})
 
     def _inverse_params(self):
         for record in self:
             params = record.params
             record.params_store = repr(params) if isinstance(params, dict) else params
-
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {

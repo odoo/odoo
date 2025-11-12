@@ -2992,16 +2992,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         assertBinaryValue(record_no_bin_size, binary_value)
         assertBinaryValue(record_bin_size, binary_size)
 
-        # check computed binary field with arbitrary Python value
-        record = self.env['test_orm.model_binary'].create({})
-        record_no_bin_size = record.with_context(bin_size=False)
-        record_bin_size = record.with_context(bin_size=True)
-
-        expected_value = [(record.id, False)]
-        self.assertEqual(record.binary_computed, expected_value)
-        self.assertEqual(record_no_bin_size.binary_computed, expected_value)
-        self.assertEqual(record_bin_size.binary_computed, expected_value)
-
     def test_95_binary_bin_size_write(self):
         binary_value = base64.b64encode(b'content')
         binary_size = b'7.00 bytes'
