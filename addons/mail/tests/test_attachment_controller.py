@@ -36,6 +36,7 @@ class TestAttachmentControllerCommon(TestControllerCommon):
                         self._upload_attachment(record.id, record._name, route_kw)
 
     def _upload_attachment(self, thread_id, thread_model, route_kw):
+        headers = route_kw.pop("headers", None)
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
             res = self.url_open(
                 url="/mail/attachment/upload",
@@ -47,6 +48,7 @@ class TestAttachmentControllerCommon(TestControllerCommon):
                     **route_kw,
                 },
                 files={"ufile": file},
+                **({"headers": headers} if headers else {}),
             )
             res.raise_for_status()
             return json.loads(res.content.decode("utf-8"))["data"]["ir.attachment"][0]["id"]
@@ -81,3 +83,34 @@ class TestAttachmentController(TestAttachmentControllerCommon):
 
     def test_send_attachment_without_body(self):
         self.start_tour("/odoo/discuss", "create_thread_for_attachment_without_body",login="admin")
+
+    def test_upload_multi_company(self):
+        record = self.user_demo.partner_id
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.assertTrue(record.company_id)  # Ensure the thread has a company
+        test_cases = [
+            ({}, self.user_demo.company_id),
+            (
+                {
+                    "headers": {
+                        "Cookie": f"session_id={self.session.sid};cids={self.company_2.id}-{self.company_3.id};"
+                    }
+                },
+                self.company_2,
+            ),
+            (
+                {
+                    "headers": {
+                        "Cookie": f"session_id={self.session.sid};cids={self.company_2.id}-{self.user_admin.company_id.id};"
+                    }
+                },
+                self.user_admin.company_id,
+            ),
+        ]
+        for kwargs, expected_company in test_cases:
+            with self.subTest(expected_company=expected_company):
+                record.company_id = False if kwargs else record.company_id
+                attachment = self.env["ir.attachment"].browse(
+                    self._upload_attachment(record.id, record._name, kwargs)
+                )
+                self.assertEqual(attachment.company_id, expected_company)
