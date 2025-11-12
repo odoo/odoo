@@ -71,6 +71,9 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                        <div t-if="line.payment_status == 'waiting'" class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                            Force done
+                                        </div>
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversing'">
