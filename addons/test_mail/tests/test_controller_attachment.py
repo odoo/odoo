@@ -33,3 +33,35 @@ class TestAttachmentController(MailControllerAttachmentCommon):
             allowed=False,
             thread=thread,
         )
+
+    def test_upload_multi_company(self):
+        record = self.user_employee.partner_id
+        record.company_id = self.user_employee.company_id
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.assertTrue(record.company_id)  # Ensure the thread has a company
+        test_cases = [
+            ({}, self.user_employee.company_id),
+            (
+                {
+                    "cookies": {
+                        "cids": f"{self.company_2.id}-{self.company_3.id}",
+                    },
+                },
+                self.company_2,
+            ),
+            (
+                {
+                    "cookies": {
+                        "cids": f"{self.company_2.id}-{self.user_admin.company_id.id}",
+                    },
+                },
+                self.user_admin.company_id,
+            ),
+        ]
+        for kwargs, expected_company in test_cases:
+            with self.subTest(expected_company=expected_company):
+                record.company_id = False if kwargs else record.company_id
+                attachment = self.env["ir.attachment"].browse(
+                    self._upload_attachment(record, kwargs)
+                )
+                self.assertEqual(attachment.company_id, expected_company)
