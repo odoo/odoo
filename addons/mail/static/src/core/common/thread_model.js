@@ -596,7 +596,7 @@ export class Thread extends Record {
                 return;
             }
             const otherMembers = this.channelMembers.filter((member) =>
-                member.persona.notEq(this.store.self)
+                member.notEq(this.selfMember)
             );
             if (otherMembers.length === 0) {
                 return;
