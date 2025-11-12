@@ -648,7 +648,6 @@ class TestHrVersion(TestHrCommon):
             "active_employee",
             "activity_ids",
             "company_country_id",
-            "contract_wage",
             "country_code",
             "create_date",
             "create_uid",
