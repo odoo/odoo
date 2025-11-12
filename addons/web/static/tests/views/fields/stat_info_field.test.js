@@ -5,9 +5,10 @@ class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value" });
     int_field = fields.Integer({ string: "int_field" });
     qux = fields.Float({ digits: [16, 1] });
+    bar = fields.Float({ string: "Float field" });
     monetary = fields.Monetary({ currency_field: "" });
 
-    _records = [{ id: 1, foo: "yop", int_field: 10, qux: 0.44444, monetary: 9.999999 }];
+    _records = [{ id: 1, foo: "yop", int_field: 10, qux: 0.44444, bar: 9.1, monetary: 9.999999 }];
 }
 
 defineModels([Partner]);
@@ -38,6 +39,25 @@ test("StatInfoField formats decimal precision", async () => {
     });
     expect("button.oe_stat_button .o_field_widget .o_stat_value:eq(1)").toHaveText("10.00", {
         message: "Currency decimal precision should be 2",
+    });
+});
+
+test("StatInfoField with 'hide_trailing_zeros' option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <button class="oe_stat_button" name="items" icon="fa-gear">
+                    <field name="bar" widget="statinfo" options="{'hide_trailing_zeros': true}" />
+                </button>
+            </form>
+        `,
+    });
+
+    expect("button.oe_stat_button .o_field_widget .o_stat_value:eq(0)").toHaveText("9.1", {
+        message: "Value would show 9.10 without the option enabled",
     });
 });
 

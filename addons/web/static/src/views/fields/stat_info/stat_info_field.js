@@ -14,6 +14,10 @@ export class StatInfoField extends Component {
         noLabel: { type: Boolean, optional: true },
         digits: { type: Array, optional: true },
         string: { type: String, optional: true },
+        trailingZeros: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        trailingZeros: true,
     };
 
     get formattedValue() {
@@ -22,6 +26,7 @@ export class StatInfoField extends Component {
         return formatter(this.props.record.data[this.props.name], {
             digits: this.props.digits,
             field,
+            trailingZeros: this.props.trailingZeros,
         });
     }
     get label() {
@@ -41,6 +46,12 @@ export const statInfoField = {
             type: "field",
             availableTypes: ["char"],
         },
+        {
+            label: _t("Hide trailing zeros"),
+            name: "hide_trailing_zeros",
+            type: "boolean",
+            help: _t("Hide zeros to the right of the last non-zero digit, e.g. 1.20 becomes 1.2"),
+        },
     ],
     supportedTypes: ["float", "integer", "monetary", "char", "one2many", "many2one"],
     isEmpty: () => false,
@@ -59,6 +70,7 @@ export const statInfoField = {
             labelField: options.label_field,
             noLabel: exprToBoolean(attrs.nolabel),
             string,
+            trailingZeros: !options.hide_trailing_zeros,
         };
     },
 };

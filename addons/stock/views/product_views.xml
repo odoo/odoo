@@ -327,16 +327,16 @@
                                 <div class="d-flex flex-row gap-1 ms-1">
                                     <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
                                         <span class="o_stat_value">
-                                            <field name="qty_available" widget="statinfo" nolabel="1"/>
+                                            <field name="qty_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                         <span class="o_stat_value" invisible="virtual_available != 0">
-                                            <field name="virtual_available" nolabel="1"/>
+                                            <field name="virtual_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                         <span class="o_stat_value text-info" invisible="virtual_available &lt;= 0">
-                                            <field name="virtual_available" nolabel="1"/>
+                                            <field name="virtual_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                         <span class="o_stat_value text-danger" invisible="virtual_available &gt;= 0">
-                                            <field name="virtual_available" nolabel="1"/>
+                                            <field name="virtual_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                     </div>
                                     <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
@@ -444,16 +444,16 @@
                                 <div class="d-flex flex-row gap-1 ms-1">
                                     <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
                                         <span class="o_stat_value">
-                                            <field name="qty_available" widget="statinfo" nolabel="1"/>
+                                            <field name="qty_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                         <span class="o_stat_value" invisible="virtual_available != 0">
-                                            <field name="virtual_available" nolabel="1"/>
+                                            <field name="virtual_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                         <span class="o_stat_value text-info" invisible="virtual_available &lt;= 0">
-                                            <field name="virtual_available" nolabel="1"/>
+                                            <field name="virtual_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                         <span class="o_stat_value text-danger" invisible="virtual_available &gt;= 0">
-                                            <field name="virtual_available" nolabel="1"/>
+                                            <field name="virtual_available" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
                                         </span>
                                     </div>
                                     <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
