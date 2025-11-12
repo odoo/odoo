@@ -1796,7 +1796,7 @@ export class ListRenderer extends Component {
                 // TODO this seems bad: refactor this
                 list.leaveEditMode({ discard: true });
                 const firstAddButton = this.tableRef.el.querySelector(
-                    ".o_field_x2many_list_row_add a"
+                    ".o_field_x2many_list_row_add button"
                 );
 
                 if (firstAddButton) {
@@ -2145,7 +2145,7 @@ export class ListRenderer extends Component {
             return;
         }
         // Add row
-        if (target.closest(".o_field_x2many_list_row_add a")) {
+        if (target.closest(".o_field_x2many_list_row_add button")) {
             return;
         }
         // Optional columns

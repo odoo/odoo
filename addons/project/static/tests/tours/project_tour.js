@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         content: 'Open sub-tasks notebook section',
         run: 'click',
     }, {
-        trigger: '.o_field_subtasks_one2many .o_list_renderer a[role="button"]',
+        trigger: '.o_field_subtasks_one2many .o_list_renderer .o_field_x2many_list_row_add button',
         content: 'Add a subtask',
         run: 'click',
     }, {
@@ -139,7 +139,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         content: 'Open sub-tasks notebook section',
         run: 'click',
     }, {
-        trigger: '.o_field_subtasks_one2many .o_list_renderer a[role="button"]',
+        trigger: '.o_field_subtasks_one2many .o_list_renderer .o_field_x2many_list_row_add button',
         content: 'Add a subtask',
         run: 'click',
     }, {

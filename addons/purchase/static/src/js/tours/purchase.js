@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             trigger: ".o_field_res_partner_many2one[name='partner_id'] .o_external_button",
         },
         {
-            trigger: ".o_field_x2many_list_row_add > a",
+            trigger: ".o_field_x2many_list_row_add > button",
             content: _t("Add some products or services to your quotation."),
             tooltipPosition: "bottom",
             run: "click",

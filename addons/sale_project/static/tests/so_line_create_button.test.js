@@ -97,7 +97,7 @@ test("test so_line_create_button widget: valid SO", async () => {
             "The default_project_id set in the field context should be passed in the SO form view.",
     });
 
-    await contains(".modal-content .o_field_x2many_list_row_add a").click();
+    await contains(".modal-content .o_field_x2many_list_row_add button").click();
     await contains(".modal-content .o_selected_row td[name='product_id'] input").edit(
         "Service Product 2"
     );
@@ -123,7 +123,7 @@ test("test so_line_create_button widget: invalid SO", async () => {
     await contains("a[aria-label='Create Sales Order']").click();
     await animationFrame();
 
-    await contains(".modal-content .o_field_x2many_list_row_add a").click();
+    await contains(".modal-content .o_field_x2many_list_row_add button").click();
     await contains(".modal-content .o_selected_row td[name='product_id'] input").edit(
         "Consumable Product 1"
     );

@@ -163,14 +163,8 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".o_searchview input").toBeFocused({ message: "searchview input should be focused" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
     expect(".o_setting_box a").toHaveCount(2);
-    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute(
-        "title",
-        "this is bar info"
-    );
-    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute(
-        "title",
-        "this is foo info"
-    );
+    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute("title", "this is bar info");
+    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute("title", "this is foo info");
     expect(".o_setting_box a:eq(0)").toHaveAttribute(
         "href",
         "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
@@ -319,14 +313,8 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".o_form_editable").not.toHaveClass("o_form_nosheet");
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
     expect(".o_setting_box a").toHaveCount(2);
-    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute(
-        "title",
-        "this is bar info"
-    );
-    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute(
-        "title",
-        "this is foo info"
-    );
+    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute("title", "this is bar info");
+    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute("title", "this is foo info");
     expect(".o_setting_box a:eq(0)").toHaveAttribute(
         "href",
         "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
@@ -1630,7 +1618,7 @@ test("settings can contain one2many fields", async () => {
         `,
     });
 
-    await click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add button");
     await animationFrame();
     await click(".modal-body input");
     await edit("Added Task");

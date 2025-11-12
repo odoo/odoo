@@ -109,7 +109,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on Timesheets page to log a timesheet',
     run: "click",
 }, {
-    trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add a[role="button"]',
+    trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add button',
     content: 'Click on Add a line to create a new timesheet into the task.',
     run: "click",
 }, {
@@ -217,7 +217,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on Invoicing tab to configure the invoicing of this project.',
     run: "click",
 }, {
-    trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > a[role="button"]',
+    trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > button',
     content: 'Click on Add a line on the mapping list view.',
     run: "click",
 }, {

@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.ui-menu-item > a:contains("Agrolait")',
     run: "click",
 }, {
-    trigger: "a:contains('Add a product')",
+    trigger: "button:contains('Add a product')",
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: ".o_form_status_indicator_buttons:not(:visible)",
 },
 {
-    trigger: 'a:contains("Add a product")',
+    trigger: 'button:contains("Add a product")',
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',

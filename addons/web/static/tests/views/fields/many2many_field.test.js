@@ -391,14 +391,14 @@ test("field string is used in the SelectCreateDialog", async () => {
             </form>`,
     });
 
-    await contains(".o_field_x2many_list_row_add a:eq(0)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(0)").click();
     expect(".modal").toHaveCount(1);
     expect(".modal .modal-title").toHaveText("Add: pokemon");
 
     await contains(".modal .o_form_button_cancel").click();
     expect(".modal").toHaveCount(0);
 
-    await contains(".o_field_x2many_list_row_add a:eq(1)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(1)").click();
     expect(".modal").toHaveCount(1);
     expect(".modal .modal-title").toHaveText("Add: Abcde");
 });
@@ -527,7 +527,7 @@ test("many2many list (non editable): create a new record and click on action but
             </form>`,
         resId: 1,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     await contains(".modal .o_create_button").click();
     expect.verifySteps([
@@ -580,7 +580,7 @@ test("many2many list (non editable): create a new record and click on action but
             </form>`,
         resId: 1,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     await contains(".modal .o_create_button").click();
     expect.verifySteps([
@@ -637,7 +637,7 @@ test("add a new record in a many2many non editable list", async () => {
             </form>`,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_dialog .o_create_button").click();
     await contains(".o_dialog .o_field_widget[name=name] input").edit("a name");
     await contains(".o_dialog .o_form_button_save").click();
@@ -689,7 +689,7 @@ test("add record in a many2many non editable list with context", async () => {
     });
 
     await contains(".o_field_widget[name=int_field] input").edit("2");
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 });
 
 test("many2many list (editable): edition", async () => {
@@ -750,7 +750,7 @@ test("many2many list (editable): edition", async () => {
     expect.verifySteps(["get_views", "web_read"]);
 
     // add new subrecords
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".modal").toHaveCount(1);
     expect(".modal .o_list_view .o_data_row").toHaveCount(1);
     await contains(".modal .o_list_view .o_data_row .o_data_cell").click();
@@ -873,7 +873,7 @@ test("fieldmany2many list comodel not writable", async () => {
     });
 
     expect(".o_field_many2many .o_field_x2many_list_row_add").toHaveCount(1);
-    await contains(".o_field_many2many .o_field_x2many_list_row_add a").click();
+    await contains(".o_field_many2many .o_field_x2many_list_row_add button").click();
     expect(".modal").toHaveCount(1);
 
     expect(".modal-footer button").toHaveCount(2);
@@ -922,7 +922,7 @@ test("many2many list: conditional create/delete attrs", async () => {
     });
     expect(".o_list_record_remove").toHaveCount(2);
 
-    await contains(".o_field_x2many_list_row_add a:eq(0)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(0)").click();
 
     expect(".modal .modal-footer button").toHaveCount(3);
 
@@ -936,7 +936,7 @@ test("many2many list: conditional create/delete attrs", async () => {
     expect(".o_field_x2many_list_row_add").toHaveCount(1);
     expect(".o_list_record_remove").toHaveCount(2);
 
-    await contains(".o_field_x2many_list_row_add a:eq(0)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(0)").click();
     expect(".modal .modal-footer button").toHaveCount(2);
 });
 
@@ -965,7 +965,7 @@ test("many2many field with link/unlink attrs (list)", async () => {
     expect(".o_field_x2many_list_row_add").toHaveCount(1);
     expect(".o_list_record_remove").toHaveCount(2);
 
-    await contains(".o_field_x2many_list_row_add a:eq(0)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(0)").click();
 
     expect(".modal .modal-footer button").toHaveCount(3);
 
@@ -1003,7 +1003,7 @@ test('many2many field with link/unlink attrs (list, create="0")', async () => {
     expect(".o_field_x2many_list_row_add").toHaveCount(1);
     expect(".o_list_record_remove").toHaveCount(2);
 
-    await contains(".o_field_x2many_list_row_add a:eq(0)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(0)").click();
 
     expect(".modal .modal-footer button").toHaveCount(2);
 
@@ -1194,7 +1194,7 @@ test("context and domain dependent on an x2m must contain the list of current id
             </field>
         </form>`,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 });
 
 test("many2many list with x2many: add a record", async () => {
@@ -1226,13 +1226,13 @@ test("many2many list with x2many: add a record", async () => {
         resId: 1,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".modal .o_data_row:first .o_data_cell:eq(0)").click();
 
     expect(".o_data_row").toHaveCount(1);
     expect(queryAllTexts(".o_data_row:first .o_tag_badge_text")).toEqual(["leonardo", "donatello"]);
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".modal .o_data_row .o_data_cell:eq(1)").click();
 
     expect(".o_data_row").toHaveCount(2);
@@ -1266,7 +1266,7 @@ test("many2many with a domain", async () => {
         resId: 1,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".modal .o_data_row").toHaveCount(1);
     await contains(`.modal .o_searchview input`).edit("s");
     await press("enter");
@@ -1459,7 +1459,7 @@ test("many2many concurrency edition", async () => {
     expect(".o_data_row").toHaveCount(4);
     await contains(".o_data_row .o_list_record_remove").click();
     await contains(".o_data_row .o_list_record_remove").click();
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".modal .o_data_row td.o_data_cell:eq(0)").click();
     def.resolve();
     await animationFrame();
@@ -1507,7 +1507,7 @@ test("many2many widget: creates a new record with a context containing the paren
     });
     expect.verifySteps(["get_views", "web_read"]);
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect.verifySteps(["get_views", "web_search_read", "has_group"]);
 
     await contains(".o_create_button").click();
@@ -1715,7 +1715,7 @@ test("many2many list add *many* records, remove, re-add", async () => {
     });
 
     // First round: add 51 records in batch
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
 
     expect(".modal-lg").toHaveCount(1);
 
@@ -1749,7 +1749,7 @@ test("many2many list add *many* records, remove, re-add", async () => {
     ).toHaveText("50");
 
     // Third round: re-add 1 records
-    await contains(".o_field_x2many_list_row_add a:eq(0)").click();
+    await contains(".o_field_x2many_list_row_add button:eq(0)").click();
 
     expect(".modal-lg").toHaveCount(1);
 
@@ -1992,7 +1992,7 @@ test("`this` inside rendererProps should reference the component", async () => {
                 </form>`,
         resId: 1,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect.verifySteps(["onAdd", "selectCreate"]);
 });
 
@@ -2097,7 +2097,7 @@ test("test view button warning on opening unsaved record", async () => {
         `,
     });
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_list_record_open_form_view button").click();
 
     expect.verifySteps(["notification"]);

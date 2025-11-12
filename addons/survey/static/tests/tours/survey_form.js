@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "edit Test survey",
     }, {
         content: "Add a first question",
-        trigger: "td.o_field_x2many_list_row_add a",
+        trigger: "td.o_field_x2many_list_row_add button",
         run: "click",
     }, {
         content: "Set the first question's title",
@@ -238,7 +238,7 @@ function addTwoAnswers() {
         {
             content: "Add the first answer",
             trigger:
-                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
+                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {
@@ -248,7 +248,7 @@ function addTwoAnswers() {
         {
             content: "Add the second answer",
             trigger:
-                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
+                ".modal div[name=suggested_answer_ids] .o_field_x2many_list_row_add button",
             run: "click",
         },
         {

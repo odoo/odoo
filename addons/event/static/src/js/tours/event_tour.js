@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('event_tour', {
     content: markup(_t("Open date range picker.<br/>Pick a Start and End date for your event.")),
     run: "click",
 }, {
-    trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
+    trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add button',
     content: markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
     run: "click",
 }, stepUtils.autoExpandMoreButtons(),

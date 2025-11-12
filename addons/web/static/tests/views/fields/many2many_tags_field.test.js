@@ -1764,7 +1764,7 @@ test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on desktop"
             </field>
         </form>`,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".modal").toHaveCount(1);
 
     await contains(".modal [name='name'] input").edit("yop");
@@ -1800,7 +1800,7 @@ test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on mobile",
             </field>
         </form>`,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".modal").toHaveCount(1);
 
     await contains(".modal [name='name'] input").edit("yop");

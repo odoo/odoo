@@ -28,7 +28,7 @@ function addProduct(productName, rowNumber=1) {
     return [
         {
             content: `Add product ${productName}`,
-            trigger: 'a:contains("Add a product")',
+            trigger: 'button:contains("Add a product")',
             run: 'click',
         },
         {

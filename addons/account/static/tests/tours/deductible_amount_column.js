@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("deductible_amount_column", {
     steps: () => [
     {
         content: "Add item",
-        trigger: "div[name='invoice_line_ids'] .o_field_x2many_list_row_add a:contains('Add a line')",
+        trigger: "div[name='invoice_line_ids'] .o_field_x2many_list_row_add button:contains('Add a line')",
         run: "click",
     },
     {

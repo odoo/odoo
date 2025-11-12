@@ -57,7 +57,7 @@
         trigger: '.o_field_widget[name=participants] .o_data_cell:contains(user_test)',
     }, { // add ourself as participant
         content: "click to add participants",
-        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "select Admin",
@@ -82,7 +82,7 @@
         run: "click",
     }, {
         content: "create new message a",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body a",
@@ -98,7 +98,7 @@
     },
     { // add message b
         content: "create new message b",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body b",
@@ -138,7 +138,7 @@
     },
     { // add message c
         content: "create new message c",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body",
@@ -158,7 +158,7 @@
         run: "click",
     }, {
         content: "click to add participants",
-        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "select Demo User",
@@ -215,7 +215,7 @@
     },
     { // add message d
         content: "create new message d",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body",
@@ -231,7 +231,7 @@
     },
     { // add message e
         content: "create new message e",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body",
@@ -335,7 +335,7 @@
     },
     { // add message ddd
         content: "create new message ddd",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "select another user",
@@ -483,7 +483,7 @@
     },
     { // add message eee
         content: "create new message eee",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "change text value",

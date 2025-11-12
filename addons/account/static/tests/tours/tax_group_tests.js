@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     // Add First product
     {
         content: "Add items",
-        trigger: 'div[name="invoice_line_ids"] .o_field_x2many_list_row_add a:contains("Add a line")',
+        trigger: 'div[name="invoice_line_ids"] .o_field_x2many_list_row_add button:contains("Add a line")',
         run: "click",
     },
     {

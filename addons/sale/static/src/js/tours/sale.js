@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            trigger: ".o_field_x2many_list_row_add > a",
+            trigger: ".o_field_x2many_list_row_add > button",
             content: _t("Click here to add some products or services to your quotation."),
             tooltipPosition: "bottom",
             run: "click",
