@@ -76,8 +76,6 @@ declare module "models" {
         name: string;
         notifyAvatarToServer: (data: string) => Promise<void>;
         notifyDescriptionToServer: (description: unknown) => Promise<unknown>;
-        offlineMembers: ChannelMember[];
-        onlineMembers: ChannelMember[];
         rename: (name: string) => Promise<void>;
         scrollUnread: boolean;
         self_member_id: ChannelMember;
