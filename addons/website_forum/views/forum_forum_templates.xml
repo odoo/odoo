@@ -278,19 +278,20 @@
         </div>
         <t t-else="">
             <t t-set="tag_filter" t-value="keep_query('filters').split('=')[1] if keep_query('filters') else ''"/>
-            <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/tag"/>
-            <t t-set="record_name_plural">tags</t>
-            <t t-call="website_forum.no_results_message">
-                <t t-if="tag_filter and tag_filter != 'all'" t-set="result_msg">
-                    There are no tags matching the selected filter <t t-if="search">and search</t>.
-                </t>
-                <t t-elif="search" t-set="result_msg">
-                    There are no tags matching the selected search.
-                </t>
-                <t t-else="" t-set="result_msg">
-                    There are no tags being used in this forum.
-                </t>
+            <t t-if="tag_filter and tag_filter != 'all'" t-set="result_msg">
+                There are no tags matching the selected filter <t t-if="search">and search</t>.
             </t>
+            <t t-elif="search" t-set="result_msg">
+                There are no tags matching the selected search.
+            </t>
+            <t t-else="" t-set="result_msg">
+                There are no tags being used in this forum.
+            </t>
+            <t t-call="website_forum.no_results_message"
+                go_back_url.f="/forum/#{ slug(forum) }/tag"
+                record_name_plural.translate="tags"
+                result_msg="result_msg"
+                />
         </t>
     </t>
 </template>
