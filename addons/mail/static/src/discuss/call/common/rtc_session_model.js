@@ -56,7 +56,7 @@ export class RtcSession extends Record {
 
     delete() {
         if (this.eq(this.store.rtc.localSession)) {
-            this.store.rtc.log(this, "self session deleted, ending call", { important: true });
+            this.store.rtc.notifyServerDisconnect();
             this.store.rtc.endCall();
         }
         this.store.rtc.disconnect(this);

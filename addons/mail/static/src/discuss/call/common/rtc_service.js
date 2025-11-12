@@ -2200,6 +2200,15 @@ export class Rtc extends Record {
         await this.refreshMicAudioStatus();
     }
 
+    notifyServerDisconnect() {
+        this.log(this.localSession, "self session deleted by the server, ending call", {
+            important: true,
+        });
+        this.notification.add(_t("Disconnected from the call by the server"), {
+            type: "warning",
+        });
+    }
+
     formatInfo() {
         this.localSession.is_camera_on = Boolean(this.cameraTrack);
         this.localSession.is_screen_sharing_on = Boolean(this.screenTrack);
@@ -2445,10 +2454,8 @@ export const rtcService = {
         );
         services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
             if (rtc.localSession?.id === sessionId) {
+                rtc.notifyServerDisconnect();
                 rtc.endCall();
-                services.notification.add(_t("Disconnected from the RTC call by the server"), {
-                    type: "warning",
-                });
             }
         });
         services["bus_service"].subscribe("res.users.settings.volumes", (payload) => {
