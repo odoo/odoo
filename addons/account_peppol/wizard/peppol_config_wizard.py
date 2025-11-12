@@ -136,10 +136,7 @@ class PeppolConfigWizard(models.TransientModel):
             self_billing_services.write({'enabled': wizard.peppol_activate_self_billing})
 
     def button_sync_form_with_peppol_proxy(self):
-        """Update the peppol contact email on IAP.
-        Note: The service configuration is DEPRECATED / hidden in the view.
-        Disabling services can lead to complicance issues and is not necessary
-        since all existing services should just work."""
+        """Update the peppol contact email on IAP."""
         self.ensure_one()
 
         # Update company details
