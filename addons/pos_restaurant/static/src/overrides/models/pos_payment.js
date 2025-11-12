@@ -7,6 +7,9 @@ patch(PosPayment.prototype, {
         if (this.payment_method_id.payment_terminal) {
             return this.payment_method_id.payment_terminal.canBeAdjusted(this.uuid);
         }
-        return !this.payment_method_id.is_cash_count;
+        return (
+            !this.payment_method_id.is_cash_count &&
+            this.payment_method_id.payment_method_type != "qr_code"
+        );
     },
 });
