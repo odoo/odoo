@@ -18,6 +18,7 @@ export class LivechatChannelInfoList extends Component {
 
     setup() {
         super.setup();
+        this.actionService = useService("action");
         this.store = useService("mail.store");
         this.ui = useService("ui");
         useSubEnv({ inLivechatInfoPanel: true });
@@ -53,6 +54,13 @@ export class LivechatChannelInfoList extends Component {
         } else {
             this.props.thread.channel.openChatWindow({ focus: true });
         }
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "res.partner",
+            res_id: this.props.thread.livechatVisitorMember.partner_id.id,
+            views: [[false, "form"]],
+            target: "current",
+        });
     }
 
     get visitorProfileURL() {
