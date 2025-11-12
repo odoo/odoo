@@ -3616,12 +3616,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 1.85,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
         ])
         self.assertRecordValues(caba_transition_exchange_moves_2[1].line_ids, [
-            {'debit': 0.01,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
-            {'debit': 0.0,      'credit': 0.01,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.income_currency_exchange_account_id.id},
-        ])
-        self.assertRecordValues(caba_transition_exchange_moves_2[2].line_ids, [
             {'debit': 0.0,      'credit': 1.86,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
             {'debit': 1.86,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
+        ])
+        self.assertRecordValues(caba_transition_exchange_moves_2[2].line_ids, [
+            {'debit': 0.01,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 0.01,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.income_currency_exchange_account_id.id},
         ])
 
         self.assertAmountsGroupByAccount([
@@ -5894,3 +5894,43 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount': 1001.0, 'debit_move_id': line_2.id, 'credit_move_id': line_5.id},
             {'amount': 1002.0, 'debit_move_id': line_3.id, 'credit_move_id': line_4.id},
         ])
+
+    def test_exchange_move_assignment_with_group_payment(self):
+        """
+        Test that when doing a group payment the exchange_moves are correctly assigned to the invoices
+        """
+        foreign_curr = self.setup_other_currency('EUR', rates=[
+            ('2025-01-01', 0.054493834023),
+            ('2025-01-02', 0.054363189597),
+        ])
+
+        inv1, inv2 = [
+            self.init_invoice(
+                'out_invoice',
+                partner=self.partner_a,
+                invoice_date='2025-01-01',
+                post=True,
+                products=[self.product_a],
+                amounts=[amount],
+                currency=foreign_curr,
+             )
+             for amount in [500.0, 10.0]
+        ]
+
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=(inv1 + inv2).ids,
+        ).create({
+            'payment_date': '2025-01-02',
+            'group_payment': True,
+            'amount': 510.0,
+            'currency_id': foreign_curr.id,
+        })._create_payments()
+
+        partials = self.env['account.partial.reconcile'].search([
+            ('debit_move_id.move_id', 'in', [inv1.id, inv2.id]),
+            ('credit_move_id.move_id', '=', payment.move_id.id),
+        ])
+
+        # Check that there is two exchanges for the two partials
+        self.assertEqual(len(partials.mapped('exchange_move_id')), 2)
