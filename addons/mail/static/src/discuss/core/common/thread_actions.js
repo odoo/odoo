@@ -175,13 +175,13 @@ registerThreadAction("member-list", {
         }
     },
     actionPanelComponent: ChannelMemberList,
-    actionPanelComponentProps: ({ actions, thread }) => ({
+    actionPanelComponentProps: ({ actions, channel }) => ({
         openChannelInvitePanel({ keepPrevious } = {}) {
             actions.actions
                 .find(({ id }) => id === "invite-people")
                 ?.actionPanelOpen({ keepPrevious });
         },
-        thread,
+        channel,
     }),
     actionPanelOpen: ({ owner, store }) => {
         if (owner.env.inDiscussApp) {
@@ -189,8 +189,8 @@ registerThreadAction("member-list", {
         }
     },
     actionPanelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
-    condition: ({ owner, thread }) =>
-        thread?.hasMemberList &&
+    condition: ({ owner, channel }) =>
+        channel?.hasMemberList &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "oi oi-fw oi-users",

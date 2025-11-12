@@ -8,33 +8,33 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ChannelMemberList extends Component {
     static components = { ActionPanel, ChannelMember };
-    static props = ["thread", "openChannelInvitePanel", "className?"];
+    static props = ["channel", "openChannelInvitePanel", "className?"];
     static template = "discuss.ChannelMemberList";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         onWillStart(() => {
-            if (this.props.thread.fetchMembersState === "not_fetched") {
-                this.props.thread.fetchChannelMembers();
+            if (this.props.channel.fetchMembersState === "not_fetched") {
+                this.props.channel.fetchChannelMembers();
             }
         });
         onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.fetchMembersState === "not_fetched") {
-                nextProps.thread.fetchChannelMembers();
+            if (nextProps.channel.fetchMembersState === "not_fetched") {
+                nextProps.channel.fetchChannelMembers();
             }
         });
     }
 
     get onlineSectionText() {
         return _t("Online - %(online_count)s", {
-            online_count: this.props.thread.onlineMembers.length,
+            online_count: this.props.channel.onlineMembers.length,
         });
     }
 
     get offlineSectionText() {
         return _t("Offline - %(offline_count)s", {
-            offline_count: this.props.thread.offlineMembers.length,
+            offline_count: this.props.channel.offlineMembers.length,
         });
     }
 }
