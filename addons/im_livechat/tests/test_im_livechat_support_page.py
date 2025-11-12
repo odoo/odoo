@@ -13,6 +13,7 @@ class TestImLivechatSupportPage(TestGetOperatorCommon):
             {"name": "Support Channel", "user_ids": [operator.id]}
         )
         self.start_tour(f"/im_livechat/support/{livechat_channel.id}", "im_livechat.basic_tour")
+        self.start_tour(f"/im_livechat/support/{livechat_channel.id}", "im_livechat.basic_tour", login=operator.login)
 
     def test_load_modules_cors(self):
         operator = self._create_operator()
