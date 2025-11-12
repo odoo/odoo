@@ -40,20 +40,17 @@ export class MultiRecordSelector extends Component {
     async computeDerivedParams(props = this.props) {
         const displayNames = await this.getDisplayNames(props);
         this.tags = this.getTags(props, displayNames);
+        /**
+         * Placeholder should be empty if there is at least one tag. We cannot use
+         * the default behavior of the input placeholder because even if there is
+         * a tag, the input is still empty.
+         */
+        this.placeholder = this.tags.length ? "" : this.props.placeholder;
     }
 
     async getDisplayNames(props) {
         const ids = this.getIds(props);
         return this.nameService.loadDisplayNames(props.resModel, ids);
-    }
-
-    /**
-     * Placeholder should be empty if there is at least one tag. We cannot use
-     * the default behavior of the input placeholder because even if there is
-     * a tag, the input is still empty.
-     */
-    get placeholder() {
-        return this.getTags(this.props, {}).length ? "" : this.props.placeholder;
     }
 
     getIds(props = this.props) {
@@ -69,9 +66,7 @@ export class MultiRecordSelector extends Component {
             return {
                 id,
                 text,
-                onDelete: () => {
-                    this.deleteTag(index);
-                },
+                onDelete: () => this.deleteTag(index),
                 img:
                     this.isAvatarModel &&
                     isId(id) &&

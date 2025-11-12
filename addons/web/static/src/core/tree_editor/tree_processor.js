@@ -14,6 +14,8 @@ import { disambiguate, getResModel, isId } from "./utils";
 import { introduceVirtualOperators } from "./virtual_operators";
 import { InRange } from "./tree_editor_components";
 
+const INACCESSIBLE = Symbol("inaccessible");
+
 /**
  * @param {import("@web/core/tree_editor/condition_tree").Value} val
  * @param {boolean} disambiguate
@@ -29,7 +31,7 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         if (typeof displayNames[val] === "string") {
             val = displayNames[val];
         } else {
-            return _t("Inaccessible/missing record ID: %s", val);
+            return INACCESSIBLE;
         }
     }
     if (fieldDef?.type === "selection") {
@@ -263,13 +265,26 @@ export const treeProcessorService = {
                 const valueType = value[1];
                 values = [InRange.options.find(([t]) => t === valueType)[1].toString()];
             } else {
-                values = (Array.isArray(value) ? value : [value])
-                    .slice(0, limit)
-                    .map((val, index) =>
-                        index < limit - 1
-                            ? formatValue(val, dis, fieldDef, coModeldisplayNames)
-                            : "..."
+                values = [];
+                if (Array.isArray(value)) {
+                    for (const val of value) {
+                        const formattedVal = formatValue(val, dis, fieldDef, coModeldisplayNames);
+                        if (formattedVal === INACCESSIBLE) {
+                            continue;
+                        }
+                        values.push(formattedVal);
+                    }
+                } else {
+                    const formattedVal = formatValue(value, dis, fieldDef, coModeldisplayNames);
+                    values.push(
+                        formattedVal === INACCESSIBLE
+                            ? _t("Inaccessible/missing record ID: %s", value)
+                            : formattedVal
                     );
+                }
+                values = values
+                    .slice(0, limit)
+                    .map((formattedVal, index) => (index < limit - 1 ? formattedVal : "..."));
             }
 
             let join;

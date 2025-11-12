@@ -1535,11 +1535,11 @@ test("many2one field (readonly)", async () => {
         },
         {
             domain: `[("product_id", "in", [1, 37])]`,
-            text: "Product = Inaccessible/missing record ID: 1 or xphone",
+            text: "Product = xphone",
         },
         {
             domain: `[("product_id", "in", [1, uid, 37])]`,
-            text: 'Product = Inaccessible/missing record ID: 1 or uid or "xphone"',
+            text: 'Product = uid or "xphone"',
         },
         {
             domain: `[("product_id", "in", ["abc"])]`,

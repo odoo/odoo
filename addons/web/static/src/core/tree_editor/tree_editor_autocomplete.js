@@ -6,14 +6,14 @@ import { Expression } from "@web/core/tree_editor/condition_tree";
 import { isId } from "@web/core/tree_editor/utils";
 import { imageUrl } from "@web/core/utils/urls";
 
-export const getFormat = (val, displayNames) => {
+const getFormat = (val, displayNames) => {
     let text;
     let colorIndex;
     if (isId(val)) {
-        text =
-            typeof displayNames[val] === "string"
-                ? displayNames[val]
-                : _t("Inaccessible/missing record ID: %s", val);
+        if (typeof displayNames[val] !== "string") {
+            return null;
+        }
+        text = displayNames[val];
         colorIndex = typeof displayNames[val] === "string" ? 0 : 2; // 0 = grey, 2 = orange
     } else {
         text =
@@ -36,24 +36,32 @@ export class DomainSelectorAutocomplete extends MultiRecordSelector {
     }
 
     getTags(props, displayNames) {
-        return props.resIds.map((val, index) => {
-            const { text, colorIndex } = getFormat(val, displayNames);
-            return {
+        const tags = [];
+        this._indexInResIds = [];
+        props.resIds.forEach((val, index) => {
+            const format = getFormat(val, displayNames);
+            if (format === null) {
+                return;
+            }
+            this._indexInResIds.push(index);
+            const len = tags.length;
+            const { text, colorIndex } = format;
+            tags.push({
                 id: val,
                 text,
                 color: colorIndex,
-                onDelete: () => {
-                    this.props.update([
-                        ...this.props.resIds.slice(0, index),
-                        ...this.props.resIds.slice(index + 1),
-                    ]);
-                },
+                onDelete: () => this.deleteTag(len),
                 img:
                     this.isAvatarModel &&
                     isId(val) &&
                     imageUrl(this.props.resModel, val, "avatar_128"),
-            };
+            });
         });
+        return tags;
+    }
+
+    deleteTag(index) {
+        super.deleteTag(this._indexInResIds[index]);
     }
 }
 
