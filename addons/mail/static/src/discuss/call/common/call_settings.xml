@@ -54,7 +54,7 @@
                         <label class="d-flex flex-column align-items-start flex-wrap w-100" title="Push-to-talk key" aria-label="Push-to-talk key">
                             <span class="me-2 my-1 text-truncate text-wrap">Push-to-talk key</span>
                             <span class="d-flex border border-2 rounded w-100" t-attf-class="{{ store.settings.isRegisteringKey ? 'border-danger' : 'border-primary' }}">
-                                <span t-if="store.settings.push_to_talk_key" class="ms-1 px-3 fs-3 flex-grow-1" t-esc="pushToTalkKeyText"/>
+                                <span t-if="store.settings.push_to_talk_key" class="ms-1 px-3 fs-3 flex-grow-1" t-esc="store.settings.pushToTalkKeyText"/>
                                 <button class="btn btn-link px-2 py-0 text-black" t-on-click="onClickRegisterKeyButton">
                                     <i t-if="store.settings.isRegisteringKey" title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
                                     <i t-else="" title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
