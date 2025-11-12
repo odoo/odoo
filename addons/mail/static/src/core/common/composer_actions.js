@@ -157,7 +157,7 @@ registerComposerAction("start-poll", {
         if (!store.self_user) {
             return false;
         }
-        return ["channel", "group"].includes(composer.targetThread?.channel_type);
+        return ["channel", "group"].includes(composer.targetThread?.channel?.channel_type);
     },
     onSelected: ({ composer, owner }) =>
         owner.dialogService.add(CreatePollDialog, { thread: composer.targetThread }),
