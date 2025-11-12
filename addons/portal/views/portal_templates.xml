@@ -316,7 +316,7 @@
             <span t-else="" class="navbar-brand mb-0 h1 me-auto" t-out="title or 'No title'"/>
 
             <!--  Collapse button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#o_portal_navbar_content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle filters">
+            <button t-if="searchbar_sortings or searchbar_filters or searchbar_groupby or searchbar_inputs" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#o_portal_navbar_content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle filters">
                 <span class="fa fa-fw fa-bars"/>
             </button>
 
