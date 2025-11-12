@@ -60,6 +60,16 @@ class AttachmentController(http.Controller):
             "res_id": int(thread_id),
             "res_model": thread_model,
         }
+        if company_id := getattr(thread, "company_id", False):
+            vals["company_id"] = company_id.id
+        elif cids := request.cookies.get("cids", False):
+            active_company_ids = [int(cid) for cid in cids.split("-")]
+            company_id = (
+                request.env.user.company_id.id
+                if request.env.user.company_id.id in active_company_ids
+                else active_company_ids[0]
+            )
+            vals["company_id"] = company_id
         if is_pending and is_pending != "false":
             # Add this point, the message related to the uploaded file does
             # not exist yet, so we use those placeholder values instead.
