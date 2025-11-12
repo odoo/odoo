@@ -1,5 +1,8 @@
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 import { toRaw } from "@odoo/owl";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+
+const CONSOLE_COLOR = "#FF8269";
 
 /**
  * This module provides functions to format order and order line data for customer display.
@@ -25,7 +28,13 @@ export class CustomerDisplayPosAdapter {
                 localStorage.getItem("device_uuid"),
             ])
             .catch((error) => {
-                console.info("Failed to update customer display:", error);
+                logPosMessage(
+                    "CustomerDisplay",
+                    "dispatch",
+                    "Failed to update customer display",
+                    CONSOLE_COLOR,
+                    [error]
+                );
             });
     }
 
