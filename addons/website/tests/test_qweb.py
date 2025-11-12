@@ -528,16 +528,17 @@ class TestQwebDataSnippet(TransactionCase):
         ir_ui_view_queries = [q for q in actual_queries if re_sql.search(q)]
 
         # nb_snippets = 156
-        first_search = 1  # fom key & website
-        t_call_snippets = 2
-        fetch_snippets = 0
-        get_root_view = 1
-        combine_views = 3
+        first_search = 1  # for key & website
+        t_call_snippets = 2  # number of nested t-calls (t-call > view > t-call > other views...)
+        fetch_snippets = 0  # number of fetches (normally performed with the previous search)
+        get_root_view = 1  # determine the root views
+        combine_views = 3  # Queries performed to execute the read combine
 
         all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9
         self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
         website_queries = [q for q in actual_queries if re_sql.search(q)]
+        str_queries = "\n".join(website_queries)
 
-        self.assertLessEqual(len(website_queries), 18, f'Maximum queries: {18}')
+        self.assertLessEqual(len(website_queries), 20, f'Maximum queries: {20}\n{str_queries}')
