@@ -1,5 +1,5 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as Sms from "@pos_sms/../tests/tours/utils/test_pos_sms_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("AutofillTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.receiptIsThere(),
+            FeedbackScreen.isShown(),
             // Check pre-filled partner phone
             Sms.CheckNumber("9876543210"),
         ].flat(),

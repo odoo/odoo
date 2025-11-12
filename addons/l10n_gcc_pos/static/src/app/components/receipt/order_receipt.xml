@@ -40,10 +40,10 @@
     </t>
 
     <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
-        <xpath expr="//t[@t-as='subtotal']//span" position="attributes">
+        <xpath expr="//div[@t-as='subtotal']//span" position="attributes">
             <attribute name="t-if">!order.isGccCountry or !order.config_id.l10n_gcc_dual_language_receipt</attribute>
         </xpath>
-        <xpath expr="//t[@t-as='subtotal']//span" position="after">
+        <xpath expr="//div[@t-as='subtotal']//span" position="after">
             <span name="subtotal_span_dual" t-elif="order.isGccCountry and order.config_id.l10n_gcc_dual_language_receipt" class="text-nowrap mw-100" t-translation="off">Subtotal / الإجمالي الفرعي</span>
         </xpath>
         <xpath expr="//span[hasclass('label-rounding')]" position="attributes">

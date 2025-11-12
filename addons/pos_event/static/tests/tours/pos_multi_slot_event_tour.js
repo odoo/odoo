@@ -1,6 +1,6 @@
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as SlotSelectionScreen from "@pos_event/../tests/tours/utils/slot_selection_screen_utils";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
@@ -44,10 +44,10 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            EventTourUtils.printTicket("full"),
-            EventTourUtils.printTicket("badge"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
 
             // Slot is now unavailable
             ProductScreen.clickDisplayedProduct("My Awesome Event"),

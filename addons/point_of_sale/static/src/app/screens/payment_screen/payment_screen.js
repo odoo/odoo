@@ -160,7 +160,7 @@ export class PaymentScreen extends Component {
         } else {
             this.dialog.add(AlertDialog, {
                 title: _t("Oh snap !"),
-                body: _t("There is already an electronic payment in progress."),
+                body: result.data,
             });
             return false;
         }

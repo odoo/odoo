@@ -2,7 +2,7 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 
@@ -29,10 +29,12 @@ registry
                 PaymentScreen.clickInvoiceButton(),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("15.70"),
-                ReceiptScreen.receiptToPayAmountIsNotThere(),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "15.70",
+                    is_to_pay: false,
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
 
                 // Refund.
                 Chrome.clickOrders(),
@@ -54,10 +56,12 @@ registry
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("-15.70"),
-                ReceiptScreen.receiptToPayAmountIsNotThere(),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "-15.70",
+                    is_to_pay: false,
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -88,11 +92,13 @@ registry
                 PaymentScreen.clickInvoiceButton(),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("15.70"),
-                ReceiptScreen.receiptRoundingAmountIs("0.02"),
-                ReceiptScreen.receiptToPayAmountIs("15.72"),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "15.70",
+                    to_pay_amount: "15.72",
+                    rounding_amount: "0.02",
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
 
                 // Refund.
                 Chrome.clickOrders(),
@@ -118,11 +124,13 @@ registry
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("-15.70"),
-                ReceiptScreen.receiptRoundingAmountIs("-0.02"),
-                ReceiptScreen.receiptToPayAmountIs("-15.72"),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "-15.70",
+                    rounding_amount: "-0.02",
+                    to_pay_amount: "-15.72",
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -149,11 +157,13 @@ registry
                 PaymentScreen.clickInvoiceButton(),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("15.72"),
-                ReceiptScreen.receiptRoundingAmountIs("-0.02"),
-                ReceiptScreen.receiptToPayAmountIs("15.70"),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "15.72",
+                    to_pay_amount: "15.70",
+                    rounding_amount: "-0.02",
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
 
                 // Refund.
                 Chrome.clickOrders(),
@@ -175,11 +185,13 @@ registry
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("-15.72"),
-                ReceiptScreen.receiptRoundingAmountIs("0.02"),
-                ReceiptScreen.receiptToPayAmountIs("-15.70"),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "-15.72",
+                    to_pay_amount: "-15.70",
+                    rounding_amount: "0.02",
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -210,11 +222,13 @@ registry
                 PaymentScreen.clickInvoiceButton(),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("15.72"),
-                ReceiptScreen.receiptRoundingAmountIs("0.01"),
-                ReceiptScreen.receiptToPayAmountIs("15.73"),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "15.72",
+                    to_pay_amount: "15.73",
+                    rounding_amount: "0.01",
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
 
                 // Refund.
                 Chrome.clickOrders(),
@@ -240,10 +254,12 @@ registry
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickValidate(),
 
-                ReceiptScreen.receiptAmountTotalIs("-15.72"),
-                ReceiptScreen.receiptRoundingAmountIs("-0.01"),
-                ReceiptScreen.receiptToPayAmountIs("-15.73"),
-                ReceiptScreen.receiptChangeAmountIsNotThere(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.checkTicketData({
+                    total_amount: "-15.72",
+                    to_pay_amount: "-15.73",
+                    rounding_amount: "-0.01",
+                    is_change: false,
+                }),
+                FeedbackScreen.clickNextOrder(),
             ].flat(),
     });

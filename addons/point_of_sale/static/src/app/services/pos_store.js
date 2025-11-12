@@ -14,7 +14,7 @@ import {
 } from "@point_of_sale/utils";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
 import { SelectLotPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
@@ -61,6 +61,8 @@ export const CONSOLE_COLOR = "#F5B427";
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
+    orderReceiptComponent = OrderReceipt;
+    feedbackScreenAutoSkipDelay = 5000;
 
     static serviceDependencies = [
         "bus_service",

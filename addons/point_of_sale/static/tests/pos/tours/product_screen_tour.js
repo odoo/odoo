@@ -6,7 +6,6 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenPartnerList from "@point_of_sale/../tests/pos/tours/utils/product_screen_partner_list_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { back, inLeftSide, selectButton } from "@point_of_sale/../tests/pos/tours/utils/common";
@@ -251,8 +250,8 @@ registry.category("web_tour.tours").add("test_reuse_empty_floating_order", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             // Should reuse previously created empty floating order
             ProductScreen.checkFloatingOrderCount(1),
         ].flat(),
@@ -270,7 +269,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
             Order.doesNotHaveLine({ discount: "" }),
         ].flat(),
 });
@@ -290,8 +289,8 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -596,7 +595,7 @@ registry.category("web_tour.tours").add("AutofillCashCount", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
             ProductScreen.isShown(),
             Chrome.clickMenuOption("Close Register"),
             {
@@ -861,7 +860,7 @@ registry.category("web_tour.tours").add("test_draft_orders_not_syncing", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
             Chrome.endTour(),
         ].flat(),
 });
@@ -878,15 +877,26 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            {
-                content: "Make sure orderline tax label is correct",
-                trigger: ".orderline:contains('Tax Group 2')",
-            },
-            {
-                content: "Make sure receipt tax label is correct and correspond to the orderline",
-                trigger: ".pos-receipt-taxes:contains('Tax Group 2')",
-            },
+            FeedbackScreen.isShown(),
+            FeedbackScreen.checkTicketData({
+                orderlines: [
+                    {
+                        name: "Test Product",
+                        cssRules: [
+                            {
+                                css: ".tax-group",
+                                text: "Tax Group 2",
+                            },
+                        ],
+                    },
+                ],
+                cssRules: [
+                    {
+                        css: ".pos-receipt-taxes",
+                        text: "Tax Group 2",
+                    },
+                ],
+            }),
         ].flat(),
 });
 
@@ -972,7 +982,7 @@ registry.category("web_tour.tours").add("test_remove_archived_product_from_cache
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
             Chrome.clickMenuOption("Close Register"),
             {
                 trigger: ".modal .modal-footer .btn:contains(close register)",
@@ -1033,13 +1043,13 @@ registry
                 Dialog.confirm("Open Register"),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickFastPaymentButton("Bank"),
-                ReceiptScreen.isShown(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.isShown(),
+                FeedbackScreen.clickNextOrder(),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickPayButton(),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
-                ReceiptScreen.isShown(),
+                FeedbackScreen.isShown(),
             ].flat(),
     });
 
@@ -1054,7 +1064,7 @@ registry
                 ProductScreen.clickFastPaymentButton("Bank"),
                 FeedbackScreen.isShown(),
                 Dialog.confirm(),
-                FeedbackScreen.clickScreen(),
+                FeedbackScreen.clickNextOrder(),
                 ProductScreen.isShown(),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickPayButton(),
@@ -1062,7 +1072,7 @@ registry
                 PaymentScreen.clickValidate(),
                 FeedbackScreen.isShown(),
                 Dialog.confirm(),
-                FeedbackScreen.clickScreen(),
+                FeedbackScreen.clickNextOrder(),
                 ProductScreen.isShown(),
             ].flat(),
     });
@@ -1168,7 +1178,7 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
             Chrome.endTour(),
         ].flat(),
 });

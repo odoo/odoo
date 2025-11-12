@@ -2,7 +2,7 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
@@ -144,7 +144,8 @@ export function finalizeOrder(paymentMethod, amount) {
         ...PaymentScreen.clickPaymentMethod(paymentMethod),
         ...PaymentScreen.clickNumpad([...amount].join(" ")),
         ...PaymentScreen.clickValidate(),
-        ...ReceiptScreen.clickNextOrder(),
+        ...FeedbackScreen.isShown(),
+        ...FeedbackScreen.clickNextOrder(),
     ];
 }
 export function removeRewardLine(name) {
@@ -249,11 +250,4 @@ export function checkPartnerPoints(name, points) {
             trigger: `.partner-list .partner-line:contains(${name}) .partner-line-balance:contains(${points} Loyalty Point(s))`,
         },
     ];
-}
-
-export function isLoyaltyPointsAvailable() {
-    return {
-        content: "Loyalty Points are visible on the receipt",
-        trigger: ".pos-receipt .loyalty",
-    };
 }
