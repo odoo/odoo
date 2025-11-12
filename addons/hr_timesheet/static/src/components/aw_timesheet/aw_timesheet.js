@@ -18,57 +18,106 @@ export class ActivityWatchTimesheet extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.state = useState({
-            loading: true,
-            grouped: {},
-            selected: null,
-            selectedData: {},
-            billableTimesheets: [],
-            nonBillableTimesheets: [],
-            totalTime: [],
-            billableTime: 0.0,
-            nonBillableTime: 0.0,
-            billablePercentage: 0.0,
-            nonBillablePercentage: 0.0,
-            projectById: {},
-            taskById: {},
-            selectedRows: new Set(),
-            isSelecting: false,
+            ...this.defaultStateValues,
+            groupBy: 'project',
+            currentDate: DateTime.now().startOf('day'),
         });
         this.localKey = "aw_taken_deleted_events";
         this.consumedEvents = JSON.parse(localStorage.getItem(this.localKey) || "{}");
 
         onWillStart(async () => {
             await this.loadData();
-            this.state.loading = false;
         });
 
         this._onMouseUp = this.onMouseUp.bind(this);
-        onMounted(() => window.addEventListener("mouseup", this._onMouseUp));
-        onWillUnmount(() => window.removeEventListener("mouseup", this._onMouseUp));
+        this._onClickOutsideBound = this.onClickOutside.bind(this);
+        onMounted(() => {
+            window.addEventListener("mouseup", this._onMouseUp)
+            document.addEventListener("click", this._onClickOutsideBound);
+        });
+        onWillUnmount(() => {
+            window.removeEventListener("mouseup", this._onMouseUp);
+            document.removeEventListener("click", this._onClickOutsideBound);
+        });
+    }
+
+    get defaultStateValues() {
+        return {
+            records: [],
+            grouped: {},
+            billableTimesheets: [],
+            nonBillableTimesheets: [],
+            totalTime: 0,
+            billableTime: 0,
+            nonBillableTime: 0,
+            billablePercentage: 0,
+            nonBillablePercentage: 0,
+            projectById: {},
+            taskById: {},
+            selectedRows: new Set(),
+            isSelecting: false,
+        };
+    };
+
+    onClickOutside(ev) {
+        const cards = document.querySelector(".o_suggestion");
+        if (cards && !cards.contains(ev.target)) {
+            this.initSelectedRows();
+        }
+    }
+
+    onDateChange(ev) {
+        this.state.currentDate = DateTime.fromISO(ev.target.value);
+        this.loadData();
+    }
+
+    navigateToDay(diff) {
+        this.state.currentDate = this.state.currentDate.plus({ days: diff });
+        this.loadData();
     }
 
     keyFor(groupKey, title) {
-        return `${groupKey}|${title}`;
+        // set doesn't deep compare objects
+        return JSON.stringify({
+            groupKey,
+            title,
+        });
+    }
+
+    disableTextSelection() {
+        document.body.style.userSelect = "none";
+    }
+
+    enableTextSelection() {
+        document.body.style.userSelect = "";
     }
 
     isSelected(groupKey, title) {
         return this.state.selectedRows.has(this.keyFor(groupKey, title));
     }
 
-    onMouseDown(groupKey, title) {
+    onMouseDown(groupKey, title, ev) {
+        if (ev.button !== 0) {
+            return;
+        }
+        this.disableTextSelection();
         this.state.isSelecting = true;
         this.toggleSelect(groupKey, title);
     }
 
     onMouseEnter(groupKey, title) {
+        if (!this.state.isSelecting) {
+            return;
+        }
         const key = this.keyFor(groupKey, title);
-        if (this.state.isSelecting && !this.state.selectedRows.has(key)) {
+        if (!this.state.selectedRows.has(key)) {
             this.state.selectedRows.add(key);
         }
     }
 
     onMouseUp() {
         this.state.isSelecting = false;
+        this.enableTextSelection();
     }
 
     toggleSelect(groupKey, title) {
@@ -171,13 +220,14 @@ export class ActivityWatchTimesheet extends Component {
             .map((key) => buckets[key]);
     }
 
-    async loadAwEvents(baseUrl, watchers, start, end) {
+    async loadAwEvents(baseUrl, start, end) {
         try {
+            const watchers = await this.getWatchers(baseUrl);
             const requests = [];
             for (const watcher of watchers) {
                 requests.push(
                     fetch(
-                        `${baseUrl}/api/0/buckets/${watcher["id"]}/events?start=${start}&end=${end}`
+                        `${baseUrl}/api/0/buckets/${watcher["id"]}/events?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
                     )
                 );
             }
@@ -195,6 +245,7 @@ export class ActivityWatchTimesheet extends Component {
                         if (watchers[index].client === "aw-watcher-vscode") {
                             event.name = _t("Programming In VS Code"); // should be done in config
                             event.keyEvent = true;
+                            event.type = "vs_code";
                         } else if (
                             ["aw-watcher-window", "aw-client-web"].includes(watchers[index].client)
                         ) {
@@ -236,6 +287,7 @@ export class ActivityWatchTimesheet extends Component {
                     ),
                     {
                         type: "danger",
+                        sticky: true,
                     }
                 );
                 return {};
@@ -252,6 +304,7 @@ export class ActivityWatchTimesheet extends Component {
                     ),
                     {
                         type: "warning",
+                        sticky: true,
                     }
                 );
             }
@@ -261,14 +314,25 @@ export class ActivityWatchTimesheet extends Component {
                 _t(
                     "Something went wrong getting data from Activity Watch, make sure to start the server with the right cors origins E.G ./aw-server --cors-origins http://localhost:8069"
                 ),
-                { type: "danger" }
+                {
+                    type: "danger",
+                    sticky: true,
+                }
             );
             return {};
         }
     }
 
+    resetState() {
+        Object.assign(this.state, {
+            ...this.defaultStateValues,
+            groupBy: this.state.groupBy,
+            currentDate: this.state.currentDate,
+        });
+    }
+
     async loadData() {
-        this.state.loading = true;
+        this.resetState();
         this.awRules = await this.orm.call("aw.rule", "search_read", [
             [],
             [
@@ -283,12 +347,10 @@ export class ActivityWatchTimesheet extends Component {
             ],
         ]);
         // not for nesting, start => activitywatch/aw-server$ ./aw-server --cors-origins http://localhost:8069
-        const baseUrl = "http://localhost:5600";
-        const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
-        const todayEnd = new Date(new Date().setHours(23, 59, 59, 999)).toISOString();
-
-        const watchers = await this.getWatchers(baseUrl);
-        const events = await this.loadAwEvents(baseUrl, watchers, todayStart, todayEnd);
+        const baseUrl = "http://localhost:5700";
+        const todayStart = this.state.currentDate.toISO();
+        const todayEnd = this.state.currentDate.endOf('day').toISO();
+        const events = await this.loadAwEvents(baseUrl, todayStart, todayEnd);
 
         // we get planning slot and calendar events from odoo
         // (intervals where the user should be doing a slot for a project or on a calendar event for a customer ..)
@@ -424,22 +486,43 @@ export class ActivityWatchTimesheet extends Component {
                 this.state.grouped[project][name] = {
                     duration: 0.0,
                     type: range.type,
+                    start: range.start,
                 };
             }
             this.state.grouped[project][name].duration += duration;
         }
 
         for (const [groupKey, activities] of Object.entries(this.state.grouped)) {
-            for (const [title] of Object.entries(activities)) {
+            for (const [title, {duration, start}] of Object.entries(activities)) {
                 const eventKey = this.getEventKey(groupKey, title);
-                if (this.consumedEvents[eventKey]) {
+                if (this.consumedEvents[eventKey]) { // can be done directly when adding
                     delete this.state.grouped[groupKey][title];
+                } else {
+                    const data = {
+                        start,
+                        duration,
+                        title,
+                        groupKey,
+                    }
+                    const ids = groupKey.split("_");
+                    const project_id = this.parseId(ids[0]);
+                    const task_id = this.parseId(ids[1]);
+
+                    if (project_id) {
+                        data.project = this.projectName(project_id);
+                    }
+
+                    if (task_id) {
+                        data.task = this.taskName(task_id);
+                    }
+
+                    this.state.records.push(data);
                 }
             }
         }
 
+        this.state.records.sort((a, b) => a.start - b.start);
         await this.loadTimesheets(todayStart);
-        this.state.loading = false;
     }
 
     async loadTimesheets(todayStart) {
@@ -452,14 +535,6 @@ export class ActivityWatchTimesheet extends Component {
         ];
 
         const timesheets = await this.orm.searchRead("account.analytic.line", domain, fields);
-
-        // init to avoid accumulating
-        this.state.billableTimesheets = [];
-        this.state.nonBillableTimesheets = [];
-        this.state.billableTime = 0;
-        this.state.nonBillableTime = 0;
-        this.state.totalTime = 0;
-
         for (const timesheet of timesheets) {
             if (timesheet.so_line) {
                 this.state.billableTimesheets.push(timesheet);
@@ -471,9 +546,14 @@ export class ActivityWatchTimesheet extends Component {
             this.state.totalTime += timesheet.unit_amount;
         }
 
-        this.state.billablePercentage = (this.state.billableTime * 100) / this.state.totalTime;
-        this.state.nonBillablePercentage =
-            (this.state.nonBillableTime * 100) / this.state.totalTime;
+        this.state.billablePercentage = this.state.totalTime ?
+            (this.state.billableTime * 100) / this.state.totalTime :
+            0
+        ;
+        this.state.nonBillablePercentage = this.state.totalTime ?
+            (this.state.nonBillableTime * 100) / this.state.totalTime :
+            0
+        ;
     }
 
     merge(ranges, intervalsToInclude) {
@@ -511,10 +591,6 @@ export class ActivityWatchTimesheet extends Component {
         return isNaN(res) ? null : res;
     }
 
-    isSuggestionClicked(groupKey, title) {
-        return this.state.selected?.groupKey === groupKey && this.state.selected?.title === title;
-    }
-
     projectName(id) {
         return this.state.projectById[id] || "unmatched"; // manage if the project is wrong (not a valid key)
     }
@@ -530,11 +606,9 @@ export class ActivityWatchTimesheet extends Component {
         const ids = groupKey.split("_");
         const project_id = this.parseId(ids[0]);
         const task_id = this.parseId(ids[1]);
-        const unit_amount = this.state.grouped[groupKey][title] / 60; // seconds => minutes
-        const name = title;
         const res = {
             name: title,
-            unit_amount: this.state.grouped[groupKey][title] / 60,
+            unit_amount: this.state.grouped[groupKey][title].duration / 60,
         };
         if (project_id != null) {
             res["project_id"] = project_id;
@@ -546,23 +620,13 @@ export class ActivityWatchTimesheet extends Component {
         return res;
     }
 
-    onClickLeftSide() {
-        this.state.selected = null;
-        this.state.selectedData = {};
-    }
-
-    onSelectSuggestion(groupKey, title) {
-        const params = this.getSuggestionParams(groupKey, title);
-        if (params === false) {
-            return;
-        }
-        this.state.selected = { groupKey, title };
-        this.state.selectedData = params;
+    initSelectedRows() {
+        this.state.selectedRows = new Set();
     }
 
     async onTake(groupKey, title) {
         // duplicated in loadData
-        const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
+        const todayStart = this.currentDate.toISO();
         const date = todayStart.split("T")[0];
         const params = this.getSuggestionParams(groupKey, title);
         if (params === false) {
@@ -578,7 +642,6 @@ export class ActivityWatchTimesheet extends Component {
         await this.orm.call("account.analytic.line", "create", [vals]);
         this.notification.add("Timesheet entry created!", { type: "success" });
         this.onDelete(groupKey, title);
-        this.state.selected = null;
         this.loadTimesheets(todayStart);
     }
 
@@ -591,16 +654,59 @@ export class ActivityWatchTimesheet extends Component {
 
     getEventKey(groupKey, title) {
         const type = this.state.grouped[groupKey][title].type;
-        const today = new Date().toISOString().split("T")[0];
+        const today = this.state.currentDate.toISO().split("T")[0];
         return `${groupKey}||${type}||${today}`;
     }
 
-    onSaveTimesheetForm() {
-        // Assume the timesheet has been saved
-        if (this.state.selected) {
-            this.onDelete(this.state.selected.groupKey, this.state.selected.title);
+    get selectedData() {
+        let project_id = null;
+        let task_id = null;
+        let name = "";
+        let total_amount = 0.0;
+
+        for (const row of this.state.selectedRows) {
+            const { groupKey, title } = JSON.parse(row);
+            const params = this.getSuggestionParams(groupKey, title);
+
+            if (!project_id && params.project_id) {
+                project_id = params.project_id;
+                task_id = params.task_id;
+            }
+
+            name += params.name + ' ';
+            total_amount += params.unit_amount;
         }
+
+        return {
+            project_id,
+            task_id,
+            name,
+            unit_amount: total_amount,
+            date: this.state.currentDate.toISO().split("T")[0],
+            user_id: user.userId,
+        }
+    }
+
+    onSaveTimesheetForm() {
+        for (const row of this.state.selectedRows) {
+            const { groupKey, title } = JSON.parse(row);
+            this.onDelete(groupKey, title);
+        }
+
+        this.state.records = this.state.records.filter(record => {
+            return !this.state.selectedRows.has(JSON.stringify({
+                groupKey: record.groupKey,
+                title: record.title
+            }));
+        });
+
+        this.initSelectedRows();
         this.notification.add("Timesheet entry created!", { type: "success" });
+    }
+
+    formatTime(isoString) {
+        const dt = DateTime.fromISO(isoString);
+        return dt.isValid ? dt.toFormat("HH:mm") : "";
     }
 }
 

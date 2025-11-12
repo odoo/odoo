@@ -3,71 +3,115 @@
   <t t-name="hr_timesheet.ActivityWatchTimesheet">
     <div class="o_activitywatch_sync d-flex h-100">
 
-      <!-- LEFT SIDE: suggestions -->
-      <div class="o_suggestions w-50 pe-3" t-on-click.stop="() => this.onClickLeftSide()">
-        <t t-if="state.loading">
-          <span>Loading ActivityWatch data...</span>
-        </t>
-        <t t-else="">
-          <t t-foreach="Object.keys(state.grouped)" t-as="groupKey" t-key="groupKey">
-            <div class="card mb-3 p-3 shadow-sm" t-if="Object.keys(this.state.grouped[groupKey]).length &gt; 0">
-              <!-- group title -->
-              <t t-set="ids" t-value="groupKey.split('_')"/>
-              <t t-set="project_id" t-value="projectName(parseId(ids[0]))"/>
-              <t t-set="task_id" t-value="taskName(parseId(ids[1]))"/>
-              <h6 class="mb-2">
-                Project <t t-esc="project_id or 'Unknown Project'"/> /
-                Task <t t-esc="task_id or 'Unknown Task'"/>
-              </h6>
+      <!-- LEFT SIDE -->
+      <div class="o_suggestions w-50 pe-3">
+        <div class="o_activitywatch_header d-flex align-items-center mb-3">
+          <!-- Date selector -->
+          <div class="d-flex align-items-center me-3">
+            <button class="btn btn-light btn-sm me-2" t-on-click="() => this.navigateToDay(-1)">
+              <i class="fa fa-chevron-left"/>
+            </button>
 
-              <!-- list of activities as a table -->
-              <div class="table-responsive mb-2">
-                <table class="table table-sm table-borderless align-middle mb-0">
-                  <tbody>
-                    <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
-                      <tr
-                        t-if="state.grouped[groupKey][title].duration >= 120"
-                        t-att-class="{
-                          'table-danger': this.isSelected(groupKey, title),
-                        }"
-                        t-on-mousedown.stop="() => this.onMouseDown(groupKey, title)"
-                        t-on-mouseenter.stop="() => this.onMouseEnter(groupKey, title)"
-                        style="cursor: pointer;"
-                      >
-                        <!-- Activity name -->
-                        <td class="w-50">
-                          <t t-esc="title"/>
-                        </td>
+            <input type="date"
+                class="form-control form-control-sm"
+                t-att-value="state.currentDate.toISODate()"
+                t-on-change="(ev) => this.onDateChange(ev)"/>
 
-                        <!-- Minutes -->
-                        <td class="text-end text-muted">
-                          <t t-esc="(state.grouped[groupKey][title].duration / 60).toFixed(1)"/> min
-                        </td>
+            <button class="btn btn-light btn-sm ms-2" t-on-click="() => this.navigateToDay(1)">
+              <i class="fa fa-chevron-right"/>
+            </button>
+          </div>
 
-                        <!-- Actions -->
-                        <td class="text-end">
-                          <!-- TODO: More robust table column width to remove t-att-style below -->
-                          <button
-                            t-att-style="groupKey === 'false_false' ? 'visibility: hidden;' : ''"
-                            class="btn btn-sm btn-primary me-1"
-                            t-on-click.stop="() => this.onTake(groupKey, title)"
-                          >
-                            Take
-                          </button>
-                          <button
-                            class="btn btn-sm btn-secondary"
-                            t-on-click.stop="() => this.onDelete(groupKey, title)"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    </t>
-                  </tbody>
-                </table>
+          <!-- Group-by selector -->
+          <div class="d-flex align-items-center ms-auto">
+            <label class="me-2 fw-semibold">Group by:</label>
+            <select class="form-select form-select-sm w-auto"
+                    t-model="state.groupBy">
+              <option value="project">Project</option>
+              <option value="timeline">Timeline</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PROJECT MODE -->
+        <t t-if="state.groupBy === 'project'">
+          <div class="o_suggestion">
+            <t t-foreach="Object.keys(state.grouped)" t-as="groupKey" t-key="groupKey">
+              <div class="card mb-3 p-3 shadow-sm"
+                   t-if="Object.keys(state.grouped[groupKey]).length &gt; 0">
+                <t t-set="ids" t-value="groupKey.split('_')"/>
+                <h6 class="mb-2">
+                  Project <t t-esc="projectName(parseId(ids[0])) || 'Unknown Project'"/> /
+                  Task <t t-esc="taskName(parseId(ids[1])) || 'Unknown Task'"/>
+                </h6>
+
+                <div class="table-responsive mb-2">
+                  <table class="table table-sm table-borderless align-middle mb-0">
+                    <tbody>
+                      <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
+                      <!-- t-if="state.grouped[groupKey][title].duration >= 120" -->
+                        <tr
+                            t-att-class="{'table-danger': this.isSelected(groupKey, title)}"
+                            t-on-mousedown.stop="(ev) => this.onMouseDown(groupKey, title, ev)"
+                            t-on-mouseenter.stop="() => this.onMouseEnter(groupKey, title)"
+                            style="cursor: pointer;">
+                          <td class="w-50"><t t-esc="title"/></td>
+                          <td class="text-end text-muted">
+                            <t t-esc="(state.grouped[groupKey][title].duration / 60).toFixed(2)"/> min
+                          </td>
+                          <td class="text-end" t-if="state.selectedRows.size === 0">
+                            <button t-att-style="groupKey === 'false_false' ? 'visibility: hidden;' : ''"
+                                    class="btn btn-sm btn-primary me-1"
+                                    t-on-click.stop="() => this.onTake(groupKey, title)">Take</button>
+                            <button class="btn btn-sm btn-secondary"
+                                    t-on-click.stop="() => this.onDelete(groupKey, title)">Delete</button>
+                          </td>
+                        </tr>
+                      </t>
+                    </tbody>
+                  </table>
+                </div>
               </div>
+            </t>
+          </div>
+        </t>
+
+        <!-- TIMELINE MODE -->
+        <t t-if="state.groupBy === 'timeline'">
+          <div class="o_suggestion p-3 shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-sm table-borderless align-middle mb-0">
+                <tbody>
+                  <t t-foreach="state.records" t-as="record" t-key="record.start">
+                    <tr t-att-class="{'table-danger': this.isSelected(record.groupKey, record.title)}"
+                        t-on-mousedown.stop="(ev) => this.onMouseDown(record.groupKey, record.title, ev)"
+                        t-on-mouseenter.stop="() => this.onMouseEnter(record.groupKey, record.title)"
+                        style="cursor: pointer;">
+                      <td>
+                        <t t-esc="record.title"/>
+                      </td>
+                      <td>
+                        <small class="text-muted">
+                          <t t-esc="record.project || 'No Project'"/> /
+                          <t t-esc="record.task || 'No Task'"/>
+                        </small>
+                      </td>
+                          <td class="text-end text-muted">
+                            <t t-esc="(record.duration / 60).toFixed(2)"/> min
+                          </td>
+                          <td class="text-end" t-if="state.selectedRows.size === 0">
+                            <button t-att-style="record.groupKey === 'false_false' ? 'visibility: hidden;' : ''"
+                                    class="btn btn-sm btn-primary me-1"
+                                    t-on-click.stop="() => this.onTake(record.groupKey, record.title)">Take</button>
+                            <button class="btn btn-sm btn-secondary"
+                                    t-on-click.stop="() => this.onDelete(record.groupKey, record.title)">Delete</button>
+                          </td>
+                    </tr>
+                  </t>
+                </tbody>
+              </table>
             </div>
-          </t>
+          </div>
         </t>
       </div>
 
@@ -76,11 +120,11 @@
 
         <!-- Timesheet form -->
         <div class="mb-4">
-          <t t-if="!state.selected">
+          <t t-if="!state.selectedRows.size === 0">
             <TimesheetTimer onSaveCallback="() => this.onSaveTimesheetForm()"/>
           </t>
           <t t-else="">
-            <TimesheetTimer data="state.selectedData" onSaveCallback="() => this.onSaveTimesheetForm()"/>
+            <TimesheetTimer data="this.selectedData" onSaveCallback="() => this.onSaveTimesheetForm()"/>
           </t>
         </div>
 
@@ -115,7 +159,7 @@
           <h6 class="fw-bold text-success mb-2">
             Non-Billable -
             <t t-esc="state.nonBillableTime.toFixed(2)"/>h
-            (<t t-esc="state.nonBillablePercentage.toFixed(1)"/>%)
+            (<t t-esc="state.nonBillablePercentage.toFixed(2)"/>%)
           </h6>
           <t t-if="state.nonBillableTimesheets.length === 0">
             <p class="text-muted small mb-0">No non-billable timesheets today.</p>
