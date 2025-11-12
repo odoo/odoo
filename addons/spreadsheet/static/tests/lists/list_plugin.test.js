@@ -38,7 +38,7 @@ import {
 } from "@spreadsheet/../tests/helpers/data";
 
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
+const { DEFAULT_LOCALE, PIVOT_STATIC_TABLE_CONFIG } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -112,7 +112,7 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
     expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
         A2: "74.40€",    B2: "10.00",  C2: "1",
         A3: "$74.80",    B3: "11.00",  C3: "2",
-        A4: "4.00€",     B4: "95.00",  C4: "3",      
+        A4: "4.00€",     B4: "95.00",  C4: "3",
         A5: "$1,000.00", B5: "15.00",  C5: "4",
         A6: "$0.00",     B6: "0.00",   C6: "0",
     });
@@ -1166,7 +1166,7 @@ test("INSERT_ODOO_LIST_WITH_TABLE adds a table that maches the list dimension", 
     const table = model.getters.getTable({ sheetId, col, row });
     expect(table.range.zone).toEqual(toZone("A20:D25"));
     expect(table.type).toBe("static");
-    expect(table.config).toEqual({ ...PIVOT_TABLE_CONFIG, firstColumn: false });
+    expect(table.config).toEqual({ ...PIVOT_STATIC_TABLE_CONFIG, firstColumn: false });
 });
 
 test("An error is displayed if the list has invalid model", async function () {
