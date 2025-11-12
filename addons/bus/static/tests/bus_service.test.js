@@ -471,7 +471,8 @@ test("show notification when version is outdated", async () => {
     await waitForSteps(["Worker deactivated due to an outdated version.", "disconnect"]);
     await runAllTimers();
     await waitFor(".o_notification", {
-        text: "Save your work and refresh to get the latest updates and avoid potential issues.",
+        contains:
+            "Save your work and refresh to get the latest updates and avoid potential issues.",
     });
     await contains(".o_notification button:contains(Refresh)").click();
     await waitForSteps(["reload"]);

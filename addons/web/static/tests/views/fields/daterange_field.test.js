@@ -36,7 +36,7 @@ function ensureCSSVisible(selector) {
 }
 
 function getPickerCell(expr) {
-    return queryAll(`.o_datetime_picker .o_date_item_cell:contains(/^${expr}$/)`);
+    return queryAll(`.o_datetime_picker .o_date_item_cell:text(${expr})`);
 }
 
 class Partner extends models.Model {
