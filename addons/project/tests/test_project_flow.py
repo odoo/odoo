@@ -477,3 +477,16 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.assertFalse(task1.user_ids)
         self.assertEqual(self.user_projectuser + self.user_projectmanager, task_2.user_ids)
         self.assertEqual(self.user_projectuser, task_3.user_ids)
+
+    def test_customer_can_access_public_project(self):
+        """Test that a customer is automatically subscribed when the project is public."""
+        project = self.env['project.project'].create({
+            'name': 'Public Project',
+            'privacy_visibility': 'portal',
+            'partner_id': self.partner_1.id,
+        })
+
+        self.assertIn(
+            self.partner_1, project.message_partner_ids,
+            "Customer should be automatically subscribed to the project when visibility is set to 'public'."
+        )

@@ -657,6 +657,9 @@ class ProjectProject(models.Model):
             if vals.pop('is_favorite', False):
                 vals['favorite_user_ids'] = [self.env.uid]
         projects = super().create(vals_list)
+        for project in projects:
+            if project.privacy_visibility == 'portal':
+                project.message_subscribe(partner_ids=[project.partner_id.id])
         return projects
 
     def write(self, vals):
