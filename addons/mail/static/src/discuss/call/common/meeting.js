@@ -2,7 +2,6 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
-import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import {
     inDiscussCallViewProps,
     useInDiscussCallView,
@@ -30,7 +29,6 @@ export class Meeting extends Component {
     static components = {
         Call,
         CallActionList,
-        ChannelInvitation,
         Composer,
         Dropdown,
         MeetingSideActions,

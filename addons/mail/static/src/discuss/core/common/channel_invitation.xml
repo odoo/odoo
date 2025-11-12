@@ -2,19 +2,19 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelInvitation">
-        <ActionPanel t-if="props.thread" title.translate="Invite people" resizable="!!env.inMeetingView" minWidth="env.inMeetingView ? 300 : undefined" initialWidth="env.inMeetingView ? 400 : undefined" icon="'oi oi-user-plus'">
+        <ActionPanel t-if="props.channel" title.translate="Invite people" resizable="!!env.inMeetingView" minWidth="env.inMeetingView ? 300 : undefined" initialWidth="env.inMeetingView ? 400 : undefined" icon="'oi oi-user-plus'">
             <t t-call="discuss.ChannelInvitation.main"/>
         </ActionPanel>
         <t t-else="" t-call="discuss.ChannelInvitation.main"/>
     </t>
 
     <t t-name="discuss.ChannelInvitation.main">
-        <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints, 'px-1': !props.thread }">
+        <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints, 'px-1': !props.channel }">
             <t t-if="store.self_user">
                 <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="searchStr" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
                 <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': selectablePartners.length === 0 and state.selectableEmails.length === 0 }">
                     <div t-if="selectablePartners.length === 0 and state.selectableEmails.length === 0" class="smaller text-muted mx-1 opacity-50">
-                        <t t-if="props.thread">No user found that is not already a member of this channel.</t>
+                        <t t-if="props.channel">No user found that is not already a member of this channel.</t>
                         <t t-else="">No user found.</t>
                     </div>
                     <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
@@ -47,18 +47,18 @@
                             </t>
                         </div>
                     </div>
-                    <button t-if="props.thread and (selectedPartners.length > 0 or state.selectedEmails.length > 0)" class="btn btn-primary w-100 my-2" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                    <button t-if="props.channel and (selectedPartners.length > 0 or state.selectedEmails.length > 0)" class="btn btn-primary w-100 my-2" t-att-title="invitationButtonText" t-on-click="onClickInvite">
                         <t t-esc="invitationButtonText"/>
                     </button>
                 </t>
-                <hr t-if="props.thread?.invitationLink" class="border-dark-subtle"/>
-                <div t-if="props.thread?.invitationLink" class="input-group">
-                    <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.thread.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
+                <hr t-if="props.channel?.invitationLink" class="border-dark-subtle"/>
+                <div t-if="props.channel?.invitationLink" class="input-group">
+                    <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.channel.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
                     <button class="btn btn-primary px-2 o-py-0_5" t-on-click="onClickCopy">
                         <i class="fa fa-copy"/>
                     </button>
                 </div>
-                <div t-if="props.thread?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.thread.accessRestrictedToGroupText"/>
+                <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.channel.accessRestrictedToGroupText"/>
             </div>
         </div>
     </t>
