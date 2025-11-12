@@ -59,6 +59,8 @@ import * as _network from "../mock/network";
 import * as _notification from "../mock/notification";
 import * as _window from "../mock/window";
 
+const { isPrevented, mockPreventDefault } = _window;
+
 /**
  * @typedef {{
  *  readonly config: (config: JobConfig) => CurrentConfigurators;
@@ -198,15 +200,6 @@ function formatAssertions(assertions) {
         }
     }
     return lines;
-}
-
-/**
- * @param {Event} ev
- */
-function safePrevent(ev) {
-    if (ev.cancelable) {
-        ev.preventDefault();
-    }
 }
 
 /**
@@ -1795,7 +1788,7 @@ export class Runner {
         const error = ensureError(ev);
         if (handledErrors.has(error)) {
             // Already handled
-            return safePrevent(ev);
+            return ev.preventDefault();
         }
         handledErrors.add(error);
 
@@ -1803,27 +1796,29 @@ export class Runner {
             ev = new ErrorEvent("error", { error });
         }
 
+        mockPreventDefault(ev);
+
         if (error.message.includes(RESIZE_OBSERVER_MESSAGE)) {
             // Stop event
             ev.stopImmediatePropagation();
             if (ev.bubbles) {
                 ev.stopPropagation();
             }
-            return safePrevent(ev);
+            return ev.preventDefault();
         }
 
         if (this.state.currentTest && !(error instanceof HootError)) {
             // Handle the error in the current test
             const handled = this._handleErrorInTest(ev, error);
             if (handled) {
-                return safePrevent(ev);
+                return ev.preventDefault();
             }
         } else {
             this._handleGlobalError(ev, error);
         }
 
         // Prevent error event
-        safePrevent(ev);
+        ev.preventDefault();
 
         // Log error
         if (error.level) {
@@ -1843,7 +1838,7 @@ export class Runner {
     _handleErrorInTest(ev, error) {
         for (const callbackRegistry of this._getCallbackChain(this.state.currentTest)) {
             callbackRegistry.callSync("error", ev, logger.error);
-            if (ev.defaultPrevented) {
+            if (isPrevented(ev)) {
                 // Prevented in tests
                 return true;
             }
