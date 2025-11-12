@@ -11,6 +11,7 @@ The system is able to add and compute the shipping line.
 """,
     'depends': ['sale', 'payment_custom'],
     'data': [
+        'data/account_payment_method_data.xml',
         'data/delivery_data.xml',
         'data/payment_method_data.xml',
         'data/payment_provider_data.xml',  # Depends on `payment_method_cash_on_delivery`.

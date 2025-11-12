@@ -4,6 +4,7 @@ import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class SaleOrder(models.Model):
@@ -16,6 +17,11 @@ class SaleOrder(models.Model):
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
     is_all_service = fields.Boolean("Service Product", compute="_compute_is_service_products")
     shipping_weight = fields.Float("Shipping Weight", compute="_compute_shipping_weight", store=True, readonly=False)
+
+    pending_delivery_transaction_ids = fields.Many2many(
+        comodel_name='payment.transaction', compute='_compute_pending_delivery_transaction_ids',
+    )
+    amount_at_delivery = fields.Monetary(compute='_compute_amount_at_delivery')
 
     def _compute_partner_shipping_id(self):
         """ Override to reset the delivery address when a pickup location was selected. """
@@ -38,6 +44,47 @@ class SaleOrder(models.Model):
     def _compute_delivery_state(self):
         for order in self:
             order.delivery_set = any(line.is_delivery for line in order.order_line)
+
+    @api.depends('transaction_ids')
+    def _compute_pending_delivery_transaction_ids(self):
+        pms_at_delivery = self.env['payment.method']._get_payment_method_at_delivery_codes()
+        predicate = Domain([
+            ('payment_method_id.code', 'in', pms_at_delivery),
+            ('state', '=', 'pending'),
+        ])._as_predicate(self.transaction_ids)
+
+        for order in self:
+            order.pending_delivery_transaction_ids = order.transaction_ids.filtered(predicate)
+
+    @api.depends('transaction_ids')
+    def _compute_amount_at_delivery(self):
+        for order in self:
+            order.amount_at_delivery = sum(order.pending_delivery_transaction_ids.mapped('amount'))
+
+    def action_confirm_delivery_payment(self):
+        """Mark pending delivery transactions as done and trigger post-processing so payment
+        records are created immediately.
+
+        :raises UserError: If no pending delivery transaction is found.
+        :return: An action dict to display a notification.
+        :rtype: dict
+        """
+        if not self.pending_delivery_transaction_ids:
+            raise UserError(self.env._("No pending transaction found."))
+
+        self.pending_delivery_transaction_ids._set_done(
+            state_message=self.env._("Payment collected on delivery."),
+        )
+        self.pending_delivery_transaction_ids._post_process()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': self.env._("The payment was collected successfully!"),
+                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+            },
+        }
 
     @api.onchange('order_line', 'partner_id', 'partner_shipping_id')
     def onchange_order_line(self):

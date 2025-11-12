@@ -31,6 +31,14 @@ class StockPicking(models.Model):
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
     integration_level = fields.Selection(related='carrier_id.integration_level')
 
+    display_confirm_delivery_payment_action = fields.Boolean(
+        compute='_compute_display_confirm_delivery_payment_action'
+    )
+    order_amount_at_delivery = fields.Monetary(
+        related='sale_id.amount_at_delivery', currency_field='order_currency_id'
+    )
+    order_currency_id = fields.Many2one(related='sale_id.currency_id')
+
     @api.depends('partner_id', 'carrier_id.max_weight', 'carrier_id.max_volume', 'carrier_id.must_have_tag_ids', 'carrier_id.excluded_tag_ids', 'move_ids.product_id.product_tag_ids', 'move_ids.product_id.weight', 'move_ids.product_id.volume')
     def _compute_allowed_carrier_ids(self):
         for picking in self:
@@ -56,6 +64,38 @@ class StockPicking(models.Model):
                 picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', '=like', '%s%%' % picking.carrier_id.get_return_label_prefix())])
             else:
                 picking.return_label_ids = False
+
+    @api.depends('sale_id.transaction_ids', 'location_dest_id.usage')
+    def _compute_display_confirm_delivery_payment_action(self):
+        for picking in self:
+            picking.display_confirm_delivery_payment_action = (
+                self.sale_id.pending_delivery_transaction_ids
+                and self.location_dest_id.usage == 'customer'
+            )
+
+    def action_confirm_delivery_payment(self):
+        """Collect the pending payments of the linked sale order, if any, and log a message on both
+        the current picking and the linked sale order to trace the action.
+
+        Note: `self.ensure_one()`
+
+        :raises UserError: If the picking is not linked to a sale order.
+        :raises UserError: If no pending delivery transaction is found.
+        :return: An action dict to display a notification.
+        :rtype: dict
+        """
+        self.ensure_one()
+        if not self.sale_id:
+            raise UserError(self.env._("The picking is not linked to a sale order."))
+
+        res = self.sale_id.action_confirm_delivery_payment()
+        self.message_post(
+            body=self.env._("Payment collected for %s.", self.sale_id._get_html_link())
+        )
+        self.sale_id.message_post(
+            body=self.env._("Payment collected on %s.", self._get_html_link())
+        )
+        return res
 
     def get_multiple_carrier_tracking(self):
         self.ensure_one()

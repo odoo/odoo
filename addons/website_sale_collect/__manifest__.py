@@ -8,6 +8,7 @@ Allows customers to check in-store stock, pay on site, and pick up their orders 
 """,
     'depends': ['base_geolocalize', 'payment_custom', 'website_sale_stock'],
     'data': [
+        'data/account_payment_method_data.xml',
         'data/payment_method_data.xml',
         'data/payment_provider_data.xml',  # Depends on `payment_method_pay_on_site`.
         'data/product_product_data.xml',

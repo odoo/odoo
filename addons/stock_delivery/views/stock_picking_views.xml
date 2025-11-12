@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="not display_confirm_delivery_payment_action"
+                >
+                    Payment to collect:
+                    <field name="order_amount_at_delivery" widget="monetary"/>
+                    <field name="order_currency_id" invisible="1"/>
+                </div>
+            </sheet>
+            <!-- Mark the "Validate" button as secondary if a payment should be collected first. -->
+            <button name="button_validate" position="attributes">
+                <attribute
+                    name="invisible" add="display_confirm_delivery_payment_action" separator=" or "
+                />
+            </button>
+            <button name="button_validate" position="before">
+                <button
+                    name="action_confirm_delivery_payment"
+                    type="object"
+                    string="Confirm Payment"
+                    class="oe_highlight"
+                    invisible="not display_confirm_delivery_payment_action"
+                />
+                <button
+                    string="Validate"
+                    name="button_validate"
+                    type="object"
+                    invisible="
+                        state in ('draft', 'confirmed', 'done', 'cancel')
+                        or not display_confirm_delivery_payment_action
+                    "
+                    groups="stock.group_stock_user"
+                    data-hotkey="v"
+                />
+            </button>
+        </field>
+    </record>
+</odoo>
