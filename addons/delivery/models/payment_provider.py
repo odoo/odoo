@@ -11,6 +11,12 @@ class PaymentProvider(models.Model):
 
     custom_mode = fields.Selection(selection_add=[('cash_on_delivery', 'Cash On Delivery')])
 
+    def _get_provider_payment_method(self, code):
+        """Override to allow the post processing of transactions to create payments."""
+        if self.code == code == 'custom' and self.custom_mode == 'cash_on_delivery':
+            code = 'cash_on_delivery'
+        return super()._get_provider_payment_method(code)
+
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
