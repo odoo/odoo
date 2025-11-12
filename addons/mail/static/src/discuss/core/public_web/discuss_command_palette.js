@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
-import { ChannelInvitation } from "../common/channel_invitation";
+import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");

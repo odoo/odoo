@@ -14,7 +14,7 @@ export class ChannelInvitation extends Component {
     static props = [
         "autofocus?",
         "hasSizeConstraints?",
-        "thread?",
+        "channel?",
         "close?",
         "className?",
         "state?",
@@ -50,7 +50,7 @@ export class ChannelInvitation extends Component {
             }
         });
         onMounted(() => {
-            if (this.store.self_user && this.props.thread) {
+            if (this.store.self_user && this.props.channel) {
                 this.inputRef.el.focus();
             }
         });
@@ -111,7 +111,7 @@ export class ChannelInvitation extends Component {
     }
 
     get searchPlaceholder() {
-        if (this.props.thread?.allow_invite_by_email) {
+        if (this.props.channel?.allow_invite_by_email) {
             return _t("Invite people or email");
         }
         return _t("Search people to invite");
@@ -121,7 +121,7 @@ export class ChannelInvitation extends Component {
         const results = await this.sequential(() =>
             this.orm.call("res.partner", "search_for_channel_invite", [
                 this.searchStr,
-                this.props.thread?.id ?? false,
+                this.props.channel?.id ?? false,
             ])
         );
         if (!results) {
@@ -134,7 +134,7 @@ export class ChannelInvitation extends Component {
         this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
-            this.props.thread
+            this.props.channel?.thread
         );
         this.state.searchResultCount = results["count"];
         const selectableEmails = this.state.selectedEmails.filter((addr) =>
@@ -195,7 +195,7 @@ export class ChannelInvitation extends Component {
             ? this.rtc.pipService.pipWindow?.navigator.clipboard
             : navigator.clipboard;
         try {
-            await clipboard.writeText(this.props.thread.invitationLink);
+            await clipboard.writeText(this.props.channel.invitationLink);
         } catch {
             notification = _t("Invitation link copy failed (Permission denied?)!");
             type = "danger";
@@ -204,10 +204,10 @@ export class ChannelInvitation extends Component {
     }
 
     async onClickInvite() {
-        if (this.props.thread.channel?.channel_type === "chat") {
+        if (this.props.channel?.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
-            if (this.props.thread.correspondent?.partner_id) {
-                partnerIds.unshift(this.props.thread.correspondent.partner_id.id);
+            if (this.props.channel.correspondent?.partner_id) {
+                partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
             }
             await this.store.startChat(partnerIds);
             return;
@@ -215,15 +215,15 @@ export class ChannelInvitation extends Component {
         const invitePromises = [];
         if (this.selectedPartners.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
+                this.orm.call("discuss.channel", "add_members", [[this.props.channel.id]], {
                     partner_ids: this.selectedPartners.map((partner) => partner.id),
-                    invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.thread?.channel),
+                    invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
                 })
             );
         }
         if (this.state.selectedEmails.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "invite_by_email", [this.props.thread.id], {
+                this.orm.call("discuss.channel", "invite_by_email", [this.props.channel.id], {
                     emails: this.state.selectedEmails,
                 })
             );
@@ -235,15 +235,15 @@ export class ChannelInvitation extends Component {
     }
 
     get invitationButtonText() {
-        if (!this.props.thread) {
+        if (!this.props.channel) {
             return "";
         }
-        if (this.props.thread.channel?.channel_type === "channel") {
+        if (this.props.channel?.channel_type === "channel") {
             return _t("Invite");
-        } else if (this.props.thread.channel?.channel_type === "group") {
+        } else if (this.props.channel?.channel_type === "group") {
             return _t("Invite to Group Chat");
-        } else if (this.props.thread.channel?.channel_type === "chat") {
-            if (this.props.thread.correspondent?.persona.eq(this.store.self)) {
+        } else if (this.props.channel?.channel_type === "chat") {
+            if (this.props.channel.correspondent?.persona.eq(this.store.self)) {
                 if (this.selectedPartners.length === 0) {
                     return _t("Invite");
                 }
