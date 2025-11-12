@@ -77,6 +77,8 @@ export class Persona extends Record {
     type;
     /** @type {string} */
     name;
+    /** @type {string} */
+    display_name;
     country_id = fields.One("res.country");
     /** @type {string} */
     email;
@@ -123,7 +125,7 @@ export class Persona extends Record {
      * computation, override the displayName getter.
      */
     _computeDisplayName() {
-        return this.name;
+        return this.name || this.display_name;
     }
 
     get avatarUrl() {
