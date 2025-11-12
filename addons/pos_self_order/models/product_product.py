@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
             load=False
         )
 
-        combo_products = self.browse((p['id'] for p in products if p["type"] == "combo"))
+        combo_products = self.browse(p['id'] for p in products if p["type"] == "combo")
         combo_products_choice = self.search_read(
             [("id", 'in', combo_products.combo_ids.combo_item_ids.product_id.product_tmpl_id.ids), ("id", "not in", [p['id'] for p in products])],
             fields,

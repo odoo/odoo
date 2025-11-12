@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 import base64
+import datetime
 import itertools
 import json
 import typing
 from collections import defaultdict
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import babel
 import babel.dates
-import datetime
-import pytz
 
 from odoo import api, models
 from odoo.fields import Command, Date, Domain
@@ -18,6 +18,7 @@ from odoo.api import NewId
 from odoo.models import regex_order, READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
+from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyTranslate
 
 if typing.TYPE_CHECKING:
@@ -1007,8 +1008,8 @@ class Base(models.AbstractModel):
             first_week_day = int(get_lang(self.env).week_start) - 1
             days_offset = first_week_day and 7 - first_week_day
         tz = False
-        if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
-            tz = pytz.timezone(self.env.context['tz'])
+        if field.type == 'datetime' and self.env.context.get('tz') in all_timezones:
+            tz = ZoneInfo(self.env.context['tz'])
 
         # existing non null date(time)
         existing = sorted(group_value for group in groups if (group_value := group[0])) or [None]
@@ -1018,14 +1019,14 @@ class Base(models.AbstractModel):
             fill_from = Date.to_date(fill_from)
             fill_from = date_utils.start_of(fill_from, granularity) - datetime.timedelta(days=days_offset)
             if tz:
-                fill_from = tz.localize(fill_from)
+                fill_from = fill_from.replace(tzinfo=tz)
         elif existing_from:
             fill_from = existing_from
         if fill_to:
             fill_to = Date.to_date(fill_to)
             fill_to = date_utils.start_of(fill_to, granularity) - datetime.timedelta(days=days_offset)
             if tz:
-                fill_to = tz.localize(fill_to)
+                fill_to = fill_to.replace(tzinfo=tz)
         elif existing_to:
             fill_to = existing_to
 
@@ -1160,11 +1161,11 @@ class Base(models.AbstractModel):
                     range_end = value + interval
                     if field.type == 'datetime':
                         tzinfo = None
-                        if self.env.context.get('tz') in pytz.all_timezones_set:
-                            tzinfo = pytz.timezone(self.env.context['tz'])
-                            range_start = tzinfo.localize(range_start).astimezone(pytz.utc)
+                        if self.env.context.get('tz') in all_timezones:
+                            tzinfo = ZoneInfo(self.env.context['tz'])
+                            range_start = range_start.replace(tzinfo=tzinfo).astimezone(datetime.UTC)
                             # take into account possible hour change between start and end
-                            range_end = tzinfo.localize(range_end).astimezone(pytz.utc)
+                            range_end = range_end.replace(tzinfo=tzinfo).astimezone(datetime.UTC)
 
                         label = babel.dates.format_datetime(
                             range_start, format=READ_GROUP_DISPLAY_FORMAT[granularity],

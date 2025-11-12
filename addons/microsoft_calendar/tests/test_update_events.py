@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import datetime, timedelta
-from dateutil.parser import parse
 import logging
-import pytz
+from datetime import datetime, timedelta, UTC
 from unittest.mock import patch, ANY
+
+from dateutil.parser import parse
 from freezegun import freeze_time
 
 from odoo import Command
@@ -166,11 +165,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -246,7 +245,7 @@ class TestUpdateEvents(TestCommon):
     @patch.object(MicrosoftCalendarService, 'insert')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_name_of_one_and_future_events_of_recurrence_from_odoo(
-        self, mock_patch, mock_insert, mock_delete
+        self, mock_patch, _mock_insert, _mock_delete
     ):
         """
         Update a Odoo event name and future events from a recurrence from the organizer calendar.
@@ -286,7 +285,7 @@ class TestUpdateEvents(TestCommon):
     @patch.object(MicrosoftCalendarService, 'insert')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_start_of_one_and_future_events_of_recurrence_from_odoo(
-        self, mock_patch, mock_insert, mock_delete
+        self, mock_patch, _mock_insert, mock_delete
     ):
         """
         Update a Odoo event start date and future events from a recurrence from the organizer calendar.
@@ -346,11 +345,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -363,7 +362,7 @@ class TestUpdateEvents(TestCommon):
     @patch.object(MicrosoftCalendarService, 'insert')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_start_of_one_and_future_events_of_recurrence_from_odoo_with_overlap(
-        self, mock_patch, mock_insert, mock_delete
+        self, mock_patch, _mock_insert, mock_delete
     ):
         """
         Update a Odoo event start date and future events from a recurrence from the organizer calendar,
@@ -419,11 +418,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -436,7 +435,7 @@ class TestUpdateEvents(TestCommon):
     @patch.object(MicrosoftCalendarService, 'insert')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_one_and_future_events_of_recurrence_from_odoo_attendee_calendar(
-        self, mock_patch, mock_insert, mock_delete
+        self, mock_patch, _mock_insert, mock_delete
     ):
         """
         Update a Odoo event name and future events from a recurrence from the attendee calendar.
@@ -487,11 +486,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -506,7 +505,7 @@ class TestUpdateEvents(TestCommon):
     @patch.object(MicrosoftCalendarService, 'insert')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_name_of_all_events_of_recurrence_from_odoo(
-        self, mock_patch, mock_insert, mock_delete
+        self, mock_patch, _mock_insert, _mock_delete
     ):
         """
         Update all events name from a recurrence from the organizer calendar.
@@ -541,7 +540,7 @@ class TestUpdateEvents(TestCommon):
     @patch.object(MicrosoftCalendarService, 'insert')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_start_of_all_events_of_recurrence_from_odoo(
-        self, mock_patch, mock_insert, mock_delete
+        self, mock_patch, _mock_insert, mock_delete
     ):
         """
         Update all events start date from a recurrence from the organizer calendar.
@@ -580,11 +579,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -605,7 +604,7 @@ class TestUpdateEvents(TestCommon):
     @patch.object(MicrosoftCalendarService, 'insert')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_all_events_of_recurrence_from_odoo_attendee_calendar(
-        self, mock_patch, mock_insert, mock_delete
+        self, mock_patch, _mock_insert, mock_delete
     ):
         """
         Update all events start date from a recurrence from the attendee calendar.
@@ -644,11 +643,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -1411,7 +1410,7 @@ class TestUpdateEvents(TestCommon):
 
     @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'patch')
-    def test_restart_sync_with_synced_recurrence(self, mock_patch):
+    def test_restart_sync_with_synced_recurrence(self, _mock_patch):
         """ Ensure that sync restart is not blocked when there are recurrence outliers in Odoo database. """
         # Stop synchronization, set recurrent events as outliers and restart sync with Outlook.
         self.organizer_user.stop_microsoft_synchronization()

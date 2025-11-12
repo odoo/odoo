@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup
-from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
-from pytz import timezone
+from zoneinfo import ZoneInfo
+
+from werkzeug.exceptions import NotFound
 
 from odoo import http, _
 from odoo.http import content_disposition, request
@@ -212,7 +212,7 @@ class LivechatController(http.Controller):
         if not channel:
             raise NotFound()
         user, guest = request.env["res.users"]._get_current_persona()
-        tz = timezone(user.tz or guest.timezone or "UTC")
+        tz = ZoneInfo(user.tz or guest.timezone or "UTC")
         pdf, _type = (
             request.env["ir.actions.report"]
             .sudo()

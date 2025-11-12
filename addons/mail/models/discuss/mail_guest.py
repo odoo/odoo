@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
 import uuid
 from datetime import datetime, timedelta
 
@@ -9,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
+from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
@@ -82,7 +82,7 @@ class MailGuest(models.Model):
 
     def _get_timezone_from_request(self, request):
         timezone = request.cookies.get('tz')
-        return timezone if timezone in pytz.all_timezones else False
+        return timezone if timezone in all_timezones else False
 
     def _update_name(self, name):
         self.ensure_one()

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
+from uuid import uuid4
 
-import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
-from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -179,8 +179,8 @@ class CalendarEvent(models.Model):
             values['follow_recurrence'] = google_event.is_recurrence_follower()
         if google_event.start.get('dateTime'):
             # starting from python3.7, use the new [datetime, date].fromisoformat method
-            start = parse(google_event.start.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
-            stop = parse(google_event.end.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
+            start = parse(google_event.start.get('dateTime')).astimezone(datetime.UTC).replace(tzinfo=None)
+            stop = parse(google_event.end.get('dateTime')).astimezone(datetime.UTC).replace(tzinfo=None)
             values['allday'] = False
         else:
             start = parse(google_event.start.get('date'))
@@ -307,8 +307,8 @@ class CalendarEvent(models.Model):
         else:
             # For timed events, 'date' must be set to None to indicate that it's not an all-day event.
             # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as a timed event
-            start['dateTime'] = pytz.utc.localize(self.start).isoformat()
-            end['dateTime'] = pytz.utc.localize(self.stop).isoformat()
+            start['dateTime'] = self.start.replace(tzinfo=datetime.UTC).isoformat()
+            end['dateTime'] = self.stop.replace(tzinfo=datetime.UTC).isoformat()
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes

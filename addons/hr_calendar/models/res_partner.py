@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from pytz import UTC, timezone
-from datetime import datetime
 from collections import defaultdict
+from datetime import datetime, UTC
 from functools import reduce
+from zoneinfo import ZoneInfo
 
 from odoo import api, models
 from odoo.fields import Domain
@@ -53,7 +53,7 @@ class ResPartner(models.Model):
 
         # Compute all work intervals per calendar
         for calendar, resources in resources_by_calendar.items():
-            work_intervals = calendar._work_intervals_batch(start_period, stop_period, resources=resources, tz=timezone(calendar.tz))
+            work_intervals = calendar._work_intervals_batch(start_period, stop_period, resources=resources, tz=ZoneInfo(calendar.tz))
             del work_intervals[False]
             # Merge all employees intervals to avoid to compute it multiples times
             if merge:
@@ -100,8 +100,8 @@ class ResPartner(models.Model):
         # This is the format expected by the fullcalendar library to do the overlay
         return [{
             "daysOfWeek": [(interval[0].weekday() + 1) % 7],
-            "startTime":  interval[0].astimezone(timezone(self.env.user.tz or 'UTC')).strftime("%H:%M"),
-            "endTime": interval[1].astimezone(timezone(self.env.user.tz or 'UTC')).strftime("%H:%M"),
+            "startTime":  interval[0].astimezone(ZoneInfo(self.env.user.tz or 'UTC')).strftime("%H:%M"),
+            "endTime": interval[1].astimezone(ZoneInfo(self.env.user.tz or 'UTC')).strftime("%H:%M"),
         } for interval in working_intervals] if working_intervals else [{
             # 7 is used a dummy value to gray the full week
             # Returning an empty list would leave the week uncolored

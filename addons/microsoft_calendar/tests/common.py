@@ -1,16 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
-from datetime import datetime, timedelta
-from markupsafe import Markup
-from unittest.mock import patch, MagicMock
 from contextlib import contextmanager
+from datetime import datetime, timedelta, UTC
+from unittest.mock import patch, MagicMock
+
 from freezegun import freeze_time
+from markupsafe import Markup
 
 from odoo import fields
-
 from odoo.tests.common import HttpCase
-
 from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftCalendarSync
 
 def mock_get_token(user):
@@ -118,11 +116,11 @@ class TestCommon(HttpCase):
                 'contentType': "text",
             },
             "start": {
-                'dateTime': pytz.utc.localize(self.simple_event_values["start"]).isoformat(),
+                'dateTime': self.simple_event_values["start"].replace(tzinfo=UTC).isoformat(),
                 'timeZone': 'Europe/London'
             },
             "end": {
-                'dateTime': pytz.utc.localize(self.simple_event_values["stop"]).isoformat(),
+                'dateTime': self.simple_event_values["stop"].replace(tzinfo=UTC).isoformat(),
                 'timeZone': 'Europe/London'
             },
             "isAllDay": False,

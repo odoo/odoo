@@ -1,17 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import UTC
+from zoneinfo import ZoneInfo
 
 import babel
 import base64
 import contextlib
 import json
 import logging
-import pytz
 import re
 from collections import defaultdict
 from functools import reduce
 from operator import getitem
-
-from pytz import timezone
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
@@ -129,7 +128,7 @@ class IrActionsActions(models.Model):
             'time': tools.safe_eval.time,
             'datetime': tools.safe_eval.datetime,
             'dateutil': tools.safe_eval.dateutil,
-            'timezone': timezone,
+            'timezone': ZoneInfo,
             'float_compare': float_compare,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
@@ -492,9 +491,9 @@ class IrActionsServerHistory(models.Model):
         self.display_name = False
         for history in self.filtered('create_date'):
             locale = get_lang(self.env).code
-            tzinfo = pytz.timezone(self.env.user.tz)
+            tzinfo = ZoneInfo(self.env.user.tz)
             datetime = history.create_date.replace(microsecond=0)
-            datetime = pytz.utc.localize(datetime, is_dst=False)
+            datetime = datetime.replace(tzinfo=UTC)
             datetime = datetime.astimezone(tzinfo) if tzinfo else datetime
             date_label = babel.dates.format_datetime(
                 datetime,

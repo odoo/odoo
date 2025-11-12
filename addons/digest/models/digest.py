@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pytz
+from datetime import datetime, date, UTC
+from zoneinfo import ZoneInfo
 
-from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from werkzeug.urls import url_encode
@@ -377,10 +377,10 @@ class DigestDigest(models.Model):
         return date.today() + delta
 
     def _compute_timeframes(self, company):
-        start_datetime = datetime.utcnow()
+        start_datetime = datetime.now(UTC)
         tz_name = company.resource_calendar_id.tz
         if tz_name:
-            start_datetime = pytz.timezone(tz_name).localize(start_datetime)
+            start_datetime = start_datetime.replace(tzinfo=ZoneInfo(tz_name))
         return [
             (_('Last 24 hours'), (
                 (start_datetime + relativedelta(days=-1), start_datetime),

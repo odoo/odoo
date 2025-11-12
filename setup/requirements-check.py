@@ -60,7 +60,6 @@ Version = Tuple[int, ...]
 
 # shared beween debian and ubuntu
 SPECIAL = {
-    'pytz': 'tz',
     'libsass': 'libsass-python',
 }
 SUPPORTED_FORMATS = ('txt', 'ansi', 'svg', 'html', 'json')

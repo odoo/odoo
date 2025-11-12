@@ -6,14 +6,14 @@ from __future__ import annotations
 
 import functools
 import logging
-import pytz
 import typing
-import warnings
 from collections import defaultdict, deque
 from collections.abc import Mapping
 from contextlib import contextmanager
+from datetime import UTC
 from pprint import pformat
 from weakref import ref as weakref
+from zoneinfo import ZoneInfo
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
@@ -302,10 +302,10 @@ class Environment(Mapping[str, "BaseModel"]):
         timezone = self.context.get('tz') or self.user.tz
         if timezone:
             try:
-                return pytz.timezone(timezone)
+                return ZoneInfo(timezone)
             except Exception:  # noqa: BLE001
                 _logger.debug("Invalid timezone %r", timezone, exc_info=True)
-        return pytz.utc
+        return UTC
 
     @functools.cached_property
     def lang(self) -> str | None:

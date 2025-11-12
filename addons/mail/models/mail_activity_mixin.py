@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections.abc import Iterable
-from datetime import datetime
-
 import logging
-import pytz
+from collections.abc import Iterable
+from datetime import datetime, UTC
 
 from odoo import api, fields, models
 from odoo.fields import Domain
@@ -191,7 +189,7 @@ class MailActivityMixin(models.AbstractModel):
             )::INT AS activity_state
             """,
             activity_t.date_deadline,
-            fields.Datetime.now().astimezone(pytz.utc),
+            fields.Datetime.now().astimezone(UTC),
             activity_t.user_tz,
         ))
 

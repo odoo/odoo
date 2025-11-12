@@ -259,10 +259,10 @@ class Many2one(_Relational):
             self.bypass_search_access = True
         elif self.delegate:
             comodel_name = self.comodel_name or 'comodel_name'
-            raise TypeError((
+            raise TypeError(
                 f"The delegate field {self} must be declared in the model class e.g.\n"
                 f"_inherits = {{{comodel_name!r}: {name!r}}}"
-            ))
+            )
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)

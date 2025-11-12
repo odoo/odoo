@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from pytz import UTC
 from collections import defaultdict
-from datetime import timedelta, datetime, time
+from datetime import timedelta, datetime, time, UTC
+
 from lxml import html
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
@@ -2100,8 +2100,8 @@ class ProjectTask(models.Model):
     def get_unusual_days(self, date_from, date_to=None):
         calendar = self.env.company.resource_calendar_id
         return calendar._get_unusual_days(
-            datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
-            datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
+            datetime.combine(fields.Date.from_string(date_from), time.min, tzinfo=UTC),
+            datetime.combine(fields.Date.from_string(date_to), time.max, tzinfo=UTC)
         )
 
     def action_redirect_to_project_task_form(self):

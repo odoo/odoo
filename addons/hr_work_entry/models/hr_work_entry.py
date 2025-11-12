@@ -2,10 +2,9 @@
 
 from collections import defaultdict
 from contextlib import contextmanager
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, UTC
 from itertools import chain
 
-import pytz
 from psycopg2 import OperationalError
 
 from odoo import _, api, fields, models
@@ -97,8 +96,8 @@ class HrWorkEntry(models.Model):
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         return self.env.company.resource_calendar_id._get_unusual_days(
-            datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=pytz.utc),
-            datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=pytz.utc),
+            datetime.combine(fields.Date.from_string(date_from), time.min, tzinfo=UTC),
+            datetime.combine(fields.Date.from_string(date_to), time.max, tzinfo=UTC),
             self.company_id,
         )
 
@@ -199,9 +198,9 @@ class HrWorkEntry(models.Model):
             datetime_stop = datetime.combine(max(entries.mapped('date')), time.max)
 
             if calendar:
-                calendar_intervals = calendar._attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))[False]
+                calendar_intervals = calendar._attendance_intervals_batch(datetime_start.replace(tzinfo=UTC), datetime_stop.replace(tzinfo=UTC))[False]
             else:
-                calendar_intervals = Intervals([(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop), self.env['resource.calendar.attendance'])])
+                calendar_intervals = Intervals([(datetime_start.replace(tzinfo=UTC), datetime_stop.replace(tzinfo=UTC), self.env['resource.calendar.attendance'])])
             entries_intervals = entries._to_intervals()
             overlapping_entries = self._from_intervals(entries_intervals & calendar_intervals)
             outside_entries |= entries - overlapping_entries
@@ -210,7 +209,7 @@ class HrWorkEntry(models.Model):
 
     def _to_intervals(self):
         return Intervals(
-            ((datetime.combine(w.date, time.min).replace(tzinfo=pytz.utc), datetime.combine(w.date, time.max).replace(tzinfo=pytz.utc), w) for w in self),
+            ((datetime.combine(w.date, time.min, tzinfo=UTC), datetime.combine(w.date, time.max, tzinfo=UTC), w) for w in self),
             keep_distinct=True)
 
     @api.model

@@ -668,7 +668,7 @@ class AccountPartialReconcile(models.Model):
             if counterpart_line.reconciled:
                 continue
 
-            reconciliation_plan.append((counterpart_line + lines))
+            reconciliation_plan.append(counterpart_line + lines)
 
         # passing add_caba_vals in the context to make sure that any exchange diff that would be created for
         # this cash basis move would set the field draft_caba_move_vals accordingly on the partial

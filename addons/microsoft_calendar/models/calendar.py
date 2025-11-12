@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pytz
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, UTC
+from zoneinfo import ZoneInfo
+
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
@@ -314,8 +315,8 @@ class CalendarEvent(models.Model):
         }
 
         commands_attendee, commands_partner = self._odoo_attendee_commands_m(microsoft_event)
-        timeZone_start = pytz.timezone(microsoft_event.start.get('timeZone'))
-        timeZone_stop = pytz.timezone(microsoft_event.end.get('timeZone'))
+        timeZone_start = ZoneInfo(microsoft_event.start.get('timeZone'))
+        timeZone_stop = ZoneInfo(microsoft_event.end.get('timeZone'))
         start = parse(microsoft_event.start.get('dateTime')).astimezone(timeZone_start).replace(tzinfo=None)
         if microsoft_event.isAllDay:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None) - relativedelta(days=1)
@@ -370,8 +371,8 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _microsoft_to_odoo_recurrence_values(self, microsoft_event, default_values=None):
-        timeZone_start = pytz.timezone(microsoft_event.start.get('timeZone'))
-        timeZone_stop = pytz.timezone(microsoft_event.end.get('timeZone'))
+        timeZone_start = ZoneInfo(microsoft_event.start.get('timeZone'))
+        timeZone_stop = ZoneInfo(microsoft_event.end.get('timeZone'))
         start = parse(microsoft_event.start.get('dateTime')).astimezone(timeZone_start).replace(tzinfo=None)
         if microsoft_event.isAllDay:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None) - relativedelta(days=1)
@@ -519,8 +520,8 @@ class CalendarEvent(models.Model):
                 start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
                 end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
             else:
-                start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'timeZone': 'Europe/London'}
-                end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'timeZone': 'Europe/London'}
+                start = {'dateTime': self.start.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
+                end = {'dateTime': self.stop.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
 
             values['start'] = start
             values['end'] = end
@@ -657,8 +658,8 @@ class CalendarEvent(models.Model):
             start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
             end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
         else:
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'timeZone': 'Europe/London'}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'timeZone': 'Europe/London'}
+            start = {'dateTime': self.start.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
+            end = {'dateTime': self.stop.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
 
         values['start'] = start
         values['end'] = end

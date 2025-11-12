@@ -2,9 +2,10 @@
 
 from copy import deepcopy
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta, time
-from pytz import timezone
+from zoneinfo import ZoneInfo
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
@@ -123,7 +124,7 @@ class ResourceResource(models.Model):
         end = localized(end)
         result = {}
         for resource in self:
-            resource_tz = timezone(resource.tz)
+            resource_tz = ZoneInfo(resource.tz)
             start, end = start.astimezone(resource_tz), end.astimezone(resource_tz)
             search_range = [
                 start + relativedelta(hour=0, minute=0, second=0),
@@ -157,7 +158,7 @@ class ResourceResource(models.Model):
         for calendar, resources in calendar_mapping.items():
             if not calendar:
                 continue
-            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
+            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=ZoneInfo(calendar.tz))
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
@@ -239,14 +240,14 @@ class ResourceResource(models.Model):
 
         resources_per_tz = defaultdict(list)
         for resource in self:
-            resources_per_tz[timezone((resource or self.env.user).tz)].append(resource)
+            resources_per_tz[ZoneInfo((resource or self.env.user).tz)].append(resource)
 
         for tz, resources in resources_per_tz.items():
             start = start_date
             ranges = []
             while start <= end_date:
-                start_datetime = tz.localize(datetime.combine(start, datetime.min.time()))
-                end_datetime = tz.localize(datetime.combine(start, datetime.max.time()))
+                start_datetime = datetime.combine(start, datetime.min.time(), tzinfo=tz)
+                end_datetime = datetime.combine(start, datetime.max.time(), tzinfo=tz)
                 ranges.append((start_datetime, end_datetime, self.env['resource.calendar.attendance']))
                 start += timedelta(days=1)
 
@@ -268,7 +269,7 @@ class ResourceResource(models.Model):
     def _format_leave(self, leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale):
         leave_start_day = leave[0].date()
         leave_end_day = leave[1].date()
-        tz = timezone(self.tz or self.env.user.tz)
+        tz = ZoneInfo(self.tz or self.env.user.tz)
 
         while leave_start_day <= leave_end_day:
             if not self._is_fully_flexible():
@@ -279,8 +280,8 @@ class ResourceResource(models.Model):
                 year_and_week = weeknumber(babel_locale_parse(locale), leave_start_day)
                 resource_hours_per_week[self.id][year_and_week] -= hours
 
-            range_start_datetime = tz.localize(datetime.combine(leave_start_day, datetime.min.time()))
-            range_end_datetime = tz.localize(datetime.combine(leave_start_day, datetime.max.time()))
+            range_start_datetime = datetime.combine(leave_start_day, datetime.min.time(), tzinfo=tz)
+            range_end_datetime = datetime.combine(leave_start_day, datetime.max.time(), tzinfo=tz)
             ranges_to_remove.append((range_start_datetime, range_end_datetime, self.env['resource.calendar.attendance']))
             leave_start_day += timedelta(days=1)
 
@@ -353,7 +354,7 @@ class ResourceResource(models.Model):
                 resource_work_intervals[resource_id] -= Intervals(ranges_to_remove)
 
         for resource_id, work_intervals in resource_work_intervals.items():
-            tz = timezone(resource_by_id[resource_id].tz or self.env.user.tz)
+            tz = ZoneInfo(resource_by_id[resource_id].tz or self.env.user.tz)
             resource_work_intervals[resource_id] = work_intervals & Intervals([(start.astimezone(tz), end.astimezone(tz), self.env['resource.calendar.attendance'])])
 
         return resource_work_intervals, resource_hours_per_day, resource_hours_per_week

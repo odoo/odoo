@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
+from datetime import datetime, UTC
 
-from datetime import datetime
-from pytz import UTC
 from lxml import etree
 
 from odoo import api, models

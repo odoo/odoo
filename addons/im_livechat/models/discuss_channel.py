@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+from zoneinfo import ZoneInfo
+
+from markupsafe import Markup
+
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 from odoo.tools.mimetypes import get_extension
-
-import json
-from markupsafe import Markup
-from pytz import timezone
 
 
 def is_livechat_channel(channel):
@@ -560,7 +561,7 @@ class DiscussChannel(models.Model):
         render_context = {
             "company": company,
             "channel": self,
-            "tz": timezone(tz),
+            "tz": ZoneInfo(tz),
         }
         mail_body = self.env['ir.qweb']._render('im_livechat.livechat_email_template', render_context, minimal_qcontext=True)
         mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)

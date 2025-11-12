@@ -1,14 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 import logging
-
-from markupsafe import Markup
+from datetime import timedelta, UTC
 from random import randint
 from textwrap import shorten
+from zoneinfo import ZoneInfo
 
-from pytz import timezone, utc
 import werkzeug.urls
+from markupsafe import Markup
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
@@ -392,14 +391,14 @@ class EventTrack(models.Model):
     def _compute_track_time_data(self):
         """ Compute start and remaining time for track itself. Do everything in
         UTC as we compute only time deltas here. """
-        now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
+        now_utc = fields.Datetime.now().replace(microsecond=0, tzinfo=UTC)
         for track in self:
             if not (track.date or track.date_end):
                 track.is_track_live = track.is_track_soon = track.is_track_today = track.is_track_upcoming = track.is_track_done = False
                 track.track_start_relative = track.track_start_remaining = 0
                 continue
-            date_begin_utc = utc.localize(track.date, is_dst=False)
-            date_end_utc = utc.localize(track.date_end, is_dst=False)
+            date_begin_utc = track.date.replace(tzinfo=UTC)
+            date_end_utc = track.date_end.replace(tzinfo=UTC)
             track.is_track_live = date_begin_utc <= now_utc < date_end_utc
             track.is_track_soon = (date_begin_utc - now_utc).total_seconds() < 30*60 if date_begin_utc > now_utc else False
             track.is_track_today = date_begin_utc.date() == now_utc.date()
@@ -416,14 +415,14 @@ class EventTrack(models.Model):
     def _compute_cta_time_data(self):
         """ Compute start and remaining time for track itself. Do everything in
         UTC as we compute only time deltas here. """
-        now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
+        now_utc = fields.Datetime.now().replace(microsecond=0, tzinfo=UTC)
         for track in self:
             if not track.website_cta:
                 track.is_website_cta_live = track.website_cta_start_remaining = False
                 continue
 
-            date_begin_utc = utc.localize(track.date, is_dst=False) + timedelta(minutes=track.website_cta_delay or 0)
-            date_end_utc = utc.localize(track.date_end, is_dst=False)
+            date_begin_utc = track.date.replace(tzinfo=UTC) + timedelta(minutes=track.website_cta_delay or 0)
+            date_end_utc = track.date_end.replace(tzinfo=UTC)
             track.is_website_cta_live = date_begin_utc <= now_utc <= date_end_utc
             if date_begin_utc >= now_utc:
                 td = date_begin_utc - now_utc
@@ -641,9 +640,9 @@ class EventTrack(models.Model):
 
             date_tz = track.event_id.date_tz
             reminder_dates = track._get_track_calendar_reminder_dates()
-            cal_track.add('created').value = fields.Datetime.now().replace(tzinfo=timezone('UTC'))
-            cal_track.add('dtstart').value = reminder_dates['date_begin'].astimezone(timezone(date_tz))
-            cal_track.add('dtend').value = reminder_dates['date_end'].astimezone(timezone(date_tz))
+            cal_track.add('created').value = fields.Datetime.now().replace(tzinfo=UTC)
+            cal_track.add('dtstart').value = reminder_dates['date_begin'].astimezone(ZoneInfo(date_tz))
+            cal_track.add('dtend').value = reminder_dates['date_end'].astimezone(ZoneInfo(date_tz))
             cal_track.add('summary').value = track.name
             cal_track.add('description').value = track._get_track_calendar_description()
             if track.event_id.address_inline or track.location_id:
@@ -736,8 +735,8 @@ class EventTrack(models.Model):
     def _get_track_calendar_urls(self):
         date_tz = self.event_id.date_tz
         reminder_dates = self._get_track_calendar_reminder_dates()
-        url_date_begin = reminder_dates['date_begin'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S')
-        url_date_end = reminder_dates['date_end'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_begin = reminder_dates['date_begin'].astimezone(ZoneInfo(date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_end = reminder_dates['date_end'].astimezone(ZoneInfo(date_tz)).strftime('%Y%m%dT%H%M%S')
 
         if self.event_id.address_inline or self.location_id:
             location = ', '.join([self.event_id.sudo().address_inline, self.location_id.sudo().name or ''])

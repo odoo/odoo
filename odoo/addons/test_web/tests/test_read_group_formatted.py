@@ -1,5 +1,5 @@
-from datetime import datetime, time
-from pytz import UTC, timezone
+from datetime import datetime, time, UTC
+from zoneinfo import ZoneInfo
 
 import babel
 
@@ -742,9 +742,9 @@ class TestFormattedReadGroup(common.TransactionCase):
         def set_context(lang):
             '''Add `lang` & `tz` to context, and add localized `datetime` values.'''
             tz = tz_by_lang[lang]
-            tzinfo = timezone(tz)
+            tzinfo = ZoneInfo(tz)
             for record in records:
-                local_dt = tzinfo.localize(datetime.combine(record.date, time.min))
+                local_dt = datetime.combine(record.date, time.min, tzinfo=tzinfo)
                 record.datetime = local_dt.astimezone(UTC).replace(tzinfo=None)
             return Model.with_context(lang=lang, tz=tz)
 

@@ -4,17 +4,18 @@ from __future__ import annotations
 import base64
 import collections
 import datetime
-import pytz
 import re
-
+import typing
 from collections import defaultdict
 from random import randint
+from zoneinfo import ZoneInfo
+
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tools.date_utils import all_timezones
 
-import typing
 if typing.TYPE_CHECKING:
     from .res_users import ResUsers
     from .res_bank import ResPartnerBank
@@ -37,7 +38,7 @@ def _lang_get(self):
 
 
 # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-_tzs = [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+_tzs = [(tz, tz) for tz in sorted(all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 def _tz_get(self):
     return _tzs
 
@@ -401,7 +402,7 @@ class ResPartner(models.Model):
     @api.depends('tz')
     def _compute_tz_offset(self):
         for partner in self:
-            partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
+            partner.tz_offset = datetime.datetime.now(ZoneInfo(partner.tz or 'UTC')).strftime('%z')
 
     @api.depends('parent_id')
     def _compute_user_id(self):

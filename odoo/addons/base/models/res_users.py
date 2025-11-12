@@ -14,10 +14,10 @@ import time
 from functools import wraps
 from hashlib import sha256
 from itertools import chain
-from markupsafe import Markup
+from zoneinfo import ZoneInfo
 
-import pytz
 from lxml import etree
+from markupsafe import Markup
 from passlib.context import CryptContext as _CryptContext
 
 from odoo import api, fields, models, tools, _
@@ -26,7 +26,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
 from odoo.tools import email_domain_extract, is_html_empty, frozendict, reset_cached_properties, SQL
-
+from odoo.tools.date_utils import all_timezones
 
 _logger = logging.getLogger(__name__)
 
@@ -451,7 +451,7 @@ class ResUsers(models.Model):
     @api.depends('tz')
     def _compute_tz_offset(self):
         for user in self:
-            user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
+            user.tz_offset = datetime.datetime.now(ZoneInfo(user.tz or 'UTC')).strftime('%z')
 
     @api.depends('all_group_ids')
     def _compute_accesses_count(self):
@@ -733,7 +733,7 @@ class ResUsers(models.Model):
                 user = user.with_user(user).sudo()
                 auth_info = user._check_credentials(credential, user_agent_env)
                 tz = request.cookies.get('tz') if request else None
-                if tz in pytz.all_timezones and (not user.tz or not user.login_date):
+                if tz in all_timezones and (not user.tz or not user.login_date):
                     # first login or missing tz -> set tz to browser tz
                     user.tz = tz
                 user._update_last_login()

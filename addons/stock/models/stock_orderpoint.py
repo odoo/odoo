@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from pytz import timezone, UTC
 from collections import defaultdict
-from datetime import datetime, time
+from datetime import datetime, time, UTC
+from zoneinfo import ZoneInfo
+
 from dateutil import relativedelta
 from psycopg2 import OperationalError
 
@@ -796,7 +797,7 @@ class StockWarehouseOrderpoint(models.Model):
         return True
 
     def _get_orderpoint_procurement_date(self):
-        return timezone(self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(self.lead_horizon_date, time(12))).astimezone(UTC).replace(tzinfo=None)
+        return datetime.combine(self.lead_horizon_date, time(12), tzinfo=ZoneInfo(self.company_id.partner_id.tz or 'UTC')).astimezone(UTC).replace(tzinfo=None)
 
     def _get_orderpoint_products(self):
         return self.env['product.product'].search([('is_storable', '=', True), ('stock_move_ids', '!=', False)])

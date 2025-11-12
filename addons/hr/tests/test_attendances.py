@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from pytz import timezone
-
 from datetime import datetime, date
+from zoneinfo import ZoneInfo
 
 from odoo.tests import tagged
 
@@ -63,7 +62,7 @@ class TestAttendances(TestHrCommon):
         cls.employee.resource_calendar_id = contract_now.resource_calendar_id
 
     def test_incoming_overlapping_contract(self):
-        tz = timezone("Europe/Brussels")
+        tz = ZoneInfo("Europe/Brussels")
         check_in_tz = datetime.combine(datetime(2024, 6, 1), datetime.min.time()).astimezone(tz)
         check_out_tz = datetime.combine(datetime(2024, 6, 30), datetime.max.time()).astimezone(tz)
         intervals = self.employee._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=False)

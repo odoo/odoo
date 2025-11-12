@@ -108,7 +108,7 @@ class MailLinkPreview(models.Model):
 
     def _is_domain_thottled(self, url):
         domain = urlparse(url).netloc
-        date_interval = fields.Datetime.to_string((datetime.now() - relativedelta(seconds=10)))
+        date_interval = fields.Datetime.to_string(datetime.now() - relativedelta(seconds=10))
         call_counter = self.env["mail.link.preview"].search_count(
             [("source_url", "ilike", domain), ("create_date", ">", date_interval)]
         )

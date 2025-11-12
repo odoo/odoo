@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
-import pytz
-
 from collections import defaultdict
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, UTC
 from textwrap import dedent
+from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -13,7 +12,6 @@ from odoo.fields import Domain
 from odoo.tools import float_round
 
 from odoo.addons.base.models.res_partner import _tz_get
-
 
 WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 CRON_DEPENDS = {'name', 'active', 'send_by', 'automatic_email_time', 'moment', 'tz'}
@@ -130,9 +128,7 @@ class LunchSupplier(models.Model):
         for supplier in self:
             supplier = supplier.with_context(tz=supplier.tz)
 
-            sendat_tz = pytz.timezone(supplier.tz).localize(datetime.combine(
-                fields.Date.context_today(supplier),
-                float_to_time(supplier.automatic_email_time, supplier.moment)))
+            sendat_tz = datetime.combine(fields.Date.context_today(supplier), float_to_time(supplier.automatic_email_time, supplier.moment), tzinfo=ZoneInfo(supplier.tz))
             cron = supplier.cron_id.sudo()
             lc = cron.lastcall
             if ((
@@ -141,7 +137,7 @@ class LunchSupplier(models.Model):
                 not lc and sendat_tz <= fields.Datetime.context_timestamp(supplier, fields.Datetime.now())
             )):
                 sendat_tz += timedelta(days=1)
-            sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
+            sendat_utc = sendat_tz.astimezone(UTC).replace(tzinfo=None)
 
             cron.active = supplier.active and supplier.send_by == 'mail'
             cron.name = f"Lunch: send automatic email to {supplier.name}"
@@ -294,10 +290,10 @@ class LunchSupplier(models.Model):
 
     @api.depends('recurrency_end_date', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')
     def _compute_available_today(self):
-        now = fields.Datetime.now().replace(tzinfo=pytz.UTC)
+        now = fields.Datetime.now().replace(tzinfo=UTC)
 
         for supplier in self:
-            supplier_date = now.astimezone(pytz.timezone(supplier.tz))
+            supplier_date = now.astimezone(ZoneInfo(supplier.tz))
             supplier.available_today = supplier._available_on_date(supplier_date)
 
     def _available_on_date(self, date):
@@ -308,14 +304,12 @@ class LunchSupplier(models.Model):
 
     @api.depends('available_today', 'automatic_email_time', 'send_by')
     def _compute_order_deadline_passed(self):
-        now = fields.Datetime.now().replace(tzinfo=pytz.UTC)
+        now = fields.Datetime.now().replace(tzinfo=UTC)
 
         for supplier in self:
             if supplier.send_by == 'mail':
-                now = now.astimezone(pytz.timezone(supplier.tz))
-                email_time = pytz.timezone(supplier.tz).localize(datetime.combine(
-                    fields.Date.context_today(supplier),
-                    float_to_time(supplier.automatic_email_time, supplier.moment)))
+                now = now.astimezone(ZoneInfo(supplier.tz))
+                email_time = datetime.combine(fields.Date.context_today(supplier), float_to_time(supplier.automatic_email_time, supplier.moment), tzinfo=ZoneInfo(supplier.tz))
                 supplier.order_deadline_passed = supplier.available_today and now > email_time
             else:
                 supplier.order_deadline_passed = not supplier.available_today

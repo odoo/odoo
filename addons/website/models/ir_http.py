@@ -2,11 +2,11 @@
 import contextlib
 import functools
 import logging
-from lxml import etree
 import unittest
+from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
 
-import pytz
 import werkzeug
+from lxml import etree
 
 import odoo
 from odoo import api, models, tools
@@ -235,9 +235,9 @@ class IrHttp(models.AbstractModel):
     def _frontend_pre_dispatch(cls):
         super()._frontend_pre_dispatch()
 
-        if not request.env.context.get('tz'):
-            with contextlib.suppress(pytz.UnknownTimeZoneError):
-                request.update_context(tz=pytz.timezone(request.geoip.location.time_zone).zone)
+        if not request.env.context.get('tz') and (tz := request.geoip.location.time_zone):
+            with contextlib.suppress(ZoneInfoNotFoundError):
+                request.update_context(tz=ZoneInfo(tz).key)
 
         website = request.env['website'].get_current_website()
         user = request.env.user

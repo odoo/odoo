@@ -4,11 +4,12 @@ import itertools
 import logging
 import math
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from itertools import repeat
+from zoneinfo import ZoneInfo
+
 from markupsafe import Markup
 
-import pytz
 from werkzeug.urls import url_parse
 
 from odoo import api, fields, models
@@ -1241,8 +1242,7 @@ class CalendarEvent(models.Model):
         deadline = start
         user_tz = self.env.context.get('tz')
         if user_tz and not allday:
-            deadline = pytz.utc.localize(deadline)
-            deadline = deadline.astimezone(pytz.timezone(user_tz))
+            deadline = deadline.replace(tzinfo=UTC).astimezone(ZoneInfo(user_tz))
         return deadline.date()
 
     # ------------------------------------------------------------
@@ -1568,10 +1568,9 @@ class CalendarEvent(models.Model):
         if not self.start:
             return fields.Date.today()
         if self.recurrency and self.event_tz:
-            tz = pytz.timezone(self.event_tz)
             # Ensure that all day events date are not calculated around midnight. TZ shift would potentially return bad date
             start = self.start if not self.allday else self.start.replace(hour=12)
-            return pytz.utc.localize(start).astimezone(tz).date()
+            return start.replace(tzinfo=UTC).astimezone(ZoneInfo(self.event_tz)).date()
         return self.start.date()
 
     def _range(self):
@@ -1595,7 +1594,7 @@ class CalendarEvent(models.Model):
             if idate:
                 if allday:
                     return idate
-                return idate.replace(tzinfo=pytz.timezone('UTC'))
+                return idate.replace(tzinfo=ZoneInfo("UTC"))
             return False
 
         if not vobject:

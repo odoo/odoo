@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import datetime
 import logging
 from contextlib import contextmanager
 from functools import wraps
-import pytz
-from dateutil.parser import parse
 from datetime import timedelta
+
+from dateutil.parser import parse
 
 from odoo import api, fields, models
 from odoo.fields import Domain
@@ -320,7 +320,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 odoo_event = self.browse(mevent.odoo_id(self.env)).exists()
 
             if odoo_event:
-                odoo_event_updated_time = pytz.utc.localize(odoo_event.write_date)
+                odoo_event_updated_time = odoo_event.write_date.replace(tzinfo=datetime.UTC)
                 ms_event_updated_time = parse(mevent.lastModifiedDateTime)
 
                 # If the update comes from an old event/recurrence, check if time diff between updates is reasonable.

@@ -1,8 +1,7 @@
 from collections import defaultdict
-from datetime import datetime, time
+from datetime import datetime, time, UTC
 
 from dateutil.relativedelta import relativedelta
-from pytz import UTC
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -654,7 +653,7 @@ class PurchaseOrderLine(models.Model):
         """Return a datetime which is the noon of the input date(time) according
         to order user's time zone, convert to UTC time.
         """
-        return self.order_id.get_order_timezone().localize(datetime.combine(date, time(12))).astimezone(UTC).replace(tzinfo=None)
+        return datetime.combine(date, time(12), tzinfo=self.order_id.get_order_timezone()).astimezone(UTC).replace(tzinfo=None)
 
     @api.model
     def _date_in_the_past(self):

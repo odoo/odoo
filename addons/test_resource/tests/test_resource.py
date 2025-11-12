@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-
-from pytz import utc
+from datetime import datetime, UTC
 
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
@@ -17,12 +15,12 @@ class TestResource(TestResourceCommon):
 
     def test_calendars_validity_within_period(self):
         calendars = self.jean.resource_id._get_calendars_validity_within_period(
-            utc.localize(datetime(2021, 7, 1, 8, 0, 0)),
-            utc.localize(datetime(2021, 7, 30, 17, 0, 0)),
+            datetime(2021, 7, 1, 8, 0, 0).replace(tzinfo=UTC),
+            datetime(2021, 7, 30, 17, 0, 0).replace(tzinfo=UTC),
         )
         interval = Intervals([(
-            utc.localize(datetime(2021, 7, 1, 8, 0, 0)),
-            utc.localize(datetime(2021, 7, 30, 17, 0, 0)),
+            datetime(2021, 7, 1, 8, 0, 0).replace(tzinfo=UTC),
+            datetime(2021, 7, 30, 17, 0, 0).replace(tzinfo=UTC),
             self.env['resource.calendar.attendance'],
         )])
 
@@ -35,8 +33,8 @@ class TestResource(TestResourceCommon):
         self.assertFalse(interval - jean_entry[jean_calendar], "Calendar validity should cover all interval")
 
         calendars = self.env['resource.resource']._get_calendars_validity_within_period(
-            utc.localize(datetime(2021, 7, 1, 8, 0, 0)),
-            utc.localize(datetime(2021, 7, 30, 17, 0, 0)),
+            datetime(2021, 7, 1, 8, 0, 0).replace(tzinfo=UTC),
+            datetime(2021, 7, 30, 17, 0, 0).replace(tzinfo=UTC),
         )
         self.assertEqual(1, len(calendars), "The dict returned by calendars validity should only have 1 entry")
         self.assertEqual(1, len(calendars[False]), "False (default) should only have one calendar")
@@ -54,24 +52,24 @@ class TestResource(TestResourceCommon):
             'resource_calendar_id': calendars[i % calendars_len].id,
         } for i in range(0, 50)])
 
-        start = utc.localize(datetime(2021, 7, 7, 12, 0, 0))
-        end = utc.localize(datetime(2021, 7, 16, 23, 59, 59))
+        start = datetime(2021, 7, 7, 12, 0, 0).replace(tzinfo=UTC)
+        end = datetime(2021, 7, 16, 23, 59, 59).replace(tzinfo=UTC)
         with self.assertQueryCount(13):
             work_intervals, _ = self.resources_test.resource_id._get_valid_work_intervals(start, end)
 
         self.assertEqual(len(work_intervals), 50)
 
     def test_get_valid_work_intervals(self):
-        start = utc.localize(datetime(2021, 7, 7, 12, 0, 0))
-        end = utc.localize(datetime(2021, 7, 16, 23, 59, 59))
+        start = datetime(2021, 7, 7, 12, 0, 0).replace(tzinfo=UTC)
+        end = datetime(2021, 7, 16, 23, 59, 59).replace(tzinfo=UTC)
         work_intervals, _ = self.jean.resource_id._get_valid_work_intervals(start, end)
         sum_work_intervals = sum_intervals(work_intervals[self.jean.resource_id.id])
         self.assertEqual(58, sum_work_intervals, "Sum of the work intervals for the resource jean should be 40h+18h = 58h")
 
     def test_get_valid_work_intervals_calendars_only(self):
         calendars = [self.calendar_jean, self.calendar_john, self.calendar_jules, self.calendar_patel]
-        start = utc.localize(datetime(2021, 7, 7, 12, 0, 0))
-        end = utc.localize(datetime(2021, 7, 16, 23, 59, 59))
+        start = datetime(2021, 7, 7, 12, 0, 0).replace(tzinfo=UTC)
+        end = datetime(2021, 7, 16, 23, 59, 59).replace(tzinfo=UTC)
         _, calendars_intervals = self.env['resource.resource']._get_valid_work_intervals(start, end, calendars)
         sum_work_intervals_jean = sum_intervals(calendars_intervals[self.calendar_jean.id])
         self.assertEqual(58, sum_work_intervals_jean, "Sum of the work intervals for the calendar of jean should be 40h+18h = 58h")

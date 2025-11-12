@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from freezegun import freeze_time
 from lxml import etree
-from pytz import timezone
-from odoo import Command
 
+from odoo import Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.tests import tagged
 from odoo.tools import misc
@@ -75,7 +75,7 @@ class TestEdiZatca(TestSaEdiCommon):
             test_file_path='l10n_sa_edi/tests/compliance/simplified/credit.xml',
             expected_xpath=self.credit_note_applied_xpath,
             move_data=move_data,
-            freeze_time_at=datetime(2023, 3, 10, 14, 59, 38, tzinfo=timezone('Etc/GMT-3'))
+            freeze_time_at=datetime(2023, 3, 10, 14, 59, 38, tzinfo=ZoneInfo('Etc/GMT-3'))
         )
 
     def testCreditNoteStandard(self):
@@ -103,7 +103,7 @@ class TestEdiZatca(TestSaEdiCommon):
             test_file_path='l10n_sa_edi/tests/compliance/standard/credit.xml',
             expected_xpath=self.credit_note_applied_xpath,
             move_data=move_data,
-            freeze_time_at=datetime(2022, 9, 5, 9, 39, 15, tzinfo=timezone('Etc/GMT-3')),
+            freeze_time_at=datetime(2022, 9, 5, 9, 39, 15, tzinfo=ZoneInfo('Etc/GMT-3')),
             additional_xpath=additional_xpath
         )
 
@@ -127,7 +127,7 @@ class TestEdiZatca(TestSaEdiCommon):
             test_file_path='l10n_sa_edi/tests/compliance/simplified/debit.xml',
             expected_xpath=self.debit_note_applied_xpath,
             move_data=move_data,
-            freeze_time_at=datetime(2023, 3, 10, 15, 1, 46, tzinfo=timezone('Etc/GMT-3'))
+            freeze_time_at=datetime(2023, 3, 10, 15, 1, 46, tzinfo=ZoneInfo('Etc/GMT-3'))
         )
 
     def testDebitNoteStandard(self):
@@ -155,7 +155,7 @@ class TestEdiZatca(TestSaEdiCommon):
             test_file_path='l10n_sa_edi/tests/compliance/standard/debit.xml',
             expected_xpath=self.debit_note_applied_xpath,
             move_data=move_data,
-            freeze_time_at=datetime(2022, 9, 5, 9, 45, 27, tzinfo=timezone('Etc/GMT-3')),
+            freeze_time_at=datetime(2022, 9, 5, 9, 45, 27, tzinfo=ZoneInfo('Etc/GMT-3')),
             additional_xpath=additional_xpath
         )
 
@@ -179,7 +179,7 @@ class TestEdiZatca(TestSaEdiCommon):
             test_file_path='l10n_sa_edi/tests/compliance/simplified/invoice.xml',
             expected_xpath=self.invoice_applied_xpath,
             move_data=move_data,
-            freeze_time_at=datetime(2023, 3, 10, 14, 56, 55, tzinfo=timezone('Etc/GMT-3'))
+            freeze_time_at=datetime(2023, 3, 10, 14, 56, 55, tzinfo=ZoneInfo('Etc/GMT-3'))
         )
 
     def testInvoiceStandard(self):
@@ -201,7 +201,7 @@ class TestEdiZatca(TestSaEdiCommon):
             test_file_path='l10n_sa_edi/tests/compliance/standard/invoice.xml',
             expected_xpath=self.invoice_applied_xpath,
             move_data=move_data,
-            freeze_time_at=datetime(2022, 9, 5, 8, 20, 2, tzinfo=timezone('Etc/GMT-3'))
+            freeze_time_at=datetime(2022, 9, 5, 8, 20, 2, tzinfo=ZoneInfo('Etc/GMT-3'))
         )
 
     def testInvoiceWithDownpayment(self):
@@ -210,7 +210,7 @@ class TestEdiZatca(TestSaEdiCommon):
             self.skipTest("Sale module is not installed")
         self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
 
-        freeze = datetime(2022, 9, 5, 8, 20, 2, tzinfo=timezone('Etc/GMT-3'))
+        freeze = datetime(2022, 9, 5, 8, 20, 2, tzinfo=ZoneInfo('Etc/GMT-3'))
 
         # Helper to test generated files
         saudi_pricelist = self.env['product.pricelist'].create({
@@ -325,7 +325,7 @@ class TestEdiZatca(TestSaEdiCommon):
             test_file_path='l10n_sa_edi/tests/compliance/standard/invoice.xml',
             expected_xpath=self.invoice_applied_xpath,
             move_data=move_data,
-            freeze_time_at=datetime(2022, 9, 5, 8, 20, 2, tzinfo=timezone('Etc/GMT-3'))
+            freeze_time_at=datetime(2022, 9, 5, 8, 20, 2, tzinfo=ZoneInfo('Etc/GMT-3'))
         )
 
     def testCompanyOnSimplifiedInvoiceQR(self):

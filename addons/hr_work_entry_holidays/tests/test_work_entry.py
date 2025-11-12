@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
-import pytz
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
@@ -17,7 +18,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
     @classmethod
     def setUpClass(cls):
         super(TestWorkeEntryHolidaysWorkEntry, cls).setUpClass()
-        cls.tz = pytz.timezone(cls.richard_emp.tz)
+        cls.tz = ZoneInfo(cls.richard_emp.tz)
         cls.start = datetime(2015, 11, 1, 1, 0, 0)
         cls.end = datetime(2015, 11, 30, 23, 59, 59)
         cls.resource_calendar_id = cls.env['resource.calendar'].create({'name': 'Zboub'})

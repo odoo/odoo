@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import json
 import math
-import pytz
 from ast import literal_eval
-from datetime import date, timedelta
+from datetime import date, timedelta, UTC
 from collections import defaultdict
 
 from odoo import _, api, fields, models
@@ -1804,16 +1802,16 @@ class StockPicking(models.Model):
         date_category = ""
 
         if datetime:
-            datetime = datetime.astimezone(pytz.UTC)
+            datetime = datetime.astimezone(UTC)
             if datetime < start_yesterday:
                 date_category = "before"
-            elif datetime >= start_yesterday and datetime < start_today:
+            elif start_yesterday <= datetime < start_today:
                 date_category = "yesterday"
-            elif datetime >= start_today and datetime < start_day_1:
+            elif start_today <= datetime < start_day_1:
                 date_category = "today"
-            elif datetime >= start_day_1 and datetime < start_day_2:
+            elif start_day_1 <= datetime < start_day_2:
                 date_category = "day_1"
-            elif datetime >= start_day_2 and datetime < start_day_3:
+            elif start_day_2 <= datetime < start_day_3:
                 date_category = "day_2"
             else:
                 date_category = "after"
@@ -1847,7 +1845,7 @@ class StockPicking(models.Model):
             self.env.user, fields.Datetime.now()
         ).replace(hour=0, minute=0, second=0, microsecond=0)
 
-        start_today = start_today.astimezone(pytz.UTC).replace(tzinfo=None)
+        start_today = start_today.astimezone(UTC).replace(tzinfo=None)
 
         start_yesterday = start_today + timedelta(days=-1)
         start_day_1 = start_today + timedelta(days=1)
