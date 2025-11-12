@@ -2,14 +2,13 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { constants } = spreadsheet;
-const { PIVOT_TABLE_CONFIG } = constants;
+const { PIVOT_STATIC_TABLE_CONFIG } = constants;
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
  */
 
 export class ListUIPlugin extends OdooUIPlugin {
-
     /**
      * Handle a spreadsheet command
      * @param {Object} cmd Command
@@ -33,7 +32,6 @@ export class ListUIPlugin extends OdooUIPlugin {
     // Handlers
     // -------------------------------------------------------------------------
 
-
     _addTable({ sheetId, col, row, linesNumber, columns }) {
         const zone = {
             left: col,
@@ -45,7 +43,7 @@ export class ListUIPlugin extends OdooUIPlugin {
             tableType: "static",
             sheetId,
             ranges: [this.getters.getRangeDataFromZone(sheetId, zone)],
-            config: { ...PIVOT_TABLE_CONFIG, firstColumn: false },
+            config: { ...PIVOT_STATIC_TABLE_CONFIG, firstColumn: false },
         });
     }
 }
