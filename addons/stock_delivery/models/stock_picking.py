@@ -6,7 +6,9 @@ import json
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.addons.web.controllers.utils import clean_action
+
 
 
 class StockPicking(models.Model):
@@ -70,10 +72,52 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
+    def _pre_action_done_hook(self):
+        # Override to force the collection of payment on the final pickings (dest = customer).
+        res = super()._pre_action_done_hook()
+        if res is not True or self.env.context.get('order_ids_to_confirm'):
+            # Super as an action to make first, or we already executed this hook.
+            return res
+
+        # Treat picked moves as validated during confirmation to ensure the amount on delivery is
+        # computed against the quantities about to be validated.
+        prevalidated_self = self.with_context(
+            prevalidated_move_ids=self.move_ids.filtered('picked').ids
+        )
+
+        order_ids_to_confirm = (
+            prevalidated_self
+            .filtered_domain(Domain('location_dest_id.usage', '=', 'customer'))
+            .sale_id.filtered('amount_on_delivery')
+            .ids
+        )
+        if order_ids_to_confirm:
+            return (
+                prevalidated_self
+                .with_context(order_ids_to_confirm=order_ids_to_confirm)
+                .env['pay.on.delivery']
+                .create({'order_id': order_ids_to_confirm[0]})
+                ._get_records_action(target='new')
+            )
+        return res
+
+    def _action_done(self):
+        # Override to finish the payment collection flow after the pickings are actually validated.
+        # This ensures that any prior validation (`_pre_action_done_hook`) must pass for the
+        # payments to be collected.
+        res = super()._action_done()
+        order_ids_to_confirm = set(self.env.context.get('order_ids_to_confirm', []))
+        if pickings_to_confirm := (
+            self.filtered(lambda picking: picking.sale_id.id in order_ids_to_confirm)
+        ):
+            pickings_to_confirm._confirm_payment_on_delivery()
+        return res
+
     def button_validate(self):
         res = super().button_validate()
         if res is not True:
             return res
+        # FIXME: this won't run if the next action is to print the picking report
         for picking in self:
             # `_get_new_picking_values` is used to propagate the carrier before a picking is created (i.e. carrier is set on an SO).
             # Whereas this case handles the propagation of carrier after the picking validation as the carrier maybe set
@@ -84,6 +128,68 @@ class StockPicking(models.Model):
                     lambda p: not p.carrier_id and any(rule.propagate_carrier for rule in p.move_ids.rule_id)
                 ).write({'carrier_id': picking.carrier_id.id, 'carrier_tracking_ref': picking.carrier_tracking_ref})
         return res
+
+    def _confirm_payment_on_delivery(self, log_action=True, **kwargs):
+        """Confirm the pending payments of the linked sales orders, and log the action.
+
+        :param bool log_action: Whether to post a message on related records of the confirmed
+            transactions.
+        :param dict kwargs: Arguments forwarded to
+            :meth:`payment.transaction._confirm_payment_on_delivery`.
+        :raises UserError: If a picking is not linked to a sale order.
+        :raises UserError: If an order doesn't have any payment to confirm.
+        :return: The confirmed transactions, sudoed.
+        :rtype: payment.transaction
+        """
+        if no_sale_order := self.filtered(lambda picking: not picking.sale_id):
+            raise UserError(
+                self.env._(
+                    "No sale order is linked to %(pickings)s.",
+                    pickings=", ".join(no_sale_order.mapped('display_name')),
+                )
+            )
+
+        # Orders with at least one remaining picking to process, for which we must keep following up
+        # on the remaining payment.
+        orders_to_followup = self.sale_id.filtered_domain(
+            Domain('picking_ids.state', 'not in', {'done', 'cancel'})
+        )
+        # Orders without any remaining picking to process, for which no further delivery-payment
+        # follow-up is needed.
+        orders_not_to_followup = (self.sale_id - orders_to_followup) | kwargs.pop(
+            'orders_not_to_followup', self.env['sale.order']
+        )
+
+        # Override logging to trace the pickings during which the payment was collected.
+        delivered_txs_sudo = self.sale_id._confirm_payment_on_delivery(
+            log_action=False, orders_not_to_followup=orders_not_to_followup, **kwargs
+        )
+
+        if log_action:
+            self._log_payment_on_delivery(delivered_txs_sudo)
+
+        return delivered_txs_sudo
+
+    def _log_payment_on_delivery(self, delivered_txs_sudo):
+        """Log a message on the pickings and the linked documents of the confirmed transactions with
+        a link to the pickings during which the payment was collected."""
+        delivered_tx_sudo_by_order = delivered_txs_sudo.grouped('sale_order_ids')
+        pickings_by_order = self.grouped('sale_id')
+        for order_sudo in delivered_tx_sudo_by_order.keys() & pickings_by_order.keys():
+            delivered_tx_sudo = delivered_tx_sudo_by_order[order_sudo]
+            pickings = pickings_by_order[order_sudo]
+
+            message = self.env._(
+                "A payment of %(amount_on_delivery)s was collected for %(order)s on the"
+                " delivery of %(pickings)s.",
+                amount_on_delivery=delivered_tx_sudo.currency_id.format(delivered_tx_sudo.amount),
+                order=order_sudo._get_html_link(),
+                pickings=Markup(", ").join(picking._get_html_link() for picking in pickings),
+            )
+
+            delivered_tx_sudo._log_message_on_linked_documents(message)
+            for picking in pickings:
+                picking.message_post(body=message)
 
     def _carrier_exception_note(self, exception):
         self.ensure_one()

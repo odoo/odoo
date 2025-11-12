@@ -35,7 +35,7 @@
                     <field name="link"
                            string="Generate and Copy Payment Link"
                            readonly="1"
-                           disabled="bool(warning_message)"
+                           disabled="not amount or bool(warning_message)"
                            widget="PaymentWizardCopyClipboardButtonField"
                            data-hotkey="q"/>
                     <button string="Close"

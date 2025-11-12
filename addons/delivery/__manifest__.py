@@ -13,6 +13,7 @@ The system is able to add and compute the shipping line.
     "data": [
         "report/ir_actions_report_templates.xml",
         "report/ir_actions_report.xml",
+        "data/account_payment_method_data.xml",
         "data/delivery_data.xml",
         "data/ir_sequence_data.xml",
         "data/mail_template_data.xml",
@@ -31,6 +32,7 @@ The system is able to add and compute the shipping line.
         "wizard/choose_delivery_carrier_views.xml",
         "wizard/delivery_note_line_views.xml",
         "wizard/delivery_note_views.xml",
+        "wizard/pay_on_delivery_views.xml",
     ],
     "demo": ["data/delivery_demo.xml"],
     "assets": {"web.assets_frontend": ["delivery/static/src/**/*"]},
