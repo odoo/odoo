@@ -29,7 +29,10 @@
                              To generate complete electronic invoices, also set a country for this partner.
                         </div>
                         <field name="ubl_cii_format" widget="selection"/>
-                        <field name="peppol_eas" widget="selection"
+                        <field name="peppol_eas_identifier" invisible="1"/>
+                        <field name="peppol_eas"
+                               widget="dynamic_selection"
+                               options="{'available_field': 'peppol_eas_identifier'}"
                                attrs="{'invisible': [('ubl_cii_format', '=', False)]}"/>
                         <field name="peppol_endpoint"
                                attrs="{'invisible': [('ubl_cii_format', '=', False)]}"/>

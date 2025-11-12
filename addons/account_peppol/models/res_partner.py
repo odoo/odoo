@@ -3,16 +3,16 @@
 import contextlib
 import logging
 import re
+from urllib import parse
+
 import requests
 from lxml import etree
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from stdnum.fr import siret
-from urllib import parse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-
-from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
-from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 TIMEOUT = 10
 _logger = logging.getLogger(__name__)
@@ -24,20 +24,20 @@ EAS_MAPPING = {
     'AD': {'9922': 'vat'},
     'AE': {'0235': 'vat'},
     'AL': {'9923': 'vat'},
-    'AT': {'9915': 'vat'},
+    'AT': {'9915': 'vat', '9914': None},
     'AU': {'0151': 'vat'},
     'BA': {'9924': 'vat'},
-    'BE': {'0208': 'company_registry'},
+    'BE': {'0208': 'company_registry', '9925': 'vat'},
     'BG': {'9926': 'vat'},
-    'CH': {'9927': 'vat'},
+    'CH': {'9927': 'vat', '0183': None},
     'CY': {'9928': 'vat'},
     'CZ': {'9929': 'vat'},
-    'DE': {'9930': 'vat'},
-    'DK': {'0184': 'company_registry', '0198': 'vat'},
-    'EE': {'9931': 'vat'},
+    'DE': {'9930': 'vat', '0204': None},
+    'DK': {'0184': 'vat', '0198': 'vat', '0096': None},
+    'EE': {'9931': 'vat', '0191': None},
     'ES': {'9920': 'vat'},
-    'FI': {'0216': None},
-    'FR': {'0009': 'siret', '9957': 'vat'},
+    'FI': {'0216': None, '0213': 'vat', '0037': None},
+    'FR': {'0009': 'siret', '9957': 'vat', '0002': None, '0225': None, '0240': None},
     'SG': {'0195': 'l10n_sg_unique_entity_number'},
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
@@ -45,16 +45,17 @@ EAS_MAPPING = {
     'HU': {'9910': 'l10n_hu_eu_vat'},
     'IE': {'9935': 'vat'},
     'IS': {'0196': 'vat'},
-    'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale'},
-    'JP': {'0221': 'vat'},
+    'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale', '0097': None},
+    'JP': {'0221': 'vat', '0188': None},
     'LI': {'9936': 'vat'},
-    'LT': {'9937': 'vat'},
+    'LT': {'9937': 'vat', '0200': None},
     'LU': {'9938': 'vat'},
     'LV': {'0218': 'company_registry', '9939': 'vat'},
     'MC': {'9940': 'vat'},
     'ME': {'9941': 'vat'},
     'MK': {'9942': 'vat'},
     'MT': {'9943': 'vat'},
+    'MY': {'0230': None},
     # Do not add the vat for NL, since: "[NL-R-003] For suppliers in the Netherlands, the legal entity identifier
     # MUST be either a KVK or OIN number (schemeID 0106 or 0190)" in the Bis 3 rules (in PartyLegalEntity/CompanyID).
     'NL': {'0106': None, '0190': None},
@@ -64,13 +65,118 @@ EAS_MAPPING = {
     'PT': {'9946': 'vat'},
     'RO': {'9947': 'vat'},
     'RS': {'9948': 'vat'},
-    'SE': {'0007': 'company_registry'},
+    'SE': {'0007': 'company_registry', '9955': 'vat'},
     'SI': {'9949': 'vat'},
     'SK': {'9950': 'vat'},
     'SM': {'9951': 'vat'},
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},
+    # DOM-TOM
+    'BL': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Barthélemy
+    'GF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Guiana
+    'GP': {'0009': 'siret', '9957': 'vat', '0002': None},  # Guadeloupe
+    'MF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Martin
+    'MQ': {'0009': 'siret', '9957': 'vat', '0002': None},  # Martinique
+    'NC': {'0009': 'siret', '9957': 'vat', '0002': None},  # New Caledonia
+    'PF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Polynesia
+    'PM': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Pierre and Miquelon
+    'RE': {'0009': 'siret', '9957': 'vat', '0002': None},  # Réunion
+    'TF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Southern and Antarctic Lands
+    'WF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Wallis and Futuna
+    'YT': {'0009': 'siret', '9957': 'vat', '0002': None},  # Mayotte
 }
+
+PEPPOL_EAS_SELECTION = {
+    '9923': 'Albania VAT',
+    '9922': 'Andorra VAT',
+    '0151': 'Australia ABN',
+    '9914': 'Austria UID',
+    '9915': 'Austria VOKZ',
+    '0208': 'Belgian Company Registry',
+    '9925': 'Belgian VAT',
+    '9924': 'Bosnia and Herzegovina VAT',
+    '9926': 'Bulgaria VAT',
+    '9934': 'Croatia VAT',
+    '9928': 'Cyprus VAT',
+    '9929': 'Czech Republic VAT',
+    '0096': 'Denmark P',
+    '0184': 'Denmark CVR',
+    '0198': 'Denmark SE',
+    '0191': 'Estonia Company code',
+    '9931': 'Estonia VAT',
+    '0037': 'Finland LY-tunnus',
+    '0216': 'Finland OVT code',
+    '0213': 'Finland VAT',
+    '0002': 'France SIRENE',
+    '0009': 'France SIRET',
+    '9957': 'France VAT',
+    '0225': 'France FRCTC Electronic Address',
+    '0240': 'France Register of legal persons',
+    '0204': 'Germany Leitweg-ID',
+    '9930': 'Germany VAT',
+    '9933': 'Greece VAT',
+    '9910': 'Hungary VAT',
+    '0196': 'Iceland Kennitala',
+    '9935': 'Ireland VAT',
+    '0211': 'Italia Partita IVA',
+    '0097': 'Italia FTI',
+    '0188': 'Japan SST',
+    '0221': 'Japan IIN',
+    '0218': 'Latvia Unified registration number',
+    '9939': 'Latvia VAT',
+    '9936': 'Liechtenstein VAT',
+    '0200': 'Lithuania JAK',
+    '9937': 'Lithuania VAT',
+    '9938': 'Luxembourg VAT',
+    '9942': 'Macedonia VAT',
+    '0230': 'Malaysia',
+    '9943': 'Malta VAT',
+    '9940': 'Monaco VAT',
+    '9941': 'Montenegro VAT',
+    '0106': 'Netherlands KvK',
+    '0190': 'Netherlands OIN',
+    '9944': 'Netherlands VAT',
+    '0192': 'Norway Org.nr.',
+    '9945': 'Poland VAT',
+    '9946': 'Portugal VAT',
+    '9947': 'Romania VAT',
+    '9948': 'Serbia VAT',
+    '0195': 'Singapore UEN',
+    '9949': 'Slovenia VAT',
+    '9950': 'Slovakia VAT',
+    '9920': 'Spain VAT',
+    '0007': 'Sweden Org.nr.',
+    '9955': 'Sweden VAT',
+    '9927': 'Swiss VAT',
+    '0183': 'Swiss UIDB',
+    '9952': 'Turkey VAT',
+    '0235': 'UAE Tax Identification Number (TIN)',
+    '9932': 'United Kingdom VAT',
+    '9959': 'USA EIN',
+    '0060': 'DUNS Number',
+    '0088': 'EAN Location Code',
+    '0130': 'Directorates of the European Commission',
+    '0135': 'SIA Object Identifiers',
+    '0142': 'SECETI Object Identifiers',
+    '0193': 'UBL.BE party identifier',
+    '0199': 'Legal Entity Identifier (LEI)',
+    '0201': 'Codice Univoco Unità Organizzativa iPA',
+    '0202': 'Indirizzo di Posta Elettronica Certificata',
+    '0209': 'GS1 identification keys',
+    '0210': 'Codice Fiscale',
+    '9913': 'Business Registers Network',
+    '9918': 'S.W.I.F.T',
+    '9919': 'Kennziffer des Unternehmensregisters',
+    '9951': 'San Marino VAT',
+    '9953': 'Vatican VAT',
+    'AN': 'O.F.T.P. (ODETTE File Transfer Protocol)',
+    'AQ': 'X.400 address for mail text',
+    'AS': 'AS2 exchange',
+    'AU': 'File Transfer Protocol',
+    'EM': 'Electronic mail'
+}
+
+INTERNATIONAL_EAS_FIELDS = ['0060', '0088', '0199']
 
 
 class ResPartner(models.Model):
@@ -118,6 +224,7 @@ class ResPartner(models.Model):
         readonly=False,
         tracking=True,
     )
+    peppol_eas_identifier = fields.Char(compute='_compute_peppol_eas_identifier')
     peppol_eas = fields.Selection(  # from 17.0 module `account_edi_ubl_cii`
         string="Peppol e-address (EAS)",
         help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
@@ -126,98 +233,7 @@ class ResPartner(models.Model):
         store=True,
         readonly=False,
         tracking=True,
-        selection=[
-            ('0002', "0002 - System Information et Repertoire des Entreprise et des Etablissements: SIRENE"),
-            ('0007', "0007 - Organisationsnummer (Swedish legal entities)"),
-            ('0009', "0009 - SIRET-CODE"),
-            ('0037', "0037 - LY-tunnus"),
-            ('0060', "0060 - Data Universal Numbering System (D-U-N-S Number)"),
-            ('0088', "0088 - EAN Location Code"),
-            ('0096', "0096 - DANISH CHAMBER OF COMMERCE Scheme (EDIRA compliant)"),
-            ('0097', "0097 - FTI - Ediforum Italia, (EDIRA compliant)"),
-            ('0106', "0106 - Association of Chambers of Commerce and Industry in the Netherlands, (EDIRA compliant)"),
-            ('0130', "0130 - Directorates of the European Commission"),
-            ('0135', "0135 - SIA Object Identifiers"),
-            ('0142', "0142 - SECETI Object Identifiers"),
-            ('0151', "0151 - Australian Business Number (ABN) Scheme"),
-            ('0183', "0183 - Swiss Unique Business Identification Number (UIDB)"),
-            ('0184', "0184 - DIGSTORG"),
-            ('0188', "0188 - Corporate Number of The Social Security and Tax Number System"),
-            ('0190', "0190 - Dutch Originator's Identification Number"),
-            ('0191', "0191 - Centre of Registers and Information Systems of the Ministry of Justice"),
-            ('0192', "0192 - Enhetsregisteret ved Bronnoysundregisterne"),
-            ('0193', "0193 - UBL.BE party identifier"),
-            ('0195', "0195 - Singapore UEN identifier"),
-            ('0196', "0196 - Kennitala - Iceland legal id for individuals and legal entities"),
-            ('0198', "0198 - ERSTORG"),
-            ('0199', "0199 - Legal Entity Identifier (LEI)"),
-            ('0200', "0200 - Legal entity code (Lithuania)"),
-            ('0201', "0201 - Codice Univoco Unità Organizzativa iPA"),
-            ('0202', "0202 - Indirizzo di Posta Elettronica Certificata"),
-            ('0204', "0204 - Leitweg-ID"),
-            ('0208', "0208 - Numero d'entreprise / ondernemingsnummer / Unternehmensnummer"),
-            ('0209', "0209 - GS1 identification keys"),
-            ('0210', "0210 - CODICE FISCALE"),
-            ('0211', "0211 - PARTITA IVA"),
-            ('0212', "0212 - Finnish Organization Identifier"),
-            ('0213', "0213 - Finnish Organization Value Add Tax Identifier"),
-            ('0215', "0215 - Net service ID"),
-            ('0216', "0216 - OVTcode"),
-            ('0218', "0218 - Unified registration number (Latvia)"),
-            ('0221', "0221 - The registered number of the qualified invoice issuer (Japan)"),
-            ('0225', "0225 - FRCTC Electronic Address (France)"),
-            ('0230', "0230 - National e-Invoicing Framework (Malaysia)"),
-            ('0235', "0235 - UAE Tax Identification Number (TIN)"),
-            ('0240', "0240 - Register of legal persons (France)"),
-            ('9901', "9901 - Danish Ministry of the Interior and Health"),
-            ('9910', "9910 - Hungary VAT number"),
-            ('9913', "9913 - Business Registers Network"),
-            ('9914', "9914 - Österreichische Umsatzsteuer-Identifikationsnummer"),
-            ('9915', "9915 - Österreichisches Verwaltungs bzw. Organisationskennzeichen"),
-            ('9918', "9918 - SOCIETY FOR WORLDWIDE INTERBANK FINANCIAL, TELECOMMUNICATION S.W.I.F.T"),
-            ('9919', "9919 - Kennziffer des Unternehmensregisters"),
-            ('9920', "9920 - Agencia Española de Administración Tributaria"),
-            ('9922', "9922 - Andorra VAT number"),
-            ('9923', "9923 - Albania VAT number"),
-            ('9924', "9924 - Bosnia and Herzegovina VAT number"),
-            ('9925', "9925 - Belgium VAT number"),
-            ('9926', "9926 - Bulgaria VAT number"),
-            ('9927', "9927 - Switzerland VAT number"),
-            ('9928', "9928 - Cyprus VAT number"),
-            ('9929', "9929 - Czech Republic VAT number"),
-            ('9930', "9930 - Germany VAT number"),
-            ('9931', "9931 - Estonia VAT number"),
-            ('9932', "9932 - United Kingdom VAT number"),
-            ('9933', "9933 - Greece VAT number"),
-            ('9934', "9934 - Croatia VAT number"),
-            ('9935', "9935 - Ireland VAT number"),
-            ('9936', "9936 - Liechtenstein VAT number"),
-            ('9937', "9937 - Lithuania VAT number"),
-            ('9938', "9938 - Luxemburg VAT number"),
-            ('9939', "9939 - Latvia VAT number"),
-            ('9940', "9940 - Monaco VAT number"),
-            ('9941', "9941 - Montenegro VAT number"),
-            ('9942', "9942 - Macedonia, the former Yugoslav Republic of VAT number"),
-            ('9943', "9943 - Malta VAT number"),
-            ('9944', "9944 - Netherlands VAT number"),
-            ('9945', "9945 - Poland VAT number"),
-            ('9946', "9946 - Portugal VAT number"),
-            ('9947', "9947 - Romania VAT number"),
-            ('9948', "9948 - Serbia VAT number"),
-            ('9949', "9949 - Slovenia VAT number"),
-            ('9950', "9950 - Slovakia VAT number"),
-            ('9951', "9951 - San Marino VAT number"),
-            ('9952', "9952 - Türkiye VAT number"),
-            ('9953', "9953 - Holy See (Vatican City State) VAT number"),
-            ('9955', "9955 - Swedish VAT number"),
-            ('9957', "9957 - French VAT number"),
-            ('9959', "9959 - Employer Identification Number (EIN, USA)"),
-            ('AN', "AN - O.F.T.P. (ODETTE File Transfer Protocol)"),
-            ('AQ', "AQ - X.400 address for mail text"),
-            ('AS', "AS - AS2 exchange"),
-            ('AU', "AU - File Transfer Protocol"),
-            ('EM', "EM - Electronic mail"),
-        ]
+        selection=list(PEPPOL_EAS_SELECTION.items())
     )
 
     @api.constrains('peppol_eas')
@@ -369,6 +385,14 @@ class ResPartner(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends(lambda self: self._peppol_eas_endpoint_depends())
+    def _compute_peppol_eas_identifier(self):
+        for partner in self:
+            country_wise_identifiers = set(INTERNATIONAL_EAS_FIELDS)
+            if partner.country_code and partner.country_code in EAS_MAPPING:
+                country_wise_identifiers.update(EAS_MAPPING[str(partner.country_code)])
+            partner.peppol_eas_identifier = ",".join(country_wise_identifiers)
 
     @api.depends('peppol_eas', 'peppol_endpoint', 'ubl_cii_format')
     def _compute_account_peppol_is_endpoint_valid(self):

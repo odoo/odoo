@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_peppol.models.res_partner import INTERNATIONAL_EAS_FIELDS, EAS_MAPPING
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
-
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
 class ResConfigSettings(models.TransientModel):
@@ -16,6 +16,7 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_account_peppol_edi_user',
     )
     account_peppol_contact_email = fields.Char(related='company_id.account_peppol_contact_email', readonly=False)
+    account_peppol_eas_identifier = fields.Char(compute='_compute_account_peppol_eas_identifier')
     account_peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False)
     account_peppol_edi_identification = fields.Char(related='account_peppol_edi_user.edi_identification')
     account_peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False)
@@ -111,6 +112,14 @@ class ResConfigSettings(models.TransientModel):
             else:
                 config.account_peppol_endpoint_warning = _("The endpoint number might not be correct. "
                                                            "Please check if you entered the right identification number.")
+
+    @api.depends('company_id.country_code')
+    def _compute_account_peppol_eas_identifier(self):
+        for config in self:
+            country_wise_identifiers = set(INTERNATIONAL_EAS_FIELDS)
+            if config.country_code and config.country_code in EAS_MAPPING:
+                country_wise_identifiers.update(EAS_MAPPING[str(config.country_code)])
+            config.account_peppol_eas_identifier = ",".join(country_wise_identifiers)
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

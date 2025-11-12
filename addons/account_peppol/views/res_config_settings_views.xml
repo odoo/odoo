@@ -33,7 +33,10 @@
                                         <label string="Peppol EAS"
                                                for="account_peppol_eas"
                                                class="col-lg-3 o_light_label"/>
-                                        <field name="account_peppol_eas"/>
+                                        <field name="account_peppol_eas_identifier" invisible="1"/>
+                                        <field name="account_peppol_eas"
+                                               widget="dynamic_selection"
+                                               options="{'available_field': 'account_peppol_eas_identifier'}"/>
                                     </div>
                                     <div class="row">
                                         <label string="Peppol Endpoint"
