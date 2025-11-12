@@ -31,7 +31,9 @@ patch(PosStore.prototype, {
             return;
         }
         const sale_order = await this._getSaleOrder(clickedOrderId);
-
+        await this._processSaleOrder(sale_order, selectedOption);
+    },
+    async _processSaleOrder(sale_order, selectedOption) {
         const currentSaleOrigin = this.getOrder()
             .getOrderlines()
             .find((line) => line.sale_order_origin_id)?.sale_order_origin_id;
