@@ -186,7 +186,7 @@ export async function loadImageInfo(el, attachmentSrc = "") {
     }
 
     const srcUrl = new URL(src, docHref);
-    let relativeSrc = srcUrl.pathname;
+    let relativeSrc = decodeURI(srcUrl.pathname);
 
     let match = relativeSrc.match(/\/(?:web_editor|html_editor)\/image_shape\/(\w+\.\w+)/);
     if (el.dataset.shape && match) {
