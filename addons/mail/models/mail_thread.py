@@ -4926,7 +4926,7 @@ class MailThread(models.AbstractModel):
                     etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
                     msg_values["body"] = (
                         # markup: it is considered safe, as coming from html.fragment_fromstring
-                        Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
+                        (tree.text or "") + Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
                     )
                 else:  # body is plain text
                     # keep html if already Markup, otherwise escape
