@@ -976,6 +976,12 @@ class TestAPI(ThreadRecipients):
         self.assertFalse((attachments + new_attachments).exists())
         self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited"></span></p>'))
 
+        ticket_record._message_update_content(
+            message,
+            body=Markup("line1<br>edit<br>line2<br>line3"),
+        )
+        self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited"></span></p>'))
+
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content_check(self):
