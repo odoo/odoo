@@ -82,6 +82,26 @@ registerWebsitePreviewTour(
         clickOnExtraMenuItem({}, true),
         toggleMegaMenu({}),
         {
+            content: "Wait for the mega menu content to appear.",
+            trigger: ":iframe .o_mega_menu",
+        },
+        {
+            content: "Select the mega menu content to view its properties.",
+            trigger: ":iframe .o_mega_menu", // Target the main container of the dropdown
+            run: "click",
+        },
+        // Your original steps will now execute in the correct context.
+        {
+            content: "Toggle the 'Fetch Ecom Categories' switch on.",
+            trigger: "[data-action-id='toggleFetchEcomCategories'] input[type='checkbox']",
+            run: "click",
+        },
+        {
+            content: "Toggle the 'Fetch Ecom Categories' switch off again.",
+            trigger: "[data-action-id='toggleFetchEcomCategories'] input[type='checkbox']",
+            run: "click",
+        },
+        {
             content: "Select the last menu link of the first column",
             trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(6)", // 6th is the last one
             run: "click",
