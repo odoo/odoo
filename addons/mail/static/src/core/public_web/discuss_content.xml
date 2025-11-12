@@ -27,7 +27,7 @@
                     </div>
                     <AutoresizeInput
                         className="'o-mail-DiscussContent-threadName fw-bold flex-shrink-1 py-0 fs-4'"
-                        enabled="thread.is_editable or thread.channel_type === 'chat'"
+                        enabled="thread.is_editable or thread.channel?.channel_type === 'chat'"
                         onValidate.bind="renameThread"
                         value="thread.displayName || ''"
                     />

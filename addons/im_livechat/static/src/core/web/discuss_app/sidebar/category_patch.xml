@@ -26,7 +26,7 @@
 
     <t t-name="im_livechat.LivechatStatusLabelOfThread">
         <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
-        <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
+        <span t-if="livechatThread.channel?.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
             'position-absolute top-0 start-0': env.inDiscussSidebar or env.inChatBubble or env.inNotificationItem,
             'o-livechat-LivechatStatusLabel-Sidebar end-0 bottom-0 rounded-2 border': env.inDiscussSidebar,
             'm-n2 z-1 bg-opacity-100': env.inChatBubble or env.inNotificationItem,

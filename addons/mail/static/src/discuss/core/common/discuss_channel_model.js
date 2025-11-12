@@ -56,6 +56,8 @@ export class DiscussChannel extends Record {
         onDelete: (r) => r?.delete(),
         sort: (m1, m2) => m1.id - m2.id,
     });
+    /** @type {"chat"|"channel"|"group"|"livechat"|"whatsapp"|"ai_chat"|"ai_composer"} */
+    channel_type;
     chatWindow = fields.One("ChatWindow", {
         inverse: "channel",
     });

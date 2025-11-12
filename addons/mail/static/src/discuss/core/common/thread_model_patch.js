@@ -26,8 +26,6 @@ const threadPatch = {
                 return this.model === "discuss.channel" ? this.id : undefined;
             },
         });
-        /** @type {string} */
-        this.channel_type = undefined;
         this.correspondent = fields.One("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
@@ -174,8 +172,8 @@ const threadPatch = {
     /** Equivalent to DiscussChannel._allow_invite_by_email */
     get allow_invite_by_email() {
         return (
-            this.channel_type === "group" ||
-            (this.channel_type === "channel" && !this.group_public_id)
+            this.channel.channel_type === "group" ||
+            (this.channel.channel_type === "channel" && !this.group_public_id)
         );
     },
     get avatarUrl() {
