@@ -99,6 +99,11 @@
             &:hover {
                 --o-bg-opacity: 1;
             }
+
+            &.o_event_hatched:before {
+                content: "\f1db"; // fa-circle-thin
+                color: $body-color;
+            }
         }
     }
 
@@ -657,7 +662,7 @@
             &.o_event_dot {
                 background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
 
-                &:before {
+                &:where(:not(.o_event_hatched)):before {
                     color: var(--o-event-bg, #{$info});
                 }
             }
