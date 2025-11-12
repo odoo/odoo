@@ -11,7 +11,7 @@ import {
 export const sizingY = {
     selector: "section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating",
     exclude:
-        "section:has(> .carousel), .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize",
+        "section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize",
 };
 export const sizingX = {
     selector: ".row > div",

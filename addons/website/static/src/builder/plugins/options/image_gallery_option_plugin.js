@@ -61,9 +61,21 @@ class ImageGalleryOption extends Plugin {
         on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_snippet_dropped_handlers: ({ snippetEl }) => {
-            const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
-            this.addCarouselListener(carousels);
-            this.addUniqueIds(carousels);
+            const galleries = this.document.querySelectorAll(".s_image_gallery");
+            for (const galleryEl of galleries) {
+                const container = this.getContainer(galleryEl);
+                const images = this.getImages(container);
+                const mode = this.getMode(galleryEl);
+                // Use setImages to rebuild the proper structure for the current mode.
+                // For masonry this will dispatch items into columns and initialize DnD.
+                this.setImages(galleryEl, mode, images);
+                // Ensure carousel listeners/ids are in place when rebuilt.
+                const carouselEl = galleryEl.querySelector(".carousel");
+                if (carouselEl) {
+                    this.addCarouselListener([carouselEl]);
+                    this.addUniqueIds([carouselEl]);
+                }
+            }
         },
         on_cloned_handlers: ({ cloneEl }) => {
             const carousels = cloneEl.querySelectorAll(".s_image_gallery .carousel");
@@ -213,7 +225,7 @@ class ImageGalleryOption extends Plugin {
             return img;
         });
 
-        // Add data-index to track original order
+        // Add data-index to track order
         unwrappedImages.forEach((img, index) => {
             img.dataset.imageIndex = index;
         });
@@ -248,6 +260,7 @@ class ImageGalleryOption extends Plugin {
 
         // Initialize drag and drop
         this.initializeDragAndDrop(imageGalleryElement);
+        this.dependencies.history.addStep();
     }
 
     createDraggableWrapper(imageEl) {
@@ -257,6 +270,9 @@ class ImageGalleryOption extends Plugin {
         wrapper.style.cursor = "move";
         wrapper.style.display = "inline-block";
         wrapper.style.width = "100%";
+
+        // Store the image index on the wrapper too
+        wrapper.dataset.imageIndex = imageEl.dataset.imageIndex;
 
         // Create overlay for drag handle
         const overlay = document.createElement("div");
@@ -293,172 +309,106 @@ class ImageGalleryOption extends Plugin {
 
     initializeDragAndDrop(imageGalleryElement) {
         let draggedWrapper = null;
-        // eslint-disable-next-line no-unused-vars
-        let draggedImage = null;
 
         const wrappers = imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper");
 
         wrappers.forEach((wrapper) => {
             const overlay = wrapper.querySelector(".o_masonry_drag_overlay");
-
             overlay.setAttribute("draggable", "true");
 
             overlay.addEventListener("dragstart", (e) => {
                 draggedWrapper = wrapper;
-                draggedImage = wrapper.querySelector("img");
                 wrapper.style.opacity = "0.5";
                 e.dataTransfer.effectAllowed = "move";
-                e.dataTransfer.setData("text/html", wrapper.innerHTML);
-
-                // Show drop zones at all possible positions
-                setTimeout(() => {
-                    const allWrappers = imageGalleryElement.querySelectorAll(
-                        ".o_masonry_image_wrapper"
-                    );
-                    allWrappers.forEach((w, index) => {
-                        if (w !== draggedWrapper) {
-                            // Add drop zone before each wrapper
-                            const dropZoneBefore = document.createElement("div");
-                            dropZoneBefore.classList.add(
-                                "oe_drop_zone",
-                                "oe_insert",
-                                "oe_vertical"
-                            );
-                            dropZoneBefore.style.cssText = "float: none; height: 273.672px;";
-                            dropZoneBefore.dataset.dropPosition = "before";
-                            dropZoneBefore.dataset.targetIndex = index;
-                            w.parentElement.insertBefore(dropZoneBefore, w);
-                        }
-                    });
-
-                    // Add drop zone after the last wrapper
-                    const lastWrapper = allWrappers[allWrappers.length - 1];
-                    if (lastWrapper && lastWrapper !== draggedWrapper) {
-                        const dropZoneAfter = document.createElement("div");
-                        dropZoneAfter.classList.add("oe_drop_zone", "oe_insert", "oe_vertical");
-                        dropZoneAfter.style.cssText = "float: none; height: 273.672px;";
-                        dropZoneAfter.dataset.dropPosition = "after";
-                        dropZoneAfter.dataset.targetIndex = allWrappers.length - 1;
-                        lastWrapper.parentElement.insertBefore(
-                            dropZoneAfter,
-                            lastWrapper.nextSibling
-                        );
-                    }
-                }, 0);
+                e.dataTransfer.setData("text/plain", wrapper.dataset.imageIndex);
             });
 
             overlay.addEventListener("dragend", (e) => {
                 wrapper.style.opacity = "1";
                 draggedWrapper = null;
-                draggedImage = null;
-
-                // Remove all drop zones
-                imageGalleryElement.querySelectorAll(".oe_drop_zone").forEach((dz) => dz.remove());
             });
 
+            // Allow dropping on other wrappers
             wrapper.addEventListener("dragover", (e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = "move";
 
+                // Visual feedback - highlight the target
                 if (draggedWrapper && wrapper !== draggedWrapper) {
-                    // Remove existing drop zones
-                    imageGalleryElement
-                        .querySelectorAll(".oe_drop_zone")
-                        .forEach((dz) => dz.remove());
-
-                    const rect = wrapper.getBoundingClientRect();
-                    const midpoint = rect.top + rect.height / 2;
-
-                    // Create drop zone
-                    const dropZone = document.createElement("div");
-                    dropZone.classList.add("oe_drop_zone", "oe_insert", "oe_vertical");
-                    dropZone.style.cssText = "float: none; height: 273.672px;";
-
-                    if (e.clientY < midpoint) {
-                        wrapper.parentElement.insertBefore(dropZone, wrapper);
-                    } else {
-                        wrapper.parentElement.insertBefore(dropZone, wrapper.nextSibling);
-                    }
+                    wrapper.style.outline = "3px solid #007bff";
                 }
-
-                return false;
             });
 
             wrapper.addEventListener("dragleave", (e) => {
-                // Check if we're leaving the wrapper entirely (not just entering a child)
-                const relatedTarget = e.relatedTarget;
-                if (!wrapper.contains(relatedTarget)) {
-                    imageGalleryElement
-                        .querySelectorAll(".oe_drop_zone")
-                        .forEach((dz) => dz.remove());
-                }
+                wrapper.style.outline = "";
             });
 
             wrapper.addEventListener("drop", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                wrapper.style.outline = "";
 
-                // Remove all drop zones
-                imageGalleryElement.querySelectorAll(".oe_drop_zone").forEach((dz) => dz.remove());
-
-                if (draggedWrapper && wrapper !== draggedWrapper) {
-                    // Get all wrappers in current DOM order
-                    const allWrappers = Array.from(
-                        imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper")
-                    );
-
-                    // Find indices in the flat array
-                    const draggedIdx = allWrappers.indexOf(draggedWrapper);
-                    const targetIdx = allWrappers.indexOf(wrapper);
-
-                    // Swap the wrappers in the array
-                    if (draggedIdx !== -1 && targetIdx !== -1) {
-                        // Remove dragged item
-                        allWrappers.splice(draggedIdx, 1);
-                        // Insert at new position
-                        allWrappers.splice(targetIdx, 0, draggedWrapper);
-
-                        // Extract images from wrappers and rebuild
-                        const reorderedImages = allWrappers.map((w) => {
-                            const img = w.querySelector("img");
-                            // Remove wrapper to get clean image
-                            w.replaceChildren();
-                            return img;
-                        });
-
-                        // Update indices
-                        reorderedImages.forEach((img, index) => {
-                            img.dataset.imageIndex = index;
-                        });
-
-                        // Rebuild masonry with new order
-                        this.masonry(imageGalleryElement, reorderedImages);
-                    }
+                if (!draggedWrapper || wrapper === draggedWrapper) {
+                    return;
                 }
 
-                return false;
+                // Get indices
+                const draggedIndex = parseInt(draggedWrapper.dataset.imageIndex);
+                const targetIndex = parseInt(wrapper.dataset.imageIndex);
+
+                console.log(`Swapping image ${draggedIndex} with image ${targetIndex}`);
+
+                // Get all images in order by their data-index
+                const allWrappers = Array.from(
+                    imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper")
+                );
+
+                // Sort by current index to get ordered array
+                allWrappers.sort(
+                    (a, b) => parseInt(a.dataset.imageIndex) - parseInt(b.dataset.imageIndex)
+                );
+
+                // Swap the two items in the array
+                const draggedPos = allWrappers.findIndex(
+                    (w) => parseInt(w.dataset.imageIndex) === draggedIndex
+                );
+                const targetPos = allWrappers.findIndex(
+                    (w) => parseInt(w.dataset.imageIndex) === targetIndex
+                );
+
+                if (draggedPos !== -1 && targetPos !== -1) {
+                    // Swap in array
+                    [allWrappers[draggedPos], allWrappers[targetPos]] = [
+                        allWrappers[targetPos],
+                        allWrappers[draggedPos],
+                    ];
+
+                    // Extract images from wrappers
+                    const reorderedImages = allWrappers.map((w) => {
+                        const img = w.querySelector("img");
+                        w.replaceChildren();
+                        return img;
+                    });
+
+                    // Update indices to match new order
+                    reorderedImages.forEach((img, index) => {
+                        img.dataset.imageIndex = index;
+                    });
+
+                    // Rebuild masonry with swapped order
+                    this.masonry(imageGalleryElement, reorderedImages);
+                }
             });
         });
     }
 
     // Helper method to get current image order
     getImageOrder(imageGalleryElement) {
-        const wrappers = imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper");
-        return Array.from(wrappers).map((wrapper) => {
-            const img = wrapper.querySelector("img");
-            return parseInt(img.dataset.imageIndex);
-        });
-    }
-
-    // Helper method to save order (you'll need to implement the backend call)
-    saveImageOrder(imageGalleryElement) {
-        const order = this.getImageOrder(imageGalleryElement);
-        console.log("New image order:", order);
-        // TODO: Send order to backend
-        // this.rpc('/web/dataset/resequence', {
-        //     model: 'ir.attachment',
-        //     ids: order,
-        // });
+        const images = Array.from(
+            imageGalleryElement.querySelectorAll(".o_masonry_image_wrapper img")
+        );
+        // Sort by current visual order and return indices
+        return images.map((img) => parseInt(img.dataset.imageIndex));
     }
 
     /**
