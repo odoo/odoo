@@ -12,7 +12,9 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 patch(PosStore.prototype, {
     async onClickSaleOrder(clickedOrderId) {
         const sale_order = await this._getSaleOrder(clickedOrderId);
-
+        await this._processSaleOrder(sale_order);
+    },
+    async _processSaleOrder(sale_order) {
         const currentSaleOrigin = this.getOrder()
             .getOrderlines()
             .find((line) => line.sale_order_origin_id)?.sale_order_origin_id;
