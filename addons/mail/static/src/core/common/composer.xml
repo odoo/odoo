@@ -206,7 +206,7 @@
     <t t-name="mail.Composer.suggestionRole">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-esc="option.label"/>
         <em class="text-600 text-truncate align-self-center">
-            <t t-if="option.thread?.channel_type === 'channel'">Notify users with this role who have permission to view this channel</t>
+            <t t-if="option.thread?.channel?.channel_type === 'channel'">Notify users with this role who have permission to view this channel</t>
             <t t-else="">Notify users with this role</t>
         </em>
     </t>
