@@ -926,10 +926,15 @@ class SaleOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_order_line(self):
         for index, line in enumerate(self.order_line):
-            if line.product_type != 'combo':
-                continue
             combo_item_lines = line._get_linked_lines().filtered('combo_item_id')
-            if line.selected_combo_items:
+            if line.product_template_id.type != 'combo':
+                if combo_item_lines:
+                    # Delete any linked combo item lines if the line's product is no longer a combo
+                    # product.
+                    self.order_line = [
+                        Command.delete(linked_line.id) for linked_line in combo_item_lines
+                    ]
+            elif line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
                 if (
                     selected_combo_items
@@ -971,7 +976,11 @@ class SaleOrder(models.Model):
                 # Clear `selected_combo_items` to avoid applying the same changes multiple times.
                 line.selected_combo_items = False
                 self.order_line = delete_commands + create_commands + update_commands
-            elif combo_item_lines:
+            elif (
+                combo_item_lines
+                # Only update the combo item lines if the line's combo choices haven't changed.
+                and combo_item_lines.combo_item_id.combo_id == line.product_template_id.combo_ids
+            ):
                 combo_item_lines.update({
                     'product_uom_qty': line.product_uom_qty,
                     'discount': line.discount,
