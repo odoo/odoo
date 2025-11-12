@@ -208,6 +208,7 @@ test("Dragging an inner content from the sidebar in mobile view should not make 
     expect(".o_website_preview").toHaveClass("o_is_mobile");
     dragUtils = await contains("#snippet_content [name='Alert'] .o_snippet_thumbnail").drag();
     expect(":iframe .oe_grid_zone").toHaveCount(0);
+    await dragUtils.cancel();
 });
 
 test("Dragging an inner content from the page should not make grid dropzones appear", async () => {
@@ -231,6 +232,7 @@ test("Dragging an inner content from the page should not make grid dropzones app
     // Check in mobile view.
     await contains(".o-snippets-top-actions [data-action='mobile']").click();
     expect(".o_website_preview").toHaveClass("o_is_mobile");
-    await contains(".o_overlay_options .o_move_handle").drag();
+    const { cancel } = await contains(".o_overlay_options .o_move_handle").drag();
     expect(":iframe .oe_grid_zone").toHaveCount(0);
+    await cancel();
 });
