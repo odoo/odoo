@@ -466,11 +466,11 @@ describe("pos_store.js", () => {
             expect(order.amount_tax).toEqual(2.85);
             expect(order.lines[0].qty).toEqual(3);
             expect(order.lines[0].price_unit).toEqual(3);
-            expect(order.lines[0].price_subtotal).toEqual(3);
+            expect(order.lines[0].price_subtotal).toEqual(9);
             expect(order.lines[0].price_subtotal_incl).toEqual(10.35);
             expect(order.lines[1].qty).toEqual(2);
             expect(order.lines[1].price_unit).toEqual(3);
-            expect(order.lines[1].price_subtotal).toEqual(3);
+            expect(order.lines[1].price_subtotal).toEqual(6);
             expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
 
             order.is_refund = true;
@@ -481,11 +481,11 @@ describe("pos_store.js", () => {
             expect(order.amount_tax).toEqual(-2.85);
             expect(order.lines[0].qty).toEqual(-3);
             expect(order.lines[0].price_unit).toEqual(3);
-            expect(order.lines[0].price_subtotal).toEqual(3);
+            expect(order.lines[0].price_subtotal).toEqual(9);
             expect(order.lines[0].price_subtotal_incl).toEqual(10.35);
             expect(order.lines[1].qty).toEqual(-2);
             expect(order.lines[1].price_unit).toEqual(3);
-            expect(order.lines[1].price_subtotal).toEqual(3);
+            expect(order.lines[1].price_subtotal).toEqual(6);
             expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
         });
     });
