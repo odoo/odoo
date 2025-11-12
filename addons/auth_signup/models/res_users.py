@@ -250,7 +250,7 @@ class ResUsers(models.Model):
         email_template = self.env.ref('auth_signup.mail_template_data_unregistered_users', raise_if_not_found=False)
         if not email_template:
             _logger.warning("Template 'auth_signup.mail_template_data_unregistered_users' was not found. Cannot send reminder notifications.")
-            self.env['ir.cron']._commit_progress(deactivate=True)
+            self.env['ir.cron']._notify_progress(deactivate=True)
             return
         datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
         datetime_max = datetime_min + relativedelta(days=1)

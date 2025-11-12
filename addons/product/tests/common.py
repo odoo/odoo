@@ -14,7 +14,6 @@ class ProductCommon(
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         cls.product_category = cls.env['product.category'].create({
             'name': 'Test Category',
         })
