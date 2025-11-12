@@ -204,13 +204,20 @@ export class SuggestionService {
             // would be notified to the mentioned partner, so this prevents
             // from inadvertently leaking the private message to the
             // mentioned partner.
-            partners = thread.channel_member_ids
-                .map((member) => member.persona)
-                .filter((persona) => persona.type === "partner");
+            const partnersById = new Map(
+                [
+                    ...thread.channel_member_ids,
+                    ...(thread.parent_channel_id?.channel_member_ids ?? []),
+                ]
+                    .map((member) => member.persona)
+                    .filter((persona) => persona.type === "partner")
+                    .map((partner) => [partner.id, partner])
+            );
             if (thread.channel_type === "channel") {
                 const group = (thread.parent_channel_id || thread).group_public_id;
-                partners = new Set([...partners, ...(group?.personas ?? [])]);
+                group.personas.forEach((partner) => partnersById.set(partner.id, partner));
             }
+            partners = Array.from(partnersById.values());
         } else {
             partners = Object.values(this.store.Persona.records).filter((persona) => {
                 if (thread?.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
