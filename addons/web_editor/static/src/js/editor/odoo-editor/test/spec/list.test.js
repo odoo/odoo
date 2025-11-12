@@ -5361,7 +5361,7 @@ describe('List', () => {
                         });
                     });
                     describe('Unordered to checklist', () => {
-                        it('should merge an unordered list into an checklist list', async () => {
+                        it('should merge an unordered list into an checklist list (1)', async () => {
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
                                 contentBefore:
@@ -5373,6 +5373,8 @@ describe('List', () => {
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                             });
+                        });
+                        it('should merge an unordered list into an checklist list (2)', async () => {
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
                                 contentBefore:
@@ -5385,6 +5387,8 @@ describe('List', () => {
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                             });
+                        });
+                        it('should merge an unordered list into an checklist list (3)', async () => {
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
                                 contentBefore:
@@ -5397,6 +5401,8 @@ describe('List', () => {
                                 contentAfter:
                                     '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                             });
+                        });
+                        it('should merge an unordered list into an checklist list (4)', async () => {
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
                                 contentBefore:
