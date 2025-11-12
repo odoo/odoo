@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import pytz
 import logging
+from datetime import datetime, timedelta, UTC
+from textwrap import dedent
+from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
 
 from .lunch_supplier import float_to_time
-from datetime import datetime, timedelta
-from textwrap import dedent
 
 from odoo.addons.base.models.res_partner import _tz_get
 
@@ -92,9 +92,7 @@ class LunchAlert(models.Model):
                 and (not alert.until or fields.Date.context_today(alert) <= alert.until)
             )
 
-            sendat_tz = pytz.timezone(alert.tz).localize(datetime.combine(
-                fields.Date.context_today(alert, fields.Datetime.now()),
-                float_to_time(alert.notification_time, alert.notification_moment)))
+            sendat_tz = datetime.combine(fields.Date.context_today(alert, fields.Datetime.now()), float_to_time(alert.notification_time, alert.notification_moment), tzinfo=ZoneInfo(alert.tz))
             cron = alert.cron_id.sudo()
             lc = cron.lastcall
             if ((
@@ -103,7 +101,7 @@ class LunchAlert(models.Model):
                 not lc and sendat_tz <= fields.Datetime.context_timestamp(alert, fields.Datetime.now())
             )):
                 sendat_tz += timedelta(days=1)
-            sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
+            sendat_utc = sendat_tz.astimezone(UTC).replace(tzinfo=None)
 
             cron.name = f"Lunch: alert chat notification ({alert.name})"
             cron.active = cron_required

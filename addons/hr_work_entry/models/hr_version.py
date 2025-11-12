@@ -2,8 +2,8 @@
 
 import itertools
 from collections import defaultdict
-from datetime import datetime, date, time, timedelta
-import pytz
+from datetime import datetime, date, time, timedelta, UTC
+from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
@@ -71,8 +71,8 @@ class HrVersion(models.Model):
         self.ensure_one()
         for leave in leaves:
             if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
-                interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
-                interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
+                interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
+                interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry.work_entry_type_leave')
 
@@ -109,7 +109,7 @@ class HrVersion(models.Model):
                     start_dt,
                     end_dt,
                     resources=employees.resource_id,
-                    tz=pytz.timezone(calendar.tz) if calendar.tz else pytz.utc
+                    tz=ZoneInfo(calendar.tz) if calendar.tz else UTC
                 ))
         return result
 
@@ -126,7 +126,7 @@ class HrVersion(models.Model):
                 start_dt,
                 end_dt,
                 resources=employees.resource_id,
-                tz=pytz.timezone(calendar.tz),
+                tz=ZoneInfo(calendar.tz),
                 lunch=True,
             ))
         return result
@@ -154,8 +154,8 @@ class HrVersion(models.Model):
             work_entry_type = self._get_interval_work_entry_type(interval)
             # All benefits generated here are using datetimes converted from the employee's timezone
             vals += [dict([
-                      ('date_start', interval[0].astimezone(pytz.utc).replace(tzinfo=None)),
-                      ('date_stop', interval[1].astimezone(pytz.utc).replace(tzinfo=None)),
+                      ('date_start', interval[0].astimezone(UTC).replace(tzinfo=None)),
+                      ('date_stop', interval[1].astimezone(UTC).replace(tzinfo=None)),
                       ('work_entry_type_id', work_entry_type.id),
                       ('employee_id', employee.id),
                       ('version_id', self.id),
@@ -164,8 +164,8 @@ class HrVersion(models.Model):
         return vals
 
     def _get_version_work_entries_values(self, date_start, date_stop):
-        start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
-        end_dt = pytz.utc.localize(date_stop) if not date_stop.tzinfo else date_stop
+        start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
+        end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
         version_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
 
@@ -183,7 +183,7 @@ class HrVersion(models.Model):
             calendar = version.resource_calendar_id
             resource = employee.resource_id
             # if the version is fully flexible, we refer to the employee's timezone
-            tz = pytz.timezone(resource.tz) if version._is_fully_flexible() else pytz.timezone(calendar.tz)
+            tz = ZoneInfo(resource.tz) if version._is_fully_flexible() else ZoneInfo(calendar.tz)
             attendances = attendances_by_resource[resource.id]
 
             # Other calendars: In case the employee has declared time off in another calendar
@@ -196,7 +196,7 @@ class HrVersion(models.Model):
                     # Global time off is not for this calendar, can happen with multiple calendars in self
                     if resource and leave.calendar_id and leave.calendar_id != calendar and not leave.resource_id:
                         continue
-                    tz = tz if tz else pytz.timezone((resource or version).tz)
+                    tz = tz if tz else ZoneInfo((resource or version).tz)
                     if (tz, start_dt) in tz_dates:
                         start = tz_dates[tz, start_dt]
                     else:
@@ -290,8 +290,8 @@ class HrVersion(models.Model):
                 work_entry_type = version._get_interval_leave_work_entry_type(interval, worked_leaves, bypassing_work_entry_type_codes)
                 # All benefits generated here are using datetimes converted from the employee's timezone
                 version_vals += [dict([
-                    ('date_start', interval[0].astimezone(pytz.utc).replace(tzinfo=None)),
-                    ('date_stop', interval[1].astimezone(pytz.utc).replace(tzinfo=None)),
+                    ('date_start', interval[0].astimezone(UTC).replace(tzinfo=None)),
+                    ('date_stop', interval[1].astimezone(UTC).replace(tzinfo=None)),
                     ('work_entry_type_id', work_entry_type.id),
                     ('employee_id', employee.id),
                     ('version_id', version.id),
@@ -315,8 +315,8 @@ class HrVersion(models.Model):
                     if not interval_leaves:
                         # Maybe the computed leave type is not found. In that case, we use all leaves
                         interval_leaves = leaves
-                    interval_start = leave_interval[0].astimezone(pytz.utc).replace(tzinfo=None)
-                    interval_stop = leave_interval[1].astimezone(pytz.utc).replace(tzinfo=None)
+                    interval_start = leave_interval[0].astimezone(UTC).replace(tzinfo=None)
+                    interval_stop = leave_interval[1].astimezone(UTC).replace(tzinfo=None)
                     version_vals += [dict([
                         ('date_start', interval_start),
                         ('date_stop', interval_stop),
@@ -340,10 +340,10 @@ class HrVersion(models.Model):
             for version in self:
                 versions_by_tz[version.resource_calendar_id.tz] += version
             for version_tz, versions in versions_by_tz.items():
-                tz = pytz.timezone(version_tz) if version_tz else pytz.utc
+                tz = ZoneInfo(version_tz) if version_tz else UTC
                 version_vals += versions._get_version_work_entries_values(
-                    tz.localize(date_start),
-                    tz.localize(date_stop))
+                    date_start.replace(tzinfo=tz),
+                    date_stop.replace(tzinfo=tz))
 
         # {version_id: ([dates_start], [dates_stop])}
         mapped_version_dates = defaultdict(lambda: ([], []))
@@ -392,12 +392,11 @@ class HrVersion(models.Model):
                 version.company_id,
                 (version.resource_calendar_id or version.employee_id).tz,
             ] += version
-        utc = pytz.timezone('UTC')
         new_work_entries = self.env['hr.work.entry']
         for (company, version_tz), versions in versions_by_company_tz.items():
-            tz = pytz.timezone(version_tz) if version_tz else utc
-            date_start_tz = tz.localize(date_start).astimezone(utc).replace(tzinfo=None)
-            date_stop_tz = tz.localize(date_stop).astimezone(utc).replace(tzinfo=None)
+            tz = ZoneInfo(version_tz) if version_tz else UTC
+            date_start_tz = date_start.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+            date_stop_tz = date_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
             new_work_entries += versions.with_user(SUPERUSER_ID).with_company(company)._generate_work_entries(
                 date_start_tz, date_stop_tz, force=force)
         return new_work_entries
@@ -420,15 +419,14 @@ class HrVersion(models.Model):
             'date_generated_from': date_start,
             'date_generated_to': date_start,
         })
-        utc = pytz.timezone('UTC')
         for version in self:
             version_tz = (version.resource_calendar_id or version.company_id.resource_calendar_id or version.employee_id).tz
-            tz = pytz.timezone(version_tz) if version_tz else pytz.utc
-            version_start = tz.localize(fields.Datetime.to_datetime(version.date_start)).astimezone(utc).replace(tzinfo=None)
+            tz = ZoneInfo(version_tz) if version_tz else UTC
+            version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
             version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or datetime.max.date()),
                                              datetime.max.time())
             if version.date_end:
-                version_stop = tz.localize(version_stop).astimezone(utc).replace(tzinfo=None)
+                version_stop = version_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
             if date_start > version_stop or date_stop < version_start:
                 continue
             date_start_work_entries = max(date_start, version_start)
@@ -483,7 +481,7 @@ class HrVersion(models.Model):
             tz = version.resource_calendar_id.tz or version.employee_id.resource_calendar_id.tz or version.company_id.resource_calendar_id.tz
             if not tz:
                 raise UserError(_('Missing timezone for work entries generation.'))
-            tz = pytz.timezone(tz)
+            tz = ZoneInfo(tz)
             tz_by_version[version_id] = tz
             return tz
 
@@ -498,8 +496,8 @@ class HrVersion(models.Model):
                 new_vals_list.append(new_vals)
                 continue
 
-            date_start_utc = new_vals['date_start'] if new_vals['date_start'].tzinfo else pytz.UTC.localize(new_vals['date_start'])
-            date_stop_utc = new_vals['date_stop'] if new_vals['date_stop'].tzinfo else pytz.UTC.localize(new_vals['date_stop'])
+            date_start_utc = new_vals['date_start'] if new_vals['date_start'].tzinfo else new_vals['date_start'].replace(tzinfo=UTC)
+            date_stop_utc = new_vals['date_stop'] if new_vals['date_stop'].tzinfo else new_vals['date_stop'].replace(tzinfo=UTC)
 
             tz = _get_tz(new_vals['version_id'])
             local_start = date_start_utc.astimezone(tz)
@@ -508,14 +506,14 @@ class HrVersion(models.Model):
             # Handle multi-local-day spans
             current = local_start + timedelta(microseconds=1) if local_start.time() == datetime.max.time() else local_start
             while current < local_stop:
-                next_local_midnight = tz.localize(datetime.combine(current.date() + timedelta(days=1), time.min) - timedelta(microseconds=1))
+                next_local_midnight = (datetime.combine(current.date() + timedelta(days=1), time.min) - timedelta(microseconds=1)).replace(tzinfo=tz)
                 segment_end = min(local_stop, next_local_midnight)
 
                 partial_vals = new_vals.copy()
 
                 # Convert partial segment back to UTC for consistency
-                partial_vals['date_start'] = current.astimezone(pytz.UTC)
-                partial_vals['date_stop'] = segment_end.astimezone(pytz.UTC)
+                partial_vals['date_start'] = current.astimezone(UTC)
+                partial_vals['date_stop'] = segment_end.astimezone(UTC)
 
                 new_vals_list.append(partial_vals)
 

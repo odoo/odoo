@@ -1,15 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
 import hashlib
-import pytz
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import _, SQL
+from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 
@@ -387,7 +386,7 @@ class WebsiteVisitor(models.Model):
 
     def _get_visitor_timezone(self):
         tz = request.cookies.get('tz') if request else None
-        if tz in pytz.all_timezones:
+        if tz in all_timezones:
             return tz
         elif not self.env.user._is_public():
             return self.env.user.tz

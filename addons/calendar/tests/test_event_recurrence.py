@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
-from datetime import datetime, date
+from datetime import datetime, date, UTC
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
@@ -18,12 +19,11 @@ class TestRecurrentEvents(TransactionCase):
         lang.week_start = '1'  # Monday
 
     def assertEventDates(self, events, dates):
-        events = events.sorted('start')
-        self.assertEqual(len(events), len(dates), "Wrong number of events in the recurrence")
         self.assertTrue(all(events.mapped('active')), "All events should be active")
-        for event, (start, stop) in zip(events, dates):
-            self.assertEqual(event.start, start)
-            self.assertEqual(event.stop, stop)
+        self.assertEqual(
+            dates,
+            [(event.start, event.stop) for event in events.sorted('start')],
+        )
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -225,8 +225,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
 
     def test_ambiguous_dst_time_winter(self):
         """ Test hours stays the same, regardless of DST changes """
-        eastern = pytz.timezone('America/New_York')
-        dt = eastern.localize(datetime(2002, 10, 20, 1, 30, 00)).astimezone(pytz.utc).replace(tzinfo=None)
+        eastern = ZoneInfo('America/New_York')
+        dt = datetime(2002, 10, 20, 1, 30, 00, tzinfo=eastern).astimezone(UTC).replace(tzinfo=None)
         # Next occurence happens at 1:30am on 27th Oct 2002 which happened twice in the America/New_York
         # timezone when the clocks where put back at the end of Daylight Saving Time
         self.event.start = dt
@@ -247,8 +247,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
 
     def test_ambiguous_dst_time_spring(self):
         """ Test hours stays the same, regardless of DST changes """
-        eastern = pytz.timezone('America/New_York')
-        dt = eastern.localize(datetime(2002, 3, 31, 2, 30, 00)).astimezone(pytz.utc).replace(tzinfo=None)
+        eastern = ZoneInfo('America/New_York')
+        dt = datetime(2002, 3, 31, 2, 30, 00, tzinfo=eastern).astimezone(UTC).replace(tzinfo=None)
         # Next occurence happens 2:30am on 7th April 2002 which never happened at all in the
         # America/New_York timezone, as the clocks where put forward at 2:00am skipping the entire hour
         self.event.start = dt
@@ -318,8 +318,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         # In Europe/Brussels: 26 March 2023 from winter to summer (from no DST to DST)
         # We are in the case where we create a recurring event after the time change (there is the DST).
         timezone = 'Europe/Brussels'
-        tz = pytz.timezone(timezone)
-        dt = tz.localize(datetime(2023, 3, 27, 9, 0, 00)).astimezone(pytz.utc).replace(tzinfo=None)
+        tz = ZoneInfo(timezone)
+        dt = datetime(2023, 3, 27, 9, 0, 00, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
         self.event.start = dt
         self.event.stop = dt + relativedelta(hours=1)
 

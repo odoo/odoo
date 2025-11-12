@@ -53,7 +53,6 @@ setup(
         'pyserial',
         'python-dateutil',
         'python-stdnum',
-        'pytz',
         'pyusb >= 1.0.0b1',
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab

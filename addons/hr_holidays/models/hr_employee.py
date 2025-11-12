@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
-from datetime import date, datetime, time, timedelta, timezone
 from collections import defaultdict
+from datetime import date, datetime, time, timedelta, timezone, UTC
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
-import pytz
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -304,7 +304,7 @@ class HrEmployee(models.Model):
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
         self = self._get_contextual_employee()
-        employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz or 'utc')
+        employee_tz = ZoneInfo(self._get_tz() if self else self.env.user.tz or 'UTC')
         public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
         return list(map(lambda bh: {
             'id': -bh.id,
@@ -319,11 +319,11 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_time_off_dashboard_data(self, target_date=None):
-        dashboard_data = {}
-        dashboard_data['has_accrual_allocation'] = self.env['hr.leave.type'].has_accrual_allocation()
-        dashboard_data['allocation_data'] = self.env['hr.leave.type'].get_allocation_data_request(target_date, False)
-        dashboard_data['allocation_request_amount'] = self.get_allocation_requests_amount()
-        return dashboard_data
+        return {
+            'has_accrual_allocation': self.env['hr.leave.type'].has_accrual_allocation(),
+            'allocation_data': self.env['hr.leave.type'].get_allocation_data_request(target_date, False),
+            'allocation_request_amount': self.get_allocation_requests_amount(),
+        }
 
     @api.model
     def get_allocation_requests_amount(self):
@@ -563,7 +563,7 @@ class HrEmployee(models.Model):
                             )
                             duration = leave[leave_duration_field]
                             if leave.date_from != interval_start or leave.date_to != interval_end:
-                                duration_info = employee._get_calendar_attendances(interval_start.replace(tzinfo=pytz.UTC), interval_end.replace(tzinfo=pytz.UTC))
+                                duration_info = employee._get_calendar_attendances(interval_start.replace(tzinfo=UTC), interval_end.replace(tzinfo=UTC))
                                 duration = duration_info['hours' if leave_unit == 'hours' else 'days']
                             max_allowed_duration = min(
                                 duration,

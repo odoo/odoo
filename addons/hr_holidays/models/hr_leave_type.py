@@ -4,10 +4,9 @@
 
 import logging
 import operator as py_operator
-import pytz
-
 from collections import defaultdict
-from datetime import date, datetime, time
+from datetime import date, datetime, time, UTC
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -598,8 +597,8 @@ class HrLeaveType(models.Model):
                 if closest_expiration_date:
                     closest_allocation_expire = format_date(self.env, closest_expiration_date)
                     calendar = employee.resource_calendar_id
-                    start_datetime = datetime.combine(target_date, time.min).replace(tzinfo=pytz.UTC)
-                    end_datetime = datetime.combine(closest_expiration_date, time.max).replace(tzinfo=pytz.UTC)
+                    start_datetime = datetime.combine(target_date, time.min, tzinfo=UTC)
+                    end_datetime = datetime.combine(closest_expiration_date, time.max, tzinfo=UTC)
                     closest_allocation_dict = {}
                     if not calendar:
                         closest_allocation_dict['hours'] = float_round((end_datetime - start_datetime).total_seconds() / 3600, precision_rounding=0.001)

@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import typing
-from datetime import date, datetime, time
-
-import pytz
+from datetime import date, datetime, time, UTC
+from zoneinfo import ZoneInfo
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -89,7 +88,7 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
     def _generic_property_to_sql(ftype: typing.Literal['date', 'datetime'], sql_expr: SQL, property_name: str, model: BaseModel) -> SQL:
         if ftype == 'datetime' and (timezone := model.env.context.get('tz')):
             # only use the timezone from the context
-            if timezone in pytz.all_timezones_set:
+            if timezone in date_utils.all_timezones:
                 sql_expr = SQL("timezone(%s, timezone('UTC', %s))", timezone, sql_expr)
             else:
                 _logger.warning("Grouping in unknown / legacy timezone %r", timezone)
@@ -154,7 +153,7 @@ class Date(BaseDate[date]):
         """
         today = timestamp or datetime.now()
         tz = record.env.tz
-        today_utc = pytz.utc.localize(today, is_dst=False)  # UTC = no DST
+        today_utc = today.replace(tzinfo=UTC)
         today = today_utc.astimezone(tz)
         return today.date()
 
@@ -248,7 +247,7 @@ class Datetime(BaseDate[datetime]):
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
         tz = record.env.tz
-        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False)  # UTC = no DST
+        utc_timestamp = timestamp.replace(tzinfo=UTC)
         timestamp = utc_timestamp.astimezone(tz)
         return timestamp
 
@@ -298,9 +297,9 @@ class Datetime(BaseDate[datetime]):
             dt = self.__get__(record)
             if not dt:
                 return False
-            if (tz := record.env.context.get('tz')) and tz in pytz.all_timezones_set:
+            if (tz := record.env.context.get('tz')) and tz in date_utils.all_timezones:
                 # only use the timezone from the context
-                dt = dt.astimezone(pytz.timezone(tz))
+                dt = dt.astimezone(ZoneInfo(tz))
             return get_property(dt)
 
         return getter

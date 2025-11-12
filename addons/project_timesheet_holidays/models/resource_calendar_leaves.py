@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from pytz import timezone, utc
+from datetime import UTC
+from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, _
 
@@ -56,8 +57,8 @@ class ResourceCalendarLeaves(models.Model):
         cal_attendance_intervals_dict = {}
         for calendar, leaves, resources, date_from_min, date_to_max in leaves_read_group:
             calendar_data = {
-                'date_from': utc.localize(date_from_min),
-                'date_to': utc.localize(date_to_max),
+                'date_from': date_from_min.replace(tzinfo=UTC),
+                'date_to': date_to_max.replace(tzinfo=UTC),
                 'resources': resources,
                 'leaves': leaves,
             }
@@ -75,16 +76,16 @@ class ResourceCalendarLeaves(models.Model):
                 calendar_data = cal_attendance_intervals_dict.get(calendar_id)
                 if calendar_data is None:
                     calendar_data = {
-                        'date_from': utc.localize(date_from_min),
-                        'date_to': utc.localize(date_to_max),
+                        'date_from': date_from_min.replace(tzinfo=UTC),
+                        'date_to': date_to_max.replace(tzinfo=UTC),
                         'resources': resources,
                         'leaves': leaves,
                     }
                     cal_attendance_intervals_dict[calendar_id] = calendar_data
                 else:
                     calendar_data.update(
-                        date_from=min(utc.localize(date_from_min), calendar_data['date_from']),
-                        date_to=max(utc.localize(date_to_max), calendar_data['date_to']),
+                        date_from=min(date_from_min.replace(tzinfo=UTC), calendar_data['date_from']),
+                        date_to=max(date_to_max.replace(tzinfo=UTC), calendar_data['date_to']),
                         resources=resources | calendar_data['resources'],
                         leaves=leaves | calendar_data['leaves'],
                     )
@@ -100,15 +101,15 @@ class ResourceCalendarLeaves(models.Model):
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
                 cal_attendance_intervals_params_entry['resources'],
-                tz=timezone(calendar.tz)
+                tz=ZoneInfo(calendar.tz)
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
                 work_hours_data = work_hours_intervals[leave.resource_id.id]
 
                 for date_from, date_to, _dummy in work_hours_data:
-                    if date_to > utc.localize(leave.date_from) and date_from < utc.localize(leave.date_to):
-                        tmp_start = max(date_from, utc.localize(leave.date_from))
-                        tmp_end = min(date_to, utc.localize(leave.date_to))
+                    if date_to > leave.date_from.replace(tzinfo=UTC) and date_from < leave.date_to.replace(tzinfo=UTC):
+                        tmp_start = max(date_from, leave.date_from.replace(tzinfo=UTC))
+                        tmp_end = min(date_to, leave.date_to.replace(tzinfo=UTC))
                         results[calendar_id][leave.id][tmp_start.date()] += (tmp_end - tmp_start).total_seconds() / 3600
                 results[calendar_id][leave.id] = sorted(results[calendar_id][leave.id].items())
         return results

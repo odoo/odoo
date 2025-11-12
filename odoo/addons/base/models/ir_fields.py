@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import functools
 import itertools
+import json
+from datetime import UTC
 from typing import NamedTuple
-
-import pytz
 
 from odoo import api, Command, fields, models
 from odoo.tools import OrderedSet
@@ -396,9 +395,9 @@ class IrFieldsConverter(models.AbstractModel):
             )
 
         input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
-        dt = input_tz.localize(parsed_value, is_dst=False)
+        dt = parsed_value.replace(tzinfo=input_tz, fold=1)
         # And convert to UTC before reformatting for writing
-        return fields.Datetime.to_string(dt.astimezone(pytz.UTC)), []
+        return fields.Datetime.to_string(dt.astimezone(UTC)), []
 
     @api.model
     def _get_boolean_translations(self, src):
@@ -570,7 +569,7 @@ class IrFieldsConverter(models.AbstractModel):
         skip_record = False
         if self.env.context.get('import_file'):
             import_set_empty_fields = self.env.context.get('import_set_empty_fields') or []
-            field_path = "/".join((self.env.context.get('parent_fields_hierarchy', []) + [field.name]))
+            field_path = "/".join(self.env.context.get('parent_fields_hierarchy', []) + [field.name])
             set_empty = field_path in import_set_empty_fields
             skip_record = field_path in self.env.context.get('import_skip_records', [])
         if id is None and not set_empty and not skip_record:

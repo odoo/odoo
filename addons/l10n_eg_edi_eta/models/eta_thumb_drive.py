@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import datetime
 import hashlib
 import json
-
-import pytz
 
 from asn1crypto import cms, core, x509, algos, tsp
 
@@ -129,7 +128,7 @@ class L10n_Eg_EdiThumbDrive(models.Model):
             cms.CMSAttribute({
                 'type': cms.CMSAttributeType('signing_time'),
                 'values': (
-                cms.Time({'utc_time': core.UTCTime(signing_time.replace(tzinfo=pytz.UTC))}),)
+                cms.Time({'utc_time': core.UTCTime(signing_time.replace(tzinfo=datetime.UTC))}),)
             }),
         ])
 

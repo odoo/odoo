@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from pytz import timezone, utc
-
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, UTC
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields
@@ -13,7 +13,7 @@ from odoo.tools.intervals import _boundaries
 
 
 def _naive_utc(dt):
-    return dt.astimezone(utc).replace(tzinfo=None)
+    return dt.astimezone(UTC).replace(tzinfo=None)
 
 
 def _midnight(date):
@@ -163,15 +163,15 @@ class HrAttendanceOvertimeRule(models.Model):
     def _get_local_time_start(self, date, tz):
         self.ensure_one()
         ret = _midnight(date) + relativedelta(hours=self.timing_start)
-        return _naive_utc(tz.localize(ret))
+        return _naive_utc(ret.replace(tzinfo=tz))
 
     def _get_local_time_stop(self, date, tz):
         self.ensure_one()
         if self.timing_stop == 24:
             ret = datetime.combine(date, datetime.max.time())
-            return _naive_utc(tz.localize(ret))
+            return _naive_utc(ret.replace(tzinfo=tz))
         ret = _midnight(date) + relativedelta(hours=self.timing_stop)
-        return _naive_utc(tz.localize(ret))
+        return _naive_utc(ret.replace(tzinfo=tz))
 
     def _get1_timing_overtime_intervals(self, attendances, version_map):
         self.ensure_one()
@@ -190,7 +190,7 @@ class HrAttendanceOvertimeRule(models.Model):
             for date, day_attendances in attendances.filtered(
                 lambda att: unusual_days.get(att.date.strftime('%Y-%m-%d'), None) == (self.timing_type == 'non_work_days')
             ).grouped('date').items():
-                tz = timezone(version_map[employee][date]._get_tz())
+                tz = ZoneInfo(version_map[employee][date]._get_tz())
                 time_start = self._get_local_time_start(date, tz)
                 time_stop = self._get_local_time_stop(date, tz)
 
@@ -211,7 +211,7 @@ class HrAttendanceOvertimeRule(models.Model):
             resource = attendances.employee_id.resource_id
             # Just use last version for now
             last_version = version_map[employee][max(attendances.mapped('date'))]
-            tz = timezone(last_version._get_tz())
+            tz = ZoneInfo(last_version._get_tz())
             if self.timing_type == 'schedule':
                 work_schedule = self.resource_calendar_id
                 work_intervals = Intervals()
@@ -220,8 +220,8 @@ class HrAttendanceOvertimeRule(models.Model):
                         (_naive_utc(start), _naive_utc(end), records)
                         for (start, end, records)
                         in work_schedule._attendance_intervals_batch(
-                            utc.localize(start_dt),
-                            utc.localize(end_dt),
+                            start_dt.replace(tzinfo=UTC),
+                            end_dt.replace(tzinfo=UTC),
                             resource,
                             tz=tz,
                             lunch=lunch,
@@ -231,8 +231,8 @@ class HrAttendanceOvertimeRule(models.Model):
             elif self.timing_type == 'leave':
                 # TODO: completely untested
                 leave_intervals = last_version.resource_calendar_id._leave_intervals_batch(
-                    utc.localize(start_dt),
-                    utc.localize(end_dt),
+                    start_dt.replace(tzinfo=UTC),
+                    end_dt.replace(tzinfo=UTC),
                     resource,
                     tz=tz,
                 )[resource.id]
@@ -270,8 +270,8 @@ class HrAttendanceOvertimeRule(models.Model):
         date_start = datetime.combine(date_start, datetime.min.time())
         date_end = datetime.combine(date_end, datetime.max.time())
         expected_work_time = version.employee_id._employee_attendance_intervals(
-            utc.localize(date_start),
-            utc.localize(date_end)
+            date_start.replace(tzinfo=UTC),
+            date_end.replace(tzinfo=UTC)
         )
         delta = sum((i[1] - i[0]).total_seconds() for i in expected_work_time)
         expected_hours = delta / 3600.0

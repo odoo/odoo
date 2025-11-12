@@ -1,6 +1,6 @@
 import base64
-import pytz
-from datetime import date, datetime
+from datetime import date, datetime, UTC
+from zoneinfo import ZoneInfo
 
 from odoo import _, api, exceptions, fields, models, modules
 
@@ -438,5 +438,5 @@ class CardCampaign(models.Model):
                     isinstance(result[el], (date, datetime))
                     and (tz := record._mail_get_timezone())
                 ):
-                    result[el] = pytz.utc.localize(result[el]).astimezone(pytz.timezone(tz)).replace(tzinfo=None)
+                    result[el] = result[el].replace(tzinfo=UTC).astimezone(ZoneInfo(tz)).replace(tzinfo=None)
         return result

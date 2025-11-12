@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime, UTC
+
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
-from datetime import datetime
 from odoo.fields import Datetime, Date
 from odoo.tools.misc import format_date
-import pytz
 
 
 def ctx_tz(record, field):
@@ -15,7 +15,7 @@ def ctx_tz(record, field):
     if ctx.get('lang'):
         res_lang = record.env['res.lang']._get_data(code=ctx['lang'])
     if res_lang:
-        timestamp = pytz.utc.localize(timestamp, is_dst=False)
+        timestamp = timestamp.replace(tzinfo=UTC)
         tz = record.env.tz
         return datetime.strftime(timestamp.astimezone(tz), res_lang.date_format + ' ' + res_lang.time_format)
     return Datetime.context_timestamp(record, timestamp)

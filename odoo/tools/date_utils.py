@@ -4,11 +4,13 @@ import calendar
 import math
 import re
 import typing
-from datetime import date, datetime, time, timedelta, tzinfo
+import zoneinfo
+from datetime import date, datetime, time, timedelta, tzinfo, UTC
+from operator import methodcaller
 
-import pytz
 from dateutil.relativedelta import relativedelta, weekdays
 
+from .func import lazy
 from .float_utils import float_round
 
 if typing.TYPE_CHECKING:
@@ -17,7 +19,8 @@ if typing.TYPE_CHECKING:
     from odoo.orm.types import Environment
     D = typing.TypeVar('D', date, datetime)
 
-utc = pytz.utc
+# cache `available_timezones` as it's recomputed on every call
+all_timezones = lazy(zoneinfo.available_timezones)
 
 TRUNCATE_TODAY = relativedelta(microsecond=0, second=0, minute=0, hour=0)
 TRUNCATE_UNIT = {
@@ -81,13 +84,13 @@ def time_to_float(duration: time | timedelta) -> float:
 
 def localized(dt: datetime) -> datetime:
     """ When missing, add tzinfo to a datetime. """
-    return dt if dt.tzinfo else dt.replace(tzinfo=utc)
+    return dt if dt.tzinfo else dt.replace(tzinfo=UTC)
 
 
 def to_timezone(tz: tzinfo | None) -> Callable[[datetime], datetime]:
     """ Get a function converting a datetime to another localized datetime. """
     if tz is None:
-        return lambda dt: dt.astimezone(utc).replace(tzinfo=None)
+        return lambda dt: dt.astimezone(UTC).replace(tzinfo=None)
     return lambda dt: dt.astimezone(tz)
 
 
@@ -196,7 +199,7 @@ def parse_date(value: str, env: Environment) -> date | datetime:
 
     # always return a naive date
     if isinstance(dt, datetime) and dt.tzinfo is not None:
-        dt = dt.astimezone(pytz.utc).replace(tzinfo=None)
+        dt = dt.astimezone(UTC).replace(tzinfo=None)
     return dt
 
 
@@ -384,19 +387,19 @@ def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) 
     post_process = lambda dt: dt  # noqa: E731
     if isinstance(start, datetime) and isinstance(end, datetime):
         are_naive = start.tzinfo is None and end.tzinfo is None
-        are_utc = start.tzinfo == pytz.utc and end.tzinfo == pytz.utc
+        are_utc = start.tzinfo == UTC and end.tzinfo == UTC
 
         # Cases with miscellenous timezone are more complexe because of DST.
         are_others = start.tzinfo and end.tzinfo and not are_utc
 
-        if are_others and start.tzinfo.zone != end.tzinfo.zone:
+        if are_others and start.tzinfo != end.tzinfo:
             raise ValueError("Timezones of start argument and end argument seem inconsistent")
 
         if not are_naive and not are_utc and not are_others:
             raise ValueError("Timezones of start argument and end argument mismatch")
 
         if not are_naive:
-            post_process = start.tzinfo.localize
+            post_process = methodcaller('replace', tzinfo=start.tzinfo)
             start = start.replace(tzinfo=None)
             end = end.replace(tzinfo=None)
 

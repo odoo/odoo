@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, UTC
+from zoneinfo import ZoneInfo
+
 from freezegun import freeze_time
-from pytz import timezone, utc
 
 from odoo import fields
 from odoo.addons.mrp.tests.common import TestMrpCommon
@@ -45,11 +46,11 @@ class TestOee(TestMrpCommon):
         if day.weekday() in (5, 6):
             day -= timedelta(days=2)
 
-        tz = timezone(self.workcenter_1.resource_calendar_id.tz)
+        tz = ZoneInfo(self.workcenter_1.resource_calendar_id.tz)
 
         def time_to_string_utc_datetime(time):
             return fields.Datetime.to_string(
-                tz.localize(datetime.combine(day, time)).astimezone(utc)
+                datetime.combine(day, time, tzinfo=tz).astimezone(UTC)
             )
 
         start_time = time_to_string_utc_datetime(time(10, 43, 22))

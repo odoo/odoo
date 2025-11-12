@@ -15,7 +15,7 @@ This list could be improved for other purposes.
 
 """
 
-import pytz
+import zoneinfo
 
 _tz_mapping = {
     "Africa/Asmera": "Africa/Nairobi",
@@ -119,13 +119,22 @@ _tz_mapping = {
     "Zulu": "Etc/UTC",
 }
 
-original_pytz_timezone = pytz.timezone
+all_timezones = zoneinfo.available_timezones()
+
+
+class ZoneInfo(zoneinfo.ZoneInfo):
+    def __new__(cls, key):
+        if key not in all_timezones and (canonical := _tz_mapping.get(key)):
+            z = super().__new__(cls, canonical)
+        else:
+            z = super().__new__(cls, key)
+        z.no_cache = None
+        z._new_instance = None
+        z.from_file = None
+        z.clear_cache = None
+        z._unpickle = None
+        return z
 
 
 def patch_module():
-    def timezone(name):
-        if name not in pytz.all_timezones_set and name in _tz_mapping:
-            name = _tz_mapping[name]
-        return original_pytz_timezone(name)
-
-    pytz.timezone = timezone
+    zoneinfo.ZoneInfo = ZoneInfo

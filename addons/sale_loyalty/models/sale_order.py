@@ -4,8 +4,7 @@ import itertools
 import random
 from collections import defaultdict
 from functools import partial
-
-from pytz import timezone
+from zoneinfo import ZoneInfo
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -700,7 +699,7 @@ class SaleOrder(models.Model):
         if confirmed_txs_dates:
             # If order is getting confirmed, use the earliest finalized transaction's create date
             tx_date = min(confirmed_txs_dates)
-            return tx_date.astimezone(timezone(order_tz)).date()
+            return tx_date.astimezone(ZoneInfo(order_tz)).date()
         return fields.Date.context_today(self.with_context(tz=order_tz))
 
     def _get_applicable_program_points(self, domain=None):

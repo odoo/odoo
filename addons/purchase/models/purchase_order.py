@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-
+from ast import literal_eval
 from collections import defaultdict
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
-from pytz import timezone
-from ast import literal_eval
 from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
 
@@ -1245,7 +1245,7 @@ class PurchaseOrder(models.Model):
         """ Returns the timezone of the order's user or the company's partner
         or UTC if none of them are set. """
         self.ensure_one()
-        return timezone(self.user_id.tz or self.company_id.partner_id.tz or 'UTC')
+        return ZoneInfo(self.user_id.tz or self.company_id.partner_id.tz or 'UTC')
 
     def _update_date_planned_for_lines(self, updated_dates):
         # create or update the activity

@@ -13,8 +13,10 @@ import os.path
 import pprint
 import re
 import subprocess
+import typing
 import warnings
-from datetime import datetime, timedelta
+import zoneinfo
+from datetime import datetime, timedelta, UTC, tzinfo
 from typing import Literal, Optional
 
 from dateutil.relativedelta import relativedelta
@@ -28,12 +30,19 @@ from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from odoo.exceptions import ValidationError
 
-from .safe_eval import safe_eval, pytz, time
+from .safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
 
 ConvertMode = Literal['init', 'update']
 IdRef = dict[str, int | Literal[False]]
+
+
+class Pytz(typing.NamedTuple):
+    timezone: typing.Callable[[str], zoneinfo.ZoneInfo]
+    utc: tzinfo
+    UTC: tzinfo
+
 
 class ParseError(Exception):
     ...
@@ -49,7 +58,7 @@ def _get_eval_context(self, env, model_str):
                   relativedelta=relativedelta,
                   version=release.major_version,
                   ref=self.id_get,
-                  pytz=pytz)
+                  pytz=Pytz(zoneinfo.ZoneInfo, UTC, UTC))
     if model_str:
         context['obj'] = env[model_str].browse
     return context

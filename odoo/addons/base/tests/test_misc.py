@@ -3,8 +3,7 @@
 import base64
 import datetime
 import os.path
-
-import pytz
+from zoneinfo import ZoneInfo
 
 from odoo.tests.common import tagged, BaseCase, TransactionCase
 from odoo.tools import config, misc, urls
@@ -112,7 +111,7 @@ class TestFormatLangDate(TransactionCase):
 
         # -- test `time`
         time_part = datetime.time(16, 30, 22)
-        time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('America/New_York'))  # 4:30 PM timezoned
+        time_part_tz = datetime.time(16, 30, 22, tzinfo=ZoneInfo('America/New_York'))  # 4:30 PM timezoned
 
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='HH:mm:ss'), '16:30:22')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format="ah:m:ss"), '\u4e0b\u53484:30:22')
@@ -122,7 +121,7 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm'), '\u4e0b\u53484:30')
 
         # Check timezoned time part
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='HH:mm:ss Z'), '16:30:22 -0504')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='HH:mm:ss Z'), '16:30:22 -0500')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='zzzz ah:mm:ss'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
 
         #Check timezone conversion in format_time
@@ -142,7 +141,7 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_date(self.env, date_datetime), '01/01/2017')
 
         # Force London timezone
-        date_datetime = date_datetime.replace(tzinfo=pytz.UTC)
+        date_datetime = date_datetime.replace(tzinfo=datetime.UTC)
         self.assertEqual(misc.format_date(self.env, date_datetime), '12/31/2016', "User's tz must be ignored when tz is specifed in datetime object")
 
 

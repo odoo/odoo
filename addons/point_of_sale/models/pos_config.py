@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime
 from uuid import uuid4
-import pytz
-from collections import defaultdict
 
 from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
 from odoo.http import request
@@ -390,7 +389,6 @@ class PosConfig(models.Model):
     def get_statistics_for_session(self, session):
         self.ensure_one()
         currency = self.currency_id
-        timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
         statistics = {
             'cash': {
                 'raw_opening_cash': session.cash_register_balance_start,
@@ -398,7 +396,7 @@ class PosConfig(models.Model):
             },
             'date': {
                 'is_started': bool(session.start_at),
-                'start_date': session.start_at.astimezone(timezone).strftime('%b %d') if session.start_at else False,
+                'start_date': session.start_at.astimezone(self.env.tz).strftime('%b %d') if session.start_at else False,
             },
             'orders': {
                 'paid': False,

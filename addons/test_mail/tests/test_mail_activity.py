@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from psycopg2 import IntegrityError
+from datetime import date, datetime, timedelta, UTC
 from unittest.mock import patch
 from unittest.mock import DEFAULT
+from zoneinfo import ZoneInfo
 
-import pytz
+from dateutil.relativedelta import relativedelta
+from psycopg2 import IntegrityError
 
 from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -607,8 +607,8 @@ class TestActivityViewHelpers(TestActivityCommon):
             test_record, test_record_2 = self.env['mail.test.activity'].browse(
                 (self.test_record + self.test_record_2).ids
             )
-            now_utc = datetime.now(pytz.UTC)
-            now_user = now_utc.astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
+            now_utc = datetime.now(UTC)
+            now_user = now_utc.astimezone(ZoneInfo(self.env.user.tz or 'UTC'))
             today_user = now_user.date()
 
             for days, user_id in ((-1, self.user_employee_2), (0, self.user_employee), (1, self.user_admin)):

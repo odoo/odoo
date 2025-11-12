@@ -3,8 +3,9 @@
 import base64
 import datetime
 import json
-import pytz
 import urllib.parse
+from zoneinfo import ZoneInfo
+
 import requests
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -17,8 +18,8 @@ TIMEOUT = 20
 
 def transfer_time(time_before):
     ecpay_time = datetime.datetime.strptime(time_before, "%Y-%m-%d %H:%M:%S")
-    ecpay_time = pytz.timezone('Asia/Taipei').localize(ecpay_time)
-    return ecpay_time.astimezone(pytz.UTC).strftime("%Y-%m-%d %H:%M:%S")
+    ecpay_time = ecpay_time.replace(tzinfo=ZoneInfo('Asia/Taipei'))
+    return ecpay_time.astimezone(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def encrypt(data, cipher):

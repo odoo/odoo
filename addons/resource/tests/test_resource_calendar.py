@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import pytz
-from datetime import datetime
+from datetime import datetime, UTC
 
 from odoo.tests.common import tagged, TransactionCase
 
@@ -28,7 +27,6 @@ class TestResourceCalendar(TransactionCase):
             'hour_from': 14,   # 18:00 UTC
             'hour_to': 17,     # 21:00 UTC
         })
-        UTC = pytz.timezone('UTC')
         start_dt = datetime(2025, 6, 4, 18, 0, 0).astimezone(UTC)
         end_dt = datetime(2025, 6, 4, 21, 0, 0).astimezone(UTC)
         result_per_resource_id = calendar._attendance_intervals_batch(
@@ -54,7 +52,6 @@ class TestResourceCalendar(TransactionCase):
             'full_time_required_hours': 7.0,
             'flexible_hours': True,
         })
-        UTC = pytz.timezone('UTC')
         start_dt = datetime(2025, 6, 4, 0, 0, 0).astimezone(UTC)
         end_dt = datetime(2025, 6, 4, 12, 0, 0).astimezone(UTC)
         result_per_resource_id = calendar._attendance_intervals_batch(

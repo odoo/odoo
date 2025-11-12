@@ -3,9 +3,8 @@
 
 import logging
 import time
-import pytz
+from datetime import datetime, UTC
 
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.tests import tagged, TransactionCase, warmup
@@ -31,8 +30,8 @@ class TestResourcePerformance(TransactionCase):
         ])
         with self.assertQueryCount(__system__=1):
             # Generate attendances for a whole year
-            start = pytz.utc.localize(datetime.now() + relativedelta(month=1, day=1))
-            stop = pytz.utc.localize(datetime.now() + relativedelta(month=12, day=31))
+            start = datetime.now(UTC) + relativedelta(month=1, day=1)
+            stop = datetime.now(UTC) + relativedelta(month=12, day=31)
             start_time = time.time()
             calendar._attendance_intervals_batch(start, stop, resources=resources.resource_id)
             _logger.info('Attendance Intervals Batch (100): --- %s seconds ---', time.time() - start_time)

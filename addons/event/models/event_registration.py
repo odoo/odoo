@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import os
-import pytz
+from datetime import UTC
+from zoneinfo import ZoneInfo
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.fields import Domain
@@ -447,8 +448,8 @@ class EventRegistration(models.Model):
 
         is_date_closed_today = False
         if self.date_closed:
-            event_tz = pytz.timezone(self.event_id.date_tz)
-            now = fields.Datetime.now(pytz.UTC).astimezone(event_tz)
+            event_tz = ZoneInfo(self.event_id.date_tz)
+            now = fields.Datetime.now().replace(tzinfo=UTC).astimezone(event_tz)
             closed_date = self.date_closed.astimezone(event_tz)
             is_date_closed_today = now.date() == closed_date.date()
 

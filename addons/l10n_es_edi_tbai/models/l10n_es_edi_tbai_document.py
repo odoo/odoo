@@ -1,13 +1,13 @@
+import base64
 import gzip
 import json
 import re
-import base64
 from datetime import datetime
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 import requests
 from lxml import etree
-from pytz import timezone
 from requests.exceptions import RequestException
 
 from odoo import _, api, fields, models, release
@@ -349,7 +349,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             **self._get_header_values(),
             **self._get_sender_values(),
             **(self._get_recipient_values(values['partner'], values["is_simplified"]) if values['partner'] and not self.is_cancel or not values['is_sale'] else {}),
-            'datetime_now': datetime.now(tz=timezone('Europe/Madrid')),
+            'datetime_now': datetime.now(tz=ZoneInfo('Europe/Madrid')),
             'format_date': lambda d: datetime.strftime(d, '%d-%m-%Y'),
             'format_time': lambda d: datetime.strftime(d, '%H:%M:%S'),
             'format_float': format_float,

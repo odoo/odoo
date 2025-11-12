@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
-
 from datetime import datetime, time, timedelta
-from freezegun import freeze_time
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
+
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.tests import tagged, common
@@ -73,7 +73,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
                 self.assertEqual(
                     list(Supplier._search_available_today('in', [True])),
                     ['&', '|', ('recurrency_end_date', '=', False),
-                        ('recurrency_end_date', '>', value.astimezone(pytz.timezone(self.env.user.tz)).date()),
+                        ('recurrency_end_date', '>', value.astimezone(ZoneInfo(self.env.user.tz)).date()),
                         (dayname, 'in', [True])],
                 )
 

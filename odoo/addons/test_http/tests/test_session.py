@@ -7,8 +7,8 @@ import os
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 from urllib.parse import urlencode
+from zoneinfo import ZoneInfo
 
-import pytz
 from freezegun import freeze_time
 
 import odoo
@@ -201,8 +201,8 @@ class TestHttpSession(TestHttpBase):
             datetime.datetime.now(),
             datetime.date.today(),
             datetime.time(1, 33, 7),
-            pytz.timezone('UTC'),
-            pytz.timezone('Europe/Brussels'),
+            datetime.UTC,
+            ZoneInfo('Europe/Brussels'),
             str,
             int,
             float,

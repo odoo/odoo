@@ -1,10 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import pytz
-from datetime import datetime, date
+from datetime import datetime, date, UTC
 
 from odoo.tests.common import tagged, TransactionCase
-
-UTC = pytz.timezone('UTC')
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

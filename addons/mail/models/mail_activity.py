@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
 import logging
-import pytz
-
+from ast import literal_eval
 from collections import defaultdict, Counter
 from datetime import date, datetime, timedelta
+
 from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _

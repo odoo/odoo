@@ -56,11 +56,10 @@ import functools
 import itertools
 import logging
 import operator
-import pytz
 import types
 import typing
 import warnings
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone, UTC
 
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
@@ -1533,14 +1532,15 @@ def _value_to_datetime(value, env, iso_only=False):
               that all input values were dates.
               These are handled differently during rewrites.
     """
+    if value is False:
+        return False, True
+
     if isinstance(value, datetime):
         if value.tzinfo:
             # cast to a naive datetime
             warnings.warn("Use naive datetimes in domains")
             value = value.astimezone(timezone.utc).replace(tzinfo=None)
         return value, False
-    if value is False:
-        return False, True
     if isinstance(value, str):
         if iso_only:
             try:
@@ -1553,17 +1553,11 @@ def _value_to_datetime(value, env, iso_only=False):
             value = parse_date(value, env)
         return _value_to_datetime(value, env)
     if isinstance(value, date):
-        if value.year in (1, 9999):
-            # avoid overflow errors, treat as UTC timezone
-            tz = None
-        elif (tz := env.tz) != pytz.utc:
-            # get the tzinfo (without LMT)
-            tz = tz.localize(datetime.combine(value, time.min)).tzinfo
-        else:
-            tz = None
-        value = datetime.combine(value, time.min, tz)
-        if tz is not None:
-            value = value.astimezone(timezone.utc).replace(tzinfo=None)
+        value = datetime.combine(value, time.min)
+        if value.year not in (1, 9999) and env.tz != UTC:
+            value = value.replace(tzinfo=env.tz) \
+                .astimezone(timezone.utc) \
+                .replace(tzinfo=None)
         return value, True
     if isinstance(value, COLLECTION_TYPES):
         value, is_date = zip(*(_value_to_datetime(v, env=env, iso_only=iso_only) for v in value))

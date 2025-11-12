@@ -3,6 +3,7 @@
 import base64
 import gzip
 import uuid
+from datetime import UTC
 
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode, url_parse
@@ -329,8 +330,10 @@ class ProductFeed(models.Model):
             start_date = combination_info['discount_start_date']
             end_date = combination_info['discount_end_date']
             if start_date and end_date:
-                price_info['sale_price_effective_date'] = '/'.join(
-                    map(utils.gmc_format_date, (start_date, end_date)),
+                price_info['sale_price_effective_date'] = (
+                    start_date.replace(tzinfo=UTC).isoformat(timespec='minutes')
+                    + '/' +
+                    end_date.replace(tzinfo=UTC).isoformat(timespec='minutes')
                 )
 
         # Note: Google only supports a restricted set of unit and computes the comparison prices

@@ -7,14 +7,12 @@ import shutil
 import subprocess
 import tempfile
 import zipfile
-
 from contextlib import closing
 from datetime import datetime
 from xml.etree import ElementTree as ET
 
 import psycopg2
 from psycopg2.extensions import quote_ident
-from pytz import country_timezones
 
 import odoo.api
 import odoo.modules.neutralize

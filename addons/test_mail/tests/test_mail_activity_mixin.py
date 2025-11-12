@@ -1,10 +1,10 @@
-from datetime import date, datetime, timedelta, timezone
+import random
+from datetime import date, datetime, timedelta, timezone, UTC
+from unittest.mock import patch
+from zoneinfo import ZoneInfo
+
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
-from unittest.mock import patch
-
-import pytz
-import random
 
 from odoo import fields, tests
 from odoo.addons.mail.models.mail_activity import MailActivity
@@ -43,8 +43,8 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(len(self.test_record.message_ids), 1)
             self.assertEqual(self.test_record.env.user, self.user_employee)
 
-            now_utc = datetime.now(pytz.UTC)
-            now_user = now_utc.astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
+            now_utc = datetime.now(UTC)
+            now_user = now_utc.astimezone(ZoneInfo(self.env.user.tz or 'UTC'))
             today_user = now_user.date()
 
             # Test various scheduling of activities

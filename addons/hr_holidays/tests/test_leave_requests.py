@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date, timedelta
 import time
+from datetime import datetime, date, timedelta
+
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
-from pytz import timezone
 
 from odoo import fields, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -606,7 +606,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _test_leave_with_tz(self, tz, local_date_from, local_date_to, number_of_days):
         self.user_employee.tz = tz
-        tz = timezone(tz)
 
         # We use new instead of create to avoid the leaves generated for the
         # different timezones clashing with each other.

@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime, time, timedelta, timezone
 from functools import partial
+from zoneinfo import ZoneInfo
 
-import pytz
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
@@ -293,12 +293,12 @@ class TestDateRangeFunction(BaseCase):
 
     def test_date_range_with_timezone_aware_datetimes_other_than_utc(self):
         """ Check date_range with timezone-aware datetimes other than UTC."""
-        timezone = pytz.timezone('Europe/Brussels')
+        timezone = ZoneInfo('Europe/Brussels')
 
         start = datetime(1985, 1, 1)
         end = datetime(1986, 1, 1)
-        start = timezone.localize(start)
-        end = timezone.localize(end)
+        start = start.replace(tzinfo=timezone)
+        end = end.replace(tzinfo=timezone)
 
         expected = [datetime(1985, 1, 1, 0, 0),
                     datetime(1985, 2, 1, 0, 0),
@@ -314,31 +314,31 @@ class TestDateRangeFunction(BaseCase):
                     datetime(1985, 12, 1, 0, 0),
                     datetime(1986, 1, 1, 0, 0)]
 
-        expected = [timezone.localize(e) for e in expected]
+        expected = [e.replace(tzinfo=timezone) for e in expected]
 
         dates = list(date_range(start, end))
         self.assertEqual(expected, dates)
 
     def test_date_range_with_mismatching_zones(self):
         """ Check date_range with mismatching zone should raise an exception."""
-        start_timezone = pytz.timezone('Europe/Brussels')
-        end_timezone = pytz.timezone('America/Recife')
+        start_timezone = ZoneInfo('Europe/Brussels')
+        end_timezone = ZoneInfo('America/Recife')
 
         start = datetime(1985, 1, 1)
         end = datetime(1986, 1, 1)
-        start = start_timezone.localize(start)
-        end = end_timezone.localize(end)
+        start = start.replace(tzinfo=start_timezone)
+        end = end.replace(tzinfo=end_timezone)
 
         with self.assertRaises(ValueError):
             list(date_range(start, end))
 
     def test_date_range_with_inconsistent_datetimes(self):
         """ Check date_range with a timezone-aware datetime and a naive one."""
-        context_timezone = pytz.timezone('Europe/Brussels')
+        context_timezone = ZoneInfo('Europe/Brussels')
 
         start = datetime(1985, 1, 1)
         end = datetime(1986, 1, 1)
-        end = context_timezone.localize(end)
+        end = end.replace(tzinfo=context_timezone)
 
         with self.assertRaises(ValueError):
             list(date_range(start, end))

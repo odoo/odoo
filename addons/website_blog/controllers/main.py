@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-import pytz
-import babel.dates
 from collections import defaultdict
+from zoneinfo import ZoneInfo
+
+import babel.dates
+import werkzeug
 
 from odoo import http, tools, models
 from odoo.addons.website.controllers.main import QueryURL
@@ -37,7 +38,7 @@ class WebsiteBlog(http.Controller):
             dom, groupby=['published_date:month'])
 
         locale = get_lang(request.env).code
-        tzinfo = pytz.timezone(request.env.context.get('tz', 'utc') or 'utc')
+        tzinfo = ZoneInfo(request.env.context.get('tz') or 'UTC')
         fmt = tools.DEFAULT_SERVER_DATETIME_FORMAT
 
         res = defaultdict(list)

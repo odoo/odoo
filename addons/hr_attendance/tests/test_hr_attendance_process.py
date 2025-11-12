@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import pytz
-from datetime import datetime
+from datetime import datetime, UTC
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 from odoo import fields
 from odoo.tests import Form, new_test_user
@@ -84,8 +84,8 @@ class TestHrAttendance(TransactionCase):
         """ Test day start is correctly computed according to the employee's timezone """
 
         def tz_datetime(year, month, day, hour, minute):
-            tz = pytz.timezone('Europe/Brussels')
-            return tz.localize(datetime(year, month, day, hour, minute)).astimezone(pytz.utc).replace(tzinfo=None)
+            tz = ZoneInfo('Europe/Brussels')
+            return datetime(year, month, day, hour, minute).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
 
         employee = self.env['hr.employee'].create({'name': 'Cunégonde', 'tz': 'Europe/Brussels'})
         self.env['hr.attendance'].create({
@@ -99,7 +99,7 @@ class TestHrAttendance(TransactionCase):
         })
 
         # now = 2019/3/2 14:00 in the employee's timezone
-        with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(pytz.utc).replace(tzinfo=None)):
+        with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(UTC).replace(tzinfo=None)):
             self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
 
     def test_remove_check_in_value_from_attendance(self):
