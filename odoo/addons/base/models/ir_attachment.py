@@ -860,3 +860,9 @@ class IrAttachment(models.Model):
             self.check("read")
             return True
         return super()._can_return_content(field_name, access_token)
+
+    def _migrate_remote_to_local(self):
+        if self.type == 'binary':
+            return
+        if self.type == 'url':
+            raise ValidationError(_("URL attachment (%s) shouldn't be migrated to local.", self.id))
