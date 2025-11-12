@@ -124,7 +124,8 @@ class AccountMove(models.Model):
             # for every tax group component with non-luxury tax group, we adjust the base amount and adjust the display to
             # show base amount
             change_tax_base = False
-            for subtotal in move.tax_totals["subtotals"]:
+            tax_totals = move.tax_totals
+            for subtotal in tax_totals["subtotals"]:
                 for tax_group in subtotal["tax_groups"]:
                     if tax_group["id"] == non_luxury_tax_group.id:
                         tax_group.update({
@@ -134,4 +135,5 @@ class AccountMove(models.Model):
                         })
                         change_tax_base = True
             if change_tax_base:
-                move.tax_totals["same_tax_base"] = False
+                tax_totals["same_tax_base"] = False
+                move.tax_totals = tax_totals
