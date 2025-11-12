@@ -1632,7 +1632,7 @@ class HrEmployee(models.Model):
             self._remove_work_contact_id(user, vals.get('company_id'))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
-        if 'tz' in vals:
+        if vals.get('tz'):
             users_to_update = self.env['res.users']
             for employee in self:
                 if employee.user_id and employee.company_id == employee.user_id.company_id and vals['tz'] != employee.user_id.tz:
