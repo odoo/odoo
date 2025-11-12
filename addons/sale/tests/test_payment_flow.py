@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo.fields import Command
 from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
@@ -672,4 +673,30 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             transaction.invoice_ids,
             invoice,
             "Invoice id was incorrectly removed from payment.transaction",
+        )
+
+    def test_amount_unpaid_excludes_online_transactions(self):
+        paid_amount = self.sale_order.currency_id.round(0.2 * self.sale_order.amount_total)
+        self._create_transaction(
+            "direct", sale_order_ids=self.sale_order, amount=paid_amount, state="done"
+        )
+
+        self.assertEqual(self.sale_order.amount_unpaid, self.sale_order.amount_total - paid_amount)
+
+    def test_amount_unpaid_excludes_offline_invoices(self):
+        """Invoices recorded outside the payment engine should be subtracted from the amount left to
+        pay, unless they are cancelled."""
+        downpayment_wizard = self.env["sale.advance.payment.inv"].create({
+            "sale_order_ids": [Command.set(self.sale_order.ids)],
+            "advance_payment_method": "percentage",
+            "amount": 20,
+        })
+        downpayment_wizard._create_invoices(self.sale_order)  # Draft
+        downpayment_wizard._create_invoices(self.sale_order).action_post()
+        downpayment_wizard._create_invoices(self.sale_order).button_cancel()
+
+        self.assertEqual(
+            self.sale_order.amount_unpaid,
+            0.6 * self.sale_order.amount_total,
+            msg="Cancelled invoices should not reduce the amount left to pay",
         )

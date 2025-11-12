@@ -71,10 +71,36 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
+    def _pre_action_done_hook(self):
+        """Override of ``stock`` to warn about a payment to collect before validating.
+
+        The wizard is only a reminder; the payment itself is recorded in PoS by settling the order.
+        """
+        res = super()._pre_action_done_hook()
+        if (
+            res is True
+            and not self.env.context.get('skip_pay_on_delivery_notice')
+            and self._filtered_pending_payment_on_delivery()
+        ):
+            return self.env['pay.on.delivery']._get_records_action(
+                name=self.env._("Collect Payment"), target='new'
+            )
+        return res
+
+    def _filtered_pending_payment_on_delivery(self):
+        return self.filtered(
+            lambda picking: (
+                picking.location_dest_id.usage == 'customer'
+                and picking.sale_id.sudo().transaction_ids._filtered_pending_pay_on_delivery()
+                and picking.sale_id.amount_unpaid
+            )
+        )
+
     def button_validate(self):
         res = super().button_validate()
         if res is not True:
             return res
+        # FIXME: this won't run if the next action is to print the picking report
         for picking in self:
             # `_get_new_picking_values` is used to propagate the carrier before a picking is created (i.e. carrier is set on an SO).
             # Whereas this case handles the propagation of carrier after the picking validation as the carrier maybe set

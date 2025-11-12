@@ -37,7 +37,9 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "custom":
             return super()._apply_updates(payment_data)
 
-        if self.payment_method_id._is_postpaid() or payment_data.get(const.CUSTOM_STATE_DONE_KEY):
+        if self.payment_method_code == "pay_on_invoice" or payment_data.get(
+            const.CUSTOM_STATE_DONE_KEY
+        ):
             self._set_done()
         else:
             self._set_pending()
