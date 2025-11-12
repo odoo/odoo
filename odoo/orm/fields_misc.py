@@ -6,7 +6,7 @@ import typing
 
 from psycopg2.extras import Json as PsycopgJson
 
-from odoo.tools import SQL
+from odoo.tools import SQL, json_default
 
 from .fields import Field
 from .identifiers import IdType
@@ -54,8 +54,8 @@ class Boolean(Field[bool]):
 
 class Json(Field):
     """ JSON Field that contain unstructured information in jsonb PostgreSQL column.
-    This field is still in beta
-    Some features have not been implemented and won't be implemented in stable versions, including:
+
+    Some features won't be implemented, including:
     * searching
     * indexing
     * mutating the values.
@@ -71,10 +71,12 @@ class Json(Field):
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return None
-        return json.loads(json.dumps(value))
+        return json.loads(json.dumps(value, ensure_ascii=False, default=json_default))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        if not value:
+        if validate:
+            value = self.convert_to_cache(value, record)
+        if value is None:
             return None
         return PsycopgJson(value)
 
