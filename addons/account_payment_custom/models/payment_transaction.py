@@ -9,5 +9,5 @@ class PaymentTransaction(models.Model):
     # === LIFECYCLE METHODS - POST-PROCESSING === #
 
     def _should_create_payment(self):
-        """Override of `account_payment` to avoid creating payments for post-paid transactions."""
-        return super()._should_create_payment() and not self.payment_method_id._is_postpaid()
+        """Override of ``account_payment`` to avoid creating payments for Pay on Invoice."""
+        return super()._should_create_payment() and self.payment_method_code != "pay_on_invoice"
