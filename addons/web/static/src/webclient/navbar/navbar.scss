@@ -156,7 +156,7 @@
             --NavBar-entry-color--hover: var(--NavBar-entry-color, #{$o-navbar-entry-color});
         }
 
-        .o_nav_entry, .dropdown-toggle:not(:disabled) {
+        .o_nav_entry, .dropdown-toggle:not(:disabled, .o-dropdown-toggle-custo) {
             background: var(--NavBar-entry-backgroundColor, #{$o-navbar-background});
             border: $border-width solid transparent;
 
@@ -173,7 +173,7 @@
             }
         }
 
-        .dropdown.show.dropdown-toggle {
+        .dropdown.show.dropdown-toggle:not(.o-dropdown-toggle-custo) {
             border-color: var(--NavBar-entry-borderColor-active, transparent);
             background: var(--NavBar-entry-backgroundColor--active, #{$o-navbar-entry-bg--active});
             color: var(--NavBar-entry-color--active, #{$o-navbar-entry-color--active});
