@@ -1,6 +1,6 @@
 import { Discuss } from "@mail/core/public_web/discuss";
 
-import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { onWillDestroy, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -17,10 +17,23 @@ export class LivechatSessionFormRenderer extends FormRenderer {
         this.store = useState(useService("mail.store"));
         onWillStart(async () => {
             await this.getChannel(this.props);
+            this.setCurrentThreadShadowedBySelf(true);
         });
         onWillUpdateProps(async (nextProps) => {
+            if (nextProps.record.resId === this.props.record.resId) {
+                return;
+            }
+            this.setCurrentThreadShadowedBySelf(false);
             await this.getChannel(nextProps);
+            this.setCurrentThreadShadowedBySelf(true);
         });
+        onWillDestroy(() => this.setCurrentThreadShadowedBySelf(false));
+    }
+
+    setCurrentThreadShadowedBySelf(shadowedBySelf) {
+        if (this.thread) {
+            this.thread.shadowedBySelf = shadowedBySelf;
+        }
     }
 
     /**
