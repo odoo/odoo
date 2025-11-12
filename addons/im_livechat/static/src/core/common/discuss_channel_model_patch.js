@@ -10,5 +10,8 @@ const discussChannelPatch = {
         super.setup(...arguments);
         this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "channel_ids" });
     },
+    get membersThatCanSeen() {
+        return super.membersThatCanSeen.filter((member) => member.livechat_member_type !== "bot");
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

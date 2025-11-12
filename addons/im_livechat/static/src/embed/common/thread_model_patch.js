@@ -66,10 +66,6 @@ patch(Thread.prototype, {
         return this.newestPersistentOfAllMessage?.isSelfAuthored;
     },
 
-    get membersThatCanSeen() {
-        return super.membersThatCanSeen.filter((member) => member.livechat_member_type !== "bot");
-    },
-
     get avatarUrl() {
         if (this.channel?.channel_type === "livechat") {
             return this.livechat_operator_id.avatarUrl;
