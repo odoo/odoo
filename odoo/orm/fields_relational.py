@@ -1494,7 +1494,7 @@ class Many2many(_RelationalMulti):
                     for co_id in new_co_ids - old_relation[rec_id]
                 ).check_access('read')
             except AccessError as e:
-                raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
+                raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e)) from e
 
         # update the cache of self
         for record in records:
