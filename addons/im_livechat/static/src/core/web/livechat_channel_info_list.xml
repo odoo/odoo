@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.LivechatChannelInfoList">
         <ActionPanel title.translate="Information" minWidth="200" initialWidth="env.inMeetingView ? 400 : 300" icon="'fa fa-info'">
-            <a t-if="visitorProfileURL" class="btn btn-primary mt-1" t-on-click="openVisitorProfile" t-att-href="visitorProfileURL" title="View Contact">
+            <a t-if="visitorProfileURL" class="btn btn-primary mt-1" t-on-click.prevent="openVisitorProfile" t-att-href="visitorProfileURL" title="View Contact">
                 View Contact
             </a>
             <div t-if="!props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
