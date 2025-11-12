@@ -94,7 +94,7 @@ class StockMove(models.Model):
             if computed_value_data['description'] == move.value_justification:
                 move.value_computed_justification = False
             else:
-                value = move.currency_id.format(computed_value_data['value'])
+                value = move.company_currency_id.format(computed_value_data['value'])
                 move.value_computed_justification = self.env._(
                     'Computed value: %(value)s\n%(description)s',
                     value=value, description=computed_value_data['description'])
