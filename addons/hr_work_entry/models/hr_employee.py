@@ -34,6 +34,7 @@ class HrEmployee(models.Model):
             'name': _('%s work entries', self.display_name),
             'view_mode': 'calendar,list,form',
             'res_model': 'hr.work.entry',
+            'path': 'work-entries',
             'context': ctx,
             'domain': [('employee_id', '=', self.id)],
         }

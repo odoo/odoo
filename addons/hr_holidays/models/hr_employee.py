@@ -33,6 +33,7 @@ class HrEmployee(models.Model):
         return {
             'name': _('Time Off Dashboard'),
             'type': 'ir.actions.act_window',
+            'path': 'time-off',
             'res_model': 'hr.leave',
             'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
             'domain': [('employee_id', 'in', self.ids)],
