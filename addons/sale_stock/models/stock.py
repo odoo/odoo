@@ -192,6 +192,7 @@ class StockPicking(models.Model):
     def _set_sale_id(self):
         if self.reference_ids:
             if self.sale_id:
+                self.reference_ids.sale_ids = [Command.unlink(so.id) for so in self.reference_ids.sale_ids]
                 self.reference_ids.sale_ids = [Command.link(self.sale_id.id)]
             else:
                 sale_order = self.move_ids.sale_line_id.order_id

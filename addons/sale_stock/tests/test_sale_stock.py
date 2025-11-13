@@ -2281,6 +2281,40 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         backorder_wizard_form.save().process_cancel_backorder()
         self.assertFalse(sale_order.order_line.display_qty_widget)
 
+    def test_sale_order_swap_in_pickings(self):
+        """
+        Ensure that swapping sale orders in pickings does not break the ability to add new products to the sale order.
+        """
+        sale_order_1 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_uom_qty': 2}),
+            ],
+        })
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_uom_qty': 3}),
+            ],
+        })
+        sale_order_1.action_confirm()
+        sale_order_2.action_confirm()
+
+        picking_1 = sale_order_1.picking_ids
+        picking_2 = sale_order_2.picking_ids
+
+        # Swap the sale orders in the pickings
+        picking_1.sale_id = sale_order_2
+        picking_2.sale_id = sale_order_1
+
+        # Try to add a new product to the first sale order
+        with Form(sale_order_1) as so_form:
+            with so_form.order_line.new() as line:
+                line.product_id = self.product_a
+        sale_order_1 = so_form.save()
+
+        self.assertEqual(len(sale_order_1.order_line), 2)
+
     def test_create_route_update_so_quantity(self):
         """
         Check that moves created from user-created push rules does not interfere with updating the
