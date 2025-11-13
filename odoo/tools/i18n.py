@@ -25,24 +25,30 @@ XPG_LOCALE_RE = re.compile(
 def format_list(
     env: odoo.api.Environment,
     lst: Iterable,
-    style: Literal["standard", "standard-short", "or", "or-short", "unit", "unit-short", "unit-narrow"] = "standard",
+    style: Literal["standard", "standard-short", "standard-narrow", "or", "or-short", "or-narrow", "unit", "unit-short", "unit-narrow"] = "standard",
     lang_code: str | None = None,
 ) -> str:
     """
     Format the items in `lst` as a list in a locale-dependent manner with the chosen style.
 
-    The available styles are defined by babel according to the Unicode TR35-49 spec:
+    The available styles are defined by babel according to the Unicode Technical Standard #35:
     * standard:
       A typical 'and' list for arbitrary placeholders.
       e.g. "January, February, and March"
     * standard-short:
       A short version of an 'and' list, suitable for use with short or abbreviated placeholder values.
       e.g. "Jan., Feb., and Mar."
+    * standard-narrow:
+      A yet shorter version of a short 'and' list (where possible).
+      e.g. "Jan., Feb., Mar."
     * or:
       A typical 'or' list for arbitrary placeholders.
       e.g. "January, February, or March"
     * or-short:
       A short version of an 'or' list.
+      e.g. "Jan., Feb., or Mar."
+    * or-narrow:
+      A yet shorter version of a short 'or' list (where possible).
       e.g. "Jan., Feb., or Mar."
     * unit:
       A list suitable for wide units.
@@ -54,7 +60,7 @@ def format_list(
       A list suitable for narrow units, where space on the screen is very limited.
       e.g. "3′ 7″"
 
-    See https://www.unicode.org/reports/tr35/tr35-49/tr35-general.html#ListPatterns for more details.
+    See https://www.unicode.org/reports/tr35/tr35-general.html#ListPatterns for more details.
 
     :param env: the current environment.
     :param lst: the iterable of items to format into a list.
