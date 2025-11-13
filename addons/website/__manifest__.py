@@ -270,6 +270,7 @@
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
             'website/static/src/js/content/adapt_content.js',
+            'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
@@ -278,6 +279,7 @@
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
+            ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
@@ -370,6 +372,7 @@
             'website/static/src/xml/**/*.xml',
             'website/static/src/snippets/s_table_of_content/000.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
+            'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web._assets_frontend_helpers': [
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
