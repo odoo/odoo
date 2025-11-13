@@ -84,3 +84,9 @@ class AccountMove(models.Model):
         if self.l10n_tr_is_export_invoice:
             return self.company_id.l10n_tr_nilvera_export_alias
         return super()._get_partner_l10n_tr_nilvera_customer_alias_name()
+
+    def _l10n_tr_get_status_invoice_channel(self):
+        self.ensure_one()
+        if self.l10n_tr_is_export_invoice:
+            return 'einvoice'
+        return super()._l10n_tr_get_status_invoice_channel()
