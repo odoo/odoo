@@ -317,8 +317,7 @@ export class PaymentAdyen extends PaymentInterface {
         const config = this.pos.config;
         const payment_result = payment_response.PaymentResult;
 
-        const poiTransactionId =
-            payment_response?.POIData?.POITransactionID?.TransactionID || "";
+        const poiTransactionId = payment_response?.POIData?.POITransactionID?.TransactionID || "";
         const [, poiPspReference] = poiTransactionId.split("."); // format: <tenderRef>.<pspReference>
         const paymentPspReference =
             additional_response.get("pspReference") || poiPspReference || poiTransactionId;
