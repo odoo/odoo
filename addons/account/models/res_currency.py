@@ -176,7 +176,7 @@ class ResCurrency(models.Model):
                 FROM res_company other_company
                 LEFT JOIN res_currency_rate rate
                     ON rate.currency_id = other_company.currency_id
-                    AND rate.name <= %(date_to)s
+                    AND rate.name < %(date_to)s
                     AND rate.company_id = %(main_company_id)s
                 WHERE
                     other_company.id IN %(other_company_ids)s
@@ -205,14 +205,14 @@ class ResCurrency(models.Model):
                 WHERE
                     other_company.id IN %(other_company_ids)s
                     AND rate.company_id = %(main_company_id)s
-                    AND rate.name <= %(date_to)s
+                    AND rate.name < %(date_to)s
                     %(exclusion_condition)s
             """,
             main_company_id=main_company.root_id.id,
             other_company_ids=tuple(other_companies.ids),
             main_company_unit_factor=main_company_unit_factor,
             date_to=date_to,
-            exclusion_condition=SQL("AND rate.name > %(date_exclude)s", date_exclude=date_exclude) if date_exclude else SQL(),
+            exclusion_condition=SQL("AND rate.name >= %(date_exclude)s", date_exclude=date_exclude) if date_exclude else SQL(),
         )
 
     def _get_table_builder_average(self, period_key, main_company, other_companies, date_from, date_to, main_company_unit_factor) -> SQL:
@@ -236,15 +236,15 @@ class ResCurrency(models.Model):
                         EXTRACT (
                             'Day' FROM COALESCE(
                                 LEAD(rate.name, 1) OVER (PARTITION BY other_company.id, rate.currency_id ORDER BY rate.name ASC)::TIMESTAMP,
-                                %(date_to)s::TIMESTAMP + INTERVAL '1' DAY
+                                %(date_to)s::TIMESTAMP
                             ) - rate.name::TIMESTAMP
                         ) AS number_of_days
                     FROM res_company other_company
                     JOIN res_currency_rate rate
                         ON rate.currency_id = other_company.currency_id
                     WHERE
-                    rate.name <= %(date_to)s
-                    AND rate.name >= %(date_from)s
+                    rate.name < %(date_to)s
+                    AND rate.name >= DATE %(date_from)s - INTERVAL '1 day'
                     AND other_company.id IN %(other_company_ids)s
                     AND rate.company_id = %(main_company_id)s
 
@@ -254,20 +254,20 @@ class ResCurrency(models.Model):
                         SELECT DISTINCT ON (other_company.id)
                             other_company.id as other_company_id,
                             COALESCE(out_period_rate.rate, 1.0) AS rate,
-                            EXTRACT('Day' FROM COALESCE(in_period_rate.name::TIMESTAMP, %(date_to)s::TIMESTAMP + INTERVAL '1' DAY) - %(date_from)s::TIMESTAMP) AS number_of_days
+                            EXTRACT('Day' FROM COALESCE(in_period_rate.name::TIMESTAMP, %(date_to)s::TIMESTAMP) - %(date_from)s::TIMESTAMP + INTERVAL '1 day') AS number_of_days
 
                         FROM res_company other_company
 
                         LEFT JOIN res_currency_rate in_period_rate
                             ON in_period_rate.currency_id = other_company.currency_id
-                            AND in_period_rate.name <= %(date_to)s
-                            AND in_period_rate.name >= %(date_from)s
+                            AND in_period_rate.name < %(date_to)s
+                            AND in_period_rate.name >= DATE %(date_from)s - INTERVAL '1 day'
                             AND in_period_rate.company_id = %(main_company_id)s
 
                         LEFT JOIN res_currency_rate out_period_rate
                             ON out_period_rate.currency_id = other_company.currency_id
                             AND out_period_rate.company_id = %(main_company_id)s
-                            AND out_period_rate.name < %(date_from)s
+                            AND out_period_rate.name < DATE %(date_from)s - INTERVAL '1 day'
 
                         WHERE
                         other_company.id IN %(other_company_ids)s

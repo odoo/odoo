@@ -281,8 +281,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         if 'rates' not in kwargs:
             return super().setup_other_currency(code, rates=[
                 ('1900-01-01', 1.0),
-                ('2016-01-01', 3.0),
-                ('2017-01-01', 2.0),
+                ('2015-12-31', 3.0),
+                ('2016-12-31', 2.0),
             ], **kwargs)
         return super().setup_other_currency(code, **kwargs)
 
@@ -1270,7 +1270,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     def convert_document_to_invoice(self, document):
         invoice_date = '2020-01-01'
         currency = document['currency']
-        self._ensure_rate(currency, invoice_date, document['rate'])
+        self._ensure_rate(currency, '2019-12-31', document['rate'])
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': invoice_date,

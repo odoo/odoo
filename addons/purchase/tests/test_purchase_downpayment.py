@@ -120,7 +120,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         self.assertFalse(self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids.filtered(lambda l: l.is_downpayment))
 
     def test_downpayment_exchange_rate(self):
-        self.env['res.currency.rate'].create({'currency_id': self.other_currency.id, 'rate': 1.5})
+        self.env['res.currency.rate'].create({'currency_id': self.other_currency.id, 'rate': 1.5, 'name': fields.Date.subtract(fields.Date.today(), days=1)})
 
         po = self.init_purchase(products=[self.product_order])
         po.button_confirm()

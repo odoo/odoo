@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
-
 from unittest import skip
 
 from odoo import fields
 from odoo.tests import Form, tagged
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from freezegun import freeze_time
-import time
 
 
 @skip('Temporary to fast merge new valuation')
@@ -677,7 +675,7 @@ class TestAccountInvoicingWithCOA(TestStockValuationLCCommon):
 
     def create_rate(self, inv_rate):
         return self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y-%m-%d'),
+            'name': fields.Date.subtract(fields.Date.today(), days=1),
             'inverse_company_rate': inv_rate,
             'currency_id': self.eur.id,
             'company_id': self.env.company.id,

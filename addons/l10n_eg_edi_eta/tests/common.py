@@ -16,7 +16,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
 
         cls.frozen_today = datetime(year=2022, month=3, day=15, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
 
-        cls.currency_aed_id = cls.setup_other_currency('AED', rates=[('2022-03-15', 0.198117095128)])
+        cls.currency_aed_id = cls.setup_other_currency('AED', rates=[('2022-03-14', 0.198117095128)])
 
         # Allow to see the full result of AssertionError.
         cls.maxDiff = None

@@ -315,7 +315,7 @@ class TestExpenses(TestExpenseCommon):
         Checks that the currency rate is recomputed properly when the total in company currency is set to a new value
         """
         foreign_currency_1 = self.other_currency
-        foreign_currency_2 = self.setup_other_currency('GBP', rounding=0.01, rates=([('2016-01-01', 1 / 1.52)]))
+        foreign_currency_2 = self.setup_other_currency('GBP', rounding=0.01, rates=([('2015-12-31', 1 / 1.52)]))
         foreign_sale_journal = self.company_data['default_journal_sale'].copy()
         foreign_sale_journal.currency_id = foreign_currency_2.id
 

@@ -26,7 +26,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         cls.current_year = fields.Date.today().year
 
         cls.other_currency = cls.setup_other_currency('EUR')
-        cls.other_currency_2 = cls.setup_other_currency('CAD', rates=[('2016-01-01', 3.0), ('2017-01-01', 0.01)])
+        cls.other_currency_2 = cls.setup_other_currency('CAD', rates=[('2015-12-31', 3.0), ('2016-12-31', 0.01)])
 
         cls.payment_debit_account_id = cls.copy_account(cls.inbound_payment_method_line.payment_account_id)
         cls.payment_credit_account_id = cls.copy_account(cls.outbound_payment_method_line.payment_account_id)

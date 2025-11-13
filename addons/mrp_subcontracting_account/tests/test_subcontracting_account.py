@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from unittest import skip
 
 from odoo import Command, fields
@@ -594,7 +593,7 @@ class TestBomPriceSubcontracting(TestBomPriceCommon):
             'rounding': 0.01,
             'currency_unit_label': 'Zenny',
             'rate_ids': [(0, 0, {
-                'name': fields.Date.today(),
+                'name': fields.Date.subtract(fields.Date.today(), days=1),
                 'company_rate': 0.5,
             })],
         })

@@ -37,7 +37,7 @@ class TestL10nArWithholdingArRi(TestAr):
 
         cls.tax_21 = cls.env.ref('account.%s_ri_tax_vat_21_ventas' % cls.env.company.id)
 
-        cls.other_currency = cls.setup_other_currency('USD', rounding=0.001, rates=[('2023-01-01', 0.01), ('2023-05-01', 0.005)])
+        cls.other_currency = cls.setup_other_currency('USD', rounding=0.001, rates=[('2022-12-31', 0.01), ('2023-04-30', 0.005)])
         cls.tax_wth_earnings_incurred_scale_test_5 = cls.env.ref('account.%i_ex_tax_withholding_profits_regimen_110_insc' % cls.env.company.id)
         cls.tax_wth_earnings_incurred_test_6 = cls.env.ref('account.%i_ex_tax_withholding_profits_regimen_35_insc' % cls.env.company.id)
         cls.earnings_withholding_sequence = cls.env['ir.sequence'].create({

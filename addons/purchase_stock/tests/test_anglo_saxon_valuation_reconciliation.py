@@ -533,7 +533,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         product.standard_price = 500
         self.stock_account_product_categ.property_cost_method = 'average'
         self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
+            'name': fields.Date.today() - timedelta(days=1),
             'company_rate': .00756,
             'currency_id': self.env.ref('base.USD').id,
             'company_id': self.env.company.id,
@@ -582,7 +582,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         product = self.test_product_order
         product.write({'purchase_method': 'purchase', 'standard_price': 500})
         self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
+            'name': fields.Date.today() - timedelta(days=1),
             'company_rate': .00756,
             'currency_id': self.env.ref('base.USD').id,
             'company_id': self.env.company.id,
@@ -772,7 +772,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         euro.active = True
         self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 3
         self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
+            'name': fields.Date.today() - timedelta(days=1),
             'rate': 0.2710027100271003,
             'currency_id': euro.id,
             'company_id': self.env.company.id,

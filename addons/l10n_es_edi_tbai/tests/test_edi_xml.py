@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from freezegun import freeze_time
 from lxml import etree
@@ -94,7 +94,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
         currency_usd.active = True
         date = str(self.out_invoice.invoice_date)
         self.env['res.currency.rate'].create({
-            'name': date,
+            'name': self.out_invoice.invoice_date - timedelta(days=1),
             'company_id': self.company_data['company'].id,
             'currency_id': currency_usd.id,
             'rate': 0.5})

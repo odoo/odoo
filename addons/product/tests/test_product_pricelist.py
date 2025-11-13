@@ -2,13 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-import time
 
 from odoo.exceptions import ValidationError
-from odoo.fields import Command
+from odoo.fields import Command, Date
 from odoo.tests import tagged, Form
 from odoo.tools import float_compare
-
 from odoo.addons.product.tests.common import ProductCommon
 
 
@@ -65,7 +63,7 @@ class TestProductPricelist(ProductCommon):
         cls.new_currency = cls.env['res.currency'].create({
             'name': 'Wonderful Currency',
             'symbol': ':)',
-            'rate_ids': [Command.create({'rate': 10, 'name': time.strftime('%Y-%m-%d')})],
+            'rate_ids': [Command.create({'rate': 10, 'name': Date.subtract(Date.today(), days=1)})],
         })
 
         cls.ipad_retina_display.write({'uom_id': cls.uom_unit.id, 'categ_id': cls.category_5_id})

@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -34,6 +33,9 @@ class TestSaleReportCurrencyRate(SaleCommon):
         companies = self.usd_cmp + self.eur_cmp
         today = fields.Date.today()
         past_day = fields.Date.to_date('2020-01-01')
+        eff_today = fields.Date.subtract(today, days=1)
+        eff_past = fields.Date.subtract(past_day, days=1)
+
         usd = self.usd_cmp.currency_id
         eur = self.eur_cmp.currency_id
         ars = self._enable_currency('ARS')
@@ -45,18 +47,18 @@ class TestSaleReportCurrencyRate(SaleCommon):
             {'name': 'Pricelist (ARS)', 'currency_id': ars.id, 'company_id': False},
         ])
         self.env['res.currency.rate'].create([
-            {'name': past_day, 'rate': 555, 'currency_id': ars.id, 'company_id': self.eur_cmp.id},
-            {'name': past_day, 'rate': 1.0, 'currency_id': eur.id, 'company_id': self.eur_cmp.id},
-            {'name': past_day, 'rate': 999, 'currency_id': usd.id, 'company_id': self.eur_cmp.id},
-            {'name': past_day, 'rate': 3.0, 'currency_id': ars.id, 'company_id': self.usd_cmp.id},
-            {'name': past_day, 'rate': 0.1, 'currency_id': eur.id, 'company_id': self.usd_cmp.id},
-            {'name': past_day, 'rate': 1.0, 'currency_id': usd.id, 'company_id': self.usd_cmp.id},
-            {'name': today, 'rate': 222, 'currency_id': ars.id, 'company_id': self.eur_cmp.id},
-            {'name': today, 'rate': 1.0, 'currency_id': eur.id, 'company_id': self.eur_cmp.id},
-            {'name': today, 'rate': 2.9, 'currency_id': usd.id, 'company_id': self.eur_cmp.id},
-            {'name': today, 'rate': 101, 'currency_id': ars.id, 'company_id': self.usd_cmp.id},
-            {'name': today, 'rate': 0.6, 'currency_id': eur.id, 'company_id': self.usd_cmp.id},
-            {'name': today, 'rate': 1.0, 'currency_id': usd.id, 'company_id': self.usd_cmp.id},
+            {'name': eff_past, 'rate': 555, 'currency_id': ars.id, 'company_id': self.eur_cmp.id},
+            {'name': eff_past, 'rate': 1.0, 'currency_id': eur.id, 'company_id': self.eur_cmp.id},
+            {'name': eff_past, 'rate': 999, 'currency_id': usd.id, 'company_id': self.eur_cmp.id},
+            {'name': eff_past, 'rate': 3.0, 'currency_id': ars.id, 'company_id': self.usd_cmp.id},
+            {'name': eff_past, 'rate': 0.1, 'currency_id': eur.id, 'company_id': self.usd_cmp.id},
+            {'name': eff_past, 'rate': 1.0, 'currency_id': usd.id, 'company_id': self.usd_cmp.id},
+            {'name': eff_today, 'rate': 222, 'currency_id': ars.id, 'company_id': self.eur_cmp.id},
+            {'name': eff_today, 'rate': 1.0, 'currency_id': eur.id, 'company_id': self.eur_cmp.id},
+            {'name': eff_today, 'rate': 2.9, 'currency_id': usd.id, 'company_id': self.eur_cmp.id},
+            {'name': eff_today, 'rate': 101, 'currency_id': ars.id, 'company_id': self.usd_cmp.id},
+            {'name': eff_today, 'rate': 0.6, 'currency_id': eur.id, 'company_id': self.usd_cmp.id},
+            {'name': eff_today, 'rate': 1.0, 'currency_id': usd.id, 'company_id': self.usd_cmp.id},
         ])
 
         self.assertEqual(self.product.currency_id, usd)
@@ -64,6 +66,9 @@ class TestSaleReportCurrencyRate(SaleCommon):
         sale_orders = self.env['sale.order']
         expected_reported_amount = 0  # The total amount of all sale orders in the report.
         qty = 0  # to add variety to the data
+
+        # Needed to get conversion rates between companies.
+        currency_rates = {k: v[0] for k, v in (companies + self.env.company).mapped('currency_id')._get_rates(self.env.company, today).items()}
 
         # Create sale orders
         for company in companies:
@@ -81,13 +86,14 @@ class TestSaleReportCurrencyRate(SaleCommon):
                     })
                     sale_orders |= order
 
+                    eff_date = fields.Date.subtract(date, days=1)
                     expected_so_currency_rate = self.env['res.currency.rate'].search([
-                        ('name', '=', date),
+                        ('name', '=', eff_date),
                         ('currency_id', '=', pricelist.currency_id.id),
                         ('company_id', '=', company.id),
                     ]).rate
                     expected_product_currency_rate = self.env['res.currency.rate'].search([
-                        ('name', '=', date),
+                        ('name', '=', eff_date),
                         ('currency_id', '=', self.product.currency_id.id),
                         ('company_id', '=', company.id),
                     ]).rate
@@ -106,7 +112,10 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
                     # The amount in the report is converted first to the currency of the company and
                     # then to the currency of the current company (self.env.company).
-                    conversion_rate = company.currency_id.with_context(date=today).rate
+                    current_company_rate = currency_rates[self.env.company.currency_id.id]
+                    so_company_rate = currency_rates[company.currency_id.id]
+                    conversion_rate = (current_company_rate / so_company_rate)
+
                     expected_reported_amount += (
                         order.amount_total / order.currency_rate * conversion_rate
                     )

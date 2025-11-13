@@ -822,13 +822,13 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         CurrencyRate.create({
             'currency_id': foreign_currency.id,
             'rate': rate_yesterday,
-            'name': yesterday,
+            'name': yesterday - timedelta(days=1),
             'company_id': company.id,
         })
         CurrencyRate.create({
             'currency_id': foreign_currency.id,
             'rate': rate_today,
-            'name': today,
+            'name': today - timedelta(days=1),
             'company_id': company.id,
         })
 

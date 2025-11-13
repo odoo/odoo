@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from odoo.fields import Command
+from odoo.fields import Command, Date
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.controllers.product_feed import ProductFeed
@@ -60,7 +58,7 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
             'active': True,
             'rate_ids': [
                 Command.clear(),
-                Command.create({'name': time.strftime('%Y-%m-%d'), 'rate': 1.1})
+                Command.create({'name': Date.subtract(Date.today(), days=1), 'rate': 1.1})
             ],
         })
         cls.eur_pricelist = cls._create_pricelist(

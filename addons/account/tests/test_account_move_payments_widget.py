@@ -16,7 +16,7 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
 
         cls.curr_1 = cls.company_data['currency']
         cls.curr_2 = cls.setup_other_currency('EUR')
-        cls.curr_3 = cls.setup_other_currency('CAD', rates=[('2016-01-01', 6.0), ('2017-01-01', 4.0)])
+        cls.curr_3 = cls.setup_other_currency('CAD', rates=[('2015-12-31', 6.0), ('2016-12-31', 4.0)])
 
         cls.payment_2016_curr_1 = cls.env['account.move'].create({
             'date': '2016-01-01',

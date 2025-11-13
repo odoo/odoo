@@ -2114,12 +2114,12 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.env['res.currency.rate'].create([
             {
                 'currency_id': self.eur.id,
-                'name': fields.Date.context_today(self),
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
                 'rate': 0.8,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
             },
             {
                 'currency_id': self.stn.id,
-                'name': fields.Date.context_today(self),
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
                 'rate': 20,  # 1 $ = 20 Db, 1 Db = 0.05 $
             },
         ])
@@ -2155,7 +2155,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                             FROM "res_currency_rate"
                             WHERE (
                                 ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
-                                AND "res_currency_rate"."name" <= %s
+                                AND "res_currency_rate"."name" < %s
                             ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
                             LIMIT %s
@@ -2225,12 +2225,12 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.env['res.currency.rate'].create([
             {
                 'currency_id': self.usd.id,
-                'name': fields.Date.context_today(self),
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
                 'rate': 1.25,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
             },
             {
                 'currency_id': self.stn.id,
-                'name': fields.Date.context_today(self),
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
                 'rate': 25,  # 1 eur = 25 Db, 1 Db = 0.04 eur
             },
         ])
@@ -2264,7 +2264,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                             FROM "res_currency_rate"
                             WHERE (
                                 ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
-                                AND "res_currency_rate"."name" <= %s
+                                AND "res_currency_rate"."name" < %s
                             ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
                             LIMIT %s
@@ -2299,12 +2299,12 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.env['res.currency.rate'].create([
             {
                 'currency_id': self.eur.id,
-                'name': fields.Date.context_today(self),
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
                 'rate': 0.8,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
             },
             {
                 'currency_id': self.stn.id,
-                'name': fields.Date.context_today(self),
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
                 'rate': 20,  # 1 $ = 20 Db, 1 Db = 0.05 $
             },
         ])
