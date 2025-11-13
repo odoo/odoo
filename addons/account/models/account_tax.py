@@ -69,32 +69,6 @@ class AccountTaxGroup(models.Model):
         for group in self:
             group.country_id = group.company_id.account_fiscal_country_id or group.company_id.country_id
 
-    @api.constrains('tax_payable_account_id', 'tax_receivable_account_id')
-    def _check_accounts_configuration(self):
-        account_fields = self.env['account.account']._fields
-        account_type_selection_values = dict(account_fields['account_type']._description_selection(self.env))
-        reconcile_field_name = account_fields['reconcile'].get_description(self.env)['string']
-        non_trade_field_name = account_fields['non_trade'].get_description(self.env)['string']
-
-        for group in self:
-            for field_name in ('tax_payable_account_id', 'tax_receivable_account_id'):
-                if group[field_name] and not (
-                    group[field_name].account_type in ('asset_receivable', 'liability_payable')
-                    and group[field_name].reconcile
-                    and group[field_name].non_trade
-                ):
-                    raise ValidationError(
-                        self.env._(
-                            '%(tax_account)s (%(account_name)s) should be an account of type "%(receivable)s" or "%(payable)s" with both options "%(allow_reconciliation)s" and "%(non_trade)s" enabled.',
-                            tax_account=self._fields[field_name].get_description(self.env)['string'],
-                            account_name=group[field_name].display_name,
-                            receivable=account_type_selection_values['asset_receivable'],
-                            payable=account_type_selection_values['liability_payable'],
-                            allow_reconciliation=reconcile_field_name,
-                            non_trade=non_trade_field_name,
-                        ),
-                    )
-
 
 class AccountTax(models.Model):
     _name = 'account.tax'
