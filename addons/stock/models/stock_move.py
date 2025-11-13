@@ -603,7 +603,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _set_lot_ids(self):
         for move in self:
-            if move.state == 'assigned' and all(ml.lot_id for ml in move.move_line_ids):
+            if move.state == 'assigned' and all(ml.lot_id in move.lot_ids for ml in move.move_line_ids):
                 continue
             move_lines_commands = []
             mls = move.move_line_ids
