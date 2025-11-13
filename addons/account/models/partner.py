@@ -345,7 +345,7 @@ class ResPartner(models.Model):
             country_codes = allowed_companies.mapped('account_fiscal_country_id.code')
             if record.country_code:
                 country_codes.append(record.country_code)
-            record.fiscal_country_codes = ",".join(country_codes)
+            record.fiscal_country_codes = ",".join(set(country_codes))
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
