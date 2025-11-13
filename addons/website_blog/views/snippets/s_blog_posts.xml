@@ -163,7 +163,7 @@
         <t t-set="record" t-value="data['_record']"/>
         <div class="card h-100">
             <a class="text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
-                <div class="s_blog_posts_post_cover o_not_editable card-img-top ratio ratio-16x9">
+                <div class="s_blog_posts_post_cover card-img-top ratio ratio-16x9">
                     <t t-call="website.record_cover">
                         <t t-set="_record" t-value="record"/>
                         <t t-set="additionnal_classes" t-value="'position-absolute w-100 h-100 bg-600 o_snippet_not_selectable'"/>

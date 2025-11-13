@@ -142,14 +142,15 @@
 <!-- ======   Template: Post Author   ==========================================
 ============================================================================ -->
 <template id="post_author">
-    <div t-attf-class="o_not_editable align-items-center position-relative #{additionnal_classes or ''}">
+    <div t-attf-class="align-items-center position-relative #{additionnal_classes or ''}">
         <div t-if="blog_post.author_avatar"
              t-field="blog_post.author_avatar"
              style="line-height:1"
+             class="o_not_editable"
              t-options='{"widget": "image", "alt": "", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2"}' />
         <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
             <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
-            <span t-else="" t-out="blog_post.author_name"/>
+            <span t-else="" class="o_not_editable" t-out="blog_post.author_name"/>
             <t t-if="not hide_date">
                 <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
                 <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'format': 'long', 'date_only': 'true'}"/>

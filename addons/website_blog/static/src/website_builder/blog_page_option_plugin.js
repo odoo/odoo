@@ -16,6 +16,7 @@ export class BlogPageOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [BlogPageOption],
+        content_not_editable_selectors: [".o_list_cover"],
     };
 }
 
