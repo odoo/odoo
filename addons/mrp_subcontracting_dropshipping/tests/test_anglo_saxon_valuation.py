@@ -227,13 +227,18 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             'product_qty': 1.0,
             'type': 'phantom',
         })
-        kit_bom.bom_line_ids = [(0, 0, {
-            'product_id': self.product_b.id,
-            'product_qty': 4,
-        }), (0, 0, {
-            'product_id': product_c.id,
-            'product_qty': 2,
-        })]
+        # bom line of product_c is expressed in unit to check the uom conversion (24 unit should give the same result as 2 dozens)
+        kit_bom.bom_line_ids = [
+            Command.create({
+                'product_id': self.product_b.id,
+                'product_qty': 4,
+            }),
+            Command.create({
+                'product_id': product_c.id,
+                'product_qty': 24,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id
+            }),
+        ]
 
         self.env['product.supplierinfo'].create({
             'product_id': self.product_b.id,
@@ -245,7 +250,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             'partner_id': self.partner_a.id,
             'price': 100,
         })
-
+        self.product_b.standard_price = 10
         (kit_final_prod + self.product_b).categ_id.write({
             'property_cost_method': 'fifo',
             'property_valuation': 'real_time',
@@ -253,7 +258,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
 
         sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_b.id,
-            'order_line': [(0, 0, {
+            'order_line': [Command.create({
                 'price_unit': 900,
                 'product_id': kit_final_prod.id,
                 'route_ids': [Command.link(self.dropship_route.id)],
@@ -264,24 +269,31 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         purchase_order = sale_order._get_purchase_orders()[0]
         purchase_order.button_confirm()
         dropship_transfer = purchase_order.picking_ids[0]
-        dropship_transfer.move_ids[0].quantity = 2.0
         dropship_transfer.button_validate()
 
-        account_move = sale_order._create_invoices()
-        account_move.action_post()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.action_post()
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
 
         # Each product_a should cost:
         # 4x product_b = 160 * 4 = 640 +
         # 2x product_c = 100 * 2 = 200
         #                        = 840
-        self.assertRecordValues(
-            account_move.line_ids.sorted('balance'),
-            [
-                {'name': 'product_a',                                               'debit': 0.0,       'credit': 1800.0},
-                {'name': 'product_a',                                               'debit': 0.0,       'credit': 1680.0},
-                {'name': '15% (Copy)',                                              'debit': 0.0,       'credit': 270.0},
-                {'name': f'{sale_order.name} - {account_move.name} installment #1', 'debit': 621.0,     'credit': 0.0},
-                {'name': f'{sale_order.name} - {account_move.name} installment #2', 'debit': 1449.0,    'credit': 0.0},
-                {'name': 'product_a',                                               'debit': 1680.0,    'credit': 0.0},
-            ]
-        )
+
+        # Since the kit is dropshipped, the expense should be recorded in the PO directly, as it never enter the stock.
+        self.assertRecordValues(bill.line_ids.sorted('balance'), [
+            {'name': False,          'account_name': 'Account Payable',   'debit': 0.0,      'credit': 2184.0},
+            {'name': '15%',          'account_name': 'Tax Paid',          'debit': 252.0,    'credit': 0.0},
+            {'name': '15% (copy)',   'account_name': 'Tax Paid',          'debit': 252.0,    'credit': 0.0},
+            {'name': 'product_c',    'account_name': 'Expenses',          'debit': 400.0,    'credit': 0.0},
+            {'name': 'product_b',    'account_name': 'Expenses',          'debit': 1280.0,   'credit': 0.0},
+        ])
+
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'name': 'product_a',                                            'account_name': 'Product Sales',               'debit': 0.0,      'credit': 1800.0},
+            {'name': '15% (copy)',                                           'account_name': 'Tax Received',                'debit': 0.0,      'credit': 270.0},
+            {'name': f'{sale_order.name} - {invoice.name} installment #1',   'account_name': 'Account Receivable (copy)',   'debit': 621.0,    'credit': 0.0},
+            {'name': f'{sale_order.name} - {invoice.name} installment #2',   'account_name': 'Account Receivable (copy)',   'debit': 1449.0,   'credit': 0.0},
+        ])
