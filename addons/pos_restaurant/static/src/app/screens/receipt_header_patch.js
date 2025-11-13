@@ -6,14 +6,15 @@ import { patch } from "@web/core/utils/patch";
 patch(ReceiptHeader.prototype, {
     /** @returns {string} */
     get tableName() {
-        if (this.order.table_id && this.order.customer_count) {
+        const table = this.order.table_id || this.order.self_ordering_table_id;
+        if (table && this.order.customer_count) {
             return _t("Table %(number)s, Guests: %(count)s", {
-                number: this.order.table_id.table_number,
+                number: table.table_number,
                 count: this.order.customer_count,
             });
         }
-        if (this.order.table_id) {
-            return _t("Table %(number)s", { number: this.order.table_id.table_number });
+        if (table) {
+            return _t("Table %(number)s", { number: table.table_number });
         }
         return "";
     },
