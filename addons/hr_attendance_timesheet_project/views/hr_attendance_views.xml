@@ -78,6 +78,11 @@
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="current_project_id"/>
             </xpath>
+            <!-- Add color decoration to worked_hours field -->
+            <xpath expr="//field[@name='worked_hours']" position="attributes">
+                <attribute name="decoration-success">worked_hours &gt; 8.5</attribute>
+                <attribute name="decoration-danger">worked_hours &lt; 7.9</attribute>
+            </xpath>
             <xpath expr="//field[@name='worked_hours']" position="after">
                 <field name="total_timesheet_hours" widget="float_time" optional="show"/>
                 <field name="timesheet_hours_diff" widget="float_time" optional="show"
