@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -172,9 +174,22 @@ class MailingContact(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_contact_to_list_action")
         action['view_mode'] = 'form'
         action['target'] = 'new'
-        action['context'] = ctx
+        action['context'] = ctx | json.loads(action['context'])
 
         return action
+
+    def action_open_base_import(self):
+        """Open the base import wizard to import mailing list contacts with a xlsx file."""
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'import',
+            'name': _('Import Mailing Contacts'),
+            'params': {
+                'context': self.env.context,
+                'active_model': 'mailing.contact',
+            },
+        }
 
     @api.model
     def get_import_templates(self):
