@@ -7,6 +7,8 @@
         <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet %s' % snippet_extra_classes"/>
         <t t-set="main_page_url" t-value="'/event'"/>
         <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true, "events_event_location_active":true}'/>
+        <t t-set="snippet_title" t-valuef="Upcoming Events"/>
+        <t t-set="snippet_description" t-valuef="Explore what’s happening next and join the moments that matter."/>
         <t t-out="0"/>
     </t>
 </template>

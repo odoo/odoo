@@ -19,6 +19,12 @@
                 o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_actions_theme
                 o_wsale_products_opt_has_cta'"
         />
+        <t t-set="snippet_title" t-valuef="Featured products"/>
+        <t t-set="snippet_description" t-valuef="Explore our curated selection and find the products that perfectly match your needs."/>
+        <t t-set="snippet_button_text" t-valuef="Shop all"/>
+        <t t-set="snippet_heading_extra_classes" t-valuef="flex-column"/>
+        <t t-set="snippet_heading_inner_extra_classes" t-valuef="w-lg-50"/>
+        <t t-set="snippet_button_classes" t-valuef="btn btn-secondary"/>
         <!--
             TODO: `.oe_website_sale` is used as a selector in `tracking.js`. This
             is a temporary solution to load the tracking utilities and will be removed once

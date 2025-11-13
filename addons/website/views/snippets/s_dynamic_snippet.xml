@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="website.s_dynamic_snippet_template">
+        <t t-set="snippet_title_default">Our latest content</t>
+        <t t-set="snippet_description_default">Check out what's new in our company !</t>
+        <t t-set="snippet_button_text_default">See All <i class="fa fa-long-arrow-right ms-2" role="img"/></t>
         <section t-att-data-snippet="snippet_name"
             t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic o_dynamic_snippet_empty pt64 pb64"
             t-att-data-custom-template-data="custom_template_data or '{}'"
@@ -18,13 +21,13 @@
                             <span class="placeholder col-12 rounded" style="height: 250px;"/>
                         </div>
                     </section>
-                    <section t-attf-class="{{is_single_record and 'd-none' or 'justify-content-between d-flex'}} s_dynamic_snippet_title oe_unremovable oe_unmovable flex-column flex-md-row mb-lg-0 pb-3 pb-md-0 s_col_no_resize">
-                        <div>
-                            <h2 class="h3">Our latest content</h2>
-                            <p class="lead">Check out what's new in our company !</p>
+                    <section t-attf-class="{{is_single_record and 'd-none' or 'd-flex'}} {{snippet_heading_extra_classes or 'justify-content-between flex-column flex-md-row'}} s_dynamic_snippet_title oe_unremovable oe_unmovable mb-lg-0 pb-3 pb-md-0 s_col_no_resize">
+                        <div t-att-class="snippet_heading_inner_extra_classes">
+                            <h2 class="h3" t-out="snippet_title or snippet_title_default"/>
+                            <p class="lead" t-out="snippet_description or snippet_description_default"/>
                         </div>
                         <div t-if="main_page_url">
-                            <a title="See All" t-att-href="main_page_url">See all<span class="fa fa-long-arrow-right ms-2"/></a>
+                            <a t-att-class="snippet_button_classes" t-att-href="main_page_url" t-out="snippet_button_text or snippet_button_text_default"/>
                         </div>
                     </section>
                     <section t-attf-class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col s_col_no_resize #{content_classes}">
