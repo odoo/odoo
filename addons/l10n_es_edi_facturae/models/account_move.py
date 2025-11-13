@@ -859,11 +859,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         if filetype == 'facturae':
             if facturae_attachment := self.l10n_es_edi_facturae_xml_id:
-                return {
+                return [{
                     'filename': facturae_attachment.name,
                     'filetype': 'xml',
                     'content': facturae_attachment.raw,
-                }
+                }]
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
     def get_extra_print_items(self):

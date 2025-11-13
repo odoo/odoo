@@ -357,13 +357,14 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
         invoice_de = self.init_invoice('out_invoice', partner=german_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
         invoice_be = self.init_invoice('out_invoice', partner=belgian_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
         invoice_us = self.init_invoice('out_invoice', partner=us_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
-        res = [invoice._get_invoice_legal_documents('ubl', allow_fallback=True) for invoice in (invoice_de + invoice_be + invoice_us)]
-        self.assertEqual(len(res), 3)
+        res = [document for invoice in (invoice_de + invoice_be + invoice_us) for document in invoice._get_invoice_legal_documents('ubl', allow_fallback=True)]
+        self.assertEqual(len(res), 2)
         self.assertEqual(res[0].get('filename'), 'INV_2019_00001_ubl_de.xml')
         self.assertEqual(res[1].get('filename'), 'INV_2019_00002_ubl_bis3.xml')
-        self.assertFalse(res[2])
         invoice_be_failing = self.init_invoice('out_invoice', partner=belgian_partner, amounts=[100], post=True)
-        res_errors = invoice_be_failing._get_invoice_legal_documents('ubl', allow_fallback=True)
+        legal_documents = invoice_be_failing._get_invoice_legal_documents('ubl', allow_fallback=True)
+        self.assertEqual(len(legal_documents), 1)
+        res_errors = legal_documents[0]
         self.assertIn("Each invoice line should have at least one tax.", res_errors.get('errors'))
 
     def test_billing_date_in_cii_xml(self):

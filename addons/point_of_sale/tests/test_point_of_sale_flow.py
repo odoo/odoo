@@ -294,8 +294,9 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(order_3.picking_ids[0].move_ids.mapped('state'), ['done', 'done'])
 
         order_refund_3.action_pos_order_invoice()
-        invoice_pdf_content = str(order_refund_3.account_move._get_invoice_legal_documents(
-            'pdf', allow_fallback=True).get('content'))
+        legal_documents = order_refund_3.account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
+        self.assertEqual(len(legal_documents), 1)
+        invoice_pdf_content = str(legal_documents[0]['content'])
         self.assertTrue("using Cash" in invoice_pdf_content)
         self.assertEqual(order_refund_3.picking_count, 1)
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()

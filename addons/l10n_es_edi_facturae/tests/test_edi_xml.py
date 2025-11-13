@@ -573,7 +573,9 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             })
             invoice.l10n_es_edi_facturae_xml_id = attachment
 
-            self.assertEqual(invoice._get_invoice_legal_documents('facturae'), {
+            legal_documents = invoice._get_invoice_legal_documents('facturae')
+            self.assertEqual(len(legal_documents), 1)
+            self.assertEqual(legal_documents[0], {
                 'filename': attachment.name,
                 'filetype': 'xml',
                 'content': attachment.raw,
@@ -581,8 +583,8 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
             # Test with no XML file
             invoice.l10n_es_edi_facturae_xml_id = False
-            self.assertIsNone(invoice._get_invoice_legal_documents('facturae'),
-                             "Should return None when no XML file exists")
+            self.assertFalse(invoice._get_invoice_legal_documents('facturae'),
+                             "Should return [] when no XML file exists")
 
     def test_download_facturae_xml_batch_scenario(self):
         """ Test Factura-e XML download with multiple invoices. """
