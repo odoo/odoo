@@ -3802,3 +3802,40 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 0.0, 'credit': 100.0, 'reconciled': True},
             {'debit': 100.0, 'credit': 0.0, 'reconciled': True},
         ])
+
+    def test_PO_ordered_quantity_invoice_batch_svl(self):
+        if not self.env["ir.module.module"].search([("name", "=", "stock_picking_batch"), ("state", "=", "installed")]):
+            self.skipTest("stock_picking_batch module is required for this test")
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'purchase'
+        self.product1.standard_price = 1.0
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 50.0,
+                    'price_unit': 1.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        self._bill(po)
+        receipt_1 = po.picking_ids[0]
+        receipt_1.move_ids.quantity = 20
+        receipt_1.action_split_transfer()
+        receipt_1 = po.picking_ids[0]
+        receipt_2 = po.picking_ids[1]
+        batch = self.env['stock.picking.batch'].create({
+            'name': 'Batch 1',
+            'company_id': self.env.company.id,
+            'picking_ids': [Command.link(receipt_1.id), Command.link(receipt_2.id)]
+        })
+        batch.action_done()
+        self.assertRecordValues(batch.picking_ids.move_ids.stock_valuation_layer_ids.sorted('quantity'), [
+            {'quantity': 20.0, 'unit_cost': 1.0, 'value': 20},
+            {'quantity': 30.0, 'unit_cost': 1.0, 'value': 30},
+        ])
