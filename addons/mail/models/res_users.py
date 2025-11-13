@@ -39,6 +39,12 @@ class ResUsers(models.Model):
     out_of_office_from = fields.Datetime()
     out_of_office_to = fields.Datetime()
     out_of_office_message = fields.Html('Vacation Responder')
+    out_of_office_forward_to = fields.Many2one(
+        "res.users",
+        string="Forward to",
+        help="Forward your messages to another user while you’re out of office. "
+             "Notifications about documents they can’t access won’t be forwarded.",
+    )
     is_out_of_office = fields.Boolean('Out of Office', compute='_compute_is_out_of_office')
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
@@ -161,6 +167,7 @@ class ResUsers(models.Model):
             "out_of_office_from",
             "out_of_office_message",
             "out_of_office_to",
+            "out_of_office_forward_to",
             "role_ids",
             "has_external_mail_server",
             "outgoing_mail_server_id",
@@ -174,6 +181,7 @@ class ResUsers(models.Model):
             "out_of_office_from",
             "out_of_office_message",
             "out_of_office_to",
+            "out_of_office_forward_to",
         ]
 
     @api.model_create_multi
