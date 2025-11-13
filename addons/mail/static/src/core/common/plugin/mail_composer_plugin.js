@@ -14,6 +14,7 @@ export class MailComposerPlugin extends Plugin {
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         bypass_paste_image_files: () => true,
+        create_link_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
             withSequence(1, {
                 selector: `.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`,
