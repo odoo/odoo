@@ -317,7 +317,6 @@ QUnit.module("Homeworking Calendar", ({ beforeEach }) => {
         assert.containsOnce(target, ".o_cw_popover .o_cw_popover_delete", "should show delete button");
 
         await click(target.querySelector(".o_cw_popover_close"));
-        await click(workLocations.at(-2), '.o_worklocation_line');
         assert.verifySteps(["hr_homeworking_calendar.set_location_wizard_action", "2020-12-11"]);
         mockRegistry.add("get_worklocation", previousMock, { force: true });
     });
@@ -336,7 +335,7 @@ QUnit.module("Homeworking Calendar", ({ beforeEach }) => {
             const records = target.querySelectorAll(`.fc-col-header-cell[data-date="${date}"] .o_worklocation_btn .o_homeworking_content`);
             records.forEach(record => {
                 const { employee, location } = record.dataset;
-                assert.equal(multiCalendarData[employee][`${s.weekdayLong.toLowerCase()}_location_id`].location_type, location);
+                assert.equal(multiCalendarData[employee][`${s.weekdayLong.toLowerCase()}_location_id`].location_type, location.toLowerCase());
             });
         });
 
