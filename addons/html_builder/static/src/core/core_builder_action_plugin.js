@@ -180,7 +180,7 @@ class AttributeAction extends BuilderAction {
     }
 }
 
-class DataAttributeAction extends BuilderAction {
+export class DataAttributeAction extends BuilderAction {
     static id = "dataAttributeAction";
     getValue({ editingElement, params: { mainParam: attributeName } = {} }) {
         if (!/(^color|Color)($|(?=[A-Z]))/.test(attributeName)) {
