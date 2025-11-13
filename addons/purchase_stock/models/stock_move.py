@@ -93,10 +93,415 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id
 
+<<<<<<< 9fa18a4e652e63190f8145d9bc2ed8c26c9aedd8
     def _prepare_extra_move_vals(self, qty):
         vals = super()._prepare_extra_move_vals(qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+||||||| dfd97d55287e3ca263d2012e91221371bd7307ce
+    def _get_price_unit(self):
+        """ Returns the unit price for the move"""
+        self.ensure_one()
+        if self._should_ignore_pol_price():
+            return super(StockMove, self)._get_price_unit()
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        line = self.purchase_line_id
+        order = line.order_id
+        received_qty = self._get_qty_received_without_self()
+        if line.product_id.purchase_method == 'purchase' and line.product_uom_id.compare(line.qty_invoiced, received_qty) > 0:
+            move_layer = line.move_ids.sudo().stock_valuation_layer_ids
+            invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
+            # value on valuation layer is in company's currency, while value on invoice line is in order's currency
+            receipt_value = 0
+            for layer in move_layer:
+                if not layer._should_impact_price_unit_receipt_value():
+                    continue
+                receipt_value += layer.currency_id._convert(
+                    layer.value, order.currency_id, order.company_id, layer.create_date, round=False)
+            if invoiced_layer:
+                receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
+                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
+            total_invoiced_value = 0
+            invoiced_qty = 0
+            for invoice_line in line.sudo().invoice_lines:
+                if invoice_line.move_id.state != 'posted':
+                    continue
+                # Adjust unit price to account for discounts before adding taxes.
+                adjusted_unit_price = invoice_line.price_unit * (1 - (invoice_line.discount / 100)) if invoice_line.discount else invoice_line.price_unit
+                if invoice_line.tax_ids:
+                    invoice_line_value = invoice_line.tax_ids.compute_all(
+                        adjusted_unit_price,
+                        currency=invoice_line.currency_id,
+                        quantity=invoice_line.quantity,
+                        rounding_method="round_globally",
+                    )['total_void']
+                else:
+                    invoice_line_value = adjusted_unit_price * invoice_line.quantity
+                total_invoiced_value += invoice_line.currency_id._convert(
+                        invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
+                invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id, rounding_method="HALF-UP")
+            # TODO currency check
+            remaining_value = total_invoiced_value - receipt_value
+            # TODO qty_received in product uom
+            remaining_qty = invoiced_qty - line.product_uom_id._compute_quantity(received_qty, line.product_id.uom_id, rounding_method="HALF-UP")
+            has_remaining = (
+                not order.currency_id.is_zero(remaining_value)
+                and not float_is_zero(remaining_qty, precision_rounding=line.product_id.uom_id.rounding)
+            )
+            if order.currency_id != order.company_id.currency_id and has_remaining:
+                # will be rounded during currency conversion
+                price_unit = remaining_value / remaining_qty
+            elif has_remaining:
+                price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            else:
+                price_unit = line._get_gross_price_unit()
+        else:
+            price_unit = line._get_gross_price_unit()
+        if order.currency_id != order.company_id.currency_id:
+            convert_date = self._get_currency_convert_date()
+            price_unit = order.currency_id._convert(
+                price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
+        if self.product_id.lot_valuated:
+            return dict.fromkeys(self.lot_ids, price_unit)
+        return {self.env['stock.lot']: price_unit}
+
+    def _get_qty_received_without_self(self):
+        qty_received = self.purchase_line_id.qty_received
+        if self.state == 'done':
+            qty_received -= self.product_uom._compute_quantity(
+                self.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
+            )
+        return qty_received
+
+    def _get_currency_convert_date(self):
+        self.ensure_one()
+        # The date must be today, and not the date of the move since the move move is still
+        # in assigned state. However, the move date is the scheduled date until move is
+        # done, then date of actual move processing. See:
+        # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
+        convert_date = fields.Date.context_today(self) if self.state != 'done' else self.date
+        line = self.purchase_line_id
+        if not line:
+            return convert_date
+
+        # Use currency rate at bill date when invoice before receipt
+        qty_received = self._get_qty_received_without_self()
+        if line.product_uom_id.compare(line.qty_invoiced, qty_received) > 0:
+            posted_bills = line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted')
+            convert_date = max(posted_bills.mapped('invoice_date'), default=convert_date)
+        return convert_date
+
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
+        """ Overridden from stock_account to support amount_currency on valuation lines generated from po
+        """
+        self.ensure_one()
+
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
+        purchase_currency = self.purchase_line_id.currency_id
+        company_currency = self.company_id.currency_id
+        if not self.purchase_line_id or purchase_currency == company_currency:
+            return rslt
+        svl = self.env['stock.valuation.layer'].browse(svl_id)
+        if not svl.account_move_line_id:
+            convert_date = self._get_currency_convert_date()
+            rslt['credit_line_vals']['amount_currency'] = company_currency._convert(
+                rslt['credit_line_vals']['balance'],
+                purchase_currency,
+                self.company_id,
+                convert_date
+            )
+            rslt['debit_line_vals']['amount_currency'] = company_currency._convert(
+                rslt['debit_line_vals']['balance'],
+                purchase_currency,
+                self.company_id,
+                convert_date
+            )
+            rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+            rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+        else:
+            rslt['credit_line_vals']['amount_currency'] = 0
+            rslt['debit_line_vals']['amount_currency'] = 0
+            rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+            rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+            if not svl.price_diff_value:
+                return rslt
+            # The idea is to force using the company currency during the reconciliation process
+            rslt['debit_line_vals_curr'] = {
+                'name': _("Currency exchange rate difference"),
+                'product_id': self.product_id.id,
+                'quantity': 0,
+                'product_uom_id': self.product_id.uom_id.id,
+                'partner_id': partner_id,
+                'balance': 0,
+                'account_id': debit_account_id,
+                'currency_id': purchase_currency.id,
+                'amount_currency': -svl.price_diff_value,
+            }
+            rslt['credit_line_vals_curr'] = {
+                'name': _("Currency exchange rate difference"),
+                'product_id': self.product_id.id,
+                'quantity': 0,
+                'product_uom_id': self.product_id.uom_id.id,
+                'partner_id': partner_id,
+                'balance': 0,
+                'account_id': credit_account_id,
+                'currency_id': purchase_currency.id,
+                'amount_currency': svl.price_diff_value,
+            }
+        return rslt
+
+    def _account_entry_move(self, qty, description, svl_id, cost):
+        """
+        In case of a PO return, if the value of the returned product is
+        different from the purchased one, we need to empty the stock_in account
+        with the difference
+        """
+        move_directions = self.env.context.get('move_directions') or False
+        am_vals_list = super(StockMove, self.with_context(move_directions=move_directions))._account_entry_move(qty, description, svl_id, cost)
+        returned_move = self.origin_returned_move_id
+        move = (self | returned_move).with_prefetch(self._prefetch_ids)
+        pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
+
+        if not am_vals_list or not self.purchase_line_id or pdiff_exists or self.product_id.uom_id.is_zero(qty):
+            return am_vals_list
+
+        layer = self.env['stock.valuation.layer'].browse(svl_id)
+
+        self_is_out_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+
+        if returned_move and self_is_out_move and self._is_returned(valued_type='out'):
+            returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
+            unit_diff = layer._get_layer_price_unit() - returned_layer._get_layer_price_unit() if returned_layer else 0
+        elif returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):
+            returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
+            unit_diff = returned_layer._get_layer_price_unit() - self.purchase_line_id._get_gross_price_unit()
+        else:
+            return am_vals_list
+
+        diff = unit_diff * qty
+        company = self.purchase_line_id.company_id
+        if company.currency_id.is_zero(diff):
+            return am_vals_list
+
+        sm = self.with_company(company).with_context(is_returned=True)
+        accounts = sm.product_id.product_tmpl_id.get_product_accounts()
+        acc_exp_id = accounts['expense'].id
+        acc_stock_in_id = accounts['stock_input'].id
+        journal_id = accounts['stock_journal'].id
+        vals = sm._prepare_account_move_vals(acc_exp_id, acc_stock_in_id, journal_id, qty, description, False, diff)
+        am_vals_list.append(vals)
+
+        return am_vals_list
+=======
+    def _get_price_unit(self):
+        """ Returns the unit price for the move"""
+        self.ensure_one()
+        if self._should_ignore_pol_price():
+            return super(StockMove, self)._get_price_unit()
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        line = self.purchase_line_id
+        order = line.order_id
+        received_qty = self._get_qty_received_without_self()
+        if line.product_id.purchase_method == 'purchase' and line.product_uom_id.compare(line.qty_invoiced, received_qty) > 0:
+            move_layer = line.move_ids.sudo().stock_valuation_layer_ids
+            invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
+            # value on valuation layer is in company's currency, while value on invoice line is in order's currency
+            receipt_value = 0
+            for layer in move_layer:
+                if not layer._should_impact_price_unit_receipt_value():
+                    continue
+                receipt_value += layer.currency_id._convert(
+                    layer.value, order.currency_id, order.company_id, layer.create_date, round=False)
+            if invoiced_layer:
+                receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
+                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
+            total_invoiced_value = 0
+            invoiced_qty = 0
+            for invoice_line in line.sudo().invoice_lines:
+                if invoice_line.move_id.state != 'posted':
+                    continue
+                # Adjust unit price to account for discounts before adding taxes.
+                adjusted_unit_price = invoice_line.price_unit * (1 - (invoice_line.discount / 100)) if invoice_line.discount else invoice_line.price_unit
+                if invoice_line.tax_ids:
+                    invoice_line_value = invoice_line.tax_ids.compute_all(
+                        adjusted_unit_price,
+                        currency=invoice_line.currency_id,
+                        quantity=invoice_line.quantity,
+                        rounding_method="round_globally",
+                    )['total_void']
+                else:
+                    invoice_line_value = adjusted_unit_price * invoice_line.quantity
+                total_invoiced_value += invoice_line.currency_id._convert(
+                        invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
+                invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id, rounding_method="HALF-UP")
+            # TODO currency check
+            remaining_value = total_invoiced_value - receipt_value
+            # TODO qty_received in product uom
+            remaining_qty = invoiced_qty - line.product_uom_id._compute_quantity(received_qty, line.product_id.uom_id, rounding_method="HALF-UP")
+            has_remaining = (
+                not order.currency_id.is_zero(remaining_value)
+                and not float_is_zero(remaining_qty, precision_rounding=line.product_id.uom_id.rounding)
+            )
+            if order.currency_id != order.company_id.currency_id and has_remaining:
+                # will be rounded during currency conversion
+                price_unit = remaining_value / remaining_qty
+            elif has_remaining:
+                price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            else:
+                price_unit = line._get_gross_price_unit()
+        else:
+            price_unit = line._get_gross_price_unit()
+        if order.currency_id != order.company_id.currency_id:
+            convert_date = self._get_currency_convert_date()
+            price_unit = order.currency_id._convert(
+                price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
+        if self.product_id.lot_valuated:
+            return dict.fromkeys(self.lot_ids, price_unit)
+        return {self.env['stock.lot']: price_unit}
+
+    def _get_qty_received_without_self(self):
+        qty_received = self.purchase_line_id.qty_received
+        if self.state == 'done':
+            qty_received -= self.product_uom._compute_quantity(
+                self.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
+            )
+            batch_moves = self._get_batch_moves()
+            for move in batch_moves:
+                if move == self or move.state != 'done' or move.purchase_line_id != self.purchase_line_id:
+                    continue
+                qty_received -= move.product_uom._compute_quantity(
+                    move.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
+                )
+        return qty_received
+
+    def _get_currency_convert_date(self):
+        self.ensure_one()
+        # The date must be today, and not the date of the move since the move move is still
+        # in assigned state. However, the move date is the scheduled date until move is
+        # done, then date of actual move processing. See:
+        # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
+        convert_date = fields.Date.context_today(self) if self.state != 'done' else self.date
+        line = self.purchase_line_id
+        if not line:
+            return convert_date
+
+        # Use currency rate at bill date when invoice before receipt
+        qty_received = self._get_qty_received_without_self()
+        if line.product_uom_id.compare(line.qty_invoiced, qty_received) > 0:
+            posted_bills = line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted')
+            convert_date = max(posted_bills.mapped('invoice_date'), default=convert_date)
+        return convert_date
+
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
+        """ Overridden from stock_account to support amount_currency on valuation lines generated from po
+        """
+        self.ensure_one()
+
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
+        purchase_currency = self.purchase_line_id.currency_id
+        company_currency = self.company_id.currency_id
+        if not self.purchase_line_id or purchase_currency == company_currency:
+            return rslt
+        svl = self.env['stock.valuation.layer'].browse(svl_id)
+        if not svl.account_move_line_id:
+            convert_date = self._get_currency_convert_date()
+            rslt['credit_line_vals']['amount_currency'] = company_currency._convert(
+                rslt['credit_line_vals']['balance'],
+                purchase_currency,
+                self.company_id,
+                convert_date
+            )
+            rslt['debit_line_vals']['amount_currency'] = company_currency._convert(
+                rslt['debit_line_vals']['balance'],
+                purchase_currency,
+                self.company_id,
+                convert_date
+            )
+            rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+            rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+        else:
+            rslt['credit_line_vals']['amount_currency'] = 0
+            rslt['debit_line_vals']['amount_currency'] = 0
+            rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+            rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+            if not svl.price_diff_value:
+                return rslt
+            # The idea is to force using the company currency during the reconciliation process
+            rslt['debit_line_vals_curr'] = {
+                'name': _("Currency exchange rate difference"),
+                'product_id': self.product_id.id,
+                'quantity': 0,
+                'product_uom_id': self.product_id.uom_id.id,
+                'partner_id': partner_id,
+                'balance': 0,
+                'account_id': debit_account_id,
+                'currency_id': purchase_currency.id,
+                'amount_currency': -svl.price_diff_value,
+            }
+            rslt['credit_line_vals_curr'] = {
+                'name': _("Currency exchange rate difference"),
+                'product_id': self.product_id.id,
+                'quantity': 0,
+                'product_uom_id': self.product_id.uom_id.id,
+                'partner_id': partner_id,
+                'balance': 0,
+                'account_id': credit_account_id,
+                'currency_id': purchase_currency.id,
+                'amount_currency': svl.price_diff_value,
+            }
+        return rslt
+
+    def _account_entry_move(self, qty, description, svl_id, cost):
+        """
+        In case of a PO return, if the value of the returned product is
+        different from the purchased one, we need to empty the stock_in account
+        with the difference
+        """
+        move_directions = self.env.context.get('move_directions') or False
+        am_vals_list = super(StockMove, self.with_context(move_directions=move_directions))._account_entry_move(qty, description, svl_id, cost)
+        returned_move = self.origin_returned_move_id
+        move = (self | returned_move).with_prefetch(self._prefetch_ids)
+        pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
+
+        if not am_vals_list or not self.purchase_line_id or pdiff_exists or self.product_id.uom_id.is_zero(qty):
+            return am_vals_list
+
+        layer = self.env['stock.valuation.layer'].browse(svl_id)
+
+        self_is_out_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+
+        if returned_move and self_is_out_move and self._is_returned(valued_type='out'):
+            returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
+            unit_diff = layer._get_layer_price_unit() - returned_layer._get_layer_price_unit() if returned_layer else 0
+        elif returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):
+            returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
+            unit_diff = returned_layer._get_layer_price_unit() - self.purchase_line_id._get_gross_price_unit()
+        else:
+            return am_vals_list
+
+        diff = unit_diff * qty
+        company = self.purchase_line_id.company_id
+        if company.currency_id.is_zero(diff):
+            return am_vals_list
+
+        sm = self.with_company(company).with_context(is_returned=True)
+        accounts = sm.product_id.product_tmpl_id.get_product_accounts()
+        acc_exp_id = accounts['expense'].id
+        acc_stock_in_id = accounts['stock_input'].id
+        journal_id = accounts['stock_journal'].id
+        vals = sm._prepare_account_move_vals(acc_exp_id, acc_stock_in_id, journal_id, qty, description, False, diff)
+        am_vals_list.append(vals)
+
+        return am_vals_list
+>>>>>>> cf9a31ecb7a1eccd7652f6b5fda514b9b4040b8d
 
     def _prepare_move_split_vals(self, uom_qty):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
