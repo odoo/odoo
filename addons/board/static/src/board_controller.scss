@@ -31,15 +31,20 @@
 
     > .o_view_controller {
         padding: 0 6px 6px 6px;
-        .o_graph_renderer canvas {
-            height: 300px;
-        }
         .o_content {
             max-height: 80vh;
             overflow: auto;
             > .o_renderer {
                 min-width: 1200px;
             }
+        }
+        // graph view
+        .o_graph_renderer canvas {
+            height: 300px;
+        }
+        // calendar view
+        .o_calendar_wrapper {
+            height: 400px;
         }
     }
 
