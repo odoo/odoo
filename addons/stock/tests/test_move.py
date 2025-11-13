@@ -6593,3 +6593,39 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(backorder.move_ids.product_uom_qty, 6)
         self.assertEqual(backorder.move_ids.quantity, 6)
         self.assertEqual(backorder.move_ids.state, 'assigned')
+
+    def test_edit_serial_number_from_move(self):
+        """
+        This test verifies that when a move is assigned an initial serial number,
+        and the user manually replaces it with another available one before
+        validation, the system correctly updates the serial number on both the
+        stock move and the move line. It also ensures that the updated serial
+        number is preserved after validating the picking.
+        """
+        lot1 = self.env['stock.lot'].create({
+            'product_id': self.product_serial.id,
+        })
+        lot2 = self.env['stock.lot'].create({
+            'product_id': self.product_serial.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1, lot_id=lot2)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.product_serial.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        picking.action_confirm()
+        self.assertEqual(picking.move_ids.state, 'assigned')
+        self.assertEqual(picking.move_ids.lot_ids, lot1)
+        picking.move_ids.lot_ids = lot2
+        self.assertEqual(picking.move_ids.lot_ids, lot2)
+        self.assertEqual(picking.move_line_ids.lot_id, lot2)
+        picking.button_validate()
+        self.assertEqual(picking.move_ids.lot_ids, lot2)
