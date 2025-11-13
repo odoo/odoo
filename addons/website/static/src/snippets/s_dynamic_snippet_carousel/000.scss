@@ -1,42 +1,86 @@
 .s_dynamic {
-	.carousel {
-		--o-carousel-item-padding-v: #{map-get($spacers, 3)};
-    	--o-carousel-item-width-percentage: calc(100% / var(--o-carousel-chunk-size) - (var(--o-carousel-gap, var(--gutter-x) * .5) * (var(--o-carousel-chunk-size) - 1) / var(--o-carousel-chunk-size)));
-	}
+    .carousel {
+        --o-carousel-item-padding-v: #{map-get($spacers, 3)};
+        --o-carousel-item-width-percentage: calc(100% / var(--o-carousel-chunk-size) - (var(--o-carousel-gap, var(--gutter-x) * .5) * (var(--o-carousel-chunk-size) - 1) / var(--o-carousel-chunk-size)));
+    }
 
-	.s_dynamic_snippet_arrows {
-		position: relative;
-		justify-content: center;
+    .s_dynamic_snippet_arrows {
+        position: relative;
+        justify-content: center;
 
-		@include media-breakpoint-up(md) {
-			position: absolute;
-			top: 50%;
-			transform: translateY(-50%);
-			justify-content: space-between;
-		}
-	}
+        @include media-breakpoint-up(md) {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            justify-content: space-between;
+        }
+    }
 
-	.o_carousel_arrow_wrap {
-		display: contents;
-	}
+    .o_carousel_arrow_wrap {
+        display: contents;
+    }
 
-	.carousel-control-prev,	.carousel-control-next {
-		width: auto;
-	}
+    .carousel-control-prev,	.carousel-control-next {
+        width: auto;
+    }
 
-	&:not(.o_carousel_multi_items) {
-		.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
-			.s_dynamic_snippet_arrows {
-				@include media-breakpoint-up(lg) {
-					position: sticky;
-					bottom: map-get($spacers, 3);
-					transform: none;
-				}
-			}
-		}
-	}
+    &:where(:not(.o_carousel_multi_items)) {
+        .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
+            .s_dynamic_snippet_arrows {
+                @include media-breakpoint-up(lg) {
+                    position: sticky;
+                    bottom: map-get($spacers, 3);
+                    transform: none;
+                }
+            }
+        }
+    }
 
-	.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
-		width: 75%;
-	}
+    @include media-breakpoint-up(md) {
+        &:where(:not([class*="o_arrows_"])){
+            .carousel-control-prev {
+                transform: translateX(-50%);
+            }
+
+            .carousel-control-next {
+                transform: translateX(50%);
+            }
+        }
+
+        &.o_arrows_inside {
+            .s_dynamic_snippet_arrows a {
+                margin: 0 map-get($spacers, 3);
+            }
+        }
+
+        &.o_arrows_bottom {
+            .s_dynamic_snippet_arrows {
+                position: relative;
+                transform: none;
+                margin-top: map-get($spacers, 3);
+            }
+        }
+
+        &.o_arrows_bottom_left {
+            .s_dynamic_snippet_arrows {
+                justify-content: flex-start;
+            }
+        }
+
+        &.o_arrows_bottom_center {
+            .s_dynamic_snippet_arrows {
+                justify-content: center;
+            }
+        }
+
+        &.o_arrows_bottom_right {
+            .s_dynamic_snippet_arrows {
+                justify-content: flex-end;
+            }
+        }
+    }
+
+    .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
+        width: 75%;
+    }
 }

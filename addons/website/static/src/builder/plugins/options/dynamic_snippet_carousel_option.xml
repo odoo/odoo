@@ -3,6 +3,15 @@
 
 <t t-name="website.DynamicSnippetCarouselOption" t-inherit="website.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
+        <BuilderRow label.translate="Arrow Position">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">Default</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_arrows_inside'">Inside</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_left'">Bottom Left</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_center'">Bottom Center</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_arrows_bottom o_arrows_bottom_right'">Bottom Right</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
 	    <BuilderRow label.translate="Slider Speed" t-if="numberOfRecords > 1">
 	        <BuilderNumberInput action="'setCarouselSliderSpeed'" default="1" unit="'s'" saveUnit="''" step="0.1" min="0" preview="false" id="'speed_opt'"/>
 	    </BuilderRow>

@@ -449,7 +449,6 @@ class Website(Home):
             t['numberOfElementsSmallDevices'] = attribs.get('data-number-of-elements-sm')
             t['numberOfRecords'] = attribs.get('data-number-of-elements-fetch')
             t['rowPerSlide'] = attribs.get('data-row-per-slide')
-            t['arrowPosition'] = attribs.get('data-arrow-position')
             t['extraClasses'] = attribs.get('data-extra-classes')
             t['extraSnippetClasses'] = attribs.get('data-extra-snippet-classes')
             t['containerClasses'] = attribs.get('data-container-classes')
