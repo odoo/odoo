@@ -77,6 +77,11 @@ export class ActivityWatchTimesheet extends Component {
         this.loadData();
     }
 
+    navigateToToday() {
+        this.state.currentDate = luxon.DateTime.now();
+        this.loadData();
+    }
+
     keyFor(groupKey, title) {
         return JSON.stringify({
             groupKey,
@@ -549,6 +554,10 @@ export class ActivityWatchTimesheet extends Component {
         await this.loadTimesheets();
     }
 
+    parseJson(str) {
+        return JSON.parse(str);
+    }
+
     async loadTimesheets() {
         const todayStart = this.state.currentDate.toISO();
         // get timesheets
@@ -615,11 +624,6 @@ export class ActivityWatchTimesheet extends Component {
         }
         ranges.push(...res);
         ranges.sort((a, b) => a.start - b.start);
-    }
-
-    parseId(id) {
-        const res = Number.parseInt(id);
-        return isNaN(res) ? null : res;
     }
 
     projectName(id) {

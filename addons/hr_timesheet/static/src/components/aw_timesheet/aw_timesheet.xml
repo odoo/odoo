@@ -3,10 +3,8 @@
   <t t-name="hr_timesheet.ActivityWatchTimesheet">
     <div class="o_activitywatch_sync d-flex h-100">
 
-      <!-- LEFT SIDE -->
       <div class="o_suggestions w-50 pe-3">
         <div class="o_activitywatch_header d-flex align-items-center mb-3">
-          <!-- Date selector -->
           <div class="d-flex align-items-center me-3">
             <button class="btn btn-light btn-sm me-2" t-on-click="() => this.navigateToDay(-1)">
               <i class="fa fa-chevron-left"/>
@@ -20,9 +18,11 @@
             <button class="btn btn-light btn-sm ms-2" t-on-click="() => this.navigateToDay(1)">
               <i class="fa fa-chevron-right"/>
             </button>
+
+            <button class="btn btn-outline-primary btn-sm ms-2"
+                    t-on-click="() => this.navigateToToday()">Today</button>
           </div>
 
-          <!-- Group-by selector -->
           <div class="d-flex align-items-center ms-auto">
             <label class="me-2 fw-semibold">Group by:</label>
             <select class="form-select form-select-sm w-auto"
@@ -33,16 +33,15 @@
           </div>
         </div>
 
-        <!-- PROJECT MODE -->
         <t t-if="state.groupBy === 'project'">
           <div class="o_suggestion">
             <t t-foreach="Object.keys(state.grouped)" t-as="groupKey" t-key="groupKey">
               <div class="card mb-3 p-3 shadow-sm"
                    t-if="Object.keys(state.grouped[groupKey]).length &gt; 0">
-                <t t-set="ids" t-value="groupKey.split('_')"/>
+                <t t-set="ids" t-value="parseJson(groupKey)"/>
                 <h6 class="mb-2">
-                  Project <t t-esc="projectName(parseId(ids[0])) || 'Unknown Project'"/> /
-                  Task <t t-esc="taskName(parseId(ids[1])) || 'Unknown Task'"/>
+                  Project <t t-esc="projectName(ids.project_id)"/> /
+                  Task <t t-esc="taskName(ids.task_id)"/>
                 </h6>
 
                 <div class="table-responsive mb-2">
