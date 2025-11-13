@@ -1,51 +1,11 @@
 .s_dynamic_snippet_products {
-    // Adjusts carousel arrows' aligments
-    @mixin o-aligns-controlers {
-
-        .carousel-control-next,
-        .carousel-control-prev {
-            aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
-            width: var(--o-wsale-dynamic-snippet-col-size) !important;
-            transform: scaleX(.2);
-            bottom: auto;
-            isolation: isolate;
-            padding-top: 1rem;
-
-            .oi {
-                transform: scaleX(5);
-            }
-        }
-
-        .carousel-control-next {
-            transform-origin: center right;
-        }
-
-        .carousel-control-prev {
-            transform-origin: center left;
-        }
-    }
-
-    // Adapts arrow container width
-    @mixin o-adapts-col-size {
-        .carousel {
-            --o-wsale-dynamic-snippet-col-size: var(--o-carousel-item-width-percentage);
-
-            &:where(:has(.col-6)) {
-                --o-wsale-dynamic-snippet-col-size: 50%;
-            }
-
-            &:where(:has(.col-3)) {
-                --o-wsale-dynamic-snippet-col-size: 25%;
-            }
-        }
-    }
     .s_dynamic_snippet_row.row {
         --gutter-x: var(--o-wsale-products-grid-gap, 16px);
     }
 
     .carousel-item {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding-top: var(--o-carousel-item-padding-v);
+        padding-bottom: var(--o-carousel-item-padding-v);
     }
 
     &.o_wsale_products_opt_design_grid .s_dynamic_snippet_row.row {
@@ -57,17 +17,26 @@
         }
     }
 
-    // Applies arrows' alignment except when title is on the left + desktop
-    &:where(.o_wsale_products_opt_design_thumbs) {
-        &:not(:has(.s_dynamic_snippet_title_aside)) {
-            @include o-aligns-controlers;
-            @include o-adapts-col-size;
+    // Align the arrows vertically with the images for the "Thumbnails" card design
+    &:where(.o_wsale_products_opt_design_thumbs:not(.o_arrows_bottom)) {
+        @include media-breakpoint-up(md) {
+            .s_dynamic_snippet_arrows {
+                top: var(--o-carousel-item-padding-v);
+                transform: none;
+            }
+
+            .o_carousel_arrow_wrap {
+                display: flex;
+                aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
+                width: var(--o-carousel-item-width-percentage);
+            }
         }
 
-        @include media-breakpoint-down(lg) {
-            &:has(.s_dynamic_snippet_title_aside) {
-                @include o-aligns-controlers;
-                @include o-adapts-col-size;
+        @include media-breakpoint-up(lg) {
+            &:where(:not(.o_carousel_multi_items):has(.s_dynamic_snippet_title_aside)) {
+                .o_carousel_arrow_wrap {
+                    --o-wsale-card-thumb-aspect-ratio: none;
+                }
             }
         }
     }

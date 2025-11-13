@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.carousel.arrows">
-        <a t-attf-href="##{unique_id}" class="carousel-control-prev position-md-absolute w-auto" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
-            <span class="oi oi-chevron-left ms-md-n4 rounded-pill p-3 bg-700"/>
-            <span class="visually-hidden">Previous</span>
-        </a>
-        <a t-attf-href="##{unique_id}" class="carousel-control-next position-md-absolute w-auto" data-bs-slide="next" role="button" aria-label="Next" title="Next">
-            <span class="oi oi-chevron-right me-md-n4 rounded-pill p-3 bg-700"/>
-            <span class="visually-hidden">Next</span>
-        </a>
+        <div class="o_carousel_arrow_wrap align-items-center pe-none">
+            <a t-attf-href="##{unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
+                <span class="oi oi-chevron-left rounded-pill p-3 bg-700"/>
+                <span class="visually-hidden">Previous</span>
+            </a>
+        </div>
+        <div class="o_carousel_arrow_wrap align-items-center justify-content-end pe-none">
+            <a t-attf-href="##{unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" aria-label="Next" title="Next">
+                <span class="oi oi-chevron-right rounded-pill p-3 bg-700"/>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.base">
         <div t-att-id="unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
@@ -19,7 +23,7 @@
             <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/slideSize)).keys())"/>
             <t t-set="rowIndexGenerator" t-value="Array.from(Array(rowPerSlide).keys())"/>
             <t t-set="colIndexGenerator" t-value="Array.from(Array(rowSize).keys())"/>
-            <div t-attf-class="carousel-inner w-100 mx-auto #{extraInnerClass || ''}" role="listbox"
+            <div class="carousel-inner w-100 mx-auto" role="listbox"
                  aria-label="Carousel">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
                     <t t-set="slideOffset" t-value="slideIndex * slideSize"/>
@@ -44,25 +48,19 @@
             </div>
             <!-- Controls -->
             <t t-if='slideIndexGenerator.length > minControlValue'>
-                <t t-if="arrowPosition === 'bottom'">
-                    <div class="s_dynamic_snippet_arrow_bottom px-3 px-md-0 pt-2 d-flex justify-content-between">
-                        <t t-call="website.s_dynamic_snippet.carousel.arrows">
-                            <t t-set="unique_id" t-value="unique_id" />
-                        </t>
-                    </div>
-                </t>
-                <t t-else="">
+                <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100 pe-none z-1">
                     <t t-call="website.s_dynamic_snippet.carousel.arrows">
                         <t t-set="unique_id" t-value="unique_id" />
                     </t>
-                </t>
+                </div>
             </t>
         </div>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.page_scroll">
         <t t-call="website.s_dynamic_snippet.carousel.base">
             <t t-set="rowSize" t-value="chunkSize"/>
-            <t t-set="extraInnerClass" t-value="'row'"/>
+            <t t-set="extraCarouselStyle"
+               t-value="'--o-carousel-chunk-size: ' + chunkSize"/>
             <t t-set="colClass"
                t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"/>
             <t t-set="minControlValue" t-value="1"/>
@@ -73,9 +71,9 @@
             <t t-set="rowSize" t-value="1"/>
             <t t-set="extraCarouselClass" t-value="'o_carousel_multi_items'"/>
             <t t-set="extraCarouselStyle"
-               t-value="'--o-carousel-item-width-percentage: ' + (100.0 / chunkSize).toFixed(2) + '%;'"/>
-            <t t-set="extraRowClass" t-value="'mx-0'"/>
-            <t t-set="colClass" t-value="'d-flex flex-grow-1 flex-shrink-0'"/>
+               t-value="'--o-carousel-chunk-size: ' + chunkSize"/>
+            <t t-set="extraRowClass" t-value="'h-100 mx-0 mt-0'"/>
+            <t t-set="colClass" t-value="'d-flex flex-grow-1 flex-shrink-0 mt-0 px-0'"/>
             <t t-set="minControlValue" t-value="chunkSize"/>
         </t>
     </t>
