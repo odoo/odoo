@@ -285,6 +285,8 @@ export class Navigator {
             }
         }
 
+        const focusedIndex = this.items.findIndex((item) => item.el === document.activeElement);
+
         // Focus last item if some where removed
         if (oldItemsLength != this.items.length && this.activeItemIndex >= this.items.length) {
             this.items.at(-1)?.setActive();
@@ -302,6 +304,8 @@ export class Navigator {
                 this.activeItemIndex = index;
                 this.activeItem = this.items[this.activeItemIndex];
             }
+        } else if (focusedIndex >= 0) {
+            this.items[focusedIndex].setActive();
         }
     }
 
