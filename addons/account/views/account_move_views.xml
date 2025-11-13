@@ -1180,7 +1180,7 @@
                                         <!-- /l10n_in_edi.test_edi_json -->
                                         <!-- required for @api.onchange('product_id') -->
                                         <field name="product_uom_id" column_invisible="True"/>
-                                        <field name="price_unit" string="Price"/>
+                                        <field name="price_unit" string="Price" widget="account_min_digits" options="{'min_decimal_precision': 'Product Price'}"/>
                                         <field name="discount" width="50px" string="Disc.%" optional="hide"/>
                                         <field name="tax_ids" widget="many2many_tax_tags"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
