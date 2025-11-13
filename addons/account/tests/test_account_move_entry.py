@@ -312,11 +312,27 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_modify_posted_move_readonly_fields(self):
         self.test_move.action_post()
 
-        readonly_fields = ('invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
-                           'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
-        for field in readonly_fields:
+        readonly_fields = {
+            'invoice_line_ids': False,
+            'line_ids': False,
+            'invoice_date': '4321-11-11',
+            'date': '4321-11-11',
+            'partner_id': 42424242,
+            'invoice_payment_term_id': 42424242,
+            'currency_id': 42424242,
+            'fiscal_position_id': 42424242,
+            'invoice_cash_rounding_id': 42424242,
+        }
+        for fname, value in readonly_fields.items():
             with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"):
-                self.test_move.write({field: False})
+                self.test_move.write({fname: value})
+        for fname in readonly_fields:
+            if fname.endswith('_ids'):
+                continue  # x2m are always raising
+            elif fname.endswith('_id'):
+                self.test_move.write({fname: self.test_move[fname].id})
+            else:
+                self.test_move.write({fname: self.test_move[fname]})
 
     def test_misc_move_onchange(self):
         ''' Test the behavior on onchanges for account.move having 'entry' as type. '''
