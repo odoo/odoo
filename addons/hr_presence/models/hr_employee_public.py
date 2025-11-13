@@ -10,8 +10,3 @@ class HrEmployeePublic(models.Model):
     ip_connected = fields.Boolean(default=False)
     manually_set_present = fields.Boolean(default=False)
     manually_set_presence = fields.Boolean(default=False)
-    hr_presence_state_display = fields.Selection([
-        ('out_of_working_hour', 'Off-Hours'),
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ], default='out_of_working_hour')
