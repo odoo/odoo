@@ -1,15 +1,20 @@
 import base64
+import collections
+import contextlib
 import functools
 import json
 import logging
 import os
+import pathlib
 import shutil
 import subprocess
 import tempfile
 import zipfile
 from contextlib import closing
 from datetime import datetime
+from importlib import resources
 from xml.etree import ElementTree as ET
+from zoneinfo import TZPATH
 
 import psycopg2
 from psycopg2.extensions import quote_ident
@@ -23,6 +28,7 @@ from odoo.exceptions import AccessDenied
 from odoo.release import version_info
 from odoo.sql_db import db_connect
 from odoo.tools import osutil, SQL
+from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import exec_pg_environ, find_pg_tool
 
 _logger = logging.getLogger(__name__)
@@ -75,16 +81,18 @@ def _initialize_db(db_name, demo, lang, user_password, login='admin', country_co
                 modules = env['ir.module.module'].search([('state', '=', 'installed')])
                 modules._update_translations(lang)
 
+            main_company_values = {}
             if country_code:
-                country = env['res.country'].search([('code', 'ilike', country_code)])[0]
-                env['res.company'].browse(1).write({'country_id': country_code and country.id, 'currency_id': country_code and country.currency_id.id})
-                if len(country_timezones.get(country_code, [])) == 1:
-                    users = env['res.users'].search([])
-                    users.write({'tz': country_timezones[country_code][0]})
+                country = env['res.country'].search([('code', 'ilike', country_code)], limit=1)
+                main_company_values = {'country_id': country.id, 'currency_id': country.currency_id.id}
+                if len(ct := country_timezones().get(country.code, [])) == 1:
+                    env['res.users'].search([]).write({'tz': ct[0]})
             if phone:
-                env['res.company'].browse(1).write({'phone': phone})
+                main_company_values['phone'] = phone
             if '@' in login:
-                env['res.company'].browse(1).write({'email': login})
+                main_company_values['email'] = login
+            if main_company_values:
+                env['res.company'].browse(1).write(main_company_values)
 
             # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
@@ -99,6 +107,38 @@ def _initialize_db(db_name, demo, lang, user_password, login='admin', country_co
     except Exception as e:
         _logger.exception('CREATE DATABASE failed:')
 
+
+@functools.cache
+def country_timezones():
+    """Ported from pytz on top of zoneinfo: the mapping of country code is
+    available in tzdb's zone.tab (and in a more complex / complete form in
+    zone1970.tab but we ignore that), following the example of zoneinfo we first
+    check for it in tzdata and fall back on the OS's zoneinfo db.
+    """
+    zonemap = collections.defaultdict(list)
+
+    tzpath = []
+    with contextlib.suppress(ModuleNotFoundError):
+        tzpath = [resources.files('tzdata').joinpath('zoneinfo')]
+    tzpath.extend(map(pathlib.Path, TZPATH))
+
+    for p in tzpath:
+        try:
+            zone_file = p.joinpath('zone.tab').open('r', encoding='ascii')
+        except FileNotFoundError:
+            continue
+
+        with zone_file:
+            for line in zone_file:
+                if line.startswith('#'):
+                    continue
+                code, _coordinates, zone = line.split(None, 4)[:3]
+                if zone not in all_timezones:
+                    continue
+                zonemap[code].append(zone)
+            break
+
+    return dict(zonemap)
 
 def _check_faketime_mode(db_name):
     if os.getenv('ODOO_FAKETIME_TEST_MODE') and db_name in odoo.tools.config['db_name']:
