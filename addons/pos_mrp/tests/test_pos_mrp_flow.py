@@ -3,7 +3,7 @@ from unittest import skip
 import odoo
 
 from odoo.addons.pos_mrp.tests.common import CommonPosMrpTest
-from odoo import Command
+from odoo import Command, fields
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -239,3 +239,132 @@ class TestPosMrp(CommonPosMrpTest):
             {'product_id': product_2.id, 'total_cost': 20},
             {'product_id': product_1.id, 'total_cost': 10},
         ])
+
+    def test_never_variant_bom_product_picking(self):
+        self.attribute_1 = self.env['product.attribute'].create({
+            'name': 'Color',
+            'create_variant': 'no_variant',
+            'sequence': 1,
+        })
+
+        # Create attribute values
+        self.value_1_1 = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': self.attribute_1.id,
+            'sequence': 1,
+        })
+        self.value_1_2 = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': self.attribute_1.id,
+            'sequence': 2,
+        })
+
+        # Create the configurable product with attributes
+        self.configurable_product = self.env['product.product'].create({
+            'name': 'Configurable Chair',
+            'is_storable': True,
+            'available_in_pos': True,
+            'list_price': 100,
+        })
+
+        ptal = self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': self.configurable_product.product_tmpl_id.id,
+            'attribute_id': self.attribute_1.id,
+            'value_ids': [Command.set([self.value_1_1.id, self.value_1_2.id])],
+        }])
+
+        # Create the component products
+        self.component_common = self.env['product.product'].create({
+            'name': 'Common Frame',
+            'is_storable': True,
+            'list_price': 50,
+        })
+
+        self.component_red = self.env['product.product'].create({
+            'name': 'Red Cushion',
+            'is_storable': True,
+            'list_price': 20,
+        })
+
+        self.component_blue = self.env['product.product'].create({
+            'name': 'Blue Cushion',
+            'is_storable': True,
+            'list_price': 20,
+        })
+
+        # Create BOM for the configurable product
+        self.bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.configurable_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',  # Kit type
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_common.id,
+                    'product_qty': 1.0,
+                }),
+                Command.create({
+                    'product_id': self.component_red.id,
+                    'product_qty': 1.0,
+                    'bom_product_template_attribute_value_ids': [
+                        Command.link(self.configurable_product.product_tmpl_id.attribute_line_ids[0].product_template_value_ids[0].id)
+                    ],
+                }),
+                Command.create({
+                    'product_id': self.component_blue.id,
+                    'product_qty': 1.0,
+                    'bom_product_template_attribute_value_ids': [
+                        Command.link(self.configurable_product.product_tmpl_id.attribute_line_ids[0].product_template_value_ids[1].id)
+                    ],
+                }),
+            ],
+        })
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        pos_order_data = {
+                'amount_paid': 100,
+                'amount_return': 0,
+                'amount_tax': 0,
+                'amount_total': 100,
+                'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+                'fiscal_position_id': False,
+                'lines': [
+                    Command.create({
+                        'attribute_value_ids': [ptal.product_template_value_ids[0].id],
+                        'discount': 0,
+                        'pack_lot_ids': [],
+                        'price_unit': 100.0,
+                        'product_id': self.configurable_product.id,
+                        'price_subtotal': 100.0,
+                        'price_subtotal_incl': 100.0,
+                        'qty': 1,
+                        'tax_ids': [],
+                    }),
+                    Command.create({
+                        'attribute_value_ids': [ptal.product_template_value_ids[1].id],
+                        'discount': 0,
+                        'pack_lot_ids': [],
+                        'price_unit': 100.0,
+                        'product_id': self.configurable_product.id,
+                        'price_subtotal': 100.0,
+                        'price_subtotal_incl': 100.0,
+                        'qty': 1,
+                        'tax_ids': [],
+                        }),
+                ],
+                'name': 'Order 12345-123-1234',
+                'partner_id': False,
+                'session_id': current_session.id,
+                'sequence_number': 2,
+                'payment_ids': [
+                    Command.create({
+                        'amount': 100,
+                        'name': fields.Datetime.now(),
+                        'payment_method_id': self.cash_payment_method.id
+                    })
+                ],
+                'uuid': '12345-123-1234',
+                'last_order_preparation_change': '{}',
+                'user_id': self.env.uid
+            }
+        self.env['pos.order'].sync_from_ui([pos_order_data])['pos.order'][0]['id']
+        self.assertEqual(len(current_session.picking_ids.move_line_ids), 4)
