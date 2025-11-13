@@ -364,7 +364,8 @@
                                 <td t-esc="lines['date']"/>
                                 <td t-esc="lines['sign_in']"/>
                                 <td t-esc="lines['sign_out']"/>
-                                <td t-esc="lines['worked_hours']"/>
+                                <td t-esc="lines['worked_hours']"
+                                    t-att-style="lines['hours_color'] === 'red' ? 'color: #dc3545; font-weight: bold;' : lines['hours_color'] === 'green' ? 'color: #28a745; font-weight: bold;' : ''"/>
                             </tr>
                         </tbody>
                     </div>

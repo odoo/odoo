@@ -92,12 +92,22 @@ class HrEmployee(models.Model):
         attendance_line = []
         for line in attendance:
             if line['check_in'] and line['check_out']:
+                # Determine color based on worked hours
+                worked_hours_val = line['worked_hours']
+                if worked_hours_val < 7.9:
+                    hours_color = 'red'
+                elif worked_hours_val > 8.5:
+                    hours_color = 'green'
+                else:
+                    hours_color = 'default'
+
                 val = {
                     'id':line['id'],
                     'date': line['check_in'].date(),
                     'sign_in': line['check_in'].time().strftime('%H:%M'),
                     'sign_out': line['check_out'].time().strftime('%H:%M'),
-                    'worked_hours': format_duration(line['worked_hours'])
+                    'worked_hours': format_duration(line['worked_hours']),
+                    'hours_color': hours_color
                 }
                 attendance_line.append(val)
         leaves = self.env['hr.leave'].sudo().search_read(
