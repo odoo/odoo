@@ -66,7 +66,7 @@ export class SnippetVisibilityOption extends BaseOptionComponent {
                         this.state.domain.toJson()
                     );
                     this.parseTree(newDomain);
-                    this.historyPlugin.addStep();
+                    this.config.onChange?.({ isPreviewing: false });
                 },
             },
             {
