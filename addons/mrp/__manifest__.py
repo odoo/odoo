@@ -24,6 +24,7 @@
         'wizard/mrp_consumption_warning_views.xml',
         'wizard/mrp_production_split.xml',
         'wizard/mrp_production_serial_numbers.xml',
+        'wizard/mrp_workorder_incomplete_qty.xml',
         'views/mrp_views_menus.xml',
         'views/stock_move_views.xml',
         'views/mrp_workorder_views.xml',

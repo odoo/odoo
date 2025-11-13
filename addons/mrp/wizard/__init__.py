@@ -7,6 +7,7 @@ from . import mrp_production_backorder
 from . import mrp_consumption_warning
 from . import product_replenish
 from . import mrp_production_split
+from . import mrp_workorder_incomplete_qty
 from . import stock_label_type
 from . import mrp_production_serial_numbers
 from . import stock_replenishment_info

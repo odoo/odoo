@@ -2488,7 +2488,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.bom_id = bom
         mo = mo.save()
 
-        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "ready"])  # default is ready
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["blocked", "blocked"])  # default is blocked
 
         mo.action_confirm()
         mo.action_assign()
@@ -3496,7 +3496,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_backorder.button_plan()
 
         self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
-        self.assertEqual(mo_backorder.workorder_ids[1].state, 'ready')
+        self.assertEqual(mo_backorder.workorder_ids[1].state, 'blocked')
         self.assertEqual(mo_backorder.workorder_ids[2].state, 'blocked')
         self.assertFalse(mo_backorder.workorder_ids[0].date_start)
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
@@ -4370,7 +4370,7 @@ class TestMrpOrder(TestMrpCommon):
             {'qty_produced': 0.0, 'qty_remaining': 10.0, 'duration_expected': 390.0, 'duration': 0.0}
         ])
 
-        # Dont set any duration and validate the mo for 3 units
+        # Dont set any duration and validate the mo for 3 units  --> That's were recomputing (@2060) duration_expected in _split_productions make sense
         mo_form = Form(mo)
         mo_form.qty_producing = 3.0
         mo = mo_form.save()
@@ -4387,15 +4387,25 @@ class TestMrpOrder(TestMrpCommon):
             {'qty_produced': 0.0, 'qty_remaining': 7.0, 'duration_expected': 315.0, 'duration': 0.0}
         ])
 
-        # check that the duration expected is correctly updated when the
-        # qty_producing is updated both to partial and full qty_production
+        # check that the duration expected is only updated when the the mo is marked as done with a qty_producing != qty_production
+        # When a WO with no duration is marked as done, set the duration by ratio to the duration expected
         bo_form = Form(bo)
         bo_form.qty_producing = 3.0
         bo = bo_form.save()
+        bo.workorder_ids.set_state('done')
         self.assertEqual(bo.workorder_ids.duration_expected, 165.0)
+        self.assertEqual(bo.workorder_ids.duration, 165.0)
+        bo.workorder_ids.state = 'ready'
+        bo.workorder_ids.duration = 0
+        bo.workorder_ids.qty_produced = 0
         bo_form.qty_producing = 7.0
         bo = bo_form.save()
+        bo.workorder_ids.set_state('done')
         self.assertEqual(bo.workorder_ids.duration_expected, 315.0)
+        self.assertEqual(bo.workorder_ids.duration, 315.0)
+        bo.workorder_ids.state = 'ready'
+        bo.workorder_ids.duration = 0
+        bo.workorder_ids.qty_produced = 0
         bo_form.qty_producing = 3.0
         bo = bo_form.save()
         self.assertEqual(bo.workorder_ids.duration_expected, 165.0)

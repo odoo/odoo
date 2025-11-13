@@ -285,11 +285,13 @@ class TestMrpByProduct(common.TransactionCase):
             self.assertEqual(mo.move_byproduct_ids.product_id, self.product_b)
 
             finished_move = mo.move_finished_ids.filtered(lambda x: x.product_id == self.product_a)
+            # finished_move.product_uom_qty = expected_finished_qty
             self.assertEqual(
                 finished_move.product_uom_qty, expected_finished_qty, "Wrong produced quantity of finished product."
             )
 
             by_product_move = mo.move_finished_ids.filtered(lambda x: x.product_id == self.product_b)
+            # by_product_move.product_uom_qty = expected_byproduct_qty
             self.assertEqual(
                 by_product_move.product_uom_qty, expected_byproduct_qty, "Wrong produced quantity of by-product."
             )

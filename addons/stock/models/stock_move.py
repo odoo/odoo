@@ -50,7 +50,7 @@ class StockMove(models.Model):
     description_picking_manual = fields.Text(readonly=True)
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
-        digits=0, store=True, compute_sudo=True,
+        digits=0, store=True, compute_sudo=True, precompute=True, readonly=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
         'Demand',

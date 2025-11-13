@@ -1,0 +1,18 @@
+.o_field_wo_state_dropdown {
+    display: inline-block;
+    vertical-align: baseline;
+    height: 100%;
+    .badge {
+        width: 81px;
+        text-align: center;
+    }
+}
+
+td.o_data_cell:has(> div.o_field_wo_state_dropdown) {
+    overflow: visible !important;
+}
+
+th.o_wo_state_dropdown_cell {
+    min-width: 115px !important;
+    width: 115px !important;
+}
