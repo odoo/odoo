@@ -579,21 +579,13 @@ class TestEventData(TestEventInternalsCommon):
 
     @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
-    def test_event_multi_slots_registrable(self):
-        """Test if `_compute_event_registrations_open` works properly on multi slots events. """
+    def test_event_has_slots_registrable(self):
+        """Test if `_compute_event_registrations_open` works properly on events with slots."""
         event = self.event_0.with_user(self.env.user)
         self.assertTrue(event.event_registrations_open)
         event.write({
             'date_begin': datetime(2020, 1, 30, 8, 0, 0),
             'date_end': datetime(2020, 2, 4, 8, 0, 0),
-            'is_multi_slots': True,
-        })
-        self.assertFalse(event.event_ticket_ids)
-        self.assertFalse(event.event_slot_ids)
-        # Should be closed if no slot
-        self.assertFalse(event.event_registrations_open)
-        # Should be open with a slot and no tickets
-        event.write({
             'event_slot_ids': [
                 (0, 0, {
                     'date': date(2020, 1, 30),
@@ -607,6 +599,9 @@ class TestEventData(TestEventInternalsCommon):
                 }),
             ]
         })
+        self.assertFalse(event.event_ticket_ids)
+        self.assertTrue(event.event_slot_ids)
+        # Should be open with a slot and no tickets
         self.assertTrue(event.event_registrations_open)
         # Should be open with a slot, a ticket and slot-ticket availabilities
         event.write({

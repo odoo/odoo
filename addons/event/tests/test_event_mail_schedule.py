@@ -637,7 +637,6 @@ class TestMailSchedule(EventMailCommon):
         with self.mock_datetime_and_now(self.reference_now):
             test_event = self.test_event.with_env(self.env)
             test_event.write({
-                'is_multi_slots': True,
                 # Start and end hours expressed in event tz
                 # The slots datetimes will be saved in utc
                 'event_slot_ids': [
