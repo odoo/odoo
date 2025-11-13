@@ -69,6 +69,27 @@ export class EventQuestion extends models.ServerModel {
             is_mandatory_answer: false,
             answer_ids: [],
         },
+        {
+            id: 6,
+            title: "Dietary Preferences",
+            question_type: "radio",
+            event_ids: [1],
+            sequence: 6,
+            once_per_order: false,
+            is_mandatory_answer: false,
+            answer_ids: [3, 4],
+        },
+        {
+            id: 7,
+            title: "Previous Visits",
+            question_type: "checkbox",
+            event_ids: [1],
+            sequence: 7,
+            once_per_order: false,
+            is_mandatory_answer: false,
+            answer_ids: [5, 6],
+        },
+        // Add two questions here
     ];
 }
 

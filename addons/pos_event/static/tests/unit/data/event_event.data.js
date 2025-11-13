@@ -33,7 +33,7 @@ export class EventEvent extends models.ServerModel {
             registration_ids: [],
             seats_limited: true,
             write_date: "2019-03-10 11:00:00",
-            question_ids: [1, 2, 3, 4, 5],
+            question_ids: [1, 2, 3, 4, 5, 6, 7],
             general_question_ids: [],
             specific_question_ids: [],
             badge_format: "A6",

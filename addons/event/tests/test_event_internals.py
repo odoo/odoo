@@ -74,19 +74,20 @@ class TestEventData(TestEventInternalsCommon):
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
         event.invalidate_recordset(['specific_question_ids', 'general_question_ids'])
-
         self.assertEqual(
             sorted(event.question_ids.mapped('question_type')),
-            ['email', 'name', 'phone', 'simple_choice', 'simple_choice', 'text_box'])
+            ['checkbox', 'email', 'name', 'phone', 'radio', 'simple_choice', 'text_box'])
         self.assertEqual(event.specific_question_ids.filtered(
-            lambda q: q.question_type in ['simple_choice', 'text_box']).title, 'Question1')
+            lambda q: q.question_type in ['simple_choice', 'radio', 'checkbox', 'text_box'])
+                        .mapped('title'), ['Question1', 'Question4'])
         self.assertEqual(event.specific_question_ids.filtered(
             lambda q: q.question_type in ['name', 'email', 'phone', 'company_name'])
                          .mapped('title'), ['Name', 'Email', 'Phone'])
         self.assertEqual(
             set(event.specific_question_ids.filtered(
-            lambda q: q.question_type in ['simple_choice', 'text_box']).mapped('answer_ids.name')),
-            {'Q1-Answer1', 'Q1-Answer2'})
+                lambda q: q.question_type in ['simple_choice', 'radio', 'checkbox', 'text_box'])
+                    .mapped('answer_ids.name')
+            ), {'Q1-Answer1', 'Q1-Answer2', 'Q4-Answer1', 'Q4-Answer2'})
         self.assertEqual(len(event.general_question_ids), 2)
         self.assertEqual(event.general_question_ids[0].title, 'Question2')
         self.assertEqual(event.general_question_ids[1].title, 'Question3')

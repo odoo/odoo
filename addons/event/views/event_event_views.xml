@@ -131,7 +131,7 @@
                                     <field name="once_per_order" string="Once per Order"/>
                                     <field name="question_type" string="Type" />
                                     <field name="answer_ids" widget="many2many_tags"
-                                        invisible="question_type != 'simple_choice'" />
+                                        invisible="question_type not in ['simple_choice', 'radio', 'checkbox']" />
                                     <field name="is_default" optional="hide"/>
                                     <field name="is_reusable" optional="hide"/>
                                     <button name="action_view_question_answers"
@@ -141,7 +141,7 @@
                                         string="Stats"
                                         title="Answer Breakdown"
                                         context="{'search_default_event_id': parent.id}"
-                                        invisible="question_type not in ['simple_choice', 'text_box']"/>
+                                        invisible="question_type not in ['simple_choice', 'radio', 'checkbox', 'text_box']"/>
                                 </list>
                             </field>
                         </page>

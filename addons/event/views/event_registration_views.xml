@@ -97,9 +97,9 @@
                                     <field name="question_id" domain="[('event_ids', 'in', event_id)]" options="{'no_create': True}"/>
                                     <field name="question_type" string="Type" />
                                     <field name="value_answer_id"
-                                        invisible="question_type != 'simple_choice'"
+                                        invisible="question_type not in ['simple_choice', 'radio', 'checkbox']"
                                         domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
-                                    <field name="value_text_box" invisible="question_type == 'simple_choice'" />
+                                    <field name="value_text_box" invisible="question_type in ['simple_choice', 'radio', 'checkbox']" />
                                 </list>
                                 <kanban class="o_kanban_mobile" create="false" delete="false">
                                     <field name="event_id"/>
@@ -108,10 +108,10 @@
                                         <t t-name="card" class="justify-content-between">
                                             <field class="fw-bold fs-5" name="question_id" domain="[('event_ids', 'in', event_id)]"/>
                                             <field name="value_answer_id"
-                                                invisible="question_type != 'simple_choice'"
+                                                invisible="question_type not in ['simple_choice', 'radio', 'checkbox']"
                                                 domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
                                             <field name="value_text_box"
-                                                invisible="question_type == 'simple_choice'"/>
+                                                invisible="question_type in ['simple_choice', 'radio', 'checkbox']"/>
                                         </t>
                                     </templates>
                                 </kanban>
