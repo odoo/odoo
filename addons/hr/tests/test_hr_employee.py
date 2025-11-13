@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from psycopg2.errors import UniqueViolation
 from freezegun import freeze_time
@@ -668,6 +668,61 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(partner.phone, first_employee.work_phone)
         self.assertNotEqual(partner.email, second_employee.work_email)
         self.assertNotEqual(partner.email, first_employee.work_email)
+
+    def test_presence_state_groupby(self):
+        present_user_a, present_user_b, absent_user = self.env['res.users'].create([
+            {
+                'name': 'Present User A',
+                'login': 'present_user_a',
+                'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+                'notification_type': 'email',
+            },
+            {
+                'name': 'Present User B',
+                'login': 'present_user_b',
+                'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+                'notification_type': 'email',
+            },
+            {
+                'name': 'Absent User',
+                'login': 'absent_user_a',
+                'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+                'notification_type': 'email',
+            },
+        ])
+        present_user_a.action_create_employee()
+        present_user_b.action_create_employee()
+        absent_user.action_create_employee()
+
+        present_absent_emps = present_user_a.employee_ids | present_user_b.employee_ids | absent_user.employee_ids
+        present_absent_emps.write({
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1)
+        })
+
+        archived_emp, out_working_emp = self.env['hr.employee'].create([
+            {'name': 'Archived Employee', 'active': False},
+            {'name': 'Out of Office Employee', 'contract_date_start': False, 'contract_date_end': False},
+        ])
+
+        self.env["mail.presence"]._update_presence(present_user_a)
+        self.env["mail.presence"]._update_presence(present_user_b)
+
+        employee_per_presence_state = self.env['hr.employee'].with_context(active_test=False)._read_group(
+            domain=[('id', 'in', (present_user_a.employee_ids + present_user_b.employee_ids + absent_user.employee_ids + archived_emp + out_working_emp).ids)],
+            groupby=['hr_presence_state'],
+            aggregates=['id:recordset'],
+        )
+        self.assertEqual(len(employee_per_presence_state), 4)
+        for presence_state, employees in employee_per_presence_state:
+            if presence_state == 'present':
+                self.assertEqual(employees.ids, [present_user_a.employee_ids.id, present_user_b.employee_ids.id])
+            if presence_state == 'absent':
+                self.assertEqual(employees.ids, [absent_user.employee_ids.id])
+            if presence_state == 'archive':
+                self.assertEqual(employees.ids, [archived_emp.id])
+            if presence_state == 'out_of_working_hour':
+                self.assertEqual(employees.ids, [out_working_emp.id])
 
 
 @tagged('-at_install', 'post_install')
