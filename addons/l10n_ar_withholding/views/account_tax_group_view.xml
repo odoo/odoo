@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_tax_group_form_l10n_ar" model="ir.ui.view">
+        <field name="name">account.tax.group.form.l10n_ar</field>
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="account.view_tax_group_form"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="after">
+                <field name="l10n_ar_withholding_or_perception" invisible="True"/>
+                <field name="l10n_ar_data_source" invisible="not l10n_ar_withholding_or_perception"/>
+                <field name="l10n_ar_default_aliquot" invisible="not l10n_ar_withholding_or_perception"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- <record id="view_tax_group_tree_l10n_ar" model="ir.ui.view">
+        <field name="name">account.tax.group.tree.l10n_ar</field>
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="account.view_tax_group_tree"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="after">
+                <field name="l10n_ar_data_source" optional="hide"/>
+            </field>
+        </field>
+    </record> -->
+
+</odoo>

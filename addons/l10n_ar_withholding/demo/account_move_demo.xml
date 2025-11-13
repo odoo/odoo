@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Customer Invoice to ADHOC Córdoba -->
+    <record id="demo_invoice_adhoc_cordoba" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
+        <field name="partner_id" ref="res_partner_adhoc_cordoba"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">out_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('l10n_ar.product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+        ]"/>
+    </record>
+    <function model="account.move" name="action_post">
+        <value eval="[ref('demo_invoice_adhoc_cordoba')]"/>
+    </function>
+
+    <!-- Sup Bill to ADHOC Córdoba -->
+    <record id="demo_sup_invoice_adhoc_cordoba" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
+        <field name="partner_id" ref="res_partner_adhoc_cordoba"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('l10n_ar.product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+        ]"/>
+        <field name="l10n_latam_document_number">0001-00000539</field>
+    </record>
+    <function model="account.move" name="action_post">
+        <value eval="[ref('demo_sup_invoice_adhoc_cordoba')]"/>
+    </function>
+
+    <!-- Sup Bill to El Cordobés -->
+    <record id="demo_sup_invoice_el_cordobes" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
+        <field name="partner_id" ref="res_partner_el_cordobes"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
+            (0, 0, {'product_id': ref('l10n_ar.product_product_telefonia'), 'price_unit': 250.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 3245.0, 'quantity': 2}),
+        ]"/>
+        <field name="l10n_latam_document_number">0002-00000560</field>
+    </record>
+    <function model="account.move" name="action_post">
+        <value eval="[ref('demo_sup_invoice_el_cordobes')]"/>
+    </function>
+
+</odoo>

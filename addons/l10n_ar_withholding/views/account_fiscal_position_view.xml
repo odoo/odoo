@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_position_form" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <label for="l10n_ar_perception_ids"
+                       invisible="'AR' not in fiscal_country_codes"/>
+                <div class="o_row" invisible="'AR' not in fiscal_country_codes">
+                    <field name="l10n_ar_perception_ids"
+                            widget="many2many_tags"/>
+                    <button name="action_configure_perception_tax_groups"
+                            type="object"
+                            class="btn-link"
+                            icon="fa-external-link"
+                            title="Configure AR Perception Tax Groups"/>
+                </div>
+                <label for="l10n_ar_withholding_ids"
+                       invisible="'AR' not in fiscal_country_codes"/>
+                <div class="o_row" invisible="'AR' not in fiscal_country_codes">
+                    <field name="l10n_ar_withholding_ids"
+                            widget="many2many_tags"/>
+                    <button name="action_configure_withholding_tax_groups"
+                            type="object"
+                            class="btn-link"
+                            icon="fa-external-link"
+                            title="Configure AR Withholding Tax Groups"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>
+
