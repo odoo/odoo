@@ -48,6 +48,9 @@ export class DiscussChannel extends Record {
         return def;
     }
 
+    get areAllMembersLoaded() {
+        return this.member_count === this.channel_member_ids.length;
+    }
     channel_member_ids = fields.Many("discuss.channel.member", {
         inverse: "channel_id",
         onDelete: (r) => r?.delete(),
@@ -82,6 +85,8 @@ export class DiscussChannel extends Record {
     get membersThatCanSeen() {
         return this.channel_member_ids;
     }
+    /** @type {Number|undefined} */
+    member_count;
     otherTypingMembers = fields.Many("discuss.channel.member", {
         /** @this {import("models").Thread} */
         compute() {
@@ -96,6 +101,9 @@ export class DiscussChannel extends Record {
         onDelete: (r) => r?.delete(),
     });
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });
+    get unknownMembersCount() {
+        return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
+    }
 
     delete() {
         this.chatWindow?.close();
