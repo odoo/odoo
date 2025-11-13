@@ -124,12 +124,19 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                 'question_type': 'text_box'
             }), (0, 0, {
                 'title': 'How did you learn about this event?',
-                'question_type': 'simple_choice',
+                'question_type': 'radio',
                 'once_per_order': True,
                 'answer_ids': [
                     (0, 0, {'name': 'Our website'}),
                     (0, 0, {'name': 'Commercials'}),
                     (0, 0, {'name': 'A friend'})
+                ]
+            }), (0, 0, {
+                'title': 'Which of these editions did you attend?',
+                'question_type': 'checkbox',
+                'answer_ids': [
+                    (0, 0, {'name': 'First edition'}),
+                    (0, 0, {'name': 'Second edition'}),
                 ]
             })]
         })
@@ -148,10 +155,10 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(second_registration.company_name, 'My Company')
 
         event_questions = registrations.mapped('event_id.question_ids')
-        self.assertEqual(len(event_questions), 7)
+        self.assertEqual(len(event_questions), 8)
 
         first_registration_answers = first_registration.registration_answer_ids
-        self.assertEqual(len(first_registration_answers), 6)
+        self.assertEqual(len(first_registration_answers), 8)
 
         self.assertEqual(first_registration_answers.filtered(
             lambda answer: answer.question_id.title == 'Meal Type'
@@ -165,16 +172,24 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             lambda answer: answer.question_id.title == 'How did you learn about this event?'
         ).value_answer_id.name, 'A friend')
 
+        self.assertEqual(first_registration_answers.filtered(
+            lambda answer: answer.question_id.title == 'Which of these editions did you attend?'
+        ).mapped('value_answer_id.name'), ['First edition', 'Second edition'])
+
         second_registration_answers = second_registration.registration_answer_ids
-        self.assertEqual(len(second_registration_answers), 5)
+        self.assertEqual(len(second_registration_answers), 6)
 
         self.assertEqual(second_registration_answers.filtered(
             lambda answer: answer.question_id.title == 'Meal Type'
         ).value_answer_id.name, 'Pastafarian')
 
-        self.assertEqual(first_registration_answers.filtered(
+        self.assertEqual(second_registration_answers.filtered(
             lambda answer: answer.question_id.title == 'How did you learn about this event?'
         ).value_answer_id.name, 'A friend')
+
+        self.assertEqual(second_registration_answers.filtered(
+            lambda answer: answer.question_id.title == 'Which of these editions did you attend?'
+        ).value_answer_id.name, 'Second edition')
 
     def test_website_event_search(self):
         """ Ensure filters are not reset when changing pages or performing a search. """

@@ -84,7 +84,7 @@
     <!-- EVENT QUESTION : Meal Type -->
     <record id="event_question_meal_type" model="event.question">
         <field name="title">Meal Type</field>
-        <field name="question_type">simple_choice</field>
+        <field name="question_type">radio</field>
         <field name="once_per_order" eval="False"/>
         <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0')), (4, ref('event.event_7'))]"/>
         <field name="is_reusable">True</field>
@@ -145,6 +145,35 @@
         <field name="once_per_order" eval="False"/>
         <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_5'))]"/>
         <field name="is_reusable">False</field>
+    </record>
+
+    <!-- EVENT QUESTION : Please select topics that interest you. -->
+    <record id="event_question_topics_interest" model="event.question">
+        <field name="title">Please select topics that interest you.</field>
+        <field name="question_type">checkbox</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_7'))]"/>
+        <field name="is_reusable">False</field>
+    </record>
+        <record id="event_question_topics_interest_answer_0" model="event.question.answer">
+        <field name="name">Manufacturing</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event.event_question_topics_interest"/>
+    </record>
+    <record id="event_question_topics_interest_answer_1" model="event.question.answer">
+        <field name="name">Customer Success Stories</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event.event_question_topics_interest"/>
+    </record>
+    <record id="event_question_topics_interest_answer_2" model="event.question.answer">
+        <field name="name">Marketing</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event.event_question_topics_interest"/>
+    </record>
+    <record id="event_question_topics_interested_answer_3" model="event.question.answer">
+        <field name="name">Innovation</field>
+        <field name="sequence">4</field>
+        <field name="question_id" ref="website_event.event_question_topics_interest"/>
     </record>
 
 </data></odoo>
