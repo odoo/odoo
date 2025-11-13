@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 import { Deferred } from "@web/core/utils/concurrency";
+import { rpc } from "@web/core/network/rpc";
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
@@ -55,6 +56,8 @@ export class DiscussChannel extends Record {
     chatWindow = fields.One("ChatWindow", {
         inverse: "channel",
     });
+    /** @type {"not_fetched"|"pending"|"fetched"} */
+    fetchMembersState = "not_fetched";
     hasOtherMembersTyping = fields.Attr(false, {
         /** @this {import("models").Thread} */
         compute() {
@@ -97,6 +100,27 @@ export class DiscussChannel extends Record {
     delete() {
         this.chatWindow?.close();
         super.delete(...arguments);
+    }
+
+    async fetchChannelMembers() {
+        if (this.fetchMembersState === "pending") {
+            return;
+        }
+        const previousState = this.fetchMembersState;
+        this.fetchMembersState = "pending";
+        const known_member_ids = this.channel_member_ids.map((channelMember) => channelMember.id);
+        let data;
+        try {
+            data = await rpc("/discuss/channel/members", {
+                channel_id: this.id,
+                known_member_ids: known_member_ids,
+            });
+        } catch (e) {
+            this.fetchMembersState = previousState;
+            throw e;
+        }
+        this.fetchMembersState = "fetched";
+        this.store.insert(data);
     }
 
     /**

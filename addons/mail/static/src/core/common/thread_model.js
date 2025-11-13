@@ -229,8 +229,6 @@ export class Thread extends Record {
             this.onPinStateUpdated();
         },
     });
-    /** @type {"not_fetched"|"pending"|"fetched"} */
-    fetchMembersState = "not_fetched";
     /** @type {integer|null} */
     highlightMessage = fields.One("mail.message");
     /** @type {String|undefined} */
