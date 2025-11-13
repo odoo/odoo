@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from collections import namedtuple
-
 from odoo import Command, fields
 from odoo.tests import tagged
+
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -26,7 +22,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'street': 'Avenue Test rue',
             'zip': '84000',
             'city': 'Avignon',
-            'is_company': True
+            'is_company': True,
         })
 
         cls.san_marino_partner = cls.env['res.partner'].create({
@@ -304,15 +300,13 @@ class TestItEdiReverseCharge(TestItEdi):
             'is_company': True
         })
 
-        dt_18 = self.env.ref('l10n_it_edi.l10n_it_document_type_18')
-
         bill = self.env['account.move'].with_company(self.company).create({
             'move_type': 'in_invoice',
             'invoice_date': '2022-03-24',
             'invoice_date_due': '2022-03-24',
             'date': '2022-04-01',
             'partner_id': self.eu_partner.id,
-            'l10n_it_document_type': dt_18.id,
+            'l10n_it_document_type': 'TD18',
             'invoice_line_ids': [
                 Command.create({
                     'name': "Product A",
@@ -331,7 +325,7 @@ class TestItEdiReverseCharge(TestItEdi):
         })
         reversal = reversal_wizard.refund_moves()
         credit_note = self.env['account.move'].browse(reversal['res_id'])
-        credit_note.write({'l10n_it_document_type': dt_18.id})
+        credit_note.write({'l10n_it_document_type': 'TD18'})
         credit_note.action_post()
 
         self._assert_export_invoice(credit_note, 'credit_note_export_document_type.xml')
