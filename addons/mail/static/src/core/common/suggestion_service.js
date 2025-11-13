@@ -28,7 +28,7 @@ export class SuggestionService {
      * @param {import('models').Thread} thread
      * @returns {Array<[string, number, number]>}
      */
-    getSupportedDelimiters(thread) {
+    getSupportedDelimiters(thread, env) {
         return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }
 
