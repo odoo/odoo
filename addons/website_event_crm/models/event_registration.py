@@ -15,10 +15,18 @@ class EventRegistration(models.Model):
             return reg_description
 
         answer_descriptions = []
-        for answer in self.registration_answer_ids:
-            answer_value = answer.value_answer_id.name if answer.question_type == "simple_choice" else answer.value_text_box
-            answer_value = Markup("<br/>").join(["    %s" % line for line in answer_value.split('\n')])
-            answer_descriptions.append(Markup("  - %s<br/>%s") % (answer.question_id.title, answer_value))
+        for question, answers in self.registration_answer_ids.grouped("question_id").items():
+            answer_values = [
+                answer.value_answer_id.name
+                if question.question_type in ['simple_choice', 'radio', 'checkbox']
+                else answer.value_text_box
+                for answer in answers
+            ]
+            answer_description = Markup("<br/>").join([
+                Markup("<br/>").join(["    %s" % line for line in answer_value.split('\n')])
+                for answer_value in answer_values
+            ])  # Each answer is added at a new line when linked to the same question
+            answer_descriptions.append(Markup("  - %s<br/>%s") % (question.title, answer_description))
         return Markup("%s%s<br/>%s") % (reg_description, _("Questions"), Markup('<br/>').join(answer_descriptions))
 
     def _get_lead_description_fields(self):

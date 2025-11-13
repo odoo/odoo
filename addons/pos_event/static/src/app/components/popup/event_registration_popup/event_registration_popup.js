@@ -45,15 +45,31 @@ export class EventRegistrationPopup extends Component {
             };
             const existingRegData = data?.registration_ids?.[idx];
             for (const question of this.questionsByRegistration) {
-                this.state.byRegistration[idx].questions[question.id] =
-                    existingRegData?.[question.id] || "";
+                if (question.question_type === "checkbox") {
+                    this.state.byRegistration[idx].questions[question.id] = {};
+                    for (const answer of question.answer_ids) {
+                        this.state.byRegistration[idx].questions[question.id][answer.id] = 
+                            existingRegData?.[question.id]?.[answer.id] || "";
+                    }
+                } else {
+                    this.state.byRegistration[idx].questions[question.id] = "";
+                }
             }
         }
+
         // always have one data per order
         if (this.questionsOncePerOrder.length) {
             const existingRegData = this.props.data[0]?.registration_ids?.[0];
             for (const question of this.questionsOncePerOrder) {
-                this.state.byOrder[question.id] = existingRegData?.[question.id] || "";
+                if (question.question_type === "checkbox") {
+                    this.state.byOrder[question.id] = {};
+                    for (const answer of question.answer_ids) {
+                        this.state.byOrder[question.id][answer.id] =
+                            existingRegData?.[question.id]?.[answer.id] || "";
+                    }
+                } else {
+                    this.state.byOrder[question.id] = existingRegData?.[question.id] || "";
+                }
             }
         }
 
@@ -103,8 +119,16 @@ export class EventRegistrationPopup extends Component {
     }
 
     validateQuestion(question, value) {
-        if (question.is_mandatory_answer && !value?.trim()) {
-            return false;
+        if (question.is_mandatory_answer) {
+            if (question.question_type !== "checkbox" && !value) {
+                return false;
+            }
+            else if (
+                question.question_type === "checkbox" &&
+                !Object.entries(value).some(([_answerId, isChecked]) => isChecked)
+            ) {
+                return false;
+            }
         }
         if (!value) {
             return true;
@@ -130,7 +154,11 @@ export class EventRegistrationPopup extends Component {
 
     isQuestionMissingMandatoryAnswer(id, value) {
         const question = this.pos.models["event.question"].get(id);
-        return !!(question && question.is_mandatory_answer && !value);
+        const hasAnswer =
+            question.question_type === "checkbox"
+                ? Object.entries(value).some(([_answerId, isChecked]) => isChecked)
+                : value; // value is an object for checkbox questions
+        return !!(question && question.is_mandatory_answer && !hasAnswer);
     }
 
     isConfirmEnabled() {
