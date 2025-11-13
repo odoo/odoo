@@ -2004,6 +2004,18 @@ test(`basic grouped list rendering with a date field between two fields with a a
     expect(queryAllTexts(`.o_group_header:eq(0) td`)).toEqual(["-4", "", "-4"]);
 });
 
+test(`basic grouped list rendering 1 col without selector and with optional field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="bar" optional="hidden"/></list>`,
+        groupBy: ["bar"],
+        allowSelectors: false,
+    });
+    expect(`.o_group_header:eq(0) th`).toHaveCount(2);
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
+});
+
 test(`basic grouped list rendering 1 col without selector`, async () => {
     await mountView({
         resModel: "foo",
@@ -2057,6 +2069,25 @@ test(`basic grouped list rendering 3 cols without selector`, async () => {
         resModel: "foo",
         type: "list",
         arch: `<list><field name="foo"/><field name="bar"/><field name="text"/></list>`,
+        groupBy: ["bar"],
+        allowSelectors: false,
+    });
+    expect(`.o_group_header:eq(0) th`).toHaveCount(3);
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
+});
+
+test(`basic grouped list rendering 3 cols without selector and with optional fields`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="text"/>
+                <field name="date" optional="hidden"/>
+            </list>
+        `,
         groupBy: ["bar"],
         allowSelectors: false,
     });
