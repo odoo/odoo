@@ -2523,6 +2523,12 @@
         </div>
     </template>
 
+    <template id="alternative_products_show_if_available" name="Alternative Products Show if Available" inherit_id="website_sale.alternative_products" priority="20">
+        <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_website_sale_recommended_products']" position="attributes">
+            <attribute name="t-if">product.alternative_product_ids</attribute>
+        </xpath>
+    </template>
+
     <template
         name="Terms and Conditions"
         id="website_sale.product_terms_and_conditions"
