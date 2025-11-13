@@ -8,18 +8,20 @@
         </BuilderRow>
         <BuilderContext t-if="this.isActiveItem('show_domain_selector')">
             <BuilderRow level="1" label.translate="Domain" extraLabelClass="'align-self-end'">
-                <div class="d-flex flex-column">
-                    <div class="d-inline-flex align-items-center pt-1" t-foreach="this.state.facets || []" t-as="facet" t-key="facet_index">
+                <div t-if="this.state.facets?.length" class="d-flex flex-column">
+                    <div class="d-inline-flex align-items-center pt-1" t-foreach="this.state.facets" t-as="facet" t-key="facet_index">
                         <span class="fa fa-filter pe-1"/>
                         <span t-out="facet"/>
                     </div>
                 </div>
+                <button t-else="" class="btn btn-secondary me-auto mt-1" t-on-click="this.onClickEditDomain" >
+                    Edit Conditions
+                </button>
             </BuilderRow>
             <!-- Trick to have the content of two rows on the same level -->
-            <BuilderRow label.translate=" ">
+            <BuilderRow t-if="this.state.facets?.length" label.translate=" ">
                 <button class="btn btn-secondary me-auto mt-1" t-on-click="this.onClickEditDomain">
-                    <t t-if="this.state.facets?.length">Add Conditions</t>
-                    <t t-else="">Edit Conditions</t>
+                    Add Conditions
                 </button>
             </BuilderRow>
         </BuilderContext>
