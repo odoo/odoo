@@ -872,8 +872,8 @@ class ProjectProject(models.Model):
         if self.env.context.get("from_sale_order_action"):
             context = dict(action.get("context", {}))
             context.pop("search_default_open_tasks", None)
-            if self.sale_order_id:
-                context["search_default_sale_order_id"] = self.sale_order_id.id
+            if sale_order_id := self.env.context.get('default_reinvoiced_sale_order_id') or self.reinvoiced_sale_order_id.id:
+                context["search_default_sale_order_id"] = sale_order_id
             if not self.sale_order_id:
                 sale_order = self.env["sale.order"].browse(self.env.context.get("active_id"))
                 context["default_sale_order_id"] = sale_order.id
