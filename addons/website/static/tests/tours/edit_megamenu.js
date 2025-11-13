@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import {
+    selectHeader,
+    clickOnEditAndWaitEditMode,
     changeOption,
     clickOnExtraMenuItem,
     clickOnSave,
@@ -306,3 +308,220 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: ':iframe .s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child span:not(:has(strong))',
     },
 ]);
+
+const createMegaMenu = function (name) {
+    return [
+        {
+            content: "Create a new mega menu item",
+            trigger: ".modal-body a:eq(1)",
+            run: "click",
+        },
+        {
+            content: "Set the mega menu item name to " + name,
+            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+            run: "edit " + name,
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+            run: "click",
+        },
+    ];
+};
+
+const createDropdown = function (name) {
+    return [
+        {
+            content: "Create a new menu item for the dropdown",
+            trigger: ".modal-body a:eq(0)",
+            run: "click",
+        },
+        {
+            content: "Set the dropdown name to " + name,
+            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+            run: "edit " + name,
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)",
+            run: "edit /",
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+            run: "click",
+        },
+        {
+            content: "Create a new menu item for the dropdown item",
+            trigger: ".modal-body a:eq(0)",
+            run: "click",
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+            run: "edit " + name + " item",
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(1)",
+            run: "edit /",
+        },
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)",
+            run: "click",
+        },
+        {
+            content: "Move the dropdown item into the dropdown",
+            trigger: '.oe_menu_editor li:contains("' + name + " item" + '") .fa-bars',
+            run(helpers) {
+                return helpers.drag_and_drop('.oe_menu_editor li:contains("' + name + '")', {
+                    position: {
+                        left: 50,
+                    },
+                    relative: true,
+                });
+            },
+        },
+    ];
+};
+
+const testHeaderNavVisibility = function (elementsVisibility) {
+    const test = [];
+    for (const [menu, visibility] of Object.entries(elementsVisibility)) {
+        test.push({
+            trigger: `:iframe .top_menu li:contains('${menu}')${
+                visibility ? ":visible" : ":not(:visible)"
+            }`,
+        });
+    }
+    return test;
+};
+
+const openMenu = () => ({
+    content: "Open Menu",
+    trigger: ":iframe span.navbar-toggler-icon",
+    run: "click",
+});
+
+registerWebsitePreviewTour(
+    "edit_megamenu_visibility",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        {
+            content: "Click on a menu item",
+            trigger: ":iframe .top_menu .nav-item a",
+            run: "click",
+        },
+        {
+            content: "Click on Edit Menu",
+            trigger: ":iframe .o_edit_menu_popover a.js_edit_menu",
+            run: "click",
+        },
+        {
+            trigger: ".o_website_dialog:visible",
+        },
+        ...createMegaMenu("MM des"),
+        ...createDropdown("Drop 1"),
+        ...createMegaMenu("MM mob"),
+        ...createDropdown("Drop 2"),
+        ...createMegaMenu("MM cond"),
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(save)",
+            run: "click",
+        },
+        selectHeader(),
+        changeOption("WebsiteLevelColor", 'we-select[data-variable="header-template"] we-toggler'),
+        changeOption("WebsiteLevelColor", 'we-button[data-name="header_hamburger_opt"]'),
+        openMenu(),
+        // Mega Menu 1: Desktop Only
+        {
+            content: "Open the first mega menu",
+            trigger: ":iframe header#top span:contains('MM des')",
+            run: "click",
+        },
+        {
+            content: "Click on the first mega menu content",
+            trigger: ":iframe header#top div.o_mega_menu.show section",
+            run: "click",
+        },
+        changeOption(
+            "ConditionalVisibility",
+            'we-button[data-toggle-device-visibility="no_mobile"]'
+        ),
+        // Mega Menu 2: Mobile Only
+        {
+            content: "Open the second mega menu",
+            trigger: ":iframe header#top span:contains('MM mob')",
+            run: "click",
+        },
+        {
+            content: "Click on the second mega menu content",
+            trigger: ":iframe header#top div.o_mega_menu.show section",
+            run: "click",
+        },
+        changeOption(
+            "ConditionalVisibility",
+            'we-button[data-toggle-device-visibility="no_desktop"]'
+        ),
+        // Mega Menu 3: Logged Out Only
+        {
+            content: "Open the third mega menu",
+            trigger: ":iframe header#top span:contains('MM cond')",
+            run: "click",
+        },
+        {
+            content: "Click on the third mega menu content",
+            trigger: ":iframe header#top div.o_mega_menu.show section",
+            run: "click",
+        },
+        changeOption("ConditionalVisibility", 'we-toggler:contains("No Condition")'),
+        changeOption("ConditionalVisibility", 'we-button:contains("Conditionally")'),
+        changeOption("ConditionalVisibility", 'we-toggler:contains("Visible for Everyone")'),
+        changeOption("ConditionalVisibility", 'we-button:contains("Visible for Logged Out")'),
+        ...clickOnSave(),
+        // Check desktop visibility while NOT editing
+        openMenu(),
+        ...testHeaderNavVisibility({
+            "MM des": true,
+            "Drop 1": true,
+            "MM mob": false,
+            "Drop 2": true,
+            "MM cond": false,
+        }),
+        {
+            content: "Switch to mobile view",
+            trigger: ".o_mobile_preview > a",
+            run: "click",
+        },
+        openMenu(),
+        // Check mobile visibility while NOT editing
+        ...testHeaderNavVisibility({
+            "MM des": false,
+            "Drop 1": true,
+            "MM mob": true,
+            "Drop 2": true,
+            "MM cond": false,
+        }),
+        ...clickOnEditAndWaitEditMode(),
+        // Check mobile visibility while editing
+        ...testHeaderNavVisibility({
+            "MM des": true,
+            "Drop 1": true,
+            "MM mob": true,
+            "Drop 2": true,
+            "MM cond": true,
+        }),
+        {
+            content: "Switch to desktop view",
+            trigger: "button:has(> span.fa-mobile)",
+            run: "click",
+        },
+        // Check desktop visibility while editing
+        openMenu(),
+        ...testHeaderNavVisibility({
+            "MM des": true,
+            "Drop 1": true,
+            "MM mob": true,
+            "Drop 2": true,
+            "MM cond": true,
+        }),
+    ]
+);

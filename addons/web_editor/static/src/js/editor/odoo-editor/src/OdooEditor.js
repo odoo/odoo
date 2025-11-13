@@ -3036,7 +3036,9 @@ export class OdooEditor extends EventTarget {
                 const sizeDelta = newSize - currentSize;
                 const currentNeighborSize = neighborRect[sizeProp];
                 const newNeighborSize = currentNeighborSize - sizeDelta;
-                const maxWidth = this.editable.clientWidth - pxToFloat(editableStyle.paddingLeft) - pxToFloat(editableStyle.paddingRight);
+                const enclosingCell = closestElement(table, "td, th");
+                const containerWidth = enclosingCell?.getBoundingClientRect().width || this.editable.clientWidth;
+                const maxWidth = containerWidth - pxToFloat(editableStyle.paddingLeft) - pxToFloat(editableStyle.paddingRight);
                 const tableRect = table.getBoundingClientRect();
                 if (newSize > MIN_SIZE &&
                     // prevent resizing horizontally beyond the bounds of

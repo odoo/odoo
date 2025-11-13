@@ -181,7 +181,7 @@ export function urlToState(urlObj) {
 
     const [prefix, ...splitPath] = urlObj.pathname.split("/").filter(Boolean);
 
-    if (prefix === "odoo" || isScopedApp()) {
+    if (["odoo", "scoped_app"].includes(prefix)) {
         const actionParts = [...splitPath.entries()].filter(
             ([_, part]) => !isNumeric(part) && part !== "new"
         );
@@ -225,6 +225,11 @@ export function urlToState(urlObj) {
         if (activeAction) {
             Object.assign(state, activeAction);
             state.actionStack = actions;
+        }
+        if (prefix === "scoped_app" && !isDisplayStandalone()) {
+            // make sure /scoped_app are redirected to /odoo when using the browser instead of the PWA
+            const url = browser.location.origin + router.stateToUrl(state);
+            urlObj.href = url;
         }
     }
     return state;
