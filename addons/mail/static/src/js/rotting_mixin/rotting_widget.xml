@@ -7,11 +7,13 @@
         </div>
     </t>
 
-    <t t-name="mail.ListBadgeSelectionRotting" t-inherit="web.ListBadgeSelectionField" t-inherit-mode="primary">
-        <t t-else="" position="after">
+    <t t-name="mail.Many2OneFieldRotting">
+        <div class="d-inline-flex">
+            <Many2One t-props="m2oProps"/>
             <span class="badge rounded-pill o_mail_resource_rotting_bg ms-2" t-if="props.record.data.is_rotting">
                 <t t-out="dayCount"/>
-        </span>
-        </t>
+            </span>
+
+        </div>
     </t>
 </templates>
