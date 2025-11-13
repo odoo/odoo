@@ -60,7 +60,6 @@ class OnboardingOnboardingStep(models.Model):
     @api.model
     def action_open_step_fiscal_year(self):
         company = self.env['account.journal'].browse(self.env.context.get('journal_id', None)).company_id or self.env.company
-        new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
         return {
@@ -69,10 +68,10 @@ class OnboardingOnboardingStep(models.Model):
             'view_mode': 'form',
             'res_model': 'account.financial.year.op',
             'target': 'new',
-            'res_id': new_wizard.id,
             'views': [[view_id, 'form']],
             'context': {
                 'dialog_size': 'medium',
+                'default_company_id': company.id,
             }
         }
 
