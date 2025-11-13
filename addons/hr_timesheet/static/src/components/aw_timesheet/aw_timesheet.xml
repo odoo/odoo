@@ -49,8 +49,7 @@
                   <table class="table table-sm table-borderless align-middle mb-0">
                     <tbody>
                       <t t-foreach="Object.keys(state.grouped[groupKey])" t-as="title" t-key="title">
-                      <!-- t-if="state.grouped[groupKey][title].duration >= 120" -->
-                        <tr
+                        <tr t-if="state.grouped[groupKey][title].duration >= 120"
                             t-att-class="{'table-danger': this.isSelected(groupKey, title)}"
                             t-on-mousedown.stop="(ev) => this.onMouseDown(groupKey, title, ev)"
                             t-on-mouseenter.stop="() => this.onMouseEnter(groupKey, title)"
@@ -59,11 +58,12 @@
                           <td class="text-end text-muted">
                             <t t-esc="(state.grouped[groupKey][title].duration / 60).toFixed(2)"/> min
                           </td>
-                          <td class="text-end" t-if="state.selectedRows.size === 0">
-                            <button t-att-style="groupKey === 'false_false' ? 'visibility: hidden;' : ''"
+                          <td class="text-end">
+                            <button t-att-style="groupKey === this.unmatchedProjectTaskKey || state.selectedRows.size > 0 ? 'visibility: hidden;' : ''"
                                     class="btn btn-sm btn-primary me-1"
                                     t-on-click.stop="() => this.onTake(groupKey, title)">Take</button>
                             <button class="btn btn-sm btn-secondary"
+                                    t-att-style="state.selectedRows.size > 0 ? 'visibility: hidden;' : ''"
                                     t-on-click.stop="() => this.onDelete(groupKey, title)">Delete</button>
                           </td>
                         </tr>
@@ -83,7 +83,8 @@
               <table class="table table-sm table-borderless align-middle mb-0">
                 <tbody>
                   <t t-foreach="state.records" t-as="record" t-key="record.start">
-                    <tr t-att-class="{'table-danger': this.isSelected(record.groupKey, record.title)}"
+                    <tr t-if="record.duration >= 120"
+                        t-att-class="{'table-danger': this.isSelected(record.groupKey, record.title)}"
                         t-on-mousedown.stop="(ev) => this.onMouseDown(record.groupKey, record.title, ev)"
                         t-on-mouseenter.stop="() => this.onMouseEnter(record.groupKey, record.title)"
                         style="cursor: pointer;">
@@ -99,11 +100,12 @@
                           <td class="text-end text-muted">
                             <t t-esc="(record.duration / 60).toFixed(2)"/> min
                           </td>
-                          <td class="text-end" t-if="state.selectedRows.size === 0">
-                            <button t-att-style="record.groupKey === 'false_false' ? 'visibility: hidden;' : ''"
+                          <td class="text-end">
+                            <button t-att-style="record.groupKey === this.unmatchedProjectTaskKey || state.selectedRows.size > 0 ? 'visibility: hidden;' : ''"
                                     class="btn btn-sm btn-primary me-1"
                                     t-on-click.stop="() => this.onTake(record.groupKey, record.title)">Take</button>
                             <button class="btn btn-sm btn-secondary"
+                                    t-att-style="state.selectedRows.size > 0 ? 'visibility: hidden;' : ''"
                                     t-on-click.stop="() => this.onDelete(record.groupKey, record.title)">Delete</button>
                           </td>
                     </tr>

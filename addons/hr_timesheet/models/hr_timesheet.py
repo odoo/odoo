@@ -12,18 +12,16 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.translate import _
 
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    def get_events(self):
-        now = datetime.today()
-        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        start = start_of_day.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        end = (now + relativedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT) # for test, else should be now
+    def get_events(self, day):
+        start = datetime.strptime(day, DEFAULT_SERVER_DATE_FORMAT)
+        end = (start + relativedelta(days=1))
 
         def get_planning_slots():
             res = []
@@ -37,7 +35,7 @@ class AccountAnalyticLine(models.Model):
             for slot in self.env["planning.slot"].search_read(
                 domain=[
                     ('user_id', '=', self.env.user.id),
-                    ('start_datetime', '<=', end),
+                    ('start_datetime', '<', end),
                     ('end_datetime', '>=', start),
                 ],
                 fields=fields,
