@@ -152,6 +152,13 @@ class StockMove(models.Model):
             qty_received -= self.product_uom._compute_quantity(
                 self.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
             )
+            batch_moves = self._get_batch_moves()
+            for move in batch_moves:
+                if move == self or move.state != 'done' or move.purchase_line_id != self.purchase_line_id:
+                    continue
+                qty_received -= move.product_uom._compute_quantity(
+                    move.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
+                )
         return qty_received
 
     def _get_currency_convert_date(self):
