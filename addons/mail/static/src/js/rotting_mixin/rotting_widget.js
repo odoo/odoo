@@ -1,10 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import {
-    listBadgeSelectionField,
-    ListBadgeSelectionField,
-} from "@web/views/fields/badge_selection/list_badge_selection_field";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export function getRottingDaysTitle(modelName, rotDays) {
@@ -46,8 +43,9 @@ export class KanbanRottingField extends Component {
     }
 }
 
-export class ListBadgeSelectionRotting extends ListBadgeSelectionField {
-    static template = "mail.ListBadgeSelectionRotting";
+export class Many2OneFieldRotting extends Many2OneField {
+    static template = "mail.Many2OneFieldRotting";
+
     setup() {
         super.setup();
         // As this widget is appended to another field's value, we display no additional title to prevent title overlap
@@ -62,6 +60,5 @@ registry.category("fields").add("kanban.rotting", {
 });
 
 registry.category("fields").add("list.badge_rotting", {
-    ...listBadgeSelectionField,
-    component: ListBadgeSelectionRotting,
+    ...buildM2OFieldDescription(Many2OneFieldRotting),
 });
