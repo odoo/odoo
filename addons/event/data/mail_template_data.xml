@@ -314,8 +314,8 @@
                         <br/>
                         The order for this ticket has reference <t t-out="object.sale_order_id.name"/>
                         and was placed on <t t-out="object.sale_order_id.date_order.date()"/>
-                        <t t-if="object.sale_order_line_id.price_unit"> for an amount of
-                            <t t-out="object.sale_order_line_id.price_unit" t-options="{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}"/>
+                        <t t-if="object.sale_order_line_id.price_total"> for an amount of
+                            <t t-out="object.sale_order_line_id.price_total" t-options="{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}"/>
                         </t>.
                     </div>
                     <div>
