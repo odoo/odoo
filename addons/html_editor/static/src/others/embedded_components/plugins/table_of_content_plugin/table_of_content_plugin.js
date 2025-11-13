@@ -43,10 +43,9 @@ export class TableOfContentPlugin extends Plugin {
     };
 
     setup() {
-        this.manager = new TableOfContentManager({
-            el: this.editable,
-        });
+        this.manager = new TableOfContentManager({ el: this.editable });
         this.alive = true;
+        this.manager.batchedUpdateStructure();
     }
 
     insertTableOfContent() {
