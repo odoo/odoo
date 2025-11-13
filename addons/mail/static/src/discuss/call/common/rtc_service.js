@@ -438,7 +438,10 @@ export class Rtc extends Record {
                         this.actionsStack.unshift(action.id);
                     }
                 } else {
-                    this.actionsStack.splice(this.actionsStack.indexOf(action.id), 1);
+                    const index = this.actionsStack.indexOf(action.id);
+                    if (index !== -1) {
+                        this.actionsStack.splice(index, 1);
+                    }
                 }
             }
             this.lastSelfCallAction = this.actionsStack[0];
