@@ -19,7 +19,7 @@ from functools import wraps
 from itertools import count
 from lxml import etree
 from unittest import SkipTest
-from unittest.mock import patch
+from unittest.mock import patch, ANY
 
 _logger = logging.getLogger(__name__)
 
@@ -858,6 +858,15 @@ class AccountTestInvoicingCommon(ProductCommon):
     # -------------------------------------------------------------------------
     # Assertions
     # -------------------------------------------------------------------------
+
+    def replace_ignore(self, to_compare):
+        """ Because we put jsons in separate files, we can not use ANY from unittest Mock there, so we can just apply
+        this method on the dicts to be compared before doing assertDictEqual"""
+        if isinstance(to_compare, dict):
+            return {k: self.replace_ignore(v) for k, v in to_compare.items()}
+        if isinstance(to_compare, list):
+            return [self.replace_ignore(v) for v in to_compare]
+        return ANY if to_compare == "___ignore___" else to_compare
 
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):
