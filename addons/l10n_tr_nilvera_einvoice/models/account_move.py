@@ -71,6 +71,12 @@ class AccountMove(models.Model):
     def _l10n_tr_get_category_move_type(self, document_category):
         return CATEGORY_MOVE_TYPE_MAP.get(document_category.lower())
 
+    def _l10n_tr_get_status_invoice_channel(self):
+        # Overriden in l10n_tr_nilvera_einvoice_extended
+        # to handle Export invoices edge case
+        self.ensure_one()
+        return self.partner_id.l10n_tr_nilvera_customer_status
+
     @api.model
     def _get_ubl_cii_builder_from_xml_tree(self, tree):
         customization_id = tree.find('{*}CustomizationID')
@@ -172,7 +178,7 @@ class AccountMove(models.Model):
         for company, invoices in self.grouped("company_id").items():
             with _get_nilvera_client(company) as client:
                 for invoice in invoices:
-                    invoice_channel = invoice.partner_id.l10n_tr_nilvera_customer_status
+                    invoice_channel = invoice._l10n_tr_get_status_invoice_channel()
                     document_category = invoice._l10n_tr_get_document_category(invoice_channel)
                     if not document_category or not invoice_channel:
                         continue
