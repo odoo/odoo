@@ -20,6 +20,7 @@ FLAG_MAPPING = {
     "RE": "fr",
     "MF": "fr",
     "UM": "us",
+    "XI": "uk",
 }
 
 NO_FLAG_COUNTRIES = [
