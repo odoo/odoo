@@ -55,7 +55,7 @@ class SaleOrderLine(models.Model):
         return super()._auto_init()
 
     def _additional_name_per_id(self):
-        name_per_id = super()._additional_name_per_id() if not self.env.context.get('hide_partner_ref') else {}
+        name_per_id = super()._additional_name_per_id() if (not self.env.context.get('hide_partner_ref') or len(self) == 1) else {}
         if not self.env.context.get('with_price_unit'):
             return name_per_id
 
