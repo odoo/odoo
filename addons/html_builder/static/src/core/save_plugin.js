@@ -24,8 +24,6 @@ import { uniqueId } from "@web/core/utils/functions";
  * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
  *
  * @typedef {(() => HTMLElement[] | NodeList)[]} get_dirty_els
- *
- * @typedef {CSSSelector[]} savable_selectors
  */
 
 export class SavePlugin extends Plugin {
@@ -38,11 +36,6 @@ export class SavePlugin extends Plugin {
         handleNewRecords: this.handleMutations.bind(this),
         start_edition_handlers: this.startObserving.bind(this),
         // Resource definitions:
-        savable_selectors: [
-            "#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]",
-            "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])",
-            "#wrapwrap .s_cover[data-res-model]",
-        ],
         clean_for_save_handlers: [
             // ({root}) => {
             //     clean DOM before save (leaving edit mode)
@@ -57,7 +50,6 @@ export class SavePlugin extends Plugin {
 
     setup() {
         this.canObserve = false;
-        this.savableSelector = this.getResource("savable_selectors").join(", ");
     }
 
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
@@ -149,7 +141,7 @@ export class SavePlugin extends Plugin {
             if (!targetEl) {
                 continue;
             }
-            const savableEl = targetEl.closest(this.savableSelector);
+            const savableEl = targetEl.closest(".o_savable");
             if (
                 !savableEl ||
                 savableEl.classList.contains("o_dirty") ||
