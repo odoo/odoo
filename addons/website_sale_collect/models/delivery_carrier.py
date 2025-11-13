@@ -41,11 +41,13 @@ class DeliveryCarrier(models.Model):
         for vals in vals_list:
             if vals.get('delivery_type') == 'in_store':
                 vals['integration_level'] = 'rate'
+                vals['allow_cash_on_delivery'] = False
         return super().create(vals_list)
 
     def write(self, vals):
         if vals.get('delivery_type') == 'in_store':
             vals['integration_level'] = 'rate'
+            vals['allow_cash_on_delivery'] = False
         return super().write(vals)
 
     # === BUSINESS METHODS ===#
