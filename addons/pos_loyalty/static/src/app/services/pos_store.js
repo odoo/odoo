@@ -36,6 +36,9 @@ patch(PosStore.prototype, {
             .filter((order) => order.is_reward_line && !order.reward_id)
             .map((line) => line.delete());
         await super.afterProcessServerData(...arguments);
+        if (this.selectedOrderUuid) {
+            this.updateRewards();
+        }
     },
     async updateOrder(order) {
         // Read value to trigger effect
@@ -636,12 +639,6 @@ patch(PosStore.prototype, {
 
                 reward.delete();
             }
-        }
-    },
-    async initServerData() {
-        await super.initServerData(...arguments);
-        if (this.selectedOrderUuid) {
-            this.updateRewards();
         }
     },
     /**
