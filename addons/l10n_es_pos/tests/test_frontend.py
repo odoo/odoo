@@ -140,7 +140,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_order_pos0.action_pos_order_invoice()
         attachment_proforma = self.pos_order_pos0.account_move.attachment_ids.filtered(lambda att: "proforma" in att.name)
         self.assertFalse(attachment_proforma)
-        invoice_str = str(self.pos_order_pos0.account_move._get_invoice_legal_documents('pdf', allow_fallback=True).get('content'))
+        legal_documents = self.pos_order_pos0.account_move._get_invoice_legal_documents('pdf', allow_fallback=True)
+        self.assertEqual(len(legal_documents), 1)
+        invoice_str = str(legal_documents[0]['content'])
         self.assertTrue("invoice" in invoice_str)
         self.assertTrue("proforma" not in invoice_str)
 

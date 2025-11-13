@@ -6588,13 +6588,15 @@ class AccountMove(models.Model):
         self.ensure_one()
         if filetype == 'pdf':
             if invoice_pdf := self.invoice_pdf_report_id:
-                return {
+                return [{
                     'filename': invoice_pdf.name,
                     'filetype': invoice_pdf.mimetype,
                     'content': invoice_pdf.raw,
-                }
+                }]
             elif allow_fallback:
-                return self._get_invoice_pdf_proforma()
+                return [self._get_invoice_pdf_proforma()]
+
+        return []
 
     def _get_invoice_legal_documents_all(self, allow_fallback=False):
         """ Retrieve the invoice legal attachments: PDF, XML, ...
