@@ -350,7 +350,7 @@ describe("field HTML", () => {
         expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
         // editable basic
         await contains(`.o_pager_next`).click();
-        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_basic_theme", {
+        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_basic_theme:only-child", {
             timeout: 3000,
         });
         expect(getPagerValue()).toEqual([2]);
@@ -358,7 +358,7 @@ describe("field HTML", () => {
         expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
         // editable builder
         await contains(`.o_pager_next`).click();
-        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_empty_theme", {
+        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_empty_theme:only-child", {
             timeout: 3000,
         });
         expect(getPagerValue()).toEqual([3]);
@@ -366,9 +366,10 @@ describe("field HTML", () => {
         expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(1);
         // readonly default
         await contains(`.o_pager_next`).click();
-        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_default_theme", {
-            timeout: 3000,
-        });
+        await waitFor(
+            ".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_default_theme:only-child",
+            { timeout: 3000 }
+        );
         expect(getPagerValue()).toEqual([1]);
         expect(htmlField.state.activeTheme).toBe("default");
         expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
