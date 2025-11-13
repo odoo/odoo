@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest import skip
@@ -452,7 +451,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         # change the rate of the currency
         self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y-%m-%d'),
+            'name': fields.Date.today() - timedelta(days=1),
             'rate': 2.0,
             'currency_id': eur_currency.id,
             'company_id': po1.company_id.id,
@@ -1927,7 +1926,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         eur_curr = self.env.ref('base.EUR')
         self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
+            'name': fields.Date.today() - timedelta(days=1),
             'company_id': self.env.company.id,
             'currency_id': eur_curr.id,
             'rate': 2,

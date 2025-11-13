@@ -56,7 +56,7 @@ class TestBIR2307Generation(TestPhCommon):
             'is_company': True,
         })
 
-        cls.other_currency = cls.setup_other_currency('EUR', rates=[('2017-01-01', 2)])
+        cls.other_currency = cls.setup_other_currency('EUR', rates=[('2016-12-31', 2)])
 
     def test_bir_2307_company(self):
         """ Test the report """

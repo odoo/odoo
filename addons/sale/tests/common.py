@@ -221,7 +221,7 @@ class TestTaxCommonSale(TestSaleCommon, TestTaxCommon):
     def convert_document_to_sale_order(self, document):
         order_date = '2020-01-01'
         currency = document['currency']
-        self._ensure_rate(currency, order_date, document['rate'])
+        self._ensure_rate(currency, '2019-12-31', document['rate'])
         self.foreign_currency_pricelist.currency_id = currency
         return self.env['sale.order'].create({
             'date_order': order_date,

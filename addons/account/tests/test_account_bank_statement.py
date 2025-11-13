@@ -16,8 +16,8 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         cls.currency_1 = cls.company_data['currency']
         # We need a third currency as you could have a company's currency != journal's currency !=
         cls.currency_2 = cls.setup_other_currency('EUR')
-        cls.currency_3 = cls.setup_other_currency('CAD', rates=[('2016-01-01', 6.0), ('2017-01-01', 4.0)])
-        cls.currency_4 = cls.setup_other_currency('GBP', rates=[('2016-01-01', 12.0), ('2017-01-01', 8.0)])
+        cls.currency_3 = cls.setup_other_currency('CAD', rates=[('2015-12-31', 6.0), ('2016-12-31', 4.0)])
+        cls.currency_4 = cls.setup_other_currency('GBP', rates=[('2015-12-31', 12.0), ('2016-12-31', 8.0)])
 
         cls.company_data_2 = cls.setup_other_company()
 

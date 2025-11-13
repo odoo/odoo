@@ -626,7 +626,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         2.82       | 20000     | 21% not incl
         '''
         self.env['res.currency.rate'].create({
-            'name': '2018-01-01',
+            'name': '2017-12-31',
             'rate': 1.1726,
             'currency_id': self.other_currency.id,
             'company_id': self.env.company.id,
@@ -655,7 +655,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
     def test_ensure_no_unbalanced_entry(self):
         ''' Ensure to not create an unbalanced journal entry when saving. '''
         self.env['res.currency.rate'].create({
-            'name': '2018-01-01',
+            'name': '2017-12-31',
             'rate': 0.654065014,
             'currency_id': self.other_currency.id,
             'company_id': self.env.company.id,
@@ -676,7 +676,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
     @freeze_time('2018-01-01')
     def test_tax_calculation_multi_currency(self):
         self.env['res.currency.rate'].create({
-            'name': '2018-01-01',
+            'name': '2017-12-31',
             'rate': 0.273748,
             'currency_id': self.other_currency.id,
             'company_id': self.env.company.id,

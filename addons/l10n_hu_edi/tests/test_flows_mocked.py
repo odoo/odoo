@@ -204,8 +204,8 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         if self.env['ir.module.module']._get('sale_stock').state == 'installed':
             self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
             currency = self.setup_other_currency('HRK', rates=[
-                ('2016-01-01', 3.0),
-                ('2017-01-01', 2.0),
+                ('2015-12-31', 3.0),
+                ('2016-12-31', 2.0),
             ])
             pricelist = self.env['product.pricelist'].create({
                 'name': 'Foreign pricelist',

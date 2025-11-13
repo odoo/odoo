@@ -35,8 +35,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         # ==== Multi-currency setup ====
         cls.other_currency = cls.setup_other_currency('EUR', rounding=0.001)
-        cls.other_currency_2 = cls.setup_other_currency('CAD', rates=[('2016-01-01', 6.0), ('2017-01-01', 4.0)])
-        cls.other_currency_3 = cls.setup_other_currency('XAF', rates=[('2016-01-01', 0.0001), ('2017-01-01', 0.00001)])
+        cls.other_currency_2 = cls.setup_other_currency('CAD', rates=[('2015-12-31', 6.0), ('2016-12-31', 4.0)])
+        cls.other_currency_3 = cls.setup_other_currency('XAF', rates=[('2015-12-31', 0.0001), ('2016-12-31', 0.00001)])
 
         # ==== Cash Basis Taxes setup ====
 
@@ -1852,7 +1852,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'symbol': '🍞',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2019-06-01', 'rate': 0.052972554919}),
+                Command.create({'name': '2019-05-31', 'rate': 0.052972554919}),
             ],
         })
 
@@ -1949,7 +1949,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'symbol': '🍞',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2019-06-01', 'rate': 0.052972554919}),
+                Command.create({'name': '2019-05-31', 'rate': 0.052972554919}),
             ],
         })
 
@@ -2023,7 +2023,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'symbol': '🍞',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2019-06-01', 'rate': 0.648587}),
+                Command.create({'name': '2019-05-31', 'rate': 0.648587}),
             ],
         })
 
@@ -2084,7 +2084,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'symbol': '🍞',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2019-06-01', 'rate': 0.648587}),
+                Command.create({'name': '2019-05-31', 'rate': 0.648587}),
             ],
         })
 
@@ -2142,11 +2142,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'symbol': '🍣',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2019-09-24', 'rate': 0.050800000000}),
-                Command.create({'name': '2019-06-28', 'rate': 0.052235000000}),
-                Command.create({'name': '2019-06-24', 'rate': 0.052686000000}),
-                Command.create({'name': '2019-06-20', 'rate': 0.052353000000}),
-                Command.create({'name': '2019-06-12', 'rate': 0.052072000000}),
+                Command.create({'name': '2019-09-23', 'rate': 0.050800000000}),
+                Command.create({'name': '2019-06-27', 'rate': 0.052235000000}),
+                Command.create({'name': '2019-06-23', 'rate': 0.052686000000}),
+                Command.create({'name': '2019-06-19', 'rate': 0.052353000000}),
+                Command.create({'name': '2019-06-11', 'rate': 0.052072000000}),
             ],
         })
 
@@ -2443,11 +2443,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'symbol': '🍣',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2019-09-24', 'rate': 0.050800000000}),
-                Command.create({'name': '2019-06-28', 'rate': 0.052235000000}),
-                Command.create({'name': '2019-06-24', 'rate': 0.052686000000}),
-                Command.create({'name': '2019-06-20', 'rate': 0.052353000000}),
-                Command.create({'name': '2019-06-12', 'rate': 0.052072000000}),
+                Command.create({'name': '2019-09-23', 'rate': 0.050800000000}),
+                Command.create({'name': '2019-06-27', 'rate': 0.052235000000}),
+                Command.create({'name': '2019-06-23', 'rate': 0.052686000000}),
+                Command.create({'name': '2019-06-19', 'rate': 0.052353000000}),
+                Command.create({'name': '2019-06-11', 'rate': 0.052072000000}),
             ],
         })
 
@@ -2815,7 +2815,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         ])
 
     def test_reconcile_rounding_issue(self):
-        currency = self.setup_other_currency('CHF', rates=[('2016-01-01', 1 / 1.5289), ('2017-01-01', 1 / 1.5289)])
+        currency = self.setup_other_currency('CHF', rates=[('2015-12-31', 1 / 1.5289), ('2016-12-31', 1 / 1.5289)])
 
         # Create an invoice 26.45 XXX = 40.43 USD
         invoice = self.env['account.move'].create({
@@ -3787,7 +3787,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         account is not a reconcile one.
         '''
         self.env.company.tax_exigibility = True
-        currency_id = self.setup_other_currency('CHF', rates=[('2016-01-01', 0.5), ('2017-01-01', 0.66666666666666)]).id
+        currency_id = self.setup_other_currency('CHF', rates=[('2015-12-31', 0.5), ('2016-12-31', 0.66666666666666)]).id
 
         # Rate 2/1 in 2016.
         caba_inv = self.env['account.move'].with_context(skip_invoice_sync=True).create({
@@ -3862,7 +3862,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         account is not a reconcile one.
         '''
         self.env.company.tax_exigibility = True
-        currency_id = self.setup_other_currency('CHF', rates=[('2016-01-01', 0.5), ('2017-01-01', 0.66666666666666)]).id
+        currency_id = self.setup_other_currency('CHF', rates=[('2015-12-31', 0.5), ('2016-12-31', 0.66666666666666)]).id
 
         # Rate 2/1 in 2016.
         caba_inv = self.env['account.move'].with_context(skip_invoice_sync=True).create({
@@ -4043,7 +4043,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_reconcile_cash_basis_refund_multicurrency(self):
         self.env.company.tax_exigibility = True
-        currency = self.setup_other_currency('CHF', rates=[('2016-01-01', 0.5), ('2017-01-01', 0.33333333333333333)])
+        currency = self.setup_other_currency('CHF', rates=[('2015-12-31', 0.5), ('2016-12-31', 0.33333333333333333)])
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',

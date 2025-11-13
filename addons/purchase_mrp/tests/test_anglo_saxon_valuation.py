@@ -1,6 +1,6 @@
 from unittest import skip
 
-from odoo.fields import Date, Datetime
+from odoo.fields import Date
 from odoo.tools import float_is_zero, mute_logger
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
@@ -183,11 +183,11 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         usd = self.env.ref('base.USD')
         eur = self.env.ref('base.EUR')
         self.env['res.currency.rate'].create({
-            'name': Datetime.today(),
+            'name': Date.subtract(Date.today(), days=1),
             'currency_id': usd.id,
             'rate': 1})
         self.env['res.currency.rate'].create({
-            'name': Datetime.today(),
+            'name': Date.subtract(Date.today(), days=1),
             'currency_id': eur.id,
             'rate': 2})
 

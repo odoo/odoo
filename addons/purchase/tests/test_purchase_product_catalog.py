@@ -16,7 +16,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         """
         self.authenticate(self.env.user.login, self.env.user.login)
         company_currency = self.env.company.currency_id
-        other_currency = self.setup_other_currency('HRK', rates=[(fields.Date.today(), 0.5)])
+        other_currency = self.setup_other_currency('HRK', rates=[(fields.Date.subtract(fields.Date.today(), days=1), 0.5)])
 
         other_product_price = 100
         company_product_price = 150

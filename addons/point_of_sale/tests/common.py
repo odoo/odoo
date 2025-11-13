@@ -510,7 +510,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.env['res.currency.rate'].create({
             'rate': 0.5,
             'currency_id': cls.other_currency.id,
-            'name': datetime.today().date(),
+            'name': fields.Date.subtract(datetime.today().date(), days=1),
         })
         other_cash_journal = cls.env['account.journal'].create({
             'name': 'Cash Other',

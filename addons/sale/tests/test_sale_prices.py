@@ -216,7 +216,7 @@ class TestSalePrices(SaleCommon):
         })
         with freeze_time('2022-08-19'):
             self.env['res.currency.rate'].create({
-                'name': fields.Date.today(),
+                'name': fields.Date.today() - timedelta(days=1),
                 'rate': 2.0,
                 'currency_id': other_currency.id,
                 'company_id': self.env.company.id,
@@ -302,7 +302,7 @@ class TestSalePrices(SaleCommon):
 
         currency_eur = self._enable_currency('EUR')
         self.env['res.currency.rate'].create({
-            'name': '2018-07-11',
+            'name': '2018-07-10',
             'rate': 2.0,
             'currency_id': currency_eur.id,
             'company_id': self.env.company.id,
@@ -437,7 +437,7 @@ class TestSalePrices(SaleCommon):
         with mute_logger('odoo.models.unlink'):
             self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
-            'name': '2010-01-01',
+            'name': '2009-12-31',
             'rate': 2.0,
             'currency_id': main_curr.id,
             'company_id': False,

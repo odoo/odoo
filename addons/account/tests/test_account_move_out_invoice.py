@@ -4356,8 +4356,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             )
 
         currency = self.setup_other_currency('EUR', rates=[
-            ('2016-01-01', 3.0),
-            ('2017-01-01', 2.0),
+            ('2015-12-31', 3.0),
+            ('2016-12-31', 2.0),
         ])
         self.assertRecordValues(invoice('2015-01-01'), [{
             'amount_total': 1000.0,
@@ -4681,8 +4681,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_lines_recomputation_after_currency_rate_change(self):
         currency = self.setup_other_currency('EUR', rates=[
-            ('2025-01-01', 0.5),
-            ('2025-02-01', 0.4),
+            ('2024-12-31', 0.5),
+            ('2025-01-31', 0.4),
         ])
 
         with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:

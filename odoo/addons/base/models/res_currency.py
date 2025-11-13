@@ -127,7 +127,7 @@ class ResCurrency(models.Model):
         currency_id_field = self.env['res.currency']._field_to_sql(currency_query.table, 'id')
 
         rate_query = Rate._search(
-            [('name', '<=', date), ('company_id', 'in', (False, company.root_id.id))],
+            [('name', '<', date), ('company_id', 'in', (False, company.root_id.id))],
             order='company_id.id, name DESC', limit=1)
         rate_query.add_where(
             SQL("%s = %s", Rate._field_to_sql(rate_query.table, 'currency_id'), currency_id_field))
@@ -136,7 +136,6 @@ class ResCurrency(models.Model):
             Rate._field_to_sql(Rate._table, 'name', rate_query),
         )
         currency_query.add_join('LEFT JOIN LATERAL', 'before_rate', rate_query, SQL('TRUE'))
-
         rate_query_fallback = Rate._search(
             [('company_id', 'in', (False, company.root_id.id))],
             order='company_id.id, name ASC', limit=1)

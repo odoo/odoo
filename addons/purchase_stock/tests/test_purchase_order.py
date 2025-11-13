@@ -721,7 +721,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             'symbol': 'T',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2025-01-01', 'rate': 1.5}),
+                Command.create({'name': '2021-01-13', 'rate': 1.5}),
             ],
         })
         po = self.env['purchase.order'].create({
@@ -759,7 +759,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         euro = self.env.ref('base.EUR')
         euro.active = True
         self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
+            'name': fields.Date.today() - timedelta(days=1),
             'company_rate': 1.10,
             'currency_id': euro.id,
             'company_id': self.env.company.id,
@@ -814,7 +814,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             'symbol': 'T',
             'rounding': 0.01,
             'rate_ids': [
-                Command.create({'name': '2025-01-01', 'rate': 1.5}),
+                Command.create({'name': '2021-01-13', 'rate': 1.5}),
             ],
         })
         tax_price_include = self.env['account.tax'].create({

@@ -78,7 +78,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         currency_eur.active = True
         cls.env['res.currency.rate'].create(
             {
-                'name': cls.today,
+                'name': cls.today - datetime.timedelta(days=1),
                 'currency_id': currency_eur.id,
                 'company_id': company.id,
                 'inverse_company_rate': '380.77',
@@ -86,7 +86,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         )
         cls.env['res.currency.rate'].create(
             {
-                'name': cls.today - datetime.timedelta(days=1),
+                'name': cls.today - datetime.timedelta(days=2),
                 'currency_id': currency_eur.id,
                 'company_id': company.id,
                 'inverse_company_rate': '377.66',

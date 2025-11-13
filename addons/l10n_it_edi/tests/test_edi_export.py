@@ -391,7 +391,7 @@ class TestItEdiExport(TestItEdi):
         usd = self.env.ref('base.USD')
 
         self.env['res.currency.rate'].create({
-            'name': '2024-08-06',
+            'name': '2024-08-05',
             'rate': 1.0789,
             'currency_id': usd.id,
             'company_id': self.company.id,

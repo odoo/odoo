@@ -10,13 +10,13 @@ class TestResCurrency(TransactionCase):
         currencyA, currencyB = self.env['res.currency'].create([{
             'name': 'AAA',
             'symbol': 'AAA',
-            'rate_ids': [Command.create({'name': '2009-09-09', 'rate': 1})]
+            'rate_ids': [Command.create({'name': '2009-09-08', 'rate': 1})],
         }, {
             'name': 'BBB',
             'symbol': 'BBB',
             'rate_ids': [
-                Command.create({'name': '2009-09-09', 'rate': 1}),
-                Command.create({'name': '2011-11-11', 'rate': 2}),
+                Command.create({'name': '2009-09-08', 'rate': 1}),
+                Command.create({'name': '2011-11-10', 'rate': 2}),
             ],
         }])
 
@@ -30,7 +30,7 @@ class TestResCurrency(TransactionCase):
         # update the (cached) rate of the to_currency used in the previous query
         self.env['res.currency.rate'].search([
             ('currency_id', '=', currencyB.id),
-            ('name', '=', '2009-09-09')]
+            ('name', '=', '2009-09-08')],
         ).rate = 3
 
         # repeat _convert call
@@ -45,7 +45,7 @@ class TestResCurrency(TransactionCase):
 
         # create a new rate of the to_currency for the date used in the previous query
         self.env['res.currency.rate'].create({
-            'name': '2010-10-10',
+            'name': '2010-10-09',
             'rate': 4,
             'currency_id': currencyB.id,
             'company_id': self.env.company.id,
