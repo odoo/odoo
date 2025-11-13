@@ -69,3 +69,14 @@ class TestUIPortal(TestPortal):
             f"/my/test_portal_rating_records/{record_rating.id}?token={record_rating._portal_ensure_token()}",
             "portal_rating_tour",
         )
+
+    def test_composer_actions_portal(self):
+        self.start_tour(
+            f"/my/test_portal_records/{self.record_portal.id}",
+            "portal_composer_actions_tour_internal_user",
+            login=self.user_employee.login,
+        )
+        self.start_tour(
+            f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_ensure_token()}",
+            "portal_composer_actions_tour_portal_user",
+        )
