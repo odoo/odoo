@@ -118,15 +118,4 @@ class MailingContactImport(models.TransientModel):
         }
 
     def action_open_base_import(self):
-        """Open the base import wizard to import mailing list contacts with a xlsx file."""
-        self.ensure_one()
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'import',
-            'name': _('Import Mailing Contacts'),
-            'params': {
-                'context': self.env.context,
-                'active_model': 'mailing.contact',
-            }
-        }
+        return self.env['mailing.contact'].action_open_base_import()
