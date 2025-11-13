@@ -7,6 +7,8 @@
         <t t-set="main_page_url" t-value="'/blog'"/>
         <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts %s' % snippet_extra_classes"/>
         <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true, "blog_posts_post_category_active":true, "blog_posts_post_new_active":true}'/>
+        <t t-set="snippet_title" t-valuef="Latest Stories"/>
+        <t t-set="snippet_description" t-valuef="Explore fresh ideas and updates from our editorial team."/>
         <t t-out="0"/>
     </t>
 </template>

@@ -2,7 +2,10 @@
 <odoo>
     <template id="s_dynamic_snippet_carousel" name="Dynamic Carousel">
         <t t-call="website.s_dynamic_snippet_template"
-            snippet_name.f="s_dynamic_snippet_carousel"/>
+            snippet_name.f="s_dynamic_snippet_carousel">
+                <t t-set="snippet_title" t-valuef="Our latest content"/>
+                <t t-set="snippet_description" t-valuef="Check out what's new in our company !"/>
+            </t>
     </template>
 
 <asset id="website.s_dynamic_snippet_carousel_000_scss" name="Dynamic snippet carousel 000 SCSS">
