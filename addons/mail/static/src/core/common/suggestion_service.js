@@ -30,9 +30,6 @@ export class SuggestionService {
      * @returns {Array<[string, number, number]>}
      */
     getSupportedDelimiters(thread, env) {
-        if (env?.inFrontendPortalChatter) {
-            return [[":", undefined, 2]];
-        }
         return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }
 
