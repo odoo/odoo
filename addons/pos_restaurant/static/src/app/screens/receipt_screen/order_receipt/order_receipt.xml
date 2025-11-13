@@ -36,7 +36,7 @@
     </t>
     <t t-name="pos_restaurant.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('cashier')]" position="after">
-            <t t-if="order.table_id" t-esc="tableName"/>
+            <t t-if="order.table_id or order.self_ordering_table_id" t-esc="tableName"/>
         </xpath>
     </t>
 
