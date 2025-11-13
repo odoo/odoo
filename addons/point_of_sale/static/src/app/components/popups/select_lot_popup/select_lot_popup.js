@@ -59,6 +59,7 @@ export class SelectLotPopup extends Component {
                                     create: true,
                                     id: option.id,
                                     label: option.name,
+                                    expiration_date: option.expiration_date,
                                 }),
                         }));
                     } else if (this.props.customInput && currentInput) {
@@ -102,7 +103,7 @@ export class SelectLotPopup extends Component {
         }
         const newItem = lot.currentInput
             ? { text: lot.currentInput, id: lot.id }
-            : { text: lot.label, id: lot.id };
+            : { text: lot.label, id: lot.id, expiration_date: lot.expiration_date };
         this.state.values = this.props.isSingleItem ? [newItem] : [...this.state.values, newItem];
         this.state.value = this.props.isSingleItem ? newItem.text : "";
     }
@@ -128,6 +129,7 @@ export class SelectLotPopup extends Component {
             return {
                 text: item.text,
                 _id: this._nextId(),
+                expiration_date: item.expiration_date,
                 ...(matchingLot ? { id: matchingLot.id } : {}),
             };
         });

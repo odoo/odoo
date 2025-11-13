@@ -35,7 +35,7 @@ import { normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { formatDate } from "@web/core/l10n/dates";
+import { formatDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
@@ -2283,6 +2283,12 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
+    showNotificationIfLotExpired(lotName, lotExpDate = null) {
+        const lotExpDateTime = deserializeDateTime(lotExpDate);
+        if (lotExpDateTime.isValid && lotExpDateTime.ts <= DateTime.now().ts) {
+            this.notification.add(_t("Lot/Serial %s is expired", lotName));
+        }
+    }
     async editLots(product, packLotLinesToEdit) {
         const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
         let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
@@ -2355,6 +2361,12 @@ export class PosStore extends WithLazyGetterTrap {
 
         const existingLotsName = existingLots.map((l) => l.name);
         if (!packLotLinesToEdit.length && existingLotsName.length === 1) {
+            if (existingLots[0].expiration_date) {
+                this.showNotificationIfLotExpired(
+                    existingLots[0].name,
+                    existingLots[0].expiration_date
+                );
+            }
             // If there's only one existing lot/serial number, automatically assign it to the order line
             return { newPackLotLines: [{ lot_name: existingLotsName[0] }] };
         }
@@ -2369,6 +2381,12 @@ export class PosStore extends WithLazyGetterTrap {
             isLotNameUsed: isLotNameUsed,
         });
         if (payload) {
+            for (const item of payload) {
+                if (!item.expiration_date) {
+                    continue;
+                }
+                this.showNotificationIfLotExpired(item.text, item.expiration_date);
+            }
             // Segregate the old and new packlot lines
             const modifiedPackLotLines = Object.fromEntries(
                 payload.filter((item) => item.id).map((item) => [item.id, item.text])
