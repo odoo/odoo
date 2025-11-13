@@ -52,6 +52,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
     }
 }
 
+.o-discuss-warningBadge {
+    background-color: $warning !important;
+}
+
 @function o-rounded-bubble() {
     @return calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
 }

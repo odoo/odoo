@@ -31,14 +31,11 @@ export function registerCallAction(id, definition) {
 }
 
 export const muteAction = {
-    badge: ({ owner, store }) =>
-        !owner.env.inCallMenu && store.rtc.microphonePermission !== "granted",
+    badge: ({ owner, store }) => store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
-    isActive: ({ store }) =>
-        (store.rtc.selfSession?.isMute && store.rtc.microphonePermission === "granted") ||
-        store.rtc.selfSession?.is_deaf,
+    isActive: ({ store }) => store.rtc.selfSession?.isMute,
     isTracked: true,
     icon: ({ action, store }) =>
         action.isActive
