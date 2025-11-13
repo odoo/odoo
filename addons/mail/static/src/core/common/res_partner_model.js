@@ -75,6 +75,8 @@ export class ResPartner extends Record {
     /** @type {string} */
     name;
     /** @type {string} */
+    display_name;
+    /** @type {string} */
     phone;
     /** @type {luxon.DateTime} */
     offline_since = fields.Datetime();
@@ -103,7 +105,7 @@ export class ResPartner extends Record {
      * computation, override the displayName getter.
      */
     _computeDisplayName() {
-        return this.name;
+        return this.name || this.display_name;
     }
 
     get avatarUrl() {
