@@ -30,6 +30,11 @@ describe("formatList", () => {
         expect(formatList(list, { style: "or" })).toBe("A, B, or C");
     });
 
+    test("supports “narrow” style with “standard” type", () => {
+        const list = ["Veni", "vidi", "vici"];
+        expect(formatList(list, { style: "standard-narrow" })).toBe("Veni, vidi, vici");
+    });
+
     test("uses the specified locale", () => {
         const list = ["A", "B", "C"];
         expect(formatList(list, { localeCode: "fr-FR" })).toBe("A, B et C");
