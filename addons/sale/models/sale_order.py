@@ -2193,6 +2193,15 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
+        else:  # quantity of 0, no line to update, return defaut pricelist price
+            return self.pricelist_id._get_product_price(
+                product=self.env['product.product'].browse(product_id),
+                quantity=1.0,
+                currency=self.currency_id,
+                date=self.date_order,
+                **kwargs,
+            )
+
         return sol._get_discounted_price()
 
     # === Product Documents === #
