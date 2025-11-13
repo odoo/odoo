@@ -1934,6 +1934,20 @@ class PosSession(models.Model):
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
+    @api.autovacuum
+    def _gc_session_sequences(self):
+        sequence_fields = {
+            'pos.session.login_number': 'login_number_seq_id',
+            'pos.order_': 'order_seq_id',
+        }
+        for prefix, field in sequence_fields.items():
+            sequences = self.env['ir.sequence'].search([('code', 'ilike', prefix)])
+            session_ids = [int(seq.code.split(prefix)[-1]) for seq in sequences if seq.code.split(prefix)[-1].isdigit()]
+            sessions = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '=', 'closed')])
+            sequence_to_unlink_ids = sessions.mapped(field)
+            if sequence_to_unlink_ids:
+                sequence_to_unlink_ids.sudo().unlink()
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
