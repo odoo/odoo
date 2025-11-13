@@ -1128,9 +1128,6 @@ export class ListRenderer extends Component {
             colspan = firstAggregateIndex;
         } else {
             colspan = Math.max(1, this.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
-            if (this.displayOptionalFields) {
-                colspan++;
-            }
         }
         if (this.hasSelectors) {
             colspan++;
