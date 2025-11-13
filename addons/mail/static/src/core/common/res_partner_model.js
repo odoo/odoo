@@ -93,6 +93,16 @@ export class ResPartner extends Record {
     previousPresencechannel;
     write_date = fields.Datetime();
 
+    static async getOrFetch(ids) {
+        const missingIds = ids.filter((id) => id > 0 && !this.get(id));
+        if (missingIds.length) {
+            await this.store.fetchStoreData("res.partner", {
+                partner_ids: missingIds,
+            });
+        }
+        return ids.map((id) => this.get(id)).filter((partner) => partner?.exists());
+    }
+
     /**
      * @deprecated
      *

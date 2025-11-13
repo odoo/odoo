@@ -10,7 +10,7 @@ import { withSequence } from "@html_editor/utils/resource";
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "hint", "input", "selection"];
+    static dependencies = ["clipboard", "hint", "input", "mention_link", "selection"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         bypass_paste_image_files: () => true,
@@ -35,6 +35,9 @@ export class MailComposerPlugin extends Plugin {
             }
         },
         input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        valid_partner_mention_handlers: [
+            this.config.composerPluginDependencies.handleValidPartnerMention.bind(this),
+        ],
     };
 
     setup() {
