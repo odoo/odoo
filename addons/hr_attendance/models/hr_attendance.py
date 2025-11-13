@@ -219,8 +219,8 @@ class HrAttendance(models.Model):
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
         """ Computes the worked hours of the attendance record.
-            The worked hours of resource with flexible calendar is computed as the difference
-            between check_in and check_out, without taking into account the lunch_interval"""
+            The worked hours is computed as the difference between check_in and check_out.
+            Lunch breaks are included as they are paid time (Polish labor law compliance)."""
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
                 calendar = attendance._get_employee_calendar()
@@ -228,11 +228,8 @@ class HrAttendance(models.Model):
                 tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
                 check_in_tz = attendance.check_in.astimezone(tz)
                 check_out_tz = attendance.check_out.astimezone(tz)
-                lunch_intervals = []
-                if not resource._is_flexible():
-                    lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
-                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
-                delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
+                # Calculate total time including lunch breaks (paid time in Poland)
+                delta = (check_out_tz - check_in_tz).total_seconds()
                 attendance.worked_hours = delta / 3600.0
             else:
                 attendance.worked_hours = False

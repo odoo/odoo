@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+
+# Tolerance for timesheet vs attendance hour discrepancies (in hours)
+# 15 minutes = 0.25 hours
+TIMESHEET_TOLERANCE_HOURS = 0.25
 
 
 class HrAttendance(models.Model):
@@ -25,12 +29,35 @@ class HrAttendance(models.Model):
         store=False,
         help="Project from the active timesheet"
     )
+    total_timesheet_hours = fields.Float(
+        string='Total Timesheet Hours',
+        compute='_compute_timesheet_hours',
+        store=True,
+        help="Sum of all timesheet hours for this attendance"
+    )
+    timesheet_hours_diff = fields.Float(
+        string='Hours Difference',
+        compute='_compute_timesheet_hours',
+        store=True,
+        help="Difference between timesheet hours and worked hours (positive = excess, negative = missing)"
+    )
 
     @api.depends('active_timesheet_id', 'active_timesheet_id.project_id')
     def _compute_current_project(self):
         """Get current project from active timesheet"""
         for attendance in self:
             attendance.current_project_id = attendance.active_timesheet_id.project_id if attendance.active_timesheet_id else False
+
+    @api.depends('timesheet_ids.unit_amount', 'worked_hours')
+    def _compute_timesheet_hours(self):
+        """Calculate total timesheet hours and difference with worked hours"""
+        for attendance in self:
+            total = sum(attendance.timesheet_ids.mapped('unit_amount'))
+            attendance.total_timesheet_hours = total
+            if attendance.worked_hours:
+                attendance.timesheet_hours_diff = total - attendance.worked_hours
+            else:
+                attendance.timesheet_hours_diff = 0.0
 
     @api.model
     def create(self, vals):
@@ -44,14 +71,33 @@ class HrAttendance(models.Model):
         return attendance
 
     def write(self, vals):
-        """Override write to handle check-out and timesheet closing"""
+        """Override write to handle check-out, timesheet closing, and validation"""
+        # Store old values for validation
+        old_values = {}
+        if 'check_in' in vals or 'check_out' in vals:
+            for attendance in self:
+                old_values[attendance.id] = {
+                    'check_in': attendance.check_in,
+                    'check_out': attendance.check_out,
+                }
+
         result = super().write(vals)
 
-        # If check_out is being set, close active timesheets
+        # If check_out is being set, close active timesheets and handle gaps
         if 'check_out' in vals and vals['check_out']:
             for attendance in self:
                 if attendance.active_timesheet_id:
                     attendance._close_active_timesheet()
+                # Auto-fill any gaps after closing timesheets
+                attendance._auto_fill_timesheet_gaps()
+
+        # Validate manual edits to check_in/check_out times
+        if ('check_in' in vals or 'check_out' in vals) and old_values:
+            for attendance in self:
+                # Only validate if attendance was already checked out (manual edit scenario)
+                old_val = old_values.get(attendance.id, {})
+                if old_val.get('check_out') and attendance.timesheet_ids:
+                    attendance._validate_timesheet_hours_on_edit()
 
         return result
 
@@ -192,3 +238,93 @@ class HrAttendance(models.Model):
             ], limit=1)
 
         return default_project
+
+    def _auto_fill_timesheet_gaps(self):
+        """Auto-fill timesheet gaps at checkout with tolerance handling"""
+        self.ensure_one()
+
+        if not self.worked_hours or not self.check_out:
+            return
+
+        # Calculate gap (can be negative if timesheets exceed attendance)
+        gap_hours = self.worked_hours - self.total_timesheet_hours
+
+        # If gap is within tolerance (±15 minutes), adjust last timesheet
+        if abs(gap_hours) <= TIMESHEET_TOLERANCE_HOURS:
+            if gap_hours != 0 and self.timesheet_ids:
+                # Find the last timesheet and adjust it
+                last_timesheet = self.timesheet_ids.sorted('create_date', reverse=True)[0]
+                new_amount = last_timesheet.unit_amount + gap_hours
+                if new_amount > 0:  # Don't create negative hours
+                    last_timesheet.write({'unit_amount': new_amount})
+            return
+
+        # If gap is significant (> 15 minutes), create "0 - Koszty Stałe" entry
+        if gap_hours > TIMESHEET_TOLERANCE_HOURS:
+            default_project = self._get_default_project()
+            if not default_project:
+                # Show warning but don't block checkout
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Timesheet Gap Detected'),
+                        'message': _('Missing %.2f hours of timesheets, but no default project found to auto-fill.') % gap_hours,
+                        'type': 'warning',
+                        'sticky': False,
+                    }
+                }
+
+            # Create auto-fill timesheet entry
+            self.env['account.analytic.line'].create({
+                'employee_id': self.employee_id.id,
+                'user_id': self.employee_id.user_id.id if self.employee_id.user_id else self.env.user.id,
+                'project_id': default_project.id,
+                'date': self.check_in.date(),
+                'name': _('Auto-filled unassigned time'),
+                'unit_amount': gap_hours,
+                'attendance_id': self.id,
+            })
+
+            # Show notification
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Timesheet Auto-Filled'),
+                    'message': _('Added %.2f hours to "%s" project for untracked time.') % (gap_hours, default_project.name),
+                    'type': 'info',
+                    'sticky': False,
+                }
+            }
+
+    def _validate_timesheet_hours_on_edit(self):
+        """Validate timesheet hours when manually editing attendance times
+
+        This validation applies to everyone, including administrators.
+        """
+        self.ensure_one()
+
+        if not self.worked_hours:
+            return
+
+        total_timesheet_hours = self.total_timesheet_hours
+        max_allowed = self.worked_hours + TIMESHEET_TOLERANCE_HOURS
+
+        # Check if timesheets exceed new attendance hours
+        if total_timesheet_hours > max_allowed:
+            # Block for everyone (no admin bypass)
+            raise ValidationError(_(
+                "Cannot save attendance changes: Total timesheet hours (%(timesheet)s h) exceed the new worked hours (%(worked)s h) by more than %(tolerance)s minutes.\n\n"
+                "Current timesheets total: %(timesheet)s h\n"
+                "New worked hours: %(worked)s h\n"
+                "Maximum allowed: %(max)s h (with tolerance)\n"
+                "Excess: %(excess)s h (%(excess_min)s min)\n\n"
+                "To fix this, you must first reduce or delete timesheet entries before changing attendance times.",
+                timesheet=round(total_timesheet_hours, 2),
+                worked=round(self.worked_hours, 2),
+                max=round(max_allowed, 2),
+                tolerance=int(TIMESHEET_TOLERANCE_HOURS * 60),
+                excess=round(total_timesheet_hours - self.worked_hours, 2),
+                excess_min=int((total_timesheet_hours - self.worked_hours) * 60),
+            ))

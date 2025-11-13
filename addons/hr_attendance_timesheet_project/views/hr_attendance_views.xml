@@ -25,15 +25,47 @@
             <!-- Add timesheets section after all groups -->
             <xpath expr="//group[@name='check_out_group']" position="after">
                 <separator string="Timesheets" colspan="2"/>
-                <group colspan="2">
-                    <field name="timesheet_ids" nolabel="1" readonly="1"
-                           context="{'tree_view_ref': 'hr_timesheet.hr_timesheet_line_tree'}"/>
+
+                <!-- Timesheet hour summary -->
+                <group string="Hour Summary" colspan="2" col="4">
+                    <field name="worked_hours" readonly="1" widget="float_time"/>
+                    <field name="total_timesheet_hours" readonly="1" widget="float_time"/>
+                    <field name="timesheet_hours_diff" readonly="1" widget="float_time"
+                           decoration-danger="timesheet_hours_diff &gt; 0.25 or timesheet_hours_diff &lt; -0.25"
+                           decoration-warning="timesheet_hours_diff != 0 and timesheet_hours_diff &lt;= 0.25 and timesheet_hours_diff &gt;= -0.25"
+                           decoration-success="timesheet_hours_diff == 0"/>
                 </group>
+
+                <!-- Timesheet entries -->
+                <group colspan="2">
+                    <field name="timesheet_ids" nolabel="1"
+                           context="{'default_attendance_id': id, 'default_employee_id': employee_id, 'tree_view_ref': 'hr_attendance_timesheet_project.view_timesheet_tree_attendance'}"/>
+                </group>
+
+                <!-- Active timesheet info -->
                 <group>
                     <field name="active_timesheet_id" readonly="1"/>
                 </group>
             </xpath>
 
+        </field>
+    </record>
+
+    <!-- Custom timesheet list view for attendance form (editable) -->
+    <record id="view_timesheet_tree_attendance" model="ir.ui.view">
+        <field name="name">account.analytic.line.list.attendance</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="true" delete="true">
+                <field name="date"/>
+                <field name="project_id" required="1"/>
+                <field name="task_id" optional="show"/>
+                <field name="name" required="1"/>
+                <field name="unit_amount" string="Hours" widget="float_time" sum="Total Hours"/>
+                <field name="employee_id" column_invisible="1" readonly="1" force_save="1"/>
+                <field name="user_id" column_invisible="1" readonly="1" force_save="1"/>
+                <field name="attendance_id" column_invisible="1" readonly="1" force_save="1"/>
+            </list>
         </field>
     </record>
 
@@ -45,6 +77,13 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="current_project_id"/>
+            </xpath>
+            <xpath expr="//field[@name='worked_hours']" position="after">
+                <field name="total_timesheet_hours" widget="float_time" optional="show"/>
+                <field name="timesheet_hours_diff" widget="float_time" optional="show"
+                       decoration-danger="timesheet_hours_diff &gt; 0.25 or timesheet_hours_diff &lt; -0.25"
+                       decoration-warning="timesheet_hours_diff != 0 and timesheet_hours_diff &lt;= 0.25 and timesheet_hours_diff &gt;= -0.25"
+                       decoration-success="timesheet_hours_diff == 0"/>
             </xpath>
         </field>
     </record>
