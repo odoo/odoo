@@ -4353,7 +4353,7 @@ class AccountMove(models.Model):
                         if success or file_data['type'] == 'pdf' or file_data['attachment'].mimetype in ALLOWED_MIMETYPES:
                             (invoice.invoice_line_ids - existing_lines).is_imported = True
                             if not extend_with_existing_lines:
-                                invoice._link_bill_origin_to_purchase_orders(timeout=4)
+                                invoice.with_context(default_move_type=invoice.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)
@@ -4993,7 +4993,7 @@ class AccountMove(models.Model):
                 to_unlink += move
         to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).button_draft()
         to_unlink.filtered(lambda m: m.state == 'draft').unlink()
-        to_cancel.button_cancel()
+        to_cancel.filtered(lambda m: m.state != 'cancel').button_cancel()
         return to_reverse._reverse_moves(cancel=True)
 
     def _post(self, soft=True):
