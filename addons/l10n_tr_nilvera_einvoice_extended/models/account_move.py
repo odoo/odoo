@@ -11,7 +11,10 @@ class AccountMove(models.Model):
         ],
         default="TEMELFATURA",
         string="Invoice Scenario",
-        help="The scenario of the invoice to be sent to GİB.",
+        help="Defines the official GİB (Turkish Revenue Administration) e-invoice "
+        "scenario. \n"
+        "Basic: Standard e-invoice that cannot be rejected by the recipient via the GİB portal. \n"
+        "Public Sector: Used specifically for invoices issued to public (government) institutions.",
     )
     l10n_tr_gib_invoice_type = fields.Selection(
         compute="_compute_l10n_tr_gib_invoice_type",
@@ -25,9 +28,20 @@ class AccountMove(models.Model):
             ("IHRACKAYITLI", "Registered for Export"),
             ("ISTISNA", "Tax Exempt"),
         ],
-        help="The type of invoice to be sent to GİB.",
+        help="Specifies the official GİB classification for the e-invoice/e-archive, which "
+        "determines its tax treatment and validation rules. \n"
+        "Sales: A standard sales invoice. \n"
+        "Withholding: An invoice where the buyer is responsible for "
+        "paying a portion of the VAT. \n"
+        "Registered for Export: Invoice for goods that will later be exported."
+        "If selected, an 'Exemption Reason' is required. \n"
+        "Tax Exempt: An invoice for goods/services exempt from VAT. "
+        "If selected, an 'Exemption Reason' is required.",
     )
-    l10n_tr_is_export_invoice = fields.Boolean(string="Is GIB Export")
+    l10n_tr_is_export_invoice = fields.Boolean(
+        string="Is GIB Export",
+        help="Check this box if this is a product export invoice.",
+    )
     l10n_tr_shipping_type = fields.Selection(
         selection=[
             ("1", "Sea Transportation"),
@@ -41,7 +55,7 @@ class AccountMove(models.Model):
             ("9", "Invalid Transportation Method"),
         ],
         string="Shipping Method",
-        help="The type of shipping.",
+        help="Specifies the method of transport using official GİB codes. ",
     )
     l10n_tr_exemption_code_id = fields.Many2one(
         "l10n_tr_nilvera_einvoice_extended.account.tax.code",
@@ -49,13 +63,22 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
         string="Exemption Reason",
-        help="The exception reason of the invoice.",
+        help="The official GİB tax exemption reason. \n"
+        "This field is mandatory if the 'GIB Invoice Type' is set to "
+        "'Registered for Export' or 'Tax Exempt'",
     )
-    l10n_tr_exemption_code_domain_list = fields.Binary(compute="_compute_l10n_tr_exemption_code_domain_list")
+    l10n_tr_exemption_code_domain_list = fields.Binary(
+        compute="_compute_l10n_tr_exemption_code_domain_list",
+        help="Technical field (not for users). Used to dynamically filter the "
+        "list of available exemption codes based on the selected "
+        "GIB Invoice Type or other criteria.",
+    )
     l10n_tr_nilvera_customer_status = fields.Selection(
         string="Partner Nilvera Status",
         related="partner_id.l10n_tr_nilvera_customer_status",
+        help="Shows the Nilvera status of the customer. ",
     )
+
 
     @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_gib_invoice_type", "l10n_tr_is_export_invoice")
     def _compute_l10n_tr_exemption_code_domain_list(self):

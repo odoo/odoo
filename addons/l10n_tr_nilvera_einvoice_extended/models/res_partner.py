@@ -4,7 +4,12 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    l10n_tr_tax_office_id = fields.Many2one("l10n_tr_nilvera_einvoice_extended.tax.office", string="Turkish Tax Office")
+    l10n_tr_tax_office_id = fields.Many2one(
+        "l10n_tr_nilvera_einvoice_extended.tax.office",
+        string="Turkish Tax Office",
+        help="Specifies the official Turkish Tax Office where this partner is registered. "
+             "This is required for generating valid e-Invoices for this partner.",
+    )
 
     @api.depends('l10n_tr_tax_office_id')
     def _compute_display_name(self):

@@ -10,6 +10,8 @@ class AccountMoveLine(models.Model):
         compute="_compute_l10n_tr_ctsp_number",
         store=True,
         readonly=False,
+        help="This code is a unique identifier for the product in "
+        "Turkey's Centralized Trade and Stock Management System (CTSP).",
     )
 
     @api.depends("product_id.l10n_tr_ctsp_number")

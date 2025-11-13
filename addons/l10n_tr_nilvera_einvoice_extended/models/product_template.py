@@ -8,6 +8,10 @@ class ProductTemplate(models.Model):
         string="CTSP Number",
         compute="_compute_l10n_tr_ctsp_number",
         inverse="_set_l10n_tr_ctsp_number",
+        help="A helper field that syncs the CTSP Number with the product's variants. \n"
+        "- If you set a value here, it will be applied to all variants. \n"
+        "- If variants have different values, this field will be blank. \n"
+        "This is a Turkish localization code for products.",
     )
 
     @api.depends("product_variant_ids.l10n_tr_ctsp_number")

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 15:37+0000\n"
-"PO-Revision-Date: 2025-11-13 15:37+0000\n"
+"POT-Creation-Date: 2025-11-26 08:16+0000\n"
+"PO-Revision-Date: 2025-11-26 08:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,6 +63,15 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label mx-3\" "
 "invisible=\"l10n_tr_nilvera_customer_status != 'einvoice'\">is</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_product_template__l10n_tr_ctsp_number
+msgid ""
+"A helper field that syncs the CTSP Number with the product's variants. \n"
+"- If you set a value here, it will be applied to all variants. \n"
+"- If variants have different values, this field will be blank. \n"
+"This is a Turkish localization code for products."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
@@ -122,6 +131,22 @@ msgid "Check reference on Partner(s)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_is_export_invoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_is_export_invoice
+msgid "Check this box if this is a product export invoice."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_l10n_tr_nilvera_einvoice_extended_account_tax_code__code_type
+msgid ""
+"Classifies the purpose of the reason. This is used to filter the correct codes in different parts of Odoo: \n"
+"Withholding: Used for invoices with withholding taxes. \n"
+"Exception: Used for invoices that are tax-exempt. \n"
+"Export Exception: Used for invoices related to product exports that are exempt from certain taxes. \n"
+"Export Registration: Used for invoices that are related to registered export transactions."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
 #: model:l10n_tr_nilvera_einvoice_extended.account.tax.code,name:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_612
 msgid "Cleaning Service"
 msgstr ""
@@ -169,11 +194,6 @@ msgid "Cotton, Mohair, Wool and Fleece, Raw Hide and Skin Deliveries"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
-#: model:ir.model,website_form_label:l10n_tr_nilvera_einvoice_extended.model_res_partner
-msgid "Create a Customer"
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice_extended
 #: model_terms:ir.actions.act_window,help:l10n_tr_nilvera_einvoice_extended.action_l10n_tr_nilvera_einvoice_extended_account_tax_code_list
 msgid "Create a GIB Reason"
 msgstr ""
@@ -216,6 +236,15 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice_extended
 #: model:account.incoterms,name:l10n_tr_nilvera_einvoice_extended.incoterm_DES
 msgid "DELIVERED EX SHIP"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_gib_invoice_scenario
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_gib_invoice_scenario
+msgid ""
+"Defines the official GİB (Turkish Revenue Administration) e-invoice scenario. \n"
+"Basic: Standard e-invoice that cannot be rejected by the recipient via the GİB portal. \n"
+"Public Sector: Used specifically for invoices issued to public (government) institutions."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
@@ -276,8 +305,10 @@ msgid "Domestic Water Transportation"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
-#: model:ir.model,name:l10n_tr_nilvera_einvoice_extended.model_account_tax
-msgid "ETA tax codes mixin"
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_l10n_tr_nilvera_einvoice_extended_account_tax_code__percentage
+msgid ""
+"Enter the applicable withholding tax rate for this code  as a whole number (e.g., 40 for 40%). \n"
+"This field is used specifically for withholding tax codes and defines the percentage to be withheld from the total amount."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
@@ -555,9 +586,30 @@ msgid "Sea Transportation"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_tax__l10n_tr_tax_withholding_code_id
+msgid ""
+"Select the official GİB withholding reason associated with this tax. \n"
+"This is required when the invoice type is 'Withholding'. \n"
+"The withholding reason determines the specific tax category for withholding and ensures compliance with Turkish tax regulations."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_res_config_settings__l10n_tr_nilvera_export_alias
+msgid ""
+"Set the default GİB 'Posta Kutusu' (mailbox) alias for sending export invoices (İhracat Faturası). \n"
+"This is almost always 'urn:mail:ihracatpk@gtb.gov.tr' (Turkish Ministry of Trade) and should not be changed unless you have a specific reason."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_shipping_type
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_shipping_type
 msgid "Shipping Method"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_nilvera_customer_status
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_nilvera_customer_status
+msgid "Shows the Nilvera status of the customer. "
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
@@ -566,8 +618,39 @@ msgid "Shuttle Transportation Service"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_shipping_type
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_shipping_type
+msgid "Specifies the method of transport using official GİB codes. "
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_gib_invoice_type
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_gib_invoice_type
+msgid ""
+"Specifies the official GİB classification for the e-invoice/e-archive, which determines its tax treatment and validation rules. \n"
+"Sales: A standard sales invoice. \n"
+"Withholding: An invoice where the buyer is responsible for paying a portion of the VAT. \n"
+"Registered for Export: Invoice for goods that will later be exported.If selected, an 'Exemption Reason' is required. \n"
+"Tax Exempt: An invoice for goods/services exempt from VAT. If selected, an 'Exemption Reason' is required."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_res_company__l10n_tr_tax_office_id
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_res_partner__l10n_tr_tax_office_id
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_res_users__l10n_tr_tax_office_id
+msgid ""
+"Specifies the official Turkish Tax Office where this partner is registered. "
+"This is required for generating valid e-Invoices for this partner."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
 #: model:l10n_tr_nilvera_einvoice_extended.account.tax.code,name:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_602
 msgid "Survey, Plan-Project, Consultancy, Audit and Similar Services"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model,name:l10n_tr_nilvera_einvoice_extended.model_account_tax
+msgid "Tax"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
@@ -597,6 +680,15 @@ msgid "Tax Offices"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_exemption_code_domain_list
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_exemption_code_domain_list
+msgid ""
+"Technical field (not for users). Used to dynamically filter the list of "
+"available exemption codes based on the selected GIB Invoice Type or other "
+"criteria."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
 #: model:l10n_tr_nilvera_einvoice_extended.account.tax.code,name:l10n_tr_nilvera_einvoice_extended.l10n_tr_nilvera_einvoice_extended_account_tax_code_609
 msgid ""
 "Textile and Garment Works, Bag and Shoe Sewing Works and Intermediary "
@@ -616,12 +708,6 @@ msgid "The Tax Office is not set on the following TR Partner(s)."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_exemption_code_id
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_exemption_code_id
-msgid "The exception reason of the invoice."
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice_extended
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice_extended/models/account_move_send.py:0
 msgid ""
@@ -630,26 +716,40 @@ msgid ""
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_tax__l10n_tr_tax_withholding_code_id
-msgid "The reason for withholding tax."
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_exemption_code_id
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_exemption_code_id
+msgid ""
+"The official GİB tax exemption reason. \n"
+"This field is mandatory if the 'GIB Invoice Type' is set to 'Registered for Export' or 'Tax Exempt'"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_gib_invoice_scenario
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_gib_invoice_scenario
-msgid "The scenario of the invoice to be sent to GİB."
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_l10n_tr_nilvera_einvoice_extended_account_tax_code__name
+msgid ""
+"The official description for this GİB code (e.g., 'Kısmi Tevkifat - Yapım "
+"İşleri' or 'Tam İstisna - İhracat')."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_gib_invoice_type
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_gib_invoice_type
-msgid "The type of invoice to be sent to GİB."
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_l10n_tr_nilvera_einvoice_extended_account_tax_code__code
+msgid ""
+"The official numeric GİB code (e.g., 601, 301) corresponding to this reason."
+" This is the value sent in the e-invoice XML."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_bank_statement_line__l10n_tr_shipping_type
-#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move__l10n_tr_shipping_type
-msgid "The type of shipping."
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_account_move_line__l10n_tr_ctsp_number
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_product_product__l10n_tr_ctsp_number
+msgid ""
+"This code is a unique identifier for the product in Turkey's Centralized "
+"Trade and Stock Management System (CTSP)."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice_extended
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice_extended.field_res_company__l10n_tr_nilvera_export_alias
+msgid ""
+"This is the default alias used when sending export invoices. \n"
+"This alias is typically set to the official inbox of the Turkish Ministry of Tradeand should not be changed unless instructed by your integrator. "
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice_extended

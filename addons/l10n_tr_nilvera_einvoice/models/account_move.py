@@ -32,7 +32,8 @@ class AccountMove(models.Model):
         copy=False,
         readonly=True,
         default=lambda self: str(uuid.uuid4()),
-        help="Universally unique identifier of the Invoice",
+        help="This is the unique identifier (UUID) used to link this Odoo document with the Nilvera system. \n"
+        "This record ensures every new document has its own unique ID for tracking.",
     )
 
     l10n_tr_nilvera_send_status = fields.Selection(
@@ -48,6 +49,14 @@ class AccountMove(models.Model):
         readonly=True,
         copy=False,
         default='not_sent',
+        help="Tracks the real-time submission status of this invoice to the Nilvera. It is updated automatically based on"
+             "responses from Nilvera and GİB. \n"
+             "This field is read-only as it is updated automatically by the system "
+             "based on responses from Nilvera and GİB. \n"
+             "- Not sent: Default state before processing. \n"
+             "- Sent and waiting response: Sent to Nilvera, awaiting GİB confirmation. \n"
+             "- Successful: GİB has accepted the invoice. \n"
+             "- Error: The submission failed (check chatter for details).",
     )
 
     def _get_import_file_type(self, file_data):

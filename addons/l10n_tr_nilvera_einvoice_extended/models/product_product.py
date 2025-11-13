@@ -6,7 +6,13 @@ from odoo.exceptions import ValidationError
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    l10n_tr_ctsp_number = fields.Char(string="CTSP Number", copy=False, index="btree_not_null")
+    l10n_tr_ctsp_number = fields.Char(
+        string="CTSP Number",
+        copy=False,
+        index="btree_not_null",
+        help="This code is a unique identifier for the product in "
+        "Turkey's Centralized Trade and Stock Management System (CTSP).",
+    )
 
     @api.constrains("l10n_tr_ctsp_number")
     def _check_l10n_tr_ctsp_number(self):

@@ -26,6 +26,7 @@ class ResPartner(models.Model):
         default='not_checked',
         readonly=True,
         tracking=True,
+        help="By clicking 'Verify', Odoo will check if this partner is compliant with e-Invoice or e-Archive system."
     )
     l10n_tr_nilvera_customer_alias_id = fields.Many2one(
         comodel_name='l10n_tr.nilvera.alias',
@@ -35,6 +36,9 @@ class ResPartner(models.Model):
         copy=False,
         store=True,
         readonly=False,
+        help="Specifies the alias provided by Nilvera, used when sending electronic invoices. \n"
+        "It helps make sure your customer is correctly recognized by the GİB when e-invoices are sent. \n"
+        "This ID is needed for your invoices to be processed correctly and comply with Turkish tax rules.",
     )
 
     # This field is only used technically for optimisation purposes. It's needed for _check_nilvera_customer.
