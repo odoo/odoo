@@ -1189,7 +1189,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the new text value was correctly set",
-            trigger: ":iframe section.s_website_form h2:contains(/^ABC$/)",
+            trigger: ":iframe section.s_website_form h2:text(ABC)",
             run() {
                 this.anchor.scrollIntoView();
             },

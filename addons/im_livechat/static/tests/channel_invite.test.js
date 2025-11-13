@@ -55,7 +55,7 @@ test("Can invite a partner to a livechat channel", async () => {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });
     await contains(
-        ".o-discuss-ChannelInvitation-selectable:contains('James\nEnglish\nFrench\nGerman\npricing\nevents')"
+        ".o-discuss-ChannelInvitation-selectable:contains('James English French German pricing events')"
     );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {
@@ -190,9 +190,9 @@ test("shows operators are in call", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('bob\nin a call')");
+    await contains(".o-discuss-ChannelInvitation-selectable:contains('bob in a call')");
     await contains(".o-discuss-ChannelInvitation-selectable:contains('john')");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('john\nin a call')", {
+    await contains(".o-discuss-ChannelInvitation-selectable:contains('john in a call')", {
         count: 0,
     });
 });

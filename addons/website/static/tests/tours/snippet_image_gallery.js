@@ -76,7 +76,7 @@ registerWebsitePreviewTour(
             content:
                 "Check that the Snippet Editor of the clicked image has been loaded with its size",
             trigger:
-                ".o-tab-content [data-container-title='Image']:has([title='Size']:contains(/^.+ kB$/)",
+                ".o-tab-content [data-container-title='Image']:has([title='Size']:text(.+ kB)",
         },
         {
             content: "Click on Remove Block",
