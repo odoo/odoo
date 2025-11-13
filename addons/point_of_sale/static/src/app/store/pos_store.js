@@ -1969,26 +1969,40 @@ export class PosStore extends Reactive {
             partner: currentPartner,
             getPayload: (newPartner) => currentOrder.set_partner(newPartner),
         });
-        let pricelistId = payload.pos_property_product_pricelist_id;
 
-        if (payload && Boolean(pricelistId)) {
-
-            let pricelist = this.models["product.pricelist"].find((item) => item.id === pricelistId);
-            if (!Boolean(pricelist)) {
-                await loadPricelistItems(this, pricelistId);
-                pricelist = this.models["product.pricelist"].find((item) => item.id === pricelistId);
-            }
-            if (Boolean(pricelist)) {
-                payload.property_product_pricelist = pricelist;
-                const orderLines = currentOrder.get_orderlines();
-                for (const lineIndex in orderLines) {
-                    let line = orderLines[lineIndex];
-                    await computeProductPricelistCacheOfProductAndPricelist(this, [], line.product_id, pricelistId);
+        try {
+            if (payload && Boolean(payload.pos_property_product_pricelist_id)) {
+                let pricelistId = payload.pos_property_product_pricelist_id;
+                let pricelist = this.models["product.pricelist"].find((item) => item.id === pricelistId);
+                if (!Boolean(pricelist)) {
+                    await loadPricelistItems(this, pricelistId);
+                    pricelist = this.models["product.pricelist"].find((item) => item.id === pricelistId);
                 }
+                if (Boolean(pricelist)) {
+                    payload.property_product_pricelist = pricelist;
+                    const orderLines = currentOrder.get_orderlines();
+                    for (const lineIndex in orderLines) {
+                        let line = orderLines[lineIndex];
+                        await computeProductPricelistCacheOfProductAndPricelist(this, [], line.product_id, pricelistId);
+                    }
+                }
+
             }
-
+        } catch (error) {
+            console.log(error)
+            let message;
+            if (error instanceof ConnectionLostError) {
+                message = _t(
+                    "Connection to the server has been lost. Please check your internet connection."
+                );
+            } else {
+                message = error.data.message;
+            }
+            this.env.services.dialog.add(AlertDialog, {
+                title: _t("Failure to apply pricelist of the customer"),
+                body: message,
+            });
         }
-
         if (payload) {
             currentOrder.set_partner(payload);
         } else {

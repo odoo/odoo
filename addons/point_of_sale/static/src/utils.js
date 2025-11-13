@@ -257,6 +257,7 @@ export function computeProductPricelistCache(service, data = []) {
 }
 
 export async function loadPricelistItems(service, pricelist_id) {
+    await service.data.read("pos.config", [service.config.id], ["id"]);  // dirty fix to check connectivity
     await service.data.callRelated("pos.session", "get_pos_uis_product_pricelist_item_by_pricelist", [
         odoo.pos_session_id,
         service.config.id,
