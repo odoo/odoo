@@ -499,7 +499,7 @@ class IrModuleModule(models.Model):
         cache = self.env.cache
         View = self.env['ir.ui.view']
         field = self.env['ir.ui.view']._fields['arch_db']
-        batch_size = models.PREFETCH_MAX // 10
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('module_terms_loading.batch_size', models.PREFETCH_MAX // 10))
         self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
                                           FROM ir_ui_view generic
                                          INNER JOIN ir_ui_view specific
