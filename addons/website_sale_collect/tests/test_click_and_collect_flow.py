@@ -40,3 +40,18 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         self.in_store_dm.active = True
         self.in_store_dm.is_published = True
         self.start_tour('/', 'website_sale_collect_buy_product_default_location_pick_up_in_store')
+
+    def test_cash_on_delivery_resets_on_in_store_type(self):
+        """
+        Ensure that when a carrier with cash-on-delivery enabled is switched
+        to the 'in_store' delivery type, the 'allow_cash_on_delivery' field
+        is automatically reset to False.
+        """
+        carrier = self.env['delivery.carrier'].create({
+            'name': 'Test Carrier',
+            'allow_cash_on_delivery': True,
+            'delivery_type': 'fixed',
+            'product_id': self.storable_product.id,
+        })
+        carrier.delivery_type = 'in_store'
+        self.assertEqual(carrier.allow_cash_on_delivery, False)
