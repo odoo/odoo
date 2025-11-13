@@ -3812,11 +3812,21 @@ class AccountMove(models.Model):
         self._sanitize_vals(vals)
         self._check_user_access([vals])
 
+        unmodifiable_fields = [
+            'line_ids', 'invoice_line_ids', 'journal_line_ids',
+            'date', 'invoice_date',
+            'partner_id', 'fiscal_position_id',
+            'invoice_payment_term_id',
+            'currency_id',
+            'invoice_cash_rounding_id',
+        ]
+
         is_user_able_to_supervise = self.env.user.has_group('account.group_account_manager')
         is_user_able_to_review = self.env.user.has_group('account.group_account_user') or is_user_able_to_supervise
         move_ids_review_done = []
         move_ids_review_todo = []
         for move in self:
+            modified_accounting_fields = self._field_will_change_list(move, vals, unmodifiable_fields)
             if vals.get('state') == 'draft' and (
                 ((move.review_state == 'reviewed' or not move.review_state) and not is_user_able_to_review)
                 or (move.review_state == 'supervised' and not is_user_able_to_supervise)
@@ -3828,7 +3838,7 @@ class AccountMove(models.Model):
                         move_ids_review_done.append(move.id)
                 else:
                     move_ids_review_todo.append(move.id)
-            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised'):
+            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised') and modified_accounting_fields:
                 move_ids_review_todo.append(move.id)
 
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
@@ -3868,12 +3878,11 @@ class AccountMove(models.Model):
 
             # Disallow modifying readonly fields on a posted move
             move_state = vals.get('state', move.state)
-            unmodifiable_fields = (
-                'invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
-                'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
-            readonly_fields = [val for val in vals if val in unmodifiable_fields]
-            if not self.env.context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
-                raise UserError(_("You cannot modify the following readonly fields on a posted move: %s", ', '.join(readonly_fields)))
+            if not self.env.context.get('skip_readonly_check') and move_state == "posted" and modified_accounting_fields:
+                raise UserError(_("You cannot modify the following readonly fields on a posted move: %s", ', '.join(
+                    self._fields[fname]._description_string(self.env)
+                    for fname in modified_accounting_fields
+                )))
 
             if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
                 if not self.env.user.has_group('account.group_account_manager'):
@@ -6679,6 +6688,13 @@ class AccountMove(models.Model):
             if not self._field_will_change(record, vals, field_name):
                 del cleaned_vals[field_name]
         return cleaned_vals
+
+    def _field_will_change_list(self, record, vals, fname_list):
+        return [
+            fname
+            for fname in fname_list
+            if self._field_will_change(record, vals, fname)
+        ]
 
     @contextmanager
     def _disable_recursion(self, container, key, default=None, target=True):
