@@ -176,7 +176,7 @@
         <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
         <t t-if="isMobileOS and isReverse" t-call="mail.Message.emptyQuickAction"/>
         <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
-            <ActionList actions="actions" inline="true" fw="false" groupClass="'gap-1'"/>
+            <ActionList actions="actions" inline="true" fw="false"/>
             <t t-foreach="Array.from({ length: quickActionCount - quickActions.length - 1 })" t-as="emptyQuickAction" t-key="emptyQuickAction_index">
                 <t t-call="mail.Message.emptyQuickAction"/>
             </t>
