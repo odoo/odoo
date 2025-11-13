@@ -27,8 +27,8 @@ class AccountBankStatement(models.Model):
     )
 
     date = fields.Date(
-        compute='_compute_date_index', store=True,
-        index=True, readonly=False
+        compute='_compute_date', store=True,
+        index=True, readonly=False,
     )
 
     # The internal index of the first line of a statement, it is used for sorting the statements
@@ -36,7 +36,7 @@ class AccountBankStatement(models.Model):
     # keeping this order is important because the validity of the statements are based on their order
     first_line_index = fields.Char(
         comodel_name='account.bank.statement.line',
-        compute='_compute_date_index', store=True,
+        compute='_compute_first_line_index', store=True,
     )
 
     balance_start = fields.Monetary(
@@ -124,12 +124,18 @@ class AccountBankStatement(models.Model):
             stmt.name = name +_("Statement %(date)s", date=stmt.date or fields.Date.to_date(stmt.create_date))
 
     @api.depends('line_ids.internal_index', 'line_ids.state')
-    def _compute_date_index(self):
+    def _compute_first_line_index(self):
         for stmt in self:
             # When we create lines manually from the form view, they don't have any `internal_index` set yet.
             sorted_lines = stmt.line_ids.filtered("internal_index").sorted('internal_index')
             stmt.first_line_index = sorted_lines[:1].internal_index
-            stmt.date = sorted_lines.filtered(lambda l: l.state == 'posted')[-1:].date
+
+    @api.depends('line_ids.internal_index', 'line_ids.state')
+    def _compute_date(self):
+        for statement in self:
+            # When we create lines manually from the form view, they don't have any `internal_index` set yet.
+            sorted_lines = statement.line_ids.filtered('internal_index').sorted('internal_index')
+            statement.date = sorted_lines.filtered(lambda l: l.state == 'posted')[-1:].date
 
     @api.depends('create_date')
     def _compute_balance_start(self):
