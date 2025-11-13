@@ -1,24 +1,45 @@
-import { delay } from "@web/core/utils/concurrency";
-import { registry } from "@web/core/registry";
 import { WORKER_STATE } from "@bus/services/worker_service";
+
+import { whenReady } from "@odoo/owl";
+
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
     url: "/",
     steps: () => [
         {
-            trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
+            trigger: "body",
             async run() {
-                await odoo.__WOWL_DEBUG__.root.env.services["mail.store"].isReady;
-                if (odoo.__WOWL_DEBUG__.root.env.services.bus_service.isActive) {
-                    throw new Error("Bus service should not start when loading the page");
+                await whenReady();
+                const busService = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
+                if (busService.isActive) {
+                    throw new Error("The bus service should not be started at page load.");
                 }
-                if (
-                    odoo.__WOWL_DEBUG__.root.env.services.worker_service.state !==
-                    WORKER_STATE.UNINITIALIZED
-                ) {
-                    throw new Error("Worker service should not start when loading the page");
+                patchWithCleanup(busService, {
+                    start() {
+                        document.body.classList.add("o-bus-service-started");
+                        return super.start(...arguments);
+                    },
+                });
+                const workerService = odoo.__WOWL_DEBUG__.root.env.services.worker_service;
+                if (workerService._state !== WORKER_STATE.UNINITIALIZED) {
+                    throw new Error("The worker service should not be started at page load.");
                 }
+                patchWithCleanup(workerService, {
+                    ensureWorkerStarted() {
+                        document.body.classList.add("o-worker-service-started");
+                        return super.ensureWorkerStarted(...arguments);
+                    },
+                });
+                odoo.__WOWL_DEBUG__.root.env.services["mail.store"].isReady.then(() =>
+                    document.body.classList.add("o-mail-store-ready")
+                );
             },
+        },
+        {
+            trigger:
+                "body.o-mail-store-ready:not(.o-bus-service-started):not(.o-worker-service-started)",
         },
         {
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
@@ -29,34 +50,12 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
             run: "edit Hello, I need help!",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            async run(helpers) {
-                if (odoo.__WOWL_DEBUG__.root.env.services.bus_service.isActive) {
-                    throw new Error("Bus service should not start for temporary live chat");
-                }
-                if (
-                    odoo.__WOWL_DEBUG__.root.env.services.worker_service.state !==
-                    WORKER_STATE.UNINITIALIZED
-                ) {
-                    throw new Error("Worker service should not start when loading the page");
-                }
-                await helpers.press("Enter");
-                await delay(1000);
-            },
+            trigger: "body:not(.o-bus-service-started):not(.o-worker-service-started)",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Hello, I need help!)",
-            run() {
-                if (!odoo.__WOWL_DEBUG__.root.env.services.bus_service.isActive) {
-                    throw new Error("Bus service should start after first live chat message");
-                }
-                if (
-                    odoo.__WOWL_DEBUG__.root.env.services.worker_service.state !==
-                    WORKER_STATE.INITIALIZED
-                ) {
-                    throw new Error("Worker service should start after first live chat message");
-                }
-            },
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "press Enter",
         },
+        { trigger: "body.o-bus-service-started.o-worker-service-started" },
     ],
 });
