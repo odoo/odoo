@@ -1482,13 +1482,14 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 
 // Multiple visible items configuration for carousels
 .carousel.o_carousel_multi_items {
-    --o-carousel-item-width-percentage: 25%;
+    --o-carousel-gap: #{map-get($spacers, 3)};
 
     @include media-breakpoint-up(md) {
         .carousel-inner {
             // Display the carousel items in a row
             display: flex;
             flex-wrap: nowrap;
+            gap: var(--o-carousel-gap);
 
             // Slide right animation
             .carousel-item.active,
