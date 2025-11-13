@@ -21,6 +21,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
@@ -122,10 +123,10 @@ export class Message extends Component {
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        useSubEnv({ inMessage: true });
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
-            inMessage: true,
         });
         onMounted(() => {
             if (this.shadowBody.el) {
