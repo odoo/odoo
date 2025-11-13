@@ -278,3 +278,30 @@ test("items are focused only on mousemove, not on mouseenter", async () => {
     expect(".three").toHaveClass("focus");
     expect.verifySteps([]); // onMouseEnter is not triggered again
 });
+
+test("set focused element as active item", async () => {
+    class Parent extends Component {
+        static props = [];
+        static template = xml`
+            <div class="container" t-ref="containerRef">
+                <input class="o-navigable one" id="input" t-ref="autofocus"/>
+                <button class="o-navigable two">target two</button>
+                <button class="o-navigable three">target three</button>
+            </div>
+        `;
+
+        setup() {
+            this.inputRef = useAutofocus();
+            useNavigation("containerRef", {
+                onEnabled: (nav) => {
+                    this.navigation = nav;
+                },
+            });
+        }
+    }
+
+    const component = await mountWithCleanup(Parent);
+    expect(component.inputRef.el).toBeFocused();
+    expect(component.navigation.activeItem).not.toBeEmpty();
+    expect(component.navigation.activeItem.el).toBe(component.inputRef.el);
+});
