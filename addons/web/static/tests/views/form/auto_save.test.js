@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { unload } from "@odoo/hoot-dom";
+import { unload, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon } from "@odoo/hoot-mock";
 import {
     contains,
@@ -113,16 +113,14 @@ test("hiding tab multiple times (server error)", async () => {
 
     // simulate a tab switch
     await hideTab();
-    await animationFrame();
-    expect(".o_dialog").toHaveCount(1);
+    await waitFor(".o_dialog");
     expect(".o_dialog .modal-body").toHaveText("Cannot save");
     expect.verifySteps(["save"]);
     expect.verifyErrors(["Cannot save"]);
 
     // simulate another tab switch => should not try to save again
     await hideTab();
-    await animationFrame();
-    expect(".o_dialog").toHaveCount(1);
+    await waitFor(".o_dialog");
     expect.verifySteps([]);
     expect.verifyErrors([]);
 });
@@ -144,8 +142,7 @@ test("hiding tab multiple times (server error) + make another change", async () 
 
     // simulate a tab switch
     await hideTab();
-    await animationFrame();
-    expect(".o_dialog").toHaveCount(1);
+    await waitFor(".o_dialog");
     expect(".o_dialog .modal-body").toHaveText("Cannot save");
     expect.verifySteps(["save"]);
     expect.verifyErrors(["Cannot save"]);
@@ -161,8 +158,7 @@ test("hiding tab multiple times (server error) + make another change", async () 
     // make change and simulate another tab switch
     await contains(".o_field_widget[name=name] input").edit("Mathiew Brown 2");
     await hideTab();
-    await animationFrame();
-    expect(".o_dialog").toHaveCount(1);
+    await waitFor(".o_dialog");
     expect(".o_dialog .modal-body").toHaveText("Cannot save");
     expect.verifySteps(["save"]);
     expect.verifyErrors(["Cannot save"]);
