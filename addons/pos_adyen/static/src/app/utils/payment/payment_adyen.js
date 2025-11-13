@@ -321,9 +321,7 @@ export class PaymentAdyen extends PaymentInterface {
             payment_response?.POIData?.POITransactionID?.TransactionID || "";
         const [, poiPspReference] = poiTransactionId.split("."); // format: <tenderRef>.<pspReference>
         const paymentPspReference =
-            additional_response.get("pspReference") ||
-            poiPspReference ||
-            poiTransactionId;
+            additional_response.get("pspReference") || poiPspReference || poiTransactionId;
 
         const cashier_receipt = payment_response.PaymentReceipt.find(
             (receipt) => receipt.DocumentQualifier == "CashierReceipt"
