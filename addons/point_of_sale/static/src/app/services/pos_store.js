@@ -276,9 +276,36 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async initServerData() {
-        await this.processServerData();
-        this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        return await this.afterProcessServerData();
+        try {
+            await this.processServerData();
+            this.data.connectWebSocket(
+                "CLOSING_SESSION",
+                this.closingSessionNotification.bind(this)
+            );
+            return await this.afterProcessServerData();
+        } catch (error) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Error"),
+                body: _t(
+                    "Failed to initialize the application. This is often caused by outdated cached data.\nWould you like to clear the cache and reload?"
+                ),
+                confirmLabel: _t("Clear cache"),
+                cancelLabel: _t("Continue"),
+                cancel: () => {},
+                confirm: () => this.reloadData(true),
+                dismiss: () => this.reloadData(true),
+            });
+
+            logPosMessage(
+                "Store",
+                "initServerData",
+                "Error while initializing server data",
+                CONSOLE_COLOR,
+                error
+            );
+
+            return false;
+        }
     }
 
     async closingSessionNotification(data) {
