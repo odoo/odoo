@@ -77,8 +77,6 @@ declare module "models" {
         markedAsUnread: boolean;
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;
-        member_count: number|undefined;
-        membersThatCanSeen: Readonly<ChannelMember[]>;
         name: string;
         notifyAvatarToServer: (data: string) => Promise<void>;
         notifyDescriptionToServer: (description: unknown) => Promise<unknown>;
@@ -91,7 +89,6 @@ declare module "models" {
         showUnreadBanner: Readonly<boolean>;
         toggleBusSubscription: boolean;
         typesAllowingCalls: Readonly<string[]>;
-        unknownMembersCount: Readonly<number>;
     }
 
     export interface Models {
