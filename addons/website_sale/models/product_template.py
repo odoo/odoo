@@ -3,8 +3,7 @@
 import logging
 import random
 from collections import defaultdict
-
-from werkzeug import urls
+from urllib.parse import urlencode, urlparse
 
 from odoo import api, fields, models
 from odoo.fields import Domain
@@ -261,7 +260,7 @@ class ProductTemplate(models.Model):
         super()._compute_website_url()
         for product in self:
             if product.id:
-                product.website_url = "/shop/%s" % self.env["ir.http"]._slug(product)
+                product.website_url = "/shop/product/%s" % self.env["ir.http"]._slug(product)
 
     @api.depends("product_variant_ids.default_code")
     def _compute_variants_default_code(self):
@@ -564,7 +563,7 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants().sorted(_sort_key_variant)
 
-    def _get_previewed_attribute_values(self, category=None, product_query_params=None):
+    def _get_previewed_attribute_values(self, product_query_params=None):
         """Compute previewed product attribute values for each product in the recordset.
 
         :return: the previewed attribute values per product
@@ -601,9 +600,7 @@ class ProductTemplate(models.Model):
                             "variant_image_url": self.env["website"].image_url(
                                 matching_variant, "image_512"
                             ),
-                            "variant_url": template._get_product_url(
-                                category, variant_query_params
-                            ),
+                            "variant_url": template._get_product_url(variant_query_params),
                         })
 
                     res[template.id] = {
@@ -1478,12 +1475,10 @@ class ProductTemplate(models.Model):
     def _allow_publish_rating_stats(self):  # noqa: PLR6301
         return True
 
-    def _get_product_url(self, category=None, query_params=None, grouped_attributes_values=None):
+    def _get_product_url(self, query_params=None, grouped_attributes_values=None):
         self.ensure_one()
-        slug = self.env["ir.http"]._slug
 
-        url = (category and f"/shop/{slug(category)}/{slug(self)}") or self.website_url
-
+        url = urlparse(self.website_url)
         query_params = query_params or {}
         if grouped_attributes_values:
             product_grouped_values = self.attribute_line_ids.value_ids.grouped("attribute_id")
@@ -1496,9 +1491,9 @@ class ProductTemplate(models.Model):
             query_params["attribute_values"] = ",".join(str(i) for i in available_pav_ids)
 
         if query_params:
-            url = f"{url}?{urls.url_encode(query_params)}"
+            url = url._replace(query=urlencode(query_params, doseq=True))
 
-        return url
+        return url.geturl()
 
     def _can_be_added_to_comparison(self):
         self.ensure_one()

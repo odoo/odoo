@@ -6,8 +6,6 @@ import re
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from lxml import etree
-from werkzeug import urls
-from werkzeug.exceptions import NotFound
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, MissingError
@@ -973,7 +971,8 @@ class Website(models.Model):
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
-                # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
+                # fallback email_vals in case partner_to,email_to were emptied or default recipients
+                # is false
                 email_vals = (
                     {}
                     if template.email_to or template.partner_to or template.use_default_to
@@ -1057,36 +1056,6 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """Return whether the current user is allowed to access eCommerce-related content."""
         return not (self.env.user._is_public() and self.ecommerce_access == "logged_in")
-
-    def _get_canonical_url(self):
-        """Override of `website` to customize the canonical URL for product pages.
-
-        A product page URL can have a category in its path. However, since the page is exactly the
-        same whether the category is present or not, the canonical URL shouldn't include the
-        category.
-        """
-        canonical_url = urls.url_parse(super()._get_canonical_url())
-        path = canonical_url.path
-        url_lang_code = ""
-
-        current_lang_code = self.env["res.lang"]._get_data(code=self.env.lang).url_code
-        if self.env["ir.http"]._get_default_lang().url_code != current_lang_code:
-            _, url_lang_code, *rest = path.split("/", 2)
-            if current_lang_code == url_lang_code:
-                path = "/" + (rest[0] if rest else "")
-        try:
-            rule = self.env["ir.http"]._match(path)[0].rule
-        except NotFound:
-            rule = None
-        if rule == (
-            '/shop/<model("product.public.category"):category>/<model("product.template"):product>'
-        ):
-            path_parts = path.split("/")
-            path_parts.pop(2)
-            if url_lang_code:
-                path_parts.insert(1, url_lang_code)
-            canonical_url = canonical_url.replace(path="/".join(path_parts))
-        return canonical_url.to_url()
 
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
