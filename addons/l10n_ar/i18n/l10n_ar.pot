@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-09 11:55+0000\n"
-"PO-Revision-Date: 2025-06-09 11:55+0000\n"
+"POT-Creation-Date: 2025-11-12 15:33+0000\n"
+"PO-Revision-Date: 2025-11-12 15:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -367,6 +367,12 @@ msgid "Argentinean Statements"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
+msgid "BFERCEL"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr ""
@@ -375,6 +381,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ar/models/res_partner_bank.py:0
 msgid "CBU"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
+msgid "CF"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
+msgid "CPERCEL"
 msgstr ""
 
 #. module: l10n_ar
@@ -394,9 +412,9 @@ msgstr ""
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.address_form_fields
 msgid ""
-"Changing AFIP Responsibility type is not allowed once document(s) have "
-"been issued for your account. Please contact us "
-"directly for this operation."
+"Changing AFIP Responsibility type is not allowed once document(s) have"
+"                         been issued for your account. Please contact us "
+"directly for this                         operation."
 msgstr ""
 
 #. module: l10n_ar
@@ -406,7 +424,7 @@ msgid "Code"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_code
+#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_code_uniq
 msgid "Code must be unique!"
 msgstr ""
 
@@ -455,6 +473,11 @@ msgid "Country"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model,website_form_label:l10n_ar.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__create_uid
 msgid "Created by"
 msgstr ""
@@ -492,7 +515,22 @@ msgid "Delivery Province"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__display_name
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_country__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -538,16 +576,33 @@ msgid "External Fiscal Controller"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
+msgid "FEERCEL"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
+msgid "FEERCELP"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model,name:l10n_ar.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "Fiscal Transparency Regime for the Final Consumer (Law 27.743)"
 msgstr ""
 
 #. module: l10n_ar
-#: model:account.account,name:l10n_ar.3_base_fondo_comun_de_inversion
-#: model:account.account,name:l10n_ar.4_base_fondo_comun_de_inversion
-#: model:account.account,name:l10n_ar.5_base_fondo_comun_de_inversion
-#: model:account.account.template,name:l10n_ar.base_fondo_comun_de_inversion
-msgid "Fondo común de inversión"
+#. odoo-python
+#: code:addons/l10n_ar/controllers/portal.py:0
+msgid ""
+"For the selected AFIP Responsibility you will need to set CUIT "
+"Identification Type"
 msgstr ""
 
 #. module: l10n_ar
@@ -616,7 +671,22 @@ msgid "Gross Income Type"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__id
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__id
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__id
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_country__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__id
 msgid "ID"
 msgstr ""
 
@@ -640,24 +710,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_l10n_latam_identification_type
 msgid "Identification Types"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-msgid "Invalid Checksum"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-msgid "Invalid Format"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-msgid "Invalid Length"
 msgstr ""
 
 #. module: l10n_ar
@@ -758,7 +810,7 @@ msgid "Name"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_name
+#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_name_uniq
 msgid "Name must be unique!"
 msgstr ""
 
@@ -822,7 +874,6 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
 msgid "Other National Ind. Taxes %s"
 msgstr ""
 
@@ -882,6 +933,12 @@ msgid "Purchase Aliquots"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
+msgid "RLI_RLM"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
 msgid ""
 "Raise an error if a vendor bill is miss encoded. \"Not Zero\" means the VAT "
@@ -912,6 +969,11 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_tax_group
 msgid "Tax Group"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "Taxes"
 msgstr ""
 
 #. module: l10n_ar
@@ -1003,13 +1065,6 @@ msgid "Untaxed"
 msgstr ""
 
 #. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
-msgid "Untaxed Amount"
-msgstr ""
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_vat
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_vat
 msgid "VAT"
@@ -1023,14 +1078,12 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
 msgid "VAT Content %s"
 msgstr ""
 
 #. module: l10n_ar
 #. odoo-python
-#: code:addons/l10n_ar/models/account_chart_template.py:0
-#, python-format
+#: code:addons/l10n_ar/models/template_ar_base.py:0
 msgid "Ventas Preimpreso"
 msgstr ""
 
