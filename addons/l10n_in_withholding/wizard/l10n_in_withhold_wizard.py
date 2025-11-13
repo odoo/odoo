@@ -113,12 +113,9 @@ class L10nInWithholdWizard(models.TransientModel):
     def _compute_l10n_in_withholding_warning(self):
         for wizard in self:
             warnings = {}
-            if wizard.l10n_in_tds_tax_type == 'purchase' and not wizard.related_move_id.commercial_partner_id.l10n_in_pan and any(
-                    line.tax_id.amount != max(line.tax_id.l10n_in_section_id.l10n_in_section_tax_ids, key=lambda t: abs(t.amount)).amount
-                    for line in wizard.withhold_line_ids
-                ):
+            if wizard.l10n_in_tds_tax_type == 'purchase' and not wizard.related_move_id.commercial_partner_id.l10n_in_pan:
                 warnings['lower_tds_tax'] = {
-                    'message': _("As the Partner's PAN missing/invalid, it's advisable to apply TDS at the higher rate.")
+                    'message': _("Please deduct TDS at higher rate if PAN is missing. Ignore if already applied.")
                     }
             precision = self.currency_id.decimal_places
             if wizard.related_move_id and float_compare(wizard.related_move_id.amount_untaxed, sum(line.base for line in wizard.withhold_line_ids), precision_digits=precision) < 0:
