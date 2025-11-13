@@ -42,10 +42,11 @@ class StockLandedCost(models.Model):
         'stock.picking', string='Transfers',
         copy=False)
     cost_lines = fields.One2many(
-        'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
+        'stock.landed.cost.line', 'cost_id', 'Cost Lines',
         copy=True)
     valuation_adjustment_lines = fields.One2many(
-        'stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments',)
+        'stock.valuation.adjustment.line', 'cost_id', 'Valuation Adjustments',
+    )
     description = fields.Text(
         'Item Description')
     amount_total = fields.Monetary(
@@ -178,7 +179,7 @@ class StockLandedCost(models.Model):
         return lines
 
     def compute_landed_cost(self):
-        AdjustementLines = self.env['stock.valuation.adjustment.lines']
+        AdjustementLines = self.env['stock.valuation.adjustment.line']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
         towrite_dict = {}
@@ -194,7 +195,7 @@ class StockLandedCost(models.Model):
             for val_line_values in all_val_line_values:
                 for cost_line in cost.cost_lines:
                     val_line_values.update({'cost_id': cost.id, 'cost_line_id': cost_line.id})
-                    self.env['stock.valuation.adjustment.lines'].create(val_line_values)
+                    self.env['stock.valuation.adjustment.line'].create(val_line_values)
                 total_qty += val_line_values.get('quantity', 0.0)
                 total_weight += val_line_values.get('weight', 0.0)
                 total_volume += val_line_values.get('volume', 0.0)
@@ -270,8 +271,8 @@ class StockLandedCost(models.Model):
         return True
 
 
-class StockLandedCostLines(models.Model):
-    _name = 'stock.landed.cost.lines'
+class StockLandedCostLine(models.Model):
+    _name = 'stock.landed.cost.line'
     _description = 'Stock Landed Cost Line'
 
     name = fields.Char('Description')
@@ -301,8 +302,8 @@ class StockLandedCostLines(models.Model):
         self.account_id = accounts_data['expense']
 
 
-class StockValuationAdjustmentLines(models.Model):
-    _name = 'stock.valuation.adjustment.lines'
+class StockValuationAdjustmentLine(models.Model):
+    _name = 'stock.valuation.adjustment.line'
     _description = 'Valuation Adjustment Line'
 
     name = fields.Char(
@@ -311,7 +312,7 @@ class StockValuationAdjustmentLines(models.Model):
         'stock.landed.cost', 'Landed Cost',
         ondelete='cascade', required=True, index=True)
     cost_line_id = fields.Many2one(
-        'stock.landed.cost.lines', 'Cost Line', readonly=True)
+        'stock.landed.cost.line', 'Cost Line', readonly=True)
     move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', required=True)
     quantity = fields.Float(

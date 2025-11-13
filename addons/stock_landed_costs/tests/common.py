@@ -14,7 +14,7 @@ class TestStockLandedCostsCommon(ValuationReconciliationTestCommon):
         cls.Picking = cls.env['stock.picking']
         cls.Move = cls.env['stock.move']
         cls.LandedCost = cls.env['stock.landed.cost']
-        cls.CostLine = cls.env['stock.landed.cost.lines']
+        cls.CostLine = cls.env['stock.landed.cost.line']
         # References
         cls.warehouse = cls.company_data['default_warehouse']
         cls.supplier_id = cls.env['res.partner'].create({'name': 'My Test Supplier'}).id
