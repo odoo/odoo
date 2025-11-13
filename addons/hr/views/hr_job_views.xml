@@ -21,10 +21,8 @@
                         <notebook>
                             <page string="Details" name="recruitment_page" invisible="1" groups="hr.group_hr_user">
                                 <group>
-                                    <group name="hiring_process" string="Hiring Process">
+                                    <group name="hiring_process" string="Hiring Process" invisible="1">
                                         <field name="user_id" widget="many2one_avatar_user"/>
-                                    </group>
-                                    <group name="job_posting" string="Job Posting">
                                         <label name="no_of_recruitment_label" for="no_of_recruitment"/>
                                         <div class="o_row" name="recruitment_target">
                                             <field name="no_of_recruitment" class="o_hr_narrow_field"/>
