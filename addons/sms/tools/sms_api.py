@@ -41,6 +41,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
 
         account = self.env['iap.account'].get('sms')
         params['account_token'] = account.account_token
+        params['dbuuid'] = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout)
 
