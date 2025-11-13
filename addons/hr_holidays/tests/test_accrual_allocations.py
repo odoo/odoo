@@ -2790,3 +2790,25 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with freeze_time(datetime.date.today() + relativedelta(days=2)):
                 allocation._update_accrual()
                 self.assertEqual(allocation.number_of_days, 8)
+
+    def test_accrual_plan_cleared_when_switch_to_regular(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+        allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'allocation_type': 'accrual',
+            'holiday_status_id': self.leave_type.id,
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'number_of_days': 10,
+        })
+        self.assertEqual(allocation.accrual_plan_id, accrual_plan, "Accrual plan should initially be set.")
+
+        with Form(allocation) as alloc_form:
+            alloc_form.allocation_type = 'regular'
+        self.assertFalse(
+            allocation.accrual_plan_id,
+            "accrual_plan_id should be cleared automatically when type becomes 'regular'."
+        )
+        self.assertEqual(accrual_plan.employees_count, 0, "Accrual plan should not have any linked employees.")
