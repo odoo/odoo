@@ -313,7 +313,7 @@ describe("field HTML", () => {
         await runAllTimers();
         const section = queryAny(":iframe section");
         section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
-        htmlField.editor.shared["history"].addStep();
+        htmlField.editor.config.onChange({ isPreviewing: false });
         await click(section);
         await waitFor(".hb-row .hb-row-label span:contains(Domain)");
         expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe("id = 1");
