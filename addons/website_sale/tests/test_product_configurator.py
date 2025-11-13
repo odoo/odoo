@@ -486,9 +486,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
         with MockRequest(self.env, website=self.website):
             product_values = self.pc_controller._prepare_product_values(
-                main_product,
-                self.env['product.public.category'],
-                attribute_values=str(attribute_single.value_ids.id),
+                main_product, attribute_values=str(attribute_single.value_ids.id)
             )
         is_combination_possible = product_values['combination_info']['is_combination_possible']
         combination_product_id = product_values['combination_info']['product_id']

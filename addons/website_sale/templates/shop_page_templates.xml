@@ -478,9 +478,11 @@
                                                     t-att-data-name="product_block_name"
                                                 >
                                                     <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                        <t t-call="website_sale.products_item"
+                                                        <t
+                                                            t-call="website_sale.products_item"
                                                             design_field="website.shop_opt_products_design_classes"
-                                                            product_href="product._get_product_url(category, product_query_params, grouped_attributes_values)"/>
+                                                            product_href="product._get_product_url(product_query_params, grouped_attributes_values)"
+                                                        />
                                                     </div>
                                                 </div>
                                             </t>
