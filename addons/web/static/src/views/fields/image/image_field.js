@@ -36,6 +36,7 @@ export class ImageField extends Component {
         height: { type: Number, optional: true },
         reload: { type: Boolean, optional: true },
         convertToWebp: { type: Boolean, optional: true },
+        fileNameField: { type: String, optional: true },
     };
     static defaultProps = {
         acceptedFileExtensions: "image/*",
@@ -149,7 +150,13 @@ export class ImageField extends Component {
     }
     onFileRemove() {
         this.state.isValid = true;
-        this.props.record.update({ [this.props.name]: false });
+
+        const { fileNameField, record } = this.props;
+        const changes = { [this.props.name]: false };
+        if (fileNameField in record.fields) {
+            changes[fileNameField] = false;
+        }
+        record.update(changes);
     }
     async onFileUploaded(info) {
         this.state.isValid = true;
@@ -231,7 +238,16 @@ export class ImageField extends Component {
                 ]);
             }
         }
-        this.props.record.update({ [this.props.name]: info.data });
+        const { fileNameField, record } = this.props;
+        const changes = { [this.props.name]: info.data || false };
+        if (
+            this.fieldType !== "many2one" &&
+            fileNameField in record.fields &&
+            record.data[fileNameField] !== info.name
+        ) {
+            changes[fileNameField] = info.name || "";
+        }
+        record.update(changes);
     }
     onLoadFailed() {
         this.state.isValid = false;
@@ -307,6 +323,7 @@ export const imageField = {
         width: options.size && Boolean(options.size[0]) ? options.size[0] : attrs.width,
         height: options.size && Boolean(options.size[1]) ? options.size[1] : attrs.height,
         reload: "reload" in options ? Boolean(options.reload) : true,
+        fileNameField: attrs.filename,
     }),
 };
 
