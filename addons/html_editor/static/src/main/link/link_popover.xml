@@ -160,7 +160,7 @@
                 </t>
             </div>
         </div>
-            <div t-else="" style="width: 260px;" data-prevent-closing-overlay="true">
+            <div t-else="" style="width: 274px;" data-prevent-closing-overlay="true">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">
                         <span class="o_we_preview_favicon" style="width: 16px; height: 32px">
@@ -173,22 +173,22 @@
                                 <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
                                     <t t-esc="state.urlTitle"/>
                                 </a>
-                                <div class="flex-grow-1 d-flex justify-content-end">
-                                    <a href="#" class="mx-1 o_we_replace_title_btn text-dark"
+                                <div class="flex-grow-1 d-flex justify-content-end gap-2">
+                                    <a href="#" class="o_we_replace_title_btn text-dark"
                                         t-if="!state.isImage and state.urlTitle and state.label === '' and !state.showReplaceTitleBanner"
                                         t-on-click="onClickReplaceTitle"
                                         title="Replace URL with its title"
                                     >
                                         <i class="fa fa-magic"></i>
                                     </a>
-                                    <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
+                                    <a href="#" class="o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
                                         <i class="fa fa-clipboard"></i>
                                     </a>
                                     <t t-if="props.canEdit">
-                                        <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
+                                        <a href="#" class="o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                        <a href="#" t-if="props.canRemove" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
+                                        <a href="#" t-if="props.canRemove" class="o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
                                             <i class="fa fa-chain-broken"></i>
                                         </a>
                                     </t>
