@@ -6,6 +6,7 @@ from textwrap import dedent
 import logging
 import os
 import platform
+import re
 import shutil
 import typing
 
@@ -331,6 +332,12 @@ class IrModuleModule(models.Model):
         if self:
             self.env.registry.clear_cache('stable')
         return res
+
+    @api.constrains('name')
+    def _check_module_name(self):
+        for m in self:
+            if not re.fullmatch(r'\w+', m.name):
+                _logger.warning("Invalid module name: %r (some features may misbehave)", m.name)
 
     def _get_modules_to_load_domain(self):
         """ Domain to retrieve the modules that should be loaded by the registry. """
