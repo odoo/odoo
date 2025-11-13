@@ -138,7 +138,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: "click",
     }, {
         content: "Verify the confirmation dialog is opened",
-        trigger: ".modal button.btn-primary:contains(/^Restore$/)",
+        trigger: ".modal button.btn-primary:text(Restore)",
         run: "click",
     }, {
         content: "Verify that the description contains the right text after the restore",
@@ -258,7 +258,7 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         trigger: '.modal button.btn-primary:enabled',
         run: "click",
     }, {
-        trigger: '.modal button.btn-primary:contains(/^Restore$/)',
+        trigger: '.modal button.btn-primary:text(Restore)',
         run: "click",
     },
         ...insertEditorContent("2"),

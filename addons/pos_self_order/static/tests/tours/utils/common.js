@@ -30,7 +30,7 @@ export function checkBtn(buttonName) {
 export function checkIsNoBtn(buttonName) {
     return {
         content: `Check that '${buttonName}' do not exist`,
-        trigger: `body:not(:has(.btn:contains(/^${buttonName}$/)))`,
+        trigger: `body:not(:has(.btn:text(${buttonName})))`,
     };
 }
 

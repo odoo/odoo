@@ -283,7 +283,7 @@ registerWebsitePreviewTour(
         {
             content: "Check body",
             trigger:
-                ":iframe body:not(:has(#wrap p font:first:contains(/^paragraphs <b>describing</b>$/)))",
+                ":iframe body:not(:has(#wrap p font:first:text(paragraphs <b>describing</b>)))",
         },
         ...clickOnEditAndWaitEditModeInTranslatedPage(),
         {
