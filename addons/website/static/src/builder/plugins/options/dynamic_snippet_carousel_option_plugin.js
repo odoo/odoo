@@ -46,11 +46,6 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
         } else {
             delete el.dataset.rowPerSlide;
         }
-        if (template.arrowPosition) {
-            el.dataset.arrowPosition = template.arrowPosition;
-        } else {
-            delete el.dataset.arrowPosition;
-        }
     }
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(DynamicSnippetCarouselOption.selector)) {
