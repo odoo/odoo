@@ -1,5 +1,6 @@
 import {
     insertText as htmlInsertText,
+    pasteText,
     tripleClick,
 } from "@html_editor/../tests/_helpers/user_actions";
 
@@ -1661,5 +1662,9 @@ test("parse link correctly in html composer", async () => {
     await contains(editor.editable, { text: "www.google.com", count: 1 });
     await contains(editor.editable.querySelector("a"), { text: "www.google.com", count: 0 });
     await htmlInsertText(editor, " ");
-    await contains(editor.editable.querySelector("a"), { text: "www.google.com" });
+    await contains(editor.editable.querySelector("a[target='_blank']"), { text: "www.google.com" });
+    await press("Enter");
+    await contains(editor.editable, { text: "www.google.com", count: 0 });
+    await pasteText(editor, "www.baidu.com");
+    await contains(editor.editable.querySelector("a[target='_blank']"), { text: "www.baidu.com" });
 });
