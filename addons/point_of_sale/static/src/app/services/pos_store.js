@@ -2082,7 +2082,22 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 props: {
                     resId: product?.id,
-                    onSave: (record) => {
+                    onSave: async (record) => {
+                        if (
+                            record.evalContext.pos_categ_ids.length &&
+                            !this.config.iface_available_categ_ids.some((categ) =>
+                                record.evalContext.pos_categ_ids.includes(categ)
+                            )
+                        ) {
+                            await this.data.read("pos.category", [
+                                record.evalContext.pos_categ_ids[0],
+                            ]);
+                            await this.data.read(
+                                "pos.config",
+                                [this.config.id],
+                                ["iface_available_categ_ids"]
+                            );
+                        }
                         this.data.read("product.template", [record.evalContext.id]);
                         this.data.searchRead("product.product", [
                             ["product_tmpl_id", "=", record.evalContext.id],
@@ -2094,6 +2109,7 @@ export class PosStore extends WithLazyGetterTrap {
                 },
                 additionalContext: {
                     taxes_readonly: orderContainsProduct,
+                    pos_session_id: this.session.id,
                 },
             }
         );

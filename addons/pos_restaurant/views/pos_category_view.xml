@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='available_between']" position="after">
                 <group>
-                    <field name="course_id" class="o_text_overflow" options="{'no_create_edit': True}"/>
+                    <field name="course_id" class="o_text_overflow" options="{'no_create_edit': True}" placeholder="No default"/>
                 </group>
             </xpath>
         </field>
@@ -21,6 +21,24 @@
             <field name="parent_id" position="after">
                 <field name="course_id"/>
             </field>
+        </field>
+    </record>
+
+    <record id="pos_restaurant_pos_category_kanban_view" model="ir.ui.view">
+        <field name="name">pos.restaurant.pos.category.kanban</field>
+        <field name="model">pos.category</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_category_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('category-extras')]" position="inside">
+                <div class="gap-1 row" t-if="record.course_id.raw_value">
+                    <div class="pe-0 col-auto">
+                        <span>Course:</span>
+                    </div>
+                    <div class="col text-truncate ps-0">
+                        <field name="course_id" class="col-auto"/>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
