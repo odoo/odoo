@@ -31,6 +31,7 @@ class PosCategory(models.Model):
     color = fields.Integer('Color', required=False, default=get_default_color)
     hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour for online order and self order.")
     hour_after = fields.Float(string='Availability After', default=0.0, help="The product will be available after this hour for online order and self order.")
+    pos_config_ids = fields.Many2many('pos.config', string='Linked PoS Configurations')
 
     # During loading of data, the image is not loaded so we expose a lighter
     # field to determine whether a pos.category has an image or not.
@@ -59,9 +60,9 @@ class PosCategory(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):
-        if self.search_count([('id', 'in', self.ids)]):
-            if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
-                raise UserError(_('You cannot delete a point of sale category while a session is still opened.'))
+        for record in self:
+            if record.pos_config_ids:
+                raise UserError(_('You cannot delete a category which is currently in use in a point of sale.'))
 
     @api.depends('has_image')
     def _compute_has_image(self):
