@@ -11,8 +11,8 @@
                 <field name="question_ids" invisible="1"/>
                 <field name="session_available" invisible="1"/>
                 <header>
-                    <button name="action_send_survey" string="Share" type="object" class="oe_highlight" invisible="not active"/>
-                    <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
+                    <button name="action_send_survey" string="Share" type="object" class="btn-primary" invisible="not active"/>
+                    <button name="action_result_survey" string="See results" type="object" class="btn-primary"
                       invisible="answer_done_count &lt;= 0"/>
                     <button name="action_start_session" string="Create Live Session" type="object" class="d-none d-sm-block"
                         invisible="session_state or not active or not session_available"/>
@@ -48,26 +48,28 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="background_image" widget="image" class="oe_avatar"/>
+                    <field name="background_image" widget="image" class="oe_avatar" filename="background_image_filename"/>
                     <field name="allowed_survey_types" invisible="True"/>
-                    <field name="survey_type" widget="radio_selection_with_filter"
-                        options="{'horizontal': True, 'allowed_selection_field': 'allowed_survey_types'}"
-                        class="o_field_radio" invisible="not allowed_survey_types"/>
-                    <div class="oe_title" style="width: 100%;">
+                     <field name="survey_type" widget="selection_badge_icons" nolabel="1"
+                        options="{'allowed_selection_field': 'allowed_survey_types'}"/>
+                    <div class="oe_title w-100">
                         <h1>
                             <field name="title" options="{'line_breaks': False}" widget="text" placeholder="e.g. Satisfaction Survey"/>
                         </h1>
                     </div>
                     <group>
-                        <group class="ps-md-0">
+                        <group>
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                            <field name="background_image" filename="background_image_filename" widget="binary"
+                                string="Background" options="{'use_replace_button': True}"/>
+                            <field name="background_image_filename" invisible="1"/>
                             <field name="active" invisible="1"/>
                             <field name="has_conditional_questions" invisible="1"/>
-                            <field name="lang_ids" widget="many2many_tags" placeholder="All installed languages"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>
-                        <group class="ps-3 ps-md-0 ps-lg-3">
-                            <field name="restrict_user_ids" widget="many2many_tags_avatar"/>
+                        <group>
+                            <field name="restrict_user_ids" widget="many2many_tags_avatar" string="Shared with"/>
+                            <field name="lang_ids" widget="many2many_tags" placeholder="All installed languages"
+                                options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -188,11 +190,24 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Description" name="description">
-                            <field name="description" placeholder="e.g. &quot;The following Survey will help us...&quot;" options="{'embedded_components': false}" nolabel="1"></field>
-                        </page>
-                        <page string="End Message" name="description_done">
-                            <field name="description_done" placeholder="e.g. &quot;Thank you very much for your feedback!&quot;" options="{'embedded_components': false}" nolabel="1"></field>
+                        <page string="Messages" name="messages">
+                            <group string="Intro Message">
+                                <field name="description" 
+                                    nolabel="1"
+                                    placeholder="e.g. &quot;The following Survey will help us...&quot;" 
+                                    options="{'embedded_components': false}"
+                                    colspan="2"
+                                    class="o_survey_description_editor"/>
+                            </group>
+                            
+                            <group string="End Message">
+                                <field name="description_done" 
+                                    nolabel="1"
+                                    placeholder="e.g. &quot;Thank you very much for your feedback!&quot;" 
+                                    options="{'embedded_components': false}"
+                                    colspan="2"
+                                    class="o_survey_description_editor"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -290,7 +305,7 @@
                                    type="object"
                                    name="action_survey_user_input_certified"
                                    class="fw-bold">
-                                    <field name="success_ratio" widget="progressbar" class="d-block" style="word-break: normal;"/>
+                                    <field name="success_ratio" widget="progressbar" class="d-block text-nowrap"/>
                                     <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>
@@ -363,7 +378,7 @@
                 <field string="Survey" name="title" filter_domain="['|', ('title', 'ilike', self), ('session_code', 'ilike', self)]"/>
                 <field string="Question &amp; Pages" name="question_and_page_ids"/>
                 <field name="user_id"/>
-                <field name="restrict_user_ids"/>
+                <field name="restrict_user_ids" string="Shared with"/>
                 <filter string="Is a Certification" name="certification" domain="[('certification', '=', True)]"/>
                 <filter string="Is not a Certification" name="not_certification" domain="[('certification', '=', False)]"/>
                 <separator/>
@@ -382,7 +397,7 @@
                 <group>
                     <filter string="Responsible" name="group_by_responsible"
                         context="{'group_by': 'user_id'}"/>
-                    <filter name="group_by_restrict_user_ids"
+                    <filter string="Shared with" name="group_by_restrict_user_ids"
                         context="{'group_by': 'restrict_user_ids'}"/>
                 </group>
             </search>

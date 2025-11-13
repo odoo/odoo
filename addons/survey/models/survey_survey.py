@@ -61,6 +61,7 @@ class SurveySurvey(models.Model):
         help="This message will be displayed when survey is completed")
     background_image = fields.Image("Background Image")
     background_image_url = fields.Char('Background Url', compute="_compute_background_image_url")
+    background_image_filename = fields.Char("Background Filename")
     active = fields.Boolean("Active", default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -383,12 +384,13 @@ class SurveySurvey(models.Model):
 
     @api.depends_context('uid')
     def _compute_allowed_survey_types(self):
-        self.allowed_survey_types = [
-            'survey',
-            'live_session',
-            'assessment',
-            'custom',
-        ] if self.env.user.has_group('survey.group_survey_user') else False
+        """Assign static mapping of allowed survey types and respective icons depending on users groups."""
+        self.allowed_survey_types = {
+            'survey': 'fa-edit',
+            'live_session': 'fa-bar-chart-o',
+            'assessment': "fa-mortar-board",
+            'custom': 'fa-paint-brush',
+        } if self.env.user.has_group('survey.group_survey_user') else {}
 
     @api.onchange('survey_type')
     def _onchange_survey_type(self):
