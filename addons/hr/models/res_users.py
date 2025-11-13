@@ -7,6 +7,7 @@ from markupsafe import Markup
 
 from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -58,8 +59,9 @@ class ResUsers(models.Model):
         # So try to enforce the security rules on the field to make sure we do not load employees outside of active companies
         return [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
 
-    # note: a user can only be linked to one employee per company (see sql constraint in ´hr.employee´)
+    # note: a user can only be linked to one employee per company (see sql constraint in `hr.employee`)
     employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
+    employee_public_ids = fields.One2many('hr.employee.public', 'user_id', string='Related employee (public)', domain=_employee_ids_domain, readonly=True)
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', store=False)
 
@@ -277,10 +279,13 @@ class ResUsers(models.Model):
         # If we're going to inject too many `ids`, we fall back on the default behavior
         # to avoid a performance regression.
         IN_MAX = 10_000
-        domain = [('employee_ids', operator, value)]
+        # HACK: search directly on public ids to avoid optimization on employee
+        # where we may not have access to all fields.
+        employee_field = 'employee_ids' if self.env['hr.employee'].has_access('read') else 'employee_public_ids'
+        domain = Domain(employee_field, operator, value)
         user_ids = self.env['res.users'].with_context(active_test=False)._search(domain, limit=IN_MAX).get_result_ids()
         if len(user_ids) < IN_MAX:
-            return [('id', 'in', user_ids)]
+            return Domain('id', 'in', user_ids)
 
         return domain
 
