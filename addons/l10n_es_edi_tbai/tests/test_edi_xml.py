@@ -241,3 +241,17 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
             xml_expected = etree.fromstring(super().L10N_ES_TBAI_CREDIT_NOTE_XML_POST)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
+
+    def test_xml_tree_fecha_operacion(self):
+        """
+        Test that when the invoice_date and delivery date are in the past but are the same
+        FechaOperacion appears in the xml since it is still different from
+        the date the xml is generated (FechaExpedicionFactura)
+        """
+        self.out_invoice.delivery_date = self.out_invoice.invoice_date
+
+        with freeze_time(self.frozen_today):
+            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(self.out_invoice, cancel=False)[self.out_invoice]['xml_file']
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            xml_expected = etree.fromstring(super().L10N_ES_TBAI_FECHA_OPERACION)
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
