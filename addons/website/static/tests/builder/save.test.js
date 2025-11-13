@@ -583,3 +583,21 @@ test("attempt to prevent closing window with unsaved changes", async () => {
     deferSave.resolve();
     await expect.waitForSteps(["save - end"]);
 });
+
+test("Modifying an element inside '.o_not_editable' should not mark this element as 'dirty'", async () => {
+    // An example of such a situation is a change of the blog author that makes
+    // a change of the author avatar accordingly.
+    addOption({
+        selector: ".test",
+        template: xml`<BuilderButton classAction="'x'"/>`,
+        editableOnly: false,
+    });
+    await setupWebsiteBuilder(`
+        <div class="o_not_editable" data-oe-model="model" data-oe-id="1" data-oe-field="field">
+            <p class="test">Test</p>
+        </div>
+    `);
+    await contains(`:iframe .test`).click();
+    await contains("[data-class-action='x']").click();
+    expect(":iframe [data-oe-model='model']").not.toHaveClass("o_dirty");
+});

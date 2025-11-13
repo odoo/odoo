@@ -13,7 +13,7 @@ declare module "plugins" {
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { empty_node_predicates, is_unremovable_selector, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
-    import { after_save_handlers, before_save_handlers, get_dirty_els, savable_selectors, save_element_handlers, save_elements_overrides, save_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { after_save_handlers, before_save_handlers, get_dirty_els, save_element_handlers, save_elements_overrides, save_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { after_setup_editor_handlers, before_setup_editor_handlers, o_editable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { target_hide, target_show, VisibilityShared } from "@html_builder/core/visibility_plugin";
     import { default_shape_handlers, post_compute_shape_listeners } from "@html_builder/plugins/image/image_shape_option_plugin";
@@ -147,7 +147,6 @@ declare module "plugins" {
             method: "replace" | "add" | "remove",
             value: CSSSelector,
         }[];
-        savable_selectors: savable_selectors;
         so_content_addition_selector: so_content_addition_selector;
         so_snippet_addition_selector: so_snippet_addition_selector;
         snippet_preview_dialog_bundles: snippet_preview_dialog_bundles;
