@@ -1,6 +1,9 @@
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
-import { onMounted } from "@odoo/owl";
+import { onMounted, onWillStart } from "@odoo/owl";
+import { useVivaApp } from "../../hooks/use_viva_app";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 patch(PaymentScreen.prototype, {
     setup() {
@@ -16,10 +19,51 @@ patch(PaymentScreen.prototype, {
                 return;
             }
         });
-    },
 
-    async addNewPaymentLine(paymentMethod) {
-        if (paymentMethod.use_payment_terminal === "viva_com" && this.isRefundOrder) {
+        this.vivaApp = useVivaApp(this.validateOrder.bind(this));
+        this.integrated = () => window.localStorage.getItem("vivawallet_app_answer") === "true";
+        onWillStart(async () => {
+            await this.vivaApp.process();
+        });
+    },
+    async addNewPaymentLine(pm) {
+        if (this.vivaApp.use(pm)) {
+            let previousAnswer = window.localStorage.getItem("vivawallet_app_answer");
+            if (previousAnswer === null) {
+                previousAnswer = await new Promise((resolve) =>
+                    this.dialog.add(ConfirmationDialog, {
+                        title: _t("Viva Wallet Application"),
+                        body: _t(
+                            "Is the vivawallet application installed on your device? If so, the payment will initialize directly from it."
+                        ),
+                        cancelLabel: _t("No"),
+                        confirmLabel: _t("Yes"),
+                        confirm: () => {
+                            window.localStorage.setItem("vivawallet_app_answer", true);
+                            resolve("true");
+                        },
+                        cancel: () => {
+                            window.localStorage.setItem("vivawallet_app_answer", false);
+                            resolve("false");
+                        },
+                    })
+                );
+            }
+
+            if (previousAnswer === "true") {
+                for (const lineUuid of this.currentOrder.payment_ids.map((line) => line.uuid)) {
+                    const paymentLine = this.currentOrder.getPaymentlineByUuid(lineUuid);
+                    if (this.vivaApp.use(paymentLine.payment_method_id) && !paymentLine.isDone()) {
+                        paymentLine.delete();
+                    }
+                }
+
+                this.vivaApp.start(pm, this.isRefundOrder);
+                return;
+            }
+        }
+
+        if (pm.use_payment_terminal === "viva_com" && this.isRefundOrder) {
             const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
             const amountDue = Math.abs(this.currentOrder.remainingDue);
             const matchedPaymentLine = refundedOrder.payment_ids.find(
@@ -28,7 +72,7 @@ patch(PaymentScreen.prototype, {
                     line.amount === amountDue
             );
             if (matchedPaymentLine) {
-                const paymentLineAddedSuccessfully = await super.addNewPaymentLine(paymentMethod);
+                const paymentLineAddedSuccessfully = await super.addNewPaymentLine(pm);
                 if (paymentLineAddedSuccessfully) {
                     const newPaymentLine = this.paymentLines.at(-1);
                     newPaymentLine.updateRefundPaymentLine(matchedPaymentLine);
@@ -37,6 +81,32 @@ patch(PaymentScreen.prototype, {
             }
         }
 
-        return await super.addNewPaymentLine(paymentMethod);
+        return await super.addNewPaymentLine(pm);
+    },
+    deletePaymentLine(lineUuid) {
+        const line = this.currentOrder.getPaymentlineByUuid(lineUuid);
+        if (!this.vivaApp.use(line.payment_method_id) && !this.integrated()) {
+            return super.deletePaymentLine(lineUuid);
+        }
+
+        this.currentOrder.removePaymentline(line);
+    },
+    sendPaymentRequest(line) {
+        if (this.vivaApp.use(line.payment_method_id) && this.integrated()) {
+            return;
+        }
+        return super.sendPaymentRequest(line);
+    },
+    sendPaymentCancel(line) {
+        if (this.vivaApp.use(line.payment_method_id) && this.integrated()) {
+            return;
+        }
+        return super.sendPaymentCancel(line);
+    },
+    sendPaymentReverse(line) {
+        if (this.vivaApp.use(line.payment_method_id) && this.integrated()) {
+            return;
+        }
+        return super.sendPaymentReverse(line);
     },
 });

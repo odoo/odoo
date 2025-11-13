@@ -62,10 +62,10 @@
                                         </t>
                                     </div>
                                     <div>
-                                        <div class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                        <div class="button send_force_done" t-attf-class="${this.ui.isSmall ? 'btn btn-outline-success m-0 p-3 w-100 mb-2' : ''}" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
                                             Force done
                                         </div>
-                                        <div t-if="!this.props.isRefundOrder" class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
+                                        <div t-if="!this.props.isRefundOrder" class="button send_payment_cancel" t-attf-class="${this.ui.isSmall ? 'btn btn-danger w-100' : ''}" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
                                             Cancel
                                         </div>
                                     </div>
