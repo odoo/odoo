@@ -297,6 +297,9 @@
                 <attribute name="invisible">0</attribute>
                 <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user</attribute>
             </page>
+            <xpath expr="//group[@name='hiring_process']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
             <group name="hiring_process" position="inside">
                 <field name="interviewer_ids" widget="many2many_tags_avatar"
                     options="{'no_create': True, 'no_create_edit': True}"
@@ -319,7 +322,7 @@
                 </div>
             </group>
 
-            <group name="job_posting" position="inside">
+            <group name="job" position="inside">
                 <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
             </group>
 
