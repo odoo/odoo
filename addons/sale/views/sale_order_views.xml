@@ -520,7 +520,10 @@
                                                 invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                             />
                                             <field name="product_id"
-                                                context="{'default_uom_id': product_uom_id}"
+                                                context="{
+                                                    'default_uom_id': product_uom_id,
+                                                    'partner_id': parent.partner_id,
+                                                }"
                                                 readonly="not product_updatable"
                                                 required="not display_type and not is_downpayment"
                                                 force_save="1"
@@ -632,6 +635,7 @@
                                     context="{
                                         'default_lst_price': price_unit,
                                         'default_uom_id': product_uom_id,
+                                        'partner_id': parent.partner_id,
                                     }"
                                     options="{
                                         'show_label_warning': True
@@ -645,6 +649,7 @@
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
+                                        'partner_id': parent.partner_id,
                                     }"
                                     options="{
                                         'show_label_warning': True
