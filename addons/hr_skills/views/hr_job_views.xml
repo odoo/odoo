@@ -5,9 +5,6 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <page name="recruitment_page" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </page>
             <div class="oe_title" position="after">
                 <group id="job_skills">
                     <field
@@ -20,7 +17,7 @@
                     />
                 </group>
             </div>
-            <div name="recruitment_target" position="after">
+            <group name="job" position="inside">
                 <field
                     name="current_job_skill_ids"
                     mode="list"
@@ -35,7 +32,7 @@
                         <field name="color"/>
                     </list>
                 </field>
-            </div>
+            </group>
         </field>
     </record>
 </odoo>
