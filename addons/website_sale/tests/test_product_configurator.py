@@ -445,41 +445,12 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
         with self.mock_request():
             product_values = self.pc_controller._prepare_product_values(
-                main_product,
-                self.env["product.public.category"],
-                attribute_values=str(attribute_single.value_ids.id),
+                main_product, attribute_values=str(attribute_single.value_ids.id)
             )
         is_combination_possible = product_values["combination_info"]["is_combination_possible"]
         combination_product_id = product_values["combination_info"]["product_id"]
         self.assertTrue(is_combination_possible)
         self.assertTrue(self.env["product.product"].browse(combination_product_id).active)
-
-    def test_product_page_search_scope_respects_navigation_context(self):
-        """
-        Ensure that search scope depends on how the user accessed the product page.
-
-        - Direct access to a product → search must be global (/shop)
-        - Access via category → search must be category-scoped
-        """
-        product_tmpl = self.product.product_tmpl_id
-        public_category = self.env['product.public.category'].create({
-            'name': 'Test Public Category',
-        })
-        product_tmpl.public_categ_ids = [Command.set([public_category.id])]
-
-        with MockRequest(self.env, website=self.website):
-            values = self.pc_controller._prepare_product_values(
-                product_tmpl,
-                category=None,
-            )
-        self.assertNotIn('/category', values['keep'].path)
-
-        with MockRequest(self.env, website=self.website):
-            values = self.pc_controller._prepare_product_values(
-                product_tmpl,
-                category=public_category,
-            )
-        self.assertIn('/category', values['keep'].path)
 
     def test_product_page_category_respects_current_website(self):
         """When two categories share the same name but belong to different websites, the product
@@ -505,16 +476,10 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         # On website 1, the category from website 1 should be selected.
         with MockRequest(self.env, website=self.website):
-            values = self.pc_controller._prepare_product_values(
-                product_tmpl,
-                category=None,
-            )
+            values = self.pc_controller._prepare_product_values(product_tmpl)
         self.assertEqual(values['category'], categ_website_1)
 
         # On website 2, the category from website 2 should be selected.
         with MockRequest(self.env, website=second_website):
-            values = self.pc_controller._prepare_product_values(
-                product_tmpl,
-                category=None,
-            )
+            values = self.pc_controller._prepare_product_values(product_tmpl)
         self.assertEqual(values['category'], categ_website_2)

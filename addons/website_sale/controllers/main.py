@@ -6,7 +6,6 @@ from collections import defaultdict
 from datetime import datetime
 from urllib.parse import parse_qs, urlencode, urlparse
 
-from werkzeug import urls
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -31,36 +30,6 @@ from odoo.addons.website_sale.models.website import (
 )
 
 _lt = LazyTranslate(__name__)
-
-
-def handle_product_params_error(_exc, product, category=None, **_kwargs):
-    """Handle access and missing errors related to product or category on the eCommerce.
-
-    This function is intended to prevent access-related exceptions when a user attempts to view a
-    product or category page. It checks if the provided product and category records still exist and
-    are accessible, and then attempts to redirect to a valid fallback route if possible. If no valid
-    route is found, it returns a 404 response code (instead of a 403).
-
-    :param odoo.exceptions.AccessError | odoo.exceptions.MissingError exc: The exception thrown
-            by _check_access `base.models.ir_http._pre_dispatch`.
-    :param product.template product: The product the user is trying to access.
-    :param product.public.category category: The category the user is trying to access, if any.
-    :param dict kwargs: Optional data. This parameter is not used here.
-    :return: A redirect response to a valid shop or product page, or a 404 error code if no valid
-             fallback is found.
-    :rtype: int | Response
-    """
-    product = product.exists()
-    if category:
-        category = category.exists()
-
-    if category and not (product and product.has_access("read")):
-        return request.redirect(WebsiteSale._get_shop_path(category))
-
-    if not category and product and product.has_access("read"):
-        return request.redirect(product._get_product_url())
-
-    return NotFound.code  # 404
 
 
 class TableCompute:
@@ -212,7 +181,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
         dom &= Domain(website.sale_product_domain())
         for product in ProductTemplate.with_context(prefetch_fields=False).search(dom):
-            loc = f"{SHOP_PATH}/{env['ir.http']._slug(product)}"
+            loc = f"{SHOP_PATH}/product/{env['ir.http']._slug(product)}"
             if not qs or qs.lower() in loc:
                 yield {"loc": loc}
 
@@ -301,14 +270,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         is_category_in_query = category and isinstance(category, str)
         category = self._validate_and_get_category(category)
-        # If the category is provided as a query parameter (which is deprecated), we redirect to the
-        # "correct" shop URL, where the category has been removed from the query parameters and
-        # added to the path.
+        # TODO: remove support for `category` query param in version 20 (or later).
         if is_category_in_query:
-            query = self._get_filtered_query_string(
-                request.httprequest.query_string.decode(), keys_to_remove=["category"]
+            query = request.httprequest.args.to_dict(flat=False)
+            query.pop("category", None)
+            url = urlparse(self._get_shop_path(category, page))
+            return request.redirect(
+                url._replace(query=urlencode(query, doseq=True)).geturl(), code=301
             )
-            return request.redirect(f"{self._get_shop_path(category, page)}?{query}", code=301)
 
         try:
             min_price = float(min_price)
@@ -380,18 +349,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if tax_display == "tax_included" and sale_tax:
             # Convert the boundaried to tax-excluded for internal processing
-            min_price_tax_excluded = (
-                sale_tax.with_context(force_price_include=True).compute_all(
-                    min_price,
-                    website.currency_id,
-                )["total_excluded"]
-            )
-            max_price_tax_excluded = (
-                sale_tax.with_context(force_price_include=True).compute_all(
-                    max_price,
-                    website.currency_id,
-                )["total_excluded"]
-            )
+            min_price_tax_excluded = sale_tax.with_context(force_price_include=True).compute_all(
+                min_price, website.currency_id
+            )["total_excluded"]
+            max_price_tax_excluded = sale_tax.with_context(force_price_include=True).compute_all(
+                max_price, website.currency_id
+            )["total_excluded"]
         else:
             min_price_tax_excluded = min_price
             max_price_tax_excluded = max_price
@@ -435,12 +398,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
             if tax_display == "tax_included" and sale_tax:
                 available_min_price = sale_tax.with_context(force_price_include=False).compute_all(
-                    available_min_price,
-                    website.currency_id,
+                    available_min_price, website.currency_id
                 )["total_included"]
                 available_max_price = sale_tax.with_context(force_price_include=False).compute_all(
-                    available_max_price,
-                    website.currency_id,
+                    available_max_price, website.currency_id
                 )["total_included"]
 
             if min_price or max_price:
@@ -597,7 +558,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "product_query_params": product_query_params,
             "grouped_attributes_values": grouped_attributes_values,
             "previewed_attribute_values": lazy(
-                lambda: products._get_previewed_attribute_values(category, product_query_params)
+                lambda: products._get_previewed_attribute_values(product_query_params)
             ),
             "pavs_per_attribute": pavs_per_attribute,
         }
@@ -622,6 +583,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @route(
         [
+            f'{SHOP_PATH}/product/<model("product.template"):product>',
             f'{SHOP_PATH}/<model("product.template"):product>',
             f'{SHOP_PATH}/<model("product.public.category"):category>/<model("product.template"):product>',
         ],
@@ -629,9 +591,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         auth="public",
         website=True,
         sitemap=sitemap_products,
-        handle_params_access_error=handle_product_params_error,
+        # Return a 404 instead of a 403 error in case of an access error.
+        handle_params_access_error=lambda e, **_kwargs: NotFound.code,  # noqa: ARG005
     )
-    def product(self, product, category=None, pricelist=None, **kwargs):
+    def product(self, product, pricelist=None, **kwargs):
         if not request.website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
 
@@ -645,32 +608,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     )
                 ) from ve
             if not self._apply_selectable_pricelist(pricelist_id):
-                return request.redirect(self._get_shop_path(category))
+                return request.redirect(self._get_shop_path())
 
         request.update_context(website_sale_product_page=True)
-        is_category_in_query = category and isinstance(category, str)
-        category = self._validate_and_get_category(category)
-        query = self._get_filtered_query_string(
-            request.httprequest.query_string.decode(), keys_to_remove=["category"]
-        )
-        # If the product doesn't belong to the category, we redirect to the canonical product URL,
-        # which doesn't include the category.
-        if category and not product.filtered_domain([
-            ("public_categ_ids", "child_of", category.id)
-        ]):
-            return request.redirect(f"{product._get_product_url()}?{query}", code=301)
-        # If the category is provided as a query parameter (which is deprecated), we redirect to the
-        # "correct" shop URL, where the category has been removed from the query parameters and
-        # added to the path.
-        if is_category_in_query:
-            return request.redirect(f"{product._get_product_url(category)}?{query}", code=301)
+        # TODO: remove support for deprecated paths in version 20 (or later).
+        if not request.httprequest.path.startswith(f"{SHOP_PATH}/product/"):
+            query = request.httprequest.args.to_dict(flat=False)
+            query.pop("category", None)
+            return request.redirect(product._get_product_url(query), code=301)
+
         return request.render(
             "website_sale.product",
             self._prepare_product_values(
                 # request context must be given to ensure context updates in overrides are correctly
                 # forwarded to `_get_combination_info` call
                 product.with_context(request.env.context),
-                category,
                 **kwargs,
             ),
         )
@@ -701,24 +653,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ._get_stream_from(document.ir_attachment_id)
             .get_response(as_attachment=True)
         )
-
-    @route(
-        [f'{SHOP_PATH}/product/<model("product.template"):product>'],
-        type="http",
-        auth="public",
-        website=True,
-        sitemap=False,
-    )
-    def old_product(self, product, category="", **_kwargs):
-        # Compatibility pre-v14
-        # Redirect to the "correct" product URL, which doesn't include `/product`, and where the
-        # category has been removed from the query parameters and added to the path.
-        category = int(category) if str(category).isdigit() else False
-        category = self._validate_and_get_category(category)
-        query = self._get_filtered_query_string(
-            request.httprequest.query_string.decode(), keys_to_remove=["category"]
-        )
-        return request.redirect(f"{product._get_product_url(category)}?{query}", code=301)
 
     @route(["/shop/product/extra-media"], type="jsonrpc", auth="user", website=True)
     def add_product_media(
@@ -917,14 +851,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # In sudo mode to check fields and conditions not accessible to the customer directly.
         return product.sudo()._is_add_to_cart_allowed()
 
-    def _prepare_product_values(self, product, category, **kwargs):
+    def _prepare_product_values(self, product, **kwargs):
         website = request.website
-        ProductCategory = request.env["product.public.category"]
-        original_category = category
-        category = (
-            category
-            or product.public_categ_ids.filtered(lambda c: c.can_access_from_current_website())[:1]
-        )
+        category = product.public_categ_ids.filtered(
+            lambda categ: categ.can_access_from_current_website()
+        )[:1]
         markup_data = [
             website._prepare_ecommerce_store_markup_data(),
             product._to_markup_data(website),
@@ -936,11 +867,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             )
 
         if last_attributes_search := request.session.get("attribute_values", []):
-            keep = QueryURL(
-                self._get_shop_path(original_category), attribute_values=last_attributes_search
-            )
+            keep = QueryURL(self._get_shop_path(), attribute_values=last_attributes_search)
         else:
-            keep = QueryURL(self._get_shop_path(original_category))
+            keep = QueryURL(self._get_shop_path())
 
         if attribute_values := kwargs.get("attribute_values", ""):
             attribute_value_ids = {int(i) for i in attribute_values.split(",")}
@@ -972,9 +901,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return {
             "attribute_value_images": attribute_value_images,
-            "categories": ProductCategory.search([("parent_id", "=", False)]),
+            "categories": request.env["product.public.category"].search([
+                ("parent_id", "=", False)
+            ]),
             "category": category,
-            "original_category": original_category,
             "combination_info": combination_info,
             "has_available_uoms": len(product._get_available_uoms()) > 0,
             "keep": keep,
@@ -2186,23 +2116,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if page:
             path += f"/page/{page}"
         return path
-
-    @staticmethod
-    def _get_filtered_query_string(query_string, keys_to_remove):
-        """Return a filtered copy of the provided query string, where all keys in `keys_to_remove`
-        are removed.
-
-        Note: the query string shouldn't include the leading '?'.
-
-        :param str query_string: The query string to filter.
-        :param list(str) keys_to_remove: The keys to remove from the query string.
-        :return: The filtered query string.
-        :rtype: str
-        """
-        query = urls.url_parse(f"?{query_string}").decode_query()
-        for key in keys_to_remove:
-            query.pop(key, False)
-        return urls.url_encode(query)
 
     @staticmethod
     def _get_attribute_value_dict(attribute_values):
