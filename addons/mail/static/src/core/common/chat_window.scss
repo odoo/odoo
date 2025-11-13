@@ -38,7 +38,7 @@
     .o-mail-ActionList-group {
         gap: map-get($spacers, 3);
 
-        button:not(:hover, &:focus-visible, &:active):not(.btn-success) {
+        button:not(:hover):not(:focus-visible):not(:active):not(.btn-success) {
             --o-mail-ActionList-Button-opacity: 1;
         }
 

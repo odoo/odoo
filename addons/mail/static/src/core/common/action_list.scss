@@ -17,13 +17,14 @@
 
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
-                filter: brightness(var(--o-mail-ActionList-Button-opacity));
+                opacity: var(--o-mail-ActionList-Button-opacity);
 
                 &:where(.rounded-circle) {
                     aspect-ratio: 1;
                 }
                 &:hover, &:focus, &:active, &.active, &:focus-visible {
-                    filter: brightness(var(--o-mail-ActionList-Button-opacity--hover));
+                    color: var(--o-mail-ActionList-Button-color--hover);
+                    opacity: var(--o-mail-ActionList-Button-opacity--hover);
                 }
             }
 
