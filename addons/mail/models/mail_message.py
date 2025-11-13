@@ -678,7 +678,7 @@ class MailMessage(models.Model):
     def create(self, vals_list):
         tracking_values_list = []
         for values in vals_list:
-            if not (self.env.user.has_group('base.group_user') or self.env.su):
+            if not (self.env.su or self.env.user.has_group('base.group_user')):
                 values.pop('author_id', None)
                 values.pop('email_from', None)
                 self = self.with_context({k: v for k, v in self.env.context.items() if k not in ['default_author_id', 'default_email_from']})  # noqa: PLW0642
@@ -792,7 +792,7 @@ class MailMessage(models.Model):
         return super().fetch(field_names)
 
     def write(self, vals):
-        if not (self.env.user.has_group('base.group_user') or self.env.su):
+        if not (self.env.su or self.env.user.has_group('base.group_user')):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
