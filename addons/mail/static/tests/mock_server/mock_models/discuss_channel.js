@@ -38,6 +38,10 @@ export class DiscussChannel extends models.ServerModel {
         compute: "_compute_channel_name_member_ids",
     });
     channel_type = fields.Generic({ default: "channel" });
+    discuss_category_id = fields.Many2one({
+        relation: "discuss.category",
+        string: "Discuss Category",
+    });
     group_public_id = fields.Generic({
         default: () => serverState.groupId,
     });
@@ -320,12 +324,25 @@ export class DiscussChannel extends models.ServerModel {
             DiscussChannelMember.write([memberOfCurrentUser.id], {
                 fetched_message_id: lastMessage.id,
             });
-            BusBus._sendone(channel, "discuss.channel.member/fetched", {
-                channel_id: channel.id,
-                id: memberOfCurrentUser.id,
-                last_message_id: lastMessage.id,
-                partner_id: this.env.user.partner_id,
-            });
+            BusBus._sendone(
+                channel,
+                "mail.record/insert",
+                new mailDataHelpers.Store()
+                    .add(
+                        DiscussChannelMember.browse(memberOfCurrentUser.id),
+                        makeKwArgs({
+                            fields: [
+                                mailDataHelpers.Store.one(
+                                    "channel_id",
+                                    makeKwArgs({ as_thread: true, fields: [] })
+                                ),
+                                "fetched_message_id",
+                                ...DiscussChannelMember._to_store_persona([]),
+                            ],
+                        })
+                    )
+                    .get_result()
+            );
         }
     }
 
@@ -400,6 +417,8 @@ export class DiscussChannel extends models.ServerModel {
             const MailNotification = this.env["mail.notification"];
             /** @type {import("mock_models").ResGroups}*/
             const ResGroups = this.env["res.groups"];
+            /** @type {import("mock_models").DiscussCategory} */
+            const DiscussCategory = this.env["discuss.category"];
 
             for (const channel of this) {
                 const members = DiscussChannelMember.browse(channel.channel_member_ids);
@@ -418,6 +437,10 @@ export class DiscussChannel extends models.ServerModel {
                 res.group_public_id = mailDataHelpers.Store.one(
                     ResGroups.browse(channel.group_public_id),
                     makeKwArgs({ fields: ["full_name"] })
+                );
+                res.discuss_category_id = mailDataHelpers.Store.one(
+                    DiscussCategory.browse(channel.discuss_category_id),
+                    makeKwArgs({ fields: ["name"] })
                 );
                 if (this.env.user) {
                     const message_needaction_counter = MailNotification._filter([

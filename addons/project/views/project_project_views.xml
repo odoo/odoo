@@ -93,10 +93,16 @@
                                     <field name="alias_id" invisible="1"/>
                                     <label for="alias_name" string="Email Alias" invisible="is_template"/>
                                     <field name="alias_email" widget="email" readonly="1" nolabel="1" groups="!project.group_project_manager" invisible="is_template"/>
-                                    <div class="d-inline-flex" groups="project.group_project_manager" invisible="is_template">
-                                        <field name="alias_name" placeholder="alias"/>@
-                                        <field name="alias_domain_id" placeholder="e.g. mycompany.com"
-                                            options="{'no_create': True, 'no_open': True}"/>
+                                    <div class="row" groups="project.group_project_manager" invisible="is_template">
+                                        <div class="d-flex col-10 p-0">
+                                            <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
+                                            <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                                options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                        <div class="col-2 p-0" invisible="not alias_email">
+                                           <field name="alias_email" widget="CopyClipboardButton"
+                                                class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
+                                        </div>
                                     </div>
                                     <!-- the alias contact must appear when the user start typing and it must disappear
                                         when the string is deleted. -->

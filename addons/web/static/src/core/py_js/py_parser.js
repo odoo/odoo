@@ -197,7 +197,9 @@ function parsePrefix(current, tokens) {
                     while (tokens[0] && !isSymbol(tokens[0], "}")) {
                         const key = _parse(tokens, 0);
                         if (
-                            (key.type !== 1 /* String */ && key.type !== 0) /* Number */ ||
+                            (key.type !== 1 /* String */ &&
+                                key.type !== 2 /* Boolean */ &&
+                                key.type !== 0) /* Number */ ||
                             !tokens[0] ||
                             !isSymbol(tokens[0], ":")
                         ) {

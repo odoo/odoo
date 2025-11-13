@@ -3,23 +3,25 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class FacebookOption extends BaseOptionComponent {
+    static template = "website.FacebookOption";
+    static selector = ".o_facebook_page";
+}
 
 class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
     static dependencies = ["history"];
     resources = {
-        builder_options: [
-            {
-                template: "website.FacebookOption",
-                selector: ".o_facebook_page",
-            },
-        ],
+        builder_options: [FacebookOption],
         so_content_addition_selector: [".o_facebook_page"],
         builder_actions: {
             DataAttributeListAction,
             CheckFacebookLinkAction,
         },
         normalize_handlers: this.normalize.bind(this),
+        content_not_editable_selectors: ".o_facebook_page",
     };
 
     normalize(root) {

@@ -47,6 +47,8 @@ export class SettingsPage extends Component {
 
                 const { scrollTop } = this.scrollMap[currentTab] || 0;
                 settingsEl.scrollTop = scrollTop;
+                this.scrollToSelectedTab();
+                this.tabChangeProm?.resolve();
             },
             () => [this.settingsRef.el, this.state.selectedTab]
         );
@@ -70,15 +72,15 @@ export class SettingsPage extends Component {
             this.getCurrentIndex() !== this.props.modules.length - 1
         );
     }
-    async onRightSwipe(prom) {
+    onRightSwipe() {
+        this.tabChangeProm = Promise.withResolvers();
         this.state.selectedTab = this.props.modules[this.getCurrentIndex() - 1].key;
-        await prom;
-        this.scrollToSelectedTab();
+        return this.tabChangeProm.promise;
     }
-    async onLeftSwipe(prom) {
+    onLeftSwipe() {
+        this.tabChangeProm = Promise.withResolvers();
         this.state.selectedTab = this.props.modules[this.getCurrentIndex() + 1].key;
-        await prom;
-        this.scrollToSelectedTab();
+        return this.tabChangeProm.promise;
     }
 
     scrollToSelectedTab() {

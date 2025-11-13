@@ -25,8 +25,8 @@ class TestReorderingRule(TransactionCase):
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
-        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
-
+        cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
+        cls.buy_route.product_selectable = True
         # create product and set the vendor
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Product A'
@@ -35,7 +35,7 @@ class TestReorderingRule(TransactionCase):
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
             seller.product_uom_id = product_form.uom_id
-        product_form.route_ids.add(cls.env.ref('purchase_stock.route_warehouse0_buy'))
+        product_form.route_ids.add(cls.buy_route)
         cls.product_01 = product_form.save()
 
     def test_reordering_rule_1(self):

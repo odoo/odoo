@@ -2,9 +2,12 @@
 from datetime import date, timedelta
 
 from odoo import Command
+from odoo.tests import tagged
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHolidaysFlow(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):

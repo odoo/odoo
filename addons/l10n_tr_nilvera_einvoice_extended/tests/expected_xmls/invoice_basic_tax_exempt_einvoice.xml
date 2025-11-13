@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice
+  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+  xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+  xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  <cbc:CustomizationID>TR1.2</cbc:CustomizationID>
+  <cbc:ProfileID>TEMELFATURA</cbc:ProfileID>
+  <cbc:ID>EIN2025000000001</cbc:ID>
+  <cbc:CopyIndicator>false</cbc:CopyIndicator>
+  <cbc:UUID>___ignore___</cbc:UUID>
+  <cbc:IssueDate>2025-03-03</cbc:IssueDate>
+  <cbc:InvoiceTypeCode>ISTISNA</cbc:InvoiceTypeCode>
+  <cbc:Note>3 products</cbc:Note>
+  <cbc:Note>YALNIZ : YÜZELLISEKIZ TRY KIRK KURUS</cbc:Note>
+  <cbc:DocumentCurrencyCode>TRY</cbc:DocumentCurrencyCode>
+  <cbc:LineCountNumeric>3</cbc:LineCountNumeric>
+  <cac:OrderReference>
+    <cbc:ID>EIN/2025/1</cbc:ID>
+    <cbc:IssueDate>2025-03-03</cbc:IssueDate>
+  </cac:OrderReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="VKN">3297552117</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>3281. Cadde</cbc:StreetName>
+        <cbc:CitySubdivisionName>İç Anadolu Bölgesi</cbc:CitySubdivisionName>
+        <cbc:CityName>Düzce</cbc:CityName>
+        <cbc:PostalZone>06810</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>TR</cbc:IdentificationCode>
+          <cbc:Name>Türkiye</cbc:Name>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cac:TaxScheme>
+          <cbc:Name>Ulus Malmüdürlüğü</cbc:Name>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:CompanyID>3297552117</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Telephone>+90 501 234 56 78</cbc:Telephone>
+        <cbc:ElectronicMail>info@company.trexample.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyIdentification>
+        <cbc:ID schemeID="TCKN">1729171602</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>einvoice_partner</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Gökhane Sokak No:1</cbc:StreetName>
+        <cbc:CitySubdivisionName>Sincan/Ankara</cbc:CitySubdivisionName>
+        <cbc:CityName>Ankara</cbc:CityName>
+        <cbc:PostalZone>06934</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>TR</cbc:IdentificationCode>
+          <cbc:Name>Türkiye</cbc:Name>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cac:TaxScheme>
+          <cbc:Name>Ulus Malmüdürlüğü</cbc:Name>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>einvoice_partner</cbc:RegistrationName>
+        <cbc:CompanyID>1729171602</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Telephone>+90 509 876 54 32</cbc:Telephone>
+        <cbc:ElectronicMail>info@tr_partner.com</cbc:ElectronicMail>
+      </cac:Contact>
+      <cac:Person>
+        <cbc:FirstName>einvoice_partner</cbc:FirstName>
+        <cbc:FamilyName>___ignore___</cbc:FamilyName>
+      </cac:Person>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2025-03-05</cbc:PaymentDueDate>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID>TR0123456789</cbc:ID>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+    <cbc:Amount currencyID="TRY">18.00</cbc:Amount>
+  </cac:AllowanceCharge>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="TRY">26.40</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="TRY">132.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="TRY">26.40</cbc:TaxAmount>
+      <cbc:Percent>20.0</cbc:Percent>
+      <cac:TaxCategory>
+        <cbc:TaxExemptionReasonCode>212</cbc:TaxExemptionReasonCode>
+        <cbc:TaxExemptionReason>17/4-ı Serbest Bölgelerde Verilen Hizmetler</cbc:TaxExemptionReason>
+        <cac:TaxScheme>
+          <cbc:Name>Gerçek Usulde KDV</cbc:Name>
+          <cbc:TaxTypeCode>0015</cbc:TaxTypeCode>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="TRY">132.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="TRY">132.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="TRY">158.40</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="TRY">18.00</cbc:AllowanceTotalAmount>
+    <cbc:PayableAmount currencyID="TRY">158.40</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">3.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="TRY">132.00</cbc:LineExtensionAmount>
+    <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+      <cbc:MultiplierFactorNumeric>0.12</cbc:MultiplierFactorNumeric>
+      <cbc:Amount currencyID="TRY">18.00</cbc:Amount>
+    </cac:AllowanceCharge>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="TRY">26.40</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="TRY">132.00</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="TRY">26.40</cbc:TaxAmount>
+        <cbc:Percent>20.0</cbc:Percent>
+        <cac:TaxCategory>
+          <cac:TaxScheme>
+            <cbc:Name>Gerçek Usulde KDV</cbc:Name>
+            <cbc:TaxTypeCode>0015</cbc:TaxTypeCode>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Description>product_a</cbc:Description>
+      <cbc:Name>product_a</cbc:Name>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="TRY">50.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

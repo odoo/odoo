@@ -1,15 +1,24 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { isCSSColor } from "@web/core/utils/colors";
 
 export const DATASET_KEY_PREFIX = "chart_dataset_";
 
+export function getColor(color, win, doc) {
+    if (!color) {
+        return "";
+    }
+    return isCSSColor(color)
+        ? color
+        : getCSSVariableValue(color, win.getComputedStyle(doc.documentElement));
+}
+
 export class ChartOption extends BaseOptionComponent {
     static template = "website.ChartOption";
-    static props = {
-        isPieChart: Function,
-        getColor: Function,
-    };
+    static selector = ".s_chart";
+    static dependencies = ["chartOptionPlugin"];
 
     setup() {
         super.setup();
@@ -68,7 +77,7 @@ export class ChartOption extends BaseOptionComponent {
         return data;
     }
     isPieChart(editingElement) {
-        const isPieChart = this.props.isPieChart(editingElement);
+        const isPieChart = this.dependencies.chartOptionPlugin.isPieChart(editingElement);
         if (!this.domState || this.domState.isPieChart !== isPieChart) {
             // Pie charts set color on a data cell basis, whereas the
             // other ones set it on a dataset basis
@@ -82,6 +91,9 @@ export class ChartOption extends BaseOptionComponent {
         const borderLabel = isPieChart ? _t("Data Border") : _t("Dataset Border");
         return { backgroundLabel, borderLabel };
     }
+    getColor(color) {
+        return getColor(color, this.window, this.document);
+    }
     /**
      * Retrieve the colors already in use in the chart.
      *
@@ -93,13 +105,11 @@ export class ChartOption extends BaseOptionComponent {
         const colorSet = new Set();
         for (const dataset of data.datasets) {
             if (this.isPieChart(editingElement)) {
-                dataset.backgroundColor.forEach((color) =>
-                    colorSet.add(this.props.getColor(color))
-                );
-                dataset.borderColor.forEach((color) => colorSet.add(this.props.getColor(color)));
+                dataset.backgroundColor.forEach((color) => colorSet.add(this.getColor(color)));
+                dataset.borderColor.forEach((color) => colorSet.add(this.getColor(color)));
             } else {
-                colorSet.add(this.props.getColor(dataset.backgroundColor));
-                colorSet.add(this.props.getColor(dataset.borderColor));
+                colorSet.add(this.getColor(dataset.backgroundColor));
+                colorSet.add(this.getColor(dataset.borderColor));
             }
         }
         colorSet.delete(""); // No color, remove to avoid bugs.

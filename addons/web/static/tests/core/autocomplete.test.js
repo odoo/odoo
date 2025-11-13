@@ -647,6 +647,60 @@ test("tab and shift+tab close the dropdown", async () => {
     expect(dropdown).not.toHaveCount();
 });
 
+test("Clicking away selects the first option when selectOnBlur is true", async () => {
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static components = { AutoComplete };
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(() => [
+            item("World", this.onSelect.bind(this)),
+            item("Hello", this.onSelect.bind(this)),
+        ]);
+
+        onSelect(option) {
+            this.state.value = option.label;
+            expect.step(option.label);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    const input = ".o-autocomplete input";
+    await contains(input).click();
+    expect(".o-autocomplete--dropdown-menu").toBeVisible();
+    queryFirst(input).blur();
+    await animationFrame();
+    expect(input).toHaveValue("World");
+    expect.verifySteps(["World"]);
+});
+
+test("selectOnBlur doesn't interfere with selecting by mouse clicking", async () => {
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="state.value" sources="sources" selectOnBlur="true"/>`;
+        static components = { AutoComplete };
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(() => [
+            item("World", this.onSelect.bind(this)),
+            item("Hello", this.onSelect.bind(this)),
+        ]);
+
+        onSelect(option) {
+            this.state.value = option.label;
+            expect.step(option.label);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    const input = ".o-autocomplete input";
+    await contains(input).click();
+    await contains(".o-autocomplete--dropdown-item:last").click();
+    expect(input).toHaveValue("Hello");
+    expect.verifySteps(["Hello"]);
+});
+
 test("autocomplete scrolls when moving with arrows", async () => {
     class Parent extends Component {
         static template = xml`

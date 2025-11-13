@@ -5,7 +5,7 @@ import { setUtmsHtmlDataset, unhideConditionalElements } from "@website/utils/mi
 // into Interaction
 export { unhideConditionalElements };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     // Transfer cookie/session data as HTML element's attributes so that CSS
     // selectors can be based on them.
     setUtmsHtmlDataset();

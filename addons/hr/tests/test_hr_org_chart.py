@@ -155,3 +155,40 @@ class TestHrOrgChart(TestHrCommon, HttpCase):
         self.assertEqual(len(result), 2)
         self.assertIn(get_expected_dict(self.employee_pierre), result)
         self.assertIn(get_expected_dict(self.employee_georges), result)
+
+    def test_cycles_hierarchy_read(self):
+        HrEmployee = self.env['hr.employee']
+        employees = self.employee_georges + self.employee_paul + self.employee_pierre
+        domain = [('company_id', 'in', self.env.companies.ids)]
+
+        # no cycle is created yet
+        result = HrEmployee.cycles_in_hierarchy_read(domain)
+        for emp in employees:
+            self.assertNotIn(emp.id, result)
+
+        # a cycle is created between Georges and Paul, Pierre is not in a cycle
+        self.employee_georges.parent_id = self.employee_paul
+        self.employee_paul.parent_id = self.employee_georges
+        result = HrEmployee.cycles_in_hierarchy_read(domain)
+        self.assertNotIn(self.employee_pierre.id, result)
+        self.assertIn(self.employee_georges.id, result)
+        self.assertIn(self.employee_paul.id, result)
+
+        # Pierre is in an indirect cycle with Georges and Paul who are already in a cycle
+        self.employee_pierre.parent_id = self.employee_georges
+        result = HrEmployee.cycles_in_hierarchy_read(domain)
+        for emp in employees:
+            self.assertIn(emp.id, result)
+
+        # one cycle is created between Pierre and himself, Georges and Paul are in cycle too
+        self.employee_pierre.parent_id = self.employee_pierre
+        result = HrEmployee.cycles_in_hierarchy_read(domain)
+        for emp in employees:
+            self.assertIn(emp.id, result)
+
+        # one direct cycle is created between all three employees
+        self.employee_georges.parent_id = self.employee_pierre
+        self.employee_pierre.parent_id = self.employee_paul
+        result = HrEmployee.cycles_in_hierarchy_read(domain)
+        for emp in employees:
+            self.assertIn(emp.id, result)

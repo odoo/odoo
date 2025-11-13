@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Command
+from datetime import timedelta
+
+from odoo.fields import Command, Date
 from odoo.tests.common import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
@@ -51,3 +53,19 @@ class TestUnlinkReward(TestSaleCouponCommon):
         # Check that the reward is archived and not deleted
         self.assertTrue(self.reward.exists())
         self.assertFalse(self.reward.active)
+
+    def test_unlink_expired_coupon_line(self):
+        """Ensure that lines linked to expired coupons get unlinked from the order."""
+        order = self.empty_order
+        order.order_line = [Command.create({'product_id': self.product_A.id})]
+        coupon_program = self.code_promotion_program
+        self.env['loyalty.generate.wizard'].with_context(active_id=coupon_program.id).create({
+            'coupon_qty': 1,
+            'points_granted': 1,
+        }).generate_coupons()
+        coupon = coupon_program.coupon_ids
+        self._apply_promo_code(order, coupon.code)
+        self.assertTrue(order.order_line.coupon_id)
+        coupon.expiration_date = Date.today() - timedelta(days=1)
+        order._update_programs_and_rewards()
+        self.assertFalse(order.order_line.coupon_id)

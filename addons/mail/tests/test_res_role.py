@@ -2,10 +2,9 @@
 
 from odoo import Command
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests.common import HttpCase
 
 
-@tagged("-at_install", "post_install")
 class TestResRole(MailCommon, HttpCase):
     def test_post_mention_role(self):
         """Test mention with role"""

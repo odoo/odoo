@@ -28,14 +28,14 @@
         <field name="arch" type="xml">
             <list string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                 <field name="company_id" column_invisible="True"/>
-                <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="remaining_days"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="parts_availability_state" column_invisible="True"/>
                 <field name="parts_availability"
                     invisible="state not in ['confirmed', 'under_repair']"
-                    optional="show"
+                    optional="hide"
                     decoration-success="parts_availability_state == 'available'"
                     decoration-warning="parts_availability_state == 'expected'"
                     decoration-danger="parts_availability_state == 'late'"/>
@@ -44,7 +44,7 @@
                 <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="picking_id" optional="hide"/>
-                <field name="sale_order_id" optional="show"/>
+                <field name="sale_order_id" optional="hide"/>
                 <field name="location_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                 <field name="state" optional="show" widget='badge'
@@ -173,7 +173,8 @@
                                     invisible="not show_details_visible or has_tracking != 'serial'"
                                     optional="hide"
                                     context="{'default_product_id': product_id}"
-                                    domain="[('product_id','=',product_id)]"/>
+                                    domain="[('product_id','=',product_id)]"
+                                    readonly="not id"/>
                                 <button name="action_show_details" type="object" string="Details"
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"

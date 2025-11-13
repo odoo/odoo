@@ -132,6 +132,8 @@ export class ImageHoverPlugin extends Plugin {
                 }
             }
         },
+        remove_hover_effect_handlers: this.removeHoverEffect.bind(this),
+        set_hover_effect_handlers: this.setHoverEffect.bind(this),
     };
 
     defaultHoverEffectIntensity = 20;

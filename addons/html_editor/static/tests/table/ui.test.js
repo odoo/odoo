@@ -1,5 +1,13 @@
 import { expect, test } from "@odoo/hoot";
-import { click, hover, queryAllAttributes, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    hover,
+    queryAll,
+    queryAllAttributes,
+    queryOne,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
@@ -236,6 +244,7 @@ test("list of table commands in first row", async () => {
         "move_down",
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -266,6 +275,7 @@ test("list of table commands in first row if it's table header (TH)", async () =
         "move_down",
         // no insert above
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -293,6 +303,7 @@ test("list of table commands in second row", async () => {
         "move_down",
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -320,6 +331,7 @@ test("list of table commands in last row", async () => {
         // no move down
         "insert_above",
         "insert_below",
+        "toggle_alternating_rows",
         "delete",
         "clear_content",
     ]);
@@ -382,23 +394,27 @@ test("basic delete column operation", async () => {
     // not sure about selection...
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">[]1</td></tr>
                 <tr><td class="c">3</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -427,23 +443,27 @@ test("basic clear column content operation", async () => {
     // not sure about selection...
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p><br></p></td></tr>
                 <tr><td class="c"><p>3</p></td><td class="d"><p><br></p></td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
                 <tr><td class="c"><p>3</p></td><td class="d"><h1>4</h1></td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -472,22 +492,26 @@ test("basic delete row operation", async () => {
     // not sure about selection...
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">[]1</td><td class="b">2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -516,23 +540,27 @@ test("basic clear row content operation", async () => {
     // not sure about selection...
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
                 <tr><td class="c"><p><br></p></td><td class="d"><p><br></p></td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
                 <tr><td class="c"><p>3</p></td><td class="d"><h2>4</h2></td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -560,6 +588,7 @@ test("insert column left operation", async () => {
     await click("div[name='insert_left']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -573,18 +602,21 @@ test("insert column left operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -612,6 +644,7 @@ test("insert column right operation", async () => {
     await click("div[name='insert_right']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -625,18 +658,21 @@ test("insert column right operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -664,6 +700,7 @@ test("insert column right operation when table header exists", async () => {
     await click("div[name='insert_right']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -677,7 +714,8 @@ test("insert column right operation when table header exists", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -705,6 +743,7 @@ test("insert row above operation", async () => {
     await click("div[name='insert_above']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -720,18 +759,21 @@ test("insert row above operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -759,6 +801,7 @@ test("insert row above operation should not retain height and width styles", asy
     await click("div[name='insert_above']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -774,7 +817,8 @@ test("insert row above operation should not retain height and width styles", asy
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -802,6 +846,7 @@ test("insert row below operation", async () => {
     await click("div[name='insert_below']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -817,18 +862,21 @@ test("insert row below operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -856,23 +904,27 @@ test("move column left operation", async () => {
     await click("div[name='move_left']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
             <tr><td class="b">2[]</td><td class="a">1</td></tr>
             <tr><td class="d">4</td><td class="c">3</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1</td><td class="b">2[]</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -900,23 +952,27 @@ test("move column right operation", async () => {
     await click("div[name='move_right']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
             <tr><td class="b">2[]</td><td class="a">1</td></tr>
             <tr><td class="d">4</td><td class="c">3</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1</td><td class="b">2[]</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -944,23 +1000,27 @@ test("move row above operation", async () => {
     await click("div[name='move_up']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
             <tr><td class="c">3</td><td class="d">4</td></tr>
             <tr><td class="a">1[]</td><td class="b">2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -988,12 +1048,14 @@ test("move second row to top when first row is header row", async () => {
     await click("div[name='move_up']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><th class="o_table_header">3</th><th class="o_table_header">4</th></tr>
                 <tr><td>1[]</td><td>2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -1022,13 +1084,15 @@ test("preserve table rows width on move row above operation", async () => {
     await click("div[name='move_up']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td style="width: 100px;" class="c">3</td><td style="width: 200px;" class="d">4</td></tr>
                 <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
                 <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -1056,23 +1120,27 @@ test("move row below operation", async () => {
     await click("div[name='move_down']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
             <tr><td class="c">3</td><td class="d">4</td></tr>
             <tr><td class="a">1[]</td><td class="b">2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -1100,12 +1168,14 @@ test("move header row below operation", async () => {
     await click("div[name='move_down']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><th class="o_table_header">3</th><th class="o_table_header">4</th></tr>
                 <tr><td>1[]</td><td>2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -1134,13 +1204,15 @@ test("preserve table rows width on move row below operation", async () => {
     await click("div[name='move_down']");
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td style="width: 100px;" class="c">3</td><td style="width: 200px;" class="d">4</td></tr>
                 <tr><td style="width: 100px;" class="a">1[]</td><td style="width: 200px;" class="b">2</td></tr>
                 <tr><td style="width: 150px;" class="e">5</td><td style="width: 150px;" class="f">6</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -1165,23 +1237,28 @@ test("reset table size to remove custom width", async () => {
     await click(queryOne(".dropdown-menu [name='reset_table_size']"));
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr><td style="" class="a">1[]</td></tr>
                 <tr><td style="" class="b">2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
-        unformat(`
-        <table style="width: 150px;">
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <table style="width: 150px;">
             <tbody>
             <tr><td style="width: 100px;" class="a">1[]</td></tr>
             <tr><td style="width: 50px;" class="b">2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`
+        )
     );
 });
 
@@ -1206,23 +1283,27 @@ test("reset table size to remove custom height", async () => {
     await click(queryOne(".dropdown-menu [name='reset_table_size']"));
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr style=""><td class="a">1[]</td></tr>
                 <tr style=""><td class="b">2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
             <tr style="height: 100px;"><td class="a">1[]</td></tr>
             <tr style="height: 50px;"><td class="b">2</td></tr>
             </tbody>
-        </table>`)
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
     );
 });
 
@@ -1259,7 +1340,8 @@ test("reset row size to remove custom height", async () => {
     await waitFor(".dropdown-menu", { timeout: 1000 });
     await click(queryOne(".dropdown-menu [name='reset_row_size']"));
     expect(getContent(el)).toBe(
-        unformat(`
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table">
                 <tbody>
                     <tr style="">
@@ -1278,7 +1360,9 @@ test("reset row size to remove custom height", async () => {
                         <td class="i">9</td>
                     </tr>
                 </tbody>
-            </table>`)
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        )
     );
 });
 
@@ -1314,7 +1398,8 @@ test("should redistribute excess width from current column to smaller columns", 
     await waitFor(".dropdown-menu", { timeout: 1000 });
     await click(queryOne(".dropdown-menu [name='reset_column_size']"));
     expect(getContent(el)).toBe(
-        unformat(`
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table" style="width: 500px">
                 <tbody>
                     <tr>
@@ -1332,7 +1417,9 @@ test("should redistribute excess width from current column to smaller columns", 
                         <td style="" class="j">10</td>
                     </tr>
                 </tbody>
-            </table>`)
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        )
     );
 });
 
@@ -1372,7 +1459,8 @@ test("should redistribute excess width from larger columns to current column", a
     await waitFor(".dropdown-menu", { timeout: 1000 });
     await click(queryOne(".dropdown-menu [name='reset_column_size']"));
     expect(getContent(el)).toBe(
-        unformat(`
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table" style="width: 700px">
                 <tbody>
                     <tr>
@@ -1394,6 +1482,103 @@ test("should redistribute excess width from larger columns to current column", a
                         <td style="width: 120px;" class="n">14</td>
                     </tr>
                 </tbody>
-            </table>`)
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        )
     );
+});
+
+test("applies alternating row colors when 'Insert Alternate Colors' option is clicked", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td>2</td></tr>
+                <tr><td>3</td></tr>
+                <tr><td>4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+    const cells = queryAll("tr > :first-child");
+    const firstRowCellColor = getComputedStyle(cells[0]).backgroundColor;
+    expect(
+        cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
+    ).toBe(true);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await expectElementCount("div[name='toggle_alternating_rows'", 1);
+    expect("div[name='toggle_alternating_rows'").toHaveText("Alternate row colors");
+    await click("div[name='toggle_alternating_rows'");
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="o_alternating_rows">
+                <tbody>
+                    <tr><td class="a">1[]</td></tr>
+                    <tr><td>2</td></tr>
+                    <tr><td>3</td></tr>
+                    <tr><td>4</td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>`)
+    );
+    expect(getComputedStyle(cells[2]).backgroundColor).toBe(firstRowCellColor);
+    const secondRowCellColor = getComputedStyle(cells[1]).backgroundColor;
+    expect(secondRowCellColor).not.toBe(firstRowCellColor);
+    expect(getComputedStyle(cells[3]).backgroundColor).toBe(secondRowCellColor);
+});
+
+test("removes alternating row colors when 'Clear Alternate Colors' option is clicked", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table class="o_alternating_rows">
+            <tbody>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td>2</td></tr>
+                <tr><td>3</td></tr>
+                <tr><td>4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    const cells = queryAll("tr > :first-child");
+    const firstRowCellColor = getComputedStyle(cells[0]).backgroundColor;
+    const secondRowCellColor = getComputedStyle(cells[1]).backgroundColor;
+    expect(getComputedStyle(cells[2]).backgroundColor).toBe(firstRowCellColor);
+    expect(secondRowCellColor).not.toBe(firstRowCellColor);
+    expect(getComputedStyle(cells[3]).backgroundColor).toBe(secondRowCellColor);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await expectElementCount("div[name='toggle_alternating_rows'", 1);
+    expect("div[name='toggle_alternating_rows'").toHaveText("Clear alternate colors");
+    await click("div[name='toggle_alternating_rows'");
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="">
+                <tbody>
+                    <tr><td class="a">1[]</td></tr>
+                    <tr><td>2</td></tr>
+                    <tr><td>3</td></tr>
+                    <tr><td>4</td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>`)
+    );
+    expect(
+        cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
+    ).toBe(true);
 });

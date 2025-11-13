@@ -7,8 +7,10 @@ try:
 except ImportError:
     phonenumbers = None
 
-from odoo.tests.common import BaseCase
+from odoo.tests.common import tagged, BaseCase
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPhonenumbersPatch(BaseCase):
 
     class PhoneInputOutputLine(NamedTuple):

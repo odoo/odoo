@@ -12,6 +12,7 @@ from odoo.tests import Form, tagged, users
 
 
 @tagged('mailing_list')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingContactAccess(MassMailCommon):
 
     @users('user_marketing')
@@ -43,6 +44,7 @@ class TestMailingContactAccess(MassMailCommon):
 
 
 @tagged('mailing_list')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingContactToList(MassMailCommon):
 
     @users('user_marketing')
@@ -66,8 +68,12 @@ class TestMailingContactToList(MassMailCommon):
         # set mailing list and add contacts
         wizard_form.mailing_list_id = mailing
         wizard = wizard_form.save()
-        action = wizard.action_add_contacts()
-        self.assertEqual(contacts.list_ids, mailing)
+        frozen_time = datetime(2025, 1, 1, 0, 0)
+        with self.mock_datetime_and_now(frozen_time):
+            action = wizard.action_add_contacts()
+            self.assertEqual(contacts.list_ids, mailing)
+            create_dates = contacts.subscription_ids.mapped('create_date')
+            self.assertTrue(all(date == frozen_time for date in create_dates), "All create dates should be equal to frozen datetime")
         self.assertEqual(action["type"], "ir.actions.client")
         self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
         subaction = action["params"]["next"]
@@ -90,6 +96,7 @@ class TestMailingContactToList(MassMailCommon):
 
 
 @tagged('mailing_list')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingListMerge(MassMailCommon):
 
     @classmethod
@@ -225,6 +232,7 @@ class TestMailingListMerge(MassMailCommon):
 
 
 @tagged('mailing_list')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingContactImport(MassMailCommon):
     """Test the transient <mailing.contact.import>."""
 
@@ -323,6 +331,7 @@ class TestMailingContactImport(MassMailCommon):
 
 
 @tagged('mailing_list')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubscriptionManagement(MassMailCommon):
 
     @users('user_marketing')

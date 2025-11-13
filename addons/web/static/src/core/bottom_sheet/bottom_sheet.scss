@@ -30,9 +30,8 @@
     contain: layout paint size;
 
     // Workaround
-    animation-name: has-animation;
-    @media (prefers-reduced-motion: reduce) {
-        animation-name: none;
+    @media (prefers-reduced-motion: no-preference) {
+        animation-name: has-animation;
     }
 
     // Main scroll container for gesture handling
@@ -71,14 +70,13 @@
         inset: 0;
         background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
         opacity: 0;
-        transition: all 0.2s ease;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: all 0.2s ease;
+        }
         pointer-events: auto;
         touch-action: none;
         z-index: $zindex-offcanvas - 1;
         backdrop-filter: blur(0px) grayscale(0%);
-        @media (prefers-reduced-motion: reduce) {
-            transition: none;
-        }
     }
 
     // Dismiss area
@@ -133,9 +131,8 @@
         opacity: 1;
 
         .o_bottom_sheet_sheet {
-            animation: var(--BottomSheet-slideIn-duration, 500ms) bottom-sheet-in var(--BottomSheet-slideIn-easing, ease-out) forwards;
-            @media (prefers-reduced-motion: reduce) {
-                animation: none;
+            @media (prefers-reduced-motion: no-preference) {
+                animation: var(--BottomSheet-slideIn-duration, 500ms) bottom-sheet-in var(--BottomSheet-slideIn-easing, ease-out) forwards;
             }
         }
 
@@ -178,18 +175,16 @@
     // Dismissing the sheet
     &.o_bottom_sheet_dismissing {
         .o_bottom_sheet_sheet {
-            animation: var(--BottomSheet-slideOut-duration, 300ms) bottom-sheet-out var(--BottomSheet-slideOut-easing, ease-in) forwards;
-            @media (prefers-reduced-motion: reduce) {
-                animation: none;
+            @media (prefers-reduced-motion: no-preference) {
+                animation: var(--BottomSheet-slideOut-duration, 300ms) bottom-sheet-out var(--BottomSheet-slideOut-easing, ease-in) forwards;
             }
         }
 
         .o_bottom_sheet_backdrop {
             opacity: 0;
             backdrop-filter: blur(0) grayscale(0%);
-            transition: all var(--BottomSheet-slideOut-duration, 300ms) var(--BottomSheet-slideOut-easing, ease-in);
-            @media (prefers-reduced-motion: reduce) {
-                transition: none;
+            @media (prefers-reduced-motion: no-preference) {
+                transition: all var(--BottomSheet-slideOut-duration, 300ms) var(--BottomSheet-slideOut-easing, ease-in);
             }
         }
     }
@@ -200,12 +195,11 @@
 
         // Scale down the main content
         .o_navbar, .o_action_manager {
-            transition: transform $o_BottomSheet_slideIn_duration ease;
+            @media (prefers-reduced-motion: no-preference) {
+                transition: transform $o_BottomSheet_slideIn_duration ease;
+            }
             transform: scale(.95) translateZ(0);
             transform-origin: center top;
-            @media (prefers-reduced-motion: reduce) {
-                transition: none;
-            }
         }
 
         // Avoid blank on the side
@@ -215,11 +209,10 @@
 
         &:not(.bottom-sheet-open-multiple):has(.o_bottom_sheet_dismissing) {
             .o_navbar, .o_action_manager {
-                transition: transform $o_BottomSheet_slideOut_duration ease;
-                transform: scale(1) translateZ(0);
-                @media (prefers-reduced-motion: reduce) {
-                    transition: none;
+                @media (prefers-reduced-motion: no-preference) {
+                    transition: transform $o_BottomSheet_slideOut_duration ease;
                 }
+                transform: scale(1) translateZ(0);
             }
         }
     }

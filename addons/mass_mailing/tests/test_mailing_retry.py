@@ -3,10 +3,12 @@
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 from unittest.mock import patch
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingRetry(MassMailCommon, CronMixinCase):
 
     @classmethod

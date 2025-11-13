@@ -7,10 +7,11 @@ from datetime import datetime, timedelta
 
 from odoo import fields, Command
 from odoo.exceptions import AccessError
-from odoo.tests import Form, new_test_user
+from odoo.tests import tagged, Form, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCalendar(SavepointCaseWithUserDemo):
 
     def setUp(self):

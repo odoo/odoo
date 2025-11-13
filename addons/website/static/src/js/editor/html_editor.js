@@ -7,6 +7,7 @@ import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
 import { useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { session } from "@web/session";
 
 /**
  * The goal of this patch is to handle the URL autocomplete in the LinkPopover
@@ -139,14 +140,24 @@ patch(LinkPopover.prototype, {
             this.onChange();
         }
     },
+    isFrontendUrl(url) {
+        const parsedUrl = new URL(url);
+        return (
+            (browser.location.hostname === parsedUrl.hostname ||
+                // Also check if the odoo-hosted domain is the current domain of the url
+                new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(parsedUrl.origin)) &&
+            !parsedUrl.pathname.startsWith("/odoo") &&
+            !parsedUrl.pathname.startsWith("/web") &&
+            !parsedUrl.pathname.startsWith("/@/")
+        );
+    },
     onClickForcePreviewMode(ev) {
         if (this.props.linkElement.href) {
             const currentUrl = new URL(this.props.linkElement.href);
+            // only when we are on a frontend page (in website builder) and the link is also a frontend link
             if (
-                browser.location.hostname === currentUrl.hostname &&
-                !currentUrl.pathname.startsWith("/odoo") &&
-                !currentUrl.pathname.startsWith("/web") &&
-                !currentUrl.pathname.startsWith("/@/")
+                this.isFrontendUrl(browser.location.href) &&
+                this.isFrontendUrl(this.props.linkElement.href)
             ) {
                 ev.preventDefault();
                 currentUrl.pathname = `/@${currentUrl.pathname}`;

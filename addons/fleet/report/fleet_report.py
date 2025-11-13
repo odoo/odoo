@@ -18,6 +18,7 @@ class FleetVehicleCostReport(models.Model):
     fuel_type = fields.Char('Fuel', readonly=True)
     date_start = fields.Date('Date', readonly=True)
     vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], readonly=True)
+    service_type = fields.Many2one('fleet.service.type', 'Service Type', readonly=True)
 
     cost = fields.Float('Cost', readonly=True)
     cost_type = fields.Selection(string='Cost Type', selection=[
@@ -38,7 +39,8 @@ WITH service_costs AS (
         vem.vehicle_type as vehicle_type,
         COALESCE(sum(se.amount), 0) AS
         COST,
-        'service' AS cost_type
+        'service' AS cost_type,
+        se.service_type_id AS service_type
     FROM
         fleet_vehicle ve
     JOIN
@@ -57,7 +59,8 @@ WITH service_costs AS (
         vem.vehicle_type,
         ve.name,
         date_start,
-        d
+        d,
+        service_type
     ORDER BY
         ve.id,
         date_start
@@ -73,7 +76,8 @@ contract_costs AS (
         vem.vehicle_type as vehicle_type,
         (COALESCE(sum(co.amount), 0) + COALESCE(sum(cod.cost_generated * extract(day FROM least (date_trunc('month', d) + interval '1 month', cod.expiration_date) - greatest (date_trunc('month', d), cod.start_date))), 0) + COALESCE(sum(com.cost_generated), 0) + COALESCE(sum(coy.cost_generated), 0)) AS
         COST,
-        'contract' AS cost_type
+        'contract' AS cost_type,
+        cot.cost_subtype_id AS service_type
     FROM
         fleet_vehicle ve
     JOIN
@@ -96,6 +100,7 @@ contract_costs AS (
         AND d BETWEEN coy.start_date and coy.expiration_date
         AND date_part('month', coy.date) = date_part('month', d)
         AND coy.cost_frequency = 'yearly'
+    LEFT JOIN fleet_vehicle_log_contract cot ON cot.vehicle_id = ve.id
     WHERE
         ve.active
     GROUP BY
@@ -104,7 +109,8 @@ contract_costs AS (
         vem.vehicle_type,
         ve.name,
         date_start,
-        d
+        d,
+        service_type
     ORDER BY
         ve.id,
         date_start
@@ -118,7 +124,8 @@ SELECT row_number() OVER (ORDER BY vehicle_id ASC) as id,
     date_start,
     vehicle_type,
     COST,
-    cost_type
+    cost_type,
+    service_type
 FROM (
     SELECT
         company_id,
@@ -129,7 +136,8 @@ FROM (
         date_start,
         vehicle_type,
         COST,
-        'service' as cost_type
+        'service' as cost_type,
+        service_type
     FROM
         service_costs sc
     UNION ALL (
@@ -142,7 +150,8 @@ FROM (
             date_start,
             vehicle_type,
             COST,
-            'contract' as cost_type
+            'contract' as cost_type,
+            service_type
         FROM
             contract_costs cc)
 ) c

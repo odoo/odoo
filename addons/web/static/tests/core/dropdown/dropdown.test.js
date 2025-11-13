@@ -787,7 +787,11 @@ test("don't close dropdown outside the active element", async () => {
     expect(".modal-dialog").toHaveCount(1);
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    await click(".modal-dialog .btn-primary");
+    if (getMockEnv().isSmall) {
+        await click(".modal-dialog .oi-arrow-left");
+    } else {
+        await click(".modal-dialog .btn-close");
+    }
     await animationFrame();
     expect(".modal-dialog").toHaveCount(0);
     expect(DROPDOWN_MENU).toHaveCount(1);
@@ -1545,4 +1549,22 @@ test("dropdown: no BottomSheet", async () => {
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
     expect(".o_bottom_sheet").toHaveCount(0);
+});
+
+test("can be toggled with the UP/DOWN arrow keys", async () => {
+    class Parent extends SimpleDropdown {}
+
+    await mountWithCleanup(Parent);
+
+    await contains(DROPDOWN_TOGGLE).focus();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+    await press("ArrowDown");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    await press("Escape");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+    await press("ArrowUp");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
 });

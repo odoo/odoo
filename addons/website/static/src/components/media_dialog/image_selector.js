@@ -4,8 +4,8 @@ import { ImageSelector as HtmlImageSelector } from "@html_editor/main/media/medi
 patch(HtmlImageSelector.prototype, {
     get attachmentsDomain() {
         const domain = super.attachmentsDomain;
-        domain.push('|', ['url', '=', false], '!', ['url', '=like', '/web/image/website.%']);
-        domain.push(['key', '=', false]);
+        domain.push("|", ["url", "=", false], "!", ["url", "=like", "/web/image/website.%"]);
+        domain.push(["key", "=", false]);
         return domain;
-    }
+    },
 });

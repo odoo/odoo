@@ -2,14 +2,14 @@
 
 from unittest import skip
 
-from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
-from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo import Command
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLotValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -87,7 +87,6 @@ class TestLotValuation(TestStockValuationCommon):
 
     def test_real_time_valuation(self):
         """ Test account move lines contains lot """
-        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.income_account, self.stock_journal = _create_accounting_data(self.env)
         self.product1.categ_id.write({
             'property_stock_account_input_categ_id': self.stock_input_account.id,
             'property_stock_account_output_categ_id': self.stock_output_account.id,

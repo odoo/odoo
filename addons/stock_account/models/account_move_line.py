@@ -15,10 +15,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if not line.move_id.is_purchase_document():
                 continue
-            if not line.product_id.is_storable:
-                continue
-            # Periodic with expense account
-            if line.product_id.valuation == 'periodic':
+            if not line._eligible_for_stock_account():
                 continue
             fiscal_position = line.move_id.fiscal_position_id
             accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
@@ -32,7 +29,10 @@ class AccountMoveLine(models.Model):
 
     def _eligible_for_stock_account(self):
         self.ensure_one()
-        return self.product_id.is_storable
+        if not self.product_id.is_storable:
+            return False
+        moves = self._get_stock_moves()
+        return all(not m.is_dropship for m in moves)
 
     def _get_gross_unit_price(self):
         if self.product_uom_id.is_zero(self.quantity):
@@ -66,6 +66,8 @@ class AccountMoveLine(models.Model):
 
         # FIFO
         moves = self._get_stock_moves()
+        if not moves:
+            return self.product_id._run_fifo(self.quantity)
         return moves._get_price_unit()
 
     def _get_stock_moves(self):

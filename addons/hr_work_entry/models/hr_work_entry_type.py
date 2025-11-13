@@ -24,7 +24,7 @@ class HrWorkEntryType(models.Model):
     )
     country_code = fields.Char(related='country_id.code')
     is_leave = fields.Boolean(
-        default=False, string="Time Off", help="Allow the work entry type to be linked with time off types.")
+        default=False, string="Is Time Off", help="Allow the work entry type to be linked with time off types.")
     is_work = fields.Boolean(
         compute='_compute_is_work', inverse='_inverse_is_work', string="Working Time", readonly=False,
         help="If checked, the work entry is counted as work time in the working schedule")

@@ -24,4 +24,5 @@ class MessageReactionController(ThreadController):
         return store.get_result()
 
     def _get_reaction_author(self, message, **kwargs):
-        return request.env["res.partner"]._get_current_persona()
+        user, guest = request.env["res.users"]._get_current_persona()
+        return (user.partner_id, guest)

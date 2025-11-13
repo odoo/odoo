@@ -89,6 +89,7 @@
             "point_of_sale/static/src/app/utils/printer/*",
             "point_of_sale/static/src/app/services/printer_service.js",
             'point_of_sale/static/src/app/utils/html-to-image.js',
+            'point_of_sale/static/src/app/utils/use_timed_press.js',
             "point_of_sale/static/src/app/services/render_service.js",
             "pos_self_order/static/src/app/**/*",
             "web/static/src/core/utils/render.js",
@@ -109,6 +110,7 @@
             "point_of_sale/static/src/app/utils/devices_identifier_sequence.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
             "point_of_sale/static/src/app/utils/debug-formatter.js",
+            "point_of_sale/static/src/app/store/order_change_receipt_template.xml",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

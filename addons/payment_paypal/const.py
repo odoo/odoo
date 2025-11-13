@@ -2,12 +2,13 @@
 
 # ISO 4217 codes of currencies supported by PayPal
 # See https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/.
-# Last seen on: 22 September 2022.
+# Last seen on: 04 November 2025.
+
+# CNY removed as it requires in-country PayPal accounts but China mostly uses WeChat and Alipay.
 SUPPORTED_CURRENCIES = (
     'AUD',
     'BRL',
     'CAD',
-    'CNY',
     'CZK',
     'DKK',
     'EUR',

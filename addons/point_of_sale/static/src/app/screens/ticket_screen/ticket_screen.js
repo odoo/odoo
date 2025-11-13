@@ -156,18 +156,11 @@ export class TicketScreen extends Component {
     async onClickScanOrder(qrcode) {
         if (qrcode) {
             const uuid = new URL(qrcode).searchParams.get("order_uuid");
-            const results = await this.pos.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["uuid", "=", uuid]]],
-                {},
-                false,
-                true
-            );
-            const order = results["pos.order"][0];
+            const orders = await this.pos.data.loadServerOrders([["uuid", "=", uuid]]);
+            const order = orders[0];
             if (order) {
                 this.state.filter = "SYNCED";
-                this.state.selectedOrder = order;
+                this.setSelectedOrder(order);
                 this.pos.scanning = !this.pos.scanning;
             } else {
                 this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
@@ -463,7 +456,7 @@ export class TicketScreen extends Component {
         return this.pos.getDate(order.date_order);
     }
     getTotal(order) {
-        return this.env.utils.formatCurrency(order.getTotalWithTax());
+        return this.env.utils.formatCurrency(order.priceIncl);
     }
     getPartner(order) {
         return order.getPartnerName();
@@ -661,6 +654,16 @@ export class TicketScreen extends Component {
         this.pos.setOrder(order);
         this.pos.navigateToOrderScreen(order);
     }
+
+    onClickNewOrder() {
+        const order = this.pos.createNewOrder({
+            preset_id: this.state.selectedPreset || null,
+        });
+        this.pos.selectedOrderUuid = order.uuid;
+        this.pos.addPendingOrder([order.id]);
+        this.pos.navigateToOrderScreen(order);
+    }
+
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
         orderStates.set("SYNCED", { text: _t("Paid") });
@@ -825,14 +828,9 @@ export class TicketScreen extends Component {
             .map((info) => info[0]);
 
         if (idsNotInCacheOrOutdated.length > 0) {
-            await this.pos.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["id", "in", Array.from(new Set(idsNotInCacheOrOutdated))]]],
-                {},
-                false,
-                true
-            );
+            await this.pos.data.loadServerOrders([
+                ["id", "in", Array.from(new Set(idsNotInCacheOrOutdated))],
+            ]);
         }
     }
     //#endregion

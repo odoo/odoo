@@ -6,11 +6,10 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo.tests.common import HttpCase, new_test_user, tagged
+from odoo.tests.common import HttpCase, new_test_user
 from odoo.exceptions import UserError, ValidationError
 
 
-@tagged("post_install", "-at_install")
 class TestDiscussSubChannels(HttpCase):
     def test_01_gc_unpin_outdated_sub_channels(self):
         parent = self.env["discuss.channel"].create({"name": "General"})

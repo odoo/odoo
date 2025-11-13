@@ -1,5 +1,5 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -8,6 +8,7 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { parseFloat } from "@web/views/fields/parsers";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
+import { ChoseComboPopup } from "@point_of_sale/app/components/popups/chose_combo_popup/chose_combo_popup";
 
 export class OrderSummary extends Component {
     static template = "point_of_sale.OrderSummary";
@@ -22,11 +23,29 @@ export class OrderSummary extends Component {
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
         this.pos = usePos();
+        this.state = useState({
+            potentialCombos: [],
+        });
 
         this.numberBuffer.use({
             triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
             useWithBarcode: true,
         });
+
+        this.updatePotentialCombos();
+
+        useEffect(
+            () => {
+                // We update the potential combos when the order changes
+                // or the quantity of the items changes.
+                this.updatePotentialCombos();
+            },
+            () => [this.currentOrder.totalQuantity, this.currentOrder.id]
+        );
+    }
+
+    updatePotentialCombos() {
+        this.state.potentialCombos = this.pos.getApplicableProductCombo("limited");
     }
 
     get currentOrder() {
@@ -44,18 +63,108 @@ export class OrderSummary extends Component {
     }
 
     clickLine(ev, orderline) {
-        if (ev.detail === 2) {
-            clearTimeout(this.singleClick);
-            return;
-        }
+        ev.stopPropagation();
         this.numberBuffer.reset();
+
         if (!orderline.isSelected()) {
             this.pos.selectOrderLine(this.currentOrder, orderline);
         } else {
-            this.singleClick = setTimeout(() => {
-                this.pos.getOrder().uiState.selected_orderline_uuid = null;
-            }, 300);
+            this.pos.getOrder().uiState.selected_orderline_uuid = null;
         }
+    }
+
+    async onOrderlineLongPress(ev, orderline) {
+        const order = this.currentOrder;
+        order.assertEditable();
+
+        // If combo line, edit its parent instead
+        if (orderline.combo_parent_id) {
+            orderline = orderline.combo_parent_id;
+        }
+
+        // Prevent if already sent to kitchen
+        if (typeof order.id === "number") {
+            const preparation_data = await this.pos.data.call(
+                "pos.order",
+                "get_preparation_change",
+                [order.id]
+            );
+            const prep = JSON.parse(preparation_data.last_order_preparation_change || "{}");
+            if (prep.lines && Object.keys(prep.lines).some((l) => l === orderline.uuid)) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Cannot edit orderline"),
+                    body: _t(
+                        "This orderline has already been sent to the kitchen and cannot be edited."
+                    ),
+                });
+                return false;
+            }
+        }
+
+        // Init orderline
+        const productTemplate = orderline.product_id.product_tmpl_id;
+        const values = {
+            product_tmpl_id: productTemplate,
+            product_id: orderline.product_id,
+            qty: orderline.qty,
+            price_extra: 0,
+        };
+
+        // Configurable product
+        let keepGoing = await this.pos.handleConfigurableProduct(
+            values,
+            productTemplate,
+            {
+                line: orderline,
+            },
+            true
+        );
+        if (keepGoing === false) {
+            return false;
+        }
+
+        // Combo product
+        keepGoing = await this.pos.handleComboProduct(values, order, true, {
+            line: orderline,
+        });
+        if (keepGoing === false) {
+            return false;
+        }
+
+        // Price unit
+        this.pos.handlePriceUnit(values, order, undefined);
+
+        // Update orderline
+        if (values.attribute_value_ids !== undefined) {
+            orderline.attribute_value_ids = values.attribute_value_ids.map((a) => a[1]);
+        }
+        if (values.custom_attribute_value_ids !== undefined) {
+            const createManyCustomAttributeValues = values.custom_attribute_value_ids.map(
+                (a) => a[1]
+            );
+            orderline.custom_attribute_value_ids = this.pos.models[
+                "product.attribute.custom.value"
+            ].createMany(createManyCustomAttributeValues);
+        }
+        orderline.price_extra = values.price_extra;
+        orderline.qty = values.qty;
+        if (values.product_id) {
+            orderline.product_id = values.product_id;
+        }
+        if (values.combo_line_ids !== undefined) {
+            while (orderline.combo_line_ids.length > 0) {
+                this.pos.models["pos.order.line"].delete(orderline.combo_line_ids[0]);
+            }
+            orderline.combo_line_ids = values.combo_line_ids || [];
+        }
+        if (values.price_unit !== undefined) {
+            orderline.price_unit = values.price_unit;
+        }
+        orderline.setFullProductName();
+
+        // Try to merge the orderline
+        this.pos.tryMergeOrderline(order, orderline, orderline.price_type !== "manual");
+        return true;
     }
 
     async updateSelectedOrderline({ buffer, key }) {
@@ -68,7 +177,7 @@ export class OrderSummary extends Component {
             } else if (this.pos.numpadMode === "discount") {
                 buffer = selectedLine.getDiscount() * -1;
             } else if (this.pos.numpadMode === "price") {
-                buffer = selectedLine.getUnitPrice() * -1;
+                buffer = selectedLine.prices.total_excluded_currency * -1;
             }
             this.numberBuffer.state.buffer = buffer.toString();
         }
@@ -121,7 +230,7 @@ export class OrderSummary extends Component {
         ) {
             this.numberBuffer.reset();
             const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
-                startingValue: selectedLine.getUnitPrice(),
+                startingValue: selectedLine.prices.total_excluded_currency,
                 title: _t("Set the new price"),
             });
             if (inputNumber) {
@@ -215,7 +324,7 @@ export class OrderSummary extends Component {
                 current_saved_quantity += line.uiState.savedQuantity;
             } else if (
                 line.product_id.id === selectedLine.product_id.id &&
-                line.getUnitPrice() === selectedLine.getUnitPrice()
+                line.prices.total_excluded_currency === selectedLine.prices.total_excluded_currency
             ) {
                 current_saved_quantity += line.qty;
             }
@@ -238,7 +347,8 @@ export class OrderSummary extends Component {
             for (const line of selectedLine.order_id.lines) {
                 if (
                     line.product_id.id === selectedLine.product_id.id &&
-                    line.getUnitPrice() === selectedLine.getUnitPrice() &&
+                    line.prices.total_excluded_currency ===
+                        selectedLine.prices.total_excluded_currency &&
                     line.getQuantity() * sign < 0 &&
                     line !== selectedLine
                 ) {
@@ -259,5 +369,76 @@ export class OrderSummary extends Component {
             newLine.setQuantity(0);
         }
         return newLine;
+    }
+    get isComboApplicable() {
+        return this.state.potentialCombos.length > 0;
+    }
+    getSortedBestPotentialCombos() {
+        const bestCombos = {
+            applicable: [],
+            upsell: [],
+        };
+        this.pos.getApplicableProductCombo("combinations").forEach((applicable) => {
+            applicable.comboPrice = applicable.productTmpl.getPrice(
+                this.currentOrder.pricelist_id,
+                applicable.combinationsQty
+            );
+            applicable.numberOfUpsell = Object.values(applicable.combinations[0]).reduce(
+                (acc, combo) => {
+                    if (combo.upsell) {
+                        return acc + 1;
+                    }
+                    return acc;
+                },
+                0
+            );
+            if (applicable.numberOfUpsell > 0) {
+                bestCombos.upsell.push(applicable);
+            } else {
+                bestCombos.applicable.push(applicable);
+            }
+        });
+        bestCombos.applicable.sort((a, b) => b.comboPrice - a.comboPrice);
+        bestCombos.upsell.sort((a, b) => {
+            if (a.numberOfUpsell === b.numberOfUpsell) {
+                return b.comboPrice - a.comboPrice;
+            }
+            return a.numberOfUpsell - b.numberOfUpsell;
+        });
+        return bestCombos;
+    }
+    get bestComboName() {
+        let name = `
+            ${this.state.potentialCombos[0].quantity} ${this.state.potentialCombos[0].productTmpl.display_name}`;
+        if (this.state.potentialCombos.length > 1) {
+            name += " + Others";
+        }
+        return name;
+    }
+    async applyBestCombo(keepOpen = false) {
+        let comboToApply = false;
+        const bestPotentialCombos = this.getSortedBestPotentialCombos();
+        if (
+            bestPotentialCombos.upsell.length + bestPotentialCombos.applicable.length >
+            (keepOpen ? 0 : 1)
+        ) {
+            comboToApply = await makeAwaitable(this.dialog, ChoseComboPopup, {
+                potentialCombos: bestPotentialCombos,
+            });
+        } else if (bestPotentialCombos.applicable.length == 1) {
+            comboToApply = bestPotentialCombos.applicable[0];
+        } else if (bestPotentialCombos.upsell.length == 1) {
+            comboToApply = bestPotentialCombos.upsell[0];
+        }
+        if (comboToApply) {
+            // Apply combo
+            comboToApply = this.pos.getApplicableProductCombo("full", comboToApply.productTmpl);
+            await this.pos.createComboFromLines(
+                comboToApply[0].productTmpl,
+                comboToApply[0].combinations
+            );
+            // If more combo applicable left, keep popup opened
+            await this.applyBestCombo(true);
+        }
     }
 }

@@ -4,6 +4,7 @@ import {
     X2MANY_TYPES,
     RAW_SYMBOL,
     convertRawToDateTime,
+    convertRawToDate,
     STORE_SYMBOL,
 } from "./utils";
 import { Base } from "./base";
@@ -47,15 +48,16 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
             }
             const isRelationNotInModelDef = field.relation && !modelNames.has(field.relation);
             if (!RELATION_TYPES.has(field.type) || isRelationNotInModelDef) {
-                const isDateTime = DATE_TIME_TYPE.has(field.type);
-                if (!isDateTime) {
+                if (!DATE_TIME_TYPE.has(field.type)) {
                     excludedLazyGetters.push(fieldName);
                 }
                 Object.defineProperty(ModelRecordClass.prototype, fieldName, {
                     get: function () {
                         const value = this[RAW_SYMBOL][fieldName];
-                        if (isDateTime) {
-                            return convertRawToDateTime(this, value, field);
+                        if (DATE_TIME_TYPE.has(field.type)) {
+                            return field.type === "datetime"
+                                ? convertRawToDateTime(this, value, field)
+                                : convertRawToDate(this, value, field);
                         } else if (isRelationNotInModelDef && value instanceof Set) {
                             return unmodifiableArray(
                                 [...value],

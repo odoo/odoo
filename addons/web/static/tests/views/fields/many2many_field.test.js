@@ -438,7 +438,7 @@ test("many2many kanban: create action disabled", async () => {
     expect(".modal .modal-footer .btn-primary").toHaveCount(1);
 });
 
-test("many2many kanban: conditional create/delete actions", async () => {
+test("many2many kanban: conditional create/delete attrs", async () => {
     PartnerType._views = {
         form: '<form><field name="name"/></form>',
         list: '<list><field name="name"/></list>',
@@ -451,7 +451,7 @@ test("many2many kanban: conditional create/delete actions", async () => {
         arch: `
             <form>
                 <field name="color"/>
-                <field name="timmy" options="{'create': [('color', '=', 'red')], 'delete': [('color', '=', 'red')]}">
+                <field name="timmy" create="color == 'red'" delete="color == 'red'">
                     <kanban>
                         <templates>
                             <t t-name="card">
@@ -894,7 +894,7 @@ test("fieldmany2many list comodel not writable", async () => {
     await clickSave();
 });
 
-test("many2many list: conditional create/delete actions", async () => {
+test("many2many list: conditional create/delete attrs", async () => {
     Partner._records[0].timmy = [1, 2];
 
     PartnerType._views = {
@@ -907,7 +907,7 @@ test("many2many list: conditional create/delete actions", async () => {
         arch: `
             <form>
                 <field name="color"/>
-                <field name="timmy" options="{'create': [('color', '=', 'red')], 'delete': [('color', '=', 'red')]}">
+                <field name="timmy" create="color == 'red'" delete="color == 'red'">
                     <list>
                         <field name="name"/>
                     </list>
@@ -940,7 +940,7 @@ test("many2many list: conditional create/delete actions", async () => {
     expect(".modal .modal-footer button").toHaveCount(2);
 });
 
-test("many2many field with link/unlink options (list)", async () => {
+test("many2many field with link/unlink attrs (list)", async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
@@ -952,7 +952,7 @@ test("many2many field with link/unlink options (list)", async () => {
         arch: `
             <form>
                 <field name="color"/>
-                <field name="timmy" options="{'link': [('color', '=', 'red')], 'unlink': [('color', '=', 'red')]}">
+                <field name="timmy" link="color =='red'" unlink="color == 'red'">
                     <list>
                         <field name="name"/>
                     </list>
@@ -978,7 +978,7 @@ test("many2many field with link/unlink options (list)", async () => {
     expect(".o_list_record_remove").toHaveCount(0);
 });
 
-test('many2many field with link/unlink options (list, create="0")', async () => {
+test('many2many field with link/unlink attrs (list, create="0")', async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
@@ -990,7 +990,7 @@ test('many2many field with link/unlink options (list, create="0")', async () => 
         arch: `
             <form>
                 <field name="color"/>
-                <field name="timmy" options="{'link': [('color', '=', 'red')], 'unlink': [('color', '=', 'red')]}">
+                <field name="timmy" link="color == 'red'" unlink="color == 'red'">
                     <list create="0">
                         <field name="name"/>
                     </list>
@@ -1016,7 +1016,7 @@ test('many2many field with link/unlink options (list, create="0")', async () => 
     expect(".o_list_record_remove").toHaveCount(0);
 });
 
-test("many2many field with link option (kanban)", async () => {
+test("many2many field with link attr (kanban)", async () => {
     Partner._records[0].timmy = [1, 2];
 
     PartnerType._views = {
@@ -1029,7 +1029,7 @@ test("many2many field with link option (kanban)", async () => {
         arch: `
             <form>
                 <field name="color"/>
-                <field name="timmy" options="{'link': [('color', '=', 'red')]}">
+                <field name="timmy" link="color == 'red'">
                     <kanban>
                         <templates>
                             <t t-name="card">
@@ -1057,7 +1057,7 @@ test("many2many field with link option (kanban)", async () => {
     expect(".o-kanban-button-new").toHaveCount(0);
 });
 
-test('many2many field with link option (kanban, create="0")', async () => {
+test('many2many field with link attr (kanban, create="0")', async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
@@ -1069,7 +1069,7 @@ test('many2many field with link option (kanban, create="0")', async () => {
         arch: `
             <form>
                 <field name="color"/>
-                <field name="timmy" options="{'link': [('color', '=', 'red')]}">
+                <field name="timmy" link="color == 'red'">
                     <kanban create="0">
                         <templates>
                             <t t-name="card">
@@ -1095,6 +1095,44 @@ test('many2many field with link option (kanban, create="0")', async () => {
     await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
 
     expect(".o-kanban-button-new").toHaveCount(0);
+});
+
+test("readonly many2many field: edit record", async () => {
+    Partner._records[0].timmy = [1, 2];
+
+    onRpc("web_save", ({ args }) => {
+        expect.step(`save ${args[1].name}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="color"/>
+                <field name="timmy" readonly="1">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                    <form>
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=timmy]").toHaveClass("o_readonly_modifier");
+    expect(".o_field_x2many_list_row_add").toHaveCount(0);
+    expect(".o_list_record_remove").toHaveCount(0);
+    expect(queryAllTexts(".o_data_cell")).toEqual(["gold", "silver"]);
+
+    await contains(".o_data_row:first .o_data_cell").click();
+    expect(".o_dialog .o_form_renderer").toHaveClass("o_form_editable");
+
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("new name");
+    await contains(".o_dialog .o_form_button_save").click();
+    expect(queryAllTexts(".o_data_cell")).toEqual(["new name", "silver"]);
+    expect.verifySteps(["save new name"]);
 });
 
 test("many2many list: list of id as default value", async () => {

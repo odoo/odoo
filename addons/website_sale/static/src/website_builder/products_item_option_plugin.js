@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { ProductsItemOption } from "./products_item_option";
@@ -12,24 +11,14 @@ class ProductsItemOptionPlugin extends Plugin {
         "setItemSize",
         "setProductTemplateID",
         "getProductTemplateID",
+        "loadInfo",
+        "getItemSize",
+        "getCount",
     ];
     itemSize = reactive({ x: 1, y: 1 });
 
     resources = {
-        builder_options: [
-            {
-                OptionComponent: ProductsItemOption,
-                props: {
-                    loadInfo: this.loadInfo.bind(this),
-                    itemSize: this.itemSize,
-                },
-                selector: "#products_grid .oe_product",
-                editableOnly: false,
-                title: _t("Product"),
-                groups: ["website.group_website_designer"],
-            },
-        ],
-
+        builder_options: [ProductsItemOption],
         builder_actions: {
             SetItemSizeAction,
             ChangeSequenceAction,
@@ -44,6 +33,13 @@ class ProductsItemOptionPlugin extends Plugin {
     async loadInfo() {
         this.defaultSort = await this.getDefaultSort();
         return this.defaultSort;
+    }
+
+    getItemSize() {
+        return this.itemSize;
+    }
+    getCount() {
+        return this.count;
     }
 
     async getDefaultSort() {

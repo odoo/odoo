@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -7,7 +6,6 @@ import logging
 import re
 from dateutil.relativedelta import relativedelta
 
-import odoo
 from odoo import api, fields, models, tools, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
@@ -24,6 +22,8 @@ class CrmRevealRule(models.Model):
     _name = 'crm.reveal.rule'
     _description = 'CRM Lead Generation Rule'
     _order = 'sequence'
+    _clear_cache_name = 'default'
+    _clear_cache_on_fields = {'active', 'country_ids', 'regex_url'}  # in order to recompute _get_active_rules
 
     name = fields.Char(string='Rule Name', required=True)
     active = fields.Boolean(default=True)
@@ -84,23 +84,6 @@ class CrmRevealRule(models.Model):
                 re.compile(self.regex_url)
         except Exception:
             raise ValidationError(_('Enter Valid Regex.'))
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super().create(vals_list)
-
-    def write(self, vals):
-        fields_set = {
-            'country_ids', 'regex_url', 'active'
-        }
-        if set(vals.keys()) & fields_set:
-            self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super().write(vals)
-
-    def unlink(self):
-        self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
-        return super().unlink()
 
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
@@ -232,11 +215,7 @@ class CrmRevealRule(models.Model):
         created lead with given IP. So, we unlink crm.reveal.view with same IP
         as a already created lead.
         """
-        months_valid = self.env['ir.config_parameter'].sudo().get_param('reveal.lead_month_valid', DEFAULT_REVEAL_MONTH_VALID)
-        try:
-            months_valid = int(months_valid)
-        except ValueError:
-            months_valid = DEFAULT_REVEAL_MONTH_VALID
+        months_valid = self.env['ir.config_parameter'].sudo().get_int('reveal.lead_month_valid') or DEFAULT_REVEAL_MONTH_VALID
         domain = []
         domain.append(('reveal_ip', '!=', False))
         domain.append(('create_date', '>', fields.Datetime.to_string(datetime.date.today() - relativedelta(months=months_valid))))
@@ -346,11 +325,11 @@ class CrmRevealRule(models.Model):
             views.write({'reveal_state': 'not_found'})
             views.flush_recordset()
             # reset notified parameter to re-send credit notice if appears again
-            self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
+            self.env['ir.config_parameter'].sudo().set_bool('reveal.already_notified', False)
         return True
 
     def _iap_contact_reveal(self, params, timeout=300):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
+        endpoint = (self.env['ir.config_parameter'].sudo().get_str('reveal.endpoint') or DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
         return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
 
     def _create_lead_from_response(self, result):

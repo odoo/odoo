@@ -8,7 +8,6 @@ import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
-import { getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
 
 patch(PosStore.prototype, {
     async onClickSaleOrder(clickedOrderId) {
@@ -100,7 +99,7 @@ patch(PosStore.prototype, {
                 line.product_id = this.config.down_payment_product_id;
             }
 
-            const taxes = getTaxesAfterFiscalPosition(line.tax_ids, orderFiscalPos, this.models);
+            const taxes = orderFiscalPos?.getTaxesAfterFiscalPosition(line.tax_ids) || line.tax_ids;
             const newLineValues = {
                 product_tmpl_id: line.product_id?.product_tmpl_id,
                 product_id: line.product_id,
@@ -127,7 +126,7 @@ patch(PosStore.prototype, {
             if (line.display_type === "line_section") {
                 continue;
             }
-            newLineValues.attribute_value_ids = line.product_custom_attribute_value_ids.map(
+            newLineValues.attribute_value_ids = (line.product_custom_attribute_value_ids || []).map(
                 (value_line) => {
                     if (value_line?.custom_product_template_attribute_value_id) {
                         return ["link", value_line.custom_product_template_attribute_value_id];
@@ -179,7 +178,11 @@ patch(PosStore.prototype, {
             }
 
             // Order line can only hold one lot, so we need to split the line if there are multiple lots
-            if (line.product_id.tracking == "lot" && converted_line.lot_names.length > 0) {
+            if (
+                line.product_id.tracking == "lot" &&
+                converted_line.lot_names.length > 0 &&
+                useLoadedLots
+            ) {
                 newLine.delete();
                 for (const lot of converted_line.lot_names) {
                     const splitted_line = this.models["pos.order.line"].create({
@@ -216,7 +219,7 @@ patch(PosStore.prototype, {
             this.dialog.add(AlertDialog, {
                 title: _t("No down payment product"),
                 body: _t(
-                    "It seems that you didn't configure a down payment product in your point of sale. You can go to your point of sale configuration to choose one."
+                    "It seems that you didn't configure a down payment product in your point of sale. You can go to your point of sale settings to choose one."
                 ),
             });
             return;

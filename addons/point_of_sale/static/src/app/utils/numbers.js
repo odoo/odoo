@@ -70,12 +70,6 @@ export class AbstractNumbers extends Base {
         return roundPrecision(a, this.precision, this.method);
     }
 
-    /**
-     * ```
-     * asymmetricRound(1.23, { precision: 0.1, method: "UP" }) // 1.3
-     * asymmetricRound(-1.23, { precision: 0.1, method: "UP" }) // -1.2
-     * ```
-     */
     asymmetricRound(a) {
         return roundPrecision(
             a,

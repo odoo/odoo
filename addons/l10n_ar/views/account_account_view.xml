@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_account_list" model="ir.ui.view">
+        <field name="name">account.account.view.list.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_type']" position="after">
+                <field name="l10n_ar_arca_activity_id" invisible="company_fiscal_country_code != 'AR' or account_type in ('asset_receivable', 'liability_payable', 'off_balance')" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_account_form" model="ir.ui.view">
+        <field name="name">account.account.form.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="l10n_ar_arca_activity_id" invisible="company_fiscal_country_code != 'AR' or account_type in ('asset_receivable', 'liability_payable', 'off_balance')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

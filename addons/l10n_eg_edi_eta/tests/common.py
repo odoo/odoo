@@ -84,7 +84,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
         return cls.env.ref(f'account.{cls.env.company.id}_account_tax_template_{trailing_xml_id}')
 
     @classmethod
-    def create_invoice(cls, **kwargs):
+    def _create_invoice_eg(cls, **kwargs):
         invoice = (
             cls.env['account.move']
             .with_context(edi_test_mode=True)

@@ -31,8 +31,8 @@ class Appointment extends models.Model {
                         <field name="is_published" widget="website_redirect_button" />
                     </div>
                 </sheet>
-            </form>`
-    }
+            </form>`,
+    };
 }
 
 defineModels([Appointment]);

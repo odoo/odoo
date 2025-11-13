@@ -119,25 +119,31 @@ export function toRatio(value) {
 }
 
 /**
- * Returns the list of selector, exclude and applyTo on which an option is
- * applied.
- * @param {Array<Object>} builderOptions - All the builder options
- * @param {Class} optionClass - The applied option
+ * Filters an array of classes to only include those that extend a given class.
  */
-export function getSelectorParams(builderOptions, optionClass) {
-    const selectorParams = [];
-    const optionClassName = optionClass.name;
-    for (const builderOption of builderOptions) {
-        const { OptionComponent } = builderOption;
-        if (
-            OptionComponent &&
-            (OptionComponent.name === optionClassName ||
-                OptionComponent.prototype instanceof optionClass)
-        ) {
-            selectorParams.push(builderOption);
-        }
+export function filterExtends(arr, PotentialSuperClass) {
+    return arr.filter((PotentialSubClass) =>
+        doesExtendsClass(PotentialSubClass, PotentialSuperClass)
+    );
+}
+
+/**
+ * Checks if a `potentialSubClass` directly or indirectly extends a
+ * `potentialSuperClass`.
+ *
+ * The implementation leverages the fact that classes are functions and their
+ * prototype chain reflects the inheritance.
+ *
+ * @param {Function} PotentialSubClass The class that might be a subclass.
+ * @param {Function} PotentialSuperClass The class that might be a superclass.
+ * @returns {boolean} True if `potentialSubClass` extends `potentialSuperClass`,
+ * false otherwise.
+ */
+export function doesExtendsClass(PotentialSubClass, PotentialSuperClass) {
+    if (PotentialSubClass === PotentialSuperClass) {
+        return false;
     }
-    return selectorParams;
+    return PotentialSubClass.prototype instanceof PotentialSuperClass;
 }
 
 /**

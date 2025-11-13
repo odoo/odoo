@@ -140,7 +140,7 @@ class TestMailRenderCommon(common.MailCommon):
         })
 
         # Enable group-based template management
-        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
 
         # User without the group "mail.group_mail_template_editor"
         cls.user_rendering_restricted = common.mail_new_test_user(
@@ -156,6 +156,7 @@ class TestMailRenderCommon(common.MailCommon):
 
 
 @tagged('mail_render')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailRender(TestMailRenderCommon):
 
     @users('employee')
@@ -413,6 +414,7 @@ class TestMailRender(TestMailRenderCommon):
 
 
 @tagged('mail_render', 'regex_render')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRegexRendering(common.MailCommon):
 
     def test_qweb_regex_rendering(self):
@@ -514,6 +516,7 @@ class TestRegexRendering(common.MailCommon):
 
 
 @tagged('mail_render')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailRenderSecurity(TestMailRenderCommon):
     """ Test security of rendering, based on qweb finding + restricted rendering
     group usage. """

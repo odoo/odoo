@@ -1,8 +1,11 @@
 from datetime import datetime
 
+from odoo.tests import tagged
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDashboard(TestHrHolidaysCommon):
     def test_dashboard_special_days(self):
         self.uid = self.user_hrmanager.id

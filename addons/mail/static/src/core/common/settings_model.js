@@ -1,7 +1,7 @@
 import { hasHardwareAcceleration } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { fields, Record } from "./record";
+import { fields, Record } from "@mail/model/export";
 import { debounce } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 
@@ -110,7 +110,7 @@ export class Settings extends Record {
             if (!rtc || !this.useBlur) {
                 return false;
             }
-            return this.useBlur && rtc.state?.cameraTrack && !hasHardwareAcceleration();
+            return this.useBlur && rtc.cameraTrack && !hasHardwareAcceleration();
         },
     });
     cameraFacingMode = undefined;
@@ -282,7 +282,7 @@ export class Settings extends Record {
      * @param {number} param0.volume
      */
     async saveVolumeSetting({ partnerId, guestId, volume }) {
-        if (!this.store.self_partner) {
+        if (!this.store.self_user) {
             return;
         }
         const key = `${partnerId}_${guestId}`;
@@ -437,7 +437,7 @@ export class Settings extends Record {
      * @private
      */
     async _saveSettings() {
-        if (!this.store.self_partner) {
+        if (!this.store.self_user) {
             return;
         }
         browser.clearTimeout(this.globalSettingsTimeout);

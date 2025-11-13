@@ -28,7 +28,7 @@ const clickOnSaveButtonStep = [
     {
         content: "Wait",
         trigger: "body:not(.modal-open)",
-    }
+    },
 ];
 
 const openCreatePageDialog = [
@@ -39,7 +39,7 @@ const openCreatePageDialog = [
     },
     {
         content: "Create a new page",
-        trigger: 'button[title="New Page"]',
+        trigger: 'button[aria-label="New Page"]',
         run: "click",
     },
 ];
@@ -57,11 +57,11 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
     return [
         ...openCreatePageDialog,
         {
-            trigger: 'a[data-id="custom"]',
+            trigger: 'button[data-id="custom"]',
         },
         {
             content: "Go to custom section",
-            trigger: 'a[data-id="custom"]',
+            trigger: 'button[data-id="custom"]',
             run: "click",
         },
         ...(isTemplate
@@ -79,8 +79,7 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
                       content: `Verify custom templates section is empty`,
                       trigger: `.o_website_page_templates_pane:not(:has(.o_page_template))`,
                   },
-              ]
-        ),
+              ]),
         {
             content: "Exit dialog",
             trigger: ".modal-header .btn-close",
@@ -90,7 +89,7 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
             content: "Exit new content backdrop",
             trigger: "body",
             run: "press escape",
-        }
+        },
     ];
 }
 
@@ -213,9 +212,14 @@ function testWebsitePageProperties() {
             run: "check",
         },
         {
-            content: "Set redirect type to temporary",
+            content: "Open redirect type popup",
             trigger: "#redirect_type_0",
-            run: 'select "302"',
+            run: "click",
+        },
+        {
+            content: "Set redirect type to temporary",
+            trigger: ".o-dropdown-item[data-choice-index='1']",
+            run: "click",
         },
         {
             // TODO: this needs to be tested
@@ -229,10 +233,15 @@ function testWebsitePageProperties() {
             run: "uncheck",
         },
         {
+            content: "Open visibility popup",
+            trigger: "#visibility_0",
+            run: "click",
+        },
+        {
             // TODO: this needs to be tested
             content: "Make visible with password only",
-            trigger: "#visibility_0",
-            run: 'select "password"',
+            trigger: ".o-dropdown-item[data-choice-index='3']",
+            run: "click",
         },
         {
             content: "Set password to 123",
@@ -243,7 +252,7 @@ function testWebsitePageProperties() {
             content: "Make it a template",
             trigger: "#is_new_page_template_0",
             run: "check",
-        },
+        }
     );
     steps.check.push(
         {
@@ -257,7 +266,7 @@ function testWebsitePageProperties() {
             content: "Verify no index",
             trigger: ':iframe head:hidden meta[name="robots"][content="noindex"]',
         },
-        ...checkIsTemplate(true, "Cool Page"),
+        ...checkIsTemplate(true, "Cool Page")
     );
     steps.teardown.unshift(
         {
@@ -271,9 +280,14 @@ function testWebsitePageProperties() {
             run: `edit new-page && press Enter`,
         },
         {
-            content: "Reset date published",
+            content: "Open date published popup",
             trigger: "#date_publish_0",
-            run: "edit ",
+            run: "click",
+        },
+        {
+            content: "Reset date published",
+            trigger: "button[title='Clear']",
+            run: "click",
         },
         {
             content: "Do index",
@@ -281,15 +295,20 @@ function testWebsitePageProperties() {
             run: "check",
         },
         {
-            content: "Make visibility Public",
+            content: "Open visibility popup",
             trigger: "#visibility_0",
-            run: 'select ""',
+            run: "click",
+        },
+        {
+            content: "Make visible public",
+            trigger: ".o-dropdown-item[data-choice-index='0']",
+            run: "click",
         },
         {
             content: "Remove from templates",
             trigger: "#is_new_page_template_0",
             run: "uncheck",
-        },
+        }
     );
     steps.checkTorndown.push(
         {
@@ -303,7 +322,7 @@ function testWebsitePageProperties() {
             content: "Verify is indexed",
             trigger: ':iframe head:hidden:not(:has(meta[name="robots"][content="noindex"]))',
         },
-        ...checkIsTemplate(false),
+        ...checkIsTemplate(false)
     );
     return steps;
 }
@@ -313,7 +332,7 @@ registerWebsitePreviewTour(
     {
         url: "/test_view",
     },
-    () => [...testCommonProperties("/test_view", false).finalize()],
+    () => [...testCommonProperties("/test_view", false).finalize()]
 );
 
 registerWebsitePreviewTour(
@@ -321,7 +340,7 @@ registerWebsitePreviewTour(
     {
         url: "/test_website/model_item/1",
     },
-    () => [...testCommonProperties("/test_website/model_item/1", true).finalize()],
+    () => [...testCommonProperties("/test_website/model_item/1", true).finalize()]
 );
 
 registerWebsitePreviewTour(
@@ -358,5 +377,5 @@ registerWebsitePreviewTour(
         },
         ...clickOnSave(),
         ...testWebsitePageProperties().finalize(),
-    ],
+    ]
 );

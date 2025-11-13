@@ -47,6 +47,7 @@ export class WorkEntryCalendarController extends CalendarController {
                     default_work_entry_type_id: record.rawRecord.work_entry_type_id?.[0],
                     default_employee_id: record.rawRecord.employee_id?.[0],
                     default_date: record.rawRecord.date,
+                    default_is_manual: true,
                 },
                 canExpand: false,
             },

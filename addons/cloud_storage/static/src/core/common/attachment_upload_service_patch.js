@@ -85,6 +85,7 @@ patch(AttachmentUploadService.prototype, {
 
     async _upload(thread, composer, file, options, tmpId, tmpURL) {
         if (
+            !thread.channel?.ai_agent_id && // ai_agent (enterprise) does not support url files
             session.cloud_storage_min_file_size !== undefined &&
             file.size > session.cloud_storage_min_file_size &&
             !session.cloud_storage_unsupported_models.includes(thread.model)

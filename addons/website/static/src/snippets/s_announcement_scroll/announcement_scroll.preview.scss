@@ -1,0 +1,12 @@
+// Snippets Modal Preview
+// ======================
+// Performs an animation on :hover showcasing the user how the snippet behaves
+// in use. Measurements and values are arbitrary, the goal is just to provide
+// a preview.
+.o_snippet_preview_wrap:where(:hover, :focus-visible)  [data-snippet="s_announcement_scroll"] {
+    animation-play-state: running;
+
+    .s_announcement_scroll_marquee_item {
+        animation: o-marquee-scroll-left linear infinite 10s;
+    }
+}

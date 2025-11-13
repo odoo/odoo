@@ -7,6 +7,7 @@ from odoo.addons.hr_holidays.tests.common import TestHolidayContract
 
 
 @tagged('multi_contract')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHolidaysMultiContract(TestHolidayContract):
 
     @classmethod

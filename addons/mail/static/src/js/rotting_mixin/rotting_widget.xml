@@ -7,7 +7,7 @@
         </div>
     </t>
 
-    <t t-name="mail.ListBadgeSelectionRotting" t-inherit="web.BadgeSelectionField" t-inherit-mode="primary">
+    <t t-name="mail.ListBadgeSelectionRotting" t-inherit="web.ListBadgeSelectionField" t-inherit-mode="primary">
         <t t-else="" position="after">
             <span class="badge rounded-pill o_mail_resource_rotting_bg ms-2" t-if="props.record.data.is_rotting">
                 <t t-out="dayCount"/>

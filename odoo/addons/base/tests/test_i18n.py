@@ -1,7 +1,8 @@
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.tools import format_list, py_to_js_locale
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class I18nTest(TransactionCase):
     def test_format_list(self):
         lang = self.env["res.lang"]

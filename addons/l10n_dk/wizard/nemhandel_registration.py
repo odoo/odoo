@@ -79,17 +79,17 @@ class NemhandelRegistration(models.TransientModel):
 
     @api.depends('edi_user_id')
     def _compute_edi_mode(self):
-        edi_mode = self.env['ir.config_parameter'].sudo().get_param('l10n_dk.edi.mode')
+        edi_mode = self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode') or 'prod'
         for wizard in self:
             if wizard.edi_user_id:
                 wizard.edi_mode = wizard.edi_user_id.edi_mode
             else:
-                wizard.edi_mode = edi_mode or 'prod'
+                wizard.edi_mode = edi_mode
 
     def _inverse_edi_mode(self):
         for wizard in self:
             if not wizard.edi_user_id and wizard.edi_mode:
-                self.env['ir.config_parameter'].sudo().set_param('l10n_dk.edi.mode', wizard.edi_mode)
+                self.env['ir.config_parameter'].sudo().set_str('l10n_dk.edi.mode', wizard.edi_mode)
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

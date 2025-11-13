@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { isColorGradient } from "@web/core/utils/colors";
 import { CustomColorPicker } from "../custom_color_picker/custom_color_picker";
 
-class ColorPickerCustomTab extends Component {
+export class ColorPickerCustomTab extends Component {
     static template = "web.ColorPickerCustomTab";
     static components = { CustomColorPicker };
     static props = {

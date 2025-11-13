@@ -162,6 +162,22 @@ class StockMoveLine(models.Model):
         if remaining_lines:
             remaining_lines._auto_wave_lines_into_new_waves(nearest_parent_locations=lines_nearest_parent_locations)
 
+    def _get_potential_existing_waves_extra_domain(self, domain_list, picking_type):
+        """Extend extra conditions here"""
+        return domain_list
+
+    def _get_potential_new_waves_extra_domain(self, domain_list, picking_type):
+        """Extend extra conditions here"""
+        return domain_list
+
+    def _is_potential_existing_wave_extra(self, wave):
+        """Extend extra conditions here"""
+        return True
+
+    def _is_new_potential_line_extra(self, potential_line):
+        """Extend extra conditions here"""
+        return True
+
     def _auto_wave_lines_into_existing_waves(self, nearest_parent_locations=False):
         """ Try to add move lines to existing waves if possible, return move lines of which no appropriate waves were found to link to
          :param nearest_parent_locations (defaultdict): the key is the move line and the value is the nearest parent location in the wave locations list"""
@@ -185,6 +201,7 @@ class StockMoveLine(models.Model):
                     domains.append(Domain('picking_ids.location_id', 'in', lines.location_id.ids))
                 if picking_type.batch_group_by_dest_loc:
                     domains.append(Domain('picking_ids.location_dest_id', 'in', lines.location_dest_id.ids))
+                domains = lines._get_potential_existing_waves_extra_domain(domains, picking_type)
 
                 potential_waves = self.env['stock.picking.batch'].search(Domain.AND(domains))
                 wave_to_new_lines = defaultdict(set)
@@ -218,7 +235,8 @@ class StockMoveLine(models.Model):
                         or (picking_type.batch_group_by_dest_loc and line.location_dest_id != wave.picking_ids.location_dest_id) \
                         or (picking_type.wave_group_by_product and line.product_id != wave.move_line_ids.product_id) \
                         or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
-                        or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id):
+                        or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id) \
+                        or not line._is_potential_existing_wave_extra(wave):
                             continue
 
                         wave_new_move_ids = wave_to_new_moves[wave]
@@ -279,6 +297,7 @@ class StockMoveLine(models.Model):
                 domains.append(Domain('product_id.categ_id', 'in', lines.product_id.categ_id.ids))
             if picking_type.wave_group_by_location:
                 domains.append(Domain('location_id', 'child_of', picking_type.wave_location_ids.ids))
+            domains = lines._get_potential_new_waves_extra_domain(domains, picking_type)
 
             potential_lines = self.env['stock.move.line'].search(Domain.AND(domains))
             lines_nearest_parent_locations = defaultdict(int)
@@ -305,7 +324,8 @@ class StockMoveLine(models.Model):
                     or (picking_type.batch_group_by_dest_loc and line.location_dest_id != potential_line.location_dest_id) \
                     or (picking_type.wave_group_by_product and line.product_id != potential_line.product_id) \
                     or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
-                    or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id):
+                    or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \
+                    or not line._is_new_potential_line_extra(potential_line):
                         continue
 
                     line_to_lines[line].add(potential_line.id)

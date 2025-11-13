@@ -10,7 +10,6 @@ from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
 from odoo.addons.microsoft_account.models import microsoft_service
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
-from odoo.tools import str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -68,7 +67,7 @@ class ResUsers(models.Model):
     def _get_microsoft_sync_status(self):
         """ Returns the calendar synchronization status (active, paused or stopped). """
         status = "sync_active"
-        if str2bool(self.env['ir.config_parameter'].sudo().get_param("microsoft_calendar_sync_paused"), default=False):
+        if self.env['ir.config_parameter'].sudo().get_bool("microsoft_calendar_sync_paused"):
             status = "sync_paused"
         elif self.sudo().microsoft_calendar_token and not self.sudo().microsoft_synchronization_stopped:
             status = "sync_active"
@@ -137,10 +136,10 @@ class ResUsers(models.Model):
         self.env['calendar.event']._restart_microsoft_sync()
 
     def unpause_microsoft_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", False)
+        self.env['ir.config_parameter'].sudo().set_bool("microsoft_calendar_sync_paused", False)
 
     def pause_microsoft_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", True)
+        self.env['ir.config_parameter'].sudo().set_bool("microsoft_calendar_sync_paused", True)
 
     @api.model
     def _has_setup_microsoft_credentials(self):
@@ -188,7 +187,7 @@ class ResUsers(models.Model):
         created Odoo events and thus avoid spamming invitations for those events.
         """
         ICP = self.env['ir.config_parameter'].sudo()
-        first_synchronization_date = ICP.get_param('microsoft_calendar.sync.first_synchronization_date')
+        first_synchronization_date = ICP.get_str('microsoft_calendar.sync.first_synchronization_date')
 
         if not first_synchronization_date:
             # Check if any calendar has synchronized before by checking the user's tokens.
@@ -200,4 +199,4 @@ class ResUsers(models.Model):
             # Check if any user synchronized its calendar before by saving the date token.
             # Add one minute of time diff for avoiding write time delay conflicts with the next sync methods.
             if not any_calendar_synchronized:
-                ICP.set_param('microsoft_calendar.sync.first_synchronization_date', now - timedelta(minutes=1))
+                ICP.set_str('microsoft_calendar.sync.first_synchronization_date', now - timedelta(minutes=1))

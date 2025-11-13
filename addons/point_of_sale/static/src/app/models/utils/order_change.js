@@ -1,3 +1,67 @@
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+const CONSOLE_COLOR = "#F5B427";
+
+export const getStrNotes = (note) => {
+    if (!note) {
+        return "";
+    }
+    if (Array.isArray(note)) {
+        return note.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
+    }
+    if (typeof note === "string") {
+        try {
+            const parsed = JSON.parse(note);
+            if (Array.isArray(parsed)) {
+                return parsed.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
+            }
+            return note;
+        } catch (error) {
+            logPosMessage(
+                "OrderChange",
+                "getStrNotes",
+                "Error while parsing note, not valid JSON",
+                CONSOLE_COLOR,
+                [error]
+            );
+            return note;
+        }
+    }
+    return "";
+};
+
+export const filterChangeByCategories = (categories, currentOrderChange, models) => {
+    const matchesCategories = (change) => {
+        const product = models["product.product"].get(change["product_id"]);
+        const categoryIds = product.parentPosCategIds;
+        for (const categoryId of categoryIds) {
+            if (categories.includes(categoryId)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const filterChanges = (changes) => {
+        // Combo line uuids to have at least one child line in the given categories
+        const validComboUuids = new Set(
+            changes
+                .filter((change) => change.combo_parent_uuid && matchesCategories(change))
+                .map((change) => change.combo_parent_uuid)
+        );
+        return changes.filter(
+            (change) =>
+                (change.isCombo && validComboUuids.has(change.uuid)) ||
+                (!change.isCombo && matchesCategories(change))
+        );
+    };
+
+    return {
+        new: filterChanges(currentOrderChange["new"]),
+        cancelled: filterChanges(currentOrderChange["cancelled"]),
+        noteUpdate: filterChanges(currentOrderChange["noteUpdate"]),
+    };
+};
+
 export const changesToOrder = (order, orderPreparationCategories, cancelled = false) => {
     const toAdd = [];
     const toRemove = [];
@@ -8,6 +72,7 @@ export const changesToOrder = (order, orderPreparationCategories, cancelled = fa
         : Object.values(order.last_order_preparation_change.lines);
 
     for (const lineChange of linesChanges) {
+        lineChange["note"] = getStrNotes(lineChange.note);
         if (lineChange["quantity"] > 0 && !cancelled) {
             toAdd.push(lineChange);
         } else {
@@ -52,12 +117,15 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
         const productCategoryIds = baseProduct.parentPosCategIds.filter((id) =>
             prepaCategoryIds.has(id)
         );
+        const quantity = orderline.getQuantity();
 
-        if (productCategoryIds.length > 0) {
+        if (
+            productCategoryIds.length > 0 &&
+            order.last_order_preparation_change[lineKey]?.ignoreQty !== quantity
+        ) {
             const key = Object.keys(order.last_order_preparation_change.lines).find((k) =>
                 k.startsWith(orderline.uuid)
             ); // find old data but note changed
-            const quantity = orderline.getQuantity();
 
             const relatedKey = key !== lineKey ? key : lineKey; // if note update key would be different
             const quantityDiff =
@@ -72,11 +140,12 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 uuid: orderline.uuid,
                 name: orderline.getFullProductName(),
                 basic_name: orderline.product_id.name,
-                isCombo: orderline.combo_item_id?.id,
+                isCombo: Boolean(orderline?.combo_line_ids?.length),
+                combo_parent_uuid: orderline?.combo_parent_id?.uuid,
                 product_id: product.id,
                 attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
-                note: note,
+                note: getStrNotes(note),
                 customer_note: customerNote,
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
@@ -126,8 +195,9 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     name: lineResume["name"],
                     basic_name: lineResume["basic_name"],
                     display_name: lineResume["display_name"],
-                    isCombo: lineResume["isCombo"],
-                    note: lineResume["note"],
+                    isCombo: Boolean(lineResume["isCombo"]),
+                    combo_parent_uuid: lineResume["combo_parent_uuid"],
+                    note: getStrNotes(lineResume["note"]),
                     customer_note: lineResume["customer_note"],
                     attribute_value_names: lineResume["attribute_value_names"],
                     group: lineResume["group"],

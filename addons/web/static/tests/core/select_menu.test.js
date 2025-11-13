@@ -916,7 +916,6 @@ test("Props onInput is executed when the search changes", async () => {
 
     await mountSingleApp(MyParent);
     expect(".o_select_menu_toggler").toHaveValue("Hello");
-
     await open();
     expect.verifySteps(["call with empty search"]);
     expect(queryAllTexts(".o_select_menu_item")).toEqual(["Hello"]);
@@ -1341,4 +1340,16 @@ test("Ensure items are properly sorted", async () => {
     expect(elements[4]).toHaveText("item-group-z");
     expect(elements[5]).toHaveText("item-world");
     expect(elements[6]).toHaveText("item-z");
+});
+
+test.tags("desktop");
+test("Space bar key opens the dropdown", async () => {
+    await mountSingleApp(Parent);
+
+    expect(".o_select_menu_menu").toHaveCount(0);
+    await contains(".o_select_menu_input").focus();
+    await press("Space");
+    await animationFrame();
+    expect(".o_select_menu_menu").toHaveCount(1);
+    expect(".o_select_menu_input").toHaveValue("World");
 });

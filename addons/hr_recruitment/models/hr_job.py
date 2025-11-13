@@ -59,11 +59,11 @@ class HrJob(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.", groups="hr_recruitment.group_hr_recruitment_interviewer")
     color = fields.Integer("Color Index")
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sql="_compute_sql_is_favorite", compute_sudo=True)
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many(
         "res.users",
-        domain="[('id', 'in', allowed_user_ids)]",
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
         string="Interviewers",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
@@ -152,6 +152,12 @@ class HrJob(models.Model):
                 favorited_jobs |= job
         favorited_jobs.write({'favorite_user_ids': [(4, self.env.uid)]})
         unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
+
+    def _compute_sql_is_favorite(self, alias, query):
+        return SQL(
+            "%s IN (SELECT job_id FROM job_favorite_user_rel WHERE user_id = %s)",
+            SQL.identifier(alias, 'id'), self.env.uid,
+        )
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.employee_id)
@@ -277,7 +283,7 @@ class HrJob(models.Model):
             defaults.update({
                 'job_id': self.id,
                 'department_id': self.department_id.id,
-                'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id,
+                'company_id': self.department_id.company_id.id or self.company_id.id,
                 'user_id': self.user_id.id,
             })
         return values
@@ -332,16 +338,6 @@ class HrJob(models.Model):
                 alias_default_vals = job._alias_get_creation_values().get('alias_defaults', '{}')
                 job.alias_defaults = alias_default_vals
         return res
-
-    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
-        if field_name == 'is_favorite':
-            sql_field = SQL(
-                "%s IN (SELECT job_id FROM job_favorite_user_rel WHERE user_id = %s)",
-                SQL.identifier(alias, 'id'), self.env.uid,
-            )
-            return SQL("%s %s %s", sql_field, direction, nulls)
-
-        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')

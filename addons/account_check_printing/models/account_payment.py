@@ -216,7 +216,7 @@ class AccountPayment(models.Model):
         if not report_action:
             msg = _("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again.")
             raise RedirectWarning(msg, redirect_action.id, _('Go to the configuration panel'))
-        self.write({'is_sent': 'True'})
+        self.write({'is_sent': True})
         return report_action.report_action(self)
 
     #######################

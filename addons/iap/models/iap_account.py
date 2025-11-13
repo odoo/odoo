@@ -98,7 +98,7 @@ class IapAccount(models.Model):
                 'token': account.sudo().account_token,
                 'service': account.service_id.technical_name,
             } for account in self if account.service_id],
-            'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'dbuuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
         }
         try:
             accounts_information = iap_tools.iap_jsonrpc(url=url, params=params)
@@ -133,7 +133,7 @@ class IapAccount(models.Model):
             if not account.name:
                 account.name = account.service_id.name
 
-        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
+        if self.env['ir.config_parameter'].sudo().get_bool('database.is_neutralized'):
             # Disable new accounts on a neutralized database
             for account in accounts:
                 account.account_token = f"{account.account_token.split('+')[0]}+disabled"
@@ -199,7 +199,7 @@ class IapAccount(models.Model):
     @api.model
     def get_credits_url(self, service_name, account_token=None):
         """ Called notably by: buy more widget, partner_autocomplete, snailmail, ... """
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         endpoint = iap_tools.iap_get_endpoint(self.env)
         route = '/iap/1/credit'
         base_url = url_join(endpoint, route)
@@ -253,7 +253,7 @@ class IapAccount(models.Model):
             endpoint = iap_tools.iap_get_endpoint(self.env)
             url = url_join(endpoint, route)
             params = {
-                'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                'dbuuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
                 'account_token': account.sudo().account_token,
                 'service_name': service_name,
             }

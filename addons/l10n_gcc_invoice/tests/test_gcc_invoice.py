@@ -14,7 +14,7 @@ class TestGccInvoice(AccountTestInvoicingCommon):
 
         # Activate second lang and parameter needed to display invoice terms
         self.env['res.lang']._activate_lang('ar_001')
-        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', True)
+        self.env['ir.config_parameter'].sudo().set_bool('account.use_invoice_terms', True)
 
         gcc_countries = self.env.ref('base.gulf_cooperation_council').country_ids
         self.env.company.write({

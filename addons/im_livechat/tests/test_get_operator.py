@@ -3,14 +3,12 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-import odoo
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 from odoo.tests.common import users
 
 
-@odoo.tests.tagged("-at_install", "post_install")
 class TestGetOperator(MailCommon, TestGetOperatorCommon):
     def setUp(self):
         super().setUp()
@@ -382,6 +380,23 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             {
                 livechat_channels[0]: self.env["res.users"],
                 livechat_channels[1]: operator,
+            },
+        )
+        operator.manual_im_status = "busy"
+        self.assertEqual(
+            livechat_channels._get_available_operators_by_livechat_channel(operator),
+            {
+                livechat_channels[0]: self.env["res.users"],
+                livechat_channels[1]: operator,
+            },
+        )
+        operator.manual_im_status = False
+        operator.presence_ids.status = "away"
+        self.assertEqual(
+            livechat_channels._get_available_operators_by_livechat_channel(operator),
+            {
+                livechat_channels[0]: self.env["res.users"],
+                livechat_channels[1]: self.env["res.users"],
             },
         )
         operator.presence_ids.status = "offline"

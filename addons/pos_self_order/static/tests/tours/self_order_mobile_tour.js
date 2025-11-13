@@ -19,8 +19,8 @@ registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_in", {
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkIsNoBtn("Order Now"),
         Utils.clickBtn("My Order"),
         ...CartPage.cancelOrder(),
@@ -43,8 +43,8 @@ registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_out", {
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkIsNoBtn("Order Now"),
     ],
 });
@@ -62,8 +62,8 @@ registry.category("web_tour.tours").add("self_mobile_each_counter_takeaway_in", 
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkIsNoBtn("Order Now"),
     ],
 });
@@ -82,8 +82,8 @@ registry.category("web_tour.tours").add("self_mobile_each_counter_takeaway_out",
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkIsNoBtn("Order Now"),
     ],
 });
@@ -107,8 +107,8 @@ registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_in", {
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkBtn("Order Now"),
     ],
 });
@@ -134,8 +134,8 @@ registry.category("web_tour.tours").add("self_mobile_meal_table_takeaway_out", {
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkBtn("Order Now"),
     ],
 });
@@ -160,8 +160,8 @@ registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_in", 
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkBtn("Order Now"),
     ],
 });
@@ -187,8 +187,8 @@ registry.category("web_tour.tours").add("self_mobile_meal_counter_takeaway_out",
         ConfirmationPage.isShown(),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkBtn("Order Now"),
     ],
 });
@@ -220,7 +220,7 @@ registry.category("web_tour.tours").add("self_order_mobile_meal_cancel", {
         ...ProductPage.clickCancel(),
         Utils.clickBtn("My Order"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
-        Utils.checkBtn("Order"),
+        Utils.checkIsNoBtn("Order"),
     ],
 });
 
@@ -247,7 +247,7 @@ registry.category("web_tour.tours").add("self_order_mobile_each_cancel", {
         Utils.checkIsNoBtn("Order Now"),
         Utils.clickBtn("My Order"),
         CartPage.checkProduct("Fanta", "2.53", "1"),
-        Utils.checkBtn("Order"),
+        Utils.checkIsNoBtn("Order"),
     ],
 });
 
@@ -370,6 +370,17 @@ registry.category("web_tour.tours").add("test_order_sequence_in_self", {
         [...createPaidOrder, ...createPaidOrder, ...createPaidOrder, ...createPaidOrder].flat(),
 });
 
+registry.category("web_tour.tours").add("test_sub_categories_products_displayed", {
+    steps: () =>
+        [
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickCategory("Miscellaneous"),
+            ProductPage.clickProduct("Coca-Cola"),
+            ProductPage.clickCategory("Parent"),
+            ProductPage.clickProduct("Fanta"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_mobile_self_order_preparation_changes", {
     steps: () =>
         [
@@ -384,5 +395,31 @@ registry.category("web_tour.tours").add("test_mobile_self_order_preparation_chan
             ...CartPage.selectTable("1"),
             ConfirmationPage.isShown(),
             Utils.clickBtn("Ok"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_self_order_table_sharing-each_mode", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Coca-Cola"),
+            ProductPage.clickProduct("Fanta"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Fanta", "2.53", "1"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            Utils.clickBtn("Order"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_self_order_table_sharing-meal_mode", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Coca-Cola", "2.20", "1"),
         ].flat(),
 });

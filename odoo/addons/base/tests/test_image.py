@@ -8,13 +8,14 @@ from PIL import Image, ImageDraw, PngImagePlugin
 
 from odoo.tools import image as tools
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
 def img_open(data):
     return Image.open(io.BytesIO(data))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestImage(TransactionCase):
     """Tests for the different image tools helpers."""
     def setUp(self):

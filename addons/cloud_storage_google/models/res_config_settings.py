@@ -42,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super().get_values()
-        if account_info := self.env['ir.config_parameter'].get_param('cloud_storage_google_account_info'):
+        if account_info := self.env['ir.config_parameter'].get_str('cloud_storage_google_account_info'):
             res['cloud_storage_google_service_account_key'] = base64.b64encode(account_info.encode())
         return res
 
@@ -54,10 +54,10 @@ class ResConfigSettings(models.TransientModel):
 
     def _setup_cloud_storage_provider(self):
         ICP = self.env['ir.config_parameter']
-        if ICP.get_param('cloud_storage_provider') != 'google':
+        if ICP.get_str('cloud_storage_provider') != 'google':
             return super()._setup_cloud_storage_provider()
         # check bucket access
-        bucket_name = ICP.get_param('cloud_storage_google_bucket_name')
+        bucket_name = ICP.get_str('cloud_storage_google_bucket_name')
         # use different blob names in case the credentials are allowed to
         # overwrite an existing blob created by previous tests
         blob_name = f'0/{datetime.now(timezone.utc)}.txt'
@@ -97,16 +97,16 @@ class ResConfigSettings(models.TransientModel):
 
     def _get_cloud_storage_configuration(self):
         ICP = self.env['ir.config_parameter'].sudo()
-        if ICP.get_param('cloud_storage_provider') != 'google':
+        if ICP.get_str('cloud_storage_provider') != 'google':
             return super()._get_cloud_storage_configuration()
         configuration = {
-            'bucket_name': ICP.get_param('cloud_storage_google_bucket_name'),
-            'account_info': ICP.get_param('cloud_storage_google_account_info'),
+            'bucket_name': ICP.get_str('cloud_storage_google_bucket_name'),
+            'account_info': ICP.get_str('cloud_storage_google_account_info'),
         }
         return configuration if all(configuration.values()) else {}
 
     def _check_cloud_storage_uninstallable(self):
-        if self.env['ir.config_parameter'].get_param('cloud_storage_provider') != 'google':
+        if self.env['ir.config_parameter'].get_str('cloud_storage_provider') != 'google':
             return super()._check_cloud_storage_uninstallable()
         cr = self.env.cr
         cr.execute(

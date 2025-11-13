@@ -20,7 +20,8 @@
             </div>
             <div t-elif="filter.type === 'date'" class="w-100">
                 <DateFilterValue value="filterValue"
-                                 update.bind="(value) => this.onDateInput(filter.id, value)"/>
+                                 update.bind="(value) => this.onDateInput(filter.id, value)"
+                                 model="props.model"/>
             </div>
             <div t-elif="filter.type === 'numeric'" class="w-100 d-flex align-items-center"
                  t-att-class="filterValue?.operator === 'between' ? 'justify-content-between' : ''">

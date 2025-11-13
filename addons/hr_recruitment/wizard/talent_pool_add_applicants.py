@@ -37,8 +37,15 @@ class TalentPoolAddApplicants(models.TransientModel):
                 )
                 talents += applicant
             else:
+                applicant_attachments = self.env['ir.attachment']
+                for attachment in applicant.attachment_ids:
+                    applicant_attachments |= attachment.copy({
+                        'res_id': applicant.id
+                    })
                 talent = applicant.with_context(no_copy_in_partner_name=True).copy(
                     {
+                        'attachment_ids': [Command.link(applicant_attachment.id)
+                                           for applicant_attachment in applicant_attachments],
                         "job_id": False,
                         "talent_pool_ids": self.talent_pool_ids,
                         "categ_ids": applicant.categ_ids + self.categ_ids,
@@ -50,7 +57,7 @@ class TalentPoolAddApplicants(models.TransientModel):
         return talents
 
     def action_add_applicants_to_pool(self):
-        talents = self._add_applicants_to_pool()
+        talents = self.sudo()._add_applicants_to_pool()
         if len(talents) == 1:
             return {
                 "type": "ir.actions.act_window",

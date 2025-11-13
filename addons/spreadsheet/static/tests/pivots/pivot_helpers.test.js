@@ -27,56 +27,54 @@ beforeEach(() => {
 
 describe.current.tags("headless");
 
-describe("pivot_helpers", () => {
-    test("Basic formula extractor", async function () {
-        const formula = `=PIVOT.VALUE("1", "test") + ODOO.LIST("2", "hello", "bla")`;
-        const tokens = tokenize(formula);
-        let functionName;
-        let args;
-        ({ functionName, args } = getFirstPivotFunction(tokens));
-        expect(functionName).toBe("PIVOT.VALUE");
-        expect(args.length).toBe(2);
-        expect(args[0]).toEqual(stringArg("1", 3));
-        expect(args[1]).toEqual(stringArg("test", 6));
-        ({ functionName, args } = getFirstListFunction(tokens));
-        expect(functionName).toBe("ODOO.LIST");
-        expect(args.length).toBe(3);
-        expect(args[0]).toEqual(stringArg("2", 13));
-        expect(args[1]).toEqual(stringArg("hello", 16));
-        expect(args[2]).toEqual(stringArg("bla", 19));
-    });
+test("Basic formula extractor", async function () {
+    const formula = `=PIVOT.VALUE("1", "test") + ODOO.LIST("2", "hello", "bla")`;
+    const tokens = tokenize(formula);
+    let functionName;
+    let args;
+    ({ functionName, args } = getFirstPivotFunction(tokens));
+    expect(functionName).toBe("PIVOT.VALUE");
+    expect(args.length).toBe(2);
+    expect(args[0]).toEqual(stringArg("1", 3));
+    expect(args[1]).toEqual(stringArg("test", 6));
+    ({ functionName, args } = getFirstListFunction(tokens));
+    expect(functionName).toBe("ODOO.LIST");
+    expect(args.length).toBe(3);
+    expect(args[0]).toEqual(stringArg("2", 13));
+    expect(args[1]).toEqual(stringArg("hello", 16));
+    expect(args[2]).toEqual(stringArg("bla", 19));
+});
 
-    test("Extraction with two PIVOT formulas", async function () {
-        const formula = `=PIVOT.VALUE("1", "test") + PIVOT.VALUE("2", "hello", "bla")`;
-        const tokens = tokenize(formula);
-        const { functionName, args } = getFirstPivotFunction(tokens);
-        expect(functionName).toBe("PIVOT.VALUE");
-        expect(args.length).toBe(2);
-        expect(args[0]).toEqual(stringArg("1", 3));
-        expect(args[1]).toEqual(stringArg("test", 6));
-        expect(getFirstListFunction(tokens)).toBe(undefined);
-    });
+test("Extraction with two PIVOT formulas", async function () {
+    const formula = `=PIVOT.VALUE("1", "test") + PIVOT.VALUE("2", "hello", "bla")`;
+    const tokens = tokenize(formula);
+    const { functionName, args } = getFirstPivotFunction(tokens);
+    expect(functionName).toBe("PIVOT.VALUE");
+    expect(args.length).toBe(2);
+    expect(args[0]).toEqual(stringArg("1", 3));
+    expect(args[1]).toEqual(stringArg("test", 6));
+    expect(getFirstListFunction(tokens)).toBe(undefined);
+});
 
-    test("Number of formulas", async function () {
-        const formula = `=PIVOT.VALUE("1", "test") + PIVOT.VALUE("2", "hello", "bla") + ODOO.LIST("1", "bla")`;
-        expect(getNumberOfPivotFunctions(tokenize(formula))).toBe(2);
-        expect(getNumberOfListFormulas(tokenize(formula))).toBe(1);
-        expect(getNumberOfPivotFunctions(tokenize("=1+1"))).toBe(0);
-        expect(getNumberOfListFormulas(tokenize("=1+1"))).toBe(0);
-        expect(getNumberOfPivotFunctions(tokenize("=bla"))).toBe(0);
-        expect(getNumberOfListFormulas(tokenize("=bla"))).toBe(0);
-    });
+test("Number of formulas", async function () {
+    const formula = `=PIVOT.VALUE("1", "test") + PIVOT.VALUE("2", "hello", "bla") + ODOO.LIST("1", "bla")`;
+    expect(getNumberOfPivotFunctions(tokenize(formula))).toBe(2);
+    expect(getNumberOfListFormulas(tokenize(formula))).toBe(1);
+    expect(getNumberOfPivotFunctions(tokenize("=1+1"))).toBe(0);
+    expect(getNumberOfListFormulas(tokenize("=1+1"))).toBe(0);
+    expect(getNumberOfPivotFunctions(tokenize("=bla"))).toBe(0);
+    expect(getNumberOfListFormulas(tokenize("=bla"))).toBe(0);
+});
 
-    test("getFirstPivotFunction does not crash when given crap", async function () {
-        expect(getFirstListFunction(tokenize("=SUM(A1)"))).toBe(undefined);
-        expect(getFirstPivotFunction(tokenize("=SUM(A1)"))).toBe(undefined);
-        expect(getFirstListFunction(tokenize("=1+1"))).toBe(undefined);
-        expect(getFirstPivotFunction(tokenize("=1+1"))).toBe(undefined);
-        expect(getFirstListFunction(tokenize("=bla"))).toBe(undefined);
-        expect(getFirstPivotFunction(tokenize("=bla"))).toBe(undefined);
-        expect(getFirstListFunction(tokenize("bla"))).toBe(undefined);
-        expect(getFirstPivotFunction(tokenize("bla"))).toBe(undefined);
-    });
+test("getFirstPivotFunction does not crash when given crap", async function () {
+    expect(getFirstListFunction(tokenize("=SUM(A1)"))).toBe(undefined);
+    expect(getFirstPivotFunction(tokenize("=SUM(A1)"))).toBe(undefined);
+    expect(getFirstListFunction(tokenize("=1+1"))).toBe(undefined);
+    expect(getFirstPivotFunction(tokenize("=1+1"))).toBe(undefined);
+    expect(getFirstListFunction(tokenize("=bla"))).toBe(undefined);
+    expect(getFirstPivotFunction(tokenize("=bla"))).toBe(undefined);
+    expect(getFirstListFunction(tokenize("bla"))).toBe(undefined);
+    expect(getFirstPivotFunction(tokenize("bla"))).toBe(undefined);
 });
 
 describe("toNormalizedPivotValue", () => {

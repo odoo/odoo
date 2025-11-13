@@ -187,7 +187,7 @@ export class DashboardSearchBar extends Component {
 
     async getFacetFor(filter) {
         const filterValue = this.props.model.getters.getGlobalFilterValue(filter.id);
-        return getFacetInfo(this.env, filter, filterValue);
+        return getFacetInfo(this.env, filter, filterValue, this.props.model.getters);
     }
 
     getItems(globalFilter, trimmedQuery) {

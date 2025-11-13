@@ -1,6 +1,6 @@
 /** @ts-check */
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 
@@ -14,6 +14,16 @@ export class NumericFilterValue extends Component {
     setup() {
         useNumpadDecimal();
         this.inputRef = useRef("numpadDecimal");
+        onWillUpdateProps((newProps) => {
+            if (document.activeElement !== this.inputRef.el && this.inputRef.el) {
+                this.inputRef.el.value = newProps.value || "";
+            }
+        });
+        onMounted(() => {
+            if (this.inputRef.el) {
+                this.inputRef.el.value = this.props.value?.toString() || "";
+            }
+        });
     }
 
     onChange(value) {

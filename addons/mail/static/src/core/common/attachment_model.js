@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { assignDefined } from "@mail/utils/common/misc";
 import { generatePdfThumbnail } from "@mail/utils/common/pdf_thumbnail";
 
@@ -37,7 +37,7 @@ export class Attachment extends FileModelMixin(Record) {
             if (
                 this.isPdf &&
                 !this.has_thumbnail &&
-                (this.store.self.main_user_id?.share === false || this.ownership_token)
+                (this.store.self_user?.share === false || this.ownership_token)
             ) {
                 this.setPdfThumbnail();
             }
@@ -67,7 +67,7 @@ export class Attachment extends FileModelMixin(Record) {
     }
 
     get isDeletable() {
-        if (this.message && this.store.self.main_user_id?.share !== false) {
+        if (this.message && this.store.self_user?.share !== false) {
             return this.message.editable;
         }
         return true;

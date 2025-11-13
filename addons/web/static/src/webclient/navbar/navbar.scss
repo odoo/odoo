@@ -10,7 +10,6 @@
     height: var(--o-navbar-height);
     padding-top: $o-navbar-padding-v;
     padding-bottom: $o-navbar-padding-v;
-    border-bottom: $o-navbar-border-bottom;
     background: $o-navbar-background;
     font-size: $o-navbar-font-size;
 
@@ -76,7 +75,8 @@
         // Animate on large screen without 'reduced-motion' only.
         // --------------------------------------------------------------------
         @include media-breakpoint-up(md) {
-            &.hasImage:not(.o_menu_toggle_back) {
+            &.hasImage:not(.o_menu_toggle_back),
+            &.hasFaIcon:not(.o_menu_toggle_back) {
                 .o_menu_toggle_icon {
                     opacity: 0;
                 }
@@ -105,7 +105,8 @@
                     transition: all .1s;
                 }
 
-                &.hasImage:not(.o_menu_toggle_back) {
+                &.hasImage:not(.o_menu_toggle_back),
+                &.hasFaIcon:not(.o_menu_toggle_back) {
                     transform: none;
                     transition: none;
 
@@ -150,8 +151,12 @@
         border-color: transparent;
     }
 
-    .o_menu_sections {
-        .o_nav_entry, .dropdown-toggle {
+    .o_menu_sections, .o_menu_systray:where(:not(.o_home_menu_background .o_menu_systray)) {
+        .dropdown-toggle:disabled {
+            --NavBar-entry-color--hover: var(--NavBar-entry-color, #{$o-navbar-entry-color});
+        }
+
+        .o_nav_entry, .dropdown-toggle:not(:disabled) {
             background: var(--NavBar-entry-backgroundColor, #{$o-navbar-background});
             border: $border-width solid transparent;
 

@@ -49,6 +49,9 @@ class MrpBom(models.Model):
     sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     operation_count = fields.Integer('Operations Count', compute='_compute_operation_count')
+    show_copy_operations_button = fields.Boolean(
+        compute="_compute_show_copy_operations_button",
+        help="Technical field used to control the visibility of the 'Copy Existing Operations' button.")
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
@@ -322,6 +325,13 @@ class MrpBom(models.Model):
     def _compute_operation_count(self):
         for bom in self:
             bom.operation_count = len(bom.operation_ids)
+
+    def _compute_show_copy_operations_button(self):
+        for bom in self:
+            if not bom.operation_ids:
+                self.show_copy_operations_button = bool(self.env['mrp.routing.workcenter'].search_count([], limit=1))
+                break
+            bom.show_copy_operations_button = False
 
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
@@ -644,6 +654,10 @@ class MrpBom(models.Model):
             },
         }
 
+    def action_copy_existing_operations(self):
+        self.ensure_one()
+        return self.env['mrp.routing.workcenter'].with_context(bom_id=self.id).copy_existing_operations()
+
 
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
@@ -709,7 +723,7 @@ class MrpBomLine(models.Model):
     def _compute_attachments_count(self):
         for line in self:
             nbr_attach = self.env['product.document'].search_count([
-                '&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', 't'),
+                '&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', True),
                 '|',
                 '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
                 '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_tmpl_id.id)])

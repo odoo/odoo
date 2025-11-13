@@ -11,6 +11,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
 @tagged('allocation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAllocations(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
@@ -389,7 +390,7 @@ class TestAllocations(TestHrHolidaysCommon):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Hourly Leave Type',
             'time_type': 'leave',
-            'requires_allocation': 'yes',
+            'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
         })

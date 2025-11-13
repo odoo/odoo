@@ -71,7 +71,7 @@
                                 string = "EU Intra-community Distance Selling"
                                 documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html"
                                 help="Apply VAT of the EU country to which goods and services are delivered."
-                                invisible="'EU' not in company_country_group_codes">
+                                invisible="not('EU' in company_country_group_codes or company_country_code in ('CH', 'UK'))">
                                 <button type="object" name="action_eu_oss_tax_mapping" icon="fa-refresh" string="OSS Tax mapping" class="btn-link"/>
                             </setting>
                             <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
@@ -333,9 +333,6 @@
                         <t groups="account.group_account_user">
                             <block title="Fiscal Periods" id="accounting_reports">
                                 <setting id="fiscalyear" invisible="1" groups="account.group_account_user"/>
-                                <setting id="dynamic_report" groups="account.group_account_user" help="Navigate easily through reports and see what is behind the numbers">
-                                    <field name="module_account_reports" widget="upgrade_boolean"/>
-                                </setting>
                             </block>
                         </t>
                         <block title="Analytics" id="analytic" groups="account.group_account_user">
@@ -351,7 +348,7 @@
                                 <field name="module_product_margin"/>
                             </setting>
                         </block>
-                        <block title="Reporting" id="account_reports_settings" groups="account.group_account_user" invisible="not module_account_reports">
+                        <block title="Reporting" id="account_reports_settings" groups="account.group_account_user">
                             <setting string="Restrictive Audit Trail" company_dependent="1" invisible="force_restrictive_audit_trail" help="Log changes to posted journal entries immutably">
                                 <field name="restrictive_audit_trail"/>
                             </setting>

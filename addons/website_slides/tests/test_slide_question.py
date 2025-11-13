@@ -3,8 +3,10 @@
 from odoo import Command
 
 from odoo.addons.website_slides.tests import common as slides_common
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSlideQuestionManagement(slides_common.SlidesCase):
 
     @users('user_officer')

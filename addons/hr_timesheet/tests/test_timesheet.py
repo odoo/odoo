@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import Form, TransactionCase, new_test_user
+from odoo.tests import tagged, Form, TransactionCase, new_test_user
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 
 
@@ -114,6 +113,7 @@ class TestCommonTimesheet(TransactionCase):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimesheet(TestCommonTimesheet):
 
     def setUp(self):
@@ -309,6 +309,16 @@ class TestTimesheet(TestCommonTimesheet):
             self.task1.write({
                 'project_id': False
             })
+
+    def test_favorite_project_id(self):
+        """ Test that user without previous timesheets and without
+        access to the internal project has no favorite project. """
+
+        # make internal project accessible to invited internal users only
+        self.env.company.internal_project_id.privacy_visibility = 'followers'
+
+        favorite_project = self.env['account.analytic.line'].with_user(self.user_employee)._get_favorite_project_id()
+        self.assertFalse(favorite_project, "A user without timesheet and without access to the internal project should have no favorite project.")
 
     def test_recompute_amount_for_multiple_timesheets(self):
         """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
@@ -855,6 +865,7 @@ class TestTimesheet(TestCommonTimesheet):
         timesheet.invalidate_recordset(['calendar_display_name'])
         self.assertEqual(timesheet.calendar_display_name, f"{self.project_customer.name} (1.5d)")
 
+    @freeze_time("2025-10-31 08:00:00")
     def test_multi_create_timesheets_from_calendar(self):
         """
         Simulate creating timesheets using the multi-create feature in the calendar view

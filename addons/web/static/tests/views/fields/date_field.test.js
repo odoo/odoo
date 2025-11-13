@@ -1,6 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryFirst, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
-import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
     assertDateTimePicker,
     getPickerCell,
@@ -61,6 +61,45 @@ test("toggle datepicker", async () => {
     expect(".o_datetime_picker").toHaveCount(0);
 });
 
+test("datepicker is automatically closed after selecting a value", async () => {
+    Partner._onChanges.date = () => {};
+    const def = new Deferred();
+    onRpc("onchange", () => def);
+
+    await mountView({ type: "form", resModel: "res.partner", resId: 1 });
+
+    expect(".o_datetime_picker").toHaveCount(0);
+    await contains(".o_field_date button").click();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    await contains(getPickerCell(22)).click();
+    await animationFrame();
+    // The picker shouldn't be reopened, even if the onChange RPC is slow.
+    expect(".o_datetime_picker").toHaveCount(0);
+    def.resolve();
+});
+
+test("Ensure only one datepicker is open", async () => {
+    Partner._fields.date_start = fields.Date();
+
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `
+            <form>
+                <field name="date_start"/>
+                <field name="date"/>
+            </form>`,
+        resId: 1,
+    });
+
+    await queryFirst("[data-field='date_start']").click();
+    await queryFirst("[data-field='date']").click();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+});
+
 test.tags("desktop");
 test("open datepicker on Control+Enter", async () => {
     defineParams({
@@ -91,7 +130,7 @@ test("open datepicker on Control+Enter", async () => {
     await press(["ctrl", "enter"]);
     await animationFrame();
     assertDateTimePicker({
-        title: "January 1997",
+        title: "Jan 1997",
         date: [
             {
                 cells: [
@@ -395,7 +434,7 @@ test("date field supports internationalization", async () => {
     expect(".o_field_date").toHaveText("3. feb. 2017");
     await contains(".o_field_date button").click();
     expect(".o_field_date input").toHaveValue("02/03/2017");
-    expect(".o_zoom_out strong").toHaveText("februar 2017");
+    expect(".o_zoom_out strong").toHaveText("feb 2017");
 
     await contains(getPickerCell("22")).click();
     await clickSave();

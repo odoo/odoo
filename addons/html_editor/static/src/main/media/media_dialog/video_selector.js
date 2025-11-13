@@ -5,6 +5,7 @@ import { debounce } from "@web/core/utils/timing";
 
 import { Component, useState, useRef, onMounted, status } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 class VideoOption extends Component {
     static template = "html_editor.VideoOption";
@@ -65,13 +66,15 @@ export class VideoSelector extends Component {
             platform: null,
             vimeoPreviews: [],
             errorMessage: "",
+            isVertical: false,
         });
 
         this.PLATFORMS = {
             youtube: "youtube",
             dailymotion: "dailymotion",
             vimeo: "vimeo",
-            youku: "youku",
+            instagram: "instagram",
+            facebook: "facebook",
         };
 
         this.platformParams = {
@@ -86,7 +89,6 @@ export class VideoSelector extends Component {
                 description: _t("Videos are muted when autoplay is enabled"),
                 platforms: [
                     this.PLATFORMS.youtube,
-                    this.PLATFORMS.dailymotion,
                     this.PLATFORMS.vimeo,
                 ],
                 urlParameter: () => "autoplay=1",
@@ -100,7 +102,6 @@ export class VideoSelector extends Component {
                 label: _t("Hide player controls"),
                 platforms: [
                     this.PLATFORMS.youtube,
-                    this.PLATFORMS.dailymotion,
                     this.PLATFORMS.vimeo,
                 ],
                 urlParameter: () => "controls=0",
@@ -112,15 +113,14 @@ export class VideoSelector extends Component {
                 isHidden: () =>
                     this.state.options.filter((option) => option.id === "hide_controls")[0].value,
             },
-            hide_dm_logo: {
-                label: _t("Hide Dailymotion logo"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: () => "ui-logo=0",
-            },
-            hide_dm_share: {
-                label: _t("Hide sharing button"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: () => "sharing-enable=0",
+            is_vertical: {
+                label: _t("Vertical"),
+                platforms: [
+                    this.PLATFORMS.youtube,
+                    this.PLATFORMS.instagram,
+                    this.PLATFORMS.facebook,
+                ],
+                urlParameter: () => "vertical",
             },
             start_from: {
                 label: _t("Start at"),
@@ -144,9 +144,13 @@ export class VideoSelector extends Component {
                     "";
                 if (src) {
                     this.state.urlInput = src;
-                    if (!src.includes("https:") && !src.includes("http:")) {
+                    if (!src.startsWith("https:") && !src.startsWith("http:")) {
                         this.state.urlInput = "https:" + this.state.urlInput;
                     }
+                    this.state.isVertical = !!closestElement(
+                        this.props.media,
+                        ".media_iframe_video"
+                    )?.dataset.isVertical;
                     await this.syncOptionsWithUrl();
                     if (status(this) === "destroyed") {
                         return;
@@ -193,6 +197,9 @@ export class VideoSelector extends Component {
     async onChangeOption(optionId) {
         this.state.options = this.state.options.map((option) => {
             if (option.id === optionId) {
+                if (option.id === "is_vertical") {
+                    this.state.isVertical = !this.state.isVertical;
+                }
                 // used "0" here, to set the initial "startAt" value if option is toggled on,
                 // for other option it works as truthy value.
                 return { ...option, value: !option.value && "00:00" };
@@ -226,7 +233,7 @@ export class VideoSelector extends Component {
 
         // Detect if we have an embed code rather than an URL
         const embedMatch = this.state.urlInput.match(/(src|href)=["']?([^"']+)?/);
-        if (embedMatch && embedMatch[2].length > 0 && embedMatch[2].indexOf("instagram")) {
+        if (embedMatch && embedMatch[2]?.length > 0 && embedMatch[2].indexOf("instagram")) {
             embedMatch[1] = embedMatch[2]; // Instagram embed code is different
         }
         const url = embedMatch ? embedMatch[1] : this.state.urlInput;
@@ -273,6 +280,11 @@ export class VideoSelector extends Component {
         }
 
         this.state.src = src;
+        // Explicitly passing the state so the static `createElements` method,
+        // which has no access to instance properties, can still use it.
+        if (params) {
+            params.isVertical = this.state.isVertical;
+        }
         this.props.selectMedia({
             id: src,
             src,
@@ -303,10 +315,18 @@ export class VideoSelector extends Component {
         return selectedMedia.map((video) => {
             const div = document.createElement("div");
             div.dataset.oeExpression = video.src;
-            div.innerHTML =
-                '<div class="css_editable_mode_display"></div>' +
-                '<div class="media_iframe_video_size" contenteditable="false"></div>' +
-                '<iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>';
+            const isVertical = !!video.params?.isVertical;
+            if (isVertical) {
+                div.dataset.isVertical = "true";
+            }
+            const sizeClass = isVertical
+                ? "media_iframe_video_size_for_vertical"
+                : "media_iframe_video_size";
+            div.innerHTML = `
+                <div class="css_editable_mode_display"></div>
+                <div class="${sizeClass}" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
+            `;
 
             div.querySelector("iframe").src = video.src;
             return div;
@@ -339,6 +359,14 @@ export class VideoSelector extends Component {
     async syncOptionsWithUrl() {
         await this.updateVideo();
         if (!URL.canParse(this.state.urlInput)) {
+            // For embedded codes, only the vertical option is updated since
+            // other options rely on URL parameters that can’t be parsed.
+            this.state.options = this.state.options.map((option) => {
+                if (option.id === "is_vertical") {
+                    return { ...option, value: this.state.isVertical ? "1" : "" };
+                }
+                return { ...option };
+            });
             return;
         }
         const parsedUrl = new URL(this.state.urlInput);
@@ -356,6 +384,9 @@ export class VideoSelector extends Component {
                     break;
                 case "startTime":
                     value = urlParams.get("startTime") || urlParams.get("start");
+                    break;
+                case "vertical":
+                    value = this.state.isVertical ? "1" : "";
                     break;
                 default:
                     value = this.state.urlInput.includes(urlParameter);
@@ -423,7 +454,7 @@ export class VideoSelector extends Component {
      * @returns {string} - The start time in seconds.
      */
     parseTimeToSeconds(value) {
-        const match = value.match(/^(?:(\d+)m(\d+)s|(\d+)m|(\d+)s|(\d+))$/);
+        const match = value?.match(/^(?:(\d+)m(\d+)s|(\d+)m|(\d+)s|(\d+))$/);
         if (!match) {
             return value;
         }

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
@@ -69,7 +69,9 @@ test("should make qweb tag bold and create a step even with partial selection in
     );
     bold(editor);
     expect(getContent(el)).toBe(
-        `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
+        '<p data-selection-placeholder=""><br></p>' +
+            `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>` +
+            '<p data-selection-placeholder=""><br></p>'
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
     const historySteps = editor.shared.history.getHistorySteps();
@@ -213,6 +215,7 @@ test("should make a few characters bold inside table (bold)", async () => {
             </table>`),
         stepFunction: bold,
         contentAfterEdit: unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -231,7 +234,8 @@ test("should make a few characters bold inside table (bold)", async () => {
                         <td><p><br></p></td>
                     </tr>
             </tbody>
-            </table>`),
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
     });
 });
 
@@ -460,4 +464,48 @@ test("should not add history step for bold on collapsed selection", async () => 
 
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);
+});
+
+test("Should properly apply bold format if closest element is bold but not closest block", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <blockquote class="blockquote">
+                <em class="h4">
+                    a[b]c
+                </em>
+            </blockquote>
+        `),
+        {
+            styleContent: `
+                blockquote {
+                    font-weight: 300;   
+                }
+            `,
+        }
+    );
+    await animationFrame();
+    await expectElementCount('.o-we-toolbar [name="bold"].active', 1);
+    await click('.o-we-toolbar [name="bold"].active');
+    await animationFrame();
+    expect(el).toHaveInnerHTML(
+        unformat(
+            `<blockquote class="blockquote">
+                <em class="h4">
+                    a<span style="font-weight: normal;">b</span>c
+                </em>
+            </blockquote>`
+        )
+    );
+    await expectElementCount('.o-we-toolbar [name="bold"]:not(.active)', 1);
+    await click('.o-we-toolbar [name="bold"]:not(.active)');
+    await animationFrame();
+    expect(el).toHaveInnerHTML(
+        unformat(
+            `<blockquote class="blockquote">
+                <em class="h4">
+                    abc
+                </em>
+            </blockquote>`
+        )
+    );
 });

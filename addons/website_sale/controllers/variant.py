@@ -55,10 +55,11 @@ class WebsiteSaleVariantController(Controller):
                 },
             )
 
-        if product and request.website.is_view_active('website_sale.product_tags'):
+        if request.website.is_view_active('website_sale.product_tags'):
+            all_tags = product.all_product_tag_ids if product else product_template.product_tag_ids
             combination_info['product_tags'] = request.env['ir.ui.view']._render_template(
                 'website_sale.product_tags', values={
-                    'all_product_tags': product.all_product_tag_ids.filtered('visible_to_customers')
+                    'all_product_tags': all_tags.filtered('visible_to_customers'),
                 }
             )
         return combination_info

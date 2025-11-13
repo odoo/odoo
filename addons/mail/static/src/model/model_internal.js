@@ -30,6 +30,18 @@ export class ModelInternal {
     /** @type {Map<string, string>} */
     fieldsType = new Map();
     /**
+     * Set of field names on the current model that are _inherits fields.
+     *
+     * @type {Set<string>}
+     */
+    inheritsFields = new Set();
+    /**
+     * Set of field names on the current model that are the inverse of _inherits fields.
+     *
+     * @type {Set<string>}
+     */
+    inheritsInverseFields = new Set();
+    /**
      * Map of field name to the name of the relation field through which this field should be read.
      *
      * @type {Map<string, string>}

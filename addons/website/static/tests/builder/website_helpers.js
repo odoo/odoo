@@ -10,7 +10,7 @@ import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { after, describe } from "@odoo/hoot";
+import { describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
@@ -21,6 +21,7 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
@@ -33,6 +34,9 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { WebsiteBuilder } from "@website/builder/website_builder";
 
 class Website extends models.Model {
     _name = "website";
@@ -100,7 +104,7 @@ export async function setupWebsiteBuilder(
     registry.category("services").remove("website_edit");
     let editor;
     let editableContent;
-    await mountWithCleanup(WebClient);
+    const comp = await mountWithCleanup(WebClient);
     let originalIframeLoaded;
     let resolveIframeLoaded = () => {};
     const bodyHTML = `${beforeWrapwrapContent}
@@ -195,11 +199,13 @@ export async function setupWebsiteBuilder(
     });
 
     let lastUpdatePromise;
-    const waitDomUpdated = async () => {
+    const waitSidebarUpdated = async () => {
+        await editor.shared.operation.next();
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
         await animationFrame();
+        await waitUntilIdle([comp.__owl__.app]);
     };
     patchWithCleanup(Builder.prototype, {
         setup() {
@@ -258,7 +264,7 @@ export async function setupWebsiteBuilder(
         getEditor: () => editor,
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
-        waitDomUpdated,
+        waitSidebarUpdated,
     };
 }
 
@@ -280,83 +286,36 @@ async function openBuilderSidebar(editAssetsLoaded) {
     await animationFrame();
 }
 
-export function addPlugin(Plugin) {
-    registry.category("website-plugins").add(Plugin.id, Plugin);
-    after(() => {
-        registry.category("website-plugins").remove(Plugin.id);
+export function addPlugin(...Plugin) {
+    patchWithCleanup(WebsiteBuilder.prototype, {
+        get builderProps() {
+            const props = super.builderProps;
+            return { ...props, Plugins: [...props.Plugins, ...Plugin] };
+        },
     });
 }
 
-export function addOption({
-    selector,
-    exclude,
-    applyTo,
-    template,
-    Component,
-    sequence,
-    cleanForSave,
-    props,
-    editableOnly,
-    title,
-    reloadTarget,
-}) {
+export function addOption(option) {
     const pluginId = uniqueId("test-option");
-    const Class = makeOptionPlugin({
-        pluginId,
-        OptionComponent: Component,
-        template,
-        selector,
-        exclude,
-        applyTo,
-        sequence,
-        cleanForSave,
-        props,
-        editableOnly,
-        title,
-        reloadTarget,
-    });
-    registry.category("website-plugins").add(pluginId, Class);
-    after(() => {
-        registry.category("website-plugins").remove(pluginId);
-    });
-}
-function makeOptionPlugin({
-    pluginId,
-    template,
-    selector,
-    exclude,
-    applyTo,
-    sequence,
-    OptionComponent,
-    cleanForSave,
-    props,
-    editableOnly,
-    title,
-    reloadTarget,
-}) {
-    const option = {
-        OptionComponent,
-        template,
-        selector,
-        exclude,
-        applyTo,
-        cleanForSave,
-        props,
-        editableOnly,
-        title,
-        reloadTarget,
-    };
+    const BaseComponent = option.Component || BaseOptionComponent;
+    class Option extends BaseComponent {
+        static components = { ...BaseComponent.components, BorderConfigurator };
+    }
+    const staticProps = { ...option };
+    const sequence = staticProps.sequence;
+    delete staticProps.Component;
+    delete staticProps.sequence;
+    Object.assign(Option, staticProps);
 
-    const Class = {
+    const P = {
         [pluginId]: class extends Plugin {
             static id = pluginId;
             resources = {
-                builder_options: sequence ? withSequence(sequence, option) : option,
+                builder_options: sequence ? withSequence(sequence, Option) : Option,
             };
         },
     }[pluginId];
-
-    return Class;
+    addPlugin(P);
 }
 
 export function addActionOption(actions = {}) {
@@ -367,10 +326,7 @@ export function addActionOption(actions = {}) {
             builder_actions: actions,
         };
     }
-    registry.category("website-plugins").add(pluginId, P);
-    after(() => {
-        registry.category("website-plugins").remove(P);
-    });
+    addPlugin(P);
 }
 
 export function addDropZoneSelector(selector) {
@@ -382,11 +338,7 @@ export function addDropZoneSelector(selector) {
             dropzone_selector: [selector],
         };
     }
-
-    registry.category("website-plugins").add(pluginId, P);
-    after(() => {
-        registry.category("website-plugins").remove(P);
-    });
+    addPlugin(P);
 }
 
 export async function setupWebsiteBuilderWithDummySnippet(content) {

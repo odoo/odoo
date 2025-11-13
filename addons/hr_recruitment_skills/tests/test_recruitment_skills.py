@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests.common import new_test_user
 
 
 @tagged("recruitment")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecruitmentSkills(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -71,6 +74,35 @@ class TestRecruitmentSkills(TransactionCase):
             skill.skill_level_id = self.t_skill_level_1
         app_form.save()
         self.assertEqual(len(self.t_applicant.applicant_skill_ids), 1)
+
+    def test_access_error_on_adding_applicant(self):
+        """
+        Test that adding an applicant to a talent pool via the wizard
+        fails with AccessError if the user lacks read access on Employees.
+        """
+        # Create a fresh applicant never added to any pool
+        new_applicant = self.env["hr.applicant"].create({
+            "partner_name": "New Applicant Access Test",
+            "job_id": self.t_job.id,
+        })
+
+        # Create a restricted user with Recruitment access only
+        recruitment_group = self.env.ref('hr_recruitment.group_hr_recruitment_user')
+        user_demo = self.env["res.users"].create({
+            "name": "Recruitment User",
+            "login": "recruitment_user@example.com",
+            "email": "recruitment_user@example.com",
+            "group_ids": [Command.set(recruitment_group.ids)],
+        })
+
+        # No error should be raised.
+        self.env["talent.pool.add.applicants"].create({
+            "applicant_ids": [(6, 0, [new_applicant.id])],
+            "talent_pool_ids": [(6, 0, [self.t_talent_pool.id])],
+        }).with_user(user_demo).action_add_applicants_to_pool()
+
+        talent_pool_applicants = self.t_talent_pool.talent_ids
+        self.assertEqual(len(talent_pool_applicants), 1)
 
     def test_one_skill_is_copied_from_applicant_to_talent(self):
         """
@@ -549,3 +581,53 @@ class TestRecruitmentSkills(TransactionCase):
         applicant_skills_name_list = applicant.applicant_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         employee_skills_name_list = applicant.employee_id.employee_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         self.assertCountEqual(applicant_skills_name_list, employee_skills_name_list)
+
+    def test_interviewer_skills_access(self):
+        """
+        Test that an interviewer can see the skills of an applicant
+        """
+        interviewer_user = new_test_user(self.env, 'itw',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer', email='itw@example.com')
+
+        self.t_job.expected_degree = self.env['hr.recruitment.degree'].create({
+            'name': 'Master',
+            'score': 0.5,
+        })
+        self.t_applicant.interviewer_ids = interviewer_user.ids
+        # flush to force compute methods when reading fields
+        self.env.flush_all()
+        matching_skill_ids = self.t_applicant.with_user(interviewer_user).matching_skill_ids
+        self.assertEqual(matching_skill_ids, self.t_applicant.matching_skill_ids, "The interviewer should see the skills of the applicant")
+
+    def test_applicant_from_talent_preserve_skills(self):
+        """
+        Verify that when an applicant is created from a talent pool applicant, the new applicant
+        has the same skills as the talent and the talent retains all its skills.
+        """
+        talent = (
+            self.env["talent.pool.add.applicants"]
+            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
+            ._add_applicants_to_pool()
+        )
+        talent_form = Form(talent)
+        with talent_form.current_applicant_skill_ids.new() as skill:
+            skill.skill_type_id = self.t_skill_type
+            skill.skill_id = self.t_skill_1
+            skill.skill_level_id = self.t_skill_level_1
+        talent_form.save()
+
+        test_job = self.env["hr.job"].create({"name": "Test Job"})
+        applicant = (
+            self.env["job.add.applicants"]
+            .create({"applicant_ids": talent.ids, "job_ids": test_job})
+            ._add_applicants_to_job()
+        )
+
+        self.assertEqual(applicant.applicant_skill_ids.skill_type_id, self.t_skill_type)
+        self.assertEqual(applicant.applicant_skill_ids.skill_level_id, self.t_skill_level_1)
+        self.assertEqual(applicant.applicant_skill_ids.skill_id, self.t_skill_1)
+
+        self.assertEqual(talent.applicant_skill_ids.skill_type_id, applicant.applicant_skill_ids.skill_type_id)
+        self.assertEqual(talent.applicant_skill_ids.skill_level_id, applicant.applicant_skill_ids.skill_level_id)
+        self.assertEqual(talent.applicant_skill_ids.skill_id, applicant.applicant_skill_ids.skill_id)

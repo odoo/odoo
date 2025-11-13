@@ -161,8 +161,15 @@ export class FloorScreen extends Component {
                 const table = this.getPosTable(element);
                 if (!suggestLinkingPositions()) {
                     table.position_h =
-                        x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
-                    table.position_v = y - offsetY - this.map.el.getBoundingClientRect().top;
+                        x -
+                        offsetX +
+                        this.map.el.parentElement.parentElement.scrollLeft -
+                        this.state.floorMapOffset.x;
+                    table.position_v =
+                        y -
+                        offsetY -
+                        this.map.el.getBoundingClientRect().top -
+                        this.state.floorMapOffset.y;
                     if (this.pos.isEditMode && !this.activeFloor.floor_background_image) {
                         table.position_h -= table.position_h % GRID_SIZE;
                         table.position_v -= table.position_v % GRID_SIZE;
@@ -936,7 +943,7 @@ export class FloorScreen extends Component {
             ]);
         } catch {
             this.dialog.add(AlertDialog, {
-                title: _t("Delete Error"),
+                title: _t("Warning"),
                 body: _t("You cannot delete a floor with orders still in draft for this floor."),
             });
             return;
@@ -993,7 +1000,7 @@ export class FloorScreen extends Component {
             }
         } catch {
             this.dialog.add(AlertDialog, {
-                title: _t("Delete Error"),
+                title: _t("Warning"),
                 body: _t("You cannot delete a table with orders still in draft for this table."),
             });
         }

@@ -507,7 +507,7 @@ test("should insert a 3x3 table on type `/table`", async () => {
     await press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
 });
 
@@ -519,7 +519,7 @@ test("should insert a 3x3 table on type `/table` in mobile view", async () => {
     await press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
 });
 

@@ -131,15 +131,13 @@ class ResPartner(models.Model):
         partners = self._search_mention_suggestions(domain, limit, extra_domain)
         members_domain = [("channel_id", "=", channel.id), ("partner_id", "in", partners.ids)]
         members = self.env["discuss.channel.member"].search(members_domain)
+        store = Store()
         member_fields = [
             Store.One("channel_id", [], as_thread=True),
-            *self.env["discuss.channel.member"]._to_store_persona([]),
+            *self.env["discuss.channel.member"]._to_store_persona(store.target, []),
         ]
-        store = (
-            Store()
-            .add(members, member_fields)
-            .add(partners, extra_fields=partners._get_store_mention_fields())
-        )
+        store.add(members, member_fields)
+        store.add(partners, extra_fields=partners._get_store_mention_fields())
         store.add(channel, "group_public_id")
         if allowed_group:
             for p in partners:

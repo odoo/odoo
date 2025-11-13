@@ -36,12 +36,10 @@ class IrWebsocket(models.AbstractModel):
 
     @add_guest_to_context
     def _update_mail_presence(self, inactivity_period):
-        partner, guest = self.env["res.partner"]._get_current_persona()
-        if not partner and not guest:
+        user, guest = self.env["res.users"]._get_current_persona()
+        if not user and not guest:
             return
-        self.env["mail.presence"]._try_update_presence(
-            self.env.user if partner else guest, inactivity_period
-        )
+        self.env["mail.presence"]._try_update_presence(user or guest, inactivity_period)
 
     def _prepare_subscribe_data(self, channels, last):
         data = super()._prepare_subscribe_data(channels, last)
@@ -65,19 +63,26 @@ class IrWebsocket(models.AbstractModel):
             .search([("id", "in", partner_ids)])
             .sudo(False)
         )
-        allowed_partners = partners.filtered(
-            lambda p: verify_limited_field_access_token(
-                p, "im_status", model_ids_to_token["res.partner"][p.id], scope="mail.presence"
+        user, guest = self.env["res.users"]._get_current_persona()
+        allowed_partners = (
+            partners.filtered(
+                lambda p: verify_limited_field_access_token(
+                    p, "im_status", model_ids_to_token["res.partner"][p.id], scope="mail.presence"
+                )
+                or p.has_access("read")
             )
-            or p.has_access("read")
+            | user.partner_id
         )
         guest_ids = model_ids_to_token["mail.guest"].keys()
         guests = self.env["mail.guest"].sudo().search([("id", "in", guest_ids)]).sudo(False)
-        allowed_guests = guests.filtered(
-            lambda g: verify_limited_field_access_token(
-                g, "im_status", model_ids_to_token["mail.guest"][g.id], scope="mail.presence"
+        allowed_guests = (
+            guests.filtered(
+                lambda g: verify_limited_field_access_token(
+                    g, "im_status", model_ids_to_token["mail.guest"][g.id], scope="mail.presence"
+                )
+                or g.has_access("read")
             )
-            or g.has_access("read")
+            | guest
         )
         data["channels"].update((partner, "presence") for partner in allowed_partners)
         data["channels"].update((guest, "presence") for guest in allowed_guests)
@@ -97,9 +102,9 @@ class IrWebsocket(models.AbstractModel):
         return data
 
     def _after_subscribe_data(self, data):
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if current_partner or current_guest:
-            data["missed_presences"]._send_presence(bus_target=current_partner or current_guest)
+        user, guest = self.env["res.users"]._get_current_persona()
+        if user or guest:
+            data["missed_presences"]._send_presence(bus_target=user.partner_id or guest)
 
     def _on_websocket_closed(self, cookies):
         super()._on_websocket_closed(cookies)

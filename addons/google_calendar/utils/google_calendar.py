@@ -39,7 +39,7 @@ class GoogleCalendarService():
         else:
             # full sync, limit to a range of 1y in past to 1y in the futur by default
             ICP = self.google_service.env['ir.config_parameter'].sudo()
-            day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
+            day_range = ICP.get_int('google_calendar.sync.range_days') or 365
             _logger.info("Full cal sync, restricting to %s days range", day_range)
             lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
             upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
@@ -124,7 +124,7 @@ class GoogleCalendarService():
             'd': self.google_service.env.cr.dbname,
             's': 'calendar',
             'f': from_url,
-            'u': self.google_service.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'u': self.google_service.env['ir.config_parameter'].sudo().get_str('database.uuid'),
         }
         base_url = self.google_service.env.context.get('base_url') or self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(

@@ -24,10 +24,9 @@ patch(ChatWindow.prototype, {
         this.close();
     },
     get showGiveFeedbackBtn() {
-        const thread = this.props.chatWindow.thread;
-        if (thread?.channel?.channel_type !== "livechat") {
+        if (this.channel.channel_type !== "livechat") {
             return false;
         }
-        return thread.chatbot?.completed || thread.livechat_end_dt;
+        return this.channel.chatbot?.completed || this.channel.livechat_end_dt;
     },
 });

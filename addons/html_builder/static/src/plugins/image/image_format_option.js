@@ -4,6 +4,7 @@ import { clamp } from "@web/core/utils/numbers";
 
 export class ImageFormatOption extends BaseOptionComponent {
     static template = "html_builder.ImageFormat";
+    static dependencies = ["imageFormatOption"];
     static props = {
         level: { type: Number, optional: true },
         computeMaxDisplayWidth: { type: Function, optional: true },
@@ -14,8 +15,9 @@ export class ImageFormatOption extends BaseOptionComponent {
     MAX_SUGGESTED_WIDTH = 1920;
     setup() {
         super.setup();
+        const { computeAvailableFormats } = this.dependencies.imageFormatOption;
         this.state = useDomState(async (editingElement) => {
-            const formats = await this.env.editor.shared.imageFormatOption.computeAvailableFormats(
+            const formats = await computeAvailableFormats(
                 editingElement,
                 this.computeMaxDisplayWidth.bind(this)
             );

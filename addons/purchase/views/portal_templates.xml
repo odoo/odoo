@@ -172,7 +172,7 @@
                             <div>
                                 <h5>Not using Odoo?</h5>
                                 <div class="input-group mb-3 w-50">
-                                    <t t-set="base_address" t-value="order.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                    <t t-set="base_address" t-value="order.env['ir.config_parameter'].sudo().get_str('web.base.url')"/>
                                     <t t-set="doc_url" t-value="base_address + '/my/purchase/' + str(order.id) + '/download_edi?' + str(keep_query())"/>
                                     <input type="text" class="form-control" aria-describedby="copy-button" readonly="readonly" t-att-value="doc_url"/>
                                     <button class="btn btn-outline-secondary" type="button" id="copy-button"

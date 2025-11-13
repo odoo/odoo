@@ -5,6 +5,7 @@ from odoo.tests import tagged, users
 
 
 @tagged("ir_attachment")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAttachment(MailCommon):
 
     @users("employee")

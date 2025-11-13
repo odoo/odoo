@@ -6,9 +6,10 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventSpecific(TestEventSaleCommon):
 
     def test_event_change_max_seat_no_side_effect(self):

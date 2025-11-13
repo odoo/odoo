@@ -2,7 +2,7 @@ from odoo.addons.mail.tests.common_controllers import MailControllerBinaryCommon
 from odoo.tests import tagged
 
 
-@tagged("-at_install", "post_install", "mail_controller")
+@tagged("mail_controller")
 class TestDiscussBinaryController(MailControllerBinaryCommon):
 
     @classmethod

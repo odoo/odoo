@@ -14,8 +14,17 @@ describe("insert separator", () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
             stepFunction: insertSeparator,
-            contentAfterEdit: `<hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfterEdit: `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
             contentAfter: "<hr><p>[]<br></p>",
+        });
+    });
+
+    test("should insert a separator inside editable with contenteditable set to false before the block", async () => {
+        await testEditor({
+            contentBefore: "<p>[]abc<br></p>",
+            stepFunction: insertSeparator,
+            contentAfterEdit: `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p>[]abc<br></p>`,
+            contentAfter: "<hr><p>[]abc<br></p>",
         });
     });
 
@@ -102,7 +111,7 @@ describe("insert separator", () => {
         el.append(div);
         editor.shared.history.addStep();
         expect(getContent(el)).toBe(
-            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div>`
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div><p data-selection-placeholder=""><br></p>`
         );
     });
 

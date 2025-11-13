@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import tagged, common
 from odoo.exceptions import ValidationError
 from odoo import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFiscalPosition(common.TransactionCase):
     """Tests for fiscal positions in auto apply (account.fiscal.position).
     If a partner has a vat number, the fiscal positions with "vat_required=True"
@@ -219,27 +220,6 @@ class TestFiscalPosition(common.TransactionCase):
             self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_us_no_vat),
             fp_eu_extra
         )
-
-    def test_map_inactive(self):
-        self.env.company.country_id = self.us
-        self.env['account.tax.group'].create(
-            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
-        )
-        fp = self.env['account.fiscal.position'].create({
-            'name': 'FP With Inactive Taxes',
-        })
-        src_tax = self.env['account.tax'].create({
-            'name': 'Source Tax',
-            'amount': 10,
-        })
-        dest_tax = self.env['account.tax'].create({
-            'name': 'Destination Tax',
-            'amount': 20,
-            'fiscal_position_ids': [Command.link(fp.id)],
-            'original_tax_ids': [Command.link(src_tax.id)],
-            'active': False,
-        })
-        self.assertEqual(fp.map_tax(src_tax), dest_tax)
 
     def test_domestic_fp_map_self(self):
         self.env.company.country_id = self.us

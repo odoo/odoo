@@ -22,6 +22,7 @@ except IOError:
 
 @skipIf(eslint is None, "eslint tool not found on this system")
 @tagged("test_themes")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestESLint(lint_case.LintCase):
 
     longMessage = True

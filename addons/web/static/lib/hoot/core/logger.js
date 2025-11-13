@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
-import { stringify } from "../hoot_utils";
+import { isNil, stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
 //-----------------------------------------------------------------------------
@@ -123,13 +123,13 @@ class Logger {
         $groupEnd();
     }
     /**
-     * @param  {...any} args
+     * @param {...any} args
      */
     table(...args) {
         $table(...args);
     }
     /**
-     * @param  {...any} args
+     * @param {...any} args
      */
     trace(...args) {
         $trace(...args);
@@ -288,29 +288,45 @@ export function makeNetworkLogger(prefix, title) {
     return {
         /**
          * Request logger: blue-ish.
-         * @param {() => any} getData
+         * @param {() => any[]} getData
          */
-        async logRequest(getData) {
+        logRequest(getData) {
             if (!logger.canLog("debug")) {
                 return;
             }
             const color = `color: #66e`;
-            const styles = [`${color}; font-weight: bold;`, color];
-            $groupCollapsed(`-> %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
-            $trace("request trace");
+            const args = [`${color}; font-weight: bold;`, color];
+            const [dataHeader, ...otherData] = getData();
+            if (!isNil(dataHeader)) {
+                args.push(dataHeader);
+            }
+            $groupCollapsed(`-> %c${prefix}#${id}%c<${title}>`, ...args);
+            for (const data of otherData) {
+                $log(data);
+            }
+            $trace("Request trace:");
             $groupEnd();
         },
         /**
          * Response logger: orange.
-         * @param {() => any} getData
+         * @param {() => any[]} getData
          */
-        async logResponse(getData) {
+        logResponse(getData) {
             if (!logger.canLog("debug")) {
                 return;
             }
             const color = `color: #f80`;
-            const styles = [`${color}; font-weight: bold;`, color];
-            $log(`<- %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
+            const args = [`${color}; font-weight: bold;`, color];
+            const [dataHeader, ...otherData] = getData();
+            if (!isNil(dataHeader)) {
+                args.push(dataHeader);
+            }
+            $groupCollapsed(`<- %c${prefix}#${id}%c<${title}>`, ...args);
+            for (const data of otherData) {
+                $log(data);
+            }
+            $trace("Response trace:");
+            $groupEnd();
         },
     };
 }

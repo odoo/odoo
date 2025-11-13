@@ -3,6 +3,16 @@
     --popover-border-color: #{$o-we-bg-darker};
 }
 
+.o_custom_gradient_button {
+    &, &:hover, &:focus {
+        color: #000000;
+    }
+
+    &[style*="background-image"] {
+        color: $o-we-item-clickable-color;
+    }
+}
+
 .o-hb-colorpicker {
     --o-color-picker-active-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
 

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -32,25 +32,33 @@ class HrApplicant(models.Model):
         return action
 
     def action_send_survey(self):
-        self.ensure_one()
-
-        # if an applicant does not already has associated partner_id create it
-        if not self.partner_id:
-            if not self.partner_name:
-                raise UserError(_('Please provide an applicant name.'))
-            self.partner_id = self.env['res.partner'].sudo().create({
-                'is_company': False,
-                'name': self.partner_name,
-                'email': self.email_from,
-                'phone': self.partner_phone,
-            })
-
-        self.survey_id.check_validity()
         template = self.env.ref('hr_recruitment_survey.mail_template_applicant_interview_invite', raise_if_not_found=False)
+
+        applicant_partner_ids = self.env['res.partner']
+        applicant_survey_ids = self.env['survey.survey']
+
+        # If an applicant does not already have an associated partner, search for it, or create it.
+        for applicant in self:
+            if not applicant.partner_id:
+                if not applicant.partner_name:
+                    raise UserError(self.env._('Please provide an applicant name.'))
+
+                applicant.partner_id = applicant.env['res.partner'].sudo().create({
+                    'is_company': False,
+                    'name': applicant.partner_name,
+                    'email': applicant.email_from,
+                    'phone': applicant.partner_phone,
+                })
+
+            applicant.survey_id.check_validity()
+            applicant_partner_ids += applicant.partner_id
+            applicant_survey_ids += applicant.survey_id
+
         local_context = dict(
-            default_applicant_id=self.id,
-            default_partner_ids=self.partner_id.ids,
-            default_survey_id=self.survey_id.id,
+            default_applicant_ids=self.ids,
+            default_survey_id=False,
+            default_survey_ids=applicant_survey_ids.ids,
+            default_partner_ids=applicant_partner_ids.ids,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_email_layout_xmlid='mail.mail_notification_light',
@@ -59,9 +67,9 @@ class HrApplicant(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Send an interview"),
+            'name': self.env._("Send interviews"),
             'view_mode': 'form',
-            'res_model': 'survey.invite',
+            'res_model': 'hr.recruitment.survey.invite',
             'target': 'new',
             'context': local_context,
         }

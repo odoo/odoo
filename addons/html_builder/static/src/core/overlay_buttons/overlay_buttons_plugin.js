@@ -8,7 +8,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
-    static dependencies = ["selection", "overlay", "history", "operation"];
+    static dependencies = ["selection", "overlay", "history", "operation", "toolbar"];
     static shared = [
         "hideOverlayButtons",
         "showOverlayButtons",
@@ -16,6 +16,8 @@ export class OverlayButtonsPlugin extends Plugin {
         "showOverlayButtonsUi",
     ];
     resources = {
+        selectionchange_handlers: this.shouldShowToolbar.bind(this),
+        selection_leave_handlers: this.showOverlayButtonsUi.bind(this),
         step_added_handlers: this.refreshButtons.bind(this),
         change_current_options_containers_listeners: this.addOverlayButtons.bind(this),
         on_mobile_preview_clicked: withSequence(20, this.refreshButtons.bind(this)),
@@ -121,6 +123,17 @@ export class OverlayButtonsPlugin extends Plugin {
         }
         this.state.buttons = buttons;
         this.overlay.updatePosition();
+    }
+
+    shouldShowToolbar() {
+        clearTimeout(this.toolbarTimeout);
+        this.toolbarTimeout = setTimeout(() => {
+            if (this.dependencies.toolbar.getIsToolbarOpen()) {
+                this.hideOverlayButtonsUi();
+            } else {
+                this.showOverlayButtonsUi();
+            }
+        }, 500);
     }
 
     hideOverlayButtons() {

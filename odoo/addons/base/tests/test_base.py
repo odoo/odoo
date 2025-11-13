@@ -6,11 +6,12 @@ import ast
 from textwrap import dedent
 
 from odoo import Command
-from odoo.tests.common import TransactionCase, BaseCase
+from odoo.tests.common import tagged, TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSafeEval(BaseCase):
     def test_const(self):
         # NB: True and False are names in Python 2 not consts
@@ -133,6 +134,7 @@ class TestSafeEval(BaseCase):
             safe_eval("self.__name__", {'self': self}, mode="exec")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestParentStore(TransactionCase):
     """ Verify that parent_store computation is done right """
 
@@ -195,6 +197,7 @@ class TestParentStore(TransactionCase):
         self.assertFalse(new_struct & old_struct, "After duplication, nodes should not be mixed")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGroups(TransactionCase):
 
     def test_res_groups_fullname_search(self):

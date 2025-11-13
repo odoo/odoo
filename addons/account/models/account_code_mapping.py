@@ -1,6 +1,6 @@
 from odoo import fields, models, api
 from odoo.fields import Domain
-from odoo.tools import Query
+from odoo.models import Query
 
 COMPANY_OFFSET = 10000
 

@@ -60,6 +60,17 @@ export class TranslationPlugin extends Plugin {
             for (const translationSavableEl of translationSavableEls) {
                 translationSavableEl.classList.add("o_editable_attribute");
             }
+            // Apply data-oe-readonly on wrapping editor
+            const editableElSelector = ".o_editable, .o_editable_attribute";
+            const editableEls = [
+                ...translationSavableEls,
+                ...this.services.website.pageDocument.querySelectorAll(".o_editable"),
+            ];
+            for (const editableEl of editableEls) {
+                if (editableEl.querySelectorAll(editableElSelector).length) {
+                    editableEl.setAttribute("data-oe-readonly", "true");
+                }
+            }
             return true;
         },
         start_edition_handlers: withSequence(5, () => {
@@ -75,10 +86,9 @@ export class TranslationPlugin extends Plugin {
     }
 
     prepareTranslation() {
-        const editableEls = findOEditable(this.editable);
-        this.buildTranslationInfoMap(editableEls);
-        this.handleSelectTranslation(editableEls);
-        this.handleAnnouncementScrollTranslation(editableEls);
+        this.editableEls = findOEditable(this.editable);
+        this.buildTranslationInfoMap(this.editableEls);
+        this.handleSelectTranslation(this.editableEls);
         this.markTranslatableNodes();
         for (const [translatedEl] of this.elToTranslationInfoMap) {
             if (translatedEl.matches("input[type=hidden].o_translatable_input_hidden")) {
@@ -103,18 +113,6 @@ export class TranslationPlugin extends Plugin {
             this.dialogService.add(TranslatorInfoDialog);
         }
 
-        // Apply data-oe-readonly on nested data
-        const translatableElSelector = ".o_editable, .o_editable_attribute";
-        const translationSavableEls = [
-            ...this.websiteService.pageDocument.querySelectorAll(translatableElSelector),
-        ];
-        for (const translationSavableEl of translationSavableEls) {
-            if (translationSavableEl.querySelectorAll(translatableElSelector).length) {
-                translationSavableEl.setAttribute("data-oe-readonly", "true");
-                translationSavableEl.removeAttribute("contenteditable");
-            }
-        }
-
         const showNotification = (ev) => {
             // Prevent duplicate notifications for the same click but allow the
             // event to bubble (i.e. for carousel sliding)
@@ -131,7 +129,7 @@ export class TranslationPlugin extends Plugin {
                 sticky: false,
             });
         };
-        for (const translateEl of editableEls) {
+        for (const translateEl of this.editableEls) {
             this.handleToC(translateEl);
         }
         const savableInsideNotEditableEls = this.editable.querySelectorAll(
@@ -229,18 +227,10 @@ export class TranslationPlugin extends Plugin {
                 optionEl.dataset.initialTranslationValue = optionName;
                 optionEl.className = "o_translation_select_option";
                 selectTranslationEl.appendChild(optionEl);
-                this.translateSelectEls.push(optionEl);
             }
+            this.translateSelectEls.push(selectTranslationEl);
             selectEl.before(selectTranslationEl);
         }
-    }
-
-    handleAnnouncementScrollTranslation(editableEls) {
-        this.announcementScrollEls = editableEls
-            .filter((el) =>
-                el.parentElement.classList.contains("s_announcement_scroll_marquee_item")
-            )
-            .map((el) => el.closest(".s_announcement_scroll"));
     }
 
     handleToC(translateEl) {
@@ -299,28 +289,13 @@ export class TranslationPlugin extends Plugin {
         }
         for (const translateSelectEl of this.translateSelectEls) {
             this.addDomListener(translateSelectEl, "click", (ev) => {
-                const translateSelectEl = ev.target;
                 this.dialogService.add(SelectTranslateDialog, {
-                    node: translateSelectEl,
+                    node: ev.currentTarget,
                     addStep: this.dependencies.history.addStep,
                 });
             });
         }
-        for (const announcementScrollEl of this.announcementScrollEls) {
-            // FIXME
-            // 1. Do not use prompt but an Odoo dialog
-            // 2. The interaction should be restarted when the text changes
-            // => There should probably be a better way to handle this.
-            this.addDomListener(announcementScrollEl, "click", (ev) => {
-                const els = announcementScrollEl.querySelectorAll(
-                    ".s_announcement_scroll_marquee_item > [data-oe-translation-source-sha]"
-                );
-                const value = prompt("", els[0].textContent);
-                for (const el of els) {
-                    el.textContent = value;
-                }
-            });
-        }
+        this.dispatchTo("mark_translatable_nodes", this.editableEls);
     }
 
     updateTranslationMap(translateEl, translation, attrName) {

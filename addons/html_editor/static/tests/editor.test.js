@@ -82,6 +82,29 @@ test("Remove odoo-editor-editable class after every plugin is destroyed", async 
     expect.verifySteps(["operation"]);
 });
 
+test("Element is not editable if any plugin marks it non-editable", async () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_node_editable_predicates: (node) => {
+                if (node.classList.contains("o-will-break-if-edited")) {
+                    return false;
+                }
+            },
+        };
+    }
+    const Plugins = [...MAIN_PLUGINS, TestPlugin];
+    const { el, plugins } = await setupEditor(
+        `<div>[<img class="o-editable-media o-will-break-if-edited">]</div>`,
+        {
+            config: { Plugins },
+        }
+    );
+    const img = el.querySelector(".o-editable-media");
+    const selectionPlugin = plugins.get("selection");
+    await expect(selectionPlugin.isNodeEditable(img)).toBe(false);
+});
+
 test("clean_for_save_listeners is done last", async () => {
     // This test uses custom elements tag `c-div` to make sure they won't fall into
     // a case where they won't be merged anyway.
@@ -131,7 +154,9 @@ test("Convert self closing t elements to opening/closing tags", async () => {
         </div>
     `);
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>`
+        '<p data-selection-placeholder=""><br></p>' +
+            `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>` +
+            '<p data-selection-placeholder=""><br></p>'
     );
     expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
         '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'

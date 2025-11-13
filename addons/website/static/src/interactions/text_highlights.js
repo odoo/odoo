@@ -1,12 +1,17 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { getCurrentTextHighlight, makeHighlightSvgs } from "@website/js/highlight_utils";
+import {
+    getCurrentTextHighlight,
+    makeHighlightSvgs,
+    closestToObserve,
+    getObservedEls,
+} from "@website/js/highlight_utils";
 
 export class TextHighlight extends Interaction {
-    static selector = "#wrapwrap";
+    static selector = "#wrapwrap, .o_wslides_fs_content";
     dynamicContent = {
         _root: {
-            "t-on-text_highlight_added": ({target}) => this.onTextHighlightAdded(target),
+            "t-on-text_highlight_added": ({ target }) => this.onTextHighlightAdded(target),
         },
     };
 
@@ -34,8 +39,8 @@ export class TextHighlight extends Interaction {
     _updateEntries(entries) {
         const closestToObserves = new Set();
         for (const { target, addedNodes = [], removedNodes = [] } of entries) {
-            const elements = [target, ...(addedNodes), ...(removedNodes)]
-                .map((el) => el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement)
+            const elements = [target, ...addedNodes, ...removedNodes]
+                .map((el) => (el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement))
                 .filter(Boolean);
             if (!elements.length) {
                 continue;
@@ -44,7 +49,7 @@ export class TextHighlight extends Interaction {
             if (hasSvg) {
                 continue;
             }
-            closestToObserves.add(this.closestToObserve(target));
+            closestToObserves.add(closestToObserve(target, this.el));
         }
         for (const closestToObserve of closestToObserves) {
             for (const el of closestToObserve.querySelectorAll(".o_text_highlight")) {
@@ -60,27 +65,6 @@ export class TextHighlight extends Interaction {
             }
         }
     }
-    /**
-     * @param {HTMLElement} el
-     */
-    closestToObserve(el) {
-        el = el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement;
-        if (!el || el === this.el) {
-            return null;
-        }
-        if (window.getComputedStyle(el).display !== "inline") {
-            return el;
-        }
-        return this.closestToObserve(el.parentElement);
-    }
-
-    /**
-     * @param {HTMLElement} el
-     */
-    getObservedEls(el) {
-        const closestToObserve = this.closestToObserve(el);
-        return closestToObserve ? [closestToObserve, el] : [el];
-    }
 
     /**
      * @param {HTMLElement} el
@@ -91,11 +75,11 @@ export class TextHighlight extends Interaction {
         // units (`.o_text_highlight_item`) as long as the width of the entire
         // `.o_text_highlight` element remains the same, so we need to observe
         // each one of them and do the adjustment only once for the whole text.
-        for (const elToObserve of this.getObservedEls(el)) {
+        for (const elToObserve of getObservedEls(el)) {
             this.resizeObserver.observe(elToObserve);
         }
-        const closestToObserve = this.closestToObserve(el);
-        this.mutationObserver.observe(closestToObserve, {
+        const closestToObserveEl = closestToObserve(el, this.el);
+        this.mutationObserver.observe(closestToObserveEl, {
             childList: true,
             characterData: true,
             subtree: true,
@@ -116,12 +100,8 @@ export class TextHighlight extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.text_highlight", TextHighlight);
+registry.category("public.interactions").add("website.text_highlight", TextHighlight);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.text_highlight", {
-        Interaction: TextHighlight,
-    });
+registry.category("public.interactions.edit").add("website.text_highlight", {
+    Interaction: TextHighlight,
+});

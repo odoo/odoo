@@ -70,7 +70,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
             raise exceptions.AccessError("Unavailable during module installation.")  # pylint: disable=missing-gettext
 
         params['account_token'] = self.account.sudo().account_token
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
+        endpoint = self.env['ir.config_parameter'].sudo().get_str('sms.endpoint') or self.DEFAULT_ENDPOINT
         return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout)
 
     def _send_sms_batch(self, messages, delivery_reports_url=False):  # TODO RIGR: switch to kwargs in master
@@ -103,7 +103,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
         return self._contact_iap('/api/sms/3/send', {
             'messages': messages,
             'webhook_url': delivery_reports_url,
-            'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+            'dbuuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         })
 
     def _get_sms_api_error_messages(self):
@@ -114,7 +114,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
         buy_credits_url = self.env['iap.account'].sudo().get_credits_url(service_name='sms')
         buy_credits = '<a href="{}" target="_blank">{}</a>'.format(buy_credits_url, _("Buy credits."))
 
-        sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
+        sms_endpoint = self.env['ir.config_parameter'].sudo().get_str('sms.endpoint') or self.DEFAULT_ENDPOINT
         sms_account_token = self.env['iap.account'].sudo().get('sms').sudo().account_token
         register_now = f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">%s</a>' % (
             _('Register now.')

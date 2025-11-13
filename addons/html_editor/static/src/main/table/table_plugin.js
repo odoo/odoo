@@ -63,6 +63,7 @@ function isUnremovableTableComponent(node, root) {
  * @property { TablePlugin['resetTableSize'] } resetTableSize
  * @property { TablePlugin['clearColumnContent'] } clearColumnContent
  * @property { TablePlugin['clearRowContent'] } clearRowContent
+ * @property { TablePlugin['toggleAlternatingRows'] } toggleAlternatingRows
  */
 
 /**
@@ -95,6 +96,7 @@ export class TablePlugin extends Plugin {
         "resetTableSize",
         "clearColumnContent",
         "clearRowContent",
+        "toggleAlternatingRows",
     ];
     resources = {
         user_commands: [
@@ -128,6 +130,16 @@ export class TablePlugin extends Plugin {
         move_node_whitelist_selectors: "table",
         collapsed_selection_toolbar_predicate: (selectionData) =>
             !!closestElement(selectionData.editableSelection.anchorNode, ".o_selected_td"),
+        selection_blocker_predicates: (node) => {
+            if (node.nodeName === "TABLE") {
+                return true;
+            }
+        },
+        selection_placeholder_container_predicates: (container) => {
+            if (container.nodeName === "TABLE") {
+                return false;
+            }
+        },
         normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
     };
 
@@ -624,6 +636,16 @@ export class TablePlugin extends Plugin {
             td.replaceChildren(baseContainer);
         });
     }
+
+    /**
+     * Toggles the CSS class that enables alternating row styles on a table.
+     *
+     * @param {HTMLTableElement} table
+     */
+    toggleAlternatingRows(table) {
+        table.classList.toggle("o_alternating_rows");
+    }
+
     deleteTable(table) {
         table =
             table || findInSelection(this.dependencies.selection.getEditableSelection(), "table");
@@ -769,7 +791,7 @@ export class TablePlugin extends Plugin {
         return true;
     }
 
-    hanldeFirefoxSelection(ev = null) {
+    handleFirefoxSelection(ev = null) {
         const selection = this.document.getSelection();
         if (isBrowserFirefox()) {
             if (!this.dependencies.selection.isSelectionInEditable(selection)) {
@@ -781,14 +803,18 @@ export class TablePlugin extends Plugin {
                 // To solve the issue we merge the ranges of the selection together the first time we find
                 // selection.rangeCount > 1. Morover, when hitting a double click on a cell, it spans a row
                 // inside selection which needs to be simplified here.
-                const [anchorNode, anchorOffset] = getDeepestPosition(
+                let [anchorNode, anchorOffset] = getDeepestPosition(
                     selection.getRangeAt(0).startContainer,
                     selection.getRangeAt(0).startOffset
                 );
-                const [focusNode, focusOffset] = getDeepestPosition(
+                let [focusNode, focusOffset] = getDeepestPosition(
                     selection.getRangeAt(selection.rangeCount - 1).startContainer,
                     selection.getRangeAt(selection.rangeCount - 1).startOffset
                 );
+                if (this.selectionDirection === "backward") {
+                    [anchorNode, focusNode] = [focusNode, anchorNode];
+                    [anchorOffset, focusOffset] = [focusOffset, anchorOffset];
+                }
                 this.dependencies.selection.setSelection({
                     anchorNode,
                     anchorOffset,
@@ -812,6 +838,7 @@ export class TablePlugin extends Plugin {
                     focusNode: ev.target,
                     focusOffset: 0,
                 });
+                this.selectionDirection = selection.direction;
                 return true;
             }
         }
@@ -934,7 +961,7 @@ export class TablePlugin extends Plugin {
 
     updateSelectionTable(selectionData) {
         if (
-            this.hanldeFirefoxSelection() ||
+            this.handleFirefoxSelection() ||
             this._isFirefoxDoubleMousedown ||
             this._isTripleClickInTable
         ) {
@@ -1029,7 +1056,7 @@ export class TablePlugin extends Plugin {
             !isProtecting(td) &&
             ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
         ) {
-            this.hanldeFirefoxSelection();
+            this.handleFirefoxSelection();
             this.selectTableCells(this.dependencies.selection.getEditableSelection());
             if (isBrowserFirefox()) {
                 // In firefox, selection changes when hitting mouseclick
@@ -1085,7 +1112,7 @@ export class TablePlugin extends Plugin {
         if (this._currentMouseState !== "mousedown") {
             return;
         }
-        if (this.hanldeFirefoxSelection(ev)) {
+        if (this.handleFirefoxSelection(ev)) {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();

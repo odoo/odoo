@@ -79,7 +79,12 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
     }
 
     get url() {
-        return getVideoUrl(this.state.platform, this.state.videoId, this.state.params).toString();
+        const urlParams = Object.fromEntries(
+            Object.entries(this.state.params).filter(([key]) => key !== "isVertical")
+        );
+        return decodeURIComponent(
+            getVideoUrl(this.state.platform, this.state.videoId, urlParams).toString()
+        );
     }
 
     /**
@@ -90,6 +95,13 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         this.state.videoId = media.videoId;
         this.state.platform = media.platform;
         this.state.params = media.params;
+        const isVertical = media.params.isVertical;
+        if (isVertical) {
+            this.videoBlock.dataset.isVertical = "true";
+        } else {
+            delete this.videoBlock.dataset.isVertical;
+        }
+        this.videoBlock.classList.toggle("media_iframe_video_size_for_vertical", isVertical);
         this.props.focusEditable();
     }
 }

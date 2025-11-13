@@ -1,7 +1,6 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
-import { localization } from "@web/core/l10n/localization";
 import { isValidEmail } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
@@ -121,6 +120,6 @@ export class PresetInfoPopup extends Component {
 
     formatDate(date) {
         const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
-        return dateObj.toFormat(localization.dateFormat);
+        return this.preset.formatDate(dateObj);
     }
 }

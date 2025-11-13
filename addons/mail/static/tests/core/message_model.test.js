@@ -13,7 +13,7 @@ test("Message model properties", async () => {
     await start();
     const store = getService("mail.store");
     store.Store.insert({
-        self_partner: { id: serverState.partnerId },
+        self_user: { id: serverState.userId, partner_id: serverState.partnerId },
     });
     store["mail.thread"].insert({
         id: serverState.partnerId,

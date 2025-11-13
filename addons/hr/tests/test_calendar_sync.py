@@ -1,7 +1,10 @@
 from odoo.fields import Datetime, Date
+from odoo.tests import tagged
+
 from odoo.addons.hr.tests.common import TestHrCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestContractCalendars(TestHrCommon):
 
     @classmethod

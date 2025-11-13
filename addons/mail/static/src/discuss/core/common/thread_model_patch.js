@@ -1,4 +1,4 @@
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 import { useSequential } from "@mail/utils/common/hooks";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
@@ -7,54 +7,11 @@ import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { createElementWithContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 
 const commandRegistry = registry.category("discuss.channel_commands");
-
-/** @type {typeof Thread} */
-const threadStaticPatch = {
-    async getOrFetch(data, fieldNames = []) {
-        if (data.model !== "discuss.channel" || data.id < 1) {
-            return super.getOrFetch(...arguments);
-        }
-        const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
-        if (thread?.fetchChannelInfoState === "fetched") {
-            return Promise.resolve(thread);
-        }
-        const fetchChannelInfoDeferred = this.store.channelIdsFetchingDeferred.get(data.id);
-        if (fetchChannelInfoDeferred) {
-            return fetchChannelInfoDeferred;
-        }
-        const def = new Deferred();
-        this.store.channelIdsFetchingDeferred.set(data.id, def);
-        this.store.fetchChannel(data.id).then(
-            () => {
-                this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
-                if (thread?.exists()) {
-                    thread.fetchChannelInfoState = "fetched";
-                    def.resolve(thread);
-                } else {
-                    def.resolve();
-                }
-            },
-            () => {
-                this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
-                if (thread?.exists()) {
-                    def.reject(thread);
-                } else {
-                    def.reject();
-                }
-            }
-        );
-        return def;
-    },
-};
-patch(Thread, threadStaticPatch);
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -68,12 +25,6 @@ const threadPatch = {
             compute() {
                 return this.model === "discuss.channel" ? this.id : undefined;
             },
-            onDelete: (r) => r.delete(),
-        });
-        this.channel_member_ids = fields.Many("discuss.channel.member", {
-            inverse: "channel_id",
-            onDelete: (r) => r.delete(),
-            sort: (m1, m2) => m1.id - m2.id,
         });
         /** @type {string} */
         this.channel_type = undefined;
@@ -96,12 +47,6 @@ const threadPatch = {
         /** @type {"not_fetched"|"fetching"|"fetched"} */
         this.fetchChannelInfoState = "not_fetched";
         this.group_ids = fields.Many("res.groups");
-        this.hasOtherMembersTyping = fields.Attr(false, {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.otherTypingMembers.length > 0;
-            },
-        });
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
@@ -195,7 +140,7 @@ const threadPatch = {
             /** @this {import("models").Thread} */
             compute() {
                 return this.channel?.channel_member_ids
-                    .filter((member) => this.store.onlineMemberStatuses.includes(member.im_status))
+                    .filter((member) => member.isOnline)
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
         });
@@ -204,12 +149,6 @@ const threadPatch = {
                 return this._computeOfflineMembers().sort(
                     (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
                 );
-            },
-        });
-        this.otherTypingMembers = fields.Many("discuss.channel.member", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
             },
         });
         this.self_member_id = fields.One("discuss.channel.member", {
@@ -229,12 +168,16 @@ const threadPatch = {
                 this.store.updateBusSubscription();
             },
         });
-        this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
-        return this.channel?.channel_member_ids.filter(
-            (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
+        return this.channel?.channel_member_ids.filter((member) => !member.isOnline);
+    },
+    /** Equivalent to DiscussChannel._allow_invite_by_email */
+    get allow_invite_by_email() {
+        return (
+            this.channel_type === "group" ||
+            (this.channel_type === "channel" && !this.group_public_id)
         );
     },
     get areAllMembersLoaded() {
@@ -423,15 +366,6 @@ const threadPatch = {
             });
         }).then(() => (this.markingAsRead = false));
     },
-    /**
-     * To be overridden.
-     * The purpose is to exclude technical channel_member_ids like bots and avoid
-     * "wrong" seen message indicator
-     * @returns {import("models").ChannelMember[]}
-     */
-    get membersThatCanSeen() {
-        return this.channel.channel_member_ids;
-    },
     /** @override */
     get needactionCounter() {
         return this.isChatChannel
@@ -454,7 +388,7 @@ const threadPatch = {
             if (!this.self_member_id) {
                 this.store.env.services["bus_service"].addChannel(this.busChannel);
             }
-            const res = this.openChannel();
+            const res = this.channel.openChannel();
             if (res) {
                 return res;
             }
@@ -462,12 +396,6 @@ const threadPatch = {
             return true;
         }
         return super.open(...arguments);
-    },
-    /**
-     * @returns {boolean} true if the channel was opened, false otherwise
-     */
-    openChannel() {
-        return false;
     },
     /** @param {string} body */
     async post(body) {
@@ -499,7 +427,7 @@ const threadPatch = {
         return (
             this.allowedToLeaveChannelTypes.includes(this.channel?.channel_type) &&
             this.group_ids.length === 0 &&
-            this.store.self_partner
+            this.store.self_user
         );
     },
     get allowedToUnpinChannelTypes() {
@@ -562,17 +490,13 @@ const threadPatch = {
             { description }
         );
     },
-    async leaveChannel({ force = false } = {}) {
-        if (
-            this.channel?.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self.main_user_id) &&
-            !force
-        ) {
+    async leaveChannel() {
+        if (this.channel?.channel_type !== "group" && this.create_uid?.eq(this.store.self_user)) {
             await this.askLeaveConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
         }
-        if (this.channel?.channel_type === "group" && !force) {
+        if (this.channel?.channel_type === "group") {
             await this.askLeaveConfirmation(
                 _t(
                     "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
@@ -580,9 +504,10 @@ const threadPatch = {
             );
         }
         await this.closeChatWindow();
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
+        this.leaveChannelRpc();
+    },
+    leaveChannelRpc() {
+        this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [this.id]);
     },
     /** @param {string} name */
     async rename(name) {

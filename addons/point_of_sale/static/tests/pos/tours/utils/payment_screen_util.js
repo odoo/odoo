@@ -249,7 +249,7 @@ export function changeIs(amount) {
     return [
         {
             content: `change is ${amount}`,
-            trigger: `.payment-status-change .amount:contains("${amount}")`,
+            trigger: `.payment-status-amount .amount:contains("${amount}")`,
         },
     ];
 }
@@ -269,7 +269,7 @@ export function remainingIs(amount) {
     return [
         {
             content: `remaining amount is ${amount}`,
-            trigger: `.payment-status-remaining .amount:contains("${amount}")`,
+            trigger: `.payment-status-amount .amount:contains("${amount}")`,
         },
     ];
 }
@@ -373,7 +373,7 @@ export function clickPartnerButton() {
         },
         {
             content: "partner screen is shown",
-            trigger: `.modal ${PartnerList.clickPartner().trigger}`,
+            trigger: `${PartnerList.clickPartner().trigger}`,
         },
     ];
 }
@@ -400,7 +400,7 @@ export function syncCurrentOrder() {
                 const currentOrder = posmodel.getOrder();
                 const order = await posmodel.syncAllOrders({ orders: [currentOrder] });
 
-                if (typeof order[0].id !== "number") {
+                if (!order[0].isSynced) {
                     throw new Error("Order ID is not a number after sync.");
                 }
             },

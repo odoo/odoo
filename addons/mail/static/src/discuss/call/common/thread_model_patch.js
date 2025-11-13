@@ -1,4 +1,4 @@
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
@@ -31,10 +31,7 @@ const ThreadPatch = {
         /** @type {number|undefined} */
         this.cancelRtcInvitationTimeout;
         this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
-            /** @this {import("models").Thread} */
-            onDelete(r) {
-                this.store.env.services["discuss.rtc"].deleteSession(r);
-            },
+            onDelete: (r) => r?.delete(),
             /** @this {import("models").Thread} */
             async onUpdate() {
                 const hadSelfSession = this.hadSelfSession;
@@ -140,7 +137,7 @@ const ThreadPatch = {
             compute() {
                 if (
                     this.channel?.channel_type === "chat" &&
-                    this.store.rtc.selfSession?.channel?.eq(this)
+                    this.store.rtc.selfSession?.channel?.eq(this.channel)
                 ) {
                     return this.store.rtc.selfSession.is_camera_on;
                 }
@@ -160,7 +157,7 @@ const ThreadPatch = {
         });
     },
     get showCallView() {
-        return !this.store.rtc.state.isFullscreen && this.rtc_session_ids.length > 0;
+        return !this.store.rtc.isFullscreen && this.rtc_session_ids.length > 0;
     },
     focusAvailableVideo() {
         if (this.isDisplayedInDiscussAppDesktop || !this.store.settings.useCallAutoFocus) {
@@ -178,7 +175,7 @@ const ThreadPatch = {
             : "camera";
     },
     open(options) {
-        if (this.store.fullscreenChannel?.notEq(this)) {
+        if (this.store.fullscreenChannel?.notEq(this.channel)) {
             this.store.rtc.exitFullscreen();
         }
         super.open(...arguments);
@@ -188,7 +185,7 @@ const ThreadPatch = {
      */
     updateCallFocusStack(session) {
         if (
-            this.notEq(this.store.rtc?.channel) ||
+            this.channel?.notEq(this.store.rtc?.channel) ||
             session.eq(this.store.rtc.selfSession) ||
             !this.activeRtcSession ||
             !this.store.settings.useCallAutoFocus ||

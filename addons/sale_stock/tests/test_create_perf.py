@@ -28,6 +28,7 @@ def prepare(func, /):
 
 
 @tagged('so_batch_perf')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPERF(TransactionCaseWithUserDemo):
 
     @classmethod

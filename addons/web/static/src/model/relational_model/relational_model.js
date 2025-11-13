@@ -7,7 +7,7 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
-import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
 import { DynamicGroupList } from "./dynamic_group_list";
@@ -112,7 +112,7 @@ rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
 });
 
 export class RelationalModel extends Model {
-    static services = ["action", "dialog", "notification", "orm"];
+    static services = ["action", "dialog", "notification", "orm", "offline"];
     static Record = RelationalRecord;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -128,10 +128,11 @@ export class RelationalModel extends Model {
      * @param {RelationalModelParams} params
      * @param {Services} services
      */
-    setup(params, { action, dialog, notification }) {
+    setup(params, { action, dialog, notification, offline }) {
         this.action = action;
         this.dialog = dialog;
         this.notification = notification;
+        this.offline = offline;
 
         this.bus = new EventBus();
 
@@ -201,11 +202,11 @@ export class RelationalModel extends Model {
             this.config = config;
         }
         this.hooks.onWillLoadRoot(config);
-        const rootLoadDef = new Deferred();
-        const cache = this._getCacheParams(config, rootLoadDef);
+        const { promise, resolve } = Promise.withResolvers();
+        const cache = this._getCacheParams(config, promise);
         const data = await this.keepLast.add(this._loadData(config, cache));
         this.root = this._createRoot(config, data);
-        rootLoadDef.resolve({ root: this.root, loadId: config.loadId });
+        resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
     }
@@ -278,12 +279,13 @@ export class RelationalModel extends Model {
         return new this.constructor.DynamicRecordList(this, config, data);
     }
 
-    _getCacheParams(config, rootLoadDef) {
+    _getCacheParams(config, rootLoadProm) {
         if (!this.withCache) {
             return;
         }
         if (
             !this.isReady || // first load of the model
+            this.offline.status.offline || // use the cache if we are offline
             // monorecord, loading a different id, or creating a new record (onchange)
             (config.isMonoRecord && (this.root.config.resId !== config.resId || !config.resId))
         ) {
@@ -294,7 +296,7 @@ export class RelationalModel extends Model {
                     if (!hasChanged) {
                         return;
                     }
-                    const { root, loadId } = await rootLoadDef;
+                    const { root, loadId } = await rootLoadProm;
                     if (root.id !== this.root.id) {
                         // The root id might have changed, either because:
                         //  1) the user already changed the domain and a second load has been done

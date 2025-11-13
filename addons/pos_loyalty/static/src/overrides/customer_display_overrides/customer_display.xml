@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_loyalty.CustomerDisplay" t-inherit="point_of_sale.CustomerDisplay" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_customer_display_total')]" position="after">
+            <t t-if="order and order.amount and !order.finalized and order.loyaltyData">
+                <div class="border-top px-4 py-2 bg-white">
+                    <t t-foreach="order.loyaltyData or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+                        <div
+                            t-if="_loyaltyStat.points.won or _loyaltyStat.points.spent"
+                            class="d-flex justify-content-between align-items-center py-1 flex-wrap"
+                        >
+                            <div class="loyalty-points-title fs-4 fw-semibold" t-out="_loyaltyStat.points.name"/>
+
+                            <div class="d-flex align-items-center gap-1 fw-bold fs-4 flex-nowrap text-end">
+                                <span t-if="_loyaltyStat.points.balance" class="loyalty-points-balance" t-out="_loyaltyStat.points.balance"/>
+                                <span t-if="_loyaltyStat.points.won" class="loyalty-points-won text-success">
+                                    + <t t-out="_loyaltyStat.points.won"/>
+                                </span>
+                                <span t-if="_loyaltyStat.points.spent" class="loyalty-points-spent text-danger">
+                                    - <t t-out="_loyaltyStat.points.spent"/>
+                                </span>
+                                <span class="text-muted mx-1">=</span>
+                                <span class="loyalty-points-total fw-bolder" t-out="_loyaltyStat.points.total"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

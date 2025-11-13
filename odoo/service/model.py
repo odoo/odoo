@@ -109,7 +109,6 @@ def dispatch(method, params):
         raise AccessDenied
     # access checked once we open a cursor
 
-    threading.current_thread().dbname = db
     threading.current_thread().uid = uid
     registry = Registry(db).check_signaling()
     try:

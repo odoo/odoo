@@ -14,11 +14,11 @@
                 <CallPreview onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
             </div>
             <div class="d-flex flex-column text-center justify-content-center">
-                <div class="d-flex flex-column gap-2" t-if="store.self_guest and !store.self_partner">
+                <div class="d-flex flex-column gap-2" t-if="store.self_guest and !store.self_user">
                     <label class="fs-4" >What's your name?</label>
                     <input class="form-control mb-3 bg-white rounded" type="text" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
                 </div>
-                <div class="fs-3" t-if="store.self_partner">
+                <div class="fs-3" t-if="store.self_user">
                     <p>Ready to join?</p>
                     <p t-if="showCallPreview and noActiveParticipants">No one else is here.</p>
                 </div>

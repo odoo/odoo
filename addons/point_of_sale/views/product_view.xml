@@ -208,7 +208,7 @@
                             <div name="tax_info" class="o_row">
                                 <field name="taxes_id" widget="many2many_tags"
                                     context="{'search_default_sale': 1}"
-                                    options="{'create': false, 'create_edit': false}"/>
+                                    create="False"/>
                                 <field name="tax_string"/>
                             </div>
                             <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags"/>

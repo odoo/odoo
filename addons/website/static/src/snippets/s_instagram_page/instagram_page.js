@@ -45,7 +45,10 @@ export class InstagramPage extends Interaction {
      * @param {Event} ev
      */
     onMessage(ev) {
-        if (ev.origin !== "https://www.instagram.com" || this.iframeEl.contentWindow !== ev.source) {
+        if (
+            ev.origin !== "https://www.instagram.com" ||
+            this.iframeEl.contentWindow !== ev.source
+        ) {
             return;
         }
         const evDataJSON = JSON.parse(ev.data);
@@ -61,6 +64,4 @@ export class InstagramPage extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.instagram_page", InstagramPage);
+registry.category("public.interactions").add("website.instagram_page", InstagramPage);

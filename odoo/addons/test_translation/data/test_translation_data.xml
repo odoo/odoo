@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="test.translation.model1" id="test_translation_model1_record1">
+        <field name="name">Tableware</field>
+        <field name="xml" type="xml"><form string="Fork"><div>Knife</div><div>Spoon</div></form></field>
+    </record>
+    <record model="test.translation.model1" id="test_translation_model1_record2">
+        <field name="name">Furniture</field>  <!-- this shoulnd't appear in the .pot because it is translated in this file-->
+        <field name="name@fr_FR">Meuble</field>
+    </record>
+    <record model="test.translation.model2" id="test_translation_model2_record1">
+        <field name="model1_id" ref="test_translation.test_translation_model1_record1"/>
+    </record>
+
+    <record id="action_constraint" model="ir.actions.act_window">
+        <field name="name">Constraint translation</field>
+        <field name="res_model">test.translation.constraint</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

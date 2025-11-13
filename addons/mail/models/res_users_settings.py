@@ -6,9 +6,6 @@ from odoo import api, fields, models
 class ResUsersSettings(models.Model):
     _inherit = 'res.users.settings'
 
-    is_discuss_sidebar_category_channel_open = fields.Boolean(string="Is discuss sidebar category channel open?", default=True)
-    is_discuss_sidebar_category_chat_open = fields.Boolean(string="Is discuss sidebar category chat open?", default=True)
-
     # RTC
     push_to_talk_key = fields.Char(string="Push-To-Talk shortcut", help="String formatted to represent a key with modifiers following this pattern: shift.ctrl.alt.key, e.g: truthy.1.true.b")
     use_push_to_talk = fields.Boolean(string="Use the push to talk feature", default=False)
@@ -28,7 +25,8 @@ class ResUsersSettings(models.Model):
         if 'volume_settings_ids' in fields_to_format:
             volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
             res.pop('volume_settings_ids', None)
-            res['volumes'] = [('ADD', volume_settings)]
+            if volume_settings:
+                res["volumes"] = [("ADD", volume_settings)]
         return res
 
     def set_res_users_settings(self, new_settings):

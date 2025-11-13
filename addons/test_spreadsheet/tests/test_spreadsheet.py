@@ -1,8 +1,10 @@
 import base64
 import json
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 from odoo.exceptions import ValidationError
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class ValidateSpreadsheetMixinData(TransactionCase):
     def test_onchange_json_data(self):
         spreadsheet_form = Form(self.env["spreadsheet.test"])

@@ -3,6 +3,7 @@
 import ast
 import calendar
 from collections import Counter, defaultdict
+from collections.abc import Mapping
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
@@ -52,6 +53,12 @@ PAYMENT_STATE_SELECTION = [
         ('reversed', 'Reversed'),
         ('blocked', 'Blocked'),
         ('invoicing_legacy', 'Invoicing App Legacy'),
+]
+REVIEW_STATE_SELECTION = [
+    ('todo', "To Review"),
+    ('reviewed', "Reviewed"),
+    ('supervised', "Supervised"),
+    ('anomaly', "Anomaly"),
 ]
 
 TYPE_REVERSE_MAP = {
@@ -215,6 +222,11 @@ class AccountMove(models.Model):
         column2='payment_id',
         copy=False,
     )
+    reconciled_payment_ids = fields.Many2many('account.payment', string="Reconciled Payments",
+        compute='_compute_reconciled_payment_ids',
+        search='_search_reconciled_payment_ids',
+        help='Payments that have been reconciled with this invoice.'
+    )
     payment_count = fields.Integer(compute='_compute_payment_count')
 
     # === Statement fields === #
@@ -305,10 +317,10 @@ class AccountMove(models.Model):
         index='btree_not_null',
     )
     hide_post_button = fields.Boolean(compute='_compute_hide_post_button', readonly=True)
-    checked = fields.Boolean(
-        string='Reviewed',
-        compute='_compute_checked',
-        store=True, readonly=False, tracking=True, copy=False,
+    review_state = fields.Selection(
+        string="Review",
+        selection=REVIEW_STATE_SELECTION,
+        tracking=True, copy=False,
     )
     posted_before = fields.Boolean(copy=False)
     suitable_journal_ids = fields.Many2many(
@@ -603,7 +615,8 @@ class AccountMove(models.Model):
             ('cancel', "Cancelled"),
         ],
         compute='_compute_status_in_payment',
-        copy=False,
+        compute_sql='_compute_sql_status_in_payment',
+        compute_sudo=False,
     )
     amount_total_words = fields.Char(
         string="Amount total in words",
@@ -632,6 +645,7 @@ class AccountMove(models.Model):
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
     is_manually_modified = fields.Boolean()
+    is_self_billing = fields.Boolean(related='journal_id.is_self_billing')
 
     # === Fiduciary mode fields === #
     quick_edit_mode = fields.Boolean(compute='_compute_quick_edit_mode')
@@ -663,7 +677,9 @@ class AccountMove(models.Model):
             ('not_sent', 'Not Sent'),
         ],
         string='Sent',
-        compute='compute_move_sent_values',
+        compute='_compute_move_sent_values',
+        compute_sql='_compute_sql_move_sent_values',
+        compute_sudo=False,
     )
     invoice_user_id = fields.Many2one(
         string='Salesperson',
@@ -763,7 +779,7 @@ class AccountMove(models.Model):
     display_send_button = fields.Boolean(compute='_compute_display_send_button')
     highlight_send_button = fields.Boolean(compute='_compute_highlight_send_button')
 
-    _checked_idx = models.Index("(journal_id) WHERE (checked IS NOT TRUE)")
+    _checked_idx = models.Index("(journal_id) WHERE (review_state IN ('todo', 'anomaly'))")
     _payment_idx = models.Index("(journal_id, state, payment_state, move_type, date)")
     _unique_name = models.UniqueIndex(
         "(name, journal_id) WHERE (state = 'posted'AND name != '/')",
@@ -805,9 +821,13 @@ class AccountMove(models.Model):
             move.is_being_sent = bool(move.sending_data)
 
     @api.depends('is_move_sent')
-    def compute_move_sent_values(self):
+    def _compute_move_sent_values(self):
         for move in self:
             move.move_sent_values = 'sent' if move.is_move_sent else 'not_sent'
+
+    def _compute_sql_move_sent_values(self, alias, query):
+        is_move_sent = self._field_to_sql(alias, 'is_move_sent', query)
+        return SQL("CASE WHEN %s THEN 'sent' ELSE 'not_sent' END", is_move_sent)
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -1156,6 +1176,15 @@ class AccountMove(models.Model):
         'line_ids.full_reconcile_id',
         'state')
     def _compute_amount(self):
+        self.line_ids.fetch([
+            'debit',
+            'balance',
+            'amount_currency',
+            'amount_residual',
+            'amount_residual_currency',
+            'display_type',
+            'tax_repartition_line_id'
+        ])
         for move in self:
             total_untaxed, total_untaxed_currency = 0.0, 0.0
             total_tax, total_tax_currency = 0.0, 0.0
@@ -1199,7 +1228,7 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
 
-    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids.state')
+    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'reconciled_payment_ids.state')
     def _compute_payment_state(self):
         def _invoice_qualifies(move):
             currency = move.currency_id or move.company_id.currency_id or self.env.company.currency_id
@@ -1297,35 +1326,32 @@ class AccountMove(models.Model):
     @api.depends('payment_state', 'state', 'is_move_sent')
     def _compute_status_in_payment(self):
         for move in self:
-            if move.state == 'posted' and move.payment_state == 'not_paid' and move.is_move_sent:
-                move.status_in_payment = 'sent'
-            elif move.state == 'posted' and move.payment_state in ('partial', 'in_payment', 'paid', 'reversed'):
-                move.status_in_payment = move.payment_state
-            else:
+            if move.state == 'posted':
+                if move.payment_state in ('partial', 'in_payment', 'paid', 'reversed'):
+                    move.status_in_payment = move.payment_state
+                elif move.is_move_sent:
+                    move.status_in_payment = 'sent'
+            elif move.state == 'draft':
+                if move.payment_state in ('partial', 'in_payment', 'paid'):
+                    move.status_in_payment = move.payment_state
+
+            if not move.status_in_payment:
                 move.status_in_payment = move.state
 
-    def _field_to_sql(self, alias: str, fname: str, query=None) -> SQL:
-        if fname == 'status_in_payment':
-            return SQL(
-                "CASE "
-                f"WHEN {alias}.state = 'draft' THEN 'draft' "
-                f"WHEN {alias}.state = 'cancel' THEN 'cancel' "
-                f"ELSE {alias}.payment_state "
-                "END"
-            )
-        elif fname == 'move_sent_values':
-            return SQL(
-                "CASE "
-                f"WHEN {alias}.is_move_sent THEN 'sent' "
-                f"ELSE 'not_sent' "
-                "END"
-            )
-        return super()._field_to_sql(alias, fname, query=query)
+    def _compute_sql_status_in_payment(self, alias, query):
+        # TODO not the same logic as the compute?
+        state = self._field_to_sql(alias, 'state', query)
+        payment_state = self._field_to_sql(alias, 'payment_state', query)
+        return SQL("""CASE
+            WHEN %s = 'draft' THEN 'draft'
+            WHEN %s = 'cancel' THEN 'cancel'
+            ELSE %s
+            END""", state, state, payment_state)
 
-    @api.depends('matched_payment_ids')
+    @api.depends('reconciled_payment_ids')
     def _compute_payment_count(self):
         for invoice in self:
-            invoice.payment_count = len(invoice.matched_payment_ids)
+            invoice.payment_count = len(invoice.reconciled_payment_ids)
 
     @api.depends('adjusting_entries_move_ids')
     def _compute_adjusting_entries_count(self):
@@ -1915,9 +1941,9 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda move: move.is_invoice()):
             move.access_url = '/my/invoices/%s' % (move.id)
 
-    @api.depends('move_type', 'partner_id', 'company_id')
+    @api.depends('move_type', 'partner_id', 'partner_id.lang', 'company_id')
     def _compute_narration(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_bool('account.use_invoice_terms')
         invoice_to_update_terms = self.filtered(lambda m: use_invoice_terms and m.is_sale_document(include_receipts=True))
         for move in invoice_to_update_terms:
             lang = move.partner_id.lang or self.env.user.lang
@@ -2292,15 +2318,47 @@ class AccountMove(models.Model):
         for move in self:
             move.highlight_send_button = not move.is_being_sent and not move.invoice_pdf_report_id
 
+    @api.depends('line_ids.matched_debit_ids', 'line_ids.matched_credit_ids', 'matched_payment_ids')
+    def _compute_reconciled_payment_ids(self):
+        ''' Retrieve the payments reconciled to the invoices through the reconciliation (account.partial.reconcile) '''
+        self.env['account.payment'].flush_model(fnames=['move_id'])
+        self.env['account.move'].flush_model(fnames=['move_type'])
+        self.env['account.move.line'].flush_model(fnames=['move_id', 'account_id'])
+        self.env['account.partial.reconcile'].flush_model(fnames=['debit_move_id', 'credit_move_id'])
+        self.env['account.account'].flush_model(fnames=['account_type'])
+
+        invoice_payment_links = dict(self.env.execute_query(SQL(
+            """
+            SELECT
+                invoice.id,
+                ARRAY_AGG(DISTINCT payment.id) AS payment_ids
+            FROM account_payment payment
+            JOIN account_move move ON move.id = payment.move_id
+            JOIN account_move_line line ON line.move_id = move.id
+            JOIN account_partial_reconcile part ON
+                part.debit_move_id = line.id
+                OR
+                part.credit_move_id = line.id
+            JOIN account_move_line counterpart_line ON
+                part.debit_move_id = counterpart_line.id
+                OR
+                part.credit_move_id = counterpart_line.id
+            JOIN account_move invoice ON invoice.id = counterpart_line.move_id
+            JOIN account_account account ON account.id = line.account_id
+            WHERE account.account_type IN ('asset_receivable', 'liability_payable')
+                AND invoice.id IN %(invoice_ids)s
+                AND line.id != counterpart_line.id
+            GROUP BY invoice.id, invoice.move_type
+            """,
+            invoice_ids=tuple(self.ids),
+        ))) if self.ids else {}
+        for move in self:
+            move.reconciled_payment_ids = self.env['account.payment'].browse(invoice_payment_links.get(move.id)) | move.matched_payment_ids
+
     def _search_next_payment_date(self, operator, value):
         if operator not in ('in', '<', '<='):
             return NotImplemented
         return [('line_ids', 'any', [('reconciled', '=', False), ('payment_date', operator, value)])]
-
-    @api.depends('state', 'journal_id.type')
-    def _compute_checked(self):
-        for move in self:
-            move.checked = move.state == 'posted' and (move.journal_id.type == 'general' or move._is_user_able_to_review())
 
     @api.depends('line_ids.no_followup')
     def _compute_no_followup(self):
@@ -2396,6 +2454,13 @@ class AccountMove(models.Model):
         field = 'name' if 'like' in operator else 'id'
         journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
         return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
+
+    def _search_reconciled_payment_ids(self, operator, value):
+        if operator not in ('in', '='):
+            return NotImplemented
+        payment_ids = self.env['account.payment'].browse(value).reconciled_invoice_ids.ids
+        return [('id', 'in', payment_ids)]
+
     # -------------------------------------------------------------------------
     # INVERSE METHODS
     # -------------------------------------------------------------------------
@@ -2891,7 +2956,7 @@ class AccountMove(models.Model):
                 not reference_date
                 or not self.invoice_date
                 or (
-                    (existing_discount_date := next(iter(payment_terms)).discount_date)
+                    (existing_discount_date := payment_terms[0].discount_date)
                     and
                     reference_date <= existing_discount_date
                 )
@@ -3672,6 +3737,18 @@ class AccountMove(models.Model):
         """
         return _('This entry has been reversed from %s', self._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', self._get_html_link())
 
+    def _check_user_access(self, vals_list):
+        if self.env.su:
+            return
+        is_user_able_to_supervise = self.env.user.has_group('account.group_account_manager')
+        is_user_able_to_review = self.env.user.has_group('account.group_account_user')
+        for vals in vals_list:
+            if (
+                ((vals.get('review_state') == 'reviewed' or not vals.get('review_state', True)) and not is_user_able_to_review)
+                or (vals.get('review_state') == 'supervised' and not is_user_able_to_supervise)
+            ):
+                raise AccessError(_("You don't have the access rights to perform this action."))
+
     def _sanitize_vals(self, vals):
         if vals.get('invoice_line_ids') and vals.get('journal_line_ids'):
             # values can sometimes be in only one of the two fields, sometimes in
@@ -3713,6 +3790,7 @@ class AccountMove(models.Model):
     def create(self, vals_list):
         if any('state' in vals and vals.get('state') == 'posted' for vals in vals_list):
             raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
+        self._check_user_access(vals_list)
         container = {'records': self}
         with self._check_balanced(container):
             with ExitStack() as exit_stack, self._sync_dynamic_lines(container):
@@ -3732,12 +3810,26 @@ class AccountMove(models.Model):
         if not vals:
             return True
         self._sanitize_vals(vals)
+        self._check_user_access([vals])
 
+        is_user_able_to_supervise = self.env.user.has_group('account.group_account_manager')
+        is_user_able_to_review = self.env.user.has_group('account.group_account_user') or is_user_able_to_supervise
+        move_ids_review_done = []
+        move_ids_review_todo = []
         for move in self:
-            if vals.get('checked') and not move._is_user_able_to_review():
-                raise AccessError(_("You don't have the access rights to perform this action."))
-            if vals.get('state') == 'draft' and move.checked and not move._is_user_able_to_review():
-                raise ValidationError(_("Validated entries can only be changed by your accountant."))
+            if vals.get('state') == 'draft' and (
+                ((move.review_state == 'reviewed' or not move.review_state) and not is_user_able_to_review)
+                or (move.review_state == 'supervised' and not is_user_able_to_supervise)
+            ):
+                raise ValidationError(_("This entry has already been reviewed. You need the bookkeeper role to change it."))
+            if (vals.get('state') == 'posted' and move.auto_post == 'no') or vals.get('auto_post', 'no') != 'no':
+                if is_user_able_to_review:
+                    if move.review_state:
+                        move_ids_review_done.append(move.id)
+                else:
+                    move_ids_review_todo.append(move.id)
+            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised'):
+                move_ids_review_todo.append(move.id)
 
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
             if move.inalterable_hash and violated_fields:
@@ -3819,6 +3911,8 @@ class AccountMove(models.Model):
                 if vals.get('state') == 'posted':
                     self.flush_recordset()  # Ensure that the name is correctly computed
                     self._hash_moves()
+                super(AccountMove, self.browse(move_ids_review_done)).write({'review_state': 'reviewed'})
+                super(AccountMove, self.browse(move_ids_review_todo)).write({'review_state': 'todo'})
 
             self._synchronize_business_models(set(vals.keys()))
 
@@ -4429,7 +4523,7 @@ class AccountMove(models.Model):
         chains_to_hash = self._get_chains_to_hash(**kwargs)
         grant_secure_group_access = False
         for chain in chains_to_hash:
-            move_hashes = chain['moves']._calculate_hashes(chain['previous_hash'])
+            move_hashes = chain['moves'].sudo()._calculate_hashes(chain['previous_hash'])
             for move, move_hash in move_hashes.items():
                 move.inalterable_hash = move_hash
             # If any secured entries belong to journals without 'hash on post', the user should be granted access rights
@@ -4638,6 +4732,7 @@ class AccountMove(models.Model):
             'auto_post_until': self.auto_post_until,  # same as above
             'auto_post_origin_id': self.auto_post_origin_id.id,  # same as above
             'invoice_user_id': self.invoice_user_id.id,  # otherwise user would be OdooBot
+            'review_state': self.review_state,
         })
         if self.invoice_date:
             values.update({'invoice_date': self._apply_delta_recurring_entries(self.invoice_date, self.auto_post_origin_id.invoice_date, self.auto_post)})
@@ -4794,7 +4889,7 @@ class AccountMove(models.Model):
             for grouping_key, values in aggregated_values.items():
                 if not grouping_key:
                     continue
-                if isinstance(grouping_key, dict):
+                if isinstance(grouping_key, Mapping):
                     values.update(grouping_key)
                 tax_details[grouping_key] = values
 
@@ -4803,7 +4898,7 @@ class AccountMove(models.Model):
         for grouping_key, values in values_per_grouping_key.items():
             if not grouping_key:
                 continue
-            if isinstance(grouping_key, dict):
+            if isinstance(grouping_key, Mapping):
                 values.update(grouping_key)
             tax_details[grouping_key] = values
 
@@ -5601,7 +5696,8 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def open_payments(self):
-        return self.matched_payment_ids._get_records_action(name=_("Payments"))
+        payments = self.reconciled_payment_ids
+        return payments._get_records_action(name=_("Payments"))
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
@@ -5747,6 +5843,13 @@ class AccountMove(models.Model):
             'target': target,
         }
 
+    def action_move_download_all(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_move_attachments/{",".join(str(move_id) for move_id in self.ids)}',
+            'target': 'download',
+        }
+
     def action_print_pdf(self):
         self.ensure_one()
         invoice_template = self.env['account.move.send']._get_default_pdf_report_id(self)
@@ -5792,6 +5895,13 @@ class AccountMove(models.Model):
             return autopost_bills_wizard
         return False
 
+    def _get_moves_requiring_confirmation(self):
+        """Return the subset of moves that require confirmation before validation."""
+        return self.filtered(
+            lambda move: (move.date or move.invoice_date) > fields.Date.context_today(self)
+            or move.restrict_mode_hash_table,
+        )
+
     def action_validate_moves_with_confirmation(self):
         """
         If 'restrict_mode_hash_table' is enabled or future-dated moves, open a confirmation wizard;
@@ -5801,10 +5911,8 @@ class AccountMove(models.Model):
         if not draft_moves:
             raise UserError(_('There are no journal items in the draft state to post.'))
 
-        need_confirmation_moves = draft_moves.filtered(lambda move:
-            (move.date or move.invoice_date) > fields.Date.context_today(self)
-            or move.restrict_mode_hash_table
-        )
+        need_confirmation_moves = draft_moves._get_moves_requiring_confirmation()
+
         direct_validate_moves = draft_moves - need_confirmation_moves
         if direct_validate_moves:
             direct_validate_moves._post(soft=False)
@@ -5843,15 +5951,12 @@ class AccountMove(models.Model):
         partial = self.env['account.partial.reconcile'].browse(partial_id)
         return partial.unlink()
 
-    def button_set_checked(self):
-        self.set_moves_checked()
-
     def check_selected_moves(self):
         self.env['account.move'].browse(self.env.context.get('active_ids', [])).set_moves_checked()
 
     def set_moves_checked(self, is_checked=True):
         for move in self.filtered(lambda m: m.state == 'posted'):
-            move.checked = is_checked
+            move.review_state = 'reviewed' if is_checked else 'todo'
 
     def button_draft(self):
         if any(move.state not in ('cancel', 'posted') for move in self):
@@ -6047,7 +6152,11 @@ class AccountMove(models.Model):
             ('sending_data', '!=', False),
             ('state', '=', 'posted'),
         ]
-        to_process = self.search(domain, limit=job_count).try_lock_for_update()
+        to_process = self.search(
+            domain,
+            order='date asc, invoice_date asc, sequence_number asc, id asc',
+            limit=job_count)
+        to_process.try_lock_for_update()
         if not to_process:
             return
 
@@ -6064,7 +6173,7 @@ class AccountMove(models.Model):
         domain = [('model', '=', 'account.move')]
 
         if is_invoice_report:
-            domain += [('is_invoice_report', '=', 'True')]
+            domain += [('is_invoice_report', '=', True)]
 
         model_reports = self.env['ir.actions.report'].search(domain)
 
@@ -6366,7 +6475,7 @@ class AccountMove(models.Model):
             # No eligible method could be found; we can't generate the QR-code
             return None
 
-        unstruct_ref = self.ref if self.ref else self.name
+        unstruct_ref = self.payment_reference or self.name
         rslt = self.partner_bank_id.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
 
         # We only set qr_code_method after generating the url; otherwise, it
@@ -6538,10 +6647,6 @@ class AccountMove(models.Model):
 
         return available_reports
 
-    def _is_user_able_to_review(self):
-        # If only account is installed, we don't check user access rights.
-        return True
-
     # -------------------------------------------------------------------------
     # TOOLING
     # -------------------------------------------------------------------------
@@ -6615,9 +6720,14 @@ class AccountMove(models.Model):
     def _routing_check_route(self, message, message_dict, route, raise_exception=True):
         if route[0] == 'account.move' and len(message_dict['attachments']) < 1:
             # Don't create the move if no attachment.
+            company_id = route[2].get('company_id', self.env.company.id)
+            if not isinstance(company_id, int):
+                raise ValueError(_("Default value for 'company_id' for %(record)s is not an integer",
+                                  record=route[4]))
+            journal_alias_company = self.env['res.company'].search([['id', '=', company_id]])
             body = self.env['ir.qweb']._render('account.email_template_mail_gateway_failed', {
-                'company_email': self.env.company.email,
-                'company_name': self.env.company.name,
+                'company_email': journal_alias_company.email or self.env.company.email,
+                'company_name': journal_alias_company.name or self.env.company.name,
             })
             self._routing_create_bounce_email(
                 message_dict['from'], body, message,
@@ -6926,20 +7036,24 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
-        # TO OVERRIDE
+        if posted_moves := self.filtered(lambda m: m.state == 'posted'):
+            return [
+                {
+                    'key': 'download_all',
+                    'description': _("Export ZIP"),
+                    **posted_moves.action_move_download_all(),
+                },
+            ]
         return []
 
     def _get_move_lines_to_report(self):
         def show_line(line):
             return (
                 line.display_type == 'line_section'
-                or (not (
-                    line.parent_id.collapse_composition
-                    or line.parent_id.parent_id.collapse_composition
-                ) and not (
-                    line.parent_id.collapse_prices
-                    or line.parent_id.parent_id.collapse_prices
-                ))
+                or (
+                    not any([line.parent_id.collapse_composition, line.parent_id.parent_id.collapse_composition]) and
+                    not any([line.parent_id.collapse_prices, line.parent_id.parent_id.collapse_prices])
+                )
             )
 
         return self.invoice_line_ids.filtered(show_line).sorted('sequence')

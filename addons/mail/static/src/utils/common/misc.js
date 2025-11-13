@@ -1,6 +1,5 @@
 import { reactive } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
-import { rpc } from "@web/core/network/rpc";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -62,15 +61,6 @@ export function nearestGreaterThanOrEqual(list, target, itemToCompareVal) {
 export const mailGlobal = {
     isInTest: false,
 };
-
-/**
- * Use `rpc` instead.
- *
- * @deprecated
- */
-export function rpcWithEnv() {
-    return rpc;
-}
 
 // todo: move this some other place in the future
 export function isDragSourceExternalFile(dataTransfer) {

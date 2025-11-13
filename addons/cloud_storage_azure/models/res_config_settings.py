@@ -44,24 +44,24 @@ class ResConfigSettings(models.TransientModel):
 
     def _get_cloud_storage_configuration(self):
         ICP = self.env['ir.config_parameter'].sudo()
-        if ICP.get_param('cloud_storage_provider') != 'azure':
+        if ICP.get_str('cloud_storage_provider') != 'azure':
             return super()._get_cloud_storage_configuration
         configuration = {
-            'container_name': ICP.get_param('cloud_storage_azure_container_name'),
-            'account_name': ICP.get_param('cloud_storage_azure_account_name'),
-            'tenant_id': ICP.get_param('cloud_storage_azure_tenant_id'),
-            'client_id': ICP.get_param('cloud_storage_azure_client_id'),
-            'client_secret': ICP.get_param('cloud_storage_azure_client_secret'),
+            'container_name': ICP.get_str('cloud_storage_azure_container_name'),
+            'account_name': ICP.get_str('cloud_storage_azure_account_name'),
+            'tenant_id': ICP.get_str('cloud_storage_azure_tenant_id'),
+            'client_id': ICP.get_str('cloud_storage_azure_client_id'),
+            'client_secret': ICP.get_str('cloud_storage_azure_client_secret'),
         }
         return configuration if all(configuration.values()) else {}
 
     def _setup_cloud_storage_provider(self):
         ICP = self.env['ir.config_parameter'].sudo()
-        if ICP.get_param('cloud_storage_provider') != 'azure':
+        if ICP.get_str('cloud_storage_provider') != 'azure':
             return super()._setup_cloud_storage_provider()
         blob_info = {
-            'account_name': ICP.get_param('cloud_storage_azure_account_name'),
-            'container_name': ICP.get_param('cloud_storage_azure_container_name'),
+            'account_name': ICP.get_str('cloud_storage_azure_account_name'),
+            'container_name': ICP.get_str('cloud_storage_azure_container_name'),
             # use different blob names in case the credentials are allowed to
             # overwrite an existing blob created by previous tests
             'blob_name': f'0/{datetime.now(timezone.utc)}.txt',
@@ -82,7 +82,7 @@ class ResConfigSettings(models.TransientModel):
             raise ValidationError(_('The connection string is not allowed to download blobs from the container.\n%s', str(download_response.text)))
 
     def _check_cloud_storage_uninstallable(self):
-        if self.env['ir.config_parameter'].get_param('cloud_storage_provider') != 'azure':
+        if self.env['ir.config_parameter'].get_str('cloud_storage_provider') != 'azure':
             return super()._check_cloud_storage_uninstallable()
         cr = self.env.cr
         cr.execute(
@@ -101,5 +101,5 @@ class ResConfigSettings(models.TransientModel):
         super().set_values()
         if self.cloud_storage_azure_invalidate_user_delegation_key:
             ICP = self.env['ir.config_parameter']
-            old_seq = int(ICP.get_param('cloud_storage_azure_user_delegation_key_sequence', 0))
-            ICP.set_param('cloud_storage_azure_user_delegation_key_sequence', old_seq + 1)
+            old_seq = ICP.get_int('cloud_storage_azure_user_delegation_key_sequence')
+            ICP.set_int('cloud_storage_azure_user_delegation_key_sequence', old_seq + 1)

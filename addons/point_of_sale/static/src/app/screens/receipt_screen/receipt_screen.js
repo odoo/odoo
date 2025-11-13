@@ -32,8 +32,12 @@ export class ReceiptScreen extends Component {
             phone: partner?.phone || "",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
-        this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
-        this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
+        this.doFullPrint = useTrackedAsync(() =>
+            this.pos.printReceipt({ order: this.currentOrder })
+        );
+        this.doBasicPrint = useTrackedAsync(() =>
+            this.pos.printReceipt({ order: this.currentOrder, basic: true })
+        );
     }
     actionSendReceiptOnEmail() {
         this.sendReceipt.call({
@@ -47,12 +51,12 @@ export class ReceiptScreen extends Component {
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;
-        const orderTotalAmount = order.getTotalWithTax();
+        const orderTotalAmount = order.priceIncl;
         const tip_product_id = this.pos.config.tip_product_id?.id;
         const tipLine = order
             .getOrderlines()
             .find((line) => tip_product_id && line.product_id.id === tip_product_id);
-        const tipAmount = tipLine ? tipLine.allPrices.priceWithTax : 0;
+        const tipAmount = tipLine ? tipLine.prices.total_included : 0;
         const orderAmountStr = this.env.utils.formatCurrency(orderTotalAmount - tipAmount);
         if (!tipAmount) {
             return orderAmountStr;
@@ -84,7 +88,7 @@ export class ReceiptScreen extends Component {
         );
     async _sendReceiptToCustomer({ action, destination }) {
         const order = this.currentOrder;
-        if (typeof order.id !== "number") {
+        if (!order.isSynced) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Unsynced order"),
                 body: _t(

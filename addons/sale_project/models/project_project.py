@@ -6,7 +6,8 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import Query, SQL
+from odoo.models import Query
+from odoo.tools import SQL
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 
@@ -19,7 +20,9 @@ class ProjectProject(models.Model):
             self.env['sale.order.line']._sellable_lines_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
-                ('order_partner_id', '=?', unquote("partner_id")),
+            '|',
+                ('order_partner_id.commercial_partner_id.id', 'parent_of', unquote('partner_id if partner_id else []')),
+                ('order_partner_id', '=?', unquote('partner_id')),
             ],
         ])
         return domain
@@ -42,7 +45,7 @@ class ProjectProject(models.Model):
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
     sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False)
-    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]",
+    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]", index='btree_not_null',
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
 
@@ -442,7 +445,7 @@ class ProjectProject(models.Model):
             f'{SaleOrderLine._table}.id AS sale_line_id',
         )
 
-        return Query(self.env, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
+        return Query(None, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
             project_sql, task_sql, milestone_sql, sale_order_line_sql,
         ])))
 

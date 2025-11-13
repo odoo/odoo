@@ -5,8 +5,12 @@ from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
+from odoo.tests import tagged
+
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, patch_api
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMicrosoftEvent(TestCommon):
 
     @patch_api

@@ -16,6 +16,8 @@ from odoo.exceptions import UserError
 from odoo.tools import config, file_path, mute_logger
 
 from .common import TransactionCaseWithUserDemo
+from odoo.tests import tagged
+
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 
 try:
@@ -71,6 +73,7 @@ class Certificate:
 @patch('odoo.addons.base.models.ir_mail_server.SMTP_TIMEOUT', .1)
 # prevent the CLI from interfering with the tests
 @patch.dict(config.options, {'smtp_server': ''})
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
@@ -146,8 +149,8 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         # when resolving "localhost" (so stupid), use the following to
         # force aiosmtpd/odoo to bind/connect to a fixed ipv4 OR ipv6
         # address.
-        family, _, cls.port = _find_free_local_address()
-        cls.localhost = getaddrinfo('localhost', cls.port, family)
+        family, addr, cls.port = _find_free_local_address()
+        cls.localhost = getaddrinfo(addr, cls.port, family)
         cls.startClassPatcher(patch('socket.getaddrinfo', cls.getaddrinfo))
 
     def setUp(self):

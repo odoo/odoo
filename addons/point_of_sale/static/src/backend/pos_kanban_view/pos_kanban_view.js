@@ -88,9 +88,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
             if (!(isPosManager && isAdmin)) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Access Denied"),
-                    body: _t(
-                        "It seems like you don't have enough rights to create point of sale configurations."
-                    ),
+                    body: _t("It seems like you do not have enough rights to create a shop."),
                 });
                 return;
             }

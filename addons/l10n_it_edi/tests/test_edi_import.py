@@ -142,7 +142,7 @@ class TestItEdiImport(TestItEdi):
             self._assert_import_invoice('IT09633951000_NpFwF.xml.p7m', [{
                 'ref': '333333333333333',
                 'invoice_date': fields.Date.from_string('2023-09-08'),
-                'amount_untaxed': 57.54,
+                'amount_untaxed': 39.54,
                 'amount_tax': 3.95,
             }])
 
@@ -323,7 +323,7 @@ class TestItEdiImport(TestItEdi):
 
         self._assert_import_invoice('IT01234567890_FPR01.xml', [{
             'invoice_date': fields.Date.from_string('2014-12-18'),
-            'amount_untaxed': 3.0,
+            'amount_untaxed': 5.0,
             'amount_tax': 1.1,
             'invoice_line_ids': [
                 {
@@ -331,11 +331,6 @@ class TestItEdiImport(TestItEdi):
                     'name': 'DESCRIZIONE DELLA FORNITURA',
                     'price_unit': 1.0,
                 },
-                {
-                    'quantity': 1.0,
-                    'name': 'SCONTO',
-                    'price_unit': -2,
-                }
             ],
         }], applied_xml)
 

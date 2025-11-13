@@ -114,15 +114,21 @@ export class ComparisonPage extends Interaction {
 
         // Bind events
         window.addEventListener('scroll', handleVerticalScroll, { passive: true });
+        this.registerCleanup(
+            () => window.removeEventListener('scroll', handleVerticalScroll, { passive: true })
+        );
         if (mainScrollEl && miniScrollEl) {
-            mainScrollEl.addEventListener('scroll', () => syncScroll(mainScrollEl, miniScrollEl), { passive: true });
-            miniScrollEl.addEventListener('scroll', () => syncScroll(miniScrollEl, mainScrollEl), { passive: true });
+            const syncMainToMiniScroll = (_) => syncScroll(mainScrollEl, miniScrollEl);
+            const syncMiniToMainScroll = (_) => syncScroll(miniScrollEl, mainScrollEl);
+            mainScrollEl.addEventListener('scroll', syncMainToMiniScroll, { passive: true });
+            miniScrollEl.addEventListener('scroll', syncMiniToMainScroll, { passive: true });
+            this.registerCleanup(() => mainScrollEl.removeEventListener(
+                'scroll', syncMainToMiniScroll, { passive: true }
+            ));
+            this.registerCleanup(() => miniScrollEl.removeEventListener(
+                'scroll', syncMiniToMainScroll, { passive: true }
+            ));
         }
-
-        // Cleanup
-        this.registerCleanup(() => {
-            window.removeEventListener('scroll', handleVerticalScroll);
-        });
 
         // Initial check
         handleVerticalScroll();

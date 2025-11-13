@@ -5,9 +5,12 @@ from odoo import models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tools import mute_logger, unique, lazy
 from odoo.tools.constants import PREFETCH_MAX
+from odoo.tests import tagged
+
 from odoo.exceptions import AccessError
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAPI(SavepointCaseWithUserDemo):
     """ test the new API of the ORM """
 
@@ -314,25 +317,25 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_60_prefetch_model(self):
         """ Check the prefetching model. """
-        partners = self.env['res.partner'].search([('id', 'in', self.partners.ids)], limit=PREFETCH_MAX)
-        self.assertTrue(partners)
+        partners = self.partners
+        self.assertGreater(len(partners), 5)
 
-        def same_prefetch(a, b):
-            self.assertEqual(set(a._prefetch_ids), set(b._prefetch_ids))
-
-        def diff_prefetch(a, b):
-            self.assertNotEqual(set(a._prefetch_ids), set(b._prefetch_ids))
+        prefetch_ids = partners._prefetch_ids
+        self.assertIsInstance(prefetch_ids, tuple)
 
         # the recordset operations below use different prefetch sets
-        diff_prefetch(partners, partners.browse())
-        diff_prefetch(partners, partners[0])
-        diff_prefetch(partners, partners[:5])
+        part = partners.browse(partners.ids[:5])
+        self.assertNotEqual(prefetch_ids, partners.browse()._prefetch_ids)
+        self.assertNotEqual(prefetch_ids, part._prefetch_ids)
 
         # the recordset operations below share the prefetch set
-        same_prefetch(partners, partners.browse(partners.ids))
-        same_prefetch(partners, partners.with_user(self.user_demo))
-        same_prefetch(partners, partners.with_context(active_test=False))
-        same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch_ids))
+        self.assertEqual(prefetch_ids, partners.browse(partners.ids)._prefetch_ids)
+        self.assertEqual(prefetch_ids, partners.with_user(self.user_demo)._prefetch_ids)
+        self.assertEqual(prefetch_ids, partners.with_context(active_test=False)._prefetch_ids)
+        self.assertEqual(prefetch_ids, part.with_prefetch(prefetch_ids)._prefetch_ids)
+        self.assertEqual(set(prefetch_ids), set(partners.filtered('country_id')._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set(partners[0]._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set(partners[:5]._prefetch_ids))
 
         # iteration and relational fields should use the same prefetch set
         self.assertEqual(type(partners).country_id.type, 'many2one')
@@ -351,12 +354,84 @@ class TestAPI(SavepointCaseWithUserDemo):
             'bank_ids': [Command.create({'acc_number': 'FOO42'})],
             'category_id': [Command.link(self.partner_category.id)],
         }
-        partners = partners.create(vals0) + partners.create(vals1)
+        partners = partners.create([vals0, vals1])
         for partner in partners:
-            same_prefetch(partner, partners)
-            same_prefetch(partner.country_id, partners.country_id)
-            same_prefetch(partner.bank_ids, partners.bank_ids)
-            same_prefetch(partner.category_id, partners.category_id)
+            self.assertEqual(partner._prefetch_ids, partners._prefetch_ids)
+            self.assertEqual(set(partner.country_id._prefetch_ids), set(partners.country_id._prefetch_ids))
+            self.assertEqual(set(partner.bank_ids._prefetch_ids), set(partners.bank_ids._prefetch_ids))
+            self.assertEqual(set(partner.category_id._prefetch_ids), set(partners.category_id._prefetch_ids))
+
+        # records concatenation, union, intersection, difference
+        partners = self.partners
+        prefetch_ids = partners._prefetch_ids
+        part = partners.browse(partners.ids[:5])
+        ners = partners.browse(partners.ids[5:])
+        self.assertNotEqual(part._prefetch_ids, ners._prefetch_ids)
+
+        self.assertEqual(set(prefetch_ids), set((partners & ners)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set((partners - ners)._prefetch_ids))
+
+        # those are not the same prefetch object, but they return the same ids
+        self.assertNotEqual(prefetch_ids, (part + ners)._prefetch_ids)
+        self.assertNotEqual(prefetch_ids, (part | ners)._prefetch_ids)
+        self.assertEqual(set(prefetch_ids), set((part + ners)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set((part | ners)._prefetch_ids))
+
+        # combining concatenation and union with relational fields
+        child_ids = partners.child_ids._ids
+        self.assertEqual(set(child_ids), set(partners.child_ids._prefetch_ids))
+        self.assertEqual(set(child_ids), set((part.child_ids + ners.child_ids)._prefetch_ids))
+        self.assertEqual(set(child_ids), set((part.child_ids | ners.child_ids)._prefetch_ids))
+
+        prefetch_ids = partners.child_ids._prefetch_ids
+        children = [partner.child_ids[:1] for partner in partners]
+        for child in children:
+            self.assertEqual(set(prefetch_ids), set(child._prefetch_ids))
+
+        self.assertEqual(set(prefetch_ids), set(partners.browse().concat(*children)._prefetch_ids))
+        self.assertEqual(set(prefetch_ids), set(partners.browse().union(*children)._prefetch_ids))
+
+        # incremental concatenation/union should not cause a recursion error
+        partners = partners.create([{
+            'name': f'Partner {i}',
+            'child_ids': [
+                Command.create({'name': f'Child {i} 1'}),
+                Command.create({'name': f'Child {i} 2'}),
+            ],
+        } for i in range(PREFETCH_MAX)
+        ])
+        result = self.env['res.partner']
+        for partner in partners:
+            result += partner.with_prefetch()
+        list(result._prefetch_ids)
+
+        # when building subsets of large recordsets, prefetch in priority the
+        # records in the subset
+        children = partners.child_ids.with_prefetch()
+
+        records = children.filtered(lambda child: child.name.endswith('1'))
+        records.invalidate_model(['name'])
+        records.mapped('name')
+        fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
+        self.assertEqual(set(fetched_ids), set(records._ids))
+
+        records = children[500 : PREFETCH_MAX + 500]
+        records.invalidate_model(['name'])
+        records.mapped('name')
+        fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
+        self.assertEqual(set(fetched_ids), set(records._ids))
+
+        records = children - children[500 : PREFETCH_MAX + 500]
+        records.invalidate_model(['name'])
+        records.mapped('name')
+        fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
+        self.assertEqual(set(fetched_ids), set(records._ids))
+
+        records = self.env['res.partner'].concat(*[partner.child_ids[0] for partner in partners])
+        records.invalidate_model(['name'])
+        records.mapped('name')
+        fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
+        self.assertEqual(set(fetched_ids), set(records._ids))
 
     @mute_logger('odoo.models')
     def test_60_prefetch_read(self):
@@ -421,11 +496,11 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         # check prefetching across x2many field
         prefetch_ids = records.child_ids.ids
-        reversed_ids = list(unique(
+        reversed_ids = [
             child.id
             for record in reversed(records)
             for child in record.child_ids
-        ))
+        ]
 
         self.assertEqual(list(first.child_ids._prefetch_ids), prefetch_ids)
         self.assertEqual(list(last.child_ids._prefetch_ids), reversed_ids)

@@ -1,20 +1,18 @@
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
-import { ConversationTagEdit } from "@im_livechat/core/web/livechat_conversation_tag_edit";
+import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_autocomplete";
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
-import { Component, useEffect, useRef, useSubEnv } from "@odoo/owl";
+import { Component, useEffect, useSubEnv } from "@odoo/owl";
 
+import { startUrl } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { startUrl } from "@web/core/browser/router";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { usePopover } from "@web/core/popover/popover_hook";
 
 export class LivechatChannelInfoList extends Component {
-    static components = { ActionPanel, BadgeTag, TranscriptSender };
+    static components = { ActionPanel, ExpertiseTagsAutocomplete, TranscriptSender };
     static template = "im_livechat.LivechatChannelInfoList";
     static props = ["thread"];
 
@@ -22,12 +20,6 @@ export class LivechatChannelInfoList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.tagEditPopover = usePopover(ConversationTagEdit, {
-            closeOnClickAway: true,
-            position: "left",
-            useBottomSheet: this.ui.isSmall,
-        });
-        this.tagsContainer = useRef("tagsContainer");
         useSubEnv({ inLivechatInfoPanel: true });
         useEffect(
             () => {
@@ -43,25 +35,10 @@ export class LivechatChannelInfoList extends Component {
         );
     }
 
-    get conversationTags() {
-        return this.props.thread.livechat_conversation_tag_ids.map((tag) => ({
-            id: tag.id,
-            text: tag.name,
-            color: tag.color,
-        }));
-    }
-
     get expectAnswerSteps() {
         return this.props.thread.messages
             .filter((m) => m.chatbotStep?.expectAnswer)
             .map((m) => m.chatbotStep);
-    }
-
-    get expertiseTags() {
-        return this.props.thread.livechat_expertise_ids.map((expertise) => ({
-            id: expertise.id,
-            text: expertise.name,
-        }));
     }
 
     onBlurNote() {
@@ -70,17 +47,11 @@ export class LivechatChannelInfoList extends Component {
         });
     }
 
-    onClickEditTags(ev) {
-        this.tagEditPopover.open(this.tagsContainer.el, {
-            thread: this.props.thread,
-        });
-    }
-
     openVisitorProfile() {
         if (this.ui.isSmall) {
-            this.store.ChatWindow.get({ thread: this.props.thread })?.fold();
+            this.props.thread.channel.chatWindow?.fold();
         } else {
-            this.props.thread.openChatWindow({ focus: true });
+            this.props.thread.channel.openChatWindow({ focus: true });
         }
     }
 

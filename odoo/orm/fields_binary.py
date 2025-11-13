@@ -18,9 +18,8 @@ from .fields import Field
 from .utils import SQL_OPERATORS
 
 if typing.TYPE_CHECKING:
-    from odoo.tools import Query
-
     from .models import BaseModel
+    from .query import Query
 
 # http://initd.org/psycopg/docs/usage.html#binary-adaptation
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).

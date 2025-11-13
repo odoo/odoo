@@ -122,9 +122,10 @@ class HrVersion(models.Model):
         overlapping_contracts = leave._get_overlapping_contracts().sorted(
             key=lambda c: c.contract_date_start)
         if len(overlapping_contracts.resource_calendar_id) <= 1:
-            if overlapping_contracts and leave.resource_calendar_id != overlapping_contracts[
-                0].resource_calendar_id:
-                leave.resource_calendar_id = overlapping_contracts[0].resource_calendar_id
+            if overlapping_contracts:
+                first_overlapping_contract = next(iter(overlapping_contracts), overlapping_contracts)
+                if leave.resource_calendar_id != first_overlapping_contract.resource_calendar_id:
+                    leave.resource_calendar_id = first_overlapping_contract.resource_calendar_id
             return False
         return overlapping_contracts
 

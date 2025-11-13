@@ -76,6 +76,7 @@ class IrModelAccessTest(TransactionCase):
         self.assertNotIn("base.language.export", result)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrModel(TransactionCase):
 
     @classmethod

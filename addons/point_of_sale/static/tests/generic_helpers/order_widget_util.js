@@ -101,6 +101,20 @@ export function hasTotal(amount) {
         },
     ];
 }
+export function hasSubtotal(amount) {
+    return [
+        {
+            isActive: ["desktop"],
+            content: `order total amount is '${amount}'`,
+            trigger: `.product-screen .order-summary .subtotal:contains("${amount}")`,
+        },
+        {
+            isActive: ["mobile"],
+            content: `order total amount is '${amount}'`,
+            trigger: `.product-screen .order-summary .subtotal:contains("${amount}"):not(:visible)`,
+        },
+    ];
+}
 export function hasTax(amount) {
     return {
         content: `order total tax is '${amount}'`,

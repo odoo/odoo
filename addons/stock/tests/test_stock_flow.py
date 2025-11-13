@@ -7,6 +7,7 @@ from odoo.tools import mute_logger, float_round
 from odoo import Command, fields
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
@@ -2447,7 +2448,7 @@ class TestStockFlow(TestStockCommon):
         is waiting for one available P in stock. When receiving some P (in 2
         steps), the out-move should be automatically assigned.
         """
-        self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
+        self.env['ir.config_parameter'].sudo().set_bool('stock.picking_no_auto_reserve', False)
         self.warehouse_1.out_type_id.reservation_method = 'by_date'
         self.warehouse_1.reception_steps = 'two_steps'
 

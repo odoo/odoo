@@ -42,8 +42,9 @@
             <field name="name">Test View</field>
             <field name="type">qweb</field>
             <field name="key">test_website.test_view</field>
+            <field name="priority">29</field>
             <field name="arch" type="xml">
-                <t name="Test View" priority="29" t-name="test_website.test_view">
+                <t name="Test View" t-name="test_website.test_view">
                     <t t-call="website.layout">
                         <p>Test View</p>
                         <p>placeholder</p>
@@ -55,8 +56,9 @@
             <field name="name">Test Page View</field>
             <field name="type">qweb</field>
             <field name="key">test_website.test_page_view</field>
+            <field name="priority">29</field>
             <field name="arch" type="xml">
-                <t name="Test Page View" priority="29" t-name="test_website.test_page_view">
+                <t name="Test Page View" t-name="test_website.test_page_view">
                     <t t-call="website.layout">
                         <div id="oe_structure_test_website_page" class="oe_structure oe_empty"/>
                         <p>Test Page View</p>
@@ -111,8 +113,9 @@
             <field name="name">Test View To Be t-called</field>
             <field name="type">qweb</field>
             <field name="key">test_website.test_view_to_be_t_called</field>
+            <field name="priority">29</field>
             <field name="arch" type="xml">
-                <t name="Test View To Be t-called" priority="29" t-name="test_website.test_view_to_be_t_called">
+                <t name="Test View To Be t-called" t-name="test_website.test_view_to_be_t_called">
                     <p>Test View To Be t-called</p>
                     <p>placeholder</p>
                 </t>

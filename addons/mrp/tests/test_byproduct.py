@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import Form
-from odoo.tests import common
+from odoo.tests import common, tagged, Form
 from odoo.exceptions import ValidationError
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpByProduct(common.TransactionCase):
 
     @classmethod

@@ -2,10 +2,8 @@
 
 from odoo import Command
 from odoo.addons.crm_livechat.tests import chatbot_common
-from odoo.tests.common import tagged
 
 
-@tagged("post_install", "-at_install")
 class CrmChatbotCase(chatbot_common.CrmChatbotCase):
 
     def test_chatbot_create_lead_public_user(self):

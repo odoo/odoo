@@ -5,6 +5,7 @@ import { ProjectProjectFormController } from "./project_project_form_controller"
 export const projectProjectFormView = {
     ...formViewWithHtmlExpander,
     Controller: ProjectProjectFormController,
+    buttonTemplate: "project.ProjectFormView.Buttons",
 };
 
 registry.category("views").add("project_project_form", projectProjectFormView);

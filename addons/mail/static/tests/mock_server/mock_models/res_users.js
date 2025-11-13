@@ -22,6 +22,8 @@ export class ResUsers extends webModels.ResUsers {
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
         /** @type {import("mock_models").ResUsersSettings} */
         const ResUsersSettings = this.env["res.users.settings"];
         /** @type {import("mock_models").MailMessageSubtype} */
@@ -40,18 +42,25 @@ export class ResUsers extends webModels.ResUsers {
         if (!this._is_public(this.env.uid)) {
             const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
             store.add({
-                self_partner: mailDataHelpers.Store.one(
-                    ResPartner.browse(this.env.user.partner_id),
+                self_user: mailDataHelpers.Store.one(
+                    ResUsers.browse(this.env.user.id),
                     makeKwArgs({
                         fields: [
-                            "active",
-                            "avatar_128",
-                            "im_status",
-                            "is_admin",
-                            mailDataHelpers.Store.one("main_user_id", ["notification_type"]),
-                            "name",
+                            mailDataHelpers.Store.one(
+                                "partner_id",
+                                makeKwArgs({
+                                    fields: [
+                                        "active",
+                                        "avatar_128",
+                                        "im_status",
+                                        "is_admin",
+                                        mailDataHelpers.Store.one("main_user_id", []),
+                                        "name",
+                                        "user",
+                                    ],
+                                })
+                            ),
                             "notification_type",
-                            "user",
                         ],
                     })
                 ),

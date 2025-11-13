@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Composer.prototype, {
+/** @type {Composer} */
+const composerPatch = {
     onKeydown(ev) {
         super.onKeydown(ev);
         if (
@@ -34,8 +35,9 @@ patch(Composer.prototype, {
         return (
             this.thread?.channel?.channel_type === "livechat" &&
             this.store.discuss.livechats.some(
-                (thread) => thread.notEq(this.thread) && thread.isUnread
+                (channel) => channel.thread.notEq(this.thread) && channel.isUnread
             )
         );
     },
-});
+};
+patch(Composer.prototype, composerPatch);

@@ -14,12 +14,15 @@ from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCal
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future, patch_api
+from odoo.tests import tagged
+
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
 
 @patch.object(ResUsers, '_get_microsoft_calendar_token', mock_get_token)
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateEvents(TestCommon):
 
     @patch_api
@@ -1431,7 +1434,7 @@ class TestUpdateEvents(TestCommon):
         """
         # Set sync lower bound days range (with 'lower_bound_range' = 7 days).
         # Set event end time in two weeks past the current day for simulating an old event.
-        self.env['ir.config_parameter'].sudo().set_param('microsoft_calendar.sync.lower_bound_range', 7)
+        self.env['ir.config_parameter'].sudo().set_int('microsoft_calendar.sync.lower_bound_range', 7)
         self.simple_event.write({
             'start': datetime.now() - timedelta(days=14),
             'stop': datetime.now() - timedelta(days=14) + timedelta(hours=2),

@@ -14,7 +14,7 @@
                             <i t-if="!state.loading" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Sub Channels" title="Search Sub Channels"/>
                             <i t-else="" class="fa fa-circle-o-notch fa-spin" aria-label="Search in progress" title="Search in progress"/>
                         </button>
-                        <button t-if="store.self.main_user_id?.share === false" class="btn btn-primary smaller" aria-label="Create Thread" t-on-click="onClickCreate">Create</button>
+                        <button t-if="store.self_user?.share === false" class="btn btn-primary smaller" aria-label="Create Thread" t-on-click="onClickCreate">Create</button>
                     </div>
                 </div>
             </t>

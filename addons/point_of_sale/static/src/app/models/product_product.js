@@ -17,6 +17,14 @@ export class ProductProduct extends Base {
             ""
         );
     }
+
+    get searchString() {
+        const fields = ["display_name", "barcode", "default_code"];
+        return fields
+            .map((field) => this[field] || "")
+            .filter(Boolean)
+            .join(" ");
+    }
 }
 
 const ProductProductTemplateProxy = new Proxy(ProductProduct, {

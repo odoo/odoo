@@ -1,8 +1,9 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.exceptions import AccessError
 from odoo import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMergePartner(TransactionCase):
 
     def setUp(self):

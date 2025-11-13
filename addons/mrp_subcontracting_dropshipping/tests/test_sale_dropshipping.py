@@ -2,12 +2,13 @@
 
 from unittest import skip
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
 
     @classmethod

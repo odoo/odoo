@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.tools.barcode import check_barcode_encoding
 from odoo.tools.float_utils import float_compare
 from odoo.tools.mail import html2plaintext, is_html_empty
@@ -177,6 +178,12 @@ class ProductProduct(models.Model):
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
             domain_move_out += [('restrict_partner_id', '=', owner_id)]
+        if 'owners' in self.env.context:
+            owners = self.env.context['owners']
+            if owners:
+                domain_quant += [('owner_id', 'in', self.env.context['owners'])]
+            else:
+                domain_quant += [('owner_id', '=', False)]
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
@@ -373,17 +380,19 @@ class ProductProduct(models.Model):
         if self.env.context.get('strict'):
             loc_domain = Domain('location_id', 'in', locations.ids)
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
-            dest_loc_domain_out = Domain('location_dest_id', 'in', locations.ids)
+            dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
         elif locations:
-            paths_domain = Domain.OR(Domain('parent_path', '=like', loc.parent_path + '%') for loc in locations)
-            loc_domain = Domain('location_id', 'any', paths_domain)
+            alias = locations._table + '_inner'
+            paths_query = models.Query(locations.env, alias, SQL.identifier(locations._table))
+            paths_query.add_where(alias + '.parent_path LIKE ANY(%s)', [[loc.parent_path + '%' for loc in locations]])
+            loc_domain = Domain('location_id', 'in', paths_query)
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
-            dest_loc_domain_done = Domain('location_dest_id', 'any', paths_domain)
+            dest_loc_domain_done = Domain('location_dest_id', 'in', paths_query)
             dest_loc_domain_in_progress = Domain([
                 '|',
-                    '&', ('location_final_id', '!=', False), ('location_final_id', 'any', paths_domain),
-                    '&', ('location_final_id', '=', False), ('location_dest_id', 'any', paths_domain),
+                    '&', ('location_final_id', '!=', False), ('location_final_id', 'in', paths_query),
+                    '&', ('location_final_id', '=', False), ('location_dest_id', 'in', paths_query),
             ])
             dest_loc_domain = Domain([
                 '|',
@@ -1176,6 +1185,8 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         self.ensure_one()
+        if not self.env.user._get_default_warehouse_id():
+            self.env['stock.warehouse']._warehouse_redirect_warning()
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_forecasted_product_template_action')
         return action
 
@@ -1289,8 +1300,8 @@ class UomUom(models.Model):
         """
         procurement_uom = self
         computed_qty = qty
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        if get_param('stock.propagate_uom') != '1':
+        get_bool = self.env['ir.config_parameter'].sudo().get_bool
+        if not get_bool('stock.propagate_uom'):
             computed_qty = self._compute_quantity(qty, quant_uom, rounding_method='HALF-UP')
             procurement_uom = quant_uom
         else:

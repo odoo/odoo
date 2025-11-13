@@ -1,20 +1,26 @@
 /** @odoo-module */
 
-import { after, describe, expect, getFixture, test } from "@odoo/hoot";
 import {
     advanceTime,
+    after,
     animationFrame,
     clear,
     click,
     dblclick,
+    describe,
     drag,
     edit,
+    expect,
     fill,
+    getFixture,
     hover,
     keyDown,
     keyUp,
     leave,
     middleClick,
+    mockFetch,
+    mockTouch,
+    mockUserAgent,
     on,
     pointerDown,
     pointerUp,
@@ -26,9 +32,9 @@ import {
     select,
     setInputFiles,
     setInputRange,
+    test,
     uncheck,
-} from "@odoo/hoot-dom";
-import { mockFetch, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { EventList } from "@web/../lib/hoot-dom/helpers/events";
 import { mountForTest, parseUrl } from "../local_helpers";
@@ -1817,10 +1823,11 @@ describe(parseUrl(import.meta.url), () => {
             </form>
         `);
 
-        mockFetch((url, { body, method }) => {
+        mockFetch((url, { body, headers, method }) => {
             expect.step(new URL(url).pathname);
 
-            expect(method).toBe("post");
+            expect(method).toBe("POST");
+            expect(headers).toEqual(new Headers([["Content-Type", "multipart/form-data"]]));
             expect(body).toBeInstanceOf(FormData);
             expect(body.get("csrf_token")).toBe("CSRF_TOKEN_VALUE");
             expect(body.get("name")).toBe("Pierre");

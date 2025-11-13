@@ -14,7 +14,7 @@ import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
-import { getFormattedValue } from "../utils";
+import { TOUCH_SELECTION_THRESHOLD, getFormattedValue } from "../utils";
 import { KANBAN_CARD_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
@@ -182,7 +182,7 @@ export class KanbanRecord extends Component {
     static template = "web.KanbanRecord";
 
     setup() {
-        this.LONG_TOUCH_THRESHOLD = this.props.canResequence ? 600 : 400;
+        this.LONG_TOUCH_THRESHOLD = this.props.canResequence ? 600 : TOUCH_SELECTION_THRESHOLD;
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.action = useService("action");
         this.dialog = useService("dialog");

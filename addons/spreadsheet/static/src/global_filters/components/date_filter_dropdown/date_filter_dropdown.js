@@ -4,89 +4,13 @@ import {
     getDateRange,
     getNextDateFilterValue,
     getPreviousDateFilterValue,
-    RELATIVE_PERIODS,
+    globalFilterDateRegistry,
+    getDateGlobalFilterTypes,
 } from "@spreadsheet/global_filters/helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 const { DateTime } = luxon;
-
-const DATE_OPTIONS = [
-    {
-        id: "today",
-        type: "relative",
-        label: RELATIVE_PERIODS["today"],
-    },
-    {
-        id: "yesterday",
-        type: "relative",
-        label: RELATIVE_PERIODS["yesterday"],
-        separator: true,
-    },
-    {
-        id: "last_7_days",
-        type: "relative",
-        label: RELATIVE_PERIODS["last_7_days"],
-    },
-    {
-        id: "last_30_days",
-        type: "relative",
-        label: RELATIVE_PERIODS["last_30_days"],
-    },
-    {
-        id: "last_90_days",
-        type: "relative",
-        label: RELATIVE_PERIODS["last_90_days"],
-        separator: true,
-    },
-    {
-        id: "month_to_date",
-        type: "relative",
-        label: RELATIVE_PERIODS["month_to_date"],
-    },
-    {
-        id: "last_month",
-        type: "relative",
-        label: RELATIVE_PERIODS["last_month"],
-    },
-    {
-        id: "month",
-        type: "month",
-        label: _t("Month"),
-    },
-    {
-        id: "quarter",
-        type: "quarter",
-        label: _t("Quarter"),
-        separator: true,
-    },
-    {
-        id: "year_to_date",
-        type: "relative",
-        label: RELATIVE_PERIODS["year_to_date"],
-    },
-    {
-        id: "last_12_months",
-        type: "relative",
-        label: RELATIVE_PERIODS["last_12_months"],
-    },
-    {
-        id: "year",
-        type: "year",
-        label: _t("Year"),
-        separator: true,
-    },
-    {
-        id: undefined,
-        type: undefined,
-        label: _t("All time"),
-    },
-    {
-        id: "range",
-        type: "range",
-        label: _t("Custom Range"),
-    },
-];
 
 /**
  * This component is used to select a date filter value.
@@ -99,6 +23,7 @@ export class DateFilterDropdown extends Component {
     static props = {
         value: { type: Object, optional: true },
         update: Function,
+        model: Object,
     };
 
     setup() {
@@ -112,12 +37,16 @@ export class DateFilterDropdown extends Component {
      */
     _computeDefaultSelectedValues() {
         const now = DateTime.local();
-        this.selectedValues = {
-            month: { month: now.month, year: now.year, type: "month" },
-            quarter: { quarter: Math.ceil(now.month / 3), year: now.year, type: "quarter" },
-            year: { year: now.year, type: "year" },
-            range: { from: "", to: "", type: "range" },
-        };
+        const fixedPeriodsTypes = getDateGlobalFilterTypes().filter(
+            (type) => globalFilterDateRegistry.get(type).isFixedPeriod
+        );
+
+        this.selectedValues = {};
+        for (const type of fixedPeriodsTypes) {
+            this.selectedValues[type] = globalFilterDateRegistry
+                .get(type)
+                .getCurrentFixedPeriod(now);
+        }
     }
 
     /**
@@ -126,37 +55,17 @@ export class DateFilterDropdown extends Component {
      */
     _applyCurrentValueToSelectedValues(value) {
         this._setRangeToCurrentValue(value);
-        switch (value?.type) {
-            case "month":
-                this.selectedValues.month = {
-                    type: "month",
-                    month: value.month,
-                    year: value.year,
-                };
-                break;
-            case "quarter":
-                this.selectedValues.quarter = {
-                    type: "quarter",
-                    quarter: value.quarter,
-                    year: value.year,
-                };
-                break;
-            case "year":
-                this.selectedValues.year = { type: "year", year: value.year };
-                break;
-            case "range":
-                this.selectedValues.range = {
-                    type: "range",
-                    from: value.from,
-                    to: value.to,
-                };
-                break;
+        if (value?.type) {
+            const filterType = value.type === "relative" ? value.period : value.type;
+            if (this.isFixedPeriod(filterType)) {
+                this.selectedValues[value.type] = { ...value };
+            }
         }
     }
 
     _setRangeToCurrentValue(value) {
-        const { from, to } = getDateRange(value);
         const now = DateTime.local();
+        const { from, to } = getDateRange(value, 0, now, this.props.model.getters);
         this.selectedValues.range = {
             type: "range",
             from: from ? from.toISODate() : now.startOf("month").toISODate(),
@@ -165,37 +74,43 @@ export class DateFilterDropdown extends Component {
     }
 
     get dateOptions() {
-        return DATE_OPTIONS;
-    }
+        const filterTypes = getDateGlobalFilterTypes().filter((type) => {
+            const item = globalFilterDateRegistry.get(type);
+            return !item.canOnlyBeDefault && !item.shouldBeHidden?.(this.props.model.getters);
+        });
+        const options = filterTypes.map((type, i) => {
+            const item = globalFilterDateRegistry.get(type);
+            const nextItem = filterTypes[i + 1] && globalFilterDateRegistry.get(filterTypes[i + 1]);
+            return {
+                type,
+                label: item.label,
+                separator: nextItem && nextItem.category !== item.category,
+            };
+        });
 
-    isMonthQuarterYear(value) {
-        return ["month", "quarter", "year"].includes(value?.type);
+        const rangeIndex = options.findIndex((option) => option.type === "range");
+        if (rangeIndex !== -1) {
+            options.splice(rangeIndex, 0, { type: undefined, label: _t("All time") });
+        }
+        return options;
     }
 
     isSelected(value) {
         if (!this.props.value) {
-            return value.id === undefined;
+            return value.type === undefined;
         }
         if (this.props.value.type === "relative") {
-            return this.props.value.period === value.id;
+            return this.props.value.period === value.type;
         }
         return this.props.value.type === value.type;
     }
 
     update(value) {
+        if (value.type && !this.isFixedPeriod(value.type)) {
+            this.props.update({ type: "relative", period: value.type });
+            return;
+        }
         switch (value.type) {
-            case "relative":
-                this.props.update({ type: "relative", period: value.id });
-                break;
-            case "month":
-                this.props.update(this.selectedValues.month);
-                break;
-            case "quarter":
-                this.props.update(this.selectedValues.quarter);
-                break;
-            case "year":
-                this.props.update(this.selectedValues.year);
-                break;
             case "range": {
                 const { from, to } = this.selectedValues.range;
                 if (from && to) {
@@ -208,8 +123,12 @@ export class DateFilterDropdown extends Component {
                 this.props.update(this.selectedValues.range);
                 break;
             }
-            default:
+            case undefined:
                 this.props.update(undefined);
+                break;
+            default:
+                this.props.update(this.selectedValues[value.type]);
+                break;
         }
     }
 
@@ -235,7 +154,7 @@ export class DateFilterDropdown extends Component {
     }
 
     getDescription(type) {
-        return dateFilterValueToString(this.selectedValues[type]);
+        return dateFilterValueToString(this.selectedValues[type], this.props.model.getters);
     }
 
     selectPrevious(type) {
@@ -244,5 +163,12 @@ export class DateFilterDropdown extends Component {
 
     selectNext(type) {
         this.selectedValues[type] = getNextDateFilterValue(this.selectedValues[type]);
+    }
+
+    isFixedPeriod(type) {
+        if (!type) {
+            return false;
+        }
+        return globalFilterDateRegistry.get(type).isFixedPeriod;
     }
 }

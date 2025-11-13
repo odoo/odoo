@@ -1,12 +1,11 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
-import { Record } from "@mail/core/common/record";
-import { useVisible } from "@mail/utils/common/hooks";
+import { Record } from "@mail/model/export";
+import { useChildRefs, useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
-    markRaw,
     onMounted,
     onWillDestroy,
     onWillPatch,
@@ -30,7 +29,6 @@ import { escape } from "@web/core/utils/strings";
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
 /**
  * @typedef {Object} Props
- * @property {boolean} [isInChatWindow=false]
  * @property {number} [jumpPresent=0]
  * @property {number} [jumpToNewMessage=0]
  * @property {"asc"|"desc"} [order="asc"]
@@ -44,7 +42,6 @@ export class Thread extends Component {
     static props = [
         "autofocus?",
         "showDates?",
-        "isInChatWindow?",
         "jumpPresent?",
         "jumpToNewMessage?",
         "thread",
@@ -52,16 +49,13 @@ export class Thread extends Component {
         "scrollRef?",
         "showEmptyMessage?",
         "showJumpPresent?",
-        "messageActions?",
     ];
     static defaultProps = {
-        isInChatWindow: false,
         jumpPresent: 0,
         order: "asc",
         showDates: true,
         showEmptyMessage: true,
         showJumpPresent: true,
-        messageActions: true,
     };
     static template = "mail.Thread";
 
@@ -77,7 +71,7 @@ export class Thread extends Component {
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
-        this.registerMessageRef = this.registerMessageRef.bind(this);
+        this.messageRefs = reactive(useChildRefs(), () => this.scrollToHighlighted());
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({
@@ -94,9 +88,6 @@ export class Thread extends Component {
             ? useState(this.env.messageHighlight)
             : null;
         this.scrollingToHighlight = false;
-        this.refByMessageId = reactive(new Map(), () => {
-            this.scrollToHighlighted();
-        });
         useEffect(
             () => {
                 this.scrollToHighlighted();
@@ -226,7 +217,7 @@ export class Thread extends Component {
                 if (!this.props.jumpToNewMessage) {
                     return;
                 }
-                const el = this.refByMessageId.get(
+                const el = this.messageRefs.get(
                     this.props.thread.self_member_id.new_message_separator_ui - 1
                 )?.el;
                 if (el) {
@@ -496,7 +487,7 @@ export class Thread extends Component {
 
     async onClickPreferences() {
         const actionDescription = await this.orm.call("res.users", "action_get");
-        actionDescription.res_id = this.store.self.main_user_id?.id;
+        actionDescription.res_id = this.store.self_user?.id;
         this.env.services.action.doAction(actionDescription);
     }
 
@@ -528,14 +519,6 @@ export class Thread extends Component {
             this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
-    }
-
-    registerMessageRef(message, ref) {
-        if (!ref) {
-            this.refByMessageId.delete(message.id);
-            return;
-        }
-        this.refByMessageId.set(message.id, markRaw(ref));
     }
 
     reset() {
@@ -614,7 +597,7 @@ export class Thread extends Component {
         if (!this.messageHighlight?.highlightedMessageId || this.scrollingToHighlight) {
             return;
         }
-        const el = this.refByMessageId.get(this.messageHighlight.highlightedMessageId)?.el;
+        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId)?.el;
         if (el) {
             this.scrollingToHighlight = true;
 

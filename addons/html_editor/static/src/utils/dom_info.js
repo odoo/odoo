@@ -46,7 +46,11 @@ export function isEmptyTextNode(node) {
  */
 export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
-    return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
+    const referenceElement = closestElement(
+        node,
+        (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
+    );
+    return fontWeight > 500 || fontWeight > +getComputedStyle(referenceElement).fontWeight;
 }
 
 /**
@@ -342,6 +346,7 @@ export function isIconElement(node) {
 // @todo @phoenix: move the specific part in a proper plugin.
 export function isMediaElement(node) {
     return (
+        node.nodeName === "IMG" ||
         isIconElement(node) ||
         (node.classList &&
             (node.classList.contains("o_image") ||

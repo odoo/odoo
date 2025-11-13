@@ -189,6 +189,22 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         <section class="third" data-name="Dummy Section" data-snippet="s_dummy">
             <p>test<p>
         </section>
+        <section class="fourth">
+            <p>test<p>
+            <div class="row">
+                <div>column</div>
+            </div>
+        </section>
+        <section class="fifth carousel">
+            <p>test<p>
+            <div class="row">
+                <div>column</div>
+            </div>
+        </section>
+        <section class="sixth">
+            <p>test<p>
+            <div class="s_card" data-name="Card">card</div>
+        </section>
     `;
     await setupWebsiteBuilder(websiteContent);
     const anchorSelector =
@@ -241,6 +257,36 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(".o_dialog button:contains('Remove')").click();
     expect(":iframe section.third").not.toHaveAttribute("id");
     expect(":iframe section.third").not.toHaveAttribute("data-anchor");
+
+    await contains(notificationCloseSelector).click();
+    // Column without title nor data-name should use the default name for column
+    await contains(":iframe section.fourth div.row div").click();
+    await animationFrame();
+    await contains(
+        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_anchor"
+    ).click();
+    await animationFrame();
+    expect(queryText(notificationContentSelector)).toInclude("#Column");
+    await contains(notificationCloseSelector).click();
+    expect(":iframe section.fourth div.row div").toHaveAttribute("id", "Column");
+
+    // Column in carousel does not allow anchor
+    await contains(":iframe section.fifth div.row div").click();
+    await animationFrame();
+    expect(
+        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_anchor"
+    ).toHaveCount(0);
+
+    // Card outside a column also support anchor
+    await contains(":iframe section.sixth div").click();
+    await animationFrame();
+    await contains(
+        ".o_customize_tab .options-container > div:contains('Card') button.oe_snippet_anchor"
+    ).click();
+    await animationFrame();
+    expect(queryText(notificationContentSelector)).toInclude("#Card");
+    await contains(notificationCloseSelector).click();
+    expect(":iframe section.sixth div").toHaveAttribute("id", "Card");
 });
 
 test("Clicking on the options container title selects the corresponding element", async () => {
@@ -318,29 +364,27 @@ test("applying option container button should wait for actions in progress", asy
     });
 
     const { getEditableContent, getEditor } = await setupWebsiteBuilder(`
-        <div class="test-options-target o-paragraph">plop</div>
+        <p class="test-options-target">plop</p>
     `);
     const editor = getEditor();
     const editable = getEditableContent();
 
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target">plop</p>`);
 
     await contains(".test_button").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target">plop</p>`);
 
     customActionDef.resolve();
     await tick();
     expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph customAction overlayButton">plop</div>`
+        `<p class="test-options-target customAction overlayButton">plop</p>`
     );
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph customAction">plop</div>`
-    );
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target customAction">plop</p>`);
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<p class="test-options-target">plop</p>`);
 });

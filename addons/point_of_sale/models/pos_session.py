@@ -141,7 +141,7 @@ class PosSession(models.Model):
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
-            'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move']
+            'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move', 'account.account']
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -1380,7 +1380,7 @@ class PosSession(models.Model):
             # for taxes
             'tax_ids': tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
             'base_tag_ids': tuple(base_line['tax_tag_ids'].ids),
-            'product_id': base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
+            'product_id': base_line['product_id'].id if self.config_id.use_closing_entry_by_product else False,
         }
 
     def _get_sale_vals(self, key, sale_vals):
@@ -1535,16 +1535,6 @@ class PosSession(models.Model):
 
         return new_amounts
 
-    def _round_amounts(self, amounts):
-        new_amounts = {}
-        for key, amount in amounts.items():
-            if key == 'amount_converted':
-                # round the amount_converted using the company currency.
-                new_amounts[key] = self.company_id.currency_id.round(amount)
-            else:
-                new_amounts[key] = self.currency_id.round(amount)
-        return new_amounts
-
     def _credit_amounts(self, partial_move_line_vals, amount, amount_converted, force_company_currency=False):
         """ `partial_move_line_vals` is completed by `credit`ing the given amounts.
 
@@ -1677,18 +1667,13 @@ class PosSession(models.Model):
             return {}
         return self.config_id.open_ui()
 
-    def set_opening_control(self, cashbox_value: int, notes: str):
-        if self.state != 'opening_control':
-            return
+    def _set_opening_control_data(self, cashbox_value: int, notes: str):
+        """
+        Internal logic for opening the session.
+        Inherit this method to add custom logic before the sequence is assigned.
+        """
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
-
-        sequence = self.env['ir.sequence'].with_context(
-            company_id=self.config_id.company_id.id
-        ).search([('code', '=', 'pos.session'), ('company_id', 'in', [self.config_id.company_id.id, False])], order='company_id', limit=1)
-
-        self.name = (self.config_id.name if sequence.prefix == '/' else '') + sequence.next_by_code('pos.session') + (self.name if self.name != '/' else '')
-
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
             self.opening_notes = notes
@@ -1699,6 +1684,24 @@ class PosSession(models.Model):
             message = _('Opening control message: ')
             message += notes
             self.message_post(body=plaintext2html(message))
+
+    def set_opening_control(self, cashbox_value: int, notes: str):
+        """
+        Public method to open the session.
+        This calls the internal logic and, if successful, assigns the sequence name.
+
+        DO NOT INHERIT THIS METHOD. Inherit _set_opening_control_data instead.
+        """
+        if self.state != 'opening_control':
+            return
+
+        self._set_opening_control_data(cashbox_value, notes)
+
+        sequence = self.env['ir.sequence'].with_context(
+            company_id=self.config_id.company_id.id
+        ).search([('code', '=', 'pos.session'), ('company_id', 'in', [self.config_id.company_id.id, False])], order='company_id', limit=1)
+
+        self.name = (self.config_id.name if sequence.prefix == '/' else '') + sequence.next_by_code('pos.session') + (self.name if self.name != '/' else '')
 
     def _post_cash_details_message(self, state, expected, difference, notes):
         message = (state + " difference: " + self.currency_id.format(difference) + '\n' +
@@ -1785,58 +1788,6 @@ class PosSession(models.Model):
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
 
-    def _get_attributes_by_ptal_id(self):
-        # performance trick: prefetch fields with search_fetch() and fetch()
-        product_attributes = self.env['product.attribute'].search_fetch(
-            [('create_variant', '=', 'no_variant')],
-            ['name', 'display_type'],
-        )
-        product_template_attribute_values = self.env['product.template.attribute.value'].search_fetch(
-            [('attribute_id', 'in', product_attributes.ids)],
-            ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra'],
-        )
-        product_template_attribute_values.product_attribute_value_id.fetch(['name', 'is_custom', 'html_color', 'image'])
-
-        key1 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
-        key2 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id)
-        res = {}
-        for key, group in groupby(sorted(product_template_attribute_values, key=key1), key=key2):
-            attribute_line_id, attribute = key
-            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color', 'image'])[0],
-                       'price_extra': ptav.price_extra,
-                       # id of a value should be from the "product.template.attribute.value" record
-                       'id': ptav.id,
-                       } for ptav in list(group)]
-            res[attribute_line_id] = {
-                'id': attribute_line_id,
-                'name': attribute.name,
-                'display_type': attribute.display_type,
-                'values': values,
-                'sequence': attribute.sequence,
-            }
-
-        return res
-
-    def _get_partners_domain(self):
-        return []
-
-    def find_product_by_barcode(self, barcode, config_id):
-        # Kept for backward compatibility.
-        return self.env['product.template'].load_product_from_pos(config_id, [
-            '|',
-            ('product_variant_ids.barcode', '=', barcode),
-            ('barcode', '=', barcode),
-            ('available_in_pos', '=', True),
-            ('sale_ok', '=', True),
-        ])
-
-    def get_total_discount(self):
-        amount = 0
-        for line in self.env['pos.order.line'].search([('order_id', 'in', self._get_closed_orders().ids), ('discount', '>', 0)]):
-            amount += line._get_discount_amount()
-
-        return amount
-
     def _get_invoice_total_list(self):
         invoice_list = []
         for order in self.order_ids.filtered(lambda o: o.is_invoiced):
@@ -1865,9 +1816,6 @@ class PosSession(models.Model):
             body = _('Cash move deleted: %s', action)
 
         self.message_post(body=body, author_id=partner_id)
-
-    def _pos_has_valid_product(self):
-        return self.env['product.product'].sudo().search_count([('available_in_pos', '=', True), ('list_price', '>=', 0), ('id', 'not in', self.env['pos.config']._get_special_products().ids), '|', ('active', '=', False), ('active', '=', True)], limit=1) > 0
 
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])

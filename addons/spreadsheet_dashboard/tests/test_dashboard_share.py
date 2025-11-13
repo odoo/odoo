@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import DashboardTestCommon
+from odoo.tests import tagged
+
 from odoo.exceptions import AccessError
 
 EXCEL_FILES = [
@@ -10,6 +12,8 @@ EXCEL_FILES = [
     }
 ]
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class DashboardSharing(DashboardTestCommon):
     def test_share_url(self):
         dashboard = self.create_dashboard()

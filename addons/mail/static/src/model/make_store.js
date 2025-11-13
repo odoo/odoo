@@ -66,6 +66,14 @@ export function makeStore(env, { localRegistry } = {}) {
                             if (Model._.parentFields.has(name)) {
                                 const parentFieldName = Model._.parentFields.get(name);
                                 const parentRecordFullProxy = recordFullProxy[parentFieldName];
+                                if (!parentRecordFullProxy) {
+                                    const ParentModel =
+                                        Models[Model._.fieldsTargetModel.get(parentFieldName)];
+                                    if (isMany(ParentModel, name)) {
+                                        return [];
+                                    }
+                                    return;
+                                }
                                 return Reflect.get(parentRecordFullProxy, name);
                             }
                             recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
@@ -222,15 +230,39 @@ export function makeStore(env, { localRegistry } = {}) {
             }
         }
     }
-    // Map inherited fields
+    // Map inherited properties
     for (const Model of Object.values(Models)) {
         if (Model._inherits) {
+            const ownProperties = new Set([
+                ...Model._.fields.keys(),
+                ...Object.getOwnPropertyNames(Model.prototype),
+            ]);
             for (const [parentModelName, parentFieldName] of Object.entries(Model._inherits)) {
+                const inverseField = Model._.fieldsInverse.get(parentFieldName);
+                if (!inverseField) {
+                    throw new Error(
+                        `Missing inverse field of "${parentFieldName}" for _inherits in "${Model.getName()}"`
+                    );
+                }
+                Model._.inheritsFields.add(parentFieldName);
                 const ParentModel = Models[parentModelName];
-                for (const fieldName of [...ParentModel._.fields.keys()].filter(
-                    (fieldName) => !Model._.fields.has(fieldName)
-                )) {
+                ParentModel._.inheritsInverseFields.add(inverseField);
+                // fields
+                for (const fieldName of ParentModel._.fields.keys()) {
+                    if (ownProperties.has(fieldName)) {
+                        continue;
+                    }
                     Model._.parentFields.set(fieldName, parentFieldName);
+                }
+                // getters and functions
+                for (const key of Object.getOwnPropertyNames(ParentModel.prototype)) {
+                    if (ownProperties.has(key)) {
+                        continue;
+                    }
+                    const descriptor = Object.getOwnPropertyDescriptor(ParentModel.prototype, key);
+                    if (descriptor.get || typeof descriptor.value === "function") {
+                        Model._.parentFields.set(key, parentFieldName);
+                    }
                 }
             }
         }

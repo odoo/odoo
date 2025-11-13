@@ -4,7 +4,7 @@
 from contextlib import contextmanager
 from lxml import etree
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 class TestMultiCompanyCommon(TransactionCase):
@@ -118,6 +118,8 @@ class TestMultiCompanyCommon(TransactionCase):
             context = dict(self.env.context, allowed_company_ids=old_companies)
             self.env = self.env(context=context)
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompanyProject(TestMultiCompanyCommon):
 
     @classmethod

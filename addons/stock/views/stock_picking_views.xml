@@ -73,7 +73,7 @@
                         <button name="action_assign" type="object" string="Check Availability"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
-                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                    <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show" readonly="state == 'done'"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show" readonly="state == 'done'"/>
@@ -146,15 +146,15 @@
                             invisible="not has_scrap_move"/>
                         <button name="action_see_packages" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
-                            invisible="state == 'done'" groups="stock.group_tracking_lot">
-                            <div class="o_form_field o_stat_info">
+                            invisible="state == 'done' or not packages_count" groups="stock.group_tracking_lot">
+                            <div class="o_stat_info">
                                 <span class="o_stat_text">Packages</span>
                             </div>
                         </button>
-                        <button name="action_see_package_histories" type="object"
+                        <button name="action_see_package_histories" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
-                            invisible="state != 'done'" groups="stock.group_tracking_lot">
-                            <div class="o_form_field o_stat_info">
+                            invisible="state != 'done' or not packages_count" groups="stock.group_tracking_lot">
+                            <div class="o_stat_info">
                                 <span class="o_stat_text">Packages</span>
                             </div>
                         </button>
@@ -236,7 +236,7 @@
                         <group>
                             <label for="scheduled_date"/>
                             <div class="o_row">
-                                <field name="scheduled_date" readonly="state in ['cancel', 'done']" required="id"
+                                <field name="scheduled_date" readonly="not is_date_editable" required="id"
                                     decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
@@ -252,7 +252,7 @@
                                 decoration-success="state == 'assigned' or products_availability_state == 'available'"
                                 decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
                                 decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
-                            <field name="date_done" string="Effective Date" invisible="state != 'done'"/>
+                            <field name="date_done" string="Effective Date" invisible="state != 'done'" readonly="not is_date_editable"/>
                             <field name="origin" placeholder="e.g. PO0032" readonly="state in ['cancel', 'done']"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"
                                    invisible="picking_type_code != 'incoming'"
@@ -312,7 +312,7 @@
                                         groups="stock.group_production_lot"
                                         invisible="not show_details_visible or has_tracking == 'none'"
                                         optional="hide"
-                                        options="{'create': [('parent.use_create_lots', '=', True)]}"
+                                        create="parent.use_create_lots == True"
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"
                                     />

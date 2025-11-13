@@ -125,7 +125,6 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".o_form_button_save",
     run: "click",
-    expectUnloadPage: true,
 }, {
     trigger: "button[name='action_view_tasks']",
     run: "click",

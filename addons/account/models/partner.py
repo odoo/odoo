@@ -19,6 +19,21 @@ _logger = logging.getLogger(__name__)
 _ref_company_registry = {
     'jp': '7000012050002',
     'dk': '58403288',
+
+    # Using the same placeholder value for France and all its overseas territories/collectivities
+    'fr': '33417522101010',
+    'pf': '33417522101010',
+    'mf': '33417522101010',
+    'mq': '33417522101010',
+    'nc': '33417522101010',
+    're': '33417522101010',
+    'gf': '33417522101010',
+    'gp': '33417522101010',
+    'tf': '33417522101010',
+    'bl': '33417522101010',
+    'pm': '33417522101010',
+    'yt': '33417522101010',
+    'wf': '33417522101010',
 }
 
 
@@ -45,7 +60,6 @@ class AccountFiscalPosition(models.Model):
         column1='account_fiscal_position_id',
         column2='account_tax_id',
         string='Taxes',
-        context={'active_test': False},
     )
     tax_map = fields.Binary(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
@@ -93,7 +107,7 @@ class AccountFiscalPosition(models.Model):
                 template_code = self.env['account.chart.template']._guess_chart_template(fiscal_position.country_id)
                 template = self.env['account.chart.template']._get_chart_template_mapping()[template_code]
                 # 'no_template' kept for compatibility in stable. To remove in master
-                fiscal_position.foreign_vat_header_mode = 'templates_found' if template['installed'] else 'no_template'
+                fiscal_position.foreign_vat_header_mode = 'templates_found' if template['module'] in self.env['ir.module.module']._installed() else 'no_template'
 
     @api.depends('tax_ids')
     def _compute_tax_map(self):
@@ -285,7 +299,7 @@ class AccountFiscalPosition(models.Model):
         self.ensure_one()
         template_code = self.env['account.chart.template']._guess_chart_template(self.country_id)
         template = self.env['account.chart.template']._get_chart_template_mapping()[template_code]
-        if not template['installed']:
+        if template['module'] not in self.env['ir.module.module']._installed():
             localization_module = self.env['ir.module.module'].search([('name', '=', template['module'])])
             localization_module.sudo().button_immediate_install()
         created_records = self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
@@ -321,7 +335,6 @@ class ResPartner(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     fiscal_country_group_codes = fields.Json(compute='_compute_fiscal_country_group_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
-    partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
     duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
     @api.depends('company_id')
@@ -329,7 +342,10 @@ class ResPartner(models.Model):
     def _compute_fiscal_country_codes(self):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
-            record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
+            country_codes = allowed_companies.mapped('account_fiscal_country_id.code')
+            if record.country_code:
+                country_codes.append(record.country_code)
+            record.fiscal_country_codes = ",".join(country_codes)
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -1008,13 +1024,13 @@ class ResPartner(models.Model):
             partner.partner_vat_placeholder = placeholder
 
     @api.depends('country_id')
-    def _compute_partner_company_registry_placeholder(self):
+    def _compute_company_registry_placeholder(self):
         """ Provides a dynamic placeholder on the company registry field for countries that may need it.
         Add your country and the value you want in the _ref_company_registry map.
         """
         for partner in self:
             country_code = partner.country_id.code or ''
-            partner.partner_company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
+            partner.company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
 
     def _compute_account_move_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them

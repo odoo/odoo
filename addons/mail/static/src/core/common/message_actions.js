@@ -1,15 +1,13 @@
-import { toRaw, useComponent, useState } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { discussComponentRegistry } from "./discuss_component_registry";
-import { Deferred } from "@web/core/utils/concurrency";
-import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
+import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
 
@@ -20,11 +18,7 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
 /** @typedef {import("models").Message} Message */
 /** @typedef {import("models").Thread} Thread */
 /**
- * @typedef {Object} MessageActionSpecificDefinition
- * @property {boolean|(comp: Component) => boolean} [condition=true]
- */
-/**
- * @typedef {ActionDefinition & MessageActionSpecificDefinition} MessageActionDefinition
+ * @typedef {ActionDefinition} MessageActionDefinition
  */
 /**
  * @param {string} id
@@ -142,34 +136,16 @@ registerMessageAction("edit", {
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 55),
 });
 registerMessageAction("delete", {
-    condition: ({ message }) => message.editable,
+    condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
-    onSelected: async ({ message: msg, owner, store }) => {
-        const message = toRaw(msg);
-        const def = new Deferred();
-        store.env.services.dialog.add(
-            discussComponentRegistry.get("MessageConfirmDialog"),
-            {
-                message,
-                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
-                onConfirm: () => {
-                    def.resolve(true);
-                    message.remove({
-                        removeFromThread: owner.shouldHideFromMessageListOnDelete,
-                    });
-                },
-            },
-            { context: owner, onClose: () => def.resolve(false) }
-        );
-        return def;
-    },
+    onSelected: ({ message, owner }) => toRaw(message).showDeleteConfirm(owner),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });
 registerMessageAction("download_files", {
     condition: ({ message, store }) =>
-        message.attachment_ids.length > 1 && store.self.main_user_id?.share === false,
+        message.attachment_ids.length > 1 && store.self_user?.share === false,
     icon: "fa fa-download",
     name: _t("Download Files"),
     onSelected: ({ message }) =>
@@ -183,7 +159,7 @@ registerMessageAction("download_files", {
     sequence: 55,
 });
 registerMessageAction("toggle-translation", {
-    condition: ({ message }) => message.isTranslatable(message.thread),
+    condition: ({ message }) => message.isTranslatable,
     icon: ({ message }) =>
         `fa fa-language ${message.showTranslation ? "o-mail-Message-translated" : ""}`,
     name: ({ message }) => (message.showTranslation ? _t("Revert") : _t("Translate")),
@@ -191,11 +167,11 @@ registerMessageAction("toggle-translation", {
     sequence: 100,
 });
 registerMessageAction("copy-message", {
-    condition: ({ message }) => isMobileOS() && !message.isBodyEmpty,
+    condition: ({ message }) => !message.isBodyEmpty,
     onSelected: ({ message }) => message.copyMessageText(),
-    name: _t("Copy to Clipboard"),
+    name: _t("Copy Text"),
     icon: "fa fa-copy",
-    sequence: 30,
+    sequence: () => (isMobileOS() ? 30 : 105),
 });
 registerMessageAction("copy-link", {
     condition: ({ message, thread }) =>
@@ -207,6 +183,14 @@ registerMessageAction("copy-link", {
     name: _t("Copy Link"),
     onSelected: ({ message }) => message.copyLink(),
     sequence: 110,
+});
+registerMessageAction("end-poll", {
+    condition: ({ message }) =>
+        message.poll && !message.poll.end_message_id && message.poll.createdBySelf,
+    icon: " oi oi-view-cohort",
+    name: _t("End Poll"),
+    onSelected: ({ message }) => rpc("/mail/poll/end", { poll_id: message.poll.id }),
+    sequence: 115,
 });
 
 export class MessageAction extends Action {
@@ -239,18 +223,5 @@ class UseMessageActions extends UseActions {
  * @param {Thread|() => Thread} [thread] when set, the thread the message is being viewed
  */
 export function useMessageActions({ message, thread } = {}) {
-    const component = useComponent();
-    const transformedActions = messageActionsRegistry
-        .getEntries()
-        .map(
-            ([id, definition]) =>
-                new MessageAction({ owner: component, id, definition, message, thread })
-        );
-    for (const action of transformedActions) {
-        action.setup();
-    }
-    const state = useState(
-        new UseMessageActions(component, transformedActions, useService("mail.store"))
-    );
-    return state;
+    return useAction(messageActionsRegistry, UseMessageActions, MessageAction, { message, thread });
 }

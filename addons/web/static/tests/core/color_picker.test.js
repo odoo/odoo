@@ -1,5 +1,5 @@
 import { test, expect } from "@odoo/hoot";
-import { press, click, animationFrame, queryOne } from "@odoo/hoot-dom";
+import { press, click, animationFrame, queryOne, hover } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
@@ -145,6 +145,60 @@ test("keyboard navigation", async () => {
     ).toBeFocused();
 });
 
+class AdditionalTab extends Component {
+    static template = xml`
+        <div class="container" t-on-mouseover="props.onColorPointerOver" t-on-mouseout="props.onColorPointerOut">
+            <button class="o_color_picker_button btn p-1 m-1" data-color="#FFFF00" style="background-color: #ffff00; width: auto">
+                <div>Hover me</div>
+            </button>
+        </div>
+    `;
+    static props = ["*"];
+}
+
+test.tags("desktop");
+test("should trigger color preview callbacks only once when hovering button having nested elements", async () => {
+    registry.category("color_picker_tabs").add("web.test", {
+        id: "test",
+        name: "Test",
+        component: AdditionalTab,
+    });
+    let pointerHoverCounter = 0;
+    let pointerOutCounter = 0;
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#B5D6A5",
+                defaultTab: "test",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {
+                pointerHoverCounter++;
+            },
+            applyColorResetPreview() {
+                pointerOutCounter++;
+            },
+            colorPrefix: "",
+            enabledTabs: ["solid", "custom", "test"],
+        },
+    });
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect("button.test-tab").toHaveClass("active");
+
+    // Hover in
+    await hover("div.container");
+    await hover("button[data-color='#FFFF00']");
+    await hover("button[data-color='#FFFF00'] div");
+
+    // Hover out
+    await hover("button[data-color='#FFFF00']");
+    await hover("div.container");
+
+    expect(pointerHoverCounter).toBe(1);
+    expect(pointerOutCounter).toBe(1);
+});
+
 test("colorpicker inside the builder are linked to the builder theme colors", async () => {
     await mountWithCleanup(ColorPicker, {
         props: {
@@ -268,4 +322,26 @@ test("can register an extra tab", async () => {
     expect("button.extra-tab").toHaveClass("active");
     expect(".o_font_color_selector>p:last-child").toHaveText("Color picker extra tab");
     registry.category("color_picker_tabs").remove("web.extra");
+});
+
+test("should mark default color as selected when it is selected", async () => {
+    defineStyle(`
+        :root {
+            --900: #212527;
+        }
+    `);
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#212527",
+                defaultTab: "custom",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {},
+            applyColorResetPreview() {},
+            colorPrefix: "",
+        },
+    });
+    expect(".o_color_button[data-color='900']").toHaveClass("selected");
 });

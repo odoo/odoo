@@ -8,13 +8,12 @@ try:
 except ImportError:
     ws = None
 
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.mail.models.mail_presence import AWAY_TIMER
 
 
-@tagged("-at_install", "post_install")
 class TestIrWebsocket(WebsocketCase):
     def test_notify_on_status_change(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")

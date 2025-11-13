@@ -7,7 +7,6 @@ import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
@@ -18,6 +17,7 @@ import {
     models,
     mountWithCleanup,
     patchWithCleanup,
+    waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
@@ -181,7 +181,7 @@ class IrUiView extends models.Model {
  * getEditableContent: () => HTMLElement,
  * contentEl: HTMLElement,
  * builderEl: HTMLElement,
- * waitDomUpdated: () => Promise<void>
+ * waitSidebarUpdated: () => Promise<void>
  * }>}
 }}
  */
@@ -246,11 +246,13 @@ export async function setupHTMLBuilder(
     Plugins.push(...BuilderPlugins);
 
     let lastUpdatePromise;
-    const waitDomUpdated = async () => {
+    const waitSidebarUpdated = async () => {
+        await attachedEditor.shared.operation.next();
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
         await animationFrame();
+        await waitUntilIdle([comp.__owl__.app]);
     };
     patchWithCleanup(Builder.prototype, {
         setup() {
@@ -310,7 +312,7 @@ export async function setupHTMLBuilder(
         getEditableContent: () => editableContent,
         contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
         builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
-        waitDomUpdated,
+        waitSidebarUpdated,
     };
 }
 
@@ -321,40 +323,14 @@ export function addBuilderPlugin(Plugin) {
     });
 }
 
-export function addBuilderOption({
-    selector,
-    exclude,
-    applyTo,
-    template,
-    Component,
-    sequence,
-    cleanForSave,
-    props,
-    editableOnly,
-    title,
-    reloadTarget,
-}) {
+export function addBuilderOption(Option) {
     const pluginId = uniqueId("test-option");
-    const option = {
-        pluginId,
-        OptionComponent: Component,
-        template,
-        selector,
-        exclude,
-        applyTo,
-        sequence,
-        cleanForSave,
-        props,
-        editableOnly,
-        title,
-        reloadTarget,
-    };
 
     const P = {
         [pluginId]: class extends Plugin {
             static id = pluginId;
             resources = {
-                builder_options: sequence ? withSequence(sequence, option) : option,
+                builder_options: Option,
             };
         },
     }[pluginId];
@@ -456,7 +432,7 @@ export function getBasicSection(
     return unformat(
         `<section class="${classes}" data-snippet="${snippet}" ${
             name ? `data-name="${name}"` : ""
-        }><div class="test_a o-paragraph">${content}</div></section>`
+        }><div class="test_a">${content}</div></section>`
     );
 }
 

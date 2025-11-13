@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 
 
 class BaseLanguageInstall(models.TransientModel):
@@ -15,7 +15,7 @@ class BaseLanguageInstall(models.TransientModel):
         if website_id:
             if 'website_ids' not in defaults:
                 defaults['website_ids'] = []
-            defaults['website_ids'].append(website_id)
+            defaults['website_ids'].append(Command.link(website_id))
         return defaults
 
     def lang_install(self):

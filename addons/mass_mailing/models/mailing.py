@@ -71,12 +71,8 @@ class MailingMailing(models.Model):
 
     @api.model
     def _get_default_mail_server_id(self):
-        server_id = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mail_server_id')
-        try:
-            server_id = literal_eval(server_id) if server_id else False
-            return self.env['ir.mail_server'].search([('id', '=', server_id)]).id
-        except ValueError:
-            return False
+        server_id = self.env['ir.config_parameter'].sudo().get_int('mass_mailing.mail_server_id')
+        return self.env['ir.mail_server'].browse(server_id).exists().id
 
     active = fields.Boolean(default=True, tracking=True)
     subject = fields.Char(
@@ -480,7 +476,7 @@ class MailingMailing(models.Model):
             mailing.is_body_empty = tools.is_html_empty(mailing.body_arch)
 
     def _compute_mail_server_available(self):
-        self.mail_server_available = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.outgoing_mail_server')
+        self.mail_server_available = self.env['ir.config_parameter'].sudo().get_bool('mass_mailing.outgoing_mail_server')
 
     # Overrides of mail.render.mixin
     @api.depends('mailing_model_real')
@@ -671,12 +667,20 @@ class MailingMailing(models.Model):
         self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
 
     def action_retry_failed(self):
-        failed_mails = self.env['mail.mail'].sudo().search([
+        """ Remove all failed emails and their traces, and try sending them again."""
+        # Use batching to prevent cache overfill in unlink()
+        batch_size = 1000
+        failed_emails = self.env['mail.mail'].sudo().with_context(prefetch_fields=False).search([
             ('mailing_id', 'in', self.ids),
             ('state', '=', 'exception')
-        ])
-        failed_mails.mapped('mailing_trace_ids').unlink()
-        failed_mails.unlink()
+        ], limit=batch_size)
+        while failed_emails:
+            failed_emails.mapped('mailing_trace_ids').unlink()
+            failed_emails.unlink()
+            failed_emails = failed_emails.search([
+                ('mailing_id', 'in', self.ids),
+                ('state', '=', 'exception')
+            ], limit=batch_size)
         self.action_put_in_queue()
 
     def action_view_link_trackers(self):
@@ -1176,7 +1180,7 @@ class MailingMailing(models.Model):
                 })
             self.env['ir.cron']._commit_progress(processed=1)
 
-        if self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'):
+        if self.env['ir.config_parameter'].sudo().get_bool('mass_mailing.mass_mailing_reports'):
             mailings = self.env['mailing.mailing'].search([
                 ('kpi_mail_required', '=', True),
                 ('state', '=', 'done'),
@@ -1522,6 +1526,6 @@ class MailingMailing(models.Model):
         """
         self.ensure_one()
         assert isinstance(email, str)
-        secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
+        secret = self.env["ir.config_parameter"].sudo().get_str("database.secret")
         token = (self.env.cr.dbname, self.id, int(document_id), email)
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()

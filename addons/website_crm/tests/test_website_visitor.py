@@ -10,6 +10,7 @@ from odoo.tests.common import users
 
 
 @tagged('website_visitor', 'is_query_count')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTestsCommon):
 
     def setUp(self):

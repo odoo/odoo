@@ -3,10 +3,11 @@
 
 from datetime import date
 
-from odoo.tests.common import SingleTransactionCase
+from odoo.tests.common import tagged, SingleTransactionCase
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrSequenceDateRangeStandard(SingleTransactionCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
@@ -47,6 +48,7 @@ class TestIrSequenceDateRangeStandard(SingleTransactionCase):
         seq.unlink()
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrSequenceDateRangeNoGap(SingleTransactionCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
@@ -88,6 +90,7 @@ class TestIrSequenceDateRangeNoGap(SingleTransactionCase):
         seq.unlink()
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
     """ Create sequence objects and change their ``implementation`` field. """
 

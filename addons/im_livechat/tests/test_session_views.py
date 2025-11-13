@@ -1,10 +1,11 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import Command
 from odoo.tests import new_test_user
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
-from odoo.tests.common import users, tagged
+from odoo.tests.common import users
 
 
-@tagged("-at_install", "post_install")
 class TestImLivechatSessionViews(TestImLivechatCommon):
     def test_session_history_navigation_back_and_forth(self):
         operator = new_test_user(
@@ -117,13 +118,5 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
         self.start_tour(
             f"/odoo/action-{self.looking_for_help_action.id}?view_type=kanban",
             "im_livechat.looking_for_help_kanban_real_time_update_tour",
-            login="bob_looking_for_help",
-        )
-
-    def test_looking_for_help_tags_real_time_update(self):
-        self.start_needhelp_session()
-        self.start_tour(
-            f"/odoo/action-{self.looking_for_help_action.id}",
-            "im_livechat.looking_for_help_tags_real_time_update_tour",
             login="bob_looking_for_help",
         )

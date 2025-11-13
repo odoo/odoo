@@ -23,14 +23,14 @@ class IapAutocompleteApi(models.AbstractModel):
         if not account.sudo().account_token:
             raise ValueError(_('No account token'))
         params.update({
-            'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'db_uuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
             'db_version': release.version,
             'db_lang': self.env.lang,
             'account_token': account.sudo().account_token,
             'country_code': self.env.company.country_id.code,
             'zip': self.env.company.zip,
         })
-        base_url = self.env['ir.config_parameter'].sudo().get_param('iap.partner_autocomplete.endpoint', self._DEFAULT_ENDPOINT)
+        base_url = self.env['ir.config_parameter'].sudo().get_str('iap.partner_autocomplete.endpoint') or self._DEFAULT_ENDPOINT
         return iap_tools.iap_jsonrpc(base_url + local_endpoint + '/' + action, params=params, timeout=timeout)
 
     @api.model

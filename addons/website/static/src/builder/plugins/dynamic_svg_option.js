@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class DynamicSvgOption extends BaseOptionComponent {
     static template = "website.DynamicSvgOption";
-    static props = {};
+    static selector = "img[src^='/html_editor/shape/'], img[src^='/web_editor/shape/']";
 
     setup() {
         super.setup();

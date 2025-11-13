@@ -7,6 +7,7 @@ from odoo.tests import tagged
 
 
 @tagged('work_hours')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWorkingHours(TestHrCalendarCommon):
     """ Test global leaves for a whole company, conflict resolutions """
 

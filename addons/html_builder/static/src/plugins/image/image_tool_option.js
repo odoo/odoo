@@ -12,11 +12,14 @@ export class ImageToolOption extends BaseOptionComponent {
         ImageFormatOption,
         ImageTransformOption,
     };
-    static props = {};
+    static selector = "img";
+    static exclude = "[data-oe-type='image'] > img";
+    static name = "imageToolOption";
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
             isImageAnimated: editingElement.classList.contains("o_animate"),
+            isGridMode: editingElement.closest(".o_grid_mode, .o_grid"),
         }));
     }
 }

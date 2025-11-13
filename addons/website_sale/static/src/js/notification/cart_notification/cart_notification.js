@@ -1,6 +1,8 @@
-import { Component } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 import { AddToCartNotification } from "../add_to_cart_notification/add_to_cart_notification";
 import { WarningNotification } from "../warning_notification/warning_notification";
+
+const AUTOCLOSE_DELAY = 4000;
 
 export class CartNotification extends Component {
     static components = { AddToCartNotification, WarningNotification };
@@ -31,6 +33,10 @@ export class CartNotification extends Component {
         close: Function,
         refresh: Function,
         freeze: Function,
+    }
+
+    setup() {
+        onMounted(() => setTimeout(this.props.close, AUTOCLOSE_DELAY));
     }
 
     /**

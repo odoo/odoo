@@ -7,6 +7,7 @@ from odoo.tools import email_normalize, formataddr, mute_logger
 
 
 @tagged('mail_thread', 'mail_gateway')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class NewLeadNotification(TestCrmCommon):
     """ Test mail features support on lead + specific overrides and support """
 

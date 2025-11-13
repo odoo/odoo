@@ -9,7 +9,6 @@ import {
 } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
@@ -675,6 +674,9 @@ function getValueFromGroupData(field, rawValue) {
     if (field.type === "many2many") {
         return value ? value[0] : false;
     }
+    if (field.type === "tags") {
+        return value ? value[0] : false;
+    }
     return value;
 }
 
@@ -764,16 +766,14 @@ export function useRecordObserver(callback) {
         if (!props.record) {
             return;
         }
-        const def = new Deferred();
+        const { promise, resolve, reject } = Promise.withResolvers();
         const effectId = currentId;
         let firstCall = true;
         effect(
             (record) => {
                 if (firstCall) {
                     firstCall = false;
-                    return Promise.resolve(callback(record, props))
-                        .then(def.resolve)
-                        .catch(def.reject);
+                    return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
                 } else {
                     return batched(
                         (record) => {
@@ -783,16 +783,16 @@ export function useRecordObserver(callback) {
                                 return;
                             }
                             return Promise.resolve(callback(record, props))
-                                .then(def.resolve)
-                                .catch(def.reject);
+                                .then(resolve)
+                                .catch(reject);
                         },
-                        () => new Promise((resolve) => window.requestAnimationFrame(resolve))
+                        () => new Promise((res) => window.requestAnimationFrame(res))
                     )(record);
                 }
             },
             [props.record]
         );
-        return def;
+        return promise;
     };
     onWillDestroy(() => {
         currentId = uniqueId();

@@ -1,6 +1,5 @@
-import { AND, fields, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
-import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
@@ -30,6 +29,10 @@ export class Thread extends Record {
         return localId.split(",").slice(1).join("_").replace(" AND ", "_");
     }
     static async getOrFetch(data, fieldNames = []) {
+        if (data.model === "discuss.channel") {
+            const channel = await this.store["discuss.channel"].getOrFetch(data.id);
+            return channel?.thread;
+        }
         let thread = this.get(data);
         if (
             data.id > 0 &&
@@ -59,14 +62,6 @@ export class Thread extends Record {
     allMessages = fields.Many("mail.message", {
         inverse: "thread",
     });
-    storeAsAllChannels = fields.One("Store", {
-        compute() {
-            if (this.model === "discuss.channel") {
-                return this.store;
-            }
-        },
-        eager: true,
-    });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
     group_public_id = fields.One("res.groups");
@@ -78,9 +73,6 @@ export class Thread extends Record {
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
     can_react = true;
-    chat_window = fields.One("ChatWindow", {
-        inverse: "thread",
-    });
     close_chat_window = fields.Attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {
@@ -93,7 +85,7 @@ export class Thread extends Record {
     composer = fields.One("Composer", {
         compute: () => ({}),
         inverse: "thread",
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     counter = 0;
     counter_bus_id = 0;
@@ -119,14 +111,14 @@ export class Thread extends Record {
         onAdd(r) {
             r.thread = this;
         },
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     selfFollower = fields.One("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
         },
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     /** @type {integer|undefined} */
     followersCount;
@@ -299,7 +291,7 @@ export class Thread extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return persona.displayName || persona.name;
+        return persona?.displayName || persona?.name;
     }
 
     get hasAttachmentPanel() {
@@ -315,7 +307,7 @@ export class Thread extends Record {
     }
 
     computeIsDisplayed() {
-        return this.store.ChatWindow.get({ thread: this })?.isOpen;
+        return this.channel?.chatWindow?.isOpen;
     }
 
     get avatarUrl() {
@@ -502,10 +494,10 @@ export class Thread extends Record {
      * Get the effective persona performing actions on this thread.
      * Priority order: logged-in user, portal partner (token-authenticated), guest.
      *
-     * @returns {import("models").Persona}
+     * @returns {import("models").ResPartner | import("models").MailGuest}
      */
     get effectiveSelf() {
-        return this.store.self_partner || this.store.self_guest;
+        return this.store.self_user?.partner_id || this.store.self_guest;
     }
 
     async fetchNewMessages() {
@@ -676,17 +668,14 @@ export class Thread extends Record {
             return;
         }
         await this.store.chatHub.initPromise;
-        const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact })
-        );
-        cw.open({ focus, swapOpened });
-        return cw;
+        this.channel.chatWindow = { fromMessagingMenu, bypassCompact };
+        this.channel.chatWindow.open({ focus, swapOpened });
+        return this.channel.chatWindow;
     }
 
     async closeChatWindow(options = {}) {
         await this.store.chatHub.initPromise;
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        await chatWindow?.close({ notifyState: false, ...options });
+        await this.channel?.chatWindow?.close({ notifyState: false, ...options });
     }
 
     addOrReplaceMessage(message, tmpMsg) {
@@ -723,8 +712,8 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            if (this.store.self_partner) {
-                tmpData.author_id = this.store.self_partner;
+            if (this.store.self_user) {
+                tmpData.author_id = this.store.self_user.partner_id;
             } else {
                 tmpData.author_guest_id = this.store.self_guest;
             }

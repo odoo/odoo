@@ -4,9 +4,10 @@
 from datetime import timedelta
 
 from odoo import Command, fields
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSalePurchaseStockFlow(TransactionCase):
 
     @classmethod

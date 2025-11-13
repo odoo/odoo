@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.tools.barcode import check_barcode_encoding, get_barcode_check_digit
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBarcode(TransactionCase):
     def test_barcode_check_digit(self):
         ean8 = "87111125"

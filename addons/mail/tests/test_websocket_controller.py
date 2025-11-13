@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests import tagged
+
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsocketController(HttpCaseWithUserDemo):
     def test_im_status_offline_on_websocket_closed(self):
         self.authenticate("demo", "demo")

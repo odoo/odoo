@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import common, new_test_user
+from odoo.tests import tagged, common, new_test_user
 from odoo import fields
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFleet(common.TransactionCase):
 
     def test_search_renewal(self):

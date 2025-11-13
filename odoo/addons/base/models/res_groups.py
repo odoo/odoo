@@ -12,6 +12,8 @@ class ResGroups(models.Model):
     _rec_name = 'full_name'
     _allow_sudo_commands = False
     _order = 'privilege_id, sequence, name, id'
+    _clear_cache_name = 'groups'
+    _clear_cache_on_fields = {'implied_ids', 'implied_by_ids'}
 
     name = fields.Char(required=True, translate=True)
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
@@ -36,8 +38,6 @@ class ResGroups(models.Model):
     privilege_id = fields.Many2one('res.groups.privilege', string='Privilege', index=True)
     view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
 
-    _name_uniq = models.Constraint("UNIQUE (privilege_id, name)",
-        'The name of the group must be unique within a group privilege!')
     _check_api_key_duration = models.Constraint(
         'CHECK(api_key_duration >= 0)',
         'The api key duration cannot be a negative value.',
@@ -222,10 +222,9 @@ class ResGroups(models.Model):
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
         # DLE P139
-        if self.ids:
+        if any(self._ids):
             self.env['ir.model.access'].call_cache_clearing_methods()
 
-        # The cache of groups and their relationships is invalidated by _check_disjoint_groups
         return super().write(vals)
 
     def _ensure_xml_id(self):
@@ -322,17 +321,6 @@ class ResGroups(models.Model):
                 group.disjoint_ids = user_type_groups - group
             else:
                 group.disjoint_ids = False
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        groups = super().create(vals_list)
-        self.env.registry.clear_cache('groups')
-        return groups
-
-    def unlink(self):
-        res = super().unlink()
-        self.env.registry.clear_cache('groups')
-        return res
 
     def _apply_group(self, implied_group):
         """ Add the given group to the groups implied by the current group

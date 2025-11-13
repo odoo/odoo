@@ -73,12 +73,10 @@
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <field name="website_url" invisible="1"/>
                         <field name="is_published" widget="website_redirect_button"
                             invisible="exhibitor_type == 'sponsor'"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="active" invisible="1"/>
                     <field name="image_512" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name" string="Sponsor Name"/>

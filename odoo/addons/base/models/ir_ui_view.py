@@ -141,6 +141,7 @@ class IrUiView(models.Model):
     _description = 'View'
     _order = "priority,name,id"
     _allow_sudo_commands = False
+    _clear_cache_name = 'templates'
 
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
@@ -631,7 +632,6 @@ actual arch.
                         values['arch_updated'] = False
             values.update(self._compute_defaults(values))
 
-        self.env.registry.clear_cache('templates')
         result = super().create(vals_list)
         result.with_context(ir_ui_view_partial_validation=True)._check_xml()
         return result
@@ -648,7 +648,6 @@ actual arch.
         if custom_view:
             custom_view.unlink()
 
-        self.env.registry.clear_cache('templates')
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
@@ -666,7 +665,6 @@ actual arch.
         # if in uninstall mode and has children views, emulate an ondelete cascade
         if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
-        self.env.registry.clear_cache('templates')
         return super().unlink()
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
@@ -2277,7 +2275,7 @@ actual arch.
         valid_aria_attrs = {
             *att_names('title'), *att_names('aria-label'), *att_names('aria-labelledby'),
         }
-        valid_t_attrs = {'t-value', 't-raw', 't-field', 't-out'}
+        valid_t_attrs = {'t-value', 't-field', 't-out'}
 
         ## Following or preceding text
         if (node.tail or '').strip() or (node.getparent().text or '').strip():
@@ -2292,7 +2290,7 @@ actual arch.
                 return True
             if elem.tag in ['field', 'label'] and elem.get('string'):
                 return True
-            return elem.tag == 't' and (elem.get('t-out') or elem.get('t-raw'))
+            return elem.tag == 't' and elem.get('t-out')
 
         if has_text(node.getnext()) or has_text(node.getprevious()):
             return
@@ -2424,7 +2422,7 @@ actual arch.
 
     def _contains_branded(self, node):
         return node.tag == 't'\
-            or 't-raw' in node.attrib\
+            or node.get('t-out') == '0'\
             or 't-call' in node.attrib\
             or any(self.is_node_branded(child) for child in node.iterdescendants())
 
@@ -2470,37 +2468,34 @@ actual arch.
         if not e.get('data-oe-model'):
             return
 
-        if {'t-raw', 't-out'}.intersection(e.attrib):
+        if e.get('t-out'):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)
         elif self._contains_branded(e):
             # if a branded element contains branded elements distribute own
-            # branding to children unless it's t-raw, then just remove branding
-            # on current element
+            # branding to children, then just remove branding on current element
             distributed_branding = self._pop_view_branding(e)
 
-            if 't-raw' not in e.attrib:
-                # TODO: collections.Counter if remove p2.6 compat
-                # running index by tag type, for XPath query generation
-                indexes = collections.defaultdict(lambda: 0)
-                for child in e.iterchildren(etree.Element, etree.ProcessingInstruction):
-                    if child.get('data-oe-xpath'):
-                        # injected by view inheritance, skip otherwise
-                        # generated xpath is incorrect
-                        self.distribute_branding(child)
-                    elif child.tag is etree.ProcessingInstruction:
-                        # If a node is known to have been replaced during
-                        # applying an inheritance, increment its index to
-                        # compute an accurate xpath for subsequent nodes
-                        if child.target == 'apply-inheritance-specs-node-removal':
-                            indexes[child.text] += 1
-                            e.remove(child)
-                    else:
-                        indexes[child.tag] += 1
-                        self.distribute_branding(
-                            child, distributed_branding,
-                            parent_xpath=node_path, index_map=indexes)
+            # running index by tag type, for XPath query generation
+            indexes = collections.Counter()
+            for child in e.iterchildren(etree.Element, etree.ProcessingInstruction):
+                if child.get('data-oe-xpath'):
+                    # injected by view inheritance, skip otherwise
+                    # generated xpath is incorrect
+                    self.distribute_branding(child)
+                elif child.tag is etree.ProcessingInstruction:
+                    # If a node is known to have been replaced during
+                    # applying an inheritance, increment its index to
+                    # compute an accurate xpath for subsequent nodes
+                    if child.target == 'apply-inheritance-specs-node-removal':
+                        indexes[child.text] += 1
+                        e.remove(child)
+                else:
+                    indexes[child.tag] += 1
+                    self.distribute_branding(
+                        child, distributed_branding,
+                        parent_xpath=node_path, index_map=indexes)
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a

@@ -11,12 +11,14 @@ patch(TicketScreen.prototype, {
         const destinationOrder = this.pos.getOrder();
 
         if (discountLine && destinationOrder && !destinationOrder.getDiscountLine()) {
-            const globalDiscount = -discountLine.price_subtotal_incl;
+            const globalDiscount = -discountLine.priceIncl;
+            const priceUnit =
+                (globalDiscount * destinationOrder.prices.taxDetails.total_amount) /
+                    (order.amount_total + globalDiscount) || 1;
+
             this.pos.models["pos.order.line"].create({
                 qty: 1,
-                price_unit:
-                    (globalDiscount * destinationOrder.taxTotals.total_amount) /
-                        (order.amount_total + globalDiscount) || 1,
+                price_unit: destinationOrder.orderSign * priceUnit,
                 product_id: this.pos.config.discount_product_id,
                 order_id: destinationOrder,
             });
@@ -30,7 +32,7 @@ patch(TicketScreen.prototype, {
         );
         if (orderline && orderline.product_id.id === this.pos.config.discount_product_id?.id) {
             return this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+                title: _t("Oh snap !"),
                 body: _t("You cannot edit a discount line."),
             });
         }

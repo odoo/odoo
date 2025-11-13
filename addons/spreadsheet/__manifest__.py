@@ -53,7 +53,7 @@
             'web/static/lib/bootstrap/js/dist/base-component.js',
             'web/static/lib/bootstrap/js/dist/collapse.js',
             'web/static/lib/bootstrap/js/dist/dropdown.js',
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            ('include', 'web.icons_fonts'),
             'web/static/lib/owl/owl.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
@@ -92,6 +92,7 @@
             'spreadsheet/static/src/assets_backend/**/*',
             ('remove', 'spreadsheet/static/src/public_readonly_app/**/*.scss'),
             ('remove', 'spreadsheet/static/src/**/*.dark.scss'),
+            ('remove', 'spreadsheet/static/src/print_assets/**/*'),
         ],
         "web.assets_web_dark": [
             'spreadsheet/static/src/**/*.dark.scss',

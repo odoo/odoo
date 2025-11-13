@@ -9,6 +9,7 @@ from odoo.tests import tagged
 
 
 @tagged('website_visitor', 'is_query_count')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class WebsiteVisitorTestsEventTrack(TestEventOnlineCommon, WebsiteVisitorTestsCommon):
 
     def test_clean_inactive_visitors_event_track(self):

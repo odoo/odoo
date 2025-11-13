@@ -6,6 +6,8 @@ import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_l
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
+import { Poll } from "@mail/core/common/poll";
+import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
@@ -14,9 +16,6 @@ import { renderToElement } from "@web/core/utils/render";
 import {
     Component,
     onMounted,
-    onPatched,
-    onWillDestroy,
-    onWillUpdateProps,
     toRaw,
     useChildSubEnv,
     useEffect,
@@ -25,7 +24,7 @@ import {
 } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -36,7 +35,7 @@ import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
-import { useLongPress } from "@mail/utils/common/hooks";
+import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 
 /**
@@ -67,21 +66,21 @@ export class Message extends Component {
         MessageLinkPreviewList,
         MessageReactions,
         Popover: MessageNotificationPopover,
+        Poll,
+        PollResult,
         RelativeTime,
         NotificationMessage,
     };
     static defaultProps = {
         hasActions: true,
-        isInChatWindow: false,
         showDates: true,
     };
     static props = [
         "asCard?",
-        "registerMessageRef?",
         "hasActions?",
-        "isInChatWindow?",
         "onParentMessageClick?",
         "message",
+        "messageRefs?",
         "previousMessage?",
         "squashed?",
         "thread?",
@@ -112,13 +111,7 @@ export class Message extends Component {
                 predicate: () => !this.isEditing,
             });
         }
-        onWillUpdateProps((nextProps) => {
-            this.props.registerMessageRef?.(this.props.message, null);
-        });
-        onMounted(() => this.props.registerMessageRef?.(this.props.message, this.root));
-        onPatched(() => this.props.registerMessageRef?.(this.props.message, this.root));
-        onWillDestroy(() => this.props.registerMessageRef?.(this.props.message, null));
-        this.hasTouch = hasTouch;
+        useForwardRefsToParent("messageRefs", (props) => props.message.id, this.root);
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions({
             message: () => this.message,
@@ -268,7 +261,7 @@ export class Message extends Component {
                 this.props.thread &&
                 !this.env.messageCard &&
                 !this.props.asCard,
-            "px-1": this.props.isInChatWindow,
+            "px-1": this.env.inChatWindow,
             "opacity-50": this.props.thread?.composer?.replyToMessage?.notEq(this.props.message),
             "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
@@ -440,15 +433,8 @@ export class Message extends Component {
         }
         const editedEl = bodyEl.querySelector(".o-mail-Message-edited");
         editedEl?.replaceChildren(renderToElement("mail.Message.edited"));
-        for (const linkEl of bodyEl.querySelectorAll(".o_channel_redirect")) {
-            const text = linkEl.textContent.substring(1); // remove '#' prefix
-            const icon = linkEl.classList.contains("o_channel_redirect_asThread")
-                ? "fa fa-comments-o"
-                : "fa fa-hashtag";
-            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
-            linkEl.replaceChildren(iconEl);
-            linkEl.insertAdjacentText("beforeend", ` ${text}`);
-        }
+        const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
+        this.store.handleValidChannelMention(Array.from(channelLinks));
         for (const el of bodyEl.querySelectorAll(".o_message_redirect")) {
             // only transform links targetting the same database
             if (el.getAttribute("href")?.startsWith(getOrigin())) {
@@ -500,10 +486,6 @@ export class Message extends Component {
             { message, initialReaction: reaction },
             { context: this }
         );
-    }
-
-    get shouldHideFromMessageListOnDelete() {
-        return false;
     }
 }
 

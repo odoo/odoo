@@ -4,12 +4,6 @@
     <t t-name="web.ActionHelper">
         <div class="o_view_nocontent">
             <div class="o_nocontent_help">
-                <t t-if="showWidgetSampleData()">
-                    <RibbonWidget  t-props="{
-                        text: 'SAMPLE DATA',
-                        bgClass: 'text-bg-danger',
-                    }"/>
-                </t>
                 <t t-if="showDefaultHelper">
                     <p class="o_view_nocontent_empty_folder">
                         <t t-if="title" t-esc="title"/>

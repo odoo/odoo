@@ -271,9 +271,9 @@ class HrExpense(models.Model):
     )
 
     # Security fields
-    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True, compute_sudo=True)
-    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True, compute_sudo=True)
-    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True, compute_sudo=True)
+    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True)
+    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True)
+    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True)
 
     # Legacy sheet field, allow grouping of expenses to keep the grouping mechanic data and allow it to be re-used when re-implemented
     former_sheet_id = fields.Integer(string='Former Report')
@@ -355,7 +355,7 @@ class HrExpense(models.Model):
             managers = (
                 expense.manager_id
                 | employee.expense_manager_id
-                | employee.department_id.manager_id.user_id
+                | employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
             )
             if is_all_approver:
                 managers |= self.env.user
@@ -958,7 +958,7 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_empty_list_mail_alias(self):
-        use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
+        use_mailgateway = self.env['ir.config_parameter'].sudo().get_bool('hr_expense.use_mailgateway')
         expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False) if use_mailgateway else False
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
@@ -1035,9 +1035,14 @@ class HrExpense(models.Model):
                 for manager, expenses_submitted in expenses_submitted_per_company.grouped('manager_id').items():
                     manager_langs = tuple(lang for lang in manager.partner_id.mapped('lang') if lang)
                     mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
+                    departments = expenses_submitted.department_id
+                    if len(departments) > 1:
+                        url = '/expenses-to-process'
+                    else:
+                        url = f'/departments/{departments.id}/expenses-to-approve'
                     body = self.env['ir.qweb']._render(
                         template='hr_expense.hr_expense_template_submitted_expenses',
-                        values={'manager_name': manager.name, 'url': '/expenses-to-approve'},
+                        values={'manager_name': manager.name, 'url': url},
                         lang=mail_lang,
                     )
                     new_mails.append({
@@ -1383,7 +1388,7 @@ class HrExpense(models.Model):
             elif not is_hr_admin:
                 current_managers = (
                         expense_employee.expense_manager_id
-                        | expense_employee.department_id.manager_id.user_id
+                        | expense_employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
                         | expense.manager_id
                 )
                 if expense_employee.id in expenses_employee_ids_under_user_ones:
@@ -1746,11 +1751,13 @@ class HrExpense(models.Model):
             account = journal.default_account_id
 
         if not account:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
                 "Give Odoo a hand to find an account by setting up an expense account.\n"
-                "%(expense)s %(expense_name)s.\n"
-            ), {'expense': self, 'expense_name': self.name})
+                "%(expense)s %(expense_name)s.\n",
+                expense=self,
+                expense_name=self.name,
+            ))
         return account
 
     def _get_expense_account_destination(self):
@@ -1770,6 +1777,9 @@ class HrExpense(models.Model):
         account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_line_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
         chart_template = self.with_context(allowed_company_ids=self.company_id.root_id.ids).env['account.chart.template']
         outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
+        if not self.company_id.chart_template:
+            action = self.env.ref('account.action_account_config')
+            raise RedirectWarning(_('You should install a Fiscal Localization first.'), action.id, _('Accounting Settings'))
         if not outstanding_account:
             bank_prefix = self.company_id.bank_account_code_prefix
             template_data = chart_template._get_chart_template_data(self.company_id.chart_template).get('template_data')

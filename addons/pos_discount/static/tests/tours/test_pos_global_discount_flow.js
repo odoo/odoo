@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("test_pos_global_discount_sell_and_refun
             PaymentScreen.clickBack(),
             ProductScreen.clickLine("discount"),
             ProductScreen.clickNumpad("1"),
-            Dialog.is({ title: "quantity update not allowed" }),
+            Dialog.is({ title: "price update not allowed" }),
             Dialog.confirm(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),

@@ -65,7 +65,7 @@ patch(OrderPaymentValidation.prototype, {
                 this.cancelOnlinePayment(this.order);
                 this.pos.dialog.add(AlertDialog, {
                     title: _t("Online payment unavailable"),
-                    body: _t("The QR Code for paying could not be generated."),
+                    body: _t("The QR code payment could not be generated."),
                 });
                 return false;
             }
@@ -105,6 +105,7 @@ patch(OrderPaymentValidation.prototype, {
                         return false;
                     }
 
+                    await this.pos.syncAllOrders({ orders: [this.order] });
                     onlinePaymentLine.setPaymentStatus("waiting");
                     this.order.selectPaymentline(onlinePaymentLine);
                     const onlinePaymentData = {
@@ -152,7 +153,7 @@ patch(OrderPaymentValidation.prototype, {
 
             await this.afterPaidOrderSavedOnServer(lastOrderServerOPData.paid_order);
             return false; // Cancel normal flow because the current order is already saved on the server.
-        } else if (typeof this.order.id === "number") {
+        } else if (this.order.isSynced) {
             const orderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
                 this.order,
                 0
@@ -214,7 +215,7 @@ patch(OrderPaymentValidation.prototype, {
 
         // Now, do practically the normal flow
         if (
-            (this.order.isPaidWithCash() || this.order.getChange()) &&
+            (this.order.isPaidWithCash() || this.order.change) &&
             this.pos.config.iface_cashdrawer
         ) {
             this.hardwareProxy.printer.openCashbox();

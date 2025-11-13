@@ -47,15 +47,11 @@ class FormatVatLabelMixin(models.AbstractModel):
     _description = "Country Specific VAT Label"
 
     @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if vat_label := self.env.company.country_id.vat_label:
-            for node in arch.iterfind(".//field[@name='vat']"):
-                node.set("string", vat_label)
-            # In some module vat field is replaced and so above string change is not working
-            for node in arch.iterfind(".//label[@for='vat']"):
-                node.set("string", vat_label)
-        return arch, view
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if attributes and 'string' in attributes and 'vat' in res:
+            res['vat']['string'] = self.env.company.country_id.vat_label or _("Tax ID")
+        return res
 
 
 class FormatAddressMixin(models.AbstractModel):

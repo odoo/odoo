@@ -20,3 +20,11 @@ export function hasNot(item, { subtitleContains } = {}) {
     const step = has(item, { subtitleContains })[0];
     return [{ ...step, trigger: negate(step.trigger) }];
 }
+
+export function clickMore() {
+    return {
+        content: "click on 'more' button",
+        trigger: ".cashier-selection-item:contains('More...')",
+        run: "click",
+    };
+}

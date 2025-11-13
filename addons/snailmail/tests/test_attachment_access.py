@@ -3,9 +3,10 @@
 import base64
 
 from odoo.exceptions import AccessError
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class testAttachmentAccess(TransactionCase):
     @classmethod
     def setUpClass(cls):

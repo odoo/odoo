@@ -1,4 +1,4 @@
-import { Store as BaseStore, fields, makeStore } from "@mail/core/common/record";
+import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
 
@@ -9,6 +9,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
@@ -32,21 +33,12 @@ export class Store extends BaseStore {
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
-    /** This is the current logged partner / guest */
-    self_partner = fields.One("res.partner");
     self_guest = fields.One("mail.guest");
+    self_user = fields.One("res.users");
+    /** This is the current logged partner / guest */
     get self() {
-        return this.self_partner || this.self_guest;
+        return this.self_user?.partner_id || this.self_guest;
     }
-    allChannels = fields.Many("mail.thread", {
-        inverse: "storeAsAllChannels",
-        onUpdate() {
-            const busService = this.store.env.services.bus_service;
-            if (!busService.isActive && this.allChannels.some((t) => !t.isTransient)) {
-                busService.start();
-            }
-        },
-    });
     /**
      * Indicates whether the current user is using the application through the
      * public page.
@@ -330,13 +322,13 @@ export class Store extends BaseStore {
     }
 
     async startMeeting() {
-        const thread = await this.createGroupChat({
+        const channel = await this.createGroupChat({
             default_display_mode: "video_full_screen",
             partners_to: [this.self.id],
         });
         await this.store.chatHub.initPromise;
-        this.ChatWindow.get(thread)?.update({ autofocus: 0 });
-        await this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
+        this.ChatWindow.get(channel.thread)?.update({ autofocus: 0 });
+        await this.env.services["discuss.rtc"].toggleCall(channel, { camera: true });
         if (this.rtc.selfSession) {
             this.rtc.enterFullscreen({ autoOpenAction: "invite-people" });
         }
@@ -392,7 +384,7 @@ export class Store extends BaseStore {
                             window.open(link.href);
                         }
                     } else {
-                        if (this.self_partner) {
+                        if (this.self_user) {
                             showAccessError();
                         } else {
                             window.open(link.href);
@@ -432,20 +424,29 @@ export class Store extends BaseStore {
                 } catch {
                     // assumes tab not focused: parent.document from iframe triggers CORS error
                 }
-                if (isTabFocused && thread?.isDisplayed) {
+                // Prevent duplicate inbox push notifications since they're already handled by
+                // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
+                // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
+                const isInbox =
+                    this.store.self.main_user_id?.notification_type === "inbox" &&
+                    model !== "discuss.channel";
+                if ((isTabFocused && thread?.isDisplayed) || isInbox) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },
                     });
                 }
             }
-            if (
-                type === "notification-displayed" &&
-                ["mail.thread", "discuss.channel"].includes(payload.model)
-            ) {
-                this.env.services["mail.out_of_focus"]._playSound();
+            if (type === "notification-displayed") {
+                this.onPushNotificationDisplayed(payload);
             }
         });
+    }
+
+    onPushNotificationDisplayed(payload) {
+        if (["mail.thread", "discuss.channel"].includes(payload.model)) {
+            this.env.services["mail.out_of_focus"]._playSound();
+        }
     }
 
     /**
@@ -453,7 +454,7 @@ export class Store extends BaseStore {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import("models").Thread | undefined>}
+     * @returns {Promise<import("models").DiscussChannel | undefined>}
      */
     async getChat({ userId, partnerId }) {
         const partner = await this.getPartner({ userId, partnerId });
@@ -490,6 +491,20 @@ export class Store extends BaseStore {
             (lastMessageId, message) => Math.max(lastMessageId, message.id),
             0
         );
+    }
+
+    handleValidChannelMention(channelLinks) {
+        for (const linkEl of channelLinks.filter(
+            (el) => !el.querySelector(".fa-comments-o, .fa-hashtag")
+        )) {
+            const text = linkEl.textContent.substring(1); // remove '#' prefix
+            const icon = linkEl.classList.contains("o_channel_redirect_asThread")
+                ? "fa fa-comments-o"
+                : "fa fa-hashtag";
+            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
+            linkEl.replaceChildren(iconEl);
+            linkEl.insertAdjacentText("beforeend", ` ${text}`);
+        }
     }
 
     getMentionsFromText(

@@ -4,12 +4,12 @@
         <div class="d-flex gap-3">
             <t t-foreach="items" t-as="month" t-key="month.id">
                 <div
-                    class="o_date_picker d-grid flex-grow-1 bg-view rounded overflow-auto"
+                    class="o_date_picker d-grid flex-grow-1 rounded overflow-auto"
                     t-on-pointerleave="() => (state.hoveredDate = null)"
                 >
                     <t t-foreach="month.daysOfWeek" t-as="dayOfWeek" t-key="dayOfWeek[0]">
                         <div
-                            class="o_day_of_week_cell fw-bolder d-flex align-items-center justify-content-center"
+                            class="o_day_of_week_cell bg-100 fw-bolder d-flex align-items-center justify-content-center"
                             t-att-title="dayOfWeek[1]"
                         >
                             <div class="text-nowrap overflow-hidden" t-esc="props.daysOfWeekFormat === 'narrow' ? dayOfWeek[2] : dayOfWeek[0]"/>
@@ -18,14 +18,14 @@
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
                         <t t-if="props.showWeekNumbers">
                             <div
-                                class="o_week_number_cell d-flex align-items-center ps-2 fw-bolder"
+                                class="o_week_number_cell d-flex justify-content-end align-items-center pe-3 bg-100 fw-bolder"
                                 t-esc="week.number"
                             />
                         </t>
                         <t t-foreach="week.days" t-as="itemInfo" t-key="itemInfo.id">
                             <t t-set="arInfo" t-value="getActiveRangeInfo(itemInfo)" />
                             <div
-                                class="o_date_item_cell o_datetime_button o_center cursor-pointer"
+                                class="o_date_item_cell o_datetime_button o_center"
                                 t-att-class="{
                                     'o_out_of_range text-muted': itemInfo.isOutOfRange,
                                     o_selected: arInfo.isSelected,
@@ -34,6 +34,8 @@
                                     o_highlighted: arInfo.isHighlighted,
                                     'o_today fw-bolder': itemInfo.includesToday,
                                     [itemInfo.extraClass]: true,
+                                    'opacity-50': !itemInfo.isValid,
+                                    'cursor-pointer': itemInfo.isValid,
                                 }"
                                 t-att-disabled="!itemInfo.isValid"
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
@@ -56,6 +58,7 @@
                     onChange="(newTime) => this.onTimeChange(0, newTime)"
                     minutesRounding="props.rounding"
                     showSeconds="props.rounding === 0"
+                    inputCssClass="'o_input'"
                 />
                 <i t-if="state.timeValues[0] and state.timeValues[1]" class="fa fa-long-arrow-right"/>
                 <TimePicker
@@ -64,6 +67,7 @@
                     onChange="(newTime) => this.onTimeChange(1, newTime)"
                     minutesRounding="props.rounding"
                     showSeconds="props.rounding === 0"
+                    inputCssClass="'o_input'"
                 />
             </div>
             <t t-slot="buttons" />
@@ -82,6 +86,7 @@
                         o_select_end: arInfo.isSelectEnd,
                         o_highlighted: arInfo.isHighlighted,
                         o_today: itemInfo.includesToday,
+                        'opacity-50': !itemInfo.isValid,
                     }"
                     t-att-disabled="!itemInfo.isValid"
                     t-on-click="() => this.zoomOrSelect(itemInfo)"
@@ -126,16 +131,27 @@
                         />
                     </t>
                 </button>
-                <button
-                    t-if="props.showRangeToggler"
-                    class="o_toggle_range btn btn-secondary btn-sm ms-auto"
-                    tabindex="-1"
-                    title="Toggle date range mode"
-                    t-on-click="props.onToggleRange"
-                    t-att-class="{'active': props.range}"
-                >
-                    <i class="fa fa-calendar-plus-o" />
-                </button>
+                <div t-if="props.showRangeToggler" class="btn-group ms-auto">
+                    <button
+                        class="o_toggle_range btn btn-secondary btn-sm"
+                        tabindex="-1"
+                        title="Single date"
+                        t-on-click="props.onToggleRange"
+                        t-att-class="{'active': !props.range}"
+                    >
+                        Date
+                    </button>
+                    <button
+                        class="o_toggle_range btn btn-secondary btn-sm"
+                        tabindex="-1"
+                        title="Date range"
+                        t-on-click="props.onToggleRange"
+                        t-att-class="{'active': props.range}"
+                    >
+                        Range
+                    </button>
+                </div>
+
             </nav>
             <t t-if="state.precision === 'days'">
                 <t t-call="web.DateTimePicker.Days" />

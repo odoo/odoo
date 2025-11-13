@@ -4,9 +4,10 @@
 
 from odoo.addons.website_slides.tests.common import SlidesCase
 from odoo.exceptions import ValidationError
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSurvey(SlidesCase):
     def setUp(self):
         super(TestSurvey, self).setUp()

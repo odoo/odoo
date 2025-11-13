@@ -3,9 +3,10 @@
 
 from odoo import Command
 
-from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tests.common import tagged, TransactionCase, new_test_user
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNestedTaskUpdate(TransactionCase):
 
     @classmethod

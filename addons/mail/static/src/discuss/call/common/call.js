@@ -37,7 +37,7 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
-    static props = ["thread?", "compact?", "hasOverlay?", ...inDiscussCallViewProps];
+    static props = ["channel?", "compact?", "hasOverlay?", ...inDiscussCallViewProps];
     static defaultProps = { hasOverlay: true };
     static template = "discuss.Call";
 
@@ -61,7 +61,7 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
-        this.callActions = useCallActions({ thread: () => this.channel });
+        this.callActions = useCallActions({ channel: () => this.channel });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             this.resizeObserver.observe(this.grid.el);
@@ -87,7 +87,7 @@ export class Call extends Component {
     }
 
     get isFullSize() {
-        return this.props.isPip || this.rtc.state.isFullscreen;
+        return this.props.isPip || this.rtc.isFullscreen;
     }
 
     get isActiveCall() {
@@ -95,7 +95,7 @@ export class Call extends Component {
     }
 
     get minimized() {
-        if (this.rtc.state.isFullscreen || !this.channel || this.channel.activeRtcSession) {
+        if (this.rtc.isFullscreen || !this.channel || this.channel.activeRtcSession) {
             return false;
         }
         if (!this.isActiveCall || this.channel.videoCount === 0 || this.props.compact) {
@@ -105,7 +105,7 @@ export class Call extends Component {
     }
 
     get channel() {
-        return this.props.thread || this.rtc.channel;
+        return this.props.channel || this.rtc.channel;
     }
 
     /** @returns {CardData[]} */
@@ -152,7 +152,7 @@ export class Call extends Component {
 
     get hasCallNotifications() {
         return Boolean(
-            (!this.props.compact || this.rtc.state.isFullscreen) &&
+            (!this.props.compact || this.rtc.isFullscreen) &&
                 this.isActiveCall &&
                 this.rtc.notifications.size
         );
@@ -162,12 +162,12 @@ export class Call extends Component {
         return Boolean(
             this.channel.activeRtcSession &&
                 this.state.overlay &&
-                (!this.props.compact || this.rtc.state.isFullscreen)
+                (!this.props.compact || this.rtc.isFullscreen)
         );
     }
 
     get isControllerFloating() {
-        return this.rtc.state.isFullscreen || (this.channel.activeRtcSession && !this.ui.isSmall);
+        return this.rtc.isFullscreen || (this.channel.activeRtcSession && !this.ui.isSmall);
     }
 
     onMouseleaveMain(ev) {
@@ -203,6 +203,8 @@ export class Call extends Component {
         if (!this.grid.el) {
             return;
         }
+        this.grid.el.style.setProperty("--width", "0");
+        this.grid.el.style.setProperty("--height", "0");
         const { width, height } = this.grid.el.getBoundingClientRect();
         const aspectRatio = this.minimized ? 1 : 16 / 9;
         const tileCount = this.grid.el.children.length;
@@ -241,5 +243,7 @@ export class Call extends Component {
             tileHeight: optimal.tileHeight,
             columnCount: optimal.columnCount,
         });
+        this.grid.el.style.setProperty("--width", `${this.state.tileWidth}px`);
+        this.grid.el.style.setProperty("--height", `${this.state.tileHeight}px`);
     }
 }

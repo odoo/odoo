@@ -13,7 +13,7 @@ from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
-from odoo.tests import Form, HttpCase, users
+from odoo.tests import tagged, Form, HttpCase, users
 from odoo.tests.common import freeze_time
 from odoo.tools import mute_logger
 
@@ -30,6 +30,7 @@ class TestActivityCommon(ActivityScheduleCase):
 
 
 @tests.tagged('mail_activity')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivityRights(TestActivityCommon):
 
     def test_activity_action_open_document_no_access(self):
@@ -53,6 +54,7 @@ class TestActivityRights(TestActivityCommon):
 
         # If user has no access to the record, should return activity view instead
         with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_no_access):
+            self.env.transaction.clear_access_cache()
             self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
 
             action = test_activity.with_user(self.user_employee).action_open_document()
@@ -215,6 +217,7 @@ class TestActivityRights(TestActivityCommon):
 
 
 @tests.tagged('mail_activity')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
@@ -450,6 +453,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
 @tests.tagged('mail_activity')
 @freeze_time("2024-01-01 09:00:00")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivitySystrayBusNotify(TestActivityCommon):
 
     @classmethod
@@ -571,6 +575,7 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
 
 
 @tests.tagged('mail_activity')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivityViewHelpers(TestActivityCommon):
 
     @classmethod

@@ -5,7 +5,7 @@ from odoo.fields import Domain
 class HrEmployee(models.Model):
     _inherit = 'hr.employee.public'
 
-    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user")
+    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense')
 
     def _search_filter_for_expense(self, operator, value):
         if operator != 'in':

@@ -23,20 +23,19 @@
                     <div t-if="msg.threadAsFirstUnread?.eq(props.thread) and (prevMsg or props.thread.markedAsUnread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bold z-1 px-2">
                         <div class="o-mail-Thread-newMessageLine flex-grow-1 border border-danger rounded-start-3 opacity-100 shadow-sm my-1"/><span class="o-ps-1_5 pe-1 bg-danger o-text-white rounded text-uppercase shadow-sm o-xxsmaller">New</span>
                     </div>
-                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" thread="props.thread" registerMessageRef="registerMessageRef" />
+                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" messageRefs="messageRefs" thread="props.thread"/>
                     <Message
                         t-elif="!msg.isNotification"
                         asCard="props.thread.model === 'mail.box'"
                         className="getMessageClassName(msg)"
-                        isInChatWindow="props.isInChatWindow"
                         message="msg"
+                        messageRefs="messageRefs"
                         previousMessage="prevMsg"
-                        registerMessageRef="registerMessageRef"
                         squashed="isSquashed(msg, prevMsg)"
                         onParentMessageClick.bind="() => msg.parent_id and env.messageHighlight?.highlightMessage(msg.parent_id, props.thread)"
                         thread="props.thread"
                         isFirstMessage="msg_first"
-                        hasActions="props.messageActions and !msg.eq(props.thread.from_message_id)"
+                        hasActions="!msg.eq(props.thread.from_message_id)"
                         showDates="props.showDates"
                     />
                 </t>
@@ -101,7 +100,7 @@
 </t>
 
 <t t-name="mail.Thread.startMessage">
-    <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-2 ps-xl-3': env.inDiscussApp, 'px-2': env.inMeetingChat }">
+    <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-2': env.inDiscussApp or env.inMeetingChat }">
         <div class="d-flex align-items-center gap-2" t-att-class="{
             'mt-2 mb-1': !props.thread.parent_channel_id,
             'mt-1': props.thread.parent_channel_id,

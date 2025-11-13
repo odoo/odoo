@@ -42,13 +42,18 @@ export class ColorProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ColorProductAttribute";
 }
 
+export class ImageProductAttribute extends BaseProductAttribute {
+    static template = "point_of_sale.ImageProductAttribute";
+}
+
 export class MultiProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.MultiProductAttribute";
+    static props = [...BaseProductAttribute.props, "selected?", "customValue?"];
 
     setup() {
         this.state = useState({
             is_value_selected: this.props.attribute.values().reduce((acc, value) => {
-                acc[value.id] = false;
+                acc[value.id] = this.props.selected?.includes(value) || false;
                 return acc;
             }, {}),
         });
@@ -70,6 +75,7 @@ export class ProductConfiguratorPopup extends Component {
         PillsProductAttribute,
         SelectProductAttribute,
         ColorProductAttribute,
+        ImageProductAttribute,
         MultiProductAttribute,
         Dialog,
     };
@@ -79,21 +85,26 @@ export class ProductConfiguratorPopup extends Component {
         close: Function,
         hideAlwaysVariants: { type: Boolean, optional: true },
         forceVariantValue: { type: Object, optional: true },
+        line: { type: Object, optional: true },
     };
 
     setup() {
         this.pos = usePos();
         this.state = useState({
-            attributes: this.props.productTemplate.attribute_line_ids.reduce((acc, attribute) => {
-                acc[attribute.attribute_id.id] = {
-                    selected: [],
-                    custom_value: "",
-                };
-                return acc;
-            }, {}),
+            attributes:
+                this.props.line?.selectedAttributes ||
+                this.props.productTemplate.attribute_line_ids.reduce((acc, attribute) => {
+                    acc[attribute.attribute_id.id] = {
+                        selected: [],
+                        custom_value: "",
+                    };
+                    return acc;
+                }, {}),
         });
 
-        this.initAttributes();
+        if (!this.props.line?.selectedAttributes) {
+            this.initAttributes();
+        }
     }
 
     get attributes() {
@@ -175,12 +186,24 @@ export class ProductConfiguratorPopup extends Component {
 
     setSelected(attribute) {
         return (selected) => {
+            if (!this.state.attributes[attribute.attribute_id.id]) {
+                this.state.attributes[attribute.attribute_id.id] = {
+                    selected: {},
+                    custom_value: "",
+                };
+            }
             this.state.attributes[attribute.attribute_id.id].selected = selected;
         };
     }
 
     setCustomValue(attribute) {
         return (custom_value) => {
+            if (!this.state.attributes[attribute.attribute_id.id]) {
+                this.state.attributes[attribute.attribute_id.id] = {
+                    selected: {},
+                    custom_value: "",
+                };
+            }
             this.state.attributes[attribute.attribute_id.id].custom_value = custom_value;
         };
     }
@@ -215,7 +238,7 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get title() {
-        const info = this.props.productTemplate.getProductPriceInfo(this.product, this.pos.company);
+        const info = this.props.productTemplate.getTaxDetails();
         const name = this.props.productTemplate.display_name;
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
         const taxName = info?.taxes_data[0]?.name || "";
@@ -226,9 +249,6 @@ export class ProductConfiguratorPopup extends Component {
     }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;
-    }
-    close() {
-        this.props.close();
     }
 
     confirm() {

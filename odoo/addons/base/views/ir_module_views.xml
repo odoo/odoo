@@ -72,7 +72,7 @@
                             <button invisible="state != 'to upgrade'" class="btn btn-secondary me-1" groups="base.group_system" disabled="1">Upgrading</button>
                             <button invisible="state != 'to install'" class="btn btn-secondary me-1" groups="base.group_system" disabled="1">Installing</button>
                         </div>
-                        <h6 class="text-muted mt-2" invisible="not has_iap">Contains In-App Purchases</h6>
+                        <h6 class="text-muted mt-2" invisible="not iap_paid_service">Contains In-App Purchases</h6>
                     </div>
                     <div class="clearfix"/>
                     <notebook groups="base.group_no_one">

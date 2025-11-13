@@ -126,22 +126,28 @@ class Binary(http.Controller):
                     bundle_name, rtl, asset_type, autoprefix = rw_env['ir.asset']._parse_bundle_name(filename, debug_assets)
                     css = asset_type == 'css'
                     js = asset_type == 'js'
+                    binary = asset_type == 'binary'
+                    extension = '' if '.' not in filename else filename.split('.')[-1]
                     bundle = rw_env['ir.qweb']._get_asset_bundle(
                         bundle_name,
                         css=css,
                         js=js,
+                        binary=binary,
                         debug_assets=debug_assets,
                         rtl=rtl,
                         autoprefix=autoprefix,
                         assets_params=assets_params,
                     )
                     # check if the version matches. If not, redirect to the last version
-                    if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
+                    if not debug_assets and unique != ANY_UNIQUE \
+                            and unique != bundle.get_version(extension if binary else asset_type):
                         return request.redirect(bundle.get_link(asset_type))
                     if css and bundle.stylesheets:
                         attachment = env['ir.attachment'].sudo().browse(bundle.css().id)
                     elif js and bundle.javascripts:
                         attachment = env['ir.attachment'].sudo().browse(bundle.js().id)
+                    elif binary and bundle.binaries:
+                        attachment = env['ir.attachment'].sudo().browse(bundle.bin(extension).id)
                 except ValueError as e:
                     _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
                     raise request.not_found() from e

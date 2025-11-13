@@ -130,6 +130,14 @@ export function pointsAwardedAre(points_str) {
         },
     ];
 }
+export function pointsTotalIs(points_str) {
+    return [
+        {
+            content: "loyalty points awarded " + points_str,
+            trigger: '.loyalty-points-totaltext-end:contains("' + points_str + '")',
+        },
+    ];
+}
 export function finalizeOrder(paymentMethod, amount) {
     return [
         ...ProductScreen.clickPayButton(),
@@ -241,4 +249,11 @@ export function checkPartnerPoints(name, points) {
             trigger: `.partner-list .partner-line:contains(${name}) .partner-line-balance:contains(${points} Loyalty Point(s))`,
         },
     ];
+}
+
+export function isLoyaltyPointsAvailable() {
+    return {
+        content: "Loyalty Points are visible on the receipt",
+        trigger: ".pos-receipt .loyalty",
+    };
 }

@@ -7,6 +7,7 @@ import {
     toggleUnorderedList,
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
+import { unformat } from "../_helpers/format";
 
 test("should apply color to completely selected list item", async () => {
     await testEditor({
@@ -167,6 +168,62 @@ test("should remove color from partially selected list item", async () => {
     });
 });
 
+test("should remove color from fully selected list item with nested list", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <ol>
+                <li class="text-o-color-1">
+                    <p>[abc</p>
+                    <ol class="o_default_color">
+                        <li class="text-o-color-1">def</li>
+                    </ol>
+                </li>
+                <li class="text-o-color-1">ghi]</li>
+            </ol>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit: unformat(`
+            <ol>
+                <li>
+                    <p>[abc</p>
+                    <ol>
+                        <li>def</li>
+                    </ol>
+                </li>
+                <li>ghi]</li>
+            </ol>
+        `),
+    });
+});
+
+test("should remove color from partially selected text inside list item", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <ol>
+                <li class="text-o-color-1">
+                    <p>abc</p>
+                    <ol class="o_default_color">
+                        <li class="text-o-color-1">d[e]f</li>
+                    </ol>
+                </li>
+            </ol>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit: unformat(`
+            <ol>
+                <li class="text-o-color-1">
+                    <p>abc</p>
+                    <ol class="o_default_color">
+                        <li class="text-o-color-1">
+                            d<font class="o_default_color">[e]</font>f
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        `),
+    });
+});
+
 test("should change color of a list item", async () => {
     await testEditor({
         contentBefore:
@@ -213,5 +270,17 @@ test("should apply color to a list containing sublist if list contents are fully
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
             '<ol><li style="color: rgb(255, 0, 0);"><p>[abc]</p><ol class="o_default_color"><li>def</li></ol></li></ol>',
+    });
+});
+
+test("should apply gradient color style only on font inside list item", async () => {
+    await testEditor({
+        contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%)",
+            "color"
+        ),
+        contentAfter:
+            '<ol><li><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%);">[abc]</font></li><li>def</li></ol>',
     });
 });

@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUnbuild(TestMrpCommon):
     @classmethod
     def setUpClass(cls):

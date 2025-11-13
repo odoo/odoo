@@ -3,7 +3,7 @@ import { PublicComponentInteraction } from "@web/public/public_component_interac
 
 // We register an editable interaction here to add support for <owl-component/>
 // in edit mode. The idea is that <owl-components /> in edit mode are rendered,
-// but rendered inactive by setting the pointerEvents key to none. To have 
+// but rendered inactive by setting the pointerEvents key to none. To have
 // active components in edit mode, one has to register it in the public_components.edit
 // registry
 const PublicComponentInteractionEdit = (I) =>

@@ -25,11 +25,7 @@ class CrmRevealView(models.Model):
     @api.model
     def _clean_reveal_views(self):
         """ Remove old views (> 1 month) """
-        weeks_valid = self.env['ir.config_parameter'].sudo().get_param('reveal.view_weeks_valid', DEFAULT_REVEAL_VIEW_WEEKS_VALID)
-        try:
-            weeks_valid = int(weeks_valid)
-        except ValueError:
-            weeks_valid = DEFAULT_REVEAL_VIEW_WEEKS_VALID
+        weeks_valid = self.env['ir.config_parameter'].sudo().get_int('reveal.view_weeks_valid') or DEFAULT_REVEAL_VIEW_WEEKS_VALID
         domain = []
         domain.append(('reveal_state', '=', 'not_found'))
         domain.append(('create_date', '<', fields.Datetime.to_string(datetime.date.today() - relativedelta(weeks=weeks_valid))))

@@ -14,7 +14,6 @@ import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 const { DateTime } = luxon;
-const INDEXED_DB_VERSION = 1;
 const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData extends Reactive {
@@ -150,7 +149,7 @@ export class PosData extends Reactive {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, resolve);
+            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
         });
     }
 
@@ -452,10 +451,16 @@ export class PosData extends Reactive {
     }
 
     initListeners() {
-        this.models["pos.order"].addEventListener(
-            "update",
-            this.debouncedSynchronizeLocalDataInIndexedDB.bind(this)
-        );
+        for (const dynamicModel of this.opts.dynamicModels) {
+            if (!this.models[dynamicModel]) {
+                continue;
+            }
+
+            this.models[dynamicModel].addEventListener(
+                "update",
+                this.debouncedSynchronizeLocalDataInIndexedDB.bind(this)
+            );
+        }
 
         const ignore = Object.keys(this.opts.databaseTable);
         for (const model of Object.keys(this.relations)) {
@@ -777,23 +782,33 @@ export class PosData extends Reactive {
         this.syncInProgress = false;
     }
 
+    async loadServerOrders(domain) {
+        const result = await this.callRelated(
+            "pos.order",
+            "read_pos_orders",
+            [domain],
+            {},
+            false,
+            true
+        );
+        const config = this.models["pos.config"].get(odoo.pos_config_id);
+        const session = this.models["pos.session"].get(odoo.pos_session_id);
+        const orders = result["pos.order"] || [];
+        for (const order of orders) {
+            // Clear commands
+            order.serializeForORM();
+            order.config_id = config;
+            order.session_id = session;
+        }
+        return orders;
+    }
+
     async checkAndDeleteMissingOrders(results) {
         if (results && results["pos.order"]) {
-            const ids = new Set(
-                results["pos.order"].map((o) => o.id).filter((id) => typeof id === "number")
-            );
-
+            const ids = new Set(results["pos.order"].filter((o) => o.isSynced).map((o) => o.id));
             if (ids.size) {
-                const result = await this.callRelated(
-                    "pos.order",
-                    "read_pos_orders",
-                    [[["id", "in", [...ids]]]],
-                    {},
-                    false,
-                    true
-                );
-
-                const serverIds = result["pos.order"].map((r) => r.id);
+                const orders = await this.loadServerOrders([["id", "in", [...ids]]]);
+                const serverIds = orders.map((r) => r.id);
                 for (const id of [...ids]) {
                     if (!serverIds.includes(id)) {
                         this.localDeleteCascade(this.models["pos.order"].get(id));

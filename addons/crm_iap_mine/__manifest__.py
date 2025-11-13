@@ -24,6 +24,7 @@
         'views/crm_menus.xml',
     ],
     'auto_install': True,
+    'iap_paid_service': True,
     'assets': {
         'web.assets_backend': [
             'crm_iap_mine/static/src/js/**/*',

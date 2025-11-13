@@ -126,7 +126,7 @@ class CalendarEvent(models.Model):
     def _get_sync_domain(self):
         # in case of full sync, limit to a range of 1y in past and 1y in the future by default
         ICP = self.env['ir.config_parameter'].sudo()
-        day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
+        day_range = ICP.get_int('google_calendar.sync.range_days') or 365
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
         return Domain([

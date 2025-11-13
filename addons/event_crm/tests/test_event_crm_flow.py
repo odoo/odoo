@@ -10,6 +10,7 @@ from odoo.tests.common import users
 
 
 @tagged('event_crm')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
 
     @classmethod

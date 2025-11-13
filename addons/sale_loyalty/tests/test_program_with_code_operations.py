@@ -3,9 +3,12 @@
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
+from odoo.tests import tagged
+
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProgramWithCodeOperations(TestSaleCouponCommon):
     # Test the basic operation (apply_coupon) on an coupon program on which we should
     # apply the reward when the code is correct or remove the reward automatically when the reward is
@@ -372,6 +375,49 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             generated_coupons.partner_id, self.partner,
             "The coupon's partner_id should be updated if it was created for a Public User",
         )
+
+    def test_change_reward_on_confirmed_order(self):
+        """Check that changing rewards on a confirmed order restores points on the coupon.
+        Tested flow:
+            - have a coupon program with 2 discount rewards;
+            - have confirmed order;
+            - apply a 10% discount reward, costing 1 point;
+            - change to a 50% discount reward, costing 5 points;
+            - check that there are still 5 points left on the coupon.
+        """
+        program = self.code_promotion_program_with_discount
+        program.update({
+            'rule_ids': [Command.clear()],
+            'reward_ids': [Command.create({
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 5,
+            })],
+        })
+        discount10, discount50 = program.reward_ids
+
+        self.env['loyalty.generate.wizard'].with_context(active_id=program.id).create({
+            'coupon_qty': 1,
+            'points_granted': 10,
+        }).generate_coupons()
+        coupon = program.coupon_ids
+
+        order = self.empty_order
+        order.order_line = [Command.create({'product_id': self.product_C.id})]
+        order.action_confirm()
+
+        order.order_line.product_updatable = True  # in case `sale_project` is installed
+        order._apply_program_reward(discount10, coupon)
+        reward_line = order.order_line.filtered('is_reward_line')
+        self.assertEqual(order.amount_total, 90, "10% discount should be applied")
+        self.assertEqual(coupon.points, 9, "10% discount reward should use 1 point")
+
+        order.order_line.product_updatable = True  # in case `sale_project` is installed
+        order._apply_program_reward(discount50, coupon)
+        self.assertIn(reward_line, order.order_line, "Reward line should be re-used")
+        self.assertEqual(order.amount_total, 50, "50% discount should be applied")
+        self.assertEqual(coupon.points, 5, "50% discount reward should use 5 points")
 
     def test_edit_and_reapply_promotion_program(self):
         # The flow:

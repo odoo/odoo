@@ -1,6 +1,7 @@
 # # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, tagged
 
 
@@ -147,3 +148,12 @@ class TestPrivacyWizard(TransactionCase):
         wizard.line_ids[1]._onchange_is_active()
         wizard.execution_details
         self.assertEqual(1, self.env['privacy.log'].search_count([('anonymized_email', '=', 'r*****.t**@gmail.com')]))
+
+    def test_wizard_lookup_with_invalid_email(self):
+        # lookup with an invalid email should raise UserError
+        wizard = self.env['privacy.lookup.wizard'].create({
+            'email': 'demo',
+            'name': self.partner.name,
+        })
+        with self.assertRaises(UserError, msg='Invalid email address "%s"' % wizard.email):
+            wizard.action_lookup()

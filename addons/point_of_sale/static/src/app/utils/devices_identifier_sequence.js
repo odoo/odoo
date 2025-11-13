@@ -99,7 +99,7 @@ export default class DeviceIdentifierSequence {
             return;
         }
         const numbers = orders
-            .filter((o) => typeof o.id === "string")
+            .filter((o) => !o.isSynced)
             .map((o) => this.extractNumberFromReference(o.pos_reference));
         const unsyncedNumberStack = new Set([...data.unsynced_number_stack, ...numbers]);
 

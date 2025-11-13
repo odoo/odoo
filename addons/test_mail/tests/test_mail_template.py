@@ -75,6 +75,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
 
 
 @tagged('mail_template')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTemplate(TestMailTemplateCommon):
 
     def test_template_add_context_action(self):
@@ -346,7 +347,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
             (30, 4),  # 100 / 30 -> 4 iterations
         ]:
             with self.subTest(batch_size=batch_size):
-                self.env['ir.config_parameter'].sudo().set_param(
+                self.env['ir.config_parameter'].sudo().set_int(
                     "mail.batch_size", batch_size
                 )
                 with self.with_user(self.user_employee.login), \

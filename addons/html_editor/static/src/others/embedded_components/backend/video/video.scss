@@ -13,4 +13,11 @@
         height: 100%;
         min-height: auto !important;
     }
+
+    &.media_iframe_video_size_for_vertical {
+        max-width: 315px;
+        &:has(iframe) {
+            aspect-ratio: 9 / 16;
+        }
+    }
 }

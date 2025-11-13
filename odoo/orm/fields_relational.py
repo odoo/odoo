@@ -4,11 +4,10 @@ import itertools
 import logging
 import typing
 from collections import defaultdict
-from collections.abc import Reversible
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.tools import SQL, OrderedSet, Query, sql, unique
+from odoo.tools import SQL, OrderedSet, sql, unique
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
@@ -18,7 +17,8 @@ from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_pg_name
+from .query import Query
+from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
@@ -64,6 +64,12 @@ class _Relational(Field[BaseModel]):
                     # a lot of missing records, just fetch that field
                     remaining = records[len(vals):]
                     remaining.fetch([self.name])
+                    # fetch does not raise MissingError, check value
+                    if record_id not in field_cache:
+                        raise MissingError("\n".join([
+                            env._("Record does not exist or has been deleted."),
+                            env._("(Record: %(record)s, User: %(user)s)", record=record_id, user=env.uid),
+                        ])) from None
                 else:
                     remaining = records.__class__(env, (record_id,), records._prefetch_ids)
                     super().__get__(remaining, owner)
@@ -348,12 +354,12 @@ class Many2one(_Relational):
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
         ids = () if value is None else (value,)
-        prefetch_ids = PrefetchMany2one(record, self)
+        prefetch_ids = Prefetch.relational(self, record)
         return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
 
     def convert_to_record_multi(self, values, records):
         # return the ids as a recordset without duplicates
-        prefetch_ids = PrefetchMany2one(records, self)
+        prefetch_ids = Prefetch.relational(self, records)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
         return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
@@ -493,7 +499,9 @@ class Many2one(_Relational):
             )
 
         if left_join:
-            comodel, coalias = self.join(model, alias, query)
+            assert bypass_access
+            comodel, coalias = self.join(model.sudo(), alias, query)
+            comodel = comodel.with_env(model.env)
             if not positive:
                 value = (~value).optimize_full(comodel)
             sql = value._to_sql(comodel, coalias, query)
@@ -531,8 +539,19 @@ class Many2one(_Relational):
         and return the joined table's corresponding model and alias.
         """
         comodel = model.env[self.comodel_name]
-        coalias = query.make_alias(alias, self.name)
-        query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+        if self.compute_sudo or self.inherited or model.env.su:
+            coquery = None
+        else:
+            coquery = comodel._search(Domain.TRUE, active_test=False)
+            if not coquery.where_clause:
+                coquery = None
+        if coquery is None:
+            coalias = query.make_alias(alias, self.name)
+            cotable = comodel._table
+        else:
+            coalias = query.make_alias(alias, f'{self.name}__{model.env.uid}')
+            cotable = coquery.subselect(SQL('%s.*', SQL.identifier(comodel._table)))
+        query.add_join('LEFT JOIN', coalias, cotable, SQL(
             "%s = %s",
             model._field_to_sql(alias, self.name, query),
             SQL.identifier(coalias, 'id'),
@@ -629,7 +648,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
-        prefetch_ids = PrefetchX2many(record, self)
+        prefetch_ids = Prefetch.relational(self, record)
         Comodel = record.pool[self.comodel_name]
         corecords = Comodel(record.env, value, prefetch_ids)
         if (
@@ -641,7 +660,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_record_multi(self, values, records):
         # return the list of ids as a recordset without duplicates
-        prefetch_ids = PrefetchX2many(records, self)
+        prefetch_ids = Prefetch.relational(self, records)
         Comodel = records.pool[self.comodel_name]
         ids = tuple(unique(id_ for ids in values for id_ in ids))
         corecords = Comodel(records.env, ids, prefetch_ids)
@@ -1161,7 +1180,7 @@ class One2many(_RelationalMulti):
 
         comodel = model.env[self.comodel_name].sudo()
         inverse_field = comodel._fields[self.inverse_name]
-        if not inverse_field.store:
+        if not (inverse_field.store or inverse_field.compute_sql):
             # determine ids1 in model related to ids2
             # TODO should we support this in the future?
             recs = comodel.browse(coquery).with_context(prefetch_fields=False)
@@ -1358,10 +1377,14 @@ class Many2many(_RelationalMulti):
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
 
+        # bypass the access during search if method is overwriten to avoid
+        # possibly filtering all records of the comodel before joining
+        bypass_access = self.bypass_search_access and type(comodel)._search is not BaseModel._search
+
         # make the query for the lines
         domain = self.get_comodel_domain(records)
         try:
-            query = comodel._search(domain, order=comodel._order)
+            query = comodel._search(domain, order=comodel._order, bypass_access=bypass_access)
         except AccessError as e:
             raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
 
@@ -1375,8 +1398,23 @@ class Many2many(_RelationalMulti):
 
         # retrieve pairs (record, line) and group by record
         group = defaultdict(list)
+        corecord_ids = OrderedSet()
         for id1, id2 in records.env.execute_query(query.select(sql_id1, sql_id2)):
             group[id1].append(id2)
+            corecord_ids.add(id2)
+
+        # filter using record rules
+        if bypass_access and corecord_ids:
+            accessible_corecords = comodel.browse(corecord_ids)._filtered_access('read')
+            if len(accessible_corecords) < len(corecord_ids):
+                # some records are inaccessible, remove them from groups
+                corecord_ids = set(accessible_corecords._ids)
+                for id1, ids in group.items():
+                    group[id1] = [id_ for id_ in ids if id_ in corecord_ids]
+        elif corecord_ids and not comodel.env.su:
+            # query is already filtered, corecords are accessible
+            accessible_corecords = comodel.browse(corecord_ids)
+            comodel.env._add_to_access_cache(accessible_corecords)
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
@@ -1700,52 +1738,4 @@ class Many2many(_RelationalMulti):
             SQL.identifier(alias, 'id'),
             SQL.identifier(rel_alias, rel_id2),
             coquery.subselect(),
-        )
-
-
-class PrefetchMany2one(Reversible):
-    """ Iterable for the values of a many2one field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
-
-    def __init__(self, record: BaseModel, field: Many2one):
-        self.record = record
-        self.field = field
-
-    def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in self.record._prefetch_ids
-            if (coid := field_cache.get(id_)) is not None
-        )
-
-    def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in reversed(self.record._prefetch_ids)
-            if (coid := field_cache.get(id_)) is not None
-        )
-
-
-class PrefetchX2many(Reversible):
-    """ Iterable for the values of an x2many field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
-
-    def __init__(self, record: BaseModel, field: _RelationalMulti):
-        self.record = record
-        self.field = field
-
-    def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in self.record._prefetch_ids
-            for coid in field_cache.get(id_, ())
-        )
-
-    def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in reversed(self.record._prefetch_ids)
-            for coid in field_cache.get(id_, ())
         )

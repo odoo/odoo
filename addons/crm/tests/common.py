@@ -616,7 +616,7 @@ class TestLeadConvertCommon(TestCrmCommon):
             'assignment_domain': [('probability', '>=', 10)],
         })
 
-        cls.env['ir.config_parameter'].set_param('sales_team.membership_multi', True)
+        cls.env['ir.config_parameter'].set_bool('sales_team.membership_multi', True)
         cls.sales_team_1_m3 = cls.env['crm.team.member'].create({
             'user_id': cls.user_sales_salesman.id,
             'crm_team_id': cls.sales_team_1.id,
@@ -636,7 +636,7 @@ class TestLeadConvertCommon(TestCrmCommon):
 
     @classmethod
     def _switch_to_auto_assign(cls):
-        cls.env['ir.config_parameter'].set_param('crm.lead.auto.assignment', True)
+        cls.env['ir.config_parameter'].set_bool('crm.lead.auto.assignment', True)
         cls.assign_cron = cls.env.ref('crm.ir_cron_crm_lead_assign')
         cls.assign_cron.update({
             'active': True,

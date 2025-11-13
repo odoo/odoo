@@ -9,7 +9,6 @@ from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 from odoo.addons.google_account.models import google_service
 from odoo.exceptions import LockError
 from odoo.loglevels import exception_to_unicode
-from odoo.tools import str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -33,7 +32,7 @@ class ResUsers(models.Model):
     def _get_google_sync_status(self):
         """ Returns the calendar synchronization status (active, paused or stopped). """
         status = "sync_active"
-        if str2bool(self.env['ir.config_parameter'].sudo().get_param("google_calendar_sync_paused"), default=False):
+        if self.env['ir.config_parameter'].sudo().get_bool("google_calendar_sync_paused"):
             status = "sync_paused"
         elif self.sudo().google_calendar_rtoken and not self.sudo().google_synchronization_stopped:
             status = "sync_active"
@@ -159,10 +158,10 @@ class ResUsers(models.Model):
         self.env['calendar.event']._restart_google_sync()
 
     def unpause_google_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("google_calendar_sync_paused", False)
+        self.env['ir.config_parameter'].sudo().set_bool("google_calendar_sync_paused", False)
 
     def pause_google_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("google_calendar_sync_paused", True)
+        self.env['ir.config_parameter'].sudo().set_bool("google_calendar_sync_paused", True)
 
     @api.model
     def _has_setup_credentials(self):

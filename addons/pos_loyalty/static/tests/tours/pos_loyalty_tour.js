@@ -8,6 +8,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
+import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -236,10 +237,10 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-            {
-                content: "Loyalty Points is visible on the receipt",
-                trigger: ".pos-receipt .loyalty",
-            },
+            PosLoyalty.isLoyaltyPointsAvailable(),
+            Utils.refresh(),
+            ReceiptScreen.isShown(),
+            PosLoyalty.isLoyaltyPointsAvailable(),
         ].flat(),
 });
 
@@ -609,10 +610,7 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            PartnerList.clickPartnerOptions("AAA Partner"),
-            PartnerList.clickDropDownItemText("Settle invoices"),
-            PartnerList.clickSettleOrderName("TSJ/"),
-            ProductScreen.totalAmountIs("10.00"),
+            PartnerList.settleCustomerAccount("AAA Partner", "10.00", "TSJ/"),
         ].flat(),
 });
 
@@ -658,5 +656,20 @@ registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer"
             Dialog.confirm("Open Register"),
             scan_barcode("0444-e050-4548"),
             ProductScreen.customerIsSelected("AAA Test Partner"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AA Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.claimReward("Free Product"),
+            PosLoyalty.pointsTotalIs("90"),
+            PosLoyalty.orderTotalIs("0.0"),
+            PosLoyalty.finalizeOrder("Cash", "0.0"),
         ].flat(),
 });

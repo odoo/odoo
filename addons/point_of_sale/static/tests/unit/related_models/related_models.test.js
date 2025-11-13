@@ -20,7 +20,7 @@ describe("Related Model", () => {
 
         // Id and uuid are generated
         expect(order.id).not.toBeEmpty();
-        expect(typeof order.id).toBe("string");
+        expect(order.isSynced).toBe(false);
         expect(order.uuid).not.toBeEmpty();
 
         // The generated id and uuid must be the same
@@ -593,7 +593,7 @@ describe("Related Model", () => {
 
         expect(order.lines.length).toBe(1);
         const oldLineId = order.lines[0].id;
-        expect(typeof oldOrderId).toBe("string");
+        expect(order.isSynced).toBe(false);
         expect(models["pos.order"].get(oldOrderId)).not.toBeEmpty();
 
         models.connectNewData({
@@ -630,7 +630,7 @@ describe("Related Model", () => {
         await makeMockServer();
         const models = getRelatedModelsInstance(false);
         const order = models["pos.order"].create({ total: 30 });
-        expect(typeof order.id).toBe("string");
+        expect(order.isSynced).toBe(false);
         expect(models["pos.order"].get(order.id)).toBe(order);
         expect(models["pos.order"].getBy("uuid", order.uuid)).toBe(order);
 

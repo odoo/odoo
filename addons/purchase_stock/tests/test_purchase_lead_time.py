@@ -6,9 +6,10 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from .common import PurchaseTestCommon
-from odoo.tests import Form, freeze_time
+from odoo.tests import tagged, Form, freeze_time
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_00_product_company_level_delays(self):
@@ -159,15 +160,16 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         purchase1.button_confirm()
 
-        # Check order date of purchase order
-
-        date = fields.Datetime.from_string('2025-09-16 10:00:00')
+        # Check date deadline and date planned of purchase order. Supplier of product 2 has a delay of 2 days.
+        # The purchase order is planned on Tuesday 16th, so the date deadline is 2 days before, on Sunday 14th.
+        date_p = fields.Datetime.from_string('2025-09-16 10:00:00')
+        date_d = fields.Datetime.from_string('2025-09-14 10:00:00')
         self.assertRecordValues(purchase1, [{
-            'date_planned': date, 'date_order': date,
+            'date_planned': date_p, 'date_order': date_d,
         }])
         self.assertRecordValues(purchase1.order_line, [
-            {'date_planned': date, 'date_order': date},
-            {'date_planned': date, 'date_order': date},
+            {'date_planned': date_p},
+            {'date_planned': date_p},
         ])
 
     def test_merge_po_line(self):
@@ -387,3 +389,23 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         today = datetime.combine(fields.Datetime.now(), time(12))
         self.assertEqual(purchase_order.date_order, today)
         self.assertEqual(purchase_order.date_planned, today + timedelta(days=7))
+
+    def test_lead_time_with_no_supplier(self):
+        """Test that lead time is incremented by 365 days (1 year) when there
+        is no supplier defined on a product with buy route.
+        """
+        buy_route = self.warehouse_1.buy_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': buy_route.ids,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'test',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        self.assertEqual(orderpoint.lead_days, 365)

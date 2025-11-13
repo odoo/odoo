@@ -248,6 +248,13 @@ export class SelectMenu extends Component {
         this.onInput("");
     }
 
+    onKeyDown(ev) {
+        if (ev.key === " " && !this.dropdownState.isOpen) {
+            this.dropdownState.open();
+            ev.preventDefault();
+        }
+    }
+
     onInputFocus(ev) {
         if (!this.props.searchable) {
             return ev.target.blur();

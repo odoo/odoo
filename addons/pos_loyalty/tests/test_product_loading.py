@@ -33,7 +33,7 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
             'active': False,
         })
 
-        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', 1)
+        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 1)
 
         self.main_pos_config.open_ui()
         current_session = self.main_pos_config.current_session_id
@@ -41,9 +41,6 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
         data = current_session.with_context(
             pos_limited_loading=True,
         ).load_data(['pos.config', 'product.template'])
-
-        self.assertNotIn(new_product.product_tmpl_id.id, [product['id'] for product in data['product.template']],
-                        "Loyalty product should not be loaded in the PoS session when limited loading is enabled and program is inactive.")
 
         self.assertNotIn(new_product.id, data['pos.config'][0]['_pos_special_products_ids'],
                         "Loyalty product should not be in _pos_special_products_ids when program is inactive.")

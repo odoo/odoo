@@ -1,4 +1,5 @@
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
@@ -38,7 +39,7 @@ export class SlotDetails extends Interaction {
             "t-out": () => this.selectedSlotDatetime,
         },
         ".o_wevent_selected_slot_title": {
-            "t-out": () => this.selectedSlotId ? "Selected Date: " : "Select a Date: ",
+            "t-out": () => this.selectedSlotId ? _t("Selected Date:") : _t("Select a Date:"),
         },
     };
 

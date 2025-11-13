@@ -1,6 +1,5 @@
 /** @odoo-module alias=@web/../tests/helpers/utils default=false */
 
-import { Deferred } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "./cleanup";
@@ -45,10 +44,6 @@ export function getFixture() {
 export async function nextTick() {
     await new Promise((resolve) => window.requestAnimationFrame(resolve));
     await new Promise((resolve) => setTimeout(resolve));
-}
-
-export function makeDeferred() {
-    return new Deferred();
 }
 
 function findElement(el, selector) {

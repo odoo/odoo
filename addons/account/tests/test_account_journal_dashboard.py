@@ -336,7 +336,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'move_type': 'out_invoice',
             'journal_id': journal.id,
             'partner_id': self.partner_a.id,
-            'checked': False,
+            'review_state': 'todo',
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
@@ -351,7 +351,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(0))
 
         move.action_post()
-        move.checked = False
+        move.review_state = 'todo'
 
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(100))
@@ -389,7 +389,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'journal_id': journal.id,
             'partner_id': self.partner_a.id,
             'currency_id': currency.id,
-            'checked': False,
+            'review_state': 'todo',
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
@@ -400,7 +400,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             ]
         } for currency in (self.env.ref('base.EUR'), self.env.ref('base.CHF'))])
         moves.action_post()
-        moves.checked = False
+        moves.review_state = 'todo'
 
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(150))

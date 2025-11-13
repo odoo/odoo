@@ -12,9 +12,28 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { ACTIVE_ELEMENT_CLASS, useNavigation } from "@web/core/navigation/navigation";
+import { useNavigation } from "@web/core/navigation/navigation";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 
 const parsers = registry.category("parsers");
+
+const parseValue = (value, fieldType) => {
+    const parser = parsers.contains(fieldType) ? parsers.get(fieldType) : (str) => str;
+    switch (fieldType) {
+        case "date": {
+            return serializeDate(parser(value));
+        }
+        case "datetime": {
+            return serializeDateTime(parser(value));
+        }
+        case "many2one": {
+            return value;
+        }
+        default: {
+            return parser(value);
+        }
+    }
+};
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
 const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
@@ -68,6 +87,8 @@ export class SearchBar extends Component {
         this.items = useState([]);
         this.subItems = {};
 
+        this.offlineStatus = useOfflineStatus();
+
         this.facetContainerRef = useRef("facetContainerRef");
         this.menuRef = useChildRef();
         this.setupFacetNavigation();
@@ -83,7 +104,7 @@ export class SearchBar extends Component {
         this.inputRef =
             this.env.config.disableSearchBarAutofocus || !this.props.autofocus
                 ? useRef("autofocus")
-                : useAutofocus({ mobile: this.props.toggler !== undefined }); // only force the focus on touch devices when the toggler is present on small devices
+                : useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
 
         useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();
@@ -195,6 +216,7 @@ export class SearchBar extends Component {
                 if (fuzzyTest(trimmedQuery.toLowerCase(), label.toLowerCase())) {
                     items.push({
                         id: nextItemId++,
+                        fieldType,
                         searchItemDescription: searchItem.description,
                         preposition,
                         searchItemId: searchItem.id,
@@ -209,29 +231,16 @@ export class SearchBar extends Component {
             return items;
         }
 
-        const parser = parsers.contains(fieldType) ? parsers.get(fieldType) : (str) => str;
         let value;
         try {
-            switch (fieldType) {
-                case "date":
-                    value = serializeDate(parser(trimmedQuery));
-                    break;
-                case "datetime":
-                    value = serializeDateTime(parser(trimmedQuery));
-                    break;
-                case "selection":
-                case "many2one":
-                    value = trimmedQuery;
-                    break;
-                default:
-                    value = parser(trimmedQuery);
-            }
+            value = parseValue(trimmedQuery, fieldType);
         } catch {
             return [];
         }
 
         const item = {
             id: nextItemId++,
+            fieldType,
             searchItemDescription: searchItem.description,
             preposition,
             searchItemId: searchItem.id,
@@ -424,7 +433,20 @@ export class SearchBar extends Component {
         }
 
         if (!item.unselectable) {
-            const { searchItemId, label, operator, value } = item;
+            const { searchItemId, fieldType, operator } = item;
+            let { label, value } = item;
+            if (
+                !["selection", "boolean", "tags"].includes(fieldType) &&
+                this.state.query !== label &&
+                !item.isChild
+            ) {
+                // The query (the search input) changed but it hasn't been reflected yet in the
+                // items (a rendering is scheduled but hasn't been applied to the DOM yet), so select
+                // the item but use the current query. Typical usecase is when scanning a barcode,
+                // as the keystrokes are closer than when a user uses a regular keyboard.
+                label = this.state.query;
+                value = parseValue(this.state.query.trim(), fieldType);
+            }
             this.env.searchModel.addAutoCompletionValues(searchItemId, { label, operator, value });
         }
 
@@ -470,7 +492,6 @@ export class SearchBar extends Component {
                 }
                 return [];
             },
-            isNavigationAvailable: ({ navigator, target }) => navigator.contains(target),
             hotkeys: {
                 enter: {
                     isAvailable: () => !this.inputDropdownState.isOpen,
@@ -544,6 +565,7 @@ export class SearchBar extends Component {
                 this.inputDropdownState.isOpen &&
                 (this.facetContainerRef.el?.contains(target) || navigator.contains(target)),
             onUpdated: (navigator) => (this.navigator = navigator),
+            onItemActivated: (itemEl) => (this.lastActiveItemId = parseInt(itemEl.id, 10)),
             hotkeys: {
                 escape: {
                     callback: () => {
@@ -657,7 +679,7 @@ export class SearchBar extends Component {
             this.resetState();
         }
     }
-    
+
     /**
      * @param {CompositionEvent} ev
      */
@@ -673,14 +695,9 @@ export class SearchBar extends Component {
         if (!this.state.query.length) {
             this.env.searchModel.search();
         } else {
-            const els = [
-                ...this.root.el.ownerDocument.querySelectorAll(
-                    ".o_searchview_autocomplete .o-dropdown-item"
-                ),
-            ];
-            const index = els.findIndex((el) => el.classList.contains(ACTIVE_ELEMENT_CLASS));
-            if (this.items[index]) {
-                this.selectItem(this.items[index]);
+            const item = this.items.find((item) => item.id === this.lastActiveItemId);
+            if (item) {
+                this.selectItem(item);
             }
         }
     }

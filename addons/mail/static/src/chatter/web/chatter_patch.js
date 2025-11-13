@@ -81,8 +81,6 @@ patch(Chatter.prototype, {
         super.setup(...arguments);
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
-        /** @deprecated equivalent to partner_fields and primary_email_field on thread */
-        this.mailImpactingFields = { recordFields: [], emailFields: [] };
         useRecordObserver((record) => this.updateRecipients(record));
         this.attachmentPopout = usePopoutAttachment();
         Object.assign(this.state, {
@@ -184,19 +182,19 @@ patch(Chatter.prototype, {
         Object.keys(record.data).forEach((field) => record.data[field]);
         const partnerIds = []; // Ensure that we don't have duplicates
         let email;
-        this.mailImpactingFields.recordFields.forEach((field) => {
+        (this.state.thread?.partner_fields ?? []).forEach((field) => {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
                 partnerIds.push(value.id);
             }
         });
-        this.mailImpactingFields.emailFields.forEach((field) => {
+        const field = this.state.thread?.primary_email_field;
+        if (field) {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
                 email = value;
-                return;
             }
-        });
+        }
         if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
             return;
         }
@@ -315,12 +313,6 @@ patch(Chatter.prototype, {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        this.mailImpactingFields = {
-            emailFields: this.state.thread.primary_email_field
-                ? [this.state.thread.primary_email_field]
-                : [],
-            recordFields: this.state.thread.partner_fields || [],
-        };
         this.updateRecipients(this.props.record);
     },
 

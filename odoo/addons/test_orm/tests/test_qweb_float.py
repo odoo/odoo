@@ -1,6 +1,7 @@
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFloatExport(common.TransactionCase):
 
     def get_converter(self, name):

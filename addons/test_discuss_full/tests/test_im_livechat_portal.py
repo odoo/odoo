@@ -1,8 +1,9 @@
-from odoo import Command, tests
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import Command
 from odoo.addons.website_livechat.tests.test_chatbot_ui import TestLivechatChatbotUI
 
 
-@tests.common.tagged("post_install", "-at_install")
 class TestImLivechatPortal(TestLivechatChatbotUI):
     def test_chatbot_redirect_to_portal(self):
         project = self.env["project.project"].create({"name": "Portal Project"})

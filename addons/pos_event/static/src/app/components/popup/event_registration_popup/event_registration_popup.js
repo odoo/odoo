@@ -78,7 +78,7 @@ export class EventRegistrationPopup extends Component {
 
         if (requiredByRegistration || requiredByOrder) {
             this.dialog.add(AlertDialog, {
-                title: "Error",
+                title: "Oh snap !",
                 body: "Please fill in all required fields",
             });
             return;

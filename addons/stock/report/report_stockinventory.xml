@@ -35,7 +35,7 @@
                                         <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
                                         <td class="o_td_quantity text-end">
                                             <!-- If 0, then leave blank so users have space to write a number -->
-                                            <t t-if="not line.env['ir.config_parameter'].get_param('stock.show_expected_quantity_count', default='False') == 'True'"><span></span></t>
+                                            <t t-if="not line.env['ir.config_parameter'].get_bool('stock.show_expected_quantity_count')"><span></span></t>
                                             <t t-else=""><span t-field="line.quantity" class="text-nowrap">7</span></t>
                                             <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span>
                                         </td>

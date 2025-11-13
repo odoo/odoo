@@ -3,6 +3,7 @@ import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
+const { DateTime } = luxon;
 
 registry.category("web_tour.tours").add("self_order_preset_dine_in_tour", {
     steps: () => [
@@ -30,6 +31,7 @@ registry.category("web_tour.tours").add("self_order_preset_takeaway_tour", {
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
         Utils.clickBtn("Continue"),
+        Utils.checkConfirmationString(),
         Utils.clickBtn("Ok"),
     ],
 });
@@ -49,6 +51,7 @@ registry.category("web_tour.tours").add("self_order_preset_delivery_tour", {
         CartPage.fillInput("Zip", "9999"),
         CartPage.fillInput("City", "New York"),
         Utils.clickBtn("Continue"),
+        Utils.checkConfirmationString(),
         Utils.clickBtn("Ok"),
 
         // Check if the partner is available in cache
@@ -61,6 +64,7 @@ registry.category("web_tour.tours").add("self_order_preset_delivery_tour", {
         Utils.clickBtn("Order"),
         CartPage.selectRandomValueInInput(".partner-select"),
         Utils.clickBtn("Continue"),
+        Utils.checkConfirmationString(),
         Utils.clickBtn("Ok"),
     ],
 });
@@ -74,9 +78,21 @@ registry.category("web_tour.tours").add("self_order_preset_slot_tour", {
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
-        CartPage.selectRandomValueInInput(".slot-select"),
+        CartPage.selectRandomValueInInput(".slot-select"), // Selects the first available slot
+        {
+            content: `Select value should be a future slot`,
+            trigger: ".slot-select",
+            run: ({ anchor }) => {
+                const slotTs = DateTime.fromFormat(anchor.value, "yyyy-MM-dd HH:mm:ss").ts;
+                // Only future slots should be available for selection
+                if (slotTs < DateTime.now().ts) {
+                    throw new Error(`The selected slot ${anchor.value} is in the past!`);
+                }
+            },
+        },
         CartPage.fillInput("Name", "Dr Dre"),
         Utils.clickBtn("Continue"),
+        Utils.checkConfirmationString(true),
         Utils.clickBtn("Ok"),
     ],
 });

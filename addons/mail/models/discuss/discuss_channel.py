@@ -23,7 +23,7 @@ channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 
 <path d="M416.74,217.29l5-28a8.4,8.4,0,0,0-8.27-9.88H361.09l10.24-57.34a8.4,8.4,0,0,0-8.27-9.88H334.61a8.4,8.4,0,0,0-8.27,6.93L315.57,179.4H246.5l10.24-57.34a8.4,8.4,0,0,0-8.27-9.88H220a8.4,8.4,0,0,0-8.27,6.93L201,179.4H145.6a8.42,8.42,0,0,0-8.28,6.93l-5,28a8.4,8.4,0,0,0,8.27,9.88H193l-16,89.62H121.59a8.4,8.4,0,0,0-8.27,6.93l-5,28a8.4,8.4,0,0,0,8.27,9.88H169L158.73,416a8.4,8.4,0,0,0,8.27,9.88h28.45a8.42,8.42,0,0,0,8.28-6.93l10.76-60.29h69.07L273.32,416a8.4,8.4,0,0,0,8.27,9.88H310a8.4,8.4,0,0,0,8.27-6.93l10.77-60.29h55.38a8.41,8.41,0,0,0,8.28-6.93l5-28a8.4,8.4,0,0,0-8.27-9.88H337.08l16-89.62h55.38A8.4,8.4,0,0,0,416.74,217.29ZM291.56,313.84H222.5l16-89.62h69.07Z" fill="#ffffff"/>
 </svg>'''
 group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
-<circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
+<rect width="530.06" height="530.06" fill="#875a7b"/>
 <path d="m184.356059,265.030004c-23.740561,0.73266 -43.157922,10.11172 -58.252302,28.136961l-29.455881,0c-12.0169,0 -22.128621,-2.96757 -30.335161,-8.90271s-12.309921,-14.618031 -12.309921,-26.048671c0,-51.730902 9.08582,-77.596463 27.257681,-77.596463c0.87928,0 4.06667,1.53874 9.56217,4.61622s12.639651,6.19167 21.432451,9.34235s17.512401,4.72613 26.158581,4.72613c9.8187,0 19.563981,-1.68536 29.236061,-5.05586c-0.73266,5.4223 -1.0991,10.25834 -1.0991,14.508121c0,20.370061 5.93514,39.127962 17.805421,56.273922zm235.42723,140.025346c0,17.585601 -5.34888,31.470971 -16.046861,41.655892s-24.912861,15.277491 -42.645082,15.277491l-192.122688,0c-17.732221,0 -31.947101,-5.09257 -42.645082,-15.277491s-16.046861,-24.070291 -16.046861,-41.655892c0,-7.7669 0.25653,-15.350691 0.76937,-22.751371s1.53874,-15.387401 3.07748,-23.960381s3.48041,-16.523211 5.82523,-23.850471s5.4955,-14.471411 9.45226,-21.432451s8.49978,-12.89618 13.628841,-17.805421c5.12906,-4.90924 11.393931,-8.82951 18.794611,-11.76037s15.570511,-4.3964 24.509931,-4.3964c1.46554,0 4.61622,1.57545 9.45226,4.72613s10.18492,6.6678 16.046861,10.55136c5.86194,3.88356 13.702041,7.40068 23.520741,10.55136s19.710601,4.72613 29.675701,4.72613s19.857001,-1.57545 29.675701,-4.72613s17.658801,-6.6678 23.520741,-10.55136c5.86194,-3.88356 11.21082,-7.40068 16.046861,-10.55136s7.98672,-4.72613 9.45226,-4.72613c8.93942,0 17.109251,1.46554 24.509931,4.3964s13.665551,6.85113 18.794611,11.76037c5.12906,4.90924 9.67208,10.844381 13.628841,17.805421s7.10744,14.105191 9.45226,21.432451s4.28649,15.277491 5.82523,23.850471s2.56464,16.559701 3.07748,23.960381s0.76937,14.984471 0.76937,22.751371zm-225.095689,-280.710152c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422zm154.753287,84.410884c0,23.300921 -8.24325,43.194632 -24.729751,59.681133s-36.380212,24.729751 -59.681133,24.729751s-43.194632,-8.24325 -59.681133,-24.729751s-24.729751,-36.380212 -24.729751,-59.681133s8.24325,-43.194632 24.729751,-59.681133s36.380212,-24.729751 59.681133,-24.729751s43.194632,8.24325 59.681133,24.729751s24.729751,36.380212 24.729751,59.681133zm126.616325,49.459502c0,11.43064 -4.10338,20.113531 -12.309921,26.048671s-18.318261,8.90271 -30.335161,8.90271l-29.455881,0c-15.094381,-18.025241 -34.511741,-27.404301 -58.252302,-28.136961c11.87028,-17.145961 17.805421,-35.903862 17.805421,-56.273922c0,-4.24978 -0.36644,-9.08582 -1.0991,-14.508121c9.67208,3.3705 19.417361,5.05586 29.236061,5.05586c8.64618,0 17.365781,-1.57545 26.158581,-4.72613s15.936951,-6.26487 21.432451,-9.34235s8.68289,-4.61622 9.56217,-4.61622c18.171861,0 27.257681,25.865561 27.257681,77.596463zm-28.136961,-133.870386c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422z" fill="#ffffff"/>
 </svg>'''
 
@@ -52,7 +52,7 @@ class DiscussChannel(models.Model):
     _description = 'Discussion Channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ["mail.thread", "bus.listener.mixin"]
+    _inherit = ["mail.thread", "bus.sync.mixin"]
 
     MAX_BOUNCE_LIMIT = 10
 
@@ -77,6 +77,9 @@ class DiscussChannel(models.Model):
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
     avatar_cache_key = fields.Char(compute="_compute_avatar_cache_key")
+    discuss_category_id = fields.Many2one(
+        "discuss.category", string="Category", ondelete="set null", index=True
+    )
     channel_partner_ids = fields.Many2many(
         'res.partner', string='Partners',
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
@@ -92,7 +95,7 @@ class DiscussChannel(models.Model):
     call_history_ids = fields.One2many("discuss.call.history", "channel_id")
     is_member = fields.Boolean("Is Member", compute="_compute_is_member", search="_search_is_member", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
-    self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", compute_sudo=True)
+    self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", search="_search_self_member_id", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
@@ -292,13 +295,13 @@ class DiscussChannel(models.Model):
         # given it doesn't need to make (incorrect) guess, at the cost of one extra but fast query.
         # It is expected to return hundreds of channels, a thousand at most, which is acceptable.
         # A "join" would be ideal, but the ORM is currently not able to generate it from the domain.
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if current_guest:
+        user, guest = self.env["res.users"]._get_current_persona()
+        if guest:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_guest.sudo().channel_ids
-        elif current_partner:
+            channels = guest.sudo().channel_ids
+        elif user:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_partner.sudo().channel_ids
+            channels = user.partner_id.sudo().channel_ids
         else:
             channels = self.env["discuss.channel"]
         return [('id', 'in', channels.ids)]
@@ -314,6 +317,13 @@ class DiscussChannel(models.Model):
         }
         for channel in self:
             channel.self_member_id = member_by_channel.get(channel)
+
+    def _search_self_member_id(self, operator, operand):
+        if operator == "in":
+            return [("channel_member_ids", "any", [("is_self", "=", True), ("id", "in", operand)])]
+        if operator in ('any', 'any!'):
+            return Domain('channel_member_ids', operator, Domain('is_self', '=', True) & operand)
+        return NotImplemented
 
     @api.depends("channel_member_ids.rtc_inviting_session_id")
     def _compute_invited_member_ids(self):
@@ -369,7 +379,7 @@ class DiscussChannel(models.Model):
 
     @api.model
     def _get_allowed_channel_member_create_params(self):
-        return ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]
+        return ["channel_role", "partner_id", "guest_id", "unpin_dt", "last_interest_dt"]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -405,8 +415,19 @@ class DiscussChannel(models.Model):
             # is_pinned + ensure they have rights to see channel
             if not self.env.context.get('install_mode') and not self.env.user._is_public():
                 partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
-            vals['channel_member_ids'] = membership_ids_cmd + [
-                (0, 0, {'partner_id': pid})
+            vals["channel_member_ids"] = membership_ids_cmd + [
+                Command.create(
+                    {
+                        "partner_id": pid,
+                        "channel_role": (
+                            "owner"
+                            if vals.get("channel_type") in ["channel", "group"]
+                            and pid == self.env.user.partner_id.id
+                            and not self.env.user._is_public()
+                            else None
+                        ),
+                    }
+                )
                 for pid in partner_ids_to_add if pid not in membership_pids
             ]
 
@@ -454,57 +475,32 @@ class DiscussChannel(models.Model):
                         channels=failing_channels.mapped("name"),
                     )
                 )
-
-        def get_field_name(field_description):
-            if isinstance(field_description, Store.Attr):
-                return field_description.field_name
-            return field_description
-
-        def get_field_value(channel, field_description):
-            if isinstance(field_description, Store.Attr):
-                if field_description.predicate and not field_description.predicate(channel):
-                    return None
-            if isinstance(field_description, Store.Relation):
-                return field_description._get_value(channel).records
-            if isinstance(field_description, Store.Attr):
-                return field_description._get_value(channel)
-            return channel[field_description]
-
-        def get_vals(channel):
-            return {
-                subchannel: {
-                    get_field_name(field_description): (
-                        get_field_value(channel, field_description),
-                        field_description,
+        if "active" in vals:
+            if channels_to_check := self.filtered(lambda channel: channel.active != vals["active"]):
+                if failing_channels := channels_to_check.filtered(
+                    lambda channel: channel.channel_type in ["channel", "group"]
+                    and channel.self_member_id.channel_role != "owner"
+                    and not self.env.user.has_group("base.group_system")
+                ):
+                    raise UserError(
+                        self.env._(
+                            "Cannot change the active state of the following channels: %(channels)s. "
+                            "You must be the owner or a system administrator to change it.",
+                            channels=", ".join(failing_channels.mapped("name")),
+                        )
                     )
-                    for field_description in field_descriptions
-                }
-                for subchannel, field_descriptions in self._sync_field_names().items()
-            }
-
-        old_vals = {channel: get_vals(channel) for channel in self}
         result = super().write(vals)
-        for channel in self:
-            new_subchannel_vals = get_vals(channel)
-            for subchannel, values in new_subchannel_vals.items():
-                diff = []
-                for field_name, (value, field_description) in values.items():
-                    if value != old_vals[channel][subchannel][field_name][0]:
-                        diff.append(field_description)
-                if diff:
-                    Store(
-                        bus_channel=channel,
-                        bus_subchannel=subchannel,
-                    ).add(channel, diff).bus_send()
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
 
     def _sync_field_names(self):
         # keys are bus subchannel names, values are lists of field names to sync
-        res = defaultdict(list)
+        res = super()._sync_field_names()
         res[None] += [
             Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
+            # sudo: discuss.category - guests can read categories of accessible channels
+            Store.One("discuss_category_id", ["name", "sequence"], sudo=True),
             "channel_type",
             "create_uid",
             "default_display_mode",
@@ -538,11 +534,12 @@ class DiscussChannel(models.Model):
             notifications[bus_channel] |= member
         for bus_channel, members in notifications.items():
             members = members.with_prefetch(new_members.ids)
-            Store(bus_channel=bus_channel).add(members.channel_id).add(
+            store = Store(bus_channel=bus_channel)
+            store.add(members.channel_id).add(
                 members,
                 [
                     Store.One("channel_id", [], as_thread=True),
-                    *self.env["discuss.channel.member"]._to_store_persona(),
+                    *self.env["discuss.channel.member"]._to_store_persona(store.target),
                     "unpin_dt",
                 ],
             ).bus_send()
@@ -584,13 +581,6 @@ class DiscussChannel(models.Model):
                 body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
             )
         member.unlink()
-        Store(bus_channel=self).add(
-            self,
-            [
-                Store.Many("channel_member_ids", [], mode="DELETE", value=member),
-                "member_count",
-            ],
-        ).bus_send()
 
     def add_members(
         self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True
@@ -619,7 +609,7 @@ class DiscussChannel(models.Model):
         if users:
             partners |= users.partner_id
         guests = guests or self.env["mail.guest"]
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        current_user, current_guest = self.env["res.users"]._get_current_persona()
         all_new_members = self.env["discuss.channel.member"]
         for channel in self:
             members_to_create = []
@@ -642,6 +632,7 @@ class DiscussChannel(models.Model):
             for member in new_members:
                 payload = {
                     "channel_id": member.channel_id.id,
+                    "invite_to_rtc_call": invite_to_rtc_call,
                     "data": Store(bus_channel=member._bus_channel())
                     .add(member.channel_id)
                     .add(member, "unpin_dt")
@@ -664,7 +655,7 @@ class DiscussChannel(models.Model):
                     )
             if new_members:
                 Store(bus_channel=channel).add(channel, "member_count").add(new_members).bus_send()
-            if existing_members and (bus_channel := current_partner.main_user_id or current_guest):
+            if existing_members and (bus_channel := current_user or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
@@ -781,14 +772,15 @@ class DiscussChannel(models.Model):
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         members.rtc_inviting_session_id = False
         if members:
-            Store(bus_channel=self).add(
+            store = Store(bus_channel=self)
+            store.add(
                 self,
                 {
                     "invited_member_ids": Store.Many(
                         members,
                         [
                             Store.One("channel_id", [], as_thread=True),
-                            *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+                            *self.env["discuss.channel.member"]._to_store_persona(store.target, "avatar_card"),
                         ],
                         mode="DELETE",
                     ),
@@ -1192,6 +1184,9 @@ class DiscussChannel(models.Model):
         channels += self.env["discuss.channel"].search(pinned_member_domain)
         return channels
 
+    def _get_store_target(self):
+        return {"bus_channel": self, "bus_subchannel": None}
+
     def _to_store_defaults(self, target: Store.Target):
         # As the method uses partial recordsets with filtered (that lose the prefetch ids) it is
         # best to prefetch these computed fields once to avoid doing partial queries multiple times,
@@ -1216,13 +1211,17 @@ class DiscussChannel(models.Model):
         # (through inverse of channels_with_all_members.channel_member_ids), so the ORM will only
         # prefetch all fields for members with unknown channel_id. The following line force a
         # single fetch for all fields of all members.
-        all_members.mapped("create_date")  # any field in table will do except channel_id
+        # sudo : discuss.channel.member - prefetching member fields as sudo is acceptable,
+        # and its necessary to get channel_role in the same query as the other fields
+        all_members.sudo().mapped("create_date")  # any field in table will do except channel_id
         # prefetch in batch, including nested relations (member, guest, ...)
         Store(bus_channel=target.channel, bus_subchannel=target.subchannel).add(all_members)
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         res = [
             Store.Attr("avatar_cache_key", predicate=is_channel_or_group),
+            # sudo: discuss.category - guests can read categories of accessible channels
+            Store.One("discuss_category_id", ["name", "sequence"], sudo=True),
             "channel_type",
             "create_uid",
             Store.Many(
@@ -1240,7 +1239,7 @@ class DiscussChannel(models.Model):
                 "invited_member_ids",
                 [
                     Store.One("channel_id", [], as_thread=True),
-                    *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+                    *self.env["discuss.channel.member"]._to_store_persona(target, "avatar_card"),
                 ],
                 mode="ADD",
             ),
@@ -1411,39 +1410,34 @@ class DiscussChannel(models.Model):
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
         """
-        for channel in self:
-            if not channel.message_ids.ids:
-                continue
-            # a bit not-modular but helps understanding code
-            if channel.channel_type not in {'chat', 'whatsapp'}:
-                continue
-            last_message_id = channel.message_ids.ids[0] # zero is the index of the last message
-            member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
-            if not member:
-                # member not a part of the channel
-                continue
-            if member.fetched_message_id.id == last_message_id:
-                # last message fetched by user is already up-to-date
-                continue
-            # Avoid serialization error when multiple tabs are opened.
-            query = """
-                UPDATE discuss_channel_member
-                SET fetched_message_id = %s
-                WHERE id IN (
-                    SELECT id FROM discuss_channel_member WHERE id = %s
-                    FOR NO KEY UPDATE SKIP LOCKED
-                )
-            """
-            self.env.cr.execute(query, (last_message_id, member.id))
-            channel._bus_send(
-                "discuss.channel.member/fetched",
-                {
-                    "channel_id": channel.id,
-                    "id": member.id,
-                    "last_message_id": last_message_id,
-                    "partner_id": self.env.user.partner_id.id,
-                },
-            )
+        # Avoid serialization error when multiple tabs are opened.
+        # In order to completely avoid any issues with concurrency, the very first thing we do on
+        # the cursor needs to be a SELECT FOR UPDATE
+        fetchable = self.filtered(lambda c: c.channel_type in ('chat', 'whatsapp'))
+        member_query = self.env['discuss.channel.member']._search([('channel_id', 'in', fetchable.ids), ('is_self', '=', True)]).subselect()
+        with self.env.registry.cursor() as cr:
+            cursor_self = self.with_env(self.env(cr=cr))
+            to_update = cursor_self.env.execute_query(SQL("""
+                SELECT id
+                  FROM discuss_channel_member
+                 WHERE id IN (%s)
+                   FOR NO KEY UPDATE SKIP LOCKED
+            """, member_query))
+            members = cursor_self.env['discuss.channel.member'].browse([r[0] for r in to_update])
+            channel2message = members.channel_id._get_last_messages().grouped('channel_id')
+            updated_members_by_channel = defaultdict(cursor_self.env["discuss.channel.member"].browse)
+            for member in members:
+                last_message = channel2message[member.channel_id]
+                if member.fetched_message_id != last_message:
+                    member.fetched_message_id = last_message
+                    updated_members_by_channel[member.channel_id] |= member
+            for channel in updated_members_by_channel:
+                store = Store(bus_channel=channel)
+                store.add(updated_members_by_channel[channel], fields=[
+                    Store.One("channel_id", []),
+                    "fetched_message_id",
+                    *cursor_self.env["discuss.channel.member"]._to_store_persona(store.target, [])
+                ]).bus_send()
 
     def channel_set_custom_name(self, name):
         self.ensure_one()
@@ -1500,12 +1494,24 @@ class DiscussChannel(models.Model):
             :rtype: dict
         """
         partners_to = OrderedSet(partners_to)
-        channel = self.create({
-            'channel_member_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to],
-            'channel_type': 'group',
-            'default_display_mode': default_display_mode,
-            'name': name,
-        })
+        channel = self.create(
+            {
+                "channel_member_ids": [
+                    Command.create(
+                        {
+                            "partner_id": partner_id,
+                            "channel_role": "owner"
+                            if partner_id == self.env.user.partner_id.id and not self.env.user._is_public()
+                            else None,
+                        }
+                    )
+                    for partner_id in partners_to
+                ],
+                "channel_type": "group",
+                "default_display_mode": default_display_mode,
+                "name": name,
+            }
+        )
         channel._broadcast(channel.channel_member_ids.partner_id.ids)
         return channel
 

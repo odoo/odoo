@@ -17,9 +17,10 @@ export class WebsiteBlog extends Interaction {
         "#o_wblog_post_content_jump": {
             "t-on-click.prevent.withTarget": this.onContentAnchorClick,
         },
-        ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete": {
-            "t-on-click.prevent.withTarget": this.onShareArticleClick,
-        },
+        ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete":
+            {
+                "t-on-click.prevent.withTarget": this.onShareArticleClick,
+            },
     };
 
     /**
@@ -28,17 +29,25 @@ export class WebsiteBlog extends Interaction {
     async onNextBlogClick(ev) {
         const blogNextContainerEl = ev.currentTarget.closest("#o_wblog_next_container");
         const nextInfo = blogNextContainerEl.querySelector("#o_wblog_next_post_info").dataset;
-        const recordCoverContainerEl = blogNextContainerEl.querySelector(".o_record_cover_container");
+        const recordCoverContainerEl = blogNextContainerEl.querySelector(
+            ".o_record_cover_container"
+        );
         const classes = nextInfo.size.split(" ");
         recordCoverContainerEl.classList.add(...classes, nextInfo.textContent);
-        blogNextContainerEl.querySelectorAll(".o_wblog_toggle").forEach(el => el.classList.toggle("d-none"));
+        blogNextContainerEl
+            .querySelectorAll(".o_wblog_toggle")
+            .forEach((el) => el.classList.toggle("d-none"));
         // Appending a placeholder so that the cover can scroll to the top of the
         // screen, regardless of its height.
         const placeholder = document.createElement("div");
         placeholder.style.minHeight = "100vh";
         this.insert(placeholder, this.el.querySelector("#o_wblog_next_container"), "beforeend");
         const nextUrl = verifyHttpsUrl(nextInfo.url);
-        await this.forumScrollAction(blogNextContainerEl, 300, () => browser.location.href = nextUrl);
+        await this.forumScrollAction(
+            blogNextContainerEl,
+            300,
+            () => (browser.location.href = nextUrl)
+        );
     }
     /**
      * @param {KeyboardEvent} ev
@@ -58,7 +67,11 @@ export class WebsiteBlog extends Interaction {
         ev.stopImmediatePropagation();
         const scrollTargetEl = document.querySelector(currentTargetEl.hash);
 
-        await this.forumScrollAction(scrollTargetEl, 500, () => browser.location.hash = "blog_content");
+        await this.forumScrollAction(
+            scrollTargetEl,
+            500,
+            () => (browser.location.hash = "blog_content")
+        );
     }
 
     /**
@@ -74,11 +87,15 @@ export class WebsiteBlog extends Interaction {
                 title: blogPostTitle,
                 url: articleURL,
             });
-            url = "https://twitter.com/intent/tweet?tw_p=tweetbutton&text=" + encodeURIComponent(tweetText);
+            url =
+                "https://twitter.com/intent/tweet?tw_p=tweetbutton&text=" +
+                encodeURIComponent(tweetText);
         } else if (currentTargetEl.classList.contains("o_facebook")) {
             url = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(articleURL);
         } else if (currentTargetEl.classList.contains("o_linkedin")) {
-            url = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(articleURL);
+            url =
+                "https://www.linkedin.com/sharing/share-offsite/?url=" +
+                encodeURIComponent(articleURL);
         }
         window.open(url, "", "menubar=no, width=500, height=400");
     }
@@ -94,6 +111,4 @@ export class WebsiteBlog extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website_blog.website_blog", WebsiteBlog);
+registry.category("public.interactions").add("website_blog.website_blog", WebsiteBlog);

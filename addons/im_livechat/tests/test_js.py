@@ -1,8 +1,9 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import odoo
 from odoo.addons.web.tests.test_js import unit_test_error_checker
 
 
-@odoo.tests.tagged("post_install", "-at_install")
 class ExternalTestSuite(odoo.tests.HttpCase):
     def test_external_livechat(self):
         # webclient external test suite

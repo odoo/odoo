@@ -5,7 +5,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 from freezegun import freeze_time
 
 
@@ -26,6 +26,7 @@ class TestRecurrentEvents(TransactionCase):
             self.assertEqual(event.stop, stop)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCreateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
@@ -405,6 +406,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         self.assertEqual(len(updated_events), 2, "It should have 2 events in the recurrence")
         self.assertTrue(updated_events[1].recurrency, "It should have recurrency in the updated events")
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
@@ -840,6 +843,8 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 11, 6, 1, 0), datetime(2019, 11, 6, 2, 0)),
         ])
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
@@ -914,6 +919,7 @@ class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
         self.assertEqual(event.recurrence_id.count, 2)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateMonthlyByDay(TestRecurrentEvents):
 
     @classmethod
@@ -953,6 +959,7 @@ class TestUpdateMonthlyByDay(TestRecurrentEvents):
         ])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateMonthlyByDate(TestRecurrentEvents):
 
     @classmethod

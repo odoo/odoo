@@ -23,6 +23,19 @@
                                 title="Service's Bill">Service's Bill</span>
                         </div>
                     </button>
+                    <button
+                        name="action_create_account_move"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        invisible="account_move_line_id or not id">
+                        <div class="o_field_widget o_stat_info">
+                            <div class="o_field_widget o_stat_info ms-1">
+                                <span class="o_stat_value">New</span>
+                                <span class="o_stat_text">Service's Bill</span>
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </xpath>
             <xpath expr="//field[@name='amount']" position="attributes">

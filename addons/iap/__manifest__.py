@@ -21,6 +21,7 @@ to support In-App purchases inside Odoo. """,
         'views/res_config_settings.xml',
     ],
     'auto_install': True,
+    'iap_paid_service': True,
     'assets': {
         'web.assets_backend': [
             'iap/static/src/**/*.js',

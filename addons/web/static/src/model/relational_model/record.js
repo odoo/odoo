@@ -142,9 +142,13 @@ export class Record extends DataPoint {
     }
 
     get isInEdition() {
+        if (this.model.offline.status.offline) {
+            return false;
+        }
         if (this.config.mode === "readonly") {
             return false;
         } else {
+            // FIXME: why the or ? if it's not in 'readonly' it's in 'edit', in which case the first is false ?
             return this.config.mode === "edit" || !this.resId;
         }
     }

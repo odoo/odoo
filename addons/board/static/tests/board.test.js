@@ -89,7 +89,7 @@ describe("board_desktop", () => {
             };
         });
         onRpc("web_search_read", (args) => {
-            expect(args.kwargs.domain).toEqual([["foo", "!=", "False"]], {
+            expect(args.kwargs.domain).toEqual([["foo", "!=", false]], {
                 message: "the domain should be passed",
             });
             expect(args.kwargs.context.orderedBy).toEqual(
@@ -119,7 +119,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -182,7 +182,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -215,7 +215,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -236,7 +236,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -276,7 +276,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -315,7 +315,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -340,7 +340,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -410,7 +410,7 @@ describe("board_desktop", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -658,7 +658,7 @@ describe("board_mobile", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,
@@ -690,10 +690,10 @@ describe("board_mobile", () => {
                 <form string="My Dashboard" js_class="board">
                     <board style="2-1">
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                         <column>
-                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', 'False']]"></action>
+                            <action context="{&quot;orderedBy&quot;: [{&quot;name&quot;: &quot;foo&quot;, &quot;asc&quot;: True}]}" view_mode="list" string="ABC" name="51" domain="[['foo', '!=', False]]"></action>
                         </column>
                     </board>
                 </form>`,

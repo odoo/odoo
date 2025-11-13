@@ -114,7 +114,7 @@ export class IminPrinterAdapter extends BasePrinter {
      * @override
      */
     openCashbox() {
-        if (!this.connected) {
+        if (!this.isConnected) {
             return;
         }
         try {

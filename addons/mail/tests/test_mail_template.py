@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
 from unittest.mock import patch
@@ -10,13 +9,14 @@ from odoo.tools import convert_file, mute_logger
 
 
 @tagged('mail_template')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTemplate(MailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestMailTemplate, cls).setUpClass()
         # Enable the Jinja rendering restriction
-        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
         cls.test_partner = cls.env['res.partner'].create({
             'email': 'test.rendering@test.example.com',
@@ -388,6 +388,7 @@ class TestMailTemplate(MailCommon):
 
 
 @tagged('mail_template')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTemplateReset(MailCommon):
 
     def _load(self, module, filepath):
@@ -471,7 +472,7 @@ class TestMailTemplateReset(MailCommon):
         self.assertEqual(mail_template.with_context(lang='fr_FR').name, 'Mail: Test Mail Template FR')
 
 
-@tagged("mail_template", "-at_install", "post_install")
+@tagged("mail_template")
 class TestMailTemplateUI(HttpCase):
 
     def test_mail_template_dynamic_placeholder_tour(self):
@@ -479,7 +480,7 @@ class TestMailTemplateUI(HttpCase):
         self.start_tour('/odoo?debug=1', 'mail_template_dynamic_placeholder_tour', login='admin')
 
 
-@tagged("mail_template", "-at_install", "post_install")
+@tagged("mail_template")
 class TestTemplateConfigRestrictEditor(MailCommon):
 
     def test_switch_icp_value(self):
@@ -494,14 +495,14 @@ class TestTemplateConfigRestrictEditor(MailCommon):
         self.assertIn(group, self.user_employee.all_group_ids)
         self.assertNotIn(group, self.user_employee.group_ids)
 
-        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
 
-        self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', False)
         self.assertTrue(self.user_employee.has_group('mail.group_mail_template_editor'))
 
 
-@tagged("mail_template", "-at_install", "post_install")
+@tagged("mail_template")
 class TestSearchTemplateCategory(MailCommon):
 
     @classmethod

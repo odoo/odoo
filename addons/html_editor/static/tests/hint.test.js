@@ -76,7 +76,11 @@ test("should not display hint in a non-editable paragraph", async () => {
     const content = '<div contenteditable="false"><p>[]</p></div>';
     const { el } = await setupEditor(content);
     // Unchanged, no empty paragraph hint.
-    expect(getContent(el)).toBe(content);
+    expect(getContent(el)).toBe(
+        '<p data-selection-placeholder=""><br></p>' +
+            content +
+            '<p data-selection-placeholder=""><br></p>'
+    );
 });
 
 test("should not lose track of temporary hints on split block", async () => {

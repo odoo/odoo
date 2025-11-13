@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.tests.common import TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResourceSkills(TransactionCase):
     def test_availability_skills_infos_resource(self):
         """ Ensure that all the infos related to skill needed to display the avatar

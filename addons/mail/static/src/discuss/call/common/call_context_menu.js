@@ -14,6 +14,8 @@ export class CallContextMenu extends Component {
 
     updateStatsTimeout;
     rtcConnectionTypes = CONNECTION_TYPES;
+    /** @type {import("models").Rtc} */
+    rtc;
 
     setup() {
         super.setup();
@@ -42,7 +44,7 @@ export class CallContextMenu extends Component {
 
     get inboundConnectionTypeText() {
         const candidateType =
-            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
+            this.rtc.connectionType === CONNECTION_TYPES.SERVER
                 ? this.state.downloadStats.remoteCandidateType
                 : this.state.peerStats.remoteCandidateType;
         return this.formatProtocol(candidateType);
@@ -50,7 +52,7 @@ export class CallContextMenu extends Component {
 
     get outboundConnectionTypeText() {
         const candidateType =
-            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
+            this.rtc.connectionType === CONNECTION_TYPES.SERVER
                 ? this.state.uploadStats.localCandidateType
                 : this.state.peerStats.localCandidateType;
         return this.formatProtocol(candidateType);

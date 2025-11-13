@@ -5,46 +5,18 @@ import requests
 import subprocess
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
-    path_file,
     require_db,
     toggleable,
-    unlink_file,
 )
-from odoo.addons.iot_drivers.tools.system import rpi_only, IS_RPI, IS_TEST
+from odoo.addons.iot_drivers.tools.system import (
+    rpi_only,
+    IS_TEST,
+    git,
+    pip,
+    path_file,
+)
 
 _logger = logging.getLogger(__name__)
-
-
-def git(*args):
-    """Run a git command with the given arguments, taking system
-    into account.
-
-    :param args: list of arguments to pass to git
-    """
-    git_executable = 'git' if IS_RPI else path_file('git', 'cmd', 'git.exe')
-    command = [git_executable, f'--work-tree={path_file("odoo")}', f'--git-dir={path_file("odoo", ".git")}', *args]
-
-    p = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=False)
-    if p.returncode == 0:
-        return p.stdout.strip()
-    return None
-
-
-def pip(*args):
-    """Run a pip command with the given arguments, taking system
-    into account.
-
-    :param args: list of arguments to pass to pip
-    """
-    python_executable = [] if IS_RPI else [path_file('python', 'python.exe'), '-m']
-    command = [*python_executable, 'pip', *args]
-
-    if IS_RPI and args[0] == 'install':
-        command.append('--user')
-        command.append('--break-system-package')
-
-    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    return p.returncode
 
 
 def get_db_branch(server_url):
@@ -68,39 +40,44 @@ def get_db_branch(server_url):
 
 @toggleable
 @require_db
-def check_git_branch(server_url=None):
-    """Check if the local branch is the same as the connected Odoo DB and
-    checkout to match it if needed.
+def check_git_branch(server_url=None, force=False):
+    """Update the Odoo code using git to match the branch of the connected database.
+    This method will also update the Python requirements and system packages, based
+    on requirements.txt and packages.txt files.
+
+    If the database cannot be reached, we fetch the last changes from the current branch.
 
     :param server_url: The URL of the connected Odoo database (provided by decorator).
+    :param force: check out even if the db's branch matches the current one
     """
     if IS_TEST:
         return
-    db_branch = get_db_branch(server_url)
-    if not db_branch:
-        _logger.warning("Could not get the database branch, skipping git checkout")
-        return
 
     try:
-        if not git('ls-remote', 'origin', db_branch):
-            db_branch = 'master'
+        target_branch = get_db_branch(server_url)
+        current_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
+        if not git('ls-remote', 'origin', target_branch):
+            _logger.warning("Branch '%s' doesn't exist on github.com/odoo/odoo.git, assuming 'master'", target_branch)
+            target_branch = 'master'
 
-        local_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
-        _logger.info("IoT Box git branch: %s / Associated Odoo db's git branch: %s", local_branch, db_branch)
+        if current_branch == target_branch and not force:
+            _logger.info("No branch change detected (%s)", current_branch)
+            return
 
-        if db_branch != local_branch:
-            # Repository updates
-            unlink_file("odoo/.git/shallow.lock")  # In case of previous crash/power-off, clean old lockfile
-            checkout(db_branch)
-            update_requirements()
+        # Repository updates
+        shallow_lock = path_file("odoo/.git/shallow.lock")
+        if shallow_lock.exists():
+            shallow_lock.unlink()  # In case of previous crash/power-off, clean old lockfile
+        checkout(target_branch)
+        update_requirements()
 
-            # System updates
-            update_packages()
+        # System updates
+        update_packages()
 
-            # Miscellaneous updates (version migrations)
-            misc_migration_updates()
-            _logger.warning("Update completed, restarting...")
-            odoo_restart()
+        # Miscellaneous updates (version migrations)
+        misc_migration_updates()
+        _logger.warning("Update completed, restarting...")
+        odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
 
@@ -129,7 +106,7 @@ def checkout(branch, remote=None):
     remote = remote or git('config', f'branch.{branch}.remote') or 'origin'
     _ensure_production_remote(remote)
 
-    _logger.warning("Checking out %s/%s", remote, branch)
+    _logger.info("Checking out %s/%s", remote, branch)
     git('remote', 'set-branches', remote, branch)
     git('fetch', remote, branch, '--depth=1', '--prune')  # refs/remotes to avoid 'unknown revision'
     git('reset', 'FETCH_HEAD', '--hard')
@@ -148,7 +125,7 @@ def update_requirements():
         return
 
     _logger.info("Updating pip requirements")
-    pip('install', '-r', requirements_file)
+    pip('-r', requirements_file)
 
 
 @rpi_only
@@ -185,20 +162,21 @@ def update_packages():
 def misc_migration_updates():
     """Run miscellaneous updates after the code update."""
     _logger.warning("Running version migration updates")
-    if path_file('odoo', 'addons', 'point_of_sale').exists():
-        # TODO: remove this when v18.0 is deprecated (point_of_sale/tools/posbox/ -> iot_box_image/)
-        ramdisks_service = "/root_bypass_ramdisks/etc/systemd/system/ramdisks.service"
-        subprocess.run(
-            ['sudo', 'sed', '-i', 's|iot_box_image|point_of_sale/tools/posbox|g', ramdisks_service], check=False
-        )
-
-        # TODO: Remove this code when v16 is deprecated
-        with open('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
-            if "server_wide_modules" not in f.read():
-                f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
 
     if path_file('odoo', 'addons', 'hw_drivers').exists():
         # TODO: remove this when v18.4 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
         subprocess.run(
             ['sed', '-i', 's|iot_drivers|hw_drivers,hw_posbox_homepage|g', '/home/pi/odoo.conf'], check=False
         )
+
+    # if ramdisk.service points to `setup/iot_box_builder`, we symlink it to
+    # `iot_box_image` or `point_of_sale/tools/posbox` instead
+    iot_box_builder_path = path_file('odoo', 'setup', 'iot_box_builder')
+    iot_box_image_path = path_file('odoo', 'addons', 'iot_box_image', 'configuration')
+    point_of_sale_path = path_file('odoo', 'addons', 'point_of_sale', 'tools', 'posbox', 'configuration')
+    iot_box_builder_path.mkdir(parents=True, exist_ok=True)
+    iot_box_builder_path /= "configuration"
+    if iot_box_image_path.exists():  # images <= v19.1
+        iot_box_builder_path.symlink_to(iot_box_image_path)
+    elif point_of_sale_path.exists():  # images before <=v18.0
+        iot_box_builder_path.symlink_to(point_of_sale_path)

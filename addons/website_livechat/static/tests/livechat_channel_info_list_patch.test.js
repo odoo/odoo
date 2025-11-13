@@ -47,5 +47,5 @@ test("shows language, country and recent page views", async () => {
     await contains(`.o_country_flag[data-src*='/country_flags/${country.code.toLowerCase()}.png']`);
     await contains("h6", { text: "Recent page views" });
     await contains("div > span", { text: "General website" });
-    await contains("span", { text: "Home (21:00) → Contact (21:20)" });
+    await contains("span", { text: "Contact (21:20) → Home (21:00)" });
 });

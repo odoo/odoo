@@ -4,6 +4,7 @@ from datetime import datetime
 from freezegun import freeze_time
 from lxml import etree
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import file_open
@@ -332,8 +333,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Ensure that an invoice linked to an SO will not contain this information in the xml.
         """
-        if self.env.ref('base.module_sale').state != 'installed':
-            self.skipTest("This test requires the sale module to be installed.")
+        self.ensure_installed('sale')
 
         sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
@@ -681,6 +681,19 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cbc:ItemClassificationCode[@listID="CLASS"]',
             invoice.line_ids[0].l10n_my_edi_classification_code,
         )
+
+    def test_15_none_tax(self):
+        invoice = self.init_invoice(
+            'out_invoice',
+            partner=self.partner_b,
+            products=self.product_a,
+            post=False,
+        )
+        invoice.invoice_line_ids.write({'tax_ids': [Command.clear()]})  # remove existing taxes
+        invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
+        with self.assertRaises(UserError):
+            myinvois_document.action_generate_xml_file()
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)

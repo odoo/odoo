@@ -1,5 +1,5 @@
 import { Message } from "@mail/core/common/message_model";
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -15,12 +15,12 @@ const messagePatch = {
         }
         return super.canReplyTo(thread);
     },
-    isTranslatable(thread) {
+    get isTranslatable() {
         return (
-            super.isTranslatable(thread) ||
+            super.isTranslatable ||
             (this.store.hasMessageTranslationFeature &&
-                thread?.channel?.channel_type === "livechat" &&
-                thread?.self_member_id?.partner_id?.main_user_id?.share === false)
+                this.channel_id?.channel_type === "livechat" &&
+                this.store.self_user?.share === false)
         );
     },
 };

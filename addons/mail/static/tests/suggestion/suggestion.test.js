@@ -15,7 +15,6 @@ import {
 import { beforeEach, expect, describe, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import {
-    asyncStep,
     Command,
     getService,
     onRpc,
@@ -257,7 +256,7 @@ test('display partner mention suggestions on typing "@" in chatter', async () =>
 test("[text composer] Do not fetch if search more specific and fetch had no result", async () => {
     await startServer();
     onRpc("res.partner", "get_mention_suggestions", () => {
-        asyncStep("get_mention_suggestions");
+        expect.step("get_mention_suggestions");
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);
@@ -277,7 +276,7 @@ test.tags("html composer");
 test("Do not fetch if search more specific and fetch had no result", async () => {
     await startServer();
     onRpc("res.partner", "get_mention_suggestions", () => {
-        asyncStep("get_mention_suggestions");
+        expect.step("get_mention_suggestions");
     });
     await start();
     const composerService = getService("mail.composer");
@@ -587,8 +586,28 @@ test("mention a channel thread", async () => {
     await contains(".o-mail-Composer-suggestion:eq(1):has(i.fa-comments-o)", {
         text: "GeneralThreadOne",
     });
+    await click(".o-mail-Composer-suggestion:eq(0)");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable a.o_channel_redirect:has(i.fa-hashtag)",
+        { text: "General" }
+    );
+    await press("Enter");
+    await contains(".o-mail-Message a.o_channel_redirect", {
+        text: "General",
+    });
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "" });
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    await htmlInsertText(editor, "#");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await contains(".o-mail-Composer-suggestion:eq(0):has(i.fa-hashtag)", { text: "General" });
+    await contains(".o-mail-Composer-suggestion:eq(1):has(i.fa-comments-o)", {
+        text: "GeneralThreadOne",
+    });
     await click(".o-mail-Composer-suggestion:eq(1)");
-    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "#General > ThreadOne" });
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable a.o_channel_redirect:has(i.fa-comments-o)",
+        { text: "General > ThreadOne" }
+    );
     await press("Enter");
     await contains(".o-mail-Message a.o_channel_redirect:has(i.fa-comments-o)", {
         text: "General > ThreadOne",
@@ -602,7 +621,7 @@ test("[text composer] Channel suggestions do not crash after rpc returns", async
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const deferred = new Deferred();
     onRpc("discuss.channel", "get_mention_suggestions", () => {
-        asyncStep("get_mention_suggestions");
+        expect.step("get_mention_suggestions");
         deferred.resolve();
     });
     await start();
@@ -621,7 +640,7 @@ test("Channel suggestions do not crash after rpc returns", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const deferred = new Deferred();
     onRpc("discuss.channel", "get_mention_suggestions", () => {
-        asyncStep("get_mention_suggestions");
+        expect.step("get_mention_suggestions");
         deferred.resolve();
     });
     await start();
@@ -1141,7 +1160,7 @@ test("[text composer] Mention with @-role send correct role id", async () => {
         ],
     });
     onRpcBefore("/mail/message/post", (args) => {
-        asyncStep("message_post");
+        expect.step("message_post");
         expect(args.post_data.role_ids).toEqual([roleId1]);
     });
     await start();
@@ -1185,7 +1204,7 @@ test("Mention with @-role send correct role id", async () => {
         ],
     });
     onRpcBefore("/mail/message/post", (args) => {
-        asyncStep("message_post");
+        expect.step("message_post");
         expect(args.post_data.role_ids).toEqual([roleId1]);
     });
     await start();

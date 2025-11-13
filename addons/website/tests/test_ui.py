@@ -283,7 +283,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'language_ids': [(6, 0, [self.env.ref('base.lang_en').id, parseltongue.id])],
             'default_lang_id': parseltongue.id,
         })
-        self.env['website'].create({
+        website_3 = self.env['website'].create({
             'name': 'website fu_GB',
             'language_ids': [Command.set([fake_user_lang.id])],
             'default_lang_id': fake_user_lang.id,
@@ -291,8 +291,21 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
         self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
         self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
-        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_switching_website', login='admin')
+        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_switching_website', login='admin', cookies={
+            'websiteIdMapping': json.dumps({website_3.name: website_3.id})
+        })
         self.start_tour(f"/website/force/{website.id}", 'snippet_dialog_rtl', login='admin')
+
+    def test_multiple_websites_add_language(self):
+        self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        Website = self.env['website']
+        Website.create({'name': 'Website Test'})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'multiple_websites_add_language', login='admin')
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -643,6 +656,12 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_website_edit_menus_delete_parent(self):
         website = self.env['website'].browse(1)
+        self.env['website.menu'].create({
+            'name': 'Test Child Menu',
+            'url': '/test-child',
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+        })
         menu_tree = self.env['website.menu'].get_tree(website.id)
 
         parent_menu = menu_tree['children'][0]['fields']
@@ -687,3 +706,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_create_missing_page(self):
         self.start_tour("/", "create_missing_page", login="admin")
+
+    def test_hiding_sidebar_header(self):
+        self.start_tour("/", "hide_sidebar_header", login="admin")

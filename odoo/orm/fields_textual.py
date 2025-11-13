@@ -23,11 +23,9 @@ from .fields import Field, _logger
 from .utils import COLLECTION_TYPES, SQL_OPERATORS
 
 if typing.TYPE_CHECKING:
-    from .models import BaseModel
-    from odoo.tools import Query
-
-if typing.TYPE_CHECKING:
     from collections.abc import Callable
+    from .models import BaseModel
+    from .query import Query
 
 
 class BaseString(Field[str | typing.Literal[False]]):

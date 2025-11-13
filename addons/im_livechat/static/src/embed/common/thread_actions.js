@@ -9,7 +9,7 @@ registerThreadAction("restart", {
         thread?.chatbot?.canRestart && !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
-    open: ({ owner, thread }) => {
+    onSelected: ({ owner, thread }) => {
         thread.chatbot.restart();
         owner.props.chatWindow.open({ focus: true });
     },
@@ -19,9 +19,9 @@ registerThreadAction("restart", {
 
 const callSettingsAction = threadActionsRegistry.get("call-settings");
 patch(callSettingsAction, {
-    condition({ store, thread }) {
-        return thread?.channel?.channel_type === "livechat"
-            ? store.rtc.state.channel?.eq(thread)
+    condition({ channel, store }) {
+        return channel?.channel_type === "livechat"
+            ? store.rtc.localChannel?.eq(channel)
             : super.condition(...arguments);
     },
 });

@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import Command, fields, models
 
 
 class JobAddApplicants(models.TransientModel):
@@ -9,7 +9,19 @@ class JobAddApplicants(models.TransientModel):
     job_ids = fields.Many2many("hr.job", string="Job Positions", required=True)
 
     def _add_applicants_to_job(self):
-        applicant_data = self.with_context(no_copy_in_partner_name=True).applicant_ids.copy_data()
+        applicants = self.with_context(no_copy_in_partner_name=True).applicant_ids
+        applicant_data = []
+        copy_data_values = {}
+        for applicant in applicants:
+            # last attachment should follow - [0] is the last as order = id Desc (should be a CV in most cases)
+            if applicant.attachment_ids:
+                applicant_attachment = applicant.attachment_ids[0].copy({
+                    'res_id': applicant.id
+                })
+                copy_data_values = {
+                    'attachment_ids': [Command.link(applicant_attachment.id)]
+                }
+            applicant_data.append(applicant.with_context(no_copy_in_partner_name=True).copy_data(copy_data_values)[0])
         new_applicants_vals = []
         stage_per_job = dict(self.env['hr.recruitment.stage']._read_group(
             domain=[('job_ids', 'in', self.job_ids.ids + [False]), ('fold', '=', False)],

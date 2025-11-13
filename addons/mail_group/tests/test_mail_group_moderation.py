@@ -12,6 +12,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mail_group_moderation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGroupModeration(TestMailListCommon):
     @classmethod
     def setUpClass(cls):
@@ -125,6 +126,7 @@ class TestMailGroupModeration(TestMailListCommon):
 
 
 @tagged('mail_group_moderation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestModeration(TestMailListCommon):
 
     @classmethod

@@ -5,12 +5,12 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from json import loads
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo import fields, Command
 
 
-
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpReplenish(TestMrpCommon):
 
     def _create_wizard(self, product, warehouse):
@@ -353,3 +353,22 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertEqual(orderpoint.bom_id_placeholder, 'Ref 1234: Product A')
         # The actual BoM remains empty
         self.assertFalse(orderpoint.bom_id)
+
+    def test_lead_time_with_no_bom(self):
+        """Test that lead time is incremented by 365 days (1 year) when there
+        is no BoM defined.
+        """
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': route_manufacture.ids,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'test',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        self.assertEqual(orderpoint.lead_days, 365)

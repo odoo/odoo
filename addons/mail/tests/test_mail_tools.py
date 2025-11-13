@@ -6,6 +6,7 @@ from odoo.tests import tagged, users
 
 
 @tagged('mail_tools', 'res_partner')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTools(MailCommon):
 
     @classmethod
@@ -65,6 +66,41 @@ class TestMailTools(MailCommon):
         # test with wildcard "_"
         found = Partner._mail_find_partner_from_emails(['alfred_astaire@test.example.com'])
         self.assertEqual(found, [self.env['res.partner']])
+
+    def test_mail_find_partner_from_emails_alias_localpart(self):
+        """ Test mail_find_partner_from_emails when dealing with aliases that
+        have alias_incoming_local enabled and emails include the local part. """
+        self.env['mail.alias'].create([{
+            'alias_name': 'test_localpart',
+            'alias_domain_id': self.env.company.alias_domain_id.id,
+            'alias_incoming_local': True,
+            'alias_model_id': self.env.ref('mail.model_res_partner').id,
+        }])
+
+        found = self.env['mail.thread']._partner_find_from_emails_single(['test_localpart@gmail.com'], no_create=False)
+        self.assertFalse(found, f'Found {found.email} / {found.name} instead of empty recordset')
+
+        # limit incoming-compat aliases to a fixed set of domains
+        self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', "tartopoils.com, brutijus.com")
+        for test_email, email_normalized, done in [
+            ('"Customer" <test_localpart@gmail.com>', 'test_localpart@gmail.com', True),
+            ('"Customer" <test_localpart@tartopoils.com>', 'test_localpart@tartopoils.com', False),
+            ('"Customer" <test_localpart@brutijus.com>', 'test_localpart@brutijus.com', False),
+            ('"Customer" <test_localpart@brutijus.fr.com>', 'test_localpart@brutijus.fr.com', True),
+        ]:
+            with self.subTest(check="Allowed domain support", test_email=test_email):
+                found = self.env['mail.thread']._partner_find_from_emails_single([test_email], no_create=False)
+                if not done:
+                    self.assertFalse(found, f'Found {found.email} / {found.name} instead of empty recordset')
+                else:
+                    self.assertTrue(found, 'Should have created a partner')
+                    self.assertEqual(found.email_normalized, email_normalized)
+                    self.assertEqual(found.name, 'Customer')
+
+        found = self.env['mail.thread']._partner_find_from_emails_single(['"Customer" <test_no_localpart@gmail.com>'], no_create=False)
+        self.assertTrue(found, 'Should have created a partner')
+        self.assertEqual(found.email_normalized, 'test_no_localpart@gmail.com')
+        self.assertEqual(found.name, 'Customer')
 
     @users('employee')
     def test_mail_find_partner_from_emails_followers(self):
@@ -169,14 +205,15 @@ class TestMailTools(MailCommon):
 
 
 @tagged('mail_tools', 'mail_init')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailUtils(MailCommon):
 
     def test_migrate_icp_to_domain(self):
         """ Test ICP to alias domain migration """
-        self.env["ir.config_parameter"].set_param("mail.catchall.domain", "test.migration.com")
-        self.env["ir.config_parameter"].set_param("mail.bounce.alias", "migrate+bounce")
-        self.env["ir.config_parameter"].set_param("mail.catchall.alias", "migrate+catchall")
-        self.env["ir.config_parameter"].set_param("mail.default.from", "migrate+default_from")
+        self.env["ir.config_parameter"].set_str("mail.catchall.domain", "test.migration.com")
+        self.env["ir.config_parameter"].set_str("mail.bounce.alias", "migrate+bounce")
+        self.env["ir.config_parameter"].set_str("mail.catchall.alias", "migrate+catchall")
+        self.env["ir.config_parameter"].set_str("mail.default.from", "migrate+default_from")
 
         existing = self.env["mail.alias.domain"].search([('name', '=', 'test.migration.com')])
         self.assertFalse(existing)

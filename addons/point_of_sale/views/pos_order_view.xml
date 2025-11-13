@@ -460,8 +460,8 @@
         <field name="state">code</field>
         <field name="binding_view_types">list,kanban,form</field>
         <field name="code">
-if records:
-    action = records.action_pos_order_cancel()
+            if records:
+                action = records.action_pos_order_cancel()
         </field>
     </record>
 

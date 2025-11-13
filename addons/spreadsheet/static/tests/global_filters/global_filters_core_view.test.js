@@ -7,7 +7,6 @@ import {
     addGlobalFilterWithoutReload,
     setGlobalFilterValueWithoutReload,
 } from "@spreadsheet/../tests/helpers/commands";
-import { RELATIVE_PERIODS } from "@spreadsheet/global_filters/helpers";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -32,11 +31,6 @@ test("Value of text filter", () => {
         type: "text",
         label: "Default value is an array",
         defaultValue: { operator: "ilike", strings: ["default value"] },
-    });
-    expect(result.isSuccessful).toBe(true);
-
-    result = setGlobalFilterValueWithoutReload(model, {
-        id: "1",
     });
     expect(result.isSuccessful).toBe(true);
 
@@ -86,11 +80,6 @@ test("Value of selection filter", () => {
         resModel: "res.currency",
         selectionField: "position",
         defaultValue: { operator: "in", selectionValues: ["default value"] },
-    });
-    expect(result.isSuccessful).toBe(true);
-
-    result = setGlobalFilterValueWithoutReload(model, {
-        id: "1",
     });
     expect(result.isSuccessful).toBe(true);
 
@@ -260,7 +249,18 @@ test("Value of date filter", () => {
     });
     expect(result.isSuccessful).toBe(true);
 
-    for (const period of Object.keys(RELATIVE_PERIODS)) {
+    const relativeFilterTypes = [
+        "today",
+        "yesterday",
+        "last_7_days",
+        "last_30_days",
+        "last_90_days",
+        "month_to_date",
+        "last_month",
+        "year_to_date",
+        "last_12_months",
+    ];
+    for (const period of relativeFilterTypes) {
         result = setGlobalFilterValueWithoutReload(model, {
             id: "1",
             value: { type: "relative", period },

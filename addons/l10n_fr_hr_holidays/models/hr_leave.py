@@ -55,7 +55,7 @@ class HrLeave(models.Model):
             else:
                 from_period = ['morning', 'afternoon']
                 to_period = ['morning', 'afternoon']
-            attendance_ids = self.company_id.resource_calendar_id.attendance_ids
+            attendance_ids = self.company_id.resource_calendar_id.attendance_ids | self.resource_calendar_id.attendance_ids
             date_from, date_to = adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, self.employee_id)
 
         similar = date_from.date() == date_to.date() and self.request_date_from_period == self.request_date_to_period

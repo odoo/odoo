@@ -7,17 +7,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 class SearchbarOptionPlugin extends Plugin {
     static id = "searchbarOption";
     resources = {
-        builder_options: [
-            {
-                OptionComponent: SearchbarOption,
-                selector: ".s_searchbar_input",
-                applyTo: ".search-query",
-                props: {
-                    getOrderByItems: () => this.getResource("searchbar_option_order_by_items"),
-                    getDisplayItems: () => this.getResource("searchbar_option_display_items"),
-                },
-            },
-        ],
+        builder_options: [SearchbarOption],
         builder_actions: {
             SetSearchTypeAction,
             SetOrderByAction,
@@ -62,6 +52,10 @@ class SearchbarOptionPlugin extends Plugin {
                 dependency: "search_all_opt",
             },
         ],
+        // input group should not be contenteditable, while all other children
+        // beside the input are contenteditable
+        content_not_editable_selectors: [".input-group:has( > input)"],
+        content_editable_selectors: [".input-group:has( > input) > *:not(input)"],
     };
 }
 

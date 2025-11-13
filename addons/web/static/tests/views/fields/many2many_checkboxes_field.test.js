@@ -76,13 +76,7 @@ test("Many2ManyCheckBoxesField", async () => {
 });
 
 test("[Offline] Many2ManyCheckBoxesField", async () => {
-    onRpc(
-        "/web/dataset/call_kw/partner.type/name_search",
-        () => new Response("", { status: 502 }),
-        {
-            pure: true,
-        }
-    );
+    onRpc("partner.type", "name_search", () => new Response("", { status: 502 }));
     Partner._records[0].timmy = [12];
     await mountView({
         type: "form",
@@ -101,7 +95,7 @@ test("[Offline] Many2ManyCheckBoxesField", async () => {
 
     expect("div.o_field_widget div.form-check input:eq(0)").toBeChecked();
 
-    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(0);
+    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(1);
 });
 test("Many2ManyCheckBoxesField (readonly)", async () => {
     Partner._records[0].timmy = [12];

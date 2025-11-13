@@ -1,7 +1,8 @@
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
-from odoo.tests import Form, users
+from odoo.tests import tagged, Form, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTodoQuickCreate(TestProjectCommon):
 
     @users('armandel')
@@ -42,3 +43,9 @@ class TestTodoQuickCreate(TestProjectCommon):
             todo = todo_form.save()
             results = (todo.name, len(todo.tag_ids), len(todo.user_ids), todo.priority)
             self.assertEqual(results, values)
+
+    def test_create_task_with_no_name_in_quick_create_view(self):
+        todo_form = Form(self.env['project.task'], view="project_todo.project_task_view_todo_quick_create_form")
+        todo_form.display_name = False
+        with self.assertRaises(AssertionError):
+            todo_form.save()

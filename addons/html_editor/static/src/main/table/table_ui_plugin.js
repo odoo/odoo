@@ -163,6 +163,7 @@ export class TableUIPlugin extends Plugin {
             resetTableSize: withAddStep(this.dependencies.table.resetTableSize),
             clearColumnContent: withAddStep(this.dependencies.table.clearColumnContent),
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
+            toggleAlternatingRows: withAddStep(this.dependencies.table.toggleAlternatingRows),
         };
         if (td.cellIndex === 0) {
             this.rowMenu.open({

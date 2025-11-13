@@ -174,3 +174,52 @@ test("unnamed group chat should display correct name just after being invited", 
         text: "You have been invited to #Jane and Mitchell Admin",
     });
 });
+
+test("invite user to self chat opens DM chat with user", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "TestGuest" });
+    const partnerId_1 = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId_1 });
+    const [selfChatId] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: partnerId_1 }),
+                Command.create({ partner_id: serverState.partnerId }),
+            ],
+            channel_type: "group",
+        },
+        {
+            // group chat with guest as correspondent for coverage of no crash
+            channel_member_ids: [
+                Command.create({ guest_id: guestId }),
+                Command.create({ partner_id: serverState.partnerId }),
+            ],
+            channel_type: "group",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId_1 }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    await start();
+    await openDiscuss(selfChatId);
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" }); // self-chat
+    await contains(".o-mail-DiscussSidebarChannel", { text: "TestPartner and Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "TestGuest and Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "TestPartner" });
+    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await insertText(".o-discuss-ChannelInvitation-search", "TestPartner");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click("button:contains('Go to Conversation'):enabled");
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "TestPartner" });
+});

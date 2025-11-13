@@ -22,7 +22,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         super().setUpClass()
 
         # don't be annoyed by enrich cron for query counters (unmodular but hey)
-        cls.env['ir.config_parameter'].sudo().set_param('crm.iap.lead.enrich.setting', 'no')
+        cls.env['ir.config_parameter'].sudo().set_str('crm.iap.lead.enrich.setting', 'no')
 
         # give default values for all email aliases and domain
         cls._init_mail_gateway()
@@ -37,7 +37,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         # deactivate other schedulers to avoid messing with crons
         cls.env['event.mail'].search([]).unlink()
         # consider asynchronous sending as default sending
-        cls.env["ir.config_parameter"].set_param("event.event_mail_async", False)
+        cls.env["ir.config_parameter"].set_bool("event.event_mail_async", False)
 
         # freeze some datetimes, and ensure more than 1D+1H before event starts
         # to ease time-based scheduler check
@@ -162,8 +162,8 @@ class TestMailSchedule(EventMailCommon):
 
         # check iterative work, update params to check call count
         batch_size, render_limit = 2, 10
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', render_limit)
 
         # create some registrations
         EventMailRegistration = type(self.env['event.mail.registration'])
@@ -282,8 +282,8 @@ class TestMailSchedule(EventMailCommon):
         # --------------------------------------------------
 
         # check default behavior, batch of 50 to run up to 1000 attendees
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', False)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', False)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', 0)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', False)
 
         # execute event reminder scheduler explicitly, before scheduled date -> should not do anything
         with self.mock_datetime_and_now(now), self.mock_mail_gateway():
@@ -626,8 +626,8 @@ class TestMailSchedule(EventMailCommon):
 
         # check iterative work, update params to check call count
         batch_size, render_limit = 2, 4
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', render_limit)
 
         # find slot-based schedulers, remove other to avoid noise
         event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
@@ -790,7 +790,7 @@ class TestMailSchedule(EventMailCommon):
         cron_mail = self.env.ref('mail.ir_cron_mail_scheduler_action')
         reference_now = self.reference_now
 
-        self.env['ir.config_parameter'].sudo().set_param('event.event_mail_async', True)
+        self.env['ir.config_parameter'].sudo().set_bool('event.event_mail_async', True)
         with self.capture_triggers(cron_event.id) as capt_event, \
              self.capture_triggers(cron_mail.id) as capt_mail, \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
@@ -977,9 +977,8 @@ class TestMailScheduleInternals(EventMailCommon):
             "The duplicate configuration (first one from event_type.event_type_mail_ids which has same configuration as the sent one) should not have been added")
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
-    def test_prevent_mail_schedulers(self):
-        """ Test mail scheduling for archived and cancelled events """
-
+    def test_scheduler_on_archived_cancelled_event(self):
+        """ Test mail scheduling for archived or cancelled events """
         # deactivate other schedulers to avoid messing with crons
         self.env['event.mail'].search([]).unlink()
 
@@ -1052,3 +1051,60 @@ class TestMailScheduleInternals(EventMailCommon):
         # check that scheduler is not executed for cancelled event
         self.assertEqual(len(self._new_mails), 0, 'No mail should be sent for cancelled event')
         self.assertFalse(event_prev_scheduler.mail_done, 'event: reminder scheduler should should have run')
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    def test_scheduler_on_done_event(self):
+        """ Test mail scheduling for done events """
+        # deactivate other schedulers to avoid messing with crons
+        self.env['event.mail'].search([]).unlink()
+
+        # freeze some datetimes, and ensure more than 1D+1H before event starts
+        # to ease time-based scheduler check
+        now = datetime(2023, 7, 24, 14, 30, 15)
+        event_date_begin = datetime(2023, 7, 26, 8, 0, 0)
+        event_date_end = datetime(2023, 7, 28, 18, 0, 0)
+
+        with self.mock_datetime_and_now(now):
+            test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
+                'name': 'TestEventMail',
+                'date_begin': event_date_begin,
+                'date_end': event_date_end,
+                'event_mail_ids': [
+                    (0, 0, {  # 3 hours after subscription
+                        'interval_nbr': 3,
+                        'interval_unit': 'hours',
+                        'interval_type': 'after_sub',
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                    (0, 0, {  # 3 hours after event end
+                        'interval_nbr': 3,
+                        'interval_unit': 'hours',
+                        'interval_type': 'after_event',
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
+                ]
+            })
+
+        # check event scheduler
+        scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id)])
+        self.assertEqual(len(scheduler), 2, 'event: wrong scheduler creation')
+
+        event_after_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_event')])
+
+        with self.mock_datetime_and_now(event_date_begin), self.mock_mail_gateway():
+            self.env['event.registration'].create([
+                {
+                    'event_id': test_event.id,
+                    'name': f'Reg.{idx}',
+                    'email': f'reg{idx}@example.com',
+                } for idx in range(3)
+            ])
+        # no mails sent directly, should wait a few hours
+        self.assertNotSentEmail()
+
+        # for some reasons, event is ended before emails effectively go out
+        self.execute_event_cron(freeze_date=event_date_end + relativedelta(hours=1))
+        self.assertEqual(len(self._new_mails), 0, 'Registration emails should not be send once event is over, used mainly for tickets / reminders')
+
+        # post-event should be sent even if event ended
+        self.execute_event_cron(freeze_date=event_date_end + relativedelta(hours=3))
+        self.assertEqual(len(self._new_mails), 3)
+        self.assertTrue(event_after_scheduler.mail_done)

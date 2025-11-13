@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResUsers(TransactionCase):
 
     def test_same_calendar_default_privacy_as_user_template(self):
@@ -28,7 +29,7 @@ class TestResUsers(TransactionCase):
         for (privacy, expected_output) in privacy_and_output:
             # Update default privacy.
             if privacy:
-                self.env['ir.config_parameter'].set_param("calendar.default_privacy", privacy)
+                self.env['ir.config_parameter'].set_str("calendar.default_privacy", privacy)
 
             # If Calendar Default Privacy isn't defined in vals: get the privacy from Default User Template.
             username = 'test_%s_%s' % (str(privacy), expected_output)

@@ -8,9 +8,10 @@ from unittest.mock import patch
 import odoo.addons
 from odoo.modules.module import Manifest
 from odoo.release import major_version
-from odoo.tests.common import BaseCase
+from odoo.tests.common import tagged, BaseCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestModuleManifest(BaseCase):
     @classmethod
     def setUpClass(cls):
@@ -51,6 +52,7 @@ class TestModuleManifest(BaseCase):
             'depends': ['base'],
             'description': '',
             'external_dependencies': {},
+            'iap_paid_service': False,
             'icon': '/base/static/description/icon.png',
             'init_xml': [],
             'installable': True,
@@ -94,7 +96,7 @@ class TestModuleManifest(BaseCase):
             file.write(str({'name': f'Temp {self.module_name}'}))
         with self.assertLogs('odoo.modules.module', 'WARNING') as capture:
             manifest = Manifest.for_addon(self.module_name)
-            manifest.manifest_cached
+            manifest.raw_value('')  # parse the manifest
         self.assertEqual(manifest['license'], 'LGPL-3')
         self.assertEqual(manifest['author'], '')
         self.assertIn("Missing `author` key", capture.output[0])

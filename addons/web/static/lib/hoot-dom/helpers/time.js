@@ -451,6 +451,8 @@ export async function waitUntil(predicate, options) {
 }
 
 /**
+ * @deprecated Use Promise.withResolvers() instead.
+ *
  * Manually resolvable and rejectable promise. It introduces 2 new methods:
  *  - {@link reject} rejects the deferred with the given reason;
  *  - {@link resolve} resolves the deferred with the given value.

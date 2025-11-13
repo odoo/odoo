@@ -1,5 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { imageUrl } from "@web/core/utils/urls";
 import { debounce } from "@web/core/utils/timing";
 
@@ -38,11 +38,6 @@ export class ResPartner extends Record {
     commercial_company_name;
     country_id = fields.One("res.country");
     debouncedSetImStatus;
-    displayName = fields.Attr(undefined, {
-        compute() {
-            return this._computeDisplayName();
-        },
-    });
     /** @type {string} */
     email;
     /**
@@ -57,7 +52,7 @@ export class ResPartner extends Record {
     /** @type {ImStatus} */
     im_status = fields.Attr(null, {
         onUpdate() {
-            if (this.eq(this.store.self_partner) && this.im_status === "offline") {
+            if (this.eq(this.store.self_user?.partner_id) && this.im_status === "offline") {
                 this.store.env.services.im_status.updateBusPresence();
             }
         },
@@ -94,15 +89,26 @@ export class ResPartner extends Record {
     });
     /** @type {string|undefined} */
     previousPresencechannel;
+    user_ids = fields.Many("res.users", { inverse: "partner_id" });
     write_date = fields.Datetime();
 
+    /**
+     * @deprecated
+     *
+     * `store.menuThreads` uses this field to filter threads based on search
+     * terms. For each computation, the `menuThread` field is marked as needing a
+     * recompute, which can lead to excessive recursion—sometimes even exceeding the
+     * call stack size. This computation is simple enough that it doesn’t need a
+     * compute and has been replaced by a getter. To override the display name
+     * computation, override the displayName getter.
+     */
     _computeDisplayName() {
         return this.name;
     }
 
     get avatarUrl() {
         const accessTokenParam = {};
-        if (this.store.self.main_user_id?.share !== false) {
+        if (this.store.self_user?.share !== false) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
         return imageUrl("res.partner", this.id, "avatar_128", {
@@ -111,10 +117,14 @@ export class ResPartner extends Record {
         });
     }
 
+    get displayName() {
+        return this._computeDisplayName();
+    }
+
     searchChat() {
-        return Object.values(this.store["mail.thread"].records).find(
-            (thread) =>
-                thread.channel?.channel_type === "chat" && thread.correspondent?.persona.eq(this)
+        return Object.values(this.store["discuss.channel"].records).find(
+            (channel) =>
+                channel.channel_type === "chat" && channel.correspondent?.partner_id?.eq(this)
         );
     }
 

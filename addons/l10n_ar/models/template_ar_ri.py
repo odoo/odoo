@@ -28,5 +28,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'base_diferencias_de_cambio',
                 'account_sale_tax_id': 'ri_tax_vat_21_ventas',
                 'account_purchase_tax_id': 'ri_tax_vat_21_compras',
+                'display_invoice_tax_company_currency': False,
             },
         }

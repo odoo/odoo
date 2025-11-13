@@ -8,7 +8,11 @@ import {
     defineModels,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { CustomizeBodyBgTypeAction } from "@website/builder/plugins/customize_website_plugin";
 import { renderToString } from "@web/core/utils/render";
@@ -533,8 +537,8 @@ test("BuilderButton with action “templatePreviewableWebsiteConfig”", async (
 
     await setupWebsiteBuilder(
         `<div class="test-options-target excluded-class">
-            <div class="target1"></div>
-            <div class="target2"></div>
+            <div class="target1">a</div>
+            <div class="target2">b</div>
         </div>`
     );
     await contains(":iframe .test-options-target").click();

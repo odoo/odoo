@@ -41,7 +41,7 @@ class TestUBLRS(TestUBLCommon):
             'l10n_rs_edi_registration_number': '12345678',
         })
 
-    def create_invoice(self, move_type, **invoice_kwargs):
+    def _create_invoice_rs(self, move_type, **invoice_kwargs):
         return self._generate_move(
             self.env.company.partner_id,
             self.partner_a,
@@ -70,7 +70,7 @@ class TestUBLRS(TestUBLCommon):
         return xml_file
 
     def test_export_invoice(self):
-        invoice = self.create_invoice("out_invoice")
+        invoice = self._create_invoice_rs("out_invoice")
         invoice_xml, _ = self.env['account.edi.xml.ubl.rs']._export_invoice(invoice)
         expected_xml = self._read_xml_test_file('export_invoice')
         self.assertXmlTreeEqual(
@@ -79,7 +79,7 @@ class TestUBLRS(TestUBLCommon):
         )
 
     def test_export_credit_note(self):
-        refund = self.create_invoice("out_refund")
+        refund = self._create_invoice_rs("out_refund")
         refund_xml, _ = self.env['account.edi.xml.ubl.rs']._export_invoice(refund)
         expected_xml = self._read_xml_test_file('export_credit_note')
         self.assertXmlTreeEqual(

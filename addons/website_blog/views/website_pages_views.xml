@@ -13,7 +13,6 @@
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <group name="blog_details">
                     <field name="blog_id"/>
-                    <field name="active" invisible="1"/>
                     <field name="name" placeholder="Blog Post Title"/>
                     <field name="subtitle" placeholder="Blog Subtitle"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -100,7 +99,6 @@
     <field name="priority">99</field>
     <field name="arch" type="xml">
         <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
-            <field name="active" column_invisible="True"/>
             <field name="name"/>
             <field name="website_url"/>
 

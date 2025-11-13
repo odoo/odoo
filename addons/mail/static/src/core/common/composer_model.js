@@ -1,4 +1,4 @@
-import { fields, OR, Record } from "@mail/core/common/record";
+import { fields, OR, Record } from "@mail/model/export";
 import {
     convertBrToLineBreak,
     getNonEditableMentions,

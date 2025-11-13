@@ -6,11 +6,11 @@
         <BuilderColorPicker styleAction="'color'"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Background Color">
+    <BuilderRow label.translate="Background Color" t-if="state.showBackground">
         <BuilderColorPicker styleAction="'background-color'"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Size">
+    <BuilderRow label.translate="Size" t-if="state.showSize">
         <BuilderButtonGroup>
             <BuilderButton action="'faResize'" actionParam="''" title.translate="Size 1x">1x</BuilderButton>
             <BuilderButton action="'faResize'" actionParam="'fa-2x'" title.translate="Size 2x">2x</BuilderButton>
@@ -21,7 +21,7 @@
     </BuilderRow>
 
     <!-- TODO: check if that (should?) work in mass mailing -->
-    <BorderConfigurator label.translate="Border" withRoundCorner="false"/>
+    <BorderConfigurator label.translate="Border" withRoundCorner="false" t-if="state.showBorder"/>
 </t>
 
 </templates>

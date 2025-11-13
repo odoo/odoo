@@ -1,6 +1,8 @@
 from odoo.addons.website_slides.tests.common import SlidesCase
+from odoo.tests import tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSlidesMail(SlidesCase):
     @classmethod
     def setUpClass(cls):

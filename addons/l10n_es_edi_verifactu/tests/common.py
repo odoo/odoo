@@ -71,6 +71,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         cls.tax0_no_sujeto_loc = ChartTemplate.ref('account_tax_template_s_iva_ns')
         cls.tax0_isp = ChartTemplate.ref('account_tax_template_s_iva0_isp')
         cls.tax0_exento = ChartTemplate.ref('account_tax_template_s_iva0')
+        cls.tax0_exento_export = ChartTemplate.ref('account_tax_template_s_iva0_g_e')
         # We create a 'no_sujeto' tax since there is currently no such tax in the standard chart
         cls.tax0_no_sujeto = cls.tax0_no_sujeto_loc.copy()
         cls.tax0_no_sujeto.l10n_es_type = 'no_sujeto'

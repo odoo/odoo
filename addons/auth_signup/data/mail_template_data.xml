@@ -46,7 +46,7 @@
                                 Accept invitation
                             </a>
                         </div>
-                        <b>  This link will remain valid during <t t-out="int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/24)"></t> days </b> <br/>
+                        <b>  This link will remain valid during <t t-out="(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') or 144)//24"></t> days </b> <br/>
                         <t t-set="website_url" t-value="object.get_base_url()"></t>
                         Your Odoo domain is: <b><a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.odoo.com</a></b><br />
                         Your sign in email is: <b><a t-attf-href="/web/login?login={{ object.email }}" target="_blank" t-out="object.email or ''">mark.brown23@example.com</a></b><br /><br />

@@ -10,6 +10,7 @@ from odoo.tools.mail import append_content_to_html
 
 
 @tagged("mail_group")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGroup(TestMailListCommon):
 
     def test_clean_email_body(self):

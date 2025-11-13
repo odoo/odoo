@@ -1,6 +1,6 @@
 /* global Stripe */
 
-import { StripeOptions } from '@payment_stripe/js/stripe_options';
+import { StripeOptions } from '@payment_stripe/interactions/stripe_options';
 import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 

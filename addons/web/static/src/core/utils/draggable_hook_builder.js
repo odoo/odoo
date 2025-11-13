@@ -86,6 +86,7 @@ const DRAGGABLE_CLASS = "o_draggable";
 export const DRAGGED_CLASS = "o_dragged";
 
 const DEFAULT_ACCEPTED_PARAMS = {
+    allowDisconnected: [Boolean], // do not use, introduced for stable versions, to challenge in master
     enable: [Boolean, Function],
     preventDrag: [Function],
     ref: [Object],
@@ -100,6 +101,7 @@ const DEFAULT_ACCEPTED_PARAMS = {
     iframeWindow: [Object, Function],
 };
 const DEFAULT_DEFAULT_PARAMS = {
+    allowDisconnected: false,
     elements: `.${DRAGGABLE_CLASS}`,
     enable: true,
     preventDrag: () => false,
@@ -574,7 +576,10 @@ export function makeDraggableHook(hookParams) {
                 if (state.dragging) {
                     preventClick = true;
                     if (!inErrorState) {
-                        if (target) {
+                        if (
+                            target &&
+                            (params.allowDisconnected || ctx.current.element.isConnected)
+                        ) {
                             callBuildHandler("onDrop", { target });
                         }
                         callBuildHandler("onDragEnd");
@@ -785,6 +790,8 @@ export function makeDraggableHook(hookParams) {
                         return;
                     }
                     dragStart();
+                } else if (!params.allowDisconnected && !ctx.current.element.isConnected) {
+                    return dragEnd(null);
                 }
 
                 if (ctx.followCursor) {

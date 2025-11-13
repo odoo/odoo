@@ -1,8 +1,9 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.tests import new_test_user
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 
 
-@tagged("post_install", "-at_install")
 class TestLiveChatResUsers(TransactionCase):
 
     def test_livechat_create_res_users(self):

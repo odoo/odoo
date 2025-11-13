@@ -152,7 +152,8 @@ class WebsiteMenu(models.Model):
         return menus
 
     def write(self, vals):
-        self.env.registry.clear_cache('templates')
+        if any(self._ids):
+            self.env.registry.clear_cache('templates')
         res = super().write(vals)
         if 'group_ids' in vals and not self.env.context.get("adding_designer_group_to_menu"):
             self.filtered("group_ids").with_context(
@@ -238,6 +239,11 @@ class WebsiteMenu(models.Model):
             menu_url = url_parse(self._clean_url())
             unslug_url = self.env['ir.http']._unslug_url
             if unslug_url(menu_url.path) == unslug_url(request_url.path):
+                # By default we compare the unslug version of the current URL
+                # with the menu URL but if the menu is linked to a page we don't
+                # consider it active if the paths don't match exactly.
+                if self.page_id and menu_url.path != request_url.path:
+                    return False
                 if not (
                     set(menu_url.decode_query().items(multi=True))
                     <= set(request_url.decode_query().items(multi=True))

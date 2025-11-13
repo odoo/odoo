@@ -13,7 +13,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests.common import RecordCapturer, TransactionCase
+from odoo.tests.common import tagged, RecordCapturer, TransactionCase
 from odoo.tools import mute_logger
 
 from odoo.addons.base.models.ir_cron import (
@@ -71,6 +71,7 @@ class CronMixinCase:
         return {'name': f'Dummy partner for TestIrCron {unique}'}
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrCron(TransactionCase, CronMixinCase):
 
     @classmethod

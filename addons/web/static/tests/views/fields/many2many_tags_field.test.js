@@ -1224,7 +1224,7 @@ test("Many2ManyTagsField: Save&New in many2many_tags with default_ keys in conte
 });
 
 test.tags("desktop");
-test("Many2ManyTagsField: conditional create/delete actions on desktop", async () => {
+test("Many2ManyTagsField: conditional create/delete attrs on desktop", async () => {
     Turtle._records[0].partner_ids = [2];
     for (let id = 101; id <= 110; id++) {
         Partner._records.push({ id, name: "Partner" + id });
@@ -1241,7 +1241,7 @@ test("Many2ManyTagsField: conditional create/delete actions on desktop", async (
             <form>
                 <field name="name"/>
                 <field name="turtle_bar"/>
-                <field name="partner_ids" options="{'create': [('turtle_bar', '=', True)], 'delete': [('turtle_bar', '=', True)]}" widget="many2many_tags"/>
+                <field name="partner_ids" create="turtle_bar == True" delete="turtle_bar == True" widget="many2many_tags"/>
             </form>`,
         resId: 1,
     });
@@ -1457,7 +1457,7 @@ test("Many2ManyTagsField supports 'create' props to be a Boolean on mobile", asy
     await mountView({
         type: "form",
         resModel: "partner",
-        arch: `<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder" options="{'create': False }"/></form>`,
+        arch: `<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder" create="False"/></form>`,
     });
 
     await contains(".o_field_many2many_tags input").click();

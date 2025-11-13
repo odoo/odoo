@@ -17,16 +17,11 @@ class StockRequestCount(models.TransientModel):
     show_expected_quantity = fields.Boolean(help='If the user can see the expected quantity or not', compute='_compute_show_expected_quantity', inverse='_set_show_expected_quantity')
 
     def _compute_show_expected_quantity(self):
-        show_quantity_count = self.env['ir.config_parameter'].sudo().get_param('stock.show_expected_quantity_count', default='False') == 'True'
-        for record in self:
-            record.show_expected_quantity = show_quantity_count
+        self.show_expected_quantity = self.env['ir.config_parameter'].sudo().get_bool('stock.show_expected_quantity_count')
 
     def _set_show_expected_quantity(self):
         for record in self:
-            if record.show_expected_quantity:
-                self.env['ir.config_parameter'].sudo().set_param('stock.show_expected_quantity_count', 'True')
-            else:
-                self.env['ir.config_parameter'].sudo().set_param('stock.show_expected_quantity_count', 'False')
+            self.env['ir.config_parameter'].sudo().set_bool('stock.show_expected_quantity_count', record.show_expected_quantity)
 
     def action_request_count(self):
         for count_request in self:

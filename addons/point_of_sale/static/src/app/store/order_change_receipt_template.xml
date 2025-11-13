@@ -10,7 +10,7 @@
                 </div>
                 <div class="o-employee-name" style="font-size: 78%;">
                     <span><t t-esc="data.config_name"/> : <t t-esc="data.time"/></span><br/>
-                    <span>By: <t t-esc="data.employee_name"/></span>
+                    <span t-if="data.employee_name">By: <t t-esc="data.employee_name"/></span>
                 </div>
                 <span class="my-4" style="font-size: 150%;">
                     <span>Order <strong><t t-esc="data.pos_reference"/></strong></span>
@@ -62,7 +62,7 @@
     </t>
 
     <t t-name="point_of_sale.OrderChangeReceiptLine">
-        <div t-attf-class="orderline #{line.isCombo ? 'ms-5 px-2' : 'mx-1'}" style="font-size: 150%;">
+        <div t-attf-class="orderline #{line.combo_parent_uuid ? 'ms-5 px-2' : 'mx-1'}" style="font-size: 150%;">
             <div class="d-flex medium">
                 <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
             </div>

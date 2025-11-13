@@ -24,7 +24,7 @@ patch(OrderPaymentValidation.prototype, {
                 this.order.canBeSimplifiedInvoiced() && !this.order.to_invoice;
             if (!this.order.is_l10n_es_simplified_invoice && !this.order.to_invoice) {
                 this.pos.env.services.dialog.add(AlertDialog, {
-                    title: _t("Error"),
+                    title: _t("Oh snap !"),
                     body: _t(
                         "Order amount is too large for a simplified invoice, use an invoice instead."
                     ),
@@ -43,9 +43,17 @@ patch(OrderPaymentValidation.prototype, {
                         this.pos.config.pricelist_id?.id != this.order.pricelist_id?.id
                             ? this.order.pricelist_id
                             : false;
+                    const setFiscalPosition =
+                        this.pos.config.default_fiscal_position_id?.id !=
+                        this.order.fiscal_position_id?.id
+                            ? this.order.fiscal_position_id?.id
+                            : false;
                     this.order.setPartner(this.pos.config.simplified_partner_id);
                     if (setPricelist) {
                         this.order.setPricelist(setPricelist);
+                    }
+                    if (setFiscalPosition !== false) {
+                        this.order.update({ fiscal_position_id: setFiscalPosition });
                     }
                 }
             }

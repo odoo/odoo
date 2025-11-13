@@ -1,7 +1,10 @@
 from odoo import fields
+from odoo.tests import tagged
+
 from odoo.addons.website_forum.tests.common import TestForumCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumPost(TestForumCommon):
 
     def test_get_related_posts(self):

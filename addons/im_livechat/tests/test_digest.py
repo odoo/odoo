@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.digest.tests.common import TestDigestCommon
 from odoo.tools import mute_logger
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestLiveChatDigest(TestDigestCommon):
 
     @classmethod

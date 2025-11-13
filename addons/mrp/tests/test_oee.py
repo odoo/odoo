@@ -7,9 +7,10 @@ from pytz import timezone, utc
 
 from odoo import fields
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOee(TestMrpCommon):
     def create_productivity_line(self, loss_reason, date_start=False, date_end=False):
         return self.env['mrp.workcenter.productivity'].create({

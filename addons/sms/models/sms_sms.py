@@ -161,7 +161,7 @@ class SmsSms(models.Model):
         self.env['ir.cron']._commit_progress(len(records), remaining=self.search_count(domain) if len(records) == batch_size else 0)
 
     def _get_send_batch_size(self):
-        return int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
+        return self.env['ir.config_parameter'].sudo().get_int('sms.session.batch.size') or 500
 
     def _get_sms_company(self):
         return self.mail_message_id.record_company_id or self.env.company
@@ -227,7 +227,8 @@ class SmsSms(models.Model):
     def _update_sms_state_and_trackers(self, new_state, failure_type=None):
         """Update sms state update and related tracking records (notifications, traces)."""
         self.write({'state': new_state, 'failure_type': failure_type})
-        self.sms_tracker_id._action_update_from_sms_state(new_state, failure_type=failure_type)
+        # Use sudo on mail.notification to allow writing other users' notifications; rights are already checked by sms write
+        self.sms_tracker_id.sudo()._action_update_from_sms_state(new_state, failure_type=failure_type)
 
     def _handle_call_result_hook(self, results):
         """Further process SMS sending API results."""

@@ -47,7 +47,11 @@ export class OrderWidget extends Component {
             label = _t("Order");
             disabled = isNoLine;
         } else {
-            label = this.selfOrder.hasPaymentMethod() ? _t("Pay") : _t("Order");
+            label = this.selfOrder.hasPaymentMethod()
+                ? _t("Pay")
+                : hasNotAllLinesSent.length
+                ? _t("Order")
+                : "";
         }
 
         return { label, disabled };
@@ -62,7 +66,11 @@ export class OrderWidget extends Component {
                     if (!line.combo_parent_id) {
                         acc.count += value.qty;
                     }
-                    acc.price += line.getDisplayPrice();
+                    if (line.combo_parent_id) {
+                        return acc;
+                    }
+
+                    acc.price += line.displayPrice;
                 }
                 return acc;
             },

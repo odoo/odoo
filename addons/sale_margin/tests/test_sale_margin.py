@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
+from odoo.tests import tagged
+
 from odoo.addons.sale.tests.common import SaleCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSaleMargin(SaleCommon):
 
     def test_sale_margin(self):

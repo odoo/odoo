@@ -7,8 +7,8 @@
                 <div class="o_tag_badge_text o_badge_text" t-out="this.props.text"/>
             </t>
             <t t-if="this.props.onDelete">
-                <a class="o_delete d-flex align-items-center opacity-100-hover ps-1 opacity-75" href="#" tabindex="-1" aria-label="Delete" data-tooltip="Delete" t-on-click.stop.prevent="() => this.props.onDelete()">
-                    <i class="oi oi-close align-text-center"/>
+                <a class="o_delete ps-1 opacity-75 opacity-100-hover" href="#" tabindex="-1" aria-label="Delete" data-tooltip="Delete" t-on-click.stop.prevent="() => this.props.onDelete()">
+                    <i class="oi oi-close"/>
                 </a>
             </t>
         </span>

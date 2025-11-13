@@ -37,6 +37,9 @@ class SaleOrder(models.Model):
                 return Domain.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
         return res
 
+    def _get_program_timezone(self):
+        return self.website_id.salesperson_id.tz or super()._get_program_timezone()
+
     def _try_pending_coupon(self):
         if not request:
             return False
@@ -204,8 +207,8 @@ class SaleOrder(models.Model):
     def _gc_abandoned_coupons(self, *args, **kwargs):
         """Remove coupons from abandonned ecommerce order."""
         ICP = self.env['ir.config_parameter']
-        validity = ICP.get_param('website_sale_coupon.abandonned_coupon_validity', 4)
-        validity = fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=int(validity)))
+        validity = ICP.get_int('website_sale_coupon.abandonned_coupon_validity') or 4
+        validity = fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=validity))
         so_to_reset = self.env['sale.order'].search([
             ('state', '=', 'draft'),
             ('write_date', '<', validity),

@@ -6,17 +6,11 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 export class Many2OneOptionPlugin extends Plugin {
     static id = "many2OneOption";
     resources = {
-        builder_options: [
-            {
-                OptionComponent: Many2OneOption,
-                selector: "[data-oe-many2one-model]:not([data-oe-readonly])",
-                editableOnly: false,
-            },
-        ],
+        builder_options: [Many2OneOption],
         builder_actions: {
             Many2OneAction,
         },
-        force_not_editable_selector: "[data-oe-field][data-oe-many2one-id]",
+        content_not_editable_selectors: "[data-oe-field][data-oe-many2one-id]",
     };
 }
 

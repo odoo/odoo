@@ -148,7 +148,7 @@ class CrmLead(models.Model):
                                                          compute="_compute_recurring_revenue_monthly_prorated")
     recurring_revenue_prorated = fields.Monetary('Prorated Recurring Revenues', currency_field='company_currency',
                                                  compute="_compute_recurring_revenue_prorated", store=True)
-    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sudo=True)
+    company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sql="_compute_sql_company_currency", compute_sudo=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
     date_automation_last = fields.Datetime('Last Action', readonly=True)
@@ -282,20 +282,17 @@ class CrmLead(models.Model):
             else:
                 lead.company_currency = lead.company_id.currency_id
 
-    # ORM Override to manage company_currency to aggregates monetary field
-    def _field_to_sql(self, alias, field_expr, query=None) -> SQL:
-        if field_expr == 'company_currency':
-            alias_company = query.make_alias(self._table, 'company_id')
-            company_field_sql = self._field_to_sql(self._table, 'company_id', query)
-            query.add_join('LEFT JOIN', alias_company, 'res_company', SQL(
-                "%s = %s", company_field_sql, SQL.identifier(alias_company, 'id'),
-            ))
-            company_currency_expr = self.env['res.company']._field_to_sql(alias_company, 'currency_id', query)
-            return SQL(
-                '(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)',
-                company_field_sql, company_currency_expr, self.env.company.currency_id.id
-            )
-        return super()._field_to_sql(alias, field_expr, query)
+    def _compute_sql_company_currency(self, alias, query):
+        alias_company = query.make_alias(alias, 'company_id')
+        company_field_sql = self._field_to_sql(alias, 'company_id', query)
+        query.add_join('LEFT JOIN', alias_company, 'res_company', SQL(
+            "%s = %s", company_field_sql, SQL.identifier(alias_company, 'id'),
+        ))
+        company_currency_expr = self.env['res.company']._field_to_sql(alias_company, 'currency_id', query)
+        return SQL(
+            '(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)',
+            company_field_sql, company_currency_expr, self.env.company.currency_id.id
+        )
 
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
@@ -1054,15 +1051,11 @@ class CrmLead(models.Model):
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         team_id = self.env.context.get('default_team_id')
-        if team_id:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]
-        if self.env.context.get('show_user_team_stages'):
-            team_ids = self.env.user.crm_team_ids._ids
-            if team_id:
-                team_ids += (team_id,)
+        team_ids = self.env.user.crm_team_ids._ids if self.env.context.get('show_user_team_stages') else ()
+        team_ids += (team_id,) if team_id else ()
+        search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
+        if team_ids:
             search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_ids)]
-        else:
-            search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
 
         # perform search
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
@@ -1401,18 +1394,51 @@ class CrmLead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        """ This method returns the action helpers for the leads. If help is already provided
-            on the action, the same is returned. Otherwise, we build the help message which
-            contains the alias responsible for creating the lead (if available) and return it.
-        """
-        if not is_html_empty(help_message):
-            return help_message
+        """Customize the help message to mention team membership or available alias.
 
+        When all the conditions below are met, the returned message will invite
+        users to join a team. Sales Managers will also be given a link to the
+        teams' configuration so they can immediately join one on their own.
+
+        * There are crm teams in the db,
+        * The user is not a member of any team, and
+        * The passed `help_message` is empty, or the context key
+          `crm_lead_prioritize_team_help` is truthy
+
+        Otherwise,
+
+        * Passed non-empty `help_message` is returned as-is,
+        * When `help_message` is empty, a simple message mentioning leads or
+          opportunities based on the context's `default_type` is generated.
+          Additionally, the generated message returned will mention the
+          possibility to create records via an alias if there is one set.
+        """
         help_title, sub_title = "", ""
         if self.env.context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
+        new_help_message = f"<p class='o_view_nocontent_smiling_face'>{help_title}</p>"
+        message_empty = is_html_empty(help_message)
+        if (
+            not self.env.user.sale_team_id
+            and (message_empty or self.env.context.get('crm_lead_prioritize_team_help'))
+            and self.env['crm.team'].search_count([], limit=1)
+        ):
+            sub_title = _("As you are a member of no Sales Team, you are showed the Pipeline of the "
+                          "<b>first team by default.</b>")
+            if self.env.user.has_group('sales_team.group_sale_manager'):
+                suffix = _(
+                    'To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>',
+                    self.env.ref('sales_team.crm_team_action_config').id
+                )
+            else:
+                suffix = _("To work with the CRM, you should join a team.")
+            return new_help_message + f"<p>{sub_title} {suffix}</p>"
+
+        if not message_empty:
+            return help_message
+
         alias_domain = [
             ('company_id', 'in', [self.env.company.id, False]),
             ('alias_id.alias_name', '!=', False),
@@ -1428,9 +1454,7 @@ class CrmLead(models.Model):
             sub_title = Markup(_('Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
                 'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.alias_email, alias_record.alias_email),
             }
-        return super().get_empty_list_help(
-            f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
-        )
+        return super().get_empty_list_help(f'{new_help_message}<p class="oe_view_nocontent_alias">{sub_title}</p>')
 
     # ------------------------------------------------------------
     # BUSINESS
@@ -2065,7 +2089,7 @@ class CrmLead(models.Model):
     def _is_rule_based_assignment_activated(self):
         """ Returns whether a rule-based assignment method is activated (cron-enabled or manually-ran).
         """
-        return self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment', False)
+        return self.env['ir.config_parameter'].sudo().get_bool('crm.lead.auto.assignment')
 
     # ------------------------------------------------------------
     # MAILING
@@ -2633,7 +2657,7 @@ class CrmLead(models.Model):
             as we directly use this string in the sql queries.
             To avoid sql injections when using this config param,
             we ensure the date string can be effectively a date."""
-        str_date = self.env['ir.config_parameter'].sudo().get_param('crm.pls_start_date')
+        str_date = self.env['ir.config_parameter'].sudo().get_str('crm.pls_start_date')
         if not fields.Date.to_date(str_date):
             return False
         return str_date
@@ -2643,7 +2667,7 @@ class CrmLead(models.Model):
             we the fields from the formated string stored into the Char config field.
             To avoid sql injections when using that list, we return only the fields
             that are defined on the model. """
-        pls_fields_config = self.env['ir.config_parameter'].sudo().get_param('crm.pls_fields')
+        pls_fields_config = self.env['ir.config_parameter'].sudo().get_str('crm.pls_fields')
         pls_fields = pls_fields_config.split(',') if pls_fields_config else []
         pls_safe_fields = [field for field in pls_fields if field in self._fields.keys()]
         return pls_safe_fields

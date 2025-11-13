@@ -1,9 +1,9 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCase
-from odoo.tests.common import tagged
 
 
-@tagged("post_install", "-at_install")
 class TestGuest(MailCase):
 
     def test_updating_guest_name_linked_to_multiple_channels(self):

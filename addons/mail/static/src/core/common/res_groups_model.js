@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 
 export class ResGroups extends Record {
     static _name = "res.groups";

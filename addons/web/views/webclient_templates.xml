@@ -40,7 +40,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
       </xpath>
       <xpath expr="//head/link[last()]" position="after">
-        <link rel="preload" href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
+        <t t-call-assets="web.fontawesome" t-binary="True"/>
+        <t t-call-assets="web.odoo_ui_icons" t-binary="True"/>
         <t t-call-assets="web.assets_frontend" t-js="false"/>
       </xpath>
       <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
@@ -86,14 +87,12 @@
 
     <template id="brand_promotion_message" name="Brand Promotion Message">
         <t t-set="odoo_logo">
-            <a target="_blank"
-                t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
-                class="badge text-bg-light">
-                <img alt="Odoo"
-                    src="/web/static/img/odoo_logo_tiny.png"
-                    width="62" height="20"
-                    style="width: auto; height: 1em; vertical-align: baseline;"/>
-            </a>
+            <strong>
+                <a target="_blank"
+                    t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}">
+                    Odoo
+                </a>
+            </strong>
         </t>
         <t t-set="final_message">Powered by %s%s</t>
         <t t-out="final_message % (odoo_logo, _message and ('- ' + _message) or '')"/>
@@ -192,7 +191,12 @@
                     You are logged in.
                 </p>
                 <div t-attf-class="clearfix oe_login_buttons text-center mb-1 pt-3">
-                    <a class="btn btn-primary" href="/web/session/logout">Log out</a>
+                    <form method="POST" action="/web/session/logout" class="text-center">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <button type="submit" class="btn btn-primary">
+                            Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </t>
@@ -301,9 +305,9 @@
                 <t t-else="">
                     <t t-call-assets="web.assets_web" media="screen" t-js="false"/>
                 </t>
-                <t t-call="web.conditional_assets_tests" media="screen"/>
+                <t t-call="web.conditional_assets_tests"/>
             </t>
-            <t t-set="head" t-value="head_web + (head or '')" media="screen"/>
+            <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
         </t>
     </template>

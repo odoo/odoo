@@ -22,7 +22,7 @@
                 <textarea t-att-rows="props.rows" class="h-100 flex-grow-1 form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder" t-on-keydown="onKeydown" />
             </div>
         </xpath>
-        <xpath expr="//button[hasclass('o-default-button', 'btn-primary')]" position="attributes">
+        <xpath expr="//button[hasclass('btn-primary')]" position="attributes">
             <attribute name="t-attf-class">{{state.inputValue ? '' : 'disabled'}}</attribute>
         </xpath>
     </t>

@@ -37,7 +37,7 @@ import odoo
 from odoo.exceptions import UserError
 from .config import config
 from .i18n import format_list
-from .misc import file_open, file_path, get_iso_codes, split_every, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, frozendict, get_iso_codes, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
 
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
@@ -86,10 +86,12 @@ FIELD_TRANSLATE = {
 }
 
 
-def is_translatable_attrib(key):
+def is_translatable_attrib(key, node):
     if not key:
         return False
-    return key in TRANSLATED_ATTRS or key.endswith('.translate')
+    if 't-call' not in node.attrib and key in TRANSLATED_ATTRS:
+        return True
+    return key.endswith('.translate')
 
 def is_translatable_attrib_value(node):
     # check if the value attribute of a node must be translated
@@ -176,7 +178,7 @@ def translate_xml_node(node, callback, parse, serialize):
                 and (
                     any(  # attribute to translate
                         val and (
-                            is_translatable_attrib(key) or
+                            is_translatable_attrib(key, node) or
                             (key == 'value' and is_translatable_attrib_value(node[pos])) or
                             (key == 'text' and is_translatable_attrib_text(node[pos]))
                         )
@@ -196,7 +198,7 @@ def translate_xml_node(node, callback, parse, serialize):
             isinstance(node, SKIPPED_ELEMENT_TYPES)
             or node.tag in SKIPPED_ELEMENTS
             or node.get('t-translation', "").strip() == "off"
-            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'))
+            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'), node)
             or node.getparent() is None and avoid_pattern.match(node.text or "")
         ):
             return
@@ -246,7 +248,7 @@ def translate_xml_node(node, callback, parse, serialize):
         for key, val in node.attrib.items():
             if nonspace(val):
                 if (
-                    is_translatable_attrib(key) or
+                    is_translatable_attrib(key, node) or
                     (key == 'value' and is_translatable_attrib_value(node)) or
                     (key == 'text' and is_translatable_attrib_text(node))
                 ):
@@ -421,10 +423,10 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
             args = {k: v._translate(lang) if isinstance(v, LazyGettext) else v for k, v in args.items()}
         else:
             args = tuple(v._translate(lang) if isinstance(v, LazyGettext) else v for v in args)
-    if any(isinstance(a, Iterable) and not isinstance(a, str) for a in (args.values() if args_is_dict else args)):
+    if any(isinstance(a, Iterable) and not isinstance(a, (str, bytes)) for a in (args.values() if args_is_dict else args)):
         # automatically format list-like arguments in a localized way
         def process_translation_arg(v):
-            return format_list(env=None, lst=v, lang_code=lang) if isinstance(v, Iterable) and not isinstance(v, str) else v
+            return format_list(env=None, lst=v, lang_code=lang) if isinstance(v, Iterable) and not isinstance(v, (str, bytes)) else v
         if args_is_dict:
             args = {k: process_translation_arg(v) for k, v in args.items()}
         else:
@@ -1069,7 +1071,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name')))
+                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name'), el))
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
@@ -1837,15 +1839,15 @@ class CodeTranslations:
         def filter_func(row):
             return row.get('value') and PYTHON_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
-        self.python_translations[(module_name, lang)] = ReadonlyDict(translations)
+        self.python_translations[module_name, lang] = frozendict(translations)
 
     def _load_web_translations(self, module_name, lang):
         def filter_func(row):
             return row.get('value') and JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
-        self.web_translations[(module_name, lang)] = ReadonlyDict({
+        self.web_translations[module_name, lang] = frozendict({
             "messages": tuple(
-                ReadonlyDict({"id": src, "string": value})
+                frozendict({"id": src, "string": value})
                 for src, value in translations.items())
         })
 
@@ -1901,7 +1903,7 @@ def _get_translation_upgrade_queries(cr, field):
 
     # upgrade model_terms translation: one update per field per record
     if callable(field.translate):
-        cr.execute("SELECT code FROM res_lang WHERE active = 't'")
+        cr.execute("SELECT code FROM res_lang WHERE active IS TRUE")
         languages = {l[0] for l in cr.fetchall()}
         query = f"""
             SELECT t.res_id, m."{field.name}", t.value, t.noupdate

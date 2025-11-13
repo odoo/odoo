@@ -46,6 +46,7 @@ class UsersCommonCase(TransactionCase):
         users.invalidate_recordset()
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUsers(UsersCommonCase):
 
     def test_name_search(self):
@@ -496,6 +497,7 @@ class TestUsers2(UsersCommonCase):
             })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUsersTweaks(TransactionCase):
     def test_superuser(self):
         """ The superuser is inactive and must remain as such. """

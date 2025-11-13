@@ -3,9 +3,12 @@
 
 from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.tests import tagged
+
 from .common import PurchaseTestCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDeleteOrder(PurchaseTestCommon):
 
     def test_00_delete_order(self):

@@ -10,6 +10,9 @@ from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.tools import parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
+from odoo.tools.sql import column_exists
+
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 import logging
 
@@ -44,7 +47,13 @@ class Base(models.AbstractModel):
         # Override unlink to delete records activities through (res_model, res_id)
         record_ids = self.ids if (not self._abstract and not self._transient) else []
         result = super().unlink()
-        if record_ids:
+        if record_ids and (
+            # during uninstallation of module mail, the search below will crash
+            not self.env.context.get(MODULE_UNINSTALL_FLAG) or (
+                column_exists(self.env.cr, 'mail_activity', 'res_model')
+                and column_exists(self.env.cr, 'mail_activity', 'res_id')
+            )
+        ):
             self.env['mail.activity'].with_context(active_test=False).sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
             ).unlink()
@@ -578,12 +587,17 @@ class Base(models.AbstractModel):
                     not p.is_public
                 )
             ))
+            existing_mails = {
+                email_key(e)
+                for rec in (followers | partners)
+                for e in ([rec.email_normalized] if rec.email_normalized else []) + email_split_and_format(rec.email or '')
+            }
             email_to_lst = list(tools.misc.unique(
                 e for email_input in suggested[record.id]['email_to_lst'] for e in email_split_and_format(email_input)
                 if (
                     e and e.strip() and
                     email_key(e) not in ban_emails and
-                    email_key(e) not in ((followers | partners).mapped('email_normalized') + (followers | partners).mapped('email'))
+                    email_key(e) not in existing_mails
                 )
             ))
 

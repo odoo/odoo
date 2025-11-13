@@ -2,28 +2,26 @@
 <templates xml:space="preserve">
 
 <t t-name="web.SwitchCompanyMenu">
-    <div class="o_switch_company_menu d-none d-md-block">
-        <DropdownGroup group="'web-navbar-group'">
-            <Dropdown
-                position="'bottom-end'"
-                menuRef="containerRef"
-                state="this.dropdown"
-                onStateChanged.bind="handleDropdownChange"
-                navigationOptions="navigationOptions"
-                menuClass="'o_switch_company_menu_dropdown'"
-                disabled="isSingleCompany"
-            >
-                <button data-hotkey="shift+u" t-att-disabled="isSingleCompany" t-att-title="user.activeCompany.name">
-                    <i class="fa fa-building d-lg-none"/>
-                    <span class="oe_topbar_name d-none d-lg-block text-truncate" t-esc="user.activeCompany.name"/>
-                </button>
+    <DropdownGroup group="'web-navbar-group'">
+        <Dropdown
+            position="'bottom-end'"
+            menuRef="containerRef"
+            state="this.dropdown"
+            onStateChanged.bind="handleDropdownChange"
+            navigationOptions="navigationOptions"
+            menuClass="'o_switch_company_menu_dropdown'"
+            disabled="isSingleCompany"
+        >
+            <button data-hotkey="shift+u" t-att-disabled="isSingleCompany" t-att-title="user.activeCompany.name" class="o_switch_company_menu d-none d-md-flex">
+                <i class="fa fa-building d-lg-none"/>
+                <span class="oe_topbar_name d-none d-lg-block text-truncate" t-esc="user.activeCompany.name"/>
+            </button>
 
-                <t t-set-slot="content">
-                    <t t-call="web.SwitchCompanyMenu.Items"/>
-                </t>
-            </Dropdown>
-        </DropdownGroup>
-    </div>
+            <t t-set-slot="content">
+                <t t-call="web.SwitchCompanyMenu.Items"/>
+            </t>
+        </Dropdown>
+    </DropdownGroup>
 </t>
 
 <t t-name="web.SwitchCompanyMenu.Items">

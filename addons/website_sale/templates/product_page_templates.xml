@@ -302,7 +302,7 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
                             </t>
                         </div>
                     </div>
@@ -847,6 +847,8 @@
     >
         <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
             <attribute name="data-ecom-zoom-click">1</attribute>
+            <attribute name="t-att-data-image-ratio">website.product_page_image_ratio</attribute>
+            <attribute name="t-att-data-image-ratio-mobile">website.product_page_image_ratio_mobile</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable" />
         </xpath>
     </template>
@@ -1157,7 +1159,7 @@
     >
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="before">
             <t t-call="website_sale.carousel_product_indicators">
-                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-2'"/>
+                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-lg-2'"/>
             </t>
         </xpath>
         <xpath expr="//div[@id='o-carousel-product']" position="attributes">

@@ -3,6 +3,9 @@ from itertools import chain
 import json
 import re
 
+from odoo.tools.view_validation import get_domain_value_names
+
+
 markdown_link_regex = r"^\[([^\[]+)\]\((.+)\)$"
 
 xml_id_url_prefix = "odoo://ir_menu_xml_id/"
@@ -11,15 +14,23 @@ odoo_view_link_prefix = "odoo://view/"
 
 
 def odoo_charts(data):
-    """return all odoo chart definition in the spreadsheet"""
+    """returns all odoo chart definitions in the spreadsheet"""
     figures = []
     for sheet in data.get("sheets", []):
-        figures += [
-            dict(figure["data"], id=figure["id"])
-            for figure in sheet.get("figures", [])
-            if figure["tag"] == "chart" and figure["data"]["type"].startswith("odoo_")
-        ]
+        for figure in sheet.get("figures", []):
+            if figure["tag"] == "chart" and figure["data"]["type"].startswith("odoo_"):
+                figures.append(dict(figure["data"], id=figure["id"]))
+            elif figure["tag"] == "carousel":
+                figures.extend(get_odoo_charts_from_carousel(figure["data"]))
     return figures
+
+
+def get_odoo_charts_from_carousel(carousel):
+    charts = []
+    for chart_id, chart in carousel["chartDefinitions"].items():
+        if chart["type"].startswith("odoo_"):
+            charts.append(dict(chart, id=chart_id))
+    return charts
 
 
 def links_urls(data):
@@ -57,11 +68,8 @@ def remove_aggregator(field_name):
 
 def domain_fields(domain):
     """return all field names used in the domain"""
-    fields = []
-    for leaf in domain:
-        if len(leaf) == 3:
-            fields.append(leaf[0])
-    return fields
+    field_names, _value_names = get_domain_value_names(str(domain))
+    return list(field_names)
 
 
 def pivot_measure_fields(pivot):

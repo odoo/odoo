@@ -9,6 +9,8 @@ from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
+from odoo.tests import tagged
+
 from odoo.addons.microsoft_calendar.tests.common import (
     TestCommon,
     mock_get_token,
@@ -18,6 +20,7 @@ from odoo.addons.microsoft_calendar.tests.common import (
 
 
 @patch.object(ResUsers, '_get_microsoft_calendar_token', mock_get_token)
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDeleteEvents(TestCommon):
 
     @patch_api

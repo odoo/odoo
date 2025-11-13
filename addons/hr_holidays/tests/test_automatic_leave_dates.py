@@ -1,11 +1,12 @@
 from datetime import date, datetime
 
 from odoo.fields import Command
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):

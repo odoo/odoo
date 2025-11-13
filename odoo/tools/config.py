@@ -287,7 +287,7 @@ class configmanager:
                          "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
                          "The tag will match tags added on a class with a @tagged decorator "
-                         "(all Test classes have 'standard' and 'at_install' tags "
+                         "(all Test classes have 'standard' and 'post_install' tags "
                          "until explicitly removed, see the decorator documentation). "
                          "'*' will match all tags. "
                          "If tag is omitted on include mode, its value is 'standard'. "

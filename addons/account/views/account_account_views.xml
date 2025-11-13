@@ -96,7 +96,7 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <list editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
+                <list create="1" delete="1" multi_edit="1" string="Chart of accounts">
                     <field name="placeholder_code" column_invisible="1"/>
                     <field name="code" string="Code" widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}"/>
                     <field name="name"/>

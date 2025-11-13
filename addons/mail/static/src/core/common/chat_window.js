@@ -53,22 +53,15 @@ export class ChatWindow extends Component {
         });
         this.ui = useService("ui");
         this.contentRef = useRef("content");
-        this.threadActions = useThreadActions({ thread: () => this.thread });
+        this.threadActions = useThreadActions({ thread: () => this.channel.thread });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();
 
         useChildSubEnv({
-            closeActionPanel: () => this.threadActions.activeAction?.close(),
+            closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
             messageHighlight: this.messageHighlight,
         });
-    }
-
-    get composerType() {
-        if (this.thread.model !== "discuss.channel") {
-            return "note";
-        }
-        return undefined;
     }
 
     get hasActionsMenu() {
@@ -80,12 +73,12 @@ export class ChatWindow extends Component {
         );
     }
 
-    get thread() {
-        return this.props.chatWindow.thread;
+    get channel() {
+        return this.props.chatWindow.channel;
     }
 
     get showImStatus() {
-        return this.thread?.channel?.channel_type === "chat" && this.thread.correspondent;
+        return this.channel.channel_type === "chat" && this.channel.correspondent;
     }
 
     get attClass() {
@@ -106,7 +99,7 @@ export class ChatWindow extends Component {
     onKeydown(ev) {
         const chatWindow = toRaw(this.props.chatWindow);
         if (ev.key === "Escape" && this.threadActions.activeAction) {
-            this.threadActions.activeAction.close();
+            this.threadActions.activeAction.actionPanelClose();
             ev.stopPropagation();
             return;
         }
@@ -149,7 +142,7 @@ export class ChatWindow extends Component {
             this.ui.isSmall ||
             this.state.editingName ||
             this.props.chatWindow.actionsDisabled ||
-            isEventHandled(ev, "ThreadAction.onSelected")
+            isEventHandled(ev, "Action.onSelected")
         ) {
             return;
         }
@@ -173,16 +166,16 @@ export class ChatWindow extends Component {
         return _t("Open Actions Menu");
     }
 
-    async renameThread(name) {
-        const thread = toRaw(this.thread);
-        await thread.rename(name);
+    async renameChannel(name) {
+        const channel = toRaw(this.channel);
+        await channel.rename(name);
         this.state.editingName = false;
     }
 
     async renameGuest(name) {
         const newName = name.trim();
-        if (this.store.self.name !== newName) {
-            await this.store.self.updateGuestName(newName);
+        if (this.store.self_guest.name !== newName) {
+            await this.store.self_guest.updateGuestName(newName);
         }
         this.state.editingGuestName = false;
     }

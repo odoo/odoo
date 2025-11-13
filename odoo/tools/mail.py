@@ -207,14 +207,16 @@ def tag_quote(el):
     # gmail or yahoo // # outlook, html // # msoffice
     if 'gmail_extra' in el_class or \
             ('SkyDrivePlaceholder' in el_class or 'SkyDrivePlaceholder' in el_class):
-        el.set('data-o-mail-quote', '1')
-        if el.getparent() is not None:
+        if el.tag != 't':
+            el.set('data-o-mail-quote', '1')
+        if el.getparent() is not None and el.getparent().tag != 't':
             el.getparent().set('data-o-mail-quote-container', '1')
 
     if (el.tag == 'hr' and ('stopSpelling' in el_class or 'stopSpelling' in el_id)) or \
        'yahoo_quoted' in el_class:
         # Quote all elements after this one
-        el.set('data-o-mail-quote', '1')
+        if el.tag != 't':
+            el.set('data-o-mail-quote', '1')
         for sibling in el.itersiblings(preceding=False):
             sibling.set('data-o-mail-quote', '1')
 
@@ -225,7 +227,7 @@ def tag_quote(el):
     is_outlook_reply_quote = 'divRplyFwdMsg' in el_id
     is_gmail_quote = 'gmail_quote' in el_class
     is_quote_wrapper = is_signature_wrapper or is_gmail_quote or is_outlook_reply_quote
-    if is_quote_wrapper:
+    if is_quote_wrapper and el.tag != 't':
         el.set('data-o-mail-quote-container', '1')
         el.set('data-o-mail-quote', '1')
 
@@ -235,11 +237,11 @@ def tag_quote(el):
         reply_quote = el.getnext()
         if hr is not None and hr.tag == 'hr':
             hr.set('data-o-mail-quote', '1')
-        if reply_quote is not None:
+        if reply_quote is not None and reply_quote.tag != 't':
             reply_quote.set('data-o-mail-quote-container', '1')
             reply_quote.set('data-o-mail-quote', '1')
 
-    if is_outlook_auto_message:
+    if is_outlook_auto_message and el.tag != 't':
         if not el.text or not el.text.strip():
             el.set('data-o-mail-quote-container', '1')
             el.set('data-o-mail-quote', '1')
@@ -247,8 +249,9 @@ def tag_quote(el):
     # html signature (-- <br />blah)
     signature_begin = re.compile(r"((?:(?:^|\n)[-]{2}[\s]?$))")
     if el.text and el.find('br') is not None and re.search(signature_begin, el.text):
-        el.set('data-o-mail-quote', '1')
-        if el.getparent() is not None:
+        if el.tag != 't':
+            el.set('data-o-mail-quote', '1')
+        if el.getparent() is not None and el.getparent().tag != 't':
             el.getparent().set('data-o-mail-quote-container', '1')
 
     # text-based quotes (>, >>) and signatures (-- Signature)
@@ -261,7 +264,7 @@ def tag_quote(el):
         el.set('data-o-mail-quote-node', '1')
         el.set('data-o-mail-quote', '1')
     if el.getparent() is not None and not el.getparent().get('data-o-mail-quote-node'):
-        if el.getparent().get('data-o-mail-quote'):
+        if el.getparent().get('data-o-mail-quote') and el.tag != 't':
             el.set('data-o-mail-quote', '1')
         # only quoting the elements following the first quote in the container
         # avoids issues with repeated calls to html_normalize
@@ -270,9 +273,9 @@ def tag_quote(el):
                 siblings = el.getparent().getchildren()
                 quote_index = siblings.index(first_sibling_quote)
                 element_index = siblings.index(el)
-                if quote_index < element_index:
+                if quote_index < element_index and el.tag != 't':
                     el.set('data-o-mail-quote', '1')
-    if el.getprevious() is not None and el.getprevious().get('data-o-mail-quote') and not el.text_content().strip():
+    if el.getprevious() is not None and el.getprevious().get('data-o-mail-quote') and not el.text_content().strip() and el.tag != 't':
         el.set('data-o-mail-quote', '1')
 
 

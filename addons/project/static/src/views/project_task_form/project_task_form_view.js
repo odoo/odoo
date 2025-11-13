@@ -5,6 +5,7 @@ import { ProjectTaskFormController } from "./project_task_form_controller";
 export const projectTaskFormView = {
     ...formViewWithHtmlExpander,
     Controller: ProjectTaskFormController,
+    buttonTemplate: "project.ProjectTaskFormView.Buttons",
 };
 
 registry.category("views").add("project_task_form", projectTaskFormView);

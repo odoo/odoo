@@ -8,7 +8,7 @@ from subprocess import run, PIPE
 from textwrap import dedent
 
 from odoo.tools.which import which
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 from . import _odoo_checker_sql_injection
 
@@ -70,6 +70,7 @@ class TestPylintChecks(TransactionCase):
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGetTextLint(TestPylintChecks):
     def check(self, testtext):
         return super().check(testtext, "_odoo_checker_gettext", "gettext-placeholders")
@@ -92,6 +93,7 @@ class TestGetTextLint(TestPylintChecks):
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSqlLint(TestPylintChecks):
     def check(self, testtext):
         return super().check(testtext, "_odoo_checker_sql_injection", "sql-injection")
@@ -492,6 +494,7 @@ class TestSqlLint(TestPylintChecks):
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestI18nChecks(TestPylintChecks):
     def check(self, test_content):
         return super().check(

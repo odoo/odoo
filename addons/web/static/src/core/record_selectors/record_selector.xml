@@ -17,6 +17,7 @@
                 multiSelect="false"
                 getIds="() => []"
                 update.bind="update"
+                buildQuickCreate="props.buildQuickCreate"
             >
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <span t-if="isAvatarModel" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">

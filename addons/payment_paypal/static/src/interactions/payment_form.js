@@ -20,14 +20,14 @@ patch(PaymentForm.prototype, {
     /**
      * @override
      */
-    async start() {
+    async willStart() {
         // Suffix the button IDs to prevent collisions when multiple button containers are present.
         const paypalEnabledButtons = [...document.querySelectorAll('#o_paypal_enabled_button')];
         const paypalDisabledButtons = [...document.querySelectorAll('#o_paypal_disabled_button')];
         paypalEnabledButtons.forEach((button, index) => button.id += `_${index}`);
         paypalDisabledButtons.forEach((button, index) => button.id += `_${index}`);
 
-        await super.start(...arguments);
+        await super.willStart(...arguments);
     },
 
     /**

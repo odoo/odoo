@@ -6,20 +6,10 @@ import {
     startServer,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import {
-    asyncStep,
-    Command,
-    mockService,
-    serverState,
-    waitForSteps,
-    withUser,
-} from "@web/../tests/web_test_helpers";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -113,7 +103,7 @@ test("open non-channel failure", async () => {
     ]);
     mockService("action", {
         doAction(action) {
-            asyncStep("do_action");
+            expect.step("do_action");
             expect(action.name).toBe("Mail Failures");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.view_mode).toBe("kanban,list,form");
@@ -134,7 +124,7 @@ test("open non-channel failure", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await waitForSteps(["do_action"]);
+    await expect.waitForSteps(["do_action"]);
 });
 
 test("different discuss.channel are not grouped", async () => {
@@ -303,8 +293,7 @@ test("thread notifications are re-ordered on receiving a new message", async () 
             res_id: channelId_2,
         },
     ]);
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     await withUser(bobUserId, () =>

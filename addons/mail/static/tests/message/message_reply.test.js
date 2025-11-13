@@ -185,3 +185,29 @@ test("Replying to a message containing line breaks should be correctly inlined",
         text: "Message first line. Message second line. Message third line.",
     });
 });
+
+test("Replying to a message containing attachments should display an attachment icon", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "<p>Message first line.</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+        attachment_ids: [
+            pyEnv["ir.attachment"].create({ name: "test.txt", mimetype: "text/plain" }),
+        ],
+    });
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        body: "Howdy",
+        message_type: "comment",
+        model: "discuss.channel",
+        author_id: partnerId,
+        parent_id: messageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageInReply .fa-file");
+});

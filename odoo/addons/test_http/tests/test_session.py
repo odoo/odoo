@@ -229,7 +229,14 @@ class TestHttpSession(TestHttpBase):
     def test_session09_logout(self):
         sid = self.authenticate('admin', 'admin').sid
         self.assertTrue(odoo.http.root.session_store.get(sid), "session should exist")
-        self.url_open('/web/session/logout', allow_redirects=False).raise_for_status()
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": odoo.http.Request.csrf_token(self),
+            },
+            allow_redirects=False
+        ).raise_for_status()
         self.assertFalse(odoo.http.root.session_store.get(sid), "session should not exist")
 
     def test_session10_explicit_session(self):
@@ -237,7 +244,13 @@ class TestHttpSession(TestHttpBase):
         admin_session = self.authenticate('admin', 'admin')
         with self.assertLogs('odoo.http') as capture:
             qs = urlencode({'debug': 1, 'session_id': forged_sid})
-            self.url_open(f'/web/session/logout?{qs}').raise_for_status()
+            self.url_open(
+                f'/web/session/logout?{qs}',
+                method='POST',
+                data={
+                    "csrf_token": odoo.http.Request.csrf_token(self),
+                },
+            ).raise_for_status()
         self.assertEqual(len(capture.output), 1)
         self.assertRegex(capture.output[0],
             r"^WARNING:odoo.http:<function odoo\.addons\.\w+\.controllers\.\w+\.logout> "
@@ -332,6 +345,7 @@ class TestHttpSession(TestHttpBase):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSessionStore(HttpCaseWithUserDemo):
     def setUp(self):
         super().setUp()
@@ -347,11 +361,12 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
     @mute_logger('odoo.http')
     def test01_session_nan(self):
-        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', 'adminCantSetupThisValueLikeANormalPerson')
+        # hack: logically equivalent to icp.value = 'adminCantSetupThisValueLikeANormalPerson'
+        self.env['ir.config_parameter'].set_str('sessions.max_inactivity_seconds', 'adminCantSetupThisValueLikeANormalPerson')
 
-        with self.assertLogs('odoo.http', level='WARNING') as logs:
+        with self.assertLogs('odoo.addons.base.models.ir_config_parameter', level='WARNING') as logs:
             self.assertEqual(odoo.http.get_session_max_inactivity(self.env), SESSION_LIFETIME)
-            self.assertEqual(logs.output[0], "WARNING:odoo.http:Invalid value for 'sessions.max_inactivity_seconds', using default value.")
+            self.assertEqual(logs.output[0], "WARNING:odoo.addons.base.models.ir_config_parameter:ir.config_parameter with key sessions.max_inactivity_seconds has invalid value 'adminCantSetupThisValueLikeANormalPerson' for type int")
 
     @mute_logger('odoo.http')
     def test02_session_lifetime_1week(self):
@@ -372,7 +387,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
     @mute_logger('odoo.http')
     def test03_session_lifetime_1min(self):
         # changing the lifetime to 1 minute
-        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', 60)
+        self.env['ir.config_parameter'].set_int('sessions.max_inactivity_seconds', 60)
         with freeze_time() as freeze:
             session = self.authenticate(None, None)
 
@@ -389,7 +404,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
     @mute_logger('odoo.http')
     def test04_session_lifetime_nodb(self):
         # in case of requesting session in a no db scenario
-        self.env['ir.config_parameter'].set_param('sessions.max_inactivity_seconds', SESSION_LIFETIME // 2)
+        self.env['ir.config_parameter'].set_int('sessions.max_inactivity_seconds', SESSION_LIFETIME // 2)
         with freeze_time() as freeze:
             self.authenticate(None, None)
             res = TestHttpBase.nodb_url_open(self, '/')
@@ -408,6 +423,7 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
 
 # HttpCase because session rotation needs to be tested on the file store instead of memory store
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSessionRotation(HttpCase):
     def test_session_rotation(self):
         def get_amount_sessions(session):

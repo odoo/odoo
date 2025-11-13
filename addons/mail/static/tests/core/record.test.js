@@ -1,9 +1,9 @@
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { markup, reactive, toRaw } from "@odoo/owl";
-import { asyncStep, mockService, waitForSteps } from "@web/../tests/web_test_helpers";
+import { mockService } from "@web/../tests/web_test_helpers";
 
-import { Record, Store, makeStore } from "@mail/core/common/record";
+import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -793,20 +793,20 @@ test("onAdd/onDelete hooks on one without inverse", async () => {
         static id = "name";
         name;
         thread = fields.One("Thread", {
-            onAdd: (thread) => asyncStep(`thread.onAdd(${thread.name})`),
-            onDelete: (thread) => asyncStep(`thread.onDelete(${thread.name})`),
+            onAdd: (thread) => expect.step(`thread.onAdd(${thread.name})`),
+            onDelete: (thread) => expect.step(`thread.onDelete(${thread.name})`),
         });
     }).register(localRegistry);
     const store = await start();
     const general = store.Thread.insert("General");
     const john = store.Member.insert("John");
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     john.thread = general;
-    await waitForSteps(["thread.onAdd(General)"]);
+    await expect.waitForSteps(["thread.onAdd(General)"]);
     john.thread = general;
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     john.thread = undefined;
-    await waitForSteps(["thread.onDelete(General)"]);
+    await expect.waitForSteps(["thread.onDelete(General)"]);
 });
 
 test("onAdd/onDelete hooks on many without inverse", async () => {
@@ -814,8 +814,8 @@ test("onAdd/onDelete hooks on many without inverse", async () => {
         static id = "name";
         name;
         members = fields.Many("Member", {
-            onAdd: (member) => asyncStep(`members.onAdd(${member.name})`),
-            onDelete: (member) => asyncStep(`members.onDelete(${member.name})`),
+            onAdd: (member) => expect.step(`members.onAdd(${member.name})`),
+            onDelete: (member) => expect.step(`members.onDelete(${member.name})`),
         });
     }).register(localRegistry);
     (class Member extends Record {
@@ -825,15 +825,15 @@ test("onAdd/onDelete hooks on many without inverse", async () => {
     const general = store.Thread.insert("General");
     const jane = store.Member.insert("Jane");
     const john = store.Member.insert("John");
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     general.members = jane;
-    await waitForSteps(["members.onAdd(Jane)"]);
+    await expect.waitForSteps(["members.onAdd(Jane)"]);
     general.members = jane;
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     general.members = [["ADD", john]];
-    await waitForSteps(["members.onAdd(John)"]);
+    await expect.waitForSteps(["members.onAdd(John)"]);
     general.members = undefined;
-    await waitForSteps(["members.onDelete(John)", "members.onDelete(Jane)"]);
+    await expect.waitForSteps(["members.onDelete(John)", "members.onDelete(Jane)"]);
 });
 
 test("record list assign should update inverse fields", async () => {
@@ -865,33 +865,33 @@ test("datetime type record", async () => {
         name;
         date = fields.Attr(undefined, {
             type: "datetime",
-            onUpdate: () => asyncStep("DATE_UPDATED"),
+            onUpdate: () => expect.step("DATE_UPDATED"),
         });
     }).register(localRegistry);
     const store = await start();
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     const general = store.Thread.insert({ name: "General", date: "2024-02-20 14:42:00" });
-    await waitForSteps(["DATE_UPDATED"]);
+    await expect.waitForSteps(["DATE_UPDATED"]);
     expect(general.date).toBeInstanceOf(luxon.DateTime);
     expect(general.date.day).toBe(20);
     store.Thread.insert({ name: "General", date: "2024-02-21 14:42:00" });
-    await waitForSteps(["DATE_UPDATED"]);
+    await expect.waitForSteps(["DATE_UPDATED"]);
     expect(general.date.day).toBe(21);
     store.Thread.insert({ name: "General", date: "2024-02-21 14:42:00" });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     store.Thread.insert({ name: "General", date: undefined });
-    await waitForSteps(["DATE_UPDATED"]);
+    await expect.waitForSteps(["DATE_UPDATED"]);
     expect(general.date).toBe(undefined);
     const now = luxon.DateTime.now();
     const thread = store.Thread.insert({ name: "General", date: now });
-    await waitForSteps(["DATE_UPDATED"]);
+    await expect.waitForSteps(["DATE_UPDATED"]);
     expect(thread.date).toBeInstanceOf(luxon.DateTime);
     expect(thread.date.equals(now)).toBe(true);
     store.Thread.insert({ name: "General", date: false });
-    await waitForSteps(["DATE_UPDATED"]);
+    await expect.waitForSteps(["DATE_UPDATED"]);
     expect(general.date).toBe(false);
     store.Thread.insert({ name: "General", date: "2024-02-22 14:42:00" });
-    await waitForSteps(["DATE_UPDATED"]);
+    await expect.waitForSteps(["DATE_UPDATED"]);
     expect(general.date.day).toBe(22);
 });
 
@@ -1339,4 +1339,129 @@ test("Delete record with side-effect compute to insert it should have resulting 
     discussApp.state.delete();
     expect(discussApp.state.status).toEqual("init");
     expect(discussApp.state.thread).toBe(undefined);
+});
+
+test("Can delete record with chained onDelete: () => record.delete()", async () => {
+    (class Channel extends Record {
+        static id = "name";
+        name;
+        thread = fields.One("Thread", { onDelete: (thread) => thread?.delete() }); // intentional onDelete to thread.delete() potentially twice during update cycle
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id;
+        channel = fields.One("Channel", { inverse: "thread" });
+        correspondent = fields.One("User", {
+            compute() {
+                return this.members[0];
+            },
+        });
+        members = fields.Many("User", { onDelete: (user) => user?.delete(), inverse: "threads" }); // intentional onDelete so that re-computed correspondent on delete
+    }).register(localRegistry);
+    (class User extends Record {
+        static id = "name";
+        name;
+        threads = fields.Many("Thread");
+    }).register(localRegistry);
+    const store = await start();
+    const john = store.User.insert("john");
+    const thread = store.Thread.insert({ channel: "general", members: [john] });
+    expectRecord(thread.correspondent).toEqual(john); // intentional observing correspondent field for compute on thread deletion
+    thread.delete();
+    expect(thread.exists()).toBe(false);
+});
+
+test("fields, getters and functions are inherited", async () => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        channel = fields.One("Channel", {
+            compute() {
+                return this.id;
+            },
+            inverse: "thread",
+        });
+        name;
+        get displayName() {
+            return `Thread: ${this.name}`;
+        }
+        getName() {
+            return `Thread: ${this.name}`;
+        }
+    }).register(localRegistry);
+    (class Channel extends Record {
+        static id = "id";
+        static _inherits = { Thread: "thread" };
+        id;
+        thread = fields.One("Thread", { inverse: "channel" });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({ id: 1, name: "General" });
+    expect(thread.name).toBe("General");
+    expect(thread.channel.name).toBe("General");
+    expect(thread.displayName).toBe("Thread: General");
+    expect(thread.channel.displayName).toBe("Thread: General");
+    expect(thread.getName()).toBe("Thread: General");
+    expect(thread.channel.getName()).toBe("Thread: General");
+});
+
+test("shadowed fields, getters and functions are not inherited", async () => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        channel = fields.One("Channel", {
+            compute() {
+                return this.id;
+            },
+            inverse: "thread",
+        });
+        name;
+        get displayName() {
+            return `Thread: ${this.name}`;
+        }
+        getName() {
+            return `Thread: ${this.name}`;
+        }
+    }).register(localRegistry);
+    (class Channel extends Record {
+        static id = "id";
+        static _inherits = { Thread: "thread" };
+        id;
+        thread = fields.One("Thread", { inverse: "channel" });
+        name;
+        get displayName() {
+            return `Channel: ${this.name}`;
+        }
+        getName() {
+            return `Channel: ${this.name}`;
+        }
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({ id: 1, name: "General" });
+    expect(thread.name).toBe("General");
+    expect(thread.channel.name).toBeEmpty();
+    expect(thread.displayName).toBe("Thread: General");
+    expect(thread.channel.displayName).toBe("Channel: undefined");
+    expect(thread.getName()).toBe("Thread: General");
+    expect(thread.channel.getName()).toBe("Channel: undefined");
+});
+
+test("accessing fields through empty _inherits parent returns empty values", async () => {
+    (class Partner extends Record {
+        static id = "id";
+        id;
+        name;
+        users = fields.Many("User", { inverse: "partner" });
+        partners = fields.Many("Partner");
+    }).register(localRegistry);
+    (class User extends Record {
+        static id = "id";
+        static _inherits = { Partner: "partner" };
+        id;
+        partner = fields.One("Partner", { inverse: "users" });
+    }).register(localRegistry);
+    const store = await start();
+    const user = store.User.insert({ id: 1 });
+    expect(user.partner).toBe(undefined);
+    expect(user.name).toBe(undefined);
+    expect(user.partners).toHaveLength(0);
 });

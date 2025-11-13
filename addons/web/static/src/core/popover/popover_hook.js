@@ -1,4 +1,4 @@
-import { onWillUnmount, status, useComponent } from "@odoo/owl";
+import { onWillUnmount, reactive, status, useComponent, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -24,25 +24,24 @@ import { useService } from "@web/core/utils/hooks";
  * @returns {PopoverHookReturnType}
  */
 export function makePopover(addFn, component, options) {
-    let removeFn = null;
-    function close() {
-        removeFn?.();
-    }
-    return {
+    return reactive({
+        _removeFn: null,
         open(target, props) {
-            close();
+            this.close();
             const newOptions = Object.create(options);
             newOptions.onClose = () => {
-                removeFn = null;
+                this._removeFn = null;
                 options.onClose?.();
             };
-            removeFn = addFn(target, component, props, newOptions);
+            this._removeFn = addFn(target, component, props, newOptions);
         },
-        close,
+        close() {
+            this._removeFn?.();
+        },
         get isOpen() {
-            return Boolean(removeFn);
+            return Boolean(this._removeFn);
         },
-    };
+    });
 }
 
 /**
@@ -66,7 +65,7 @@ export function usePopover(component, options = {}) {
             options.onClose?.();
         }
     };
-    const popover = makePopover(service.add, component, newOptions);
-    onWillUnmount(popover.close);
+    const popover = useState(makePopover(service.add, component, newOptions));
+    onWillUnmount(() => popover.close());
     return popover;
 }

@@ -11,6 +11,7 @@ export const projectTaskListView = {
     Controller: ProjectTaskListController,
     Model: ProjectTaskRelationalModel,
     Renderer: ProjectTaskListRenderer,
+    buttonTemplate: "project.ProjectTaskListView.Buttons",
 };
 
 registry.category("views").add("project_task_list", projectTaskListView);

@@ -4,13 +4,12 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests import chatbot_common
-from odoo.tests.common import JsonRpcException, new_test_user, tagged
+from odoo.tests.common import JsonRpcException, new_test_user
 from odoo.tools.misc import mute_logger
 from odoo.addons.mail.tests.common import freeze_all_time, MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
 
-@tagged("post_install", "-at_install")
 class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_duplicate(self):
@@ -131,6 +130,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 lambda m: m.partner_id == self.chatbot_script.operator_partner_id
             )
             guest_member = discuss_channel.channel_member_ids.filtered(lambda m: bool(m.guest_id))
+            self.env["mail.presence"]._update_presence(guest_member.guest_id)
             self_member._rtc_join_call()
             self.assertTrue(guest_member.rtc_inviting_session_id)
             self.assertFalse(bot_member.rtc_inviting_session_id)
@@ -158,6 +158,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             lambda m: m.partner_id == self.chatbot_script.operator_partner_id
         )
         member_bot_data = {
+            "channel_role": False,
             "create_date": fields.Datetime.to_string(member_bot.create_date),
             "fetched_message_id": False,
             "id": member_bot.id,
@@ -206,8 +207,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join = (
                 Store(bus_channel=member_emp._bus_channel()).add(discuss_channel).get_result()
             )
-            channel_data_join["discuss.channel"][0]["invited_member_ids"] = [["ADD", []]]
-            channel_data_join["discuss.channel"][0]["rtc_session_ids"] = [["ADD", []]]
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
@@ -269,6 +268,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "type": "discuss.channel/joined",
                         "payload": {
                             "channel_id": discuss_channel.id,
+                            "invite_to_rtc_call": False,
                             "data": channel_data_join,
                             "invited_by_user_id": self.env.user.id,
                         },
@@ -286,6 +286,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             "discuss.channel": [{"id": discuss_channel.id, "member_count": 3}],
                             "discuss.channel.member": [
                                 {
+                                    "channel_role": False,
                                     "create_date": fields.Datetime.to_string(
                                         member_emp.create_date
                                     ),
@@ -312,8 +313,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
                                     "country_id": self.env.ref("base.be").id,
                                     "id": self.partner_employee.id,
-                                    "im_status": "offline",
-                                    "im_status_access_token": self.partner_employee._get_im_status_access_token(),
                                     "is_public": False,
                                     "mention_token": self.partner_employee._get_mention_token(),
                                     "name": "Ernest Employee",
@@ -330,11 +329,16 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "payload": {
                             "discuss.channel": [
                                 {
-                                    "channel_member_ids": [["DELETE", [member_bot.id]]],
                                     "id": discuss_channel.id,
                                     "member_count": 2,
                                 }
-                            ]
+                            ],
+                            "discuss.channel.member": [
+                                {
+                                    "_DELETE": True,
+                                    "id": member_bot.id,
+                                }
+                            ],
                         },
                     },
                     {

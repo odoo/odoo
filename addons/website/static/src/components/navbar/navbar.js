@@ -1,26 +1,30 @@
-import { NavBar } from '@web/webclient/navbar/navbar';
-import { useService, useBus } from '@web/core/utils/hooks';
+import { NavBar } from "@web/webclient/navbar/navbar";
+import { useService, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 import { useEffect } from "@odoo/owl";
 
-const websiteSystrayRegistry = registry.category('website_systray');
+const websiteSystrayRegistry = registry.category("website_systray");
 websiteSystrayRegistry.add("UserMenu", { Component: UserMenu }, { sequence: 14 });
 
 patch(NavBar.prototype, {
     setup() {
         super.setup();
-        this.websiteService = useService('website');
-        this.websiteCustomMenus = useService('website_custom_menus');
+        this.websiteService = useService("website");
+        this.websiteCustomMenus = useService("website_custom_menus");
 
         // The navbar is rerendered with an event, as it can not naturally be
         // with props/state (the WebsitePreview client action and the navbar
         // are not related).
-        useBus(websiteSystrayRegistry, 'EDIT-WEBSITE', () => this.render(true));
+        useBus(websiteSystrayRegistry, "EDIT-WEBSITE", () => this.render(true));
 
-        if (this.env.debug && !websiteSystrayRegistry.contains('web.debug_mode_menu')) {
-            websiteSystrayRegistry.add('web.debug_mode_menu', registry.category('systray').get('web.debug_mode_menu'), {sequence: 100});
+        if (this.env.debug && !websiteSystrayRegistry.contains("web.debug_mode_menu")) {
+            websiteSystrayRegistry.add(
+                "web.debug_mode_menu",
+                registry.category("systray").get("web.debug_mode_menu"),
+                { sequence: 100 }
+            );
         }
         // Similar to what is done in web/navbar. When the app menu or systray
         // is updated, we need to adapt the navbar so that the "more" menu
@@ -41,7 +45,7 @@ patch(NavBar.prototype, {
             () => [adaptCounter]
         );
 
-        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', renderAndAdapt);
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", renderAndAdapt);
     },
 
     get shouldDisplayWebsiteSystray() {
@@ -59,11 +63,15 @@ patch(NavBar.prototype, {
             const websiteItems = websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
-                .filter((item) => ('isDisplayed' in item ? item.isDisplayed(this.env) : true))
+                .filter((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
                 .reverse();
             // Do not override the regular Odoo navbar if the only visible
             // elements are the debug items.
-            if (!websiteItems.every((item) => ['burger_menu', 'web.debug_mode_menu'].includes(item.key))) {
+            if (
+                !websiteItems.every((item) =>
+                    ["burger_menu", "web.debug_mode_menu"].includes(item.key)
+                )
+            ) {
                 return websiteItems;
             }
         }
@@ -75,8 +83,10 @@ patch(NavBar.prototype, {
      */
     get currentAppSections() {
         const currentAppSections = super.currentAppSections;
-        if (this.currentApp && this.currentApp.xmlid === 'website.menu_website_configuration') {
-            return this.websiteCustomMenus.addCustomMenus(currentAppSections).filter(section => section.childrenTree.length);
+        if (this.currentApp && this.currentApp.xmlid === "website.menu_website_configuration") {
+            return this.websiteCustomMenus
+                .addCustomMenus(currentAppSections)
+                .filter((section) => section.childrenTree.length);
         }
         return currentAppSections;
     },

@@ -4,8 +4,7 @@
 from unittest import skip
 
 from odoo.fields import Command
-from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
-from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.tests import Form
 from odoo.tests.common import tagged
 
@@ -51,6 +50,7 @@ class TestMrpValuationCommon(TestStockValuationCommon):
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpValuationStandard(TestMrpValuationCommon):
     def test_fifo_fifo_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -458,7 +458,7 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
 
 @tagged("post_install", "-at_install")
 @skip('Temporary to fast merge new valuation')
-class TestMrpStockValuation(TestStockValuationBase):
+class TestMrpStockValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

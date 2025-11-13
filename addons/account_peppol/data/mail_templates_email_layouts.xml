@@ -5,7 +5,7 @@
                   name="Mail: mail notification layout with responsible signature (user_id of the record) and Peppol status"
                   inherit_id="mail.mail_notification_layout_with_responsible_signature"
                   primary="True">
-            <xpath expr="//t[hasclass('o_signature')]" position="after">
+            <xpath expr="//t[@name='o_signature']" position="after">
                 <div id="peppol_status" t-if="peppol_info" style="font-size: 13px;">
                     <br/><br/>
                     <t t-if="peppol_info['is_peppol_sent']">

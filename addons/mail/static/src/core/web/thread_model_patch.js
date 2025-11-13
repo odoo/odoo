@@ -1,7 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
-import { fields } from "../common/record";
+import { fields } from "@mail/model/export";
 import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
@@ -14,9 +14,7 @@ const threadPatch = {
         this.recipients = fields.Many("mail.followers");
         this.activities = fields.Many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
-            onDelete(r) {
-                r.remove();
-            },
+            onDelete: (r) => r?.remove(),
         });
         /** @type {boolean} */
         this.isDisplayedInDiscussAppDesktop = fields.Attr(undefined, {
@@ -79,15 +77,14 @@ const threadPatch = {
     },
     async unpin() {
         await this.store.chatHub.initPromise;
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        await chatWindow?.close();
+        this.channel?.chatWindow?.close();
         await super.unpin(...arguments);
     },
     async follow() {
         const data = await rpc("/mail/thread/subscribe", {
             res_model: this.model,
             res_id: this.id,
-            partner_ids: [this.store.self.id],
+            partner_ids: [this.store.self_user?.partner_id?.id],
         });
         this.store.insert(data);
     },

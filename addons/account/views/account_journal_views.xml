@@ -169,9 +169,13 @@
                                             </a>
                                         </div>
                                         <div class="o_row" colspan="2" dir="ltr" invisible="not display_alias_fields">
-                                            <label string="Email Alias" for="alias_name"/>
-                                            <field name="alias_name" placeholder="alias"/>@
-                                            <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
+                                            <label string="Email Alias" for="alias_name" class="fw-medium"/>
+                                            <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
+                                            <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}" class="o_field_highlight"/>
+                                            <div class="w-25">
+                                                <field name="alias_email" widget="CopyClipboardButton" invisible="not alias_email"
+                                                    class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
+                                            </div>
                                         </div>
                                         <field name="incoming_einvoice_notification_email" invisible="type != 'purchase'" placeholder="Enter an email to get notified"/>
                                     </group>

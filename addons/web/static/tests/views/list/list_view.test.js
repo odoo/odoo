@@ -1,4 +1,4 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { expect, getFixture, mockSendBeacon, test } from "@odoo/hoot";
 import {
     clear,
     click,
@@ -190,10 +190,25 @@ class Currency extends models.Model {
         ],
     });
     inverse_rate = fields.Float();
+    rate_date = fields.Date();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
-        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
+        {
+            id: 1,
+            name: "USD",
+            symbol: "$",
+            position: "before",
+            inverse_rate: 1,
+            rate_date: "2017-01-08",
+        },
+        {
+            id: 2,
+            name: "EUR",
+            symbol: "€",
+            position: "after",
+            inverse_rate: 0.5,
+            rate_date: "2019-06-13",
+        },
     ];
 }
 
@@ -535,6 +550,57 @@ test(`editable list with edit="0"`, async () => {
     await contains(`.o_data_cell`).click();
     expect(`tbody tr.o_selected_row`).toHaveCount(0, { message: "should not have editable row" });
     expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
+});
+
+test.tags("desktop");
+test(`[Offline] editable list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top"><field name="foo"/></list>`,
+    });
+    expect(`tbody tr.o_data_row[data-id]`).toHaveCount(4);
+
+    expect(`.o_searchview`).toHaveCount(1);
+    await contains(`.o_data_cell`).click();
+    expect(`tbody tr.o_selected_row`).toHaveCount(1, { message: "should have editable row" });
+
+    getService("offline").status.offline = true;
+    await animationFrame();
+    expect(`.o_searchview`).toHaveCount(0);
+    await contains(`.o_data_cell`).click();
+    expect(`tbody tr.o_selected_row`).toHaveCount(0, { message: "should not have editable row" });
+});
+
+test.tags("desktop");
+test(`[Offline] list with priority widget`, async () => {
+    Foo._fields.priority = fields.Selection({
+        selection: [
+            [0, "Not Prioritary"],
+            [1, "Prioritary"],
+        ],
+        default: 0,
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="priority" widget="priority"/>
+                <field name="foo"/>
+            </list>`,
+    });
+
+    expect(".o_field_widget[name=priority] .o_priority_star").not.toHaveClass("o_disabled");
+
+    getService("offline").status.offline = true;
+    await animationFrame();
+    expect(".o_field_widget[name=priority] .o_priority_star").toHaveClass("o_disabled");
+
+    getService("offline").status.offline = false;
+    await animationFrame();
+    expect(".o_field_widget[name=priority] .o_priority_star").not.toHaveClass("o_disabled");
 });
 
 test(`non-editable list with open_form_view`, async () => {
@@ -4667,7 +4733,7 @@ test(`monetary aggregates in grouped list`, async () => {
     expect(`.o_list_footer .o_list_number span:first`).toHaveText("$ 1,400.00?");
     await toggleMultiCurrencyPopover(".o_list_footer .o_list_number span:first sup");
     expect(".o_multi_currency_popover").toHaveCount(1);
-    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
+    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50 on Jun 13");
 });
 
 test(`monetary aggregates in grouped list (!= currencies in same group)`, async () => {
@@ -4923,7 +4989,7 @@ test(`aggregates monetary (different currencies)`, async () => {
     expect(`tfoot`).toHaveText("$ 1,400.00?");
     await toggleMultiCurrencyPopover("tfoot span sup");
     expect(".o_multi_currency_popover").toHaveCount(1);
-    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
+    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50 on Jun 13");
 });
 
 test(`aggregates monetary (currency field not in view)`, async () => {
@@ -7224,8 +7290,6 @@ test(`empty list with sample data`, async () => {
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(10);
     expect(`.o_nocontent_help`).toHaveCount(1);
-    expect(".ribbon").toHaveCount(1);
-    expect(".ribbon").toHaveText("SAMPLE DATA");
 
     // Check list sample data
     expect(`.o_data_row .o_data_cell:eq(0)`).toHaveText("", {
@@ -7254,7 +7318,6 @@ test(`empty list with sample data`, async () => {
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_nocontent_help`).toHaveCount(1);
-    expect(".ribbon").toHaveCount(0);
 
     await toggleMenuItem("False Domain");
     await toggleMenuItem("True Domain");
@@ -7262,7 +7325,6 @@ test(`empty list with sample data`, async () => {
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_nocontent_help`).toHaveCount(0);
-    expect(".ribbon").toHaveCount(0);
 });
 
 test(`refresh empty list with sample data`, async () => {
@@ -7413,7 +7475,6 @@ test(`non empty list with sample data`, async () => {
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
-    expect(".ribbon").toHaveCount(0);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("true_domain");
@@ -7421,7 +7482,6 @@ test(`non empty list with sample data`, async () => {
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(0);
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
-    expect(".ribbon").toHaveCount(0);
 });
 
 test(`click on header in empty list with sample data`, async () => {
@@ -7867,6 +7927,40 @@ test(`groupby node with edit button`, async () => {
         groupBy: ["currency_id"],
     });
     await contains(`.o_group_header .o_group_buttons button:eq(1)`).click();
+    expect.verifySteps(["doAction"]);
+});
+
+test(`edit button does not trigger fold group`, async () => {
+    mockService("action", {
+        doAction(action) {
+            expect.step("doAction");
+            expect(action).toEqual({
+                context: { create: false },
+                res_id: 1,
+                res_model: "res.currency",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            });
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <groupby name="currency_id">
+                    <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                </groupby>
+            </list>
+        `,
+        groupBy: ["currency_id"],
+    });
+    expect(`.o_group_open`).toHaveCount(0);
+    await contains(`.o_group_header:eq(0)`).click();
+    expect(`.o_group_open`).toHaveCount(1);
+    await contains(`.o_group_header .o_group_buttons button:eq(0)`).click();
+    expect(`.o_group_open`).toHaveCount(1);
     expect.verifySteps(["doAction"]);
 });
 
@@ -10932,6 +11026,48 @@ test(`list daterange with empty start date and end date`, async () => {
     expect(queryAllTexts(`.o_data_row:eq(0) .o_field_widget[name=date] span`)).toEqual([
         "Jan 25, 2017",
     ]);
+});
+
+test(`list daterange in form: open/close picker`, async () => {
+    Foo._fields.foo_o2m = fields.One2many({ relation: "foo" });
+    Foo._fields.date_end = fields.Date();
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="foo_o2m">
+                        <list editable="bottom">
+                            <field name="date" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': '1'}"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(".o_field_daterange[name=date]").click();
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toBeDisplayed();
+    expect("input[data-field=date]").toBeFocused();
+
+    await contains(getPickerCell("15")).click();
+    await contains(getPickerCell("20")).click();
+
+    // Close picker
+    await pointerDown(`.o_view_controller`);
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+
+    // Wait to check if the picker is still closed
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -15724,9 +15860,17 @@ test(`Auto save: save on closing tab/browser`, async () => {
 });
 
 test(`Auto save: save on closing tab/browser (pending changes)`, async () => {
-    onRpc("foo", "web_save", ({ args }) => {
-        expect.step("web_save");
-        expect(args).toEqual([[1], { foo: "test" }]);
+    const sendBeaconDeferred = new Deferred();
+    mockSendBeacon((_, blob) => {
+        expect.step("sendBeacon");
+        blob.text().then((r) => {
+            const { params } = JSON.parse(r);
+            if (params.method === "web_save" && params.model === "foo") {
+                expect(params.args).toEqual([[1], { foo: "test" }]);
+            }
+            sendBeaconDeferred.resolve();
+        });
+        return true;
     });
 
     await mountView({
@@ -15737,12 +15881,16 @@ test(`Auto save: save on closing tab/browser (pending changes)`, async () => {
     await contains(`.o_data_cell`).click();
     await contains(`.o_data_cell [name=foo] input`).edit("test", { confirm: false });
 
-    await unload();
-    await animationFrame();
-    expect.verifySteps(["web_save"]);
+    const [event] = await unload();
+    await sendBeaconDeferred;
+    expect.verifySteps(["sendBeacon"]);
+    expect(event.defaultPrevented).toBe(false);
 });
 
 test(`Auto save: save on closing tab/browser (invalid field)`, async () => {
+    mockSendBeacon(() => {
+        expect.step("sendBeacon"); // should not be called
+    });
     onRpc("foo", "web_save", () => {
         expect.step("save"); // should not be called
     });
@@ -15771,9 +15919,18 @@ test(`Auto save: save on closing tab/browser (onchanges + pending changes)`, asy
 
     const deferred = new Deferred();
     onRpc("foo", "onchange", () => deferred);
-    onRpc("foo", "web_save", ({ args }) => {
-        expect.step("web_save");
-        expect(args).toEqual([[1], { int_field: 2021 }]);
+
+    const sendBeaconDeferred = new Deferred();
+    mockSendBeacon((_, blob) => {
+        expect.step("sendBeacon");
+        blob.text().then((r) => {
+            const { params } = JSON.parse(r);
+            if (params.method === "web_save" && params.model === "foo") {
+                expect(params.args).toEqual([[1], { int_field: 2021 }]);
+            }
+            sendBeaconDeferred.resolve();
+        });
+        return true;
     });
 
     await mountView({
@@ -15790,8 +15947,8 @@ test(`Auto save: save on closing tab/browser (onchanges + pending changes)`, asy
     await contains(`.o_data_cell [name="int_field"] input`).edit("2021", { confirm: "blur" });
 
     await unload();
-    await animationFrame();
-    expect.verifySteps(["web_save"]);
+    await sendBeaconDeferred;
+    expect.verifySteps(["sendBeacon"]);
 });
 
 test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
@@ -15803,9 +15960,18 @@ test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
 
     const deferred = new Deferred();
     onRpc("foo", "onchange", () => deferred);
-    onRpc("foo", "web_save", ({ args }) => {
-        expect.step("web_save");
-        expect(args).toEqual([[1], { foo: "test", int_field: 2021 }]);
+
+    const sendBeaconDeferred = new Deferred();
+    mockSendBeacon((_, blob) => {
+        expect.step("sendBeacon");
+        blob.text().then((r) => {
+            const { params } = JSON.parse(r);
+            if (params.method === "web_save" && params.model === "foo") {
+                expect(params.args).toEqual([[1], { foo: "test", int_field: 2021 }]);
+            }
+            sendBeaconDeferred.resolve();
+        });
+        return true;
     });
 
     await mountView({
@@ -15823,8 +15989,8 @@ test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
     await contains(`.o_data_cell [name="foo"] input`).edit("test", { confirm: "blur" });
 
     await unload();
-    await animationFrame();
-    expect.verifySteps(["web_save"]);
+    await sendBeaconDeferred;
+    expect.verifySteps(["sendBeacon"]);
 });
 
 test.tags("desktop");
@@ -19212,4 +19378,93 @@ test(`multi edition: many2many_tags add few tags in one time`, async () => {
     expect(`.modal .o_field_many2many_tags .badge:eq(0)`).toHaveText("Value 3", {
         message: "should have display_name in badge",
     });
+});
+
+test.tags("desktop");
+test("multi_edit: must work for copy/paster or operation", async () => {
+    Foo._records[1].datetime = "1989-05-03 12:51:35";
+    Foo._records[2].datetime = "1987-11-13 12:12:34";
+    Foo._records[3].datetime = "2019-04-09 03:21:35";
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="datetime"/>
+            </list>
+        `,
+    });
+
+    await contains(`.o_list_record_selector`).click();
+    await contains(`.o_data_cell[name=datetime]`).click();
+    await animationFrame();
+    await waitFor(`.o_datetime_picker`);
+    await contains(`input[data-field=datetime]`).edit("+125d", { confirm: "tab" });
+    expect(`tbody tr:eq(0) td[name=datetime]`).toHaveText("Jul 14, 11:30 AM");
+    await contains(`.modal button:contains(update)`).click();
+    expect(".modal").toHaveCount(0);
+    expect(queryAllTexts(`.o_data_cell`)).toEqual([
+        "yop",
+        "Jul 14, 11:30 AM",
+        "blip",
+        "Jul 14, 11:30 AM",
+        "gnap",
+        "Jul 14, 11:30 AM",
+        "blip",
+        "Jul 14, 11:30 AM",
+    ]);
+});
+
+test.tags("mobile");
+test("scroll position is restored when coming back to list view", async () => {
+    Foo._views = {
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 30; i++) {
+        Foo._records.push({ id: 100 + i, foo: `Record ${i}` });
+    }
+
+    let def;
+    onRpc("web_search_read", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // simulate a scroll in the list view
+    queryOne(".o_list_view").scrollTop = 200;
+
+    await getService("action").switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+
+    // the list is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_renderer").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_list_renderer").toHaveCount(1);
+    expect(".o_list_view").toHaveProperty("scrollTop", 200);
 });

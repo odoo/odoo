@@ -1,6 +1,7 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProductTemplate(TransactionCase):
     def test_name_search(self):
         partner = self.env['res.partner'].create({

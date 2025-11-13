@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_slides.tests import common
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCoursePurchaseFlow(common.SlidesCase):
     @classmethod
     def setUpClass(cls):

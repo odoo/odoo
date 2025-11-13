@@ -77,6 +77,12 @@ class ProjectProject(models.Model):
         for project in self:
             project.is_favorite = project in favorite_project_ids
 
+    def _compute_sql_is_favorite(self, alias, query):
+        return SQL(
+            "%s IN (SELECT project_id FROM project_favorite_user_rel WHERE user_id = %s)",
+            SQL.identifier(alias, 'id'), self.env.uid,
+        )
+
     def _set_favorite_user_ids(self, is_favorite):
         self_sudo = self.sudo() # To allow project users to set projects as favorite
         if is_favorite:
@@ -97,8 +103,8 @@ class ProjectProject(models.Model):
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         string='Members', export_string_translation=False, copy=False)
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite',
-        compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False)
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite', compute_sql='_compute_sql_is_favorite',
+        compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False, copy=True)
     label_tasks = fields.Char(string='Use Tasks as', default=lambda s: s.env._('Tasks'), translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
@@ -700,16 +706,6 @@ class ProjectProject(models.Model):
         self._check_project_group_with_field('allow_task_dependencies', 'project.group_project_task_dependencies')
         self._check_project_group_with_field('allow_milestones', 'project.group_project_milestone')
         self._check_project_group_with_field('allow_recurring_tasks', 'project.group_project_recurring_tasks')
-
-    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
-        if field_name == 'is_favorite':
-            sql_field = SQL(
-                "%s IN (SELECT project_id FROM project_favorite_user_rel WHERE user_id = %s)",
-                SQL.identifier(alias, 'id'), self.env.uid,
-            )
-            return SQL("%s %s %s", sql_field, direction, nulls)
-
-        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """

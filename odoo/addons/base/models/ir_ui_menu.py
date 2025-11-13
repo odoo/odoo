@@ -19,6 +19,7 @@ class IrUiMenu(models.Model):
     _order = "sequence,id"
     _parent_store = True
     _allow_sudo_commands = False
+    _clear_cache_name = 'default'
 
     name = fields.Char(string='Menu', required=True, translate=True)
     active = fields.Boolean(default=True)
@@ -145,14 +146,12 @@ class IrUiMenu(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.registry.clear_cache()
         for values in vals_list:
             if 'web_icon' in values:
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super().create(vals_list)
 
     def write(self, vals):
-        self.env.registry.clear_cache()
         if 'web_icon' in vals:
             vals['web_icon_data'] = self._compute_web_icon_data(vals.get('web_icon'))
         return super().write(vals)
@@ -179,7 +178,6 @@ class IrUiMenu(models.Model):
         direct_children = self.with_context(active_test=False).search([('parent_id', 'in', self.ids)])
         direct_children.write({'parent_id': False})
 
-        self.env.registry.clear_cache()
         return super(IrUiMenu, self).unlink()
 
     def copy(self, default=None):

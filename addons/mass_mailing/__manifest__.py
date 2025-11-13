@@ -110,17 +110,20 @@
 
             'html_editor/static/src/scss/bootstrap_overridden.scss',
 
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/lib/odoo_ui_icons/*',
+            ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
-            'web/static/src/scss/fontawesome_overridden.scss',
 
-            ('include', 'html_builder.assets_inside_builder_iframe'),
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
+        ],
+        # style assets used to view the mail content in Odoo, but not used
+        # during html conversion, specific to the builder
+        'mass_mailing.assets_inside_builder_iframe': [
+            ('include', 'html_builder.assets_inside_builder_iframe'),
+            'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
         'mass_mailing.iframe_add_dialog': [
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',

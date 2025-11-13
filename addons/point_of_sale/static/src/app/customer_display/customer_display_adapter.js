@@ -30,11 +30,12 @@ export class CustomerDisplayPosAdapter {
     }
 
     formatOrderData(order) {
+        this.currency = order.currency;
         this.data = {
             finalized: order.finalized,
             general_customer_note: order.general_customer_note,
-            amount: formatCurrency(order.getTotalWithTax() || 0, order.currency),
-            change: order.getChange() && formatCurrency(order.getChange(), order.currency),
+            amount: order.currencyDisplayPrice,
+            change: order.change && formatCurrency(order.change, order.currency),
             paymentLines: order.payment_ids.map((pl) => this.getPaymentData(pl)),
             lines: order.lines.map((l) => this.getOrderlineData(l)),
             qrPaymentData: toRaw(order.getSelectedPaymentline()?.qrPaymentData),
@@ -49,23 +50,21 @@ export class CustomerDisplayPosAdapter {
             customerNote: line.getCustomerNote() || "",
             internalNote: line.getNote() || "[]",
             productName: line.getFullProductName(),
-            price: line.getPriceString(),
+            price: line.currencyDisplayPrice,
             qty: line.getQuantityStr().qtyStr,
             unit: line.product_id.uom_id ? line.product_id.uom_id.name : "",
-            unitPrice: formatCurrency(line.unitDisplayPrice, line.currency),
+            unitPrice: line.currencyDisplayPriceUnit,
             packLotLines: line.packLotLines,
             comboParent: line.combo_parent_id?.getFullProductName?.() || "",
-            price_without_discount: formatCurrency(
-                line.getUnitDisplayPriceBeforeDiscount(),
-                line.currency
-            ),
+            price_without_discount: formatCurrency(line.displayPriceNoDiscount, line.currency),
+            isSelected: line.isSelected(),
         };
     }
 
     getPaymentData(payment) {
         return {
             name: payment.payment_method_id.name,
-            amount: formatCurrency(payment.amount, payment.pos_order_id.currency),
+            amount: formatCurrency(payment.amount, this.currency),
         };
     }
 }

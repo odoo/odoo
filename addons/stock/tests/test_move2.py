@@ -7,12 +7,14 @@ from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 
 from odoo import Command
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.tools import float_is_zero, float_compare
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
         picking_client = self.env['stock.picking'].create({
@@ -923,6 +925,8 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(return_pick.move_line_ids[1].quantity, 6)
         self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.in_type_id)
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):
         """ Check the good behavior of creating a backorder for an available stock move.
@@ -1102,10 +1106,7 @@ class TestSinglePicking(TestStockCommon):
             'state': 'draft',
         })
         # Avoid to merge move3 and move4 for the test case
-        self.env['ir.config_parameter'].create({
-            'key': 'stock.merge_only_same_date',
-            'value': True
-        })
+        self.env['ir.config_parameter'].set_bool('stock.merge_only_same_date', True)
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 4,
@@ -2605,6 +2606,7 @@ class TestSinglePicking(TestStockCommon):
         ])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockUOM(TestStockCommon):
     @classmethod
     def setUpClass(cls):
@@ -2724,6 +2726,7 @@ class TestStockUOM(TestStockCommon):
         self.assertEqual(move_line.quantity_product_uom, quant.reserved_quantity)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRoutes(TestStockCommon):
     @classmethod
     def setUpClass(cls):
@@ -2994,6 +2997,7 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move B should be "make_to_stock"')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAutoAssign(TestStockCommon):
     def create_pick_ship(self):
         self.warehouse_1.delivery_route_id.rule_ids.action = 'pull'
@@ -3373,3 +3377,101 @@ class TestAutoAssign(TestStockCommon):
 
         next_picking = receipt._get_next_transfers()
         self.assertEqual(next_picking.move_ids.description_picking, 'transfer')
+
+
+class TestPickShipBackorder(TestStockCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.picking_type_out = cls.env["stock.picking.type"].search(
+            [("code", "=", "outgoing")], limit=1
+        )
+        cls.picking_type_out.use_create_lots = True
+        cls.picking_type_out.write({"sequence_code": "WH/OUT"})
+
+        cls.product_lot = cls.env["product.product"].create(
+            {
+                "name": "Lot Product",
+                "type": "consu",
+                "is_storable": True,
+                "tracking": "lot",
+                "uom_id": cls.env.ref("uom.product_uom_unit").id,
+            }
+        )
+
+        cls.lot1 = cls.env["stock.lot"].create(
+            {
+                "name": "LOT001",
+                "product_id": cls.product_lot.id,
+            }
+        )
+        cls.lot2 = cls.env["stock.lot"].create(
+            {
+                "name": "LOT002",
+                "product_id": cls.product_lot.id,
+            }
+        )
+
+        cls.warehouse = cls.env["stock.warehouse"].search([], limit=1)
+        cls.stock_location = cls.warehouse.out_type_id.default_location_src_id or cls.warehouse.lot_stock_id
+
+        cls.env["stock.quant"]._update_available_quantity(
+            cls.product_lot, cls.stock_location, 5.0, lot_id=cls.lot1
+        )
+        cls.env["stock.quant"]._update_available_quantity(
+            cls.product_lot, cls.stock_location, 5.0, lot_id=cls.lot2
+        )
+
+    def test_pick_assign_and_backorder(self):
+        cust = self.env.ref("stock.stock_location_customers")
+        ref = self.env["stock.reference"].create({"name": "sale order"})
+        self.warehouse.delivery_steps = "pick_ship"
+        self.env["stock.rule"].run(
+            [
+                self.env["stock.rule"].Procurement(
+                    self.product_lot,
+                    10.0,
+                    self.product_lot.uom_id,
+                    cust,
+                    "sale_order",
+                    ref.name,
+                    self.warehouse.company_id,
+                    {"warehouse_id": self.warehouse, "reference_ids": ref},
+                )
+            ]
+        )
+        picking = self.env["stock.picking"].search([("origin", "=", ref.name)], limit=1)
+
+        picking.action_confirm()
+        picking.action_assign()
+
+        move_line_obj = picking.move_ids.move_line_ids
+
+        pack = self.env["stock.package"].create({"name": "Test Package"})
+        move_line_obj[0].write({"quantity": 2.0, "lot_id": self.lot1})
+        move_line_obj[1].write({"quantity": 2.0, "lot_id": self.lot2})
+        picking.move_ids.move_line_ids = [
+            Command.create(
+                {
+                    "picking_id": picking.id,
+                    "move_id": picking.move_ids[0].id,
+                    "product_id": self.product_lot.id,
+                    "lot_id": self.lot1.id,
+                    "quantity": 3.0,
+                    "result_package_id": pack.id,
+                }
+            )
+        ]
+
+        picking.picking_type_id.create_backorder = "always"
+        picking.button_validate()
+
+        backorder = self.env["stock.picking"].search(
+            [("backorder_id", "=", picking.id)]
+        )
+
+        self.assertTrue(backorder, "Backorder should exist")
+
+        backorder.action_assign()
+        backorder.button_validate()
+        self.assertEqual(backorder.state, "done")

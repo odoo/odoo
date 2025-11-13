@@ -36,6 +36,9 @@ from . import mail_message_subtype
 from . import mail_message_translation
 from . import mail_message
 from . import mail_mail
+from . import mail_poll
+from . import mail_poll_option
+from . import mail_poll_vote
 from . import mail_presence
 from . import mail_push
 from . import mail_push_device

@@ -15,7 +15,7 @@ export class WebsiteLoader extends Component {
 
         const initialState = {
             isVisible: false,
-            title: '',
+            title: "",
             flag: false,
             showTips: false,
             selectedFeatures: [],
@@ -26,19 +26,23 @@ export class WebsiteLoader extends Component {
             showCloseButton: false,
         };
 
-        const defaultMessages = [{
-            title: _t("Building your website."),
-            description: _t("Applying your colors and design..."),
-            flag: "colors",
-        }, {
-            title: _t("Building your website."),
-            description: _t("Searching your images...."),
-            flag: "images",
-        }, {
-            title: _t("Building your website."),
-            description: _t("Generating inspiring text..."),
-            flag: "text",
-        }];
+        const defaultMessages = [
+            {
+                title: _t("Building your website."),
+                description: _t("Applying your colors and design..."),
+                flag: "colors",
+            },
+            {
+                title: _t("Building your website."),
+                description: _t("Searching your images...."),
+                flag: "images",
+            },
+            {
+                title: _t("Building your website."),
+                description: _t("Generating inspiring text..."),
+                flag: "text",
+            },
+        ];
 
         let messagesInterval;
 
@@ -52,13 +56,17 @@ export class WebsiteLoader extends Component {
         useEffect(
             (selectedFeatures) => {
                 if (this.state.showWaitingMessages) {
-                    let messagesToDisplay = [...defaultMessages]; // Start with defaultMessages
+                    const messagesToDisplay = [...defaultMessages]; // Start with defaultMessages
                     if (selectedFeatures.length > 0) {
                         // Merge defaultMessages with the relevant waitingMessages
                         messagesToDisplay.push(...this.getWaitingMessages(selectedFeatures));
                     }
 
-                    this.waitingMessages.splice(0, this.waitingMessages.length, ...messagesToDisplay);
+                    this.waitingMessages.splice(
+                        0,
+                        this.waitingMessages.length,
+                        ...messagesToDisplay
+                    );
 
                     // Request the number of modules/dependencies to install
                     // and already installed
@@ -173,11 +181,12 @@ export class WebsiteLoader extends Component {
         let currentProgress = 0;
         // This controls the speed of the progress bar.
         const progressStep = isSomethingToInstall ? 0.04 : 0.02;
-        let progressForAfterModules = isSomethingToInstall ? 30 : 100;
-        let progressForAllModules = 100 - progressForAfterModules;
+        const progressForAfterModules = isSomethingToInstall ? 30 : 100;
+        const progressForAllModules = 100 - progressForAfterModules;
         let lastTotalInstalled = 0;
-        let progressPerModule = isSomethingToInstall ?
-            progressForAllModules / nbModulesToInstall : 0;
+        const progressPerModule = isSomethingToInstall
+            ? progressForAllModules / nbModulesToInstall
+            : 0;
 
         this.updateProgressInterval = setInterval(() => {
             if (this.featuresInstallInfo.nbInstalled !== lastTotalInstalled) {
@@ -186,10 +195,13 @@ export class WebsiteLoader extends Component {
                 lastTotalInstalled = this.featuresInstallInfo.nbInstalled;
             }
             currentProgress += progressStep;
-            const limit = this.featuresInstallInfo.nbInstalled === nbModulesToInstall ?
-                progressForAfterModules : progressPerModule;
-            this.state.progressPercentage = (lastTotalInstalled * progressPerModule) +
-                Math.atan(currentProgress) / (Math.PI / 2) * limit;
+            const limit =
+                this.featuresInstallInfo.nbInstalled === nbModulesToInstall
+                    ? progressForAfterModules
+                    : progressPerModule;
+            this.state.progressPercentage =
+                lastTotalInstalled * progressPerModule +
+                (Math.atan(currentProgress) / (Math.PI / 2)) * limit;
         }, 100);
     }
     /**
@@ -203,13 +215,15 @@ export class WebsiteLoader extends Component {
         const installInfo = await rpc(
             "/website/track_installing_modules",
             {
-                'selected_features': selectedFeatures,
-                'total_features': this.featuresInstallInfo.total,
+                selected_features: selectedFeatures,
+                total_features: this.featuresInstallInfo.total,
             },
             { silent: true }
         );
-        if (!this.featuresInstallInfo.total
-            || this.featuresInstallInfo.nbInstalled !== installInfo.nbInstalled) {
+        if (
+            !this.featuresInstallInfo.total ||
+            this.featuresInstallInfo.nbInstalled !== installInfo.nbInstalled
+        ) {
             this.featuresInstallInfo = installInfo;
         }
         this.initProgressBar();
@@ -225,49 +239,57 @@ export class WebsiteLoader extends Component {
      * @returns {Object[]} - the messages filtered by the selected features
      */
     getWaitingMessages(selectedFeatures) {
-        const websiteFeaturesMessages = [{
-            id: 5,
-            title: _t("Adding features."),
-            name: _t("blog"),
-            description: _t("Enabling your %s."),
-            flag: "generic",
-        }, {
-            id: 7,
-            title: _t("Adding features."),
-            name: _t("recruitment platform"),
-            description: _t("Integrating your %s."),
-            flag: "generic",
-        }, {
-            id: 8,
-            title: _t("Adding features."),
-            name: _t("online store"),
-            description: _t("Activating your %s."),
-            flag: "generic",
-        }, {
-            id: 9,
-            title: _t("Adding features."),
-            name: _t("online appointment system"),
-            description: _t("Configuring your %s."),
-            flag: "generic",
-        }, {
-            id: 10,
-            title: _t("Adding features."),
-            name: _t("forum"),
-            description: _t("Setting up your %s."),
-            flag: "generic",
-        }, {
-            id: 12,
-            title: _t("Adding features."),
-            name: _t("e-learning platform"),
-            description: _t("Installing your %s."),
-            flag: "generic",
-        }, {
-            // Always the last message if there is at least 1 feature selected.
-            id: "last",
-            title: _t("Finalizing."),
-            description: _t("Activating the last features."),
-            flag: "generic",
-        }];
+        const websiteFeaturesMessages = [
+            {
+                id: 5,
+                title: _t("Adding features."),
+                name: _t("blog"),
+                description: _t("Enabling your %s."),
+                flag: "generic",
+            },
+            {
+                id: 7,
+                title: _t("Adding features."),
+                name: _t("recruitment platform"),
+                description: _t("Integrating your %s."),
+                flag: "generic",
+            },
+            {
+                id: 8,
+                title: _t("Adding features."),
+                name: _t("online store"),
+                description: _t("Activating your %s."),
+                flag: "generic",
+            },
+            {
+                id: 9,
+                title: _t("Adding features."),
+                name: _t("online appointment system"),
+                description: _t("Configuring your %s."),
+                flag: "generic",
+            },
+            {
+                id: 10,
+                title: _t("Adding features."),
+                name: _t("forum"),
+                description: _t("Setting up your %s."),
+                flag: "generic",
+            },
+            {
+                id: 12,
+                title: _t("Adding features."),
+                name: _t("e-learning platform"),
+                description: _t("Installing your %s."),
+                flag: "generic",
+            },
+            {
+                // Always the last message if there is at least 1 feature selected.
+                id: "last",
+                title: _t("Finalizing."),
+                description: _t("Activating the last features."),
+                flag: "generic",
+            },
+        ];
 
         const filteredIds = [...selectedFeatures, "last"];
         const messagesList = websiteFeaturesMessages.filter((msg) => {

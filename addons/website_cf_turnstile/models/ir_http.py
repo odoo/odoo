@@ -18,7 +18,7 @@ class IrHttp(models.AbstractModel):
         """Add the Turnstile public key to the given session_info object"""
         session = super().get_frontend_session_info()
 
-        site_key = self.env['ir.config_parameter'].sudo().get_param('cf.turnstile_site_key')
+        site_key = self.env['ir.config_parameter'].sudo().get_str('cf.turnstile_site_key')
         if site_key:
             session['turnstile_site_key'] = site_key
 
@@ -65,7 +65,7 @@ class IrHttp(models.AbstractModel):
                      internal-error: The request failed.
             :rtype: str
         """
-        private_key = request.env['ir.config_parameter'].sudo().get_param('cf.turnstile_secret_key')
+        private_key = request.env['ir.config_parameter'].sudo().get_str('cf.turnstile_secret_key')
         if not private_key:
             return 'no_secret'
         try:

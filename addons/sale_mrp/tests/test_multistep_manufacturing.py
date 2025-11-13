@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultistepManufacturing(TestMrpCommon):
 
     @classmethod

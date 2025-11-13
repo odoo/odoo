@@ -64,7 +64,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
         self.company_data['default_journal_purchase'].restrict_mode_hash_table = True
         move = self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
-        in_invoice = self.init_invoice("in_invoice", self.partner_a, "2023-01-01", amounts=[1000], post=True)
+        in_invoice = self._create_invoice_one_line(price_unit=1000, move_type='in_invoice', partner_id=self.partner_a.id, post=True)
         # in_invoice and out_invoice should both be hashed on post
         self.assertNotEqual(move.inalterable_hash, False)
         self.assertNotEqual(in_invoice.inalterable_hash, False)

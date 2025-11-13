@@ -5,6 +5,7 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as ChoseComboPopup from "@point_of_sale/../tests/pos/tours/utils/chose_combo_popup_util";
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 
@@ -601,10 +602,12 @@ export function selectedOrderlineHasDirect(productName, quantity, price) {
         price,
     });
 }
-export function orderComboLineHas(productName, quantity) {
+export function orderComboLineHas(productName, quantity, priceUnit, attributeLine = "") {
     return Order.hasLine({
         productName,
         quantity,
+        priceUnit,
+        attributeLine,
     });
 }
 export function orderLineHas(productName, quantity, price) {
@@ -645,6 +648,9 @@ export function searchProduct(string) {
             run: `edit ${string}`,
         },
     ];
+}
+export function subtotalAmountIs(amount) {
+    return inLeftSide(...Order.hasSubtotal(amount));
 }
 export function totalAmountIs(amount) {
     return inLeftSide(...Order.hasTotal(amount));
@@ -974,6 +980,76 @@ export function clickFastPaymentButton(paymentMethodName) {
         {
             content: `Select ${paymentMethodName} fast Payment Method`,
             trigger: `.product-screen button:contains(${paymentMethodName})`,
+            run: "click",
+        },
+    ];
+}
+
+export function longPressOrderline(productName, delay = 500) {
+    return [
+        {
+            content: `long press on orderline with product '${productName}'`,
+            trigger: `.order-container .orderline:has(.product-name:contains("${productName}"))`,
+            run: async ({ queryFirst }) => {
+                const el = queryFirst`.order-container .orderline:has(.product-name:contains("${productName}"))`;
+                if (!el) {
+                    throw new Error(`Orderline with product '${productName}' not found`);
+                }
+                el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                el.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+            },
+        },
+    ];
+}
+
+export function openCartMobile() {
+    return [
+        {
+            content: "Mobile - open cart",
+            trigger: ".switchpane .btn-switchpane:contains('Cart')",
+            run: "click",
+            isActive: ["mobile"],
+        },
+    ];
+}
+
+export function clickApplyCombo(
+    isOptionShown = false,
+    optionsShown = [],
+    optionToChoose = "",
+    dialogStillPresent = false
+) {
+    const steps = [
+        {
+            content: "Check apply combo button is there",
+            trigger: ".combo-proposition",
+        },
+        {
+            content: "Click apply combo button",
+            trigger: ".combo-proposition button.btn",
+            run: "click",
+        },
+    ];
+    if (isOptionShown) {
+        steps.push(ChoseComboPopup.isShown());
+        for (const option of optionsShown) {
+            steps.push(ChoseComboPopup.isOptionShown(option));
+        }
+        steps.push(ChoseComboPopup.apply(optionToChoose));
+    }
+    if (dialogStillPresent) {
+        steps.push(ChoseComboPopup.isShown());
+        steps.push(Dialog.cancel());
+    }
+    return inLeftSide(steps.flat());
+}
+
+export function clickBreakCombo() {
+    return [
+        {
+            content: "Click break combo button",
+            trigger: ".break-combo-button",
             run: "click",
         },
     ];

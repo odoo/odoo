@@ -12,7 +12,7 @@ class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
 
     def test_automatic_invoice_on_zero_amount(self):
         # Set automatic invoice
-        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        self.env['ir.config_parameter'].sudo().set_bool('sale.automatic_invoice', True)
         Controller = WebsiteSale()
 
         # Create a discount code

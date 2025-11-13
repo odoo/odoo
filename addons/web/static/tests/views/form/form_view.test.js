@@ -255,6 +255,162 @@ test(`simple form rendering`, async () => {
     expect(`label.o_form_label_empty:contains(type_ids)`).toHaveCount(0);
 });
 
+test(`[Offline] form switches to readonly in offline mode`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field" string="f3_description"/>
+                <field name="float_field"/>
+                <field name="child_ids">
+                    <list>
+                        <field name="foo"/>
+                        <field name="bar"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
+
+    getService("offline").status.offline = true;
+    await animationFrame();
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(0);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(0);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(0);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(0);
+
+    getService("offline").status.offline = false;
+    await animationFrame();
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
+});
+
+test(`[Offline] save a form view offline (click save icon)`, async () => {
+    let offline = false;
+    onRpc(
+        "/web/dataset/call_kw/partner/web_save",
+        () => {
+            expect.step("web_save");
+            if (offline) {
+                return new Response("", { status: 502 });
+            }
+        },
+        { pure: true }
+    );
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
+    await contains(".o_field_widget[name=foo] input").edit("new foo");
+
+    offline = true;
+    await contains(".o_form_button_save").click();
+    expect(".o_form_renderer").toHaveClass("o_form_readonly");
+    expect(".o_field_widget[name=foo]").toHaveText("new foo");
+    expect(getService("offline").status.offline).toBe(true);
+    expect.verifySteps(["web_save"]);
+
+    offline = false;
+    getService("offline").status.offline = false;
+    await animationFrame();
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps(["web_save"]);
+
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(".o_data_cell:first").toHaveText("new foo");
+});
+
+test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
+    // this test is the same as above, but in this one we don't manually save
+    // the record before leaving
+    let offline = false;
+    onRpc(
+        "/web/dataset/call_kw/partner/web_save",
+        () => {
+            expect.step("web_save");
+            if (offline) {
+                return new Response("", { status: 502 });
+            }
+        },
+        { pure: true }
+    );
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
+    await contains(".o_field_widget[name=foo] input").edit("new foo");
+
+    offline = true;
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(".o_form_renderer").toHaveClass("o_form_readonly");
+    expect(".o_field_widget[name=foo]").toHaveText("new foo");
+    expect(getService("offline").status.offline).toBe(true);
+    expect.verifySteps(["web_save"]);
+
+    offline = false;
+    getService("offline").status.offline = false;
+    await animationFrame();
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(".o_data_cell:first").toHaveText("new foo");
+    expect.verifySteps(["web_save"]);
+});
+
 test(`form rendering with class and style attributes`, async () => {
     await mountView({
         resModel: "partner",
@@ -9212,7 +9368,9 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
 
     // set a value on the m2o
     await contains(`.o_field_many2one[name="partner_type_id"] input`).click();
-    expect.verifySteps(["web_name_search"]);
+    expect.verifySteps([], {
+        message: "No additional name search since the request is identical",
+    });
 
     await contains(`.dropdown .dropdown-item:contains(silver)`).click();
     await contains(`.modal-footer .o_form_button_save`).click();

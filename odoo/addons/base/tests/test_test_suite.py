@@ -11,7 +11,14 @@ from unittest import SkipTest, skip
 from unittest.mock import patch
 
 from odoo.tests.case import TestCase
-from odoo.tests.common import BaseCase, TransactionCase, users, warmup, RegistryRLock
+from odoo.tests.common import (
+    BaseCase,
+    RegistryRLock,
+    TransactionCase,
+    tagged,
+    users,
+    warmup,
+)
 from odoo.tests.result import OdooTestResult
 
 _logger = logging.getLogger(__name__)
@@ -30,6 +37,7 @@ class TestTestSuite(TestCase):
             return []
 
 
+@tagged('at_install', '-post_install')
 class TestRunnerLoggingCommon(TransactionCase):
     """
     The purpose of this class is to do some "metatesting": it actually checks
@@ -467,6 +475,7 @@ class TestRunnerLoggingTeardown(TestRunnerLoggingCommon):
         raise Exception('This is a test error')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubtests(BaseCase):
 
     def test_nested_subtests(self):
@@ -477,6 +486,7 @@ class TestSubtests(BaseCase):
                 self.assertEqual(self._subtest._subDescription(), '(b=5, x=6, a=1)')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestClassSetup(BaseCase):
 
     @classmethod
@@ -487,6 +497,7 @@ class TestClassSetup(BaseCase):
         pass
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestClassTeardown(BaseCase):
 
     @classmethod
@@ -497,6 +508,7 @@ class TestClassTeardown(BaseCase):
         pass
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class Test01ClassCleanups(BaseCase):
     """
     The purpose of this test combined with Test02ClassCleanupsCheck is to check that
@@ -518,6 +530,7 @@ class Test01ClassCleanups(BaseCase):
         pass
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class Test02ClassCleanupsCheck(BaseCase):
     def test_classcleanups(self):
         self.assertTrue(Test01ClassCleanups.executed, "This test only makes sence when executed after Test01ClassCleanups")
@@ -530,12 +543,14 @@ class TestSkipClass(BaseCase):
         raise Exception('This should be skipped')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSkipMethof(BaseCase):
     @skip
     def test_skip_method(self):
         raise Exception('This should be skipped')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRegistryRLock(BaseCase):
 
     def test_registry_rlock_count(self):

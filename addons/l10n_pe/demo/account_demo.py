@@ -1,23 +1,22 @@
-# -*- coding: utf-8 -*-
-
 from datetime import datetime, timedelta
-from odoo import api, Command, models
+from odoo import Command, models
+from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
-    @api.model
-    def _get_demo_data_move(self, company=False):
+    @template(model='account.move', demo=True)
+    def _get_demo_data_move(self, template_code):
         def _get_tax_by_code(code, type_tax='sale'):
             taxes = self.env['account.tax'].search([
                 ('type_tax_use', '=', type_tax), ('l10n_pe_edi_tax_code', '=', code)], limit=1)
             return [Command.set(taxes.ids)]
 
-        move_data = super()._get_demo_data_move(company)
+        move_data = super()._get_demo_data_move(template_code)
         ref = self.env.ref
         last_month_date = datetime.strptime(move_data['demo_invoice_1']['invoice_date'], '%Y-%m-%d') - timedelta(days=1)
-        if company.account_fiscal_country_id.code == "PE":
+        if template_code == "pe":
             move_data['demo_invoice_1']['invoice_date'] = last_month_date
             move_data['demo_invoice_1']['l10n_latam_document_number'] = 'FFF-0000001'
             move_data['demo_invoice_1']['invoice_line_ids'] = [

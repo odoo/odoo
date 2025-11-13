@@ -32,7 +32,7 @@ class IrAttachment(models.Model):
     def _post_add_create(self, **kwargs):
         super()._post_add_create(**kwargs)
         if kwargs.get('cloud_storage'):
-            if not self.env['ir.config_parameter'].sudo().get_param('cloud_storage_provider'):
+            if not self.env['ir.config_parameter'].sudo().get_str('cloud_storage_provider'):
                 raise UserError(_('Cloud Storage is not enabled'))
             for record in self:
                 record.write({
@@ -94,4 +94,8 @@ class IrAttachment(models.Model):
     def _get_cloud_storage_unsupported_models(self):
         # Some models may use their attachments' data in the business code
         # We should avoid those attachments to be uploaded to the cloud storage
-        return list(self.env.registry.descendants(['mail.thread.main.attachment'], '_inherit', '_inherits'))
+        models = self.env.registry.descendants(['mail.thread.main.attachment'], '_inherit', '_inherits')
+        if 'documents.mixin' in self.env:
+            models.update(self.env.registry.descendants(['documents.mixin'], '_inherit'))
+            models.add('documents.document')
+        return list(models)

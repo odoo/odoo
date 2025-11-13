@@ -110,7 +110,7 @@ export class ProductPricelistReport extends Component {
             active_model: this.activeModel || 'product.template',
             active_ids: this.activeIds || [],
             display_pricelist_title: this.displayPricelistTitle || '',
-            pricelist_id: this.selectedPricelist.id || '',
+            pricelist_id: this.selectedPricelist?.id || '',
             quantities: this.quantities || [1],
         };
     }

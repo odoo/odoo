@@ -28,7 +28,9 @@ class TestSubcontractingBasic(TransactionCase):
         Not reusing the existing routes and operation types"""
         wh_original = self.env['stock.warehouse'].search([], limit=1)
         wh_copy = wh_original.copy(default={'name': 'Dummy Warehouse (copy)', 'code': 'Dummy'})
-        wh_original.buy_to_resupply = False
+        if 'buy_to_resupply' in wh_original._fields:
+            # If purchase is installed, the buy route would be reused instead of duplicated.
+            wh_original.buy_to_resupply = False
         wh_original.manufacture_to_resupply = False
         # Check if warehouse routes got RECREATED (instead of reused)
         route_types = [
@@ -933,6 +935,22 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         })
         self.assertFalse(replenish_wizard.allowed_route_ids)
 
+    def test_subcontracting_unbuild_warning(self):
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 3
+                move.quantity = 3
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        subcontract = picking_receipt._get_subcontract_production()
+        error_message = "You can't unbuild a subcontracted Manufacturing Order."
+        with self.assertRaisesRegex(UserError, error_message):
+            subcontract.button_unbuild()
+
+
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
 
@@ -1377,6 +1395,9 @@ class TestSubcontractingPortal(TransactionCase):
         self.assertEqual(mo.move_line_raw_ids[1].quantity, 1)
         self.assertEqual(mo.move_line_raw_ids[1].lot_id, serial3)
         self.assertEqual(mo.move_line_raw_ids[2].quantity, 2)
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubcontractingSerialMassReceipt(TransactionCase):
 
     def setUp(self):

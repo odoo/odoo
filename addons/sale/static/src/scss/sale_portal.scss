@@ -26,6 +26,10 @@
     width: 100% !important;
 }
 
+.sale_tbody tr:has(+ .o_line_section) {
+    border-bottom: $border-width solid $dark;
+}
+
 .o_portal .sale_tbody .js_quantity_container {
 
     .js_quantity {

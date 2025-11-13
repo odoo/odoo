@@ -17,4 +17,10 @@ patch(PosOrderline.prototype, {
             )
         );
     },
+    get isDiscountLine() {
+        return (
+            this.config.module_pos_discount &&
+            this.product_id.id === this.config.discount_product_id?.id
+        );
+    },
 });

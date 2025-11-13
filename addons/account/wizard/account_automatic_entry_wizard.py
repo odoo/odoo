@@ -241,7 +241,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                     'partner_id': partner.id or None,
                     'currency_id': currency.id,
                     'amount_currency': (account_balance > 0 and -1 or 1) * abs(account_amount_currency),
-                    'analytic_distribution': analytic_distribution,
+                    'analytic_distribution': analytic_distribution and dict(analytic_distribution),
                 })
 
         # Get the lowest child company based on accounts used to avoid access error

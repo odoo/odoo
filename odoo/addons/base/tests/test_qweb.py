@@ -949,7 +949,7 @@ class TestQWebBasic(TransactionCase):
             'type': 'qweb',
             'arch_db': '''<t t-name="bibi">
                 <div t-foreach="[1, 2]" t-as="v" class="toto"/>
-                <t class="remove_me" t-set="data">a</t>
+                <t id="remove_me" t-set="data">a</t>
                 <div t-out="data"/>
             </t>'''
         })

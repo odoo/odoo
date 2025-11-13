@@ -7,7 +7,7 @@ from odoo.addons.sms.tests.common import SMSCommon, SMSCase
 from odoo.tests import tagged
 
 
-@tagged('at_install')
+@tagged('at_install', '-post_install')
 class TestSMSComposerComment(SMSCommon, SMSCase):
     """ Test behaviors that are overridden when other modules
     are installed (e.g., mass_mailing). In these cases,

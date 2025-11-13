@@ -20,8 +20,7 @@ the methods over HTTP, with examples in various programming languages.
     'assets': {
         'api_doc.assets': [
             # Libs
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/src/scss/fontawesome_overridden.scss',
+            ('include', 'web.icons_fonts'),
 
             # Core
             'web/static/src/module_loader.js',
@@ -52,6 +51,10 @@ the methods over HTTP, with examples in various programming languages.
             'api_doc/static/src/**/*.xml',
             'api_doc/static/src/**/*.js',
             'api_doc/static/src/doc_client.css',
+            ('remove', 'api_doc/static/src/api_action.js'),
+        ],
+        'web.assets_backend': [
+            'api_doc/static/src/api_action.js',
         ],
     },
     'bootstrap': True,

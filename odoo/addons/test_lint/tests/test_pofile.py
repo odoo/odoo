@@ -4,11 +4,12 @@
 from collections import Counter
 
 from odoo.modules import get_modules
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.tools.translate import translation_file_reader
 from odoo.tools.misc import file_path
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class PotLinter(TransactionCase):
     def test_pot_duplicate_entries(self):
         def format(entry):

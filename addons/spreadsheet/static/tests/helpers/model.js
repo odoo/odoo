@@ -10,6 +10,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { setCellContent } from "./commands";
 import { addRecordsFromServerData, addViewsFromServerData } from "./data";
+import { markRaw } from "@odoo/owl";
 
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
@@ -45,6 +46,7 @@ export async function createModelWithDataSource(params = {}) {
             ...config?.custom,
         },
     });
+    markRaw(model);
     env.model = model;
     // if (params.serverData) {
     //     await addRecordsFromServerData(params.serverData);

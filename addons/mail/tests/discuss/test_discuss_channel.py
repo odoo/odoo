@@ -14,11 +14,10 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, users
+from odoo.tests import HttpCase, users
 from odoo.tools import html_escape, mute_logger
 
 
-@tagged("post_install", "-at_install")
 class TestChannelInternals(MailCommon, HttpCase):
 
     @classmethod
@@ -152,6 +151,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "discuss.channel.member": [
                                 {
                                     "channel_id": {"id": test_group.id, "model": "discuss.channel"},
+                                    "channel_role": False,
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
@@ -198,6 +198,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "discuss.channel": [{"id": test_group.id, "member_count": 2}],
                             "discuss.channel.member": [
                                 {
+                                    "channel_role": False,
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
@@ -924,7 +925,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "mail.message": [
                             {
                                 "attachment_ids": [],
-                                "body": ['markup', '<p>Test update</p><span class="o-mail-Message-edited"></span>'],
+                                "body": ['markup', '<p>Test update <span class="o-mail-Message-edited"></span></p>'],
                                 "id": message.id,
                                 "parent_id": False,
                                 "partner_ids": message.partner_ids.ids,

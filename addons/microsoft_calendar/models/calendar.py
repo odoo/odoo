@@ -279,14 +279,14 @@ class CalendarEvent(models.Model):
     def _get_microsoft_sync_domain(self):
         # in case of full sync, limit to a range of 1y in past and 1y in the future by default
         ICP = self.env['ir.config_parameter'].sudo()
-        day_range = int(ICP.get_param('microsoft_calendar.sync.range_days', default=365))
+        day_range = ICP.get_int('microsoft_calendar.sync.range_days') or 365
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
 
         # Define 'custom_lower_bound_range' param for limiting old events updates in Odoo and avoid spam on Microsoft.
-        custom_lower_bound_range = ICP.get_param('microsoft_calendar.sync.lower_bound_range')
+        custom_lower_bound_range = ICP.get_int('microsoft_calendar.sync.lower_bound_range')
         if custom_lower_bound_range:
-            lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=int(custom_lower_bound_range))
+            lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=custom_lower_bound_range)
         domain = Domain([
             ('partner_ids.user_ids', 'in', [self.env.user.id]),
             ('stop', '>', lower_bound),
@@ -295,7 +295,7 @@ class CalendarEvent(models.Model):
         ])
 
         # Synchronize events that were created after the first synchronization date, when applicable.
-        first_synchronization_date = ICP.get_param('microsoft_calendar.sync.first_synchronization_date')
+        first_synchronization_date = ICP.get_str('microsoft_calendar.sync.first_synchronization_date')
         if first_synchronization_date:
             domain &= Domain('create_date', '>=', first_synchronization_date)
 
@@ -500,8 +500,6 @@ class CalendarEvent(models.Model):
         values = dict(initial_values)
         if not fields_to_sync:
             return values
-
-        microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
 
         if self.microsoft_recurrence_master_id and 'type' not in values:
             values['seriesMasterId'] = self.microsoft_recurrence_master_id

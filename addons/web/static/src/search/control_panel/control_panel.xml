@@ -6,7 +6,7 @@
             <Transition t-if="!env.isSmall" visible="state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
                 <div class="o_embedded_actions overflow-hidden d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
                     <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
-                        <t t-if="_checkValueLocalStorage(action)">
+                        <t t-if="_isEmbeddedActionVisible(action)">
                             <button class="btn btn-secondary o_draggable"
                                     t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id}"
                                     t-on-click="() => this.onEmbeddedActionClick(action)"
@@ -22,17 +22,13 @@
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-2 gap-lg-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-on-keydown="onMainButtonsKeydown">
-                        <t t-slot="control-panel-create-button"/>
-                        <t t-slot="layout-buttons"/>
-                        <t t-slot="control-panel-always-buttons"/>
+                        <t t-if="display.buttons" t-slot="control-panel-buttons"/>
                         <Dropdown t-if="env.isSmall" menuClass="'o-control-panel-adaptive-dropdown'" onOpened.bind="dropdownifyButtons">
                             <button class="btn btn-secondary o-control-panel-adaptive-dropdown" title="More">
                                 <i class="oi oi-fw oi-ellipsis-v" />
                             </button>
                             <t t-set-slot="content">
-                                <t t-slot="control-panel-create-button"/>
-                                <t t-slot="layout-buttons"/>
-                                <t t-slot="control-panel-always-buttons"/>
+                                <t t-if="display.buttons" t-slot="control-panel-buttons"/>
                             </t>
                         </Dropdown>
                     </div>
@@ -73,7 +69,7 @@
                 </div>
 
                 <div class="o_control_panel_actions d-empty-none d-flex align-items-center justify-content-start justify-content-lg-around order-2 order-lg-1 w-100 mw-100 w-lg-auto">
-                    <t t-if="display.layoutActions" t-slot="layout-actions"/>
+                    <t t-if="display.actions" t-slot="control-panel-actions"/>
                     <t t-slot="control-panel-selection-actions"/>
                 </div>
 
@@ -93,15 +89,19 @@
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
                         <div t-if="env.isSmall" class="o_cp_switch_buttons btn-group d-print-none">
                             <Dropdown menuClass="{o_cp_switch_buttons: true, o_custom_bottom_sheet: true }">
-                                <button class="btn btn-secondary">
+                                <button class="btn btn-secondary" data-available-offline="">
                                     <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
                                     <i class="oi-fw" t-att-class="activeView.icon"/>
                                 </button>
                                 <t t-set-slot="content">
                                     <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                        <DropdownItem onSelected="() => this.switchView(view.type)" class="view.active ? 'selected' : ''">
-                                            <i class="oi-fw" t-att-class="view.icon"/>
-                                            <span class="ms-1" t-out="view.name"/>
+                                        <DropdownItem 
+                                            tag="'button'"
+                                            attrs="{ 'data-available-offline': view.availableOffline}"
+                                            onSelected="() => this.switchView(view.type)"
+                                            class="view.active ? 'selected' : ''">
+                                                <i class="oi-fw" t-att-class="view.icon"/>
+                                                <span class="ms-1" t-out="view.name"/>
                                         </DropdownItem>
                                     </t>
                                 </t>
@@ -111,6 +111,7 @@
                             <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
                                 <button class="btn btn-secondary o_switch_view "
                                     t-attf-class="o_{{view.type}} {{view.active ? 'active' : ''}}"
+                                    t-att-data-available-offline="view.availableOffline"
                                     t-att-data-tooltip="view.name"
                                     t-custom-click="(ev, isMiddleClick) => this.switchView(view.type, isMiddleClick)"
                                     t-att-aria-label="view.name + ' View'"

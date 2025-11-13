@@ -5,5 +5,4 @@ export class CreatePageMessage extends Component {
     static props = {
         createPage: { type: Function },
     };
-
 }

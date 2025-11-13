@@ -4,7 +4,7 @@ from unittest import mock
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.tools import misc
+from odoo.tools.misc import file_open
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -80,7 +80,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
     def _assert_invoice_ubl_file(self, invoice, filename):
         file_path = f'addons/{self.test_module}/tests/test_files/{filename}.xml'
 
-        with misc.file_open(file_path, 'rb') as file:
+        with file_open(file_path, 'rb') as file:
             expected_content = file.read()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self.assertXmlTreeEqual(
@@ -134,7 +134,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         actual_content, _dummy = self.env['account.edi.xml.ubl_bis3'].with_context(lang='en_US')._export_invoice(invoice)
-        with misc.file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
+        with file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
             expected_content = file.read()
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_content),
@@ -640,6 +640,38 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_dispatch_base_lines_delta')
+
+    def test_unit_price_precision(self):
+        """ Check that with large quantities, the precision of the rounding on the unit price
+            is adapted in order to pass the Peppol schematron's requirement that the line's
+            subtotal must be equal to unit price * quantity, to a tolerance of less than 0.02.
+
+            In this case, the line's tax-excluded subtotal is 85.62, there are 8 units, so the raw unit
+            price is 85.62 / 8 = 10.7025.
+            If we round the unit price to 2 decimals, we get 10.70, but 10.70 * 8 = 85.60 which has
+            a difference of 0.02 with the subtotal, so this would not pass the schematron.
+            So we need to round the unit price to 3 decimals, which gives 10.703.
+        """
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 8,
+                    'price_unit': 12.95,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_unit_price_precision')
 
     # -------------------------------------------------------------------------
     # SELF-BILLED INVOICE

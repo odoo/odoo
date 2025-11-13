@@ -10,6 +10,7 @@ from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
@@ -78,6 +79,7 @@ class MailActivity(models.Model):
     automated = fields.Boolean(
         'Automated activity', readonly=True,
         help='Indicates this activity has been created automatically and not by any user.')
+    technical_usage = fields.Selection(selection=[('none', 'Non Technical')], default='none', readonly=True, help="Technical identifier")
     # Attachments are linked to a document through model / res_id and to the activity through this field.
     attachment_ids = fields.Many2many(
         'ir.attachment', 'activity_attachment_rel',
@@ -153,19 +155,17 @@ class MailActivity(models.Model):
     @api.depends('active', 'date_deadline')
     def _compute_state(self):
         for record in self.filtered(lambda activity: activity.date_deadline):
-            tz = record.user_id.sudo().tz
+            tz = record.user_tz
             date_deadline = record.date_deadline
             record.state = 'done' if not record.active else self._compute_state_from_date(date_deadline, tz)
 
     @api.model
     def _compute_state_from_date(self, date_deadline, tz=False):
-        date_deadline = fields.Date.from_string(date_deadline)
-        today_default = date.today()
-        today = today_default
+        date_deadline = fields.Date.to_date(date_deadline)
         if tz:
-            today_utc = pytz.utc.localize(datetime.utcnow())
-            today_tz = today_utc.astimezone(pytz.timezone(tz))
-            today = date(year=today_tz.year, month=today_tz.month, day=today_tz.day)
+            today = fields.Date.context_today(self.with_context(tz=tz))
+        else:
+            today = fields.Date.today()
         diff = (date_deadline - today)
         if diff.days == 0:
             return 'today'
@@ -366,11 +366,28 @@ class MailActivity(models.Model):
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
-        """ Override that adds specific access rights of mail.activity, to remove
-        ids uid could not see according to our custom rules. Please refer to
-        :meth:`_check_access` for more details about those rules.
+        """Implement custom access rules and `active_test` behavior.
 
-        The method is inspired by what has been done on mail.message. """
+        This method enhances the standard search in two ways:
+
+        1.  **Archived Records Search**: If the search domain includes a filter on
+            the 'Done Date' (`date_done`) field, the search automatically includes
+            archived records (`active_test=False`). This allows users to find
+            past activities that have been completed and subsequently archived.
+
+        2.  **Custom Access Rights**: It filters search results to only include
+            activities the current user is allowed to see. An activity is
+            accessible if the user is the assignee (`user_id`), or if they have
+            read access to the related document (`res_model`, `res_id`). This
+            logic is detailed in :meth:`~._check_access`.
+            Superusers bypass this and perform a standard search.
+        """
+
+        if any(
+            condition.field_expr == 'date_done' and condition.value
+            for condition in Domain(domain).iter_conditions()
+        ):
+            kwargs['active_test'] = False
 
         # Rules do not apply to administrator
         if self.env.is_superuser() or bypass_access:
@@ -842,7 +859,7 @@ class MailActivity(models.Model):
         - If the config_parameter is set to a negative number, it's an invalid value, we skip the gc routine
         - If the config_parameter is set to a positive number, we delete only overdue activities which deadline is older than X years
         """
-        year_threshold = int(self.env['ir.config_parameter'].sudo().get_param('mail.activity.gc.delete_overdue_years', 0))
+        year_threshold = self.env['ir.config_parameter'].sudo().get_int('mail.activity.gc.delete_overdue_years')
         if year_threshold == 0:
             _logger.warning("The ir.config_parameter 'mail.activity.gc.delete_overdue_years' is missing or set to 0. Skipping gc routine.")
             return

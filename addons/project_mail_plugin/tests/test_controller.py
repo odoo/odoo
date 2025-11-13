@@ -4,9 +4,12 @@
 import json
 from unittest.mock import patch
 
+from odoo.tests import tagged
+
 from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailPluginProjectController(TestMailPluginControllerCommon):
     def test_user_lang(self):
         """Verify that we translate field in the user language."""

@@ -91,27 +91,6 @@
         <field name="sequence">5</field>
     </record>
 
-<!-- AE : United Arab Emirates -->
-    <record id="l10n_ae_leave_type_sick_leave_50" model="hr.leave.type">
-        <field name="name">Sick Leave 50%</field>
-        <field name="requires_allocation">False</field>
-        <field name="leave_validation_type">hr</field>
-        <field name="support_document">True</field>
-        <field name="icon_id" ref="hr_holidays.icon_21"/>
-        <field name="company_id" eval="False"/>
-        <field name="country_id" ref="base.ae"/>
-    </record>
-
-    <record id="l10n_ae_leave_type_sick_leave_0" model="hr.leave.type">
-        <field name="name">Sick Leave 0%</field>
-        <field name="requires_allocation">False</field>
-        <field name="leave_validation_type">hr</field>
-        <field name="support_document">True</field>
-        <field name="icon_id" ref="hr_holidays.icon_21"/>
-        <field name="company_id" eval="False"/>
-        <field name="country_id" ref="base.ae"/>
-    </record>
-
 <!-- BE : Belgium -->
     <record id="l10n_be_leave_type_small_unemployment" model="hr.leave.type">
         <field name="name">Small Unemployment</field>
@@ -125,6 +104,28 @@
 
     <record id="l10n_be_leave_type_maternity" model="hr.leave.type">
         <field name="name">Maternity Time Off</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_17"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_paternity_paid_company" model="hr.leave.type">
+        <field name="name">Paternity Time Off (Paid By Company)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_17"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_paternity_legal" model="hr.leave.type">
+        <field name="name">Paternity Time Off (Legal)</field>
         <field name="requires_allocation">False</field>
         <field name="leave_validation_type">no_validation</field>
         <field name="request_unit">half_day</field>

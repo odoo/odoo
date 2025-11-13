@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 
@@ -32,11 +32,11 @@ export class ScheduledMessage extends Record {
     thread = fields.One("mail.thread");
     // Editors of the records can delete scheduled messages
     get deletable() {
-        return this.store.self.main_user_id?.is_admin || this.thread.hasWriteAccess;
+        return this.store.self_user?.is_admin || this.thread.hasWriteAccess;
     }
 
     get editable() {
-        return this.store.self.main_user_id?.is_admin || this.isSelfAuthored;
+        return this.store.self_user?.is_admin || this.isSelfAuthored;
     }
 
     get isSelfAuthored() {

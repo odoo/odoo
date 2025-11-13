@@ -32,11 +32,6 @@ class ImLivechatChannelMemberHistory(models.Model):
     agent_expertise_ids = fields.Many2many(
         "im_livechat.expertise", compute="_compute_member_fields", store=True
     )
-    conversation_tag_ids = fields.Many2many(
-        "im_livechat.conversation.tag",
-        "im_livechat_channel_member_history_conversation_tag_rel",
-        related="channel_id.livechat_conversation_tag_ids",
-    )
     avatar_128 = fields.Binary(compute="_compute_avatar_128")
 
     # REPORTING FIELDS

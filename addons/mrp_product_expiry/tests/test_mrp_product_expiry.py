@@ -3,10 +3,11 @@
 
 from datetime import datetime, timedelta
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.exceptions import UserError
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockLot(TestStockCommon):
 
     @classmethod

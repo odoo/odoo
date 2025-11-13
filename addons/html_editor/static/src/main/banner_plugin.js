@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { fillShrunkPhrasingParent, fixNonEditableFirstChild } from "@html_editor/utils/dom";
+import { fillShrunkPhrasingParent } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
@@ -133,15 +133,13 @@ export class BannerPlugin extends Plugin {
             </div>`
         ).childNodes[0];
         this.dependencies.dom.insert(bannerElement);
-        const baseContainerNodeName = this.dependencies.baseContainer.getDefaultNodeName();
-        const nextNode = this.dependencies.baseContainer.isCandidateForBaseContainer(blockEl)
-            ? blockEl.nodeName
-            : baseContainerNodeName;
-        this.dependencies.dom.setBlock({ tagName: nextNode });
-        fixNonEditableFirstChild(this.editable, bannerElement, baseContainerNodeName);
         this.dependencies.selection.setCursorEnd(
             bannerElement.querySelector(`.o_editor_banner_content > ${baseContainer.tagName}`)
         );
+        // Remove the old element.
+        if (bannerElement.nextSibling?.nodeName === blockEl.nodeName) {
+            bannerElement.nextSibling.remove();
+        }
         this.dependencies.history.addStep();
     }
 

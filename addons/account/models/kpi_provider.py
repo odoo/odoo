@@ -9,7 +9,7 @@ class KpiProvider(models.AbstractModel):
         grouped_moves_to_report = self.env['account.move']._read_group(
             fields.Domain.OR([
                 [('state', '=', 'draft')],
-                [('state', '=', 'posted'), ('checked', '=', False)],
+                [('state', '=', 'posted'), ('review_state', 'in', ('todo', 'anomaly'))],
                 [('state', '=', 'posted'), ('journal_id.type', '=', 'bank'), ('statement_line_id.is_reconciled', '=', False)],
             ]),
             ['journal_id'],

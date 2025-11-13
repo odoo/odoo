@@ -7,19 +7,19 @@
         <field name="model">event.event</field>
         <field name="priority" eval="3"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='website_url']" position="before">
+            <div name="button_box" position="inside">
                 <button name="%(action_event_track_from_event)d"
                         type="action"
                         class="oe_stat_button"
                         icon="fa-microphone">
                     <field name="track_count" string="Tracks" widget="statinfo"/>
                 </button>
-            </xpath>
+            </div>
             <xpath expr="//field[@name='website_menu']" position="after">
-                <label for="website_track" string="Showcase Tracks"/>
-                <field name="website_track"/>
-                <label for="website_track_proposal" string="Allow Track Proposals"/>
-                <field name="website_track_proposal"/>
+                <label for="website_track" string="Showcase Tracks" class="me-1"/>
+                <field name="website_track" class="me-3"/>
+                <label for="website_track_proposal" string="Allow Track Proposals" class="me-1"/>
+                <field name="website_track_proposal" class="me-3"/>
             </xpath>
         </field>
     </record>

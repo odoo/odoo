@@ -1,5 +1,5 @@
 import { Message } from "@mail/core/common/message_model";
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -7,10 +7,15 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup();
+        this.channel_id = fields.One("discuss.channel", {
+            compute() {
+                return this.thread?.channel;
+            },
+        });
         this.hasEveryoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
+                return this.channel_id?.membersThatCanSeen.every((m) => m.hasSeen(this));
             },
         });
         this.hasNewMessageSeparator = fields.Attr(false, {
@@ -31,7 +36,7 @@ const messagePatch = {
         this.hasSomeoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                return this.thread?.membersThatCanSeen
+                return this.channel_id?.membersThatCanSeen
                     .filter((member) => member.persona.notEq(this.author))
                     .some((m) => m.hasSeen(this));
             },
@@ -45,13 +50,20 @@ const messagePatch = {
                 return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
             },
         });
-        /** @type {Promise<Thread>[]} @deprecated */
-        this.mentionedChannelPromises = [];
         this.threadAsFirstUnread = fields.One("mail.thread", { inverse: "firstUnreadMessage" });
+    },
+    /**
+     * @override
+     */
+    get allowsEdition() {
+        return (
+            super.allowsEdition ||
+            ["owner", "admin"].includes(this.channel_id?.self_member_id?.channel_role)
+        );
     },
     /** @returns {import("models").ChannelMember[]} */
     get channelMemberHaveSeen() {
-        return this.thread.membersThatCanSeen.filter(
+        return this.channel_id.membersThatCanSeen.filter(
             (m) => m.hasSeen(this) && m.persona.notEq(this.author)
         );
     },
@@ -68,6 +80,13 @@ const messagePatch = {
             mentionedPartners,
             mentionedRoles,
         });
+    },
+    /**
+     * @param {Thread} thread the thread being viewed
+     * @returns {boolean}
+     */
+    showSeenIndicator(thread) {
+        return this.isSelfAuthored && thread?.hasSeenFeature;
     },
 };
 patch(Message.prototype, messagePatch);

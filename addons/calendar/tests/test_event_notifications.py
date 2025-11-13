@@ -142,7 +142,7 @@ class TestEventNotifications(CalendarMailCommon):
         self.assertFalse(self.event.partner_ids)
 
     def test_message_invite(self):
-        self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
+        self.env['ir.config_parameter'].sudo().set_int('mail.mail_force_send_limit', 100)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
@@ -170,7 +170,7 @@ class TestEventNotifications(CalendarMailCommon):
 
     def test_message_invite_email_notif_mass_queued(self):
         """Check that more than 20 notified attendees means mails are queued."""
-        self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
+        self.env['ir.config_parameter'].sudo().set_int('mail.mail_force_send_limit', 100)
         additional_attendees = self.env['res.partner'].create([{
             'name': f'test{n}',
             'email': f'test{n}@example.com'} for n in range(101)])

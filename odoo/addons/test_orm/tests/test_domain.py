@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from itertools import combinations
 
 from odoo.fields import Command, Domain
-from odoo.tests import TransactionCase, users
+from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import SQL, OrderedSet
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
@@ -395,6 +395,7 @@ class TestDomainComplement(TransactionExpressionCase):
             self._search(Model, [('parent_id', '>=', 'Par')])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDomainOptimize(TransactionCase):
     number_domain = Domain('number', '>', 5)
 
@@ -575,18 +576,6 @@ class TestDomainOptimize(TransactionCase):
             Domain.FALSE,
         )
         self.assertEqual(
-            Domain('important', 'in', [True, "yes"]).optimize(model),
-            is_important,
-        )
-        self.assertEqual(
-            Domain('important', 'in', ["yes"]).optimize(model),
-            is_important,
-        )
-        self.assertEqual(
-            Domain('important', 'in', [0, 2]).optimize_full(model),
-            Domain.TRUE,
-        )
-        self.assertEqual(
             list(Domain('active', 'in', [True, False]).optimize(model)),
             [('active', 'in', [True, False])],
             "the condition should not be reduced to a constant for active record",
@@ -705,8 +694,13 @@ class TestDomainOptimize(TransactionCase):
             "Timezone should have no effect on datetime"
         )
         self.assertEqual(
+            Domain('moment', '>=', '2024-07-02').optimize(model),
+            Domain('moment', '>=', datetime(2024, 7, 1, 22)),
+            "Date should consider timezone of the user"
+        )
+        self.assertEqual(
             Domain('moment', '>=', '2024-01-02').optimize(model),
-            Domain('moment', '>=', datetime(2024, 1, 1, 22)),
+            Domain('moment', '>=', datetime(2024, 1, 1, 23)),
             "Date should consider timezone of the user"
         )
 

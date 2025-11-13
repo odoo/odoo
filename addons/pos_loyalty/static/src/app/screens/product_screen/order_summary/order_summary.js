@@ -17,7 +17,7 @@ patch(OrderSummary.prototype, {
         if (selectedLine?.gift_code && key !== "Backspace" && key !== "Delete") {
             this.dialog.add(AlertDialog, {
                 title: _t("Gift Card"),
-                body: _t("You cannot change the quantity or price of a physical gift card."),
+                body: _t("You cannot change the quantity or the price of a physical gift card."),
             });
             return;
         }
@@ -175,9 +175,6 @@ patch(OrderSummary.prototype, {
 
                 await this._updateGiftCardOrderline(code, points);
                 this.currentOrder.processGiftCard(code, points, expirationDate);
-
-                // update indexedDB
-                this.pos.data.debouncedSynchronizeLocalDataInIndexedDB();
             },
         });
     },

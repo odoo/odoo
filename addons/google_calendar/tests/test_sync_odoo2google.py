@@ -15,6 +15,7 @@ from odoo import tools
 
 @tagged('odoo2google', 'calendar_performance', 'is_query_count')
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSyncOdoo2Google(TestSyncGoogle):
 
     def setUp(self):
@@ -22,7 +23,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.env.user.partner_id.tz = "Europe/Brussels"
         self.google_service = GoogleCalendarService(self.env['google.service'])
         # Make sure this test will work for the next 30 years
-        self.env['ir.config_parameter'].set_param('google_calendar.sync.range_days', 10000)
+        self.env['ir.config_parameter'].set_int('google_calendar.sync.range_days', 10000)
 
     @patch_api
     def test_event_creation(self):

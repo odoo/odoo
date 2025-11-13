@@ -14,9 +14,9 @@ from .utils import parse_field_expr, READ_GROUP_NUMBER_GRANULARITY
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
-    from odoo.tools import Query
 
     from .models import BaseModel
+    from .query import Query
 
 T = typing.TypeVar("T")
 

@@ -68,7 +68,7 @@ export class EventSlotSelectionPopup extends Component {
     confirm() {
         if (!this.slotId) {
             this.dialog.add(AlertDialog, {
-                title: "Error",
+                title: "Oh snap !",
                 body: "Please select a slot.",
             });
             return;

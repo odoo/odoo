@@ -187,7 +187,7 @@ test("Show conditionally hidden elements should not be tracked in history", asyn
     expect(":iframe section").toHaveAttribute("data-invisible", "1");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye-slash");
 
-    setSelection({ anchorNode: queryOne(":iframe p"), anchorOffset: 1 });
+    setSelection({ anchorNode: queryOne(":iframe p:not([data-selection-placeholder])"), anchorOffset: 1 });
     await insertText(getEditor(), "x"); // something to undo
     undo(getEditor());
     expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");

@@ -25,8 +25,9 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.models import Query
 from odoo.modules.module import get_manifest
-from odoo.tools import SQL, Query
+from odoo.tools import SQL
 from odoo.tools.image import image_process
 from odoo.tools.sql import escape_psql
 from odoo.tools.translate import _
@@ -52,7 +53,6 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'instagram.com', 'instagr.am', 'ig.me',
     'vimeo.com',  # 'player.vimeo.com', 'vimeo.com',
     'dailymotion.com', 'dai.ly',
-    'youku.com',  # 'player.youku.com', 'youku.com',
     'tudou.com',
     'facebook.com', 'facebook.net', 'fb.com', 'fb.me', 'fb.watch',
     'tiktok.com',
@@ -336,7 +336,8 @@ class Website(models.Model):
         values = vals
         self._handle_create_write(values)
 
-        self.env.registry.clear_cache()
+        if any(self._ids):
+            self.env.registry.clear_cache()
 
         if 'company_id' in values and 'user_id' not in values:
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
@@ -348,7 +349,8 @@ class Website(models.Model):
 
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
-            self.env.registry.clear_cache()
+            if any(self._ids):
+                self.env.registry.clear_cache()
 
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:
@@ -413,10 +415,16 @@ class Website(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         for record in self:
+            if not record.domain:
+                continue
+
             try:
-                urlparse(record.domain)
+                parsed = urlparse(record.domain)
             except ValueError:
                 raise ValidationError(_("The provided website domain is not a valid URL."))
+
+            if tools.urls._contains_dot_segments(parsed.path):
+                raise ValidationError(_("The domain path cannot contain relative path segments like '/./' or '/../'."))
 
     @api.constrains('homepage_url')
     def _check_homepage_url(self):
@@ -478,7 +486,7 @@ class Website(models.Model):
     def _api_rpc(self, route, params, endpoint_param_name, default_endpoint, **kwargs):
         params['version'] = release.version
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
-        api_endpoint = IrConfigParameter.get_param(endpoint_param_name, default_endpoint)
+        api_endpoint = IrConfigParameter.get_str(endpoint_param_name) or default_endpoint
         return iap_tools.iap_jsonrpc(api_endpoint + route, params=params, **kwargs)
 
     def _website_api_rpc(self, route, params):
@@ -844,9 +852,10 @@ class Website(models.Model):
         # through module overrides of `configurator_get_footer_links`.
         footer_links = website.configurator_get_footer_links()
         footer_ids = [
-            'website.template_footer_contact',
+            'website.template_footer_contact', 'website.template_footer_headline',
             'website.footer_custom', 'website.template_footer_links',
             'website.template_footer_minimalist', 'website.template_footer_mega', 'website.template_footer_mega_columns', 'website.template_footer_mega_links',
+            'website.template_footer_mega_cards', 'website.template_footer_descriptive', 'website.template_footer_centered', 'website.template_footer_call_to_action',
         ]
         for footer_id in footer_ids:
             view_id = self.env['website'].viewref(footer_id)
@@ -863,7 +872,6 @@ class Website(models.Model):
                 else:
                     el = arch_string.xpath("//t[@t-set='configurator_footer_links']")
                     if not el:
-                        logger.warning("No 'configurator_footer_links' found in view %s", footer_id)
                         continue
                     el[0].attrib['t-value'] = json.dumps(footer_links)
                     view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
@@ -903,10 +911,18 @@ class Website(models.Model):
                 generated_content.update(snippet_generated_content)
                 translated_content.update(snippet_translated_content)
 
+        # Extract placeholders from footers
+        for footer_id in footer_ids:
+            view_id = self.env['website'].viewref(footer_id, raise_if_not_found=False)
+            if view_id and view_id.arch_db:
+                html_text_processor, placeholders = html_text_processor._process_snippet(view_id.arch_db, view_id.arch_db)
+                for placeholder in placeholders:
+                    generated_content[placeholder] = ''
+
         translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
         if translated_ratio > 0.8:
             try:
-                database_id = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+                database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
                 response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
                     'placeholders': list(generated_content.keys()),
                     'lang': website.default_lang_id.name,
@@ -979,6 +995,20 @@ class Website(models.Model):
                 'key': f"{index}_{page_view_id.key}_configurator_pages_landing",
                 'website_id': website.id,
             })
+
+        # Configure the footers
+        for key in footer_ids:
+            generic_view = self.env['website'].viewref(key)
+            current_website_footer_view = self.env['ir.ui.view'].with_context(active_test=False).search(
+                [('key', '=', key), ('website_id', '=', website.id)], limit=1
+            )
+            # Use the website-specific view if exists, otherwise use the generic
+            # view
+            view_to_update = current_website_footer_view or generic_view
+            if generic_view and view_to_update:
+                el = html_text_processor._update_snippet_content(generated_content, key, view_to_update.arch_db)
+                updated_view = etree.tostring(el, encoding='unicode')
+                generic_view.with_context(website_id=website.id).write({'arch_db': updated_view})
 
         # Configure the images
         images = custom_resources.get('images', {})
@@ -1246,16 +1276,12 @@ class Website(models.Model):
         return page_temp
 
     def _get_plausible_script_url(self):
-        return self.env['ir.config_parameter'].sudo().get_param(
-            'website.plausible_script',
-            'https://plausible.io/js/plausible.js'
-        )
+        return self.env['ir.config_parameter'].sudo().get_str(
+            'website.plausible_script') or 'https://plausible.io/js/plausible.js'
 
     def _get_plausible_server(self):
-        return self.env['ir.config_parameter'].sudo().get_param(
-            'website.plausible_server',
-            'https://plausible.io'
-        )
+        return self.env['ir.config_parameter'].sudo().get_str(
+            'website.plausible_server') or 'https://plausible.io'
 
     def _get_plausible_share_url(self):
         embed_url = f'/share/{self.plausible_site}?auth={self.plausible_shared_key}&embed=true&theme=system'
@@ -2143,7 +2169,7 @@ class Website(models.Model):
             :rel_table: name of the rel table when search_fields in search_details contains a Many2many.
             :rel_joinkey: name of the column used to join model._table with rel_table.
             """
-            subquery = Query(self.env.cr, model._table, model._table_query)
+            subquery = Query(model)
             unaccent = self.env.registry.unaccent
             similarity = SQL(
                 "GREATEST(%(similarities)s) as similarity",
@@ -2222,8 +2248,7 @@ class Website(models.Model):
                 ORDER BY _best_similarity DESC
                 LIMIT 1000
             """, SQL("\nUNION ALL\n").join(subqueries))  # UNION ALL allows to hit GIST indexes in subplans.
-            self.env.cr.execute(query)
-            ids = {row[0] for row in self.env.cr.fetchall()}
+            ids = {row[0] for row in self.env.execute_query(query)}
             domain = Domain.AND([domain, Domain([('id', 'in', list(ids))])])
             records = model.search_read(domain, direct_fields, limit=limit)
             for record in records:

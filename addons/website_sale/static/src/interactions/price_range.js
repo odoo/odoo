@@ -1,4 +1,5 @@
 import { Interaction } from '@web/public/interaction';
+import { redirect } from '@web/core/utils/urls';
 import { registry } from '@web/core/registry';
 
 export class PriceRange extends Interaction {
@@ -24,7 +25,7 @@ export class PriceRange extends Interaction {
         if (product_list_div) {
             product_list_div.classList.add('opacity-50');
         }
-        window.location.href = `${url.pathname}?${searchParams.toString()}`;
+        redirect(`${url.pathname}?${searchParams.toString()}`);
     }
 }
 

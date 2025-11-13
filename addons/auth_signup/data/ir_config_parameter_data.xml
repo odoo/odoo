@@ -2,8 +2,8 @@
 <odoo>
     <data noupdate="1">
         <!-- activate B2C portal by default -->
-        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
+        <function model="ir.config_parameter" name="set_str" eval="('auth_signup.invitation_scope', 'b2c')"/>
         <!-- activate Reset password by default -->
-        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.reset_password', 'True')"/>
+        <function model="ir.config_parameter" name="set_bool" eval="('auth_signup.reset_password', True)"/>
     </data>
 </odoo>

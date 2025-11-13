@@ -11,7 +11,7 @@ from PIL import Image
 from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tests import Form, TransactionCase, tagged, users
+from odoo.tests import TransactionCase, tagged, users
 from odoo.tools import float_repr, mute_logger
 from odoo.tools.image import image_data_uri
 
@@ -19,6 +19,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def setUp(self):
@@ -603,7 +604,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(self.registry.field_depends[Model.full_name], ())
 
         # the dependencies of full_name are stored in a config parameter
-        self.env['ir.config_parameter'].set_param('test_orm.full_name', 'name1,name2')
+        self.env['ir.config_parameter'].set_str('test_orm.full_name', 'name1,name2')
 
         # this must re-evaluate the field's dependencies
         self.env.flush_all()
@@ -1052,33 +1053,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for record in records:
                 self.check_monetary(record, amount, currency, 'multi write(amount)')
 
-    def test_20_monetary_opw_2223134(self):
-        """ test monetary fields with cache override """
-        model = self.env['test_orm.monetary_order']
-        currency = self.env.ref('base.USD')
-
-        def check(value):
-            self.assertEqual(record.total, value)
-            self.env.flush_all()
-            self.cr.execute('SELECT total FROM test_orm_monetary_order WHERE id=%s', [record.id])
-            [total] = self.cr.fetchone()
-            self.assertEqual(total, value)
-
-        # create, and compute amount
-        record = model.create({
-            'currency_id': currency.id,
-            'line_ids': [Command.create({'subtotal': 1.0})],
-        })
-        check(1.0)
-
-        # delete and add a line: the deletion of the line clears the cache, then
-        # the recomputation of 'total' must prefetch record.currency_id without
-        # screwing up the new value in cache
-        record.write({
-            'line_ids': [Command.delete(record.line_ids.id), Command.create({'subtotal': 1.0})],
-        })
-        check(1.0)
-
     def test_20_monetary_related(self):
         """ test value rounding with related currency """
         currency = self.env.ref('base.USD')
@@ -1109,6 +1083,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.name = False
         self.assertFalse(record.filtered_domain([('name', 'like', 'F')]))
         self.assertFalse(record.filtered_domain([('name', 'ilike', 'f')]))
+
+    def test_20_like_multiline(self):
+        """ test filtered_domain() on multiline fields. """
+        record = self.env['test_orm.mixed'].create({'comment1': 'Foo\nBar'})
+        self.assertTrue(record.filtered_domain([('comment1', 'like', 'Bar')]))
+        self.assertTrue(record.filtered_domain([('comment1', 'ilike', 'bar')]))
 
     def test_21_date(self):
         """ test date fields """
@@ -1890,7 +1870,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         cat1, cat2 = cats
         self.assertEqual(cat2.name, 'ACCESS')
         # both categories should be ready for prefetching
-        self.assertItemsEqual(cat2._prefetch_ids, cats.ids)
+        self.assertEqual(set(cat2._prefetch_ids), set(cats.ids))
         # but due to our (lame) overwrite of `read`, it should not forbid us to read records we have access to
         self.assertFalse(cat2.discussions)
         self.assertEqual(cat2.parent, cat1)
@@ -1930,21 +1910,23 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         existing.categories
 
         # invalidate 'categories' for the assertQueryCount
+        self.env.transaction.clear_access_cache()
         records.invalidate_model(['categories'])
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             # <categories>.__get__(existing)
+            #  -> records.check_access('read')
+            #      -> records._check_access('read')
+            #          -> records.sudo().filtered_domain(...)
+            #              -> <name>.__get__(existing)
+            #                  -> records._fetch_field(<name>)
+            #                      -> records.fetch(['name', ...])
+            #                          -> ONE QUERY to read ['name', ...] of records
+            #                          -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
+            #      -> ONE QUERY for records.exists() / MissingError during _check_access
+            #  -> ONE QUERY for records.exists()
             #  -> records._fetch_field(<categories>)
             #      -> records.fetch(['categories'])
-            #          -> records.check_access('read')
-            #              -> records._check_access('read')
-            #                  -> records.sudo().filtered_domain(...)
-            #                      -> <name>.__get__(existing)
-            #                          -> records._fetch_field(<name>)
-            #                              -> records.fetch(['name', ...])
-            #                                  -> ONE QUERY to read ['name', ...] of records
-            #                                  -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
-            #          -> ONE QUERY for records.exists() / code: self = self.exists()
-            #          -> ONE QUERY to read the many2many of existing
+            #              -> ONE QUERY to read the many2many of existing
             existing.categories
 
         # this one must trigger a MissingError
@@ -2354,7 +2336,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # read the related field discussion_name
         self.assertNotEqual(message.sudo().env, message.env)
-        self.assertEqual(message.discussion_name, discussion.name)
+        self.assertEqual(message.discussion_name, discussion.sudo().name)
 
     def test_43_new_related(self):
         """ test the behavior of one2many related fields """
@@ -3259,7 +3241,7 @@ class TestX2many(TransactionExpressionCase):
         cls.partner_portal = cls.user_portal.partner_id
 
         if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
@@ -3740,6 +3722,7 @@ class TestX2many(TransactionExpressionCase):
                 })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHtmlField(TransactionCase):
 
     def setUp(self):
@@ -3902,6 +3885,7 @@ class TestHtmlField(TransactionCase):
         self.assertEqual(patch.call_count, 2)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMagicFields(TransactionCase):
 
     def test_write_date(self):
@@ -3943,10 +3927,12 @@ class TestMagicFields(TransactionCase):
         self.assertTrue(field.store)
 
 
-class TestParentStore(TransactionCase):
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestParentStore(TransactionCaseWithUserDemo):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # make a tree of categories:
         #   0
         #  /|\
@@ -3955,7 +3941,7 @@ class TestParentStore(TransactionCase):
         #   4 5 6
         #      /|\
         #     7 8 9
-        Cat = self.env['test_orm.category']
+        Cat = cls.env['test_orm.category']
         cat0 = Cat.create({'name': '0'})
         cat1 = Cat.create({'name': '1', 'parent': cat0.id})
         cat2 = Cat.create({'name': '2', 'parent': cat0.id})
@@ -3966,8 +3952,8 @@ class TestParentStore(TransactionCase):
         cat7 = Cat.create({'name': '7', 'parent': cat6.id})
         cat8 = Cat.create({'name': '8', 'parent': cat6.id})
         cat9 = Cat.create({'name': '9', 'parent': cat6.id})
-        self._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
-                                cat5, cat6, cat7, cat8, cat9)
+        cls._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
+                               cat5, cat6, cat7, cat8, cat9)
 
     def cats(self, *indexes):
         """ Return the given categories. """
@@ -4005,7 +3991,6 @@ class TestParentStore(TransactionCase):
 
     def test_base_compute(self):
         """ Check the tree structure after computation from scratch. """
-        self.cats()._parent_store_compute()
         self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
         self.assertChildOf(self.cats(1), self.cats(1))
         self.assertChildOf(self.cats(2), self.cats(2))
@@ -4121,12 +4106,48 @@ class TestParentStore(TransactionCase):
         self.assertEqual(self.cats(8).depth, 2)
         self.assertEqual(self.cats(9).depth, 2)
 
+        # warmup
+        self.cats().create({'name': 'warmup'})
         # add a new node: one query to INSERT, one query to UPDATE parent_path
         with self.assertQueryCount(2):
             cat = self.cats().create({'name': '10', 'parent': self.cats(6).id})
             self.assertEqual(cat.depth, 2)
 
+    def test_with_ir_rule_behavior(self):
+        self.env['ir.rule'].create({
+            'name': 'category rule',
+            'model_id': self.env['ir.model']._get('test_orm.category').id,
+            'domain_force': str([('id', 'in', self.cats(3).ids)]),
+        })
 
+        # Ensure that we don't have access to inaccessible records
+        self.assertEqual(
+            self.cats().with_user(self.user_demo).search([('id', 'child_of', self.cats(3).ids)]),
+            self.cats(3),
+        )
+        self.assertEqual(
+            self.cats().with_user(self.user_demo).search([('id', 'parent_of', self.cats(3).ids)]),
+            self.cats(3),
+        )
+
+        Dis = self.env['test_orm.discussion']
+        dis_0, dis_3, dis_5, dis_7 = Dis.create([
+            {'name': 'A', 'categories': self.cats(0)},
+            {'name': 'B', 'categories': self.cats(3)},
+            {'name': 'C', 'categories': self.cats(5)},
+            {'name': 'D', 'categories': self.cats(7)},
+        ])
+        self.assertEqual(
+            Dis.with_user(self.user_demo).search([('categories', 'child_of', self.cats(3).ids)]),
+            dis_3 + dis_5 + dis_7,
+        )
+        self.assertEqual(
+            Dis.with_user(self.user_demo).search([('categories', 'parent_of', self.cats(3).ids)]),
+            dis_0 + dis_3,
+        )
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequiredMany2one(TransactionCase):
 
     def test_explicit_ondelete(self):
@@ -4149,6 +4170,7 @@ class TestRequiredMany2one(TransactionCase):
             field.setup_nonrelated(Model)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequiredMany2oneTransient(TransactionCase):
 
     def test_explicit_ondelete(self):
@@ -4207,6 +4229,7 @@ class TestMany2oneReference(TransactionExpressionCase):
 
 
 @tagged('selection_abstract')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectionDeleteUpdate(TransactionCase):
 
     MODEL_ABSTRACT = 'test_orm.state_mixin'
@@ -4225,6 +4248,7 @@ class TestSelectionDeleteUpdate(TransactionCase):
 
 
 @tagged('selection_update_base')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectionUpdates(TransactionCase):
     MODEL_BASE = 'test_orm.model_selection_base'
     MODEL_RELATED = 'test_orm.model_selection_related'
@@ -4262,6 +4286,7 @@ class TestSelectionUpdates(TransactionCase):
 
 
 @tagged('selection_ondelete_base')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectionOndelete(TransactionCase):
 
     MODEL_BASE = 'test_orm.model_selection_base'
@@ -4418,6 +4443,7 @@ class TestSelectionOndelete(TransactionCase):
 
 
 @tagged('selection_ondelete_advanced')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectionOndeleteAdvanced(TransactionCase):
 
     MODEL_BASE = 'test_orm.model_selection_base'
@@ -4516,6 +4542,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFieldParametersValidation(TransactionCase):
     def test_invalid_parameter(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4573,6 +4600,7 @@ def update(model, *fnames):
     )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeQueries(TransactionCase):
     """ Test the queries made by create() with computed fields. """
 
@@ -4772,50 +4800,15 @@ class TestComputeQueries(TransactionCase):
             self.assertEqual(patch_compute.call_count, 1)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeSudo(TransactionCaseWithUserDemo):
     def test_compute_sudo_depends_context_uid(self):
         record = self.env['test_orm.compute.sudo'].create({})
         self.assertEqual(record.with_user(self.user_demo).name_for_uid, self.user_demo.name)
 
 
-class test_shared_cache(TransactionCaseWithUserDemo):
-    def test_shared_cache_computed_field(self):
-        # Test case: Check that the shared cache is not used if a compute_sudo stored field
-        # is computed IF there is an ir.rule defined on this specific model.
-
-        # Real life example:
-        # A user can only see its own timesheets on a task, but the field "Planned Hours",
-        # which is stored-compute_sudo, should take all the timesheet lines into account
-        # However, when adding a new line and then recomputing the value, no existing line
-        # from another user is binded on self, then the value is erased and saved on the
-        # database.
-
-        task = self.env['test_orm.model_shared_cache_compute_parent'].create({
-            'name': 'Shared Task'})
-        self.env['test_orm.model_shared_cache_compute_line'].create({
-            'user_id': self.env.ref('base.user_admin').id,
-            'parent_id': task.id,
-            'amount': 1,
-        })
-        self.assertEqual(task.total_amount, 1)
-
-        self.env.flush_all()
-        self.env.invalidate_all()  # Start fresh, as it would be the case on 2 different sessions.
-
-        task = task.with_user(self.user_demo)
-        with Form(task) as task_form:
-            # Use demo has no access to the already existing line
-            self.assertEqual(len(task_form.line_ids), 0)
-            # But see the real total_amount
-            self.assertEqual(task_form.total_amount, 1)
-            # Now let's add a new line (and retrigger the compute method)
-            with task_form.line_ids.new() as line:
-                line.amount = 2
-            # The new value for total_amount, should be 3, not 2.
-            self.assertEqual(task_form.total_amount, 2)
-
-
 @tagged('unlink_constraints')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUnlinkConstraints(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -4857,6 +4850,7 @@ class TestUnlinkConstraints(TransactionCase):
 
 
 @tagged('wrong_related_path')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWrongRelatedError(TransactionCase):
     def test_wrong_related_path(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4878,6 +4872,7 @@ class TestWrongRelatedError(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPrecomputeModel(TransactionCase):
 
     def test_precompute_consistency(self):
@@ -4937,6 +4932,7 @@ class TestPrecomputeModel(TransactionCase):
             self.registry.get_trigger_tree(Model._fields.values())
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPrecompute(TransactionCase):
 
     def test_precompute(self):
@@ -5119,6 +5115,7 @@ class TestPrecompute(TransactionCase):
             model.create({})
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestModifiedPerformance(TransactionCase):
 
     @classmethod
@@ -5196,16 +5193,7 @@ class TestModifiedPerformance(TransactionCase):
                    "test_orm_modified_line"."create_date"
             FROM "test_orm_modified_line"
             WHERE "test_orm_modified_line"."id" IN %s
-        """, """
-            SELECT "test_orm_modified_line"."id",
-                   "test_orm_modified_line"."parent_id"
-            FROM "test_orm_modified_line"
-            WHERE "test_orm_modified_line"."id" IN %s
         """], flush=False):
-            # Two requests:
-            # - one for fetch modified_line_a_child_child data (invalidate just before)
-            # - one because modified_line_a_child.parent_id (invalidate just before because we invalidate inverse in `_invalidate_cache`,
-            # see TODO) -> We should change that
             self.modified_line_a_child_child.price = 4
         self.assertEqual(self.modified_line_a_child_child.total_price_quantity, 20)
         self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)

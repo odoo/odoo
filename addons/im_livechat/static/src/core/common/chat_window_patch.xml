@@ -8,7 +8,7 @@
             </t>
         </xpath>
         <xpath expr="//Composer" position="replace">
-            <div t-if="thread?.composerHidden" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerHiddenContainer">
+            <div t-if="channel.composerHidden" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerHiddenContainer">
                 <span t-if="!showGiveFeedbackBtn" class="flex-grow-1"/>
                 <span>This livechat conversation has ended</span>
                 <span class="flex-grow-1"/>

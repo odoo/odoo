@@ -232,6 +232,17 @@ export class Dropdown extends Component {
         }
     }
 
+    handleKeydown(event) {
+        if (["ArrowDown", "ArrowUp"].includes(event.key) && !this.state.isOpen && !this.hasParent) {
+            if (this.props.disabled) {
+                return;
+            }
+
+            event.stopPropagation();
+            this.state.open();
+        }
+    }
+
     handleMouseEnter() {
         if (this.props.disabled) {
             return;
@@ -294,13 +305,19 @@ export class Dropdown extends Component {
         this.defaultDirection = this.position.split("-")[0];
         this.setTargetDirectionClass(this.defaultDirection);
 
+        const clickHandler = (ev) => this.handleClick(ev);
+        const mouseEnterHandler = (ev) => this.handleMouseEnter(ev);
+        const keydownHandler = (ev) => this.handleKeydown(ev);
+
         if (!this.props.manual) {
-            target.addEventListener("click", this.handleClick.bind(this));
-            target.addEventListener("mouseenter", this.handleMouseEnter.bind(this));
+            target.addEventListener("click", clickHandler);
+            target.addEventListener("mouseenter", mouseEnterHandler);
+            target.addEventListener("keydown", keydownHandler);
 
             return () => {
-                target.removeEventListener("click", this.handleClick.bind(this));
-                target.removeEventListener("mouseenter", this.handleMouseEnter.bind(this));
+                target.removeEventListener("click", clickHandler);
+                target.removeEventListener("mouseenter", mouseEnterHandler);
+                target.removeEventListener("keydown", keydownHandler);
             };
         }
     }

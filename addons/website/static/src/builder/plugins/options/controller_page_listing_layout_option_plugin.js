@@ -3,22 +3,23 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 const mainObjectRe = /website\.controller\.page\(((\d+,?)*)\)/;
+
+export class ControllerPageListingLayoutOption extends BaseOptionComponent {
+    static template = "website.ControllerPageListingLayoutOption";
+    static selector = ".listing_layout_switcher";
+    static editableOnly = false;
+    static title = _t("Layout");
+    static groups = ["website.group_website_designer"];
+}
 
 class ControllerPageListingLayoutOptionPlugin extends Plugin {
     static id = "controllerPageListingLayoutOption";
     static dependencies = ["builderActions"];
     resources = {
-        builder_options: [
-            {
-                template: "website.ControllerPageListingLayoutOption",
-                selector: ".listing_layout_switcher",
-                editableOnly: false,
-                title: _t("Layout"),
-                groups: ["website.group_website_designer"],
-            },
-        ],
+        builder_options: [ControllerPageListingLayoutOption],
         builder_actions: {
             ListingLayoutAction,
         },

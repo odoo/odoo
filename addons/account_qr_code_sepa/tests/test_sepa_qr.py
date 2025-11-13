@@ -77,3 +77,61 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertFalse(reverse_move.qr_code_method, "qr_code_method for credit note should be None")
+
+    def test_get_qr_vals_communication(self):
+        """ The aim of this test is making sure that we only provide a structured
+            reference (or communication) in the qr code values if the communication
+            is well-structured. If the communication is not structured, we provide
+            it through the unstructured communication value.
+        """
+        result = self.acc_sepa_iban._get_qr_vals(
+            qr_method='sct_qr',
+            amount=100.0,
+            currency=self.env.ref('base.EUR'),
+            debtor_partner=None,
+            free_communication='A free communication',
+            structured_communication='A free communication',
+        )
+        self.assertEqual(
+            result,
+            [
+                'BCD',
+                '002',
+                '1',
+                'SCT',
+                '',
+                'company_1_data',
+                'BE15001559627230',
+                'EUR100.0',
+                '',
+                '',
+                'A free communication',
+                '',
+            ]
+        )
+
+        result = self.acc_sepa_iban._get_qr_vals(
+            qr_method='sct_qr',
+            amount=100.0,
+            currency=self.env.ref('base.EUR'),
+            debtor_partner=None,
+            free_communication=' 5 000 0567 89012345 ',  # NL Structured reference
+            structured_communication=' 5 000 0567 89012345 ',  # NL Structured reference
+        )
+        self.assertEqual(
+            result,
+            [
+                'BCD',
+                '002',
+                '1',
+                'SCT',
+                '',
+                'company_1_data',
+                'BE15001559627230',
+                'EUR100.0',
+                '',
+                '5000056789012345',
+                '',
+                '',
+            ]
+        )

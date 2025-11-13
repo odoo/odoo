@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -56,7 +56,7 @@ test('click on "add followers" button', async () => {
             if (action?.res_model !== "mail.followers.edit") {
                 return super.doAction(...arguments);
             }
-            asyncStep("action:open_view");
+            expect.step("action:open_view");
             expect(action.context.default_res_model).toBe("res.partner");
             expect(action.context.default_res_ids).toEqual([partnerId_1]);
             expect(action.res_model).toBe("mail.followers.edit");
@@ -80,7 +80,7 @@ test('click on "add followers" button', async () => {
     await contains(".o-mail-Followers-dropdown");
     await click("a", { text: "Add Followers" });
     await contains(".o-mail-Followers-dropdown", { count: 0 });
-    await waitForSteps(["action:open_view"]);
+    await expect.waitForSteps(["action:open_view"]);
     await contains(".o-mail-Followers-counter", { text: "2" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower", { count: 2 });

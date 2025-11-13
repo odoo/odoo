@@ -156,6 +156,7 @@ class SurveySurvey(models.Model):
     # live sessions - current question fields
     session_question_id = fields.Many2one('survey.question', string="Current Question", copy=False,
         help="The current question of the survey session.")
+    session_question_can_answer = fields.Boolean("Can Answer Current Question", default=True, copy=False)
     session_start_time = fields.Datetime("Current Session Start Time", copy=False)
     session_question_start_time = fields.Datetime("Current Question Start Time", copy=False,
         help="The time at which the current question has started, used to handle the timer for attendees.")

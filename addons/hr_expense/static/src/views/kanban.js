@@ -24,10 +24,12 @@ registry.category('views').add('hr_expense_kanban', {
     ...kanbanView,
     Controller: ExpenseKanbanController,
     Renderer: ExpenseKanbanRenderer,
+    buttonTemplate: "hr_expense.KanbanView.Buttons"
 });
 
 registry.category('views').add('hr_expense_dashboard_kanban', {
     ...kanbanView,
     Controller: ExpenseKanbanController,
     Renderer: ExpenseDashboardKanbanRenderer,
+    buttonTemplate: "hr_expense.KanbanView.Buttons"
 });

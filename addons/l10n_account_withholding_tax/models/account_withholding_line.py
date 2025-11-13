@@ -320,7 +320,9 @@ class AccountWithholdingLine(models.AbstractModel):
         # We need to make sure that we use the actual amounts set on the line; in case of manual adjustment.
         manual_tax_amounts = {str(self.tax_id.id): {
             'base_amount_currency': self.base_amount,
+            'base_amount': company.currency_id.round(self.base_amount / conversion_rate) if conversion_rate else 0.0,
             'tax_amount_currency': -self.amount,
+            'tax_amount': company.currency_id.round(-self.amount / conversion_rate) if conversion_rate else 0.0,
         }}
         return self.env['account.tax']._prepare_base_line_for_taxes_computation(
             self,
@@ -334,6 +336,8 @@ class AccountWithholdingLine(models.AbstractModel):
             calculate_withholding_taxes=True,
             manual_tax_line_name=self.name,
             computation_key=str(self.id),
+            manual_total_excluded_currency=self.base_amount,
+            manual_total_excluded=company.currency_id.round(self.base_amount / conversion_rate) if conversion_rate else 0.0,
             manual_tax_amounts=manual_tax_amounts,
             is_refund=self._is_refund(),
         )

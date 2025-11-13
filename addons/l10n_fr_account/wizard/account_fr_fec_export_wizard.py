@@ -250,7 +250,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
             rows_to_write.append(listrow)
 
         # LINES
-        query_limit = int(self.env['ir.config_parameter'].sudo().get_param('l10n_fr_fec.batch_size', 500000)) # To prevent memory errors when fetching the results
+        query_limit = self.env['ir.config_parameter'].sudo().get_int('l10n_fr_fec.batch_size') or 500000  # To prevent memory errors when fetching the results
         query = self.env['account.move.line']._search(
             domain=self._get_base_domain() + [
                 ('date', '>=', self.date_from),

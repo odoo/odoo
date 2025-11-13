@@ -29,9 +29,11 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
             config: { cleanEmptyStructuralContainers: false },
         });
@@ -79,7 +81,9 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div><div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div></div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -108,7 +112,9 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div class="oe_unremovable">[]<br></div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -123,9 +129,11 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div class="oe_unremovable">
                     <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -141,11 +149,13 @@ describe("Adjust base container on delete", () => {
             },
             // The P is added by the deletion, not by `cleanEmptyStructuralContainers`.
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <div contenteditable="true">
                         <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -162,11 +172,13 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <div contenteditable="true">
                         <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -183,9 +195,11 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]</div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -201,9 +215,11 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -218,9 +234,11 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div class="o-paragraph">[]text</div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -253,11 +271,13 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <div contenteditable="true">
                         <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });

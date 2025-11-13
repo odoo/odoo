@@ -5,6 +5,7 @@ import { getShapeURL } from "@html_builder/plugins/image/image_helpers";
 import {
     activateCropper,
     createDataURL,
+    cropperDataFields,
     loadImage,
     loadImageInfo,
     isGif,
@@ -28,7 +29,7 @@ import { getMimetype } from "@html_editor/utils/image";
 // regex patterns in Python are slightly different from those in JavaScript.
 // See : controllers/main.py
 const CSS_ANIMATION_RULE_REGEX =
-    /(?<declaration>animation(?:-duration)?: .*?)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>ms|s)(?<separator>\s|;|"|$)/gm;
+    /(?<declaration>animation(?:-duration)?:\s*.*?)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>ms|s)(?<separator>\s|;|"|$)/gm;
 const SVG_DUR_TIMECOUNT_VAL_REGEX =
     /(?<attribute_name>\sdur="\s*)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>h|min|ms|s)?\s*"/gm;
 const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m;
@@ -61,6 +62,11 @@ export class ImageShapeOptionPlugin extends Plugin {
     setup() {
         this.shapeSvgTextCache = {};
         this.imageShapes = this.makeImageShapes();
+        // Compatibility with old shapes.
+        for (const shapeId of Object.keys(this.imageShapes)) {
+            const oldShapeId = shapeId.replace("html_builder", "web_editor");
+            this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
+        }
     }
     async canHaveHoverEffect(imgEl) {
         const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
@@ -90,13 +96,15 @@ export class ImageShapeOptionPlugin extends Plugin {
         return isImageSupportedForProcessing(getMimetype(img, dataset));
     }
     async getShapeSvgText(shapeName) {
-        let shapeSvgText = this.shapeSvgTextCache[shapeName];
+        // Compatibility with old shapes.
+        const shape = shapeName.replace("web_editor", "html_builder");
+        let shapeSvgText = this.shapeSvgTextCache[shape];
         if (shapeSvgText) {
             return shapeSvgText;
         }
-        const shapeURL = getShapeURL(shapeName);
+        const shapeURL = getShapeURL(shape);
         shapeSvgText = await (await fetch(shapeURL)).text();
-        this.shapeSvgTextCache[shapeName] = shapeSvgText;
+        this.shapeSvgTextCache[shape] = shapeSvgText;
         return shapeSvgText;
     }
     async loadShape(img, newData = {}) {
@@ -399,6 +407,18 @@ export class SetImageShapeAction extends BuilderAction {
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, value: shapeId }) {
         const params = { shape: shapeId };
+        // A crop is applied to the image at the same time as certain shapes,
+        // which is why we reset the crop here or when the shape is removed.
+        // However, we don’t reset it when the crop was applied intentionally.
+        // In that case, there are crop values; otherwise, there are none,
+        // only a 'data-aspect-ratio'.
+        if (
+            !shapeId &&
+            img.dataset.aspectRatio &&
+            !cropperDataFields.some((field) => field in img.dataset)
+        ) {
+            params["aspectRatio"] = undefined;
+        }
         // todo nby: re-read the old option method `setImgShape` and be sure all the logic is in there
         return this.dependencies.imageShapeOption.loadShape(img, params);
     }

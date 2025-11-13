@@ -20,6 +20,8 @@ actions(Check in/Check out) performed by them.
         'data/hr_attendance_data.xml',
         'security/hr_attendance_security.xml',
         'security/ir.model.access.csv',
+        'data/hr_attendance_overtime_ruleset_data.xml',
+        'data/hr_attendance_overtime_rule_data.xml',
         'views/hr_attendance_view.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
@@ -39,6 +41,9 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/**/*.xml',
             'hr_attendance/static/src/scss/views/*.scss'
         ],
+        'web.assets_unit_tests': [
+            'hr_attendance/static/tests/*.test.js',
+        ],
         'hr_attendance.assets_public_attendance': [
             # Define attendance variables (takes priority)
             'hr_attendance/static/src/scss/kiosk/primary_variables.scss',
@@ -55,11 +60,10 @@ actions(Check in/Check out) performed by them.
             'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'web._assets_bootstrap_frontend'),
             ('include', 'web._assets_bootstrap_backend'),
-            '/web/static/lib/odoo_ui_icons/*',
             '/web/static/lib/bootstrap/scss/_functions.scss',
             '/web/static/lib/bootstrap/scss/_mixins.scss',
             '/web/static/lib/bootstrap/scss/utilities/_api.scss',
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            ('include', 'web.icons_fonts'),
             ('include', 'web._assets_core'),
 
             # Public Kiosk app and its components

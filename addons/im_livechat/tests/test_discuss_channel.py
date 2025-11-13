@@ -1,13 +1,14 @@
+import json
 from datetime import timedelta
 from freezegun import freeze_time
+from markupsafe import Markup
 
 from odoo import Command, fields
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
 
 
-@tagged("-at_install", "post_install")
 class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
     def test_unfollow_from_non_member_does_not_close_livechat(self):
         bob_user = new_test_user(
@@ -201,9 +202,23 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertFalse(has_joined)
         self.assertNotIn(jane.partner_id, chat.channel_member_ids.partner_id)
 
+    @users("michel")
     def test_livechat_conversation_history(self):
         """Test livechat conversation history formatting"""
-        self.authenticate(self.operators[0].login, self.password)
+        def _convert_attachment_to_html(attachment):
+            attachment_data = {
+                "id": attachment.id,
+                "access_token": attachment.access_token,
+                "checksum": attachment.checksum,
+                "extension": "txt",
+                "mimetype": attachment.mimetype,
+                "filename": attachment.display_name,
+                "url": attachment.url,
+            }
+            return Markup(
+                "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
+            ) % json.dumps({"fileData": attachment_data})
+
         channel = self.env["discuss.channel"].create(
             {
                 "name": "test",
@@ -221,8 +236,16 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         channel.message_post(body="", attachment_ids=[attachment1.id])
         channel.with_user(self.visitor_user).message_post(body="Visitor Here")
         channel.with_user(self.visitor_user).message_post(body="", attachment_ids=[attachment2.id])
-        channel_history = channel._get_channel_history()
-        self.assertEqual(channel_history, 'Operator Here<br/>Visitor Here<br/>')
+        channel_history = channel.with_user(self.visitor_user)._get_channel_history()
+        self.assertEqual(
+            channel_history,
+            "<br/><strong>Michel Operator:</strong><br/>Operator Here<br/>%(attachment_1)s<br/>"
+            "<br/><strong>Rajesh:</strong><br/>Visitor Here<br/>%(attachment_2)s<br/>"
+            % {
+                "attachment_1": _convert_attachment_to_html(attachment1),
+                "attachment_2": _convert_attachment_to_html(attachment2),
+            },
+        )
 
     def test_gc_bot_sessions_after_one_day_inactivity(self):
         chatbot_script = self.env["chatbot.script"].create({"title": "Testing Bot"})

@@ -134,7 +134,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         cls.maxDiff = None
 
     @classmethod
-    def create_invoice(cls, **kwargs):
+    def _create_invoice_es(cls, **kwargs):
         return cls.env['account.move'].with_context(edi_test_mode=True).create({
             'partner_id': cls.partner_a.id,
             'invoice_date': cls.frozen_today.isoformat(),
@@ -162,7 +162,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with freeze_time(date), \
                 patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: date), \
                 self._mock_sha1():
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[
@@ -193,7 +193,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 patch(f'{self.certificate_module}.CertificateCertificate._compute_is_valid', _compute_is_valid), \
                 self._mock_sha1():
-            invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
+            invoice = self._create_invoice_es(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
             invoice.action_post()
             wizard = self.create_send_and_print(invoice)
             with self.assertRaises(UserError):
@@ -201,47 +201,12 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     def test_no_certificate_facturae_not_selected(self):
         self.certificate.unlink()
-        invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
+        invoice = self._create_invoice_es(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
         invoice.action_post()
         wizard = self.create_send_and_print(invoice)
         # Expect a UserError if no certificate is configured
         with self.assertRaises(UserError):
             wizard.action_send_and_print()
-
-    def test_tax_withheld(self):
-        with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
-                self._mock_sha1():
-            witholding_taxes = self.env["account.tax"].create([{
-                'name': "IVA 21%",
-                'company_id': self.company_data['company'].id,
-                'amount': 21.0,
-                'price_include_override': 'tax_excluded',
-                'l10n_es_edi_facturae_tax_type': '01'
-            }, {
-                'name': "IVA 21% withholding",
-                'company_id': self.company_data['company'].id,
-                'amount': -21.0,
-                'price_include_override': 'tax_excluded',
-                'l10n_es_edi_facturae_tax_type': '01'
-            }])
-
-            invoice = self.create_invoice(
-                partner_id=self.partner_a.id,
-                move_type='out_invoice',
-                invoice_line_ids=[
-                    {'price_unit': 100.0, 'tax_ids': witholding_taxes.ids},
-                    {'price_unit': 100.0, 'tax_ids': witholding_taxes.ids},
-                    {'price_unit': 200.0, 'tax_ids': witholding_taxes.ids},
-                ],
-            )
-            invoice.action_post()
-            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
-            self.assertFalse(errors)
-            self.assertTrue(generated_file)
-            with file_open("l10n_es_edi_facturae/tests/data/expected_tax_withholding.xml", "rt") as f:
-                expected_xml = lxml.etree.fromstring(f.read().encode())
-            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
     def test_in_invoice(self):
         random.seed(42)
@@ -249,7 +214,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with freeze_time(self.frozen_today), \
                 patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='in_invoice',
                 invoice_line_ids=[
@@ -269,13 +234,35 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
+    def test_out_invoice_decimals(self):
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        decimal_precision.digits = 4
+        with freeze_time(self.frozen_today):
+            invoice = self._create_invoice_es(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 2.0592, 'quantity': 22.0, 'tax_ids': [self.tax.id]},
+                ],
+            )
+            invoice.action_post()
+
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_4_decimals.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
     def test_refund_invoice(self):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(self.frozen_today), \
                 patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[
@@ -307,7 +294,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with freeze_time(self.frozen_today), \
                 patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[{'product_id': self.product_a.id, 'price_unit': 1000.0, 'discount': 100.0, 'quantity': 2}],
@@ -408,7 +395,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     @freeze_time('2023-01-01')
     def test_generate_with_administrative_centers(self):
-        invoice = self.create_invoice(
+        invoice = self._create_invoice_es(
             partner_id=self.partner_b.id,
             move_type='out_invoice',
             invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]},]
@@ -424,7 +411,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     @freeze_time('2023-01-01')
     def test_generate_with_invoice_period(self):
-        invoice = self.create_invoice(
+        invoice = self._create_invoice_es(
             partner_id=self.partner_a.id,
             move_type='out_invoice',
             invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
@@ -442,7 +429,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     @freeze_time('2023-01-01')
     def test_generate_with_payment_means(self):
-        invoice = self.create_invoice(
+        invoice = self._create_invoice_es(
             partner_id=self.partner_a.id,
             move_type='out_invoice',
             invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
@@ -468,7 +455,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(datetime(2023, 1, 1)):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=partner.id,
                 move_type='out_invoice',
                 invoice_line_ids=[
@@ -489,8 +476,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with freeze_time(self.frozen_today), \
                 patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
-
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[
@@ -536,8 +522,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with freeze_time(self.frozen_today), \
                 patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
                 self._mock_sha1():
-
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[{'price_unit': 150.0, 'tax_ids': [self.tax.id]}],
@@ -578,7 +563,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             invoices = self.env['account.move']
 
             # Invoice 1: With Factura-e XML
-            invoice1 = self.create_invoice(
+            invoice1 = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
@@ -595,7 +580,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             invoices |= invoice1
 
             # Invoice 2: With Factura-e XML
-            invoice2 = self.create_invoice(
+            invoice2 = self._create_invoice_es(
                 partner_id=self.partner_b.id,
                 move_type='out_invoice',
                 invoice_line_ids=[{'price_unit': 200.0, 'tax_ids': [self.tax.id]}],
@@ -612,7 +597,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             invoices |= invoice2
 
             # Invoice 3: Without Factura-e XML (should be excluded)
-            invoice3 = self.create_invoice(
+            invoice3 = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[{'price_unit': 50.0, 'tax_ids': [self.tax.id]}],
@@ -632,3 +617,26 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'target': 'download',
             }
             self.assertEqual(invoices.action_invoice_download_facturae(), expected_action)
+
+    def test_out_invoice_rounding(self):
+        company = self.company_data['company']
+        company.tax_calculation_rounding_method = 'round_globally'
+        with freeze_time(self.frozen_today):
+            invoice = self._create_invoice_es(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 2.02, 'quantity': 25.0, 'tax_ids': [self.tax.id]},
+                    {'price_unit': 7.29, 'quantity': 2.0, 'tax_ids': [self.tax.id]},
+                    {'price_unit': 7.32, 'quantity': 5.0, 'tax_ids': [self.tax.id]},
+                    {'price_unit': 9.50, 'quantity': 25.0, 'tax_ids': [self.tax.id]},
+                ],
+            )
+            invoice.action_post()
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_glob.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)

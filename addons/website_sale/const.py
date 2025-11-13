@@ -184,18 +184,18 @@ SHOP_PAGE_STYLE_MAPPING = {
             'disable': [],
         },
         'website_fields': {
-            'shop_gap': '16px',
+            'shop_gap': '4px',
             'shop_opt_products_design_classes': 'o_wsale_products_opt_name_color_regular '
                                                 'o_wsale_products_opt_thumb_cover '
                                                 'o_wsale_products_opt_has_cta '
                                                 'o_wsale_products_opt_has_wishlist '
                                                 'o_wsale_products_opt_actions_inline '
                                                 'o_wsale_products_opt_cc o_wsale_products_opt_cc1 '
-                                                'o_wsale_products_opt_rounded_2 '
-                                                'o_wsale_products_opt_img_secondary_show '
+                                                'o_wsale_products_opt_rounded_1 '
                                                 'o_wsale_products_opt_actions_promote '
                                                 'o_wsale_products_opt_layout_list '
-                                                'o_wsale_products_opt_design_thumbs',
+                                                'o_wsale_products_opt_design_condensed '
+                                                'o_wsale_products_opt_name_size_body',
         },
         'category_fields': {
             'show_category_title': True,
@@ -274,6 +274,29 @@ PRODUCT_PAGE_STYLE_MAPPING = {
             'product_page_image_ratio': '2_3',
         },
     },
+    'large_grid': {
+        'title': _lt("Large Grid"),
+        'img_src': '/website_sale/static/src/img/configurator/product/large_grid.jpg',
+        'views': {
+            'enable': [
+                # Purchase style
+                'website_sale.cta_wrapper_large',
+                'website_sale.product_buy_now_large',
+                'website_sale.product_quantity_large',
+            ],
+            'disable': [
+                'website_sale.cta_separator',  # Separator
+                'website_sale.cta_wrapper_boxed',  # Purchase style
+            ],
+        },
+        'website_fields': {
+            'product_page_image_width': '100_pc',
+            'product_page_image_layout': 'grid',
+            'product_page_image_spacing': 'big',
+            'product_page_image_roundness': 'big',
+            'product_page_image_ratio': '16_9',
+        },
+    },
     'focused': {
         'title': _lt("Focused"),
         'img_src': '/website_sale/static/src/img/configurator/product/focused.jpg',
@@ -294,28 +317,6 @@ PRODUCT_PAGE_STYLE_MAPPING = {
             'product_page_grid_columns': 1,
             'product_page_image_spacing': 'small',
             'product_page_image_roundness': 'small',
-        },
-    },
-    'large_image': {
-        'title': _lt("Large Image"),
-        'img_src': '/website_sale/static/src/img/configurator/product/large_image.jpg',
-        'views': {
-            'enable': [
-                'website_sale.carousel_product_indicators_bottom',  # Thumbnail position
-                'website_sale.cta_wrapper_boxed',  # Purchase style
-            ],
-            'disable': [
-                'website_sale.carousel_product_indicators_left',  # Thumbnail position
-                'website_sale.cta_separator',  # Separator
-                # Purchase style
-                'website_sale.cta_wrapper_large',
-                'website_sale.product_buy_now_large',
-                'website_sale.product_quantity_large',
-            ],
-        },
-        'website_fields': {
-            'product_page_image_width': '100_pc',
-            'product_page_image_ratio': '21_9',
         },
     },
     'functional': {
@@ -340,27 +341,26 @@ PRODUCT_PAGE_STYLE_MAPPING = {
 
         },
     },
-    'large_grid': {
-        'title': _lt("Large Grid"),
-        'img_src': '/website_sale/static/src/img/configurator/product/large_grid.jpg',
+    'large_image': {
+        'title': _lt("Large Image"),
+        'img_src': '/website_sale/static/src/img/configurator/product/large_image.jpg',
         'views': {
             'enable': [
+                'website_sale.carousel_product_indicators_bottom',  # Thumbnail position
+                'website_sale.cta_wrapper_boxed',  # Purchase style
+            ],
+            'disable': [
+                'website_sale.carousel_product_indicators_left',  # Thumbnail position
+                'website_sale.cta_separator',  # Separator
                 # Purchase style
                 'website_sale.cta_wrapper_large',
                 'website_sale.product_buy_now_large',
                 'website_sale.product_quantity_large',
             ],
-            'disable': [
-                'website_sale.cta_separator',  # Separator
-                'website_sale.cta_wrapper_boxed',  # Purchase style
-            ],
         },
         'website_fields': {
             'product_page_image_width': '100_pc',
-            'product_page_image_layout': 'grid',
-            'product_page_image_spacing': 'big',
-            'product_page_image_roundness': 'big',
-            'product_page_image_ratio': '16_9',
+            'product_page_image_ratio': '21_9',
         },
     },
 }

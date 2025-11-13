@@ -170,7 +170,7 @@ class ResourceCalendar(models.Model):
 
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env['resource.calendar.leaves']._read_group(
-            [('resource_id', '=', False), ('calendar_id', 'in', self.ids)],
+            [('resource_id', '=', False), '|', ('calendar_id', 'in', self.ids), ('calendar_id', '=', False)],
             ['calendar_id'],
             ['__count'],
         )

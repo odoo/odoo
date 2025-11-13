@@ -170,11 +170,11 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
 
     # Cloning odoo
     DetailPrint "Cloning Odoo"
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b saas-18.4 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b saas-19.1 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
 
     DetailPrint "Configuring Sparse Checkout for IoT modules"
     nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout init --no-cone'
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout set addons/web addons/hw_* addons/iot_drivers addons/iot_base addons/iot_box_image/configuration addons/point_of_sale/tools/posbox/configuration/requirements.txt odoo odoo-bin'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout set addons/web addons/hw_* addons/iot_drivers addons/iot_base setup/iot_box_builder/configuration addons/point_of_sale/tools/posbox/configuration/requirements.txt odoo odoo-bin'
 
     DetailPrint "Checking out the repository"
     nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" checkout'
@@ -239,8 +239,8 @@ Section -$(TITLE_Nginx) Nginx
     CreateDirectory $INSTDIR\nginx\logs
     File "conf\nginx\nginx.conf"
     # Temporary certs for the first start
-    File "..\..\odoo\addons\iot_box_image\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
-    File "..\..\odoo\addons\iot_box_image\overwrite_after_init\etc\ssl\private\nginx-cert.key"
+    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
+    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\private\nginx-cert.key"
 SectionEnd
 
 Section -$(TITLE_Ghostscript) SectionGhostscript

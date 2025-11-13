@@ -75,8 +75,10 @@
                 <field name="active" column_invisible="True"/>
                 <field name="expires_today" column_invisible="True"/>
                 <field name="name" class="fw-bold" />
+                <field name="cost_subtype_id" />
                 <field name="start_date" />
-                <field name="expiration_date" widget="remaining_days"/>
+                <field name="expiration_date" widget="remaining_days"
+                    options="{'classes': {'danger': 'record.days_left==0 and not record.expires_today and not record.has_open_contract'}}"/>
                 <field name="days_left" column_invisible="True"/>
                 <field name="vehicle_id"/>
                 <field name="insurer_id" />

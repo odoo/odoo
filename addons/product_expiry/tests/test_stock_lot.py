@@ -7,9 +7,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockLot(TestStockCommon):
 
     @classmethod

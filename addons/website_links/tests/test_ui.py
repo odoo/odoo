@@ -22,6 +22,6 @@ class TestUi(odoo.tests.HttpCase):
             'campaign_id': self.env['utm.campaign'].create({'name': 'Super Specific Campaign'}).id,
             'medium_id': self.env['utm.medium'].create({'name': 'Super Specific Medium'}).id,
             'source_id': self.env['utm.source'].create({'name': 'Super Specific Source'}).id,
-            'url': self.env["ir.config_parameter"].sudo().get_param("web.base.url") + '/contactus',
+            'url': self.env["ir.config_parameter"].sudo().get_str("web.base.url") + '/contactus',
         }])
         self.start_tour("/", 'website_links_tour', login="admin")

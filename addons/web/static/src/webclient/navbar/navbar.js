@@ -15,6 +15,7 @@ import {
     useRef,
     useState,
     onWillUnmount,
+    useChildSubEnv,
 } from "@odoo/owl";
 const systrayRegistry = registry.category("systray");
 
@@ -70,6 +71,9 @@ export class NavBar extends Component {
             () => [adaptCounter]
         );
 
+        // allow systray items to trigger an adapt when their layout changes
+        useChildSubEnv({ redrawNavbar: renderAndAdapt });
+
         this.state = useState({
             isAllAppsMenuOpened: false,
             isAppMenuSidebarOpened: false,
@@ -85,7 +89,17 @@ export class NavBar extends Component {
     }
 
     get currentApp() {
-        return this.menuService.getCurrentApp();
+        const app = this.menuService.getCurrentApp();
+        if (app?.webIcon) {
+            const [webIconClass, webIconColor, webIconBg] = app.webIcon.split(",");
+            return {
+                ...app,
+                webIconClass,
+                webIconColor,
+                webIconBg,
+            };
+        }
+        return app;
     }
 
     get currentAppSections() {

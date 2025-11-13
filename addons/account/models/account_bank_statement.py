@@ -94,6 +94,10 @@ class AccountBankStatement(models.Model):
         search='_search_is_valid',
     )
 
+    journal_has_invalid_statements = fields.Boolean(
+        related='journal_id.has_invalid_statements',
+    )
+
     problem_description = fields.Text(
         compute='_compute_problem_description',
     )
@@ -236,21 +240,26 @@ class AccountBankStatement(models.Model):
         self.env['account.bank.statement'].flush_model(['balance_start', 'balance_end_real', 'first_line_index'])
 
         self.env.cr.execute(f"""
-            SELECT st.id
-              FROM account_bank_statement st
-         LEFT JOIN res_company co ON st.company_id = co.id
-         LEFT JOIN account_journal j ON st.journal_id = j.id
-         LEFT JOIN res_currency currency ON COALESCE(j.currency_id, co.currency_id) = currency.id,
-                   LATERAL (
-                       SELECT balance_end_real
-                         FROM account_bank_statement st_lookup
-                        WHERE st_lookup.first_line_index < st.first_line_index
-                          AND st_lookup.journal_id = st.journal_id
-                     ORDER BY st_lookup.first_line_index desc
-                        LIMIT 1
-                   ) prev
-             WHERE ROUND(prev.balance_end_real, currency.decimal_places) != ROUND(st.balance_start, currency.decimal_places)
-               {"" if all_statements else "AND st.id IN %(ids)s"}
+             WITH statements AS (
+                     SELECT st.id,
+                            st.balance_start,
+                            st.journal_id,
+                            LAG(st.balance_end_real) OVER (
+                                PARTITION BY st.journal_id
+                                    ORDER BY st.first_line_index
+                            ) AS prev_balance_end_real,
+                            currency.decimal_places
+                       FROM account_bank_statement st
+                  LEFT JOIN res_company co ON st.company_id = co.id
+                  LEFT JOIN account_journal j ON st.journal_id = j.id
+                  LEFT JOIN res_currency currency ON COALESCE(j.currency_id, co.currency_id) = currency.id
+                      WHERE st.first_line_index IS NOT NULL
+                      {"" if all_statements else "AND st.id IN %(ids)s"}
+                  )
+           SELECT id
+             FROM statements
+            WHERE prev_balance_end_real IS NOT NULL
+              AND ROUND(prev_balance_end_real, decimal_places) != ROUND(balance_start, decimal_places);
         """, {
             'ids': tuple(self.ids)
         })

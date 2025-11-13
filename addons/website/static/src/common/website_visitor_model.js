@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 
 export class WebsiteVisitor extends Record {
     static _name = "website.visitor";

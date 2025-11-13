@@ -1,24 +1,10 @@
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
 import { Deferred } from "@web/core/utils/concurrency";
-
-/** @type {typeof Thread} */
-const threadStaticPatch = {
-    async getOrFetch(data, fieldNames = []) {
-        const thread = await super.getOrFetch(...arguments);
-        if (thread) {
-            return thread;
-        }
-        // wait for restore of livechatService.savedState as channel might be inserted from there
-        await this.store.isReady;
-        return super.getOrFetch(...arguments);
-    },
-};
-patch(Thread, threadStaticPatch);
 
 patch(Thread.prototype, {
     setup() {
@@ -72,23 +58,12 @@ patch(Thread.prototype, {
             },
             eager: true,
         });
-        this.storeAsActiveLivechats = fields.One("Store", {
-            compute() {
-                return this.channel?.channel_type === "livechat" && !this.livechat_end_dt
-                    ? this.store
-                    : null;
-            },
-        });
         this.requested_by_operator = false;
         this._prevComposerDisabled = false;
     },
     /** @returns {boolean} */
     get isLastMessageFromCustomer() {
         return this.newestPersistentOfAllMessage?.isSelfAuthored;
-    },
-
-    get membersThatCanSeen() {
-        return super.membersThatCanSeen.filter((member) => member.livechat_member_type !== "bot");
     },
 
     get avatarUrl() {
@@ -139,13 +114,13 @@ patch(Thread.prototype, {
             });
             this.messages.push(temporaryMsg);
             this?.chatbot?._simulateTyping(2 ** 31 - 1);
-            const thread = await this.store.env.services["im_livechat.livechat"].persist(this);
+            const channel = await this.store.env.services["im_livechat.livechat"].persist(this);
             temporaryMsg.author_id = this.store.self; // Might have been created after persist.
-            if (!thread) {
+            if (!channel) {
                 return;
             }
-            await thread.isLoadedDeferred;
-            return thread.post(...arguments).then(() => thread.readyToSwapDeferred.resolve());
+            await channel.isLoadedDeferred;
+            return channel.post(...arguments).then(() => channel.readyToSwapDeferred.resolve());
         }
         const message = await super.post(...arguments);
         await this.chatbot?.processAnswer(message);

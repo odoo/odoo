@@ -34,10 +34,10 @@ DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 # regex patterns in Python are slightly different from those in JavaScript.
 
 CSS_ANIMATION_RULE_REGEX = (
-        r"(?P<declaration>animation(-duration)?: .*?)"
-        + r"(?P<value>(\d+(\.\d+)?)|(\.\d+))"
-        + r"(?P<unit>ms|s)"
-        + r"(?P<separator>\s|;|\"|$)"
+        r"(?P<declaration>animation(-duration)?:\s*.*?)"
+        r"(?P<value>(\d+(\.\d+)?)|(\.\d+))"
+        r"(?P<unit>ms|s)"
+        r"(?P<separator>\s|;|\"|$)"
 )
 SVG_DUR_TIMECOUNT_VAL_REGEX = (
         r"(?P<attribute_name>\sdur=\"\s*)"
@@ -205,7 +205,7 @@ class HTML_Editor(http.Controller):
             )
         else:
             regex = r"<svg .*>"
-            declaration = f"--animation-ratio: {ratio}"
+            declaration = f"--animation_ratio: {ratio}"
             subst = ("\\g<0>\n\t<style>\n\t\t:root { \n\t\t\t" +
                      declaration +
                      ";\n\t\t}\n\t</style>")
@@ -351,7 +351,7 @@ class HTML_Editor(http.Controller):
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False,
                        hide_dm_logo=False, hide_dm_share=False,
-                       start_from=False):
+                       start_from=False, **kwargs):
         return get_video_url_data(
             video_url, autoplay=autoplay, loop=loop,
             hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
@@ -398,6 +398,8 @@ class HTML_Editor(http.Controller):
         """
         self._clean_context()
         attachment = request.env['ir.attachment'].browse(attachment.id)
+        if not data and attachment.datas:
+            data = attachment.datas
 
         fields = {
             'original_id': attachment.id,
@@ -492,11 +494,11 @@ class HTML_Editor(http.Controller):
         """
         attachments = []
         ICP = request.env['ir.config_parameter'].sudo()
-        library_endpoint = ICP.get_param('html_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+        library_endpoint = ICP.get_str('html_editor.media_library_endpoint') or DEFAULT_LIBRARY_ENDPOINT
 
         media_ids = ','.join(media.keys())
         params = {
-            'dbuuid': ICP.get_param('database.uuid'),
+            'dbuuid': ICP.get_str('database.uuid'),
             'media_ids': media_ids,
         }
         response = requests.post('%s/media-library/1/download_urls' % library_endpoint, data=params)
@@ -621,8 +623,8 @@ class HTML_Editor(http.Controller):
     def generate_text(self, prompt, conversation_history):
         try:
             IrConfigParameter = request.env['ir.config_parameter'].sudo()
-            olg_api_endpoint = IrConfigParameter.get_param('html_editor.olg_api_endpoint', DEFAULT_OLG_ENDPOINT)
-            database_id = IrConfigParameter.get_param('database.uuid')
+            olg_api_endpoint = IrConfigParameter.get_str('html_editor.olg_api_endpoint') or DEFAULT_OLG_ENDPOINT
+            database_id = IrConfigParameter.get_str('database.uuid')
             response = iap_tools.iap_jsonrpc(olg_api_endpoint + "/api/olg/1/chat", params={
                 'prompt': prompt,
                 'conversation_history': conversation_history or [],
@@ -726,8 +728,8 @@ class HTML_Editor(http.Controller):
     @http.route(['/html_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
     def media_library_search(self, **params):
         ICP = request.env['ir.config_parameter'].sudo()
-        endpoint = ICP.get_param('html_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
-        params['dbuuid'] = ICP.get_param('database.uuid')
+        endpoint = ICP.get_str('html_editor.media_library_endpoint') or DEFAULT_LIBRARY_ENDPOINT
+        params['dbuuid'] = ICP.get_str('database.uuid')
         response = requests.post('%s/media-library/1/search' % endpoint, data=params, timeout=5)
         if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
             return response.json()

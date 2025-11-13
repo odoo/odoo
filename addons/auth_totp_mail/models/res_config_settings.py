@@ -27,5 +27,5 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super().get_values()
-        res['auth_totp_enforce'] = bool(self.env['ir.config_parameter'].sudo().get_param('auth_totp.policy'))
+        res['auth_totp_enforce'] = bool(self.env['ir.config_parameter'].sudo().get_str('auth_totp.policy'))
         return res

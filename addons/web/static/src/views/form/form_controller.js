@@ -45,6 +45,7 @@ import {
 } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 import { effect } from "@web/core/utils/reactive";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 const viewRegistry = registry.category("views");
 
@@ -144,6 +145,7 @@ export class FormController extends Component {
         Compiler: Function,
         archInfo: Object,
         buttonTemplate: String,
+        buttonDialogTemplate: String,
         preventCreate: { type: Boolean, optional: true },
         preventEdit: { type: Boolean, optional: true },
         onDiscard: { type: Function, optional: true },
@@ -178,6 +180,8 @@ export class FormController extends Component {
         this.formInDialog = 0;
         useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:ADD", () => this.formInDialog++);
         useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE", () => this.formInDialog--);
+
+        this.disableSaveOnVisibilityChange = false;
 
         // Wait to be mounted before displaying dialog/notification for onchange warnings returned
         // by the first onchange, for 2 reasons:
@@ -331,6 +335,10 @@ export class FormController extends Component {
         }
 
         this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+
+        this.propertiesState = useState({
+            editable: false,
+        });
     }
 
     get cogMenuProps() {
@@ -367,6 +375,7 @@ export class FormController extends Component {
             hooks: {
                 onWillLoadRoot: this.onWillLoadRoot.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
+                onRecordChanged: this.onRecordChanged.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
             },
@@ -381,6 +390,10 @@ export class FormController extends Component {
      */
     onWillLoadRoot() {
         this.duplicateId = undefined;
+    }
+
+    onRecordChanged() {
+        this.disableSaveOnVisibilityChange = false;
     }
 
     /**
@@ -416,6 +429,9 @@ export class FormController extends Component {
     async onWillSaveRecord() {}
 
     async onSaveError(error, { discard, retry }, leaving) {
+        if (error instanceof ConnectionLostError) {
+            return false;
+        }
         const suggestedCompany = error.data?.context?.suggested_company;
         const activeCompanyIds = user.activeCompanies.map((c) => c.id);
         if (
@@ -482,9 +498,21 @@ export class FormController extends Component {
         }
     }
 
-    beforeVisibilityChange() {
+    async beforeVisibilityChange() {
         if (document.visibilityState === "hidden" && this.formInDialog === 0) {
-            return this.model.root.save();
+            // calling isDirty forces all fields to commit their changes
+            const isDirty = await this.model.root.isDirty();
+            if (isDirty && !this.disableSaveOnVisibilityChange) {
+                const saved = await this.model.root.save({
+                    onError: (e) => {
+                        this.disableSaveOnVisibilityChange = true;
+                        throw e;
+                    },
+                });
+                if (!saved) {
+                    this.disableSaveOnVisibilityChange = true;
+                }
+            }
         }
     }
 
@@ -512,8 +540,15 @@ export class FormController extends Component {
                 isAvailable: () => activeActions.addPropertyFieldValue,
                 sequence: 10,
                 icon: "fa fa-cogs",
-                description: _t("Edit Properties"),
-                callback: () => this.model.bus.trigger("PROPERTY_FIELD:EDIT"),
+                description: this.propertiesState.editable
+                    ? _t("Save Properties")
+                    : _t("Edit Properties"),
+                callback: () => {
+                    this.propertiesState.editable = !this.propertiesState.editable;
+                    this.model.bus.trigger("PROPERTY_FIELD:EDIT", {
+                        editable: this.propertiesState.editable,
+                    });
+                },
             },
             duplicate: {
                 isAvailable: () => activeActions.create && activeActions.duplicate,

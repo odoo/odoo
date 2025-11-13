@@ -1079,6 +1079,29 @@ describe("waitFor...", () => {
             await click(".test");
             expect.verifySteps(["before", "in catch", "updatecontent"]);
         });
+
+        test("waitFor support promise is 'undefined'", async () => {
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    _root: { "t-on-click": this.onClick },
+                };
+
+                async onClick() {
+                    await this.waitFor(undefined);
+                    expect.step("clicked");
+                }
+
+                updateContent() {
+                    expect.step("updatecontent");
+                    super.updateContent();
+                }
+            }
+            await startInteraction(Test, TemplateTest);
+            expect.verifySteps([]);
+            await click(".test");
+            expect.verifySteps(["clicked", "updatecontent"]);
+        });
     });
 
     describe("waitForTimeout", () => {

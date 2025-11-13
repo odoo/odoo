@@ -70,7 +70,7 @@ class PosConfig(models.Model):
 
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
-    is_order_printer = fields.Boolean('Order Printer')
+    use_order_printer = fields.Boolean('Order Printer')
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
     picking_type_id = fields.Many2one(
@@ -160,8 +160,8 @@ class PosConfig(models.Model):
     module_pos_avatax = fields.Boolean("AvaTax PoS Integration", help="Use automatic taxes mapping with Avatax in PoS")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_appointment = fields.Boolean("Online Booking")
-    is_posbox = fields.Boolean("PosBox")
-    is_header_or_footer = fields.Boolean("Custom Header & Footer")
+    use_posbox = fields.Boolean("PosBox")
+    use_header_or_footer = fields.Boolean("Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
     amount_authorized_diff = fields.Float('Amount Authorized Difference',
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
@@ -194,7 +194,7 @@ class PosConfig(models.Model):
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
     note_ids = fields.Many2many('pos.note', string='Note Models', help='The predefined notes of this point of sale.')
     module_pos_sms = fields.Boolean(string="SMS Enabled", help="Activate SMS feature for point_of_sale")
-    is_closing_entry_by_product = fields.Boolean(
+    use_closing_entry_by_product = fields.Boolean(
         string='Closing Entry by product',
         help="Display the breakdown of sales lines by product in the automatically generated closing entry.")
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
@@ -225,7 +225,7 @@ class PosConfig(models.Model):
         help="This ID needs to be set in the printer's configuration to secure server printing.",
         readonly=True,
         store=False,
-        default=lambda self: self.env['ir.config_parameter'].sudo().get_param('database.uuid', "")[:30].strip(),  # 30 is the max size in printer settings
+        default=lambda self: self.env['ir.config_parameter'].sudo().get_str('database.uuid')[:30].strip(),  # 30 is the max size in printer settings
     )
     epson_server_pending_receipt_ids = fields.One2many(
         'pos.printer.pending.receipt',
@@ -276,10 +276,15 @@ class PosConfig(models.Model):
         delete_record_ids = {}
         dynamic_records = {}
 
-        for model, domain in domain.items():
-            ids = record_ids[model]
-            delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
-            dynamic_records[model] = self.env[model].search(domain)
+        for model, dom in domain.items():
+            ids = record_ids.get(model, [])
+            browsed = self.env[model].browse(ids)
+
+            dynamic_records[model] = self.env[model].search(dom)
+            delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
+            # Cancelled orders must be forced deleted from the user interface.
+            if model == "pos.order":
+                delete_record_ids[model] += browsed.filtered(lambda r: r.state == "cancel").ids
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
         data = pos_order_data.read_pos_data([], self)
@@ -313,6 +318,7 @@ class PosConfig(models.Model):
         record['_base_url'] = self.get_base_url()
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
         record['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
+        record['_has_cash_delete_perm'] = self.env.user.has_group('account.group_account_basic')
         record['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
 
         # Add custom fields for 'formula' taxes.
@@ -559,8 +565,13 @@ class PosConfig(models.Model):
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
     def _check_header_footer(self, values):
-        if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
+        if not self.env.is_admin() and {'use_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
+
+    def _check_company_has_fiscal_country(self):
+        self.ensure_one()
+        if not self.company_id.account_fiscal_country_id:
+            raise ValidationError(_("The company must have a fiscal country set."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -632,7 +643,7 @@ class PosConfig(models.Model):
     def _update_preparation_printers_menuitem_visibility(self):
         prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
         if prepa_printers_menuitem:
-            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
+            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('use_order_printer', '=', True)], limit=1) > 0
 
     @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
         'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment')
@@ -642,7 +653,7 @@ class PosConfig(models.Model):
     def write(self, vals):
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
-        if ('is_order_printer' in vals and not vals['is_order_printer']):
+        if ('use_order_printer' in vals and not vals['use_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
 
         bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
@@ -674,7 +685,7 @@ class PosConfig(models.Model):
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
-        if 'is_order_printer' in vals:
+        if 'use_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
         return result
 
@@ -830,7 +841,11 @@ class PosConfig(models.Model):
                 return res
         self._validate_fields(self._fields)
 
+        self._check_company_has_fiscal_country()
         return self._action_to_open_ui()
+
+    def close_ui(self):
+        return self.open_ui()
 
     def open_existing_session_cb(self):
         """ close session button
@@ -870,53 +885,11 @@ class PosConfig(models.Model):
                 'type': 'ir.actions.act_window',
             }
 
-    def _link_same_non_cash_payment_methods(self, source_config):
-        pms = source_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
-        if pms:
-            self.payment_method_ids = [Command.link(pm.id) for pm in pms]
-
-    def _is_journal_exist(self, journal_code, name, company_id):
-        account_journal = self.env['account.journal']
-        existing_journal = account_journal.search([
-            ('name', '=', name),
-            ('code', '=', journal_code),
-            ('company_id', '=', company_id),
-        ], limit=1)
-
-        return existing_journal.id or account_journal.create({
-            'name': name,
-            'code': journal_code,
-            'type': 'cash',
-            'company_id': company_id,
-        }).id
-
-    def _is_pos_pm_exist(self, name, journal_id, company_id):
-        pos_payment = self.env['pos.payment.method']
-        existing_pos_cash_pm = pos_payment.search([
-            ('name', '=', name),
-            ('journal_id', '=', journal_id),
-            ('company_id', '=', company_id),
-        ], limit=1)
-
-        return existing_pos_cash_pm.id or pos_payment.create({
-            'name': name,
-            'journal_id': journal_id,
-            'company_id': company_id,
-        }).id
-
     def get_limited_product_count(self):
-        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', DEFAULT_LIMIT_LOAD_PRODUCT)
-        try:
-            return int(config_param)
-        except (TypeError, ValueError, OverflowError):
-            return DEFAULT_LIMIT_LOAD_PRODUCT
+        return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_product_count') or DEFAULT_LIMIT_LOAD_PRODUCT
 
     def _get_limited_partner_count(self):
-        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', DEFAULT_LIMIT_LOAD_PARTNER)
-        try:
-            return int(config_param)
-        except (TypeError, ValueError, OverflowError):
-            return DEFAULT_LIMIT_LOAD_PARTNER
+        return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_customer_count') or DEFAULT_LIMIT_LOAD_PARTNER
 
     def get_limited_partners_loading(self, offset=0):
         return self.env.execute_query(SQL("""
@@ -1254,14 +1227,14 @@ class PosConfig(models.Model):
     @api.model
     def _set_default_pos_load_limit(self):
         param_model = self.env["ir.config_parameter"]
-        if not param_model.get_param("point_of_sale.limited_product_count"):
-            param_model.set_param("point_of_sale.limited_product_count", DEFAULT_LIMIT_LOAD_PRODUCT)
+        if not param_model.get_int("point_of_sale.limited_product_count"):
+            param_model.set_int("point_of_sale.limited_product_count", DEFAULT_LIMIT_LOAD_PRODUCT)
 
-        if not param_model.get_param("point_of_sale.limited_customer_count"):
-            param_model.set_param("point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER)
+        if not param_model.get_int("point_of_sale.limited_customer_count"):
+            param_model.set_int("point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER)
 
     def _is_quantities_set(self):
-        return self.is_closing_entry_by_product
+        return self.use_closing_entry_by_product
 
     @api.onchange("epson_printer_ip")
     def _onchange_epson_printer_ip(self):

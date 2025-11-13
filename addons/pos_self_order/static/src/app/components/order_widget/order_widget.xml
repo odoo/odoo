@@ -20,7 +20,7 @@
                             </div>
                         </div>
                     </div>
-                    <button t-attf-class="cart btn btn-primary btn-lg text-truncate {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action" t-esc="buttonToShow.label"/>
+                    <button t-if="buttonToShow.label" t-attf-class="cart btn btn-primary btn-lg text-truncate {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action" t-esc="buttonToShow.label"/>
                 </div>
             </div>
         </div>

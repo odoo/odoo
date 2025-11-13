@@ -1,4 +1,4 @@
-import { fields } from "@mail/core/common/record";
+import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
@@ -8,13 +8,12 @@ patch(Thread.prototype, {
         super.setup();
         this.livechat_end_dt = fields.Datetime();
         this.livechat_operator_id = fields.One("res.partner");
-        this.livechat_conversation_tag_ids = fields.Many("im_livechat.conversation.tag");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel?.channel_type !== "livechat") {
                     return;
                 }
-                // For livechat threads, the correspondent is the first
+                // For live chat conversation, the correspondent is the first
                 // channel member that is not the operator.
                 const orderedChannelMembers = [...this.channel.channel_member_ids].sort(
                     (a, b) => a.id - b.id
@@ -73,7 +72,7 @@ patch(Thread.prototype, {
      * @param {import("models").Persona} persona
      */
     getPersonaName(persona) {
-        if (this.channel?.channel_type === "livechat" && persona.user_livechat_username) {
+        if (this.channel?.channel_type === "livechat" && persona?.user_livechat_username) {
             return persona.user_livechat_username;
         }
         return super.getPersonaName(persona);

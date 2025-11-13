@@ -1,23 +1,19 @@
-# -*- coding: utf-8 -*-
-import logging
-
-from odoo import api, models
-
-_logger = logging.getLogger(__name__)
+from odoo import models
+from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
-    @api.model
-    def _get_demo_data_move(self, company=False):
+    @template(model='account.move', demo=True)
+    def _get_demo_data_move(self, template_code):
         ref = self.env.ref
-        move_data = super()._get_demo_data_move(company)
-        if company.account_fiscal_country_id.code == "CL":
+        move_data = super()._get_demo_data_move(template_code)
+        if template_code == "cl":
             foreign_invoice = ref('l10n_cl.dc_fe_dte').id
             foreign_credit_note = ref('l10n_cl.dc_ncex_dte').id
             self.env['account.journal'].search([
-                *self.env['account.journal']._check_company_domain(company),
+                *self.env['account.journal']._check_company_domain(self.env.company),
                 ('type', '=', 'purchase'),
             ]).l10n_latam_use_documents = False
             move_data['demo_invoice_1']['l10n_latam_document_type_id'] = foreign_invoice

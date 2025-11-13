@@ -65,7 +65,7 @@ class IrActionsReport(models.Model):
         # + append context data with the display_name_in_footer parameter
         if self._is_invoice_report(report_ref):
             invoices = self.env['account.move'].browse(res_ids)
-            if self.env['ir.config_parameter'].sudo().get_param('account.display_name_in_footer'):
+            if self.env['ir.config_parameter'].sudo().get_str('account.display_name_in_footer'):
                 data = data and dict(data) or {}
                 data.update({'display_name_in_footer': True})
             if any(x.move_type == 'entry' for x in invoices):

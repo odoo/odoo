@@ -593,6 +593,7 @@ def deep_call(func, depth):
 
 
 @tagged('-standard', 'profiling_performance')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPerformance(BaseCase):
 
     def test_collector_max_frequency(self):
@@ -660,6 +661,7 @@ class TestPerformance(BaseCase):
 
 
 @tagged('-standard', 'profiling_memory')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMemoryProfiler(HttpCase):
     def test_memory_profiler(self):
         with Profiler(collectors=['memory'], db=None):

@@ -4,7 +4,7 @@
         <div class="o_action account_report">
             <ControlPanel>
                 <!-- Buttons bar -->
-                <t t-set-slot="control-panel-create-button">
+                <t t-set-slot="control-panel-buttons">
                     <StockValuationReportButtonsBar/>
                 </t>
                 <!-- <t t-set-slot="control-panel-additional-actions">
@@ -12,7 +12,7 @@
                 </t> -->
 
                 <!-- Filters -->
-                <t t-set-slot="layout-actions">
+                <t t-set-slot="control-panel-actions">
                    <div class="d-flex gap-1 flex-wrap">
                        <StockValuationReportFilters/>
                    </div>

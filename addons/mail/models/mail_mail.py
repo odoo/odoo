@@ -212,7 +212,7 @@ class MailMail(models.Model):
         ]
         if 'filters' in self.env.context:
             domain.extend(self.env.context['filters'])
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.queue.batch.size', batch_size)) or batch_size
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.mail.queue.batch.size') or batch_size
         send_ids = self.search(domain, limit=batch_size if not email_ids else batch_size * 10).ids
         if not email_ids:
             ids_done = set()
@@ -343,7 +343,7 @@ class MailMail(models.Model):
     def _filter_mail_mail_servers(self, mail_servers):
         if (
             len(self.mail_message_id.create_uid) > 1 or  # multiple create_uids -> subset that's allowed for all
-            self.env['ir.config_parameter'].sudo().get_param('mail.disable_personal_mail_servers', False)
+            self.env['ir.config_parameter'].sudo().get_bool('mail.disable_personal_mail_servers')
         ):
             return mail_servers.filtered(lambda server: not server.owner_user_id)
         return mail_servers.filtered(lambda server: server.owner_user_id in [self.env['res.users'], self.mail_message_id.create_uid])
@@ -572,7 +572,7 @@ class MailMail(models.Model):
 
             group_per_smtp_from[(mail_server_id, alias_domain_id, smtp_from)].extend(mail_ids)
 
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.session.batch.size')) or 1000
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.session.batch.size') or 1000
         for (mail_server_id, alias_domain_id, smtp_from), record_ids in group_per_smtp_from.items():
             for batch_ids in tools.split_every(batch_size, record_ids):
                 yield mail_server_id, alias_domain_id, smtp_from, batch_ids

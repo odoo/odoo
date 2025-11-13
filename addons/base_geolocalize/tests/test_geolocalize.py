@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.exceptions import UserError
 from unittest.mock import patch
 
@@ -8,6 +8,7 @@ import odoo.tests
 
 
 @odoo.tests.tagged('external', '-standard')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGeoLocalize(TransactionCase):
 
     def test_default_openstreetmap(self):
@@ -28,7 +29,7 @@ class TestGeoLocalize(TransactionCase):
         the service doesn't work."""
         test_partner = self.env.ref('base.res_partner_address_4')
         google_map = self.env.ref('base_geolocalize.geoprovider_google_map').id
-        self.env['ir.config_parameter'].set_param('base_geolocalize.geo_provider', google_map)
+        self.env['ir.config_parameter'].set_str('base_geolocalize.geo_provider', google_map)
         with self.assertRaises(UserError):
             test_partner.geo_localize()
         self.assertFalse(test_partner.partner_longitude)

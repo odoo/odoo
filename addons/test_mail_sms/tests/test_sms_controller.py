@@ -2,10 +2,11 @@
 
 from odoo import Command
 from odoo.addons.test_mail_sms.tests.test_sms_management import TestSMSActionsCommon
-from odoo.tests.common import JsonRpcException
+from odoo.tests.common import tagged, JsonRpcException
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSmsController(TestSMSActionsCommon):
     @classmethod
     def setUpClass(cls):

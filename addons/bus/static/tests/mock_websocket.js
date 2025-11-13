@@ -92,6 +92,17 @@ patch(MockServer.prototype, {
 patch(WebsocketWorker.prototype, {
     INITIAL_RECONNECT_DELAY: 0,
     RECONNECT_JITTER: 5,
+    // `runAllTimers` advances time based on the longest registered timeout.
+    // Some tests rely on the fragile assumption that time won’t advance too much.
+    // Disable the interval until those tests are rewritten to be more robust.
+    enableCheckInterval: false,
+
+    _restartConnectionCheckInterval() {
+        if (this.enableCheckInterval) {
+            super._restartConnectionCheckInterval(...arguments);
+        }
+    },
+
     _sendToServer(message) {
         const { env } = MockServer;
         if (!env) {

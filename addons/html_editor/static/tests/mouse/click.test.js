@@ -4,6 +4,7 @@ import { animationFrame, pointerDown, pointerUp, waitForNone } from "@odoo/hoot-
 import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
+import { unformat } from "../_helpers/format";
 
 /**
  * Simulates placing the cursor at the editable root after a mouse click.
@@ -22,6 +23,7 @@ async function simulateMouseClick(node, before = false) {
     });
     await tick();
     await pointerUp(node);
+    await tick();
 }
 
 test("should insert a paragraph at end of editable and place cursor in it (hr)", async () => {
@@ -31,6 +33,11 @@ test("should insert a paragraph at end of editable and place cursor in it (hr)",
             const hr = editor.editable.querySelector("hr");
             await simulateMouseClick(hr);
         },
+        contentAfterEdit: unformat(
+            `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p>
+            <hr contenteditable="false">
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        ),
         contentAfter: "<hr><p>[]<br></p>",
     });
 });
@@ -42,6 +49,11 @@ test("should insert a paragraph at end of editable and place cursor in it (table
             const table = editor.editable.querySelector("table");
             await simulateMouseClick(table);
         },
+        contentAfterEdit: unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <table></table>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        ),
         contentAfter: "<table></table><p>[]<br></p>",
     });
 });
@@ -53,7 +65,11 @@ test("should insert a paragraph at beginning of editable and place cursor in it 
             const hr = editor.editable.querySelector("hr");
             await simulateMouseClick(hr, true);
         },
-        contentAfter: "<p>[]<br></p><hr>",
+        contentAfterEdit: unformat(`
+            <p data-selection-placeholder="" style="margin: 8px 0px -9px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+            <hr contenteditable="false">
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
+        contentAfter: "[]<hr>",
     });
 });
 test("should insert a paragraph at beginning of editable and place cursor in it (2)", async () => {
@@ -63,7 +79,12 @@ test("should insert a paragraph at beginning of editable and place cursor in it 
             const table = editor.editable.querySelector("table");
             await simulateMouseClick(table, true);
         },
-        contentAfter: "<p>[]<br></p><table></table>",
+        contentAfterEdit: unformat(`
+            <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+            <table></table>
+            <p data-selection-placeholder=""><br></p>
+        `),
+        contentAfter: "[]<table></table>",
     });
 });
 
@@ -74,7 +95,14 @@ test("should insert a paragraph between the two non-P blocks and place cursor in
             const firstHR = editor.editable.querySelector("hr");
             await simulateMouseClick(firstHR);
         },
-        contentAfter: "<hr><p>[]<br></p><hr>",
+        contentAfterEdit: unformat(
+            `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p>
+            <hr contenteditable="false">
+            <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+            <hr contenteditable="false">
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        contentAfter: "<hr>[]<hr>",
     });
 });
 test("should insert a paragraph between the two non-P blocks and place cursor in it (2)", async () => {
@@ -84,7 +112,14 @@ test("should insert a paragraph between the two non-P blocks and place cursor in
             const firstTable = editor.editable.querySelector("table");
             await simulateMouseClick(firstTable);
         },
-        contentAfter: "<table></table><p>[]<br></p><table></table>",
+        contentAfterEdit: unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <table></table>
+            <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+            <table></table>
+            <p data-selection-placeholder=""><br></p>`
+        ),
+        contentAfter: "<table></table>[]<table></table>",
     });
 });
 
@@ -93,11 +128,11 @@ test("should insert a paragraph before the table, then one after it", async () =
     const table = el.querySelector("table");
     await simulateMouseClick(table, true);
     expect(getContent(el)).toBe(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><table></table>`
+        `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p><table></table><p data-selection-placeholder=""><br></p>`
     );
     await simulateMouseClick(table);
     expect(getContent(el)).toBe(
-        `<p><br></p><table></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p data-selection-placeholder=""><br></p><table></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 

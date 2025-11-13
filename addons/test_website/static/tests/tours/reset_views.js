@@ -48,7 +48,7 @@ registerWebsitePreviewTour(
             run() {
                 ace.edit(document.querySelector("#resource-editor div"))
                     .getSession()
-                    .insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
+                    .insert({ row: 4, column: 1 }, '<t t-field="not.exist"/>\n');
             },
         },
         {
@@ -104,7 +104,7 @@ registerWebsitePreviewTour(
             run() {
                 ace.edit(document.querySelector("#resource-editor div"))
                     .getSession()
-                    .insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
+                    .insert({ row: 4, column: 1 }, '<t t-field="not.exist"/>\n');
             },
         },
         {

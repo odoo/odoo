@@ -2,7 +2,7 @@ import { before, globals } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 function onRpcReal(route) {
-    onRpc(route, async () => globals.fetch.call(window, route), { pure: true });
+    onRpc(route, () => globals.fetch.call(window, route));
 }
 
 export const testImgSrc = "/web/image/website.s_text_image_default_image";

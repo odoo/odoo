@@ -23,14 +23,12 @@ from __future__ import annotations
 
 import collections
 import contextlib
-import datetime
 import functools
 import inspect
 import itertools
 import io
 import json
 import logging
-import pytz
 import re
 import typing
 import uuid
@@ -40,18 +38,15 @@ from collections.abc import Callable, Mapping
 from inspect import getmembers
 from operator import attrgetter, itemgetter
 
-import babel
-import babel.dates
 import psycopg2.errors
 import psycopg2.extensions
 from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
 from odoo.tools import (
-    clean_context, date_utils,
-    DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
+    clean_context, format_list,
     frozendict, get_lang, OrderedSet,
-    ormcache, partition, Query, split_every, unique,
+    ormcache, partition, split_every, unique,
     SQL, sql, groupby,
 )
 from odoo.tools.constants import PREFETCH_MAX
@@ -68,8 +63,9 @@ from .fields_temporal import Date, Datetime
 from .fields_textual import Char
 
 from .identifiers import NewId
+from .query import Query
 from .utils import (
-    OriginIds, check_object_name, parse_field_expr,
+    OriginIds, Prefetch, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
     SUPERUSER_ID,
@@ -404,7 +400,7 @@ class BaseModel(metaclass=MetaModel):
         * If :attr:`._name` is set, name(s) of parent models to inherit from
         * If :attr:`._name` is unset, name of a single model to extend in-place
     """
-    _inherits: frozendict[str, str] = frozendict()
+    _inherits: Mapping[str, str] = frozendict()
     """dictionary {'parent_model': 'm2o_field'} mapping the _name of the parent business
     objects to the names of the corresponding foreign key fields to use::
 
@@ -447,6 +443,8 @@ class BaseModel(metaclass=MetaModel):
     """
     _fold_name: str = 'fold'         #: field to determine folded groups in kanban views
 
+    _clear_cache_name: str = ''      # cache to clear on create/write/update
+
     _translate: bool = True           # False disables translations export for this model (Old API) TODO deprecate/remove
     _check_company_auto: bool = False
     """On write and create, call ``_check_company`` to ensure companies
@@ -461,7 +459,7 @@ class BaseModel(metaclass=MetaModel):
     through an environment using `sudo` or a more privileged user.
     """
 
-    _depends: frozendict[str, Iterable[str]] = frozendict()
+    _depends: Mapping[str, Iterable[str]] = frozendict()
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
     This is only used to determine the changes to flush to database before
@@ -1415,7 +1413,10 @@ class BaseModel(metaclass=MetaModel):
 
         fields_to_fetch = self._determine_fields_to_fetch(field_names)
 
-        return self._fetch_query(query, fields_to_fetch)
+        fetched = self._fetch_query(query, fields_to_fetch)
+        if not self.env.su:
+            self.env._add_to_access_cache(fetched)
+        return fetched
 
     #
     # display_name, name_create, name_search
@@ -1971,28 +1972,14 @@ class BaseModel(metaclass=MetaModel):
             if field.type != 'monetary':
                 raise ValueError(f'Aggregator "sum_currency" only works on currency field for {fname!r}')
 
-            CurrencyRate = self.env['res.currency.rate']
             rate_subquery_table = SQL(
-                """(SELECT DISTINCT ON (%(currency_field_sql)s) %(currency_field_sql)s, %(rate_field_sql)s
-                    FROM "res_currency_rate"
-                    WHERE %(company_field_sql)s IS NULL OR %(company_field_sql)s = %(company_id)s
-                    ORDER BY
-                        %(currency_field_sql)s,
-                        %(company_field_sql)s,
-                        CASE WHEN %(name_field_sql)s <= %(today)s THEN %(name_field_sql)s END DESC,
-                        CASE WHEN %(name_field_sql)s > %(today)s THEN %(name_field_sql)s END ASC)
-                """,
-                currency_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'currency_id'),
-                rate_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'rate'),
-                company_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'company_id'),
-                company_id=self.env.company.root_id.id,
-                name_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'name'),
-                today=Date.context_today(self),
+                "(%s)",
+                self.env['res.currency']._get_rates_query(self.env.company, Date.context_today(self)),
             )
             currency_field_name = field.get_currency_field(self)
             alias_rate = query.make_alias(self._table, f'{currency_field_name}__rates')
             currency_field_sql = self._field_to_sql(self._table, currency_field_name, query)
-            condition = SQL("%s = %s", currency_field_sql, SQL.identifier(alias_rate, "currency_id"))
+            condition = SQL("%s = %s", currency_field_sql, SQL.identifier(alias_rate, "id"))
             query.add_join('LEFT JOIN', alias_rate, rate_subquery_table, condition)
 
             return SQL(
@@ -2028,22 +2015,7 @@ class BaseModel(metaclass=MetaModel):
             if field.type != 'many2one':
                 raise ValueError(f"Only many2one path is accepted for the {groupby_spec!r} groupby spec")
 
-            comodel = self.env[field.comodel_name]
-            coquery = comodel.with_context(active_test=False)._search([])
-            if self.env.su or not coquery.where_clause:
-                coalias = query.make_alias(alias, fname)
-            else:
-                coalias = query.make_alias(alias, f"{fname}__{self.env.uid}")
-            condition = SQL(
-                "%s = %s",
-                self._field_to_sql(alias, fname, query),
-                SQL.identifier(coalias, 'id'),
-            )
-            if coquery.where_clause:
-                subselect_arg = SQL('%s.*', SQL.identifier(comodel._table))
-                query.add_join('LEFT JOIN', coalias, coquery.subselect(subselect_arg), condition)
-            else:
-                query.add_join('LEFT JOIN', coalias, comodel._table, condition)
+            comodel, coalias = field.join(self, alias, query)
             return comodel._read_group_groupby(coalias, f"{seq_fnames}:{granularity}" if granularity else seq_fnames, query)
 
         elif granularity and field.type not in ('datetime', 'date', 'properties'):
@@ -2310,6 +2282,7 @@ class BaseModel(metaclass=MetaModel):
         """Extend the group to include all target records by default."""
         return groups.search([])
 
+    @typing.final
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
@@ -3168,12 +3141,15 @@ class BaseModel(metaclass=MetaModel):
 
         # fetch the fields
         fetched = self._fetch_query(query, fields_to_fetch)
+        env = self.env
+        if not env.su:
+            env._add_to_access_cache(fetched)
 
         # possibly raise exception for the records that could not be read
-        if fetched != self:
+        if not env.su and fetched != self:
             forbidden = (self - fetched).exists()
             if forbidden:
-                raise self.env['ir.rule']._make_access_error('read', forbidden)
+                raise env['ir.rule']._make_access_error('read', forbidden)
 
     def _determine_fields_to_fetch(
             self,
@@ -3248,7 +3224,7 @@ class BaseModel(metaclass=MetaModel):
         for field in fields:
             if field.name == 'id':
                 continue
-            assert field.store
+            assert field.store or field.compute_sql
             (column_fields if field.column_type else other_fields).add(field)
 
         context = self.env.context
@@ -3350,7 +3326,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if len(self) > 1:
             raise ValueError("Expected singleton or no record: %s" % self)
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return self.env['ir.config_parameter'].sudo().get_str('web.base.url')
 
     def _check_company_domain(self, companies) -> Domain:
         """Domain to be used for company consistency between records regarding this model.
@@ -3469,26 +3445,106 @@ class BaseModel(metaclass=MetaModel):
             records.browse().check_access(operation)
 
         """
-        if not self.env.su and (result := self._check_access(operation)):
-            raise result[1]()
+        # special cases (su or no real records) or no cache
+        if self.env.su:
+            return
+        if operation != 'read' or not any(self._ids):
+            if result := self._check_access(operation):
+                raise result[1]()
+            return
+
+        # check the cache
+        access = self.env._access_cache[self._name]
+        if all(map(access.get, self._ids)):
+            return
+        self.__check_access_fill_cache(access, operation)
+        inaccessible = self.browse(id_ for id_ in self._ids if not access[id_])
+        if not inaccessible:
+            return
+        # generate the exception
+        result = inaccessible._check_access(operation)
+        assert result is not None, "_check_access is non-deterministic or issue with fill cache"
+        raise result[1]()
 
     def has_access(self, operation: str) -> bool:
         """ Return whether the current user is allowed to perform ``operation``
         on all the records in ``self``. The method is fully consistent with
         method :meth:`check_access` but returns a boolean instead.
         """
-        return self.env.su or not self._check_access(operation)
+        # special cases (su or no real records) or no cache
+        if self.env.su:
+            return True
+        if operation != 'read' or not any(self._ids):
+            return not self._check_access(operation)
 
-    def _filtered_access(self, operation: str):
+        # check the cache
+        access = self.env._access_cache[self._name]
+        if all(map(access.get, self._ids)):
+            return True
+        self.__check_access_fill_cache(access, operation)
+        return all(map(access.__getitem__, self._ids))
+
+    def _filtered_access(self, operation: str) -> typing.Self:
         """ Return the subset of ``self`` for which the current user is allowed
         to perform ``operation``. The method is fully equivalent to::
 
             self.filtered(lambda record: record.has_access(operation))
 
         """
-        if self and not self.env.su and (result := self._check_access(operation)):
-            return self - result[0]
-        return self
+        # special cases (su or no real records)
+        if self.env.su or not self:
+            return self
+        if operation != 'read' or not any(self._ids):
+            if result := self._check_access(operation):
+                return self - result[0]
+            return self
+
+        # filter using the cache
+        access = self.env._access_cache[self._name]
+        if all(map(access.get, self._ids)):
+            return self
+        self.__check_access_fill_cache(access, operation)
+        return self.filtered(lambda rec: access[rec._ids[0]])
+
+    def __check_access_fill_cache(self, access: dict[IdType, bool], operation: str) -> None:
+        """ Fill the access cache for records in self. """
+        ids = self._ids
+
+        # Select records:
+        # We get unknown ids and recheck forbidden ids.  If we have a small
+        # number of ids, we only add unknown records from the prefetch to check
+        # access in batch.
+        # We want to avoid rechecking *all* the prefetch every time we have an
+        # inaccessible record.
+        ids_to_check = tuple(id_ for id_ in ids if not access.get(id_))
+        if len(ids) < PREFETCH_MAX and self._prefetch_ids is not ids:
+            ids_to_check = itertools.chain(ids_to_check, (
+                id_ for id_ in self._prefetch_ids
+                if id_ not in access
+            ))
+            ids_to_check = itertools.islice(unique(ids_to_check), PREFETCH_MAX)
+        records = self.browse(ids_to_check)
+
+        # Check access
+        try:
+            result = records._check_access(operation)
+        except MissingError:
+            existing = records.exists()
+            missing_ids = set(records._ids) - set(existing._ids)
+            if not missing_ids.isdisjoint(ids):
+                # raise if initial ids intersect with missing ids
+                raise
+            records = existing
+            result = records._check_access(operation)
+
+        # Update the cache
+        if result is None:
+            for id_ in records._ids:
+                access[id_] = True
+        else:
+            inaccessible_record_ids = set(result[0]._ids)
+            for id_ in records._ids:
+                access[id_] = id_ not in inaccessible_record_ids
 
     def _check_access(self, operation: str) -> tuple[Self, Callable] | None:
         """ Return ``None`` if the current user has permission to perform
@@ -3649,6 +3705,8 @@ class BaseModel(metaclass=MetaModel):
             ir_model_data_unlink.unlink()
         if ir_attachment_unlink:
             ir_attachment_unlink.unlink()
+        if cache_name := self._clear_cache_name:
+            self.env.registry.clear_cache(cache_name)
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self.env.uid, self._name, self.ids)
@@ -3833,6 +3891,13 @@ class BaseModel(metaclass=MetaModel):
                             document_model=self._name,
                         ))
                     raise
+
+            # invalidate the cache
+            if real_recs and (cache_name := self._clear_cache_name) and (
+                not hasattr(self, '_clear_cache_on_fields')
+                or not self._clear_cache_on_fields.isdisjoint(vals)
+            ):
+                self.env.registry.clear_cache(cache_name)
 
             # validate inversed fields
             real_recs._validate_fields(inverse_fields)
@@ -4057,6 +4122,10 @@ class BaseModel(metaclass=MetaModel):
                 # commands, the cache may therefore hold NewId records. We must now invalidate those values.
                 inv_relational_fnames = [field.name for field in fields if field.type in ('one2many', 'many2many') and not field.store]
                 inv_records.invalidate_recordset(fnames=inv_relational_fnames)
+
+        # invalidate the cache
+        if cache_name := self._clear_cache_name:
+            self.env.registry.clear_cache(cache_name)
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
@@ -4631,7 +4700,9 @@ class BaseModel(metaclass=MetaModel):
                 terms.append(SQL("%s IS NULL", sql_field))
 
             # LEFT JOIN the comodel table, in order to include NULL values, too
-            _comodel, coalias = field.join(self, alias, query)
+            # Run as sudo because we can order by inaccessible models as we can
+            # only order by the default order or the id.
+            _comodel, coalias = field.join(self.sudo(), alias, query)
 
             # delegate the order to the comodel
             reverse = direction.code == 'DESC'
@@ -4694,7 +4765,7 @@ class BaseModel(metaclass=MetaModel):
         domain = domain.optimize_full(self)
         if domain.is_false():
             return self.browse()._as_query()
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         if not domain.is_true():
             query.add_where(domain._to_sql(self, self._table, query))
 
@@ -4724,7 +4795,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param ordered: whether the recordset order must be enforced by the query
         """
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         query.set_result_ids(self._ids, ordered)
         return query
 
@@ -4877,7 +4948,7 @@ class BaseModel(metaclass=MetaModel):
         new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
         if not ids:
             return self
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         real_ids = (id_ for [id_] in self.env.execute_query(query.select()))
         valid_ids = {*real_ids, *new_ids}
@@ -4899,7 +4970,7 @@ class BaseModel(metaclass=MetaModel):
         ids = {id_ for id_ in self._ids if id_}
         if not ids:
             return
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         # Use SKIP LOCKED instead of NOWAIT because the later aborts the
         # transaction and we do not want to use SAVEPOINTS.
@@ -4931,7 +5002,7 @@ class BaseModel(metaclass=MetaModel):
             query = self.browse(ids)._as_query(ordered=True)
             query.limit = limit - len(new_ids)
         else:
-            query = Query(self.env, self._table, self._table_sql)
+            query = Query(self)
             query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         if not ids:
             return self
@@ -4970,7 +5041,7 @@ class BaseModel(metaclass=MetaModel):
         ):
             raise ValueError(f'Field must be a many2one or many2many relation on itself: {field_name!r}')
 
-        if not self.ids:
+        if not self.ids or not self[field_name]:
             return False
 
         # must ignore 'active' flag, ir.rules, etc.
@@ -5508,19 +5579,24 @@ class BaseModel(metaclass=MetaModel):
         if not func:
             # align with mapped()
             return self
+
         if callable(func):
             # normal function
             pass
         elif isinstance(func, str):
             if '.' in func:
-                return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if any(rec.mapped(func)))
-            # avoid costly mapped
-            func = self._fields[func].__get__
+                seq_fnames = func
+                func = lambda record: any(record.mapped(seq_fnames))  # noqa: E731
+            else:
+                # avoid costly mapped
+                func = self._fields[func].__get__
         elif isinstance(func, Domain):
             return self.filtered_domain(func)
         else:
             raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
-        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if func(rec))
+
+        ids = tuple(id_ for id_, rec in zip(self._ids, self) if func(rec))
+        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5565,7 +5641,8 @@ class BaseModel(metaclass=MetaModel):
         if not self or not domain:
             return self
         predicate = Domain(domain)._as_predicate(self)
-        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if predicate(rec))
+        ids = tuple(id_ for id_, rec in zip(self._ids, self) if predicate(rec))
+        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
 
     @api.private
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
@@ -5859,14 +5936,17 @@ class BaseModel(metaclass=MetaModel):
             linear time complexity).
         """
         ids = list(self._ids)
+        prefetch_ids_list = [self._prefetch_ids]
         for arg in args:
             try:
                 if arg._name != self._name:
                     raise TypeError(f"inconsistent models in: {self} + {arg}")
                 ids.extend(arg._ids)
+                prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        return self.browse(ids)
+        ids = tuple(ids)
+        return self.__class__(self.env, ids, Prefetch.union(ids, *prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -5876,7 +5956,8 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} - {other}")
             other_ids = set(other._ids)
-            return self.browse(id_ for id_ in self._ids if id_ not in other_ids)
+            ids = tuple(id_ for id_ in self._ids if id_ not in other_ids)
+            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
@@ -5888,7 +5969,8 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
             other_ids = set(other._ids)
-            return self.browse(OrderedSet(id_ for id_ in self._ids if id_ in other_ids))
+            ids = tuple({id_: None for id_ in self._ids if id_ in other_ids})
+            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
@@ -5904,14 +5986,17 @@ class BaseModel(metaclass=MetaModel):
             complexity, with first occurrence order preserved).
         """
         ids = list(self._ids)
+        prefetch_ids_list = [self._prefetch_ids]
         for arg in args:
             try:
                 if arg._name != self._name:
                     raise TypeError(f"inconsistent models in: {self} | {arg}")
                 ids.extend(arg._ids)
+                prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
-        return self.browse(OrderedSet(ids))
+        ids = tuple(dict.fromkeys(ids))
+        return self.__class__(self.env, ids, Prefetch.union(ids, *prefetch_ids_list))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
@@ -5994,10 +6079,8 @@ class BaseModel(metaclass=MetaModel):
         if isinstance(key, str):
             # important: one must call the field's getter
             return self._fields[key].__get__(self)
-        elif isinstance(key, slice):
-            return self.browse(self._ids[key])
-        else:
-            return self.browse((self._ids[key],))
+        ids = self._ids[key] if isinstance(key, slice) else (self._ids[key],)
+        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
 
     def __setitem__(self, key: str, value: typing.Any):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
@@ -6055,10 +6138,14 @@ class BaseModel(metaclass=MetaModel):
         env = self.env
         for field in fields:
             field._invalidate_cache(env, ids)
-            # TODO VSC: used to remove the inverse of many_to_one from the cache, though we might not need it anymore
+            if field.type == 'one2many':
+                # skip invalidation of inverse for o2m fields
+                # (o2m is "computed" from m2o)
+                continue
             for invf in self.pool.field_inverses[field]:
                 self.env[invf.model_name].flush_model([invf.name])
                 invf._invalidate_cache(env)
+        self.env.transaction.clear_access_cache(self._name)
 
     @api.private
     def modified(self, fnames: Collection[str], create: bool = False, before: bool = False) -> None:

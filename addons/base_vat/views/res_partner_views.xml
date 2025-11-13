@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vat']" position="after">
                     <field name="perform_vies_validation" invisible="1"/>
-                    <label for="vat" string="Tax ID"/>
+                    <label for="vat"/>
                     <div name="vat_vies_container"/>
                 </xpath>
                 <xpath expr="//div[@name='vat_vies_container']" position="inside">

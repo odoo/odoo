@@ -5,7 +5,6 @@ import { user } from "@web/core/user";
 import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
 
 export class ProjectListController extends ListController {
-    static template = "project.ProjectListView";
     static components = {
         ...ListController.components,
         ProjectTemplateDropdown,

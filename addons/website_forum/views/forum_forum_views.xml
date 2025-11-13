@@ -14,7 +14,6 @@
                     <field name="total_views" sum="Total Views"/>
                     <field name="total_answers" optional="hide"/>
                     <field name="total_favorites" optional="hide"/>
-                    <field name="active" column_invisible="True"/>
                 </list>
             </field>
         </record>
@@ -48,7 +47,6 @@
                                 </div>
                             </button>
                         </div>
-                        <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name="image_1920" widget="image" options="{'preview_image': 'image_128'}" class="oe_avatar"/>
                         <div class="oe_title">

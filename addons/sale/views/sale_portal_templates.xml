@@ -122,12 +122,14 @@
 
     <!-- Complete page of the sale_order -->
     <template id="sale_order_portal_template" name="Sales Order" inherit_id="portal.portal_sidebar" primary="True">
-        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+        <t t-call="portal.portal_layout" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
                 <!-- Uses backend_url provided in rendering values -->
                 <t t-call="portal.portal_back_in_edit_mode"/>
             </t>
+        </t>
 
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div
                 class="row o_portal_sale_sidebar"
                 t-att-data-order-amount-total="sale_order.amount_total"
@@ -264,7 +266,7 @@
                                 <div>
                                     <h5>Not using Odoo?</h5>
                                     <div class="input-group mb-3 w-50">
-                                        <t t-set="base_address" t-value="sale_order.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                        <t t-set="base_address" t-value="sale_order.env['ir.config_parameter'].sudo().get_str('web.base.url')"/>
                                         <t t-set="doc_url" t-value="base_address + '/my/orders/' + str(sale_order.id) + '/download_edi?' + str(keep_query())"/>
                                         <input type="text" class="form-control" aria-describedby="copy-button" readonly="readonly" t-att-value="doc_url"/>
                                         <button class="btn btn-outline-secondary" type="button" id="copy-button"
@@ -713,7 +715,7 @@
                     <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
                         <thead>
                             <tr>
-                                <th class="text-start" id="product_name_header">Products</th>
+                                <th class="text-start" id="product_name_header">Description</th>
                                 <th class="text-end" id="product_qty_header">Quantity</th>
                                 <th t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}" id="product_unit_price_header">
                                     Unit Price
@@ -770,7 +772,7 @@
                                     <tr
                                         t-if="is_section or is_subsection"
                                         name="tr_section"
-                                        t-attf-class="border-dark {{'fw-bold o_line_section bg-200' if is_section else 'fw-medium o_line_subsection bg-100'}}"
+                                        t-attf-class="{{'fw-bold o_line_section bg-200' if is_section else 'fw-medium o_line_subsection border-dark bg-100'}}"
                                     >
                                         <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
                                         <t
@@ -990,6 +992,7 @@
             <t t-call="#{sale_order._get_name_tax_totals_view()}">
                 <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
                 <t t-set="currency" t-value="sale_order.currency_id"/>
+                <t t-set="doc" t-value="sale_order"/>
             </t>
         </table>
     </template>

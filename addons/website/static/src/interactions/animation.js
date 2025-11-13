@@ -27,18 +27,19 @@ export class Animation extends Interaction {
         },
         _root: {
             "t-att-class": (el) => ({
-                "o_animating": this.isAnimating,
-                "o_animated": this.isAnimated,
-                "o_animate_in_dropdown": !!el.closest(".dropdown"),
-                "o_animate_preview": undefined,
+                o_animating: this.isAnimating,
+                o_animated: this.isAnimated,
+                o_animate_in_dropdown: !!el.closest(".dropdown"),
+                o_animate_preview: undefined,
             }),
             "t-att-style": (el) => {
                 const result = {
                     "animation-name": this.isResetting ? "dummy-none" : undefined,
-                    "animation-play-state": (this.isResetting || this.isAnimateOnScroll) ? undefined : this.playState,
+                    "animation-play-state":
+                        this.isResetting || this.isAnimateOnScroll ? undefined : this.playState,
                     // The ones which are invisible in state 0 (like fade_in for
                     // example) will stay invisible.
-                    "visibility": "visible",
+                    visibility: "visible",
                 };
                 // Avoid resetting animation-delay upon stop when it is not
                 // supposed to be modified at all.
@@ -57,7 +58,9 @@ export class Animation extends Interaction {
         this.wrapwrapEl = document.querySelector("#wrapwrap");
         this.windowUnlessDropdown = this.el.closest(".dropdown") ? [] : window;
         this.scrollingElement = this.findScrollingElement();
-        this.scrollingTarget = isScrollableY(this.scrollingElement) ? this.scrollingElement : this.scrollingElement.ownerDocument.defaultView;
+        this.scrollingTarget = isScrollableY(this.scrollingElement)
+            ? this.scrollingElement
+            : this.scrollingElement.ownerDocument.defaultView;
         this.isAnimating = false;
         this.isAnimated = false;
         this.isAnimateOnScroll = this.el.classList.contains("o_animate_on_scroll");
@@ -93,12 +96,22 @@ export class Animation extends Interaction {
         this.waitForTimeout(() => {
             this.isAnimating = true;
             this.playState = "running";
-            for (const eventName of ["webkitAnimationEnd", "oanimationend", "msAnimationEnd", "animationend"]) {
-                this.addListener(this.el, eventName, () => {
-                    this.isAnimating = false;
-                    this.isAnimated = true;
-                    window.dispatchEvent(new Event("resize"));
-                }, { once: true });
+            for (const eventName of [
+                "webkitAnimationEnd",
+                "oanimationend",
+                "msAnimationEnd",
+                "animationend",
+            ]) {
+                this.addListener(
+                    this.el,
+                    eventName,
+                    () => {
+                        this.isAnimating = false;
+                        this.isAnimated = true;
+                        window.dispatchEvent(new Event("resize"));
+                    },
+                    { once: true }
+                );
             }
         });
     }
@@ -141,7 +154,9 @@ export class Animation extends Interaction {
         }
         const windowsHeight = window.innerHeight;
         const elHeight = el.offsetHeight;
-        let elOffset = this.isAnimateOnScroll ? 0 : Math.max((elHeight * this.offsetRatio), this.offsetMin);
+        const elOffset = this.isAnimateOnScroll
+            ? 0
+            : Math.max(elHeight * this.offsetRatio, this.offsetMin);
 
         // We need to offset for the change in position from some animation.
         // So we get the top value by not taking CSS transforms into calculations.
@@ -151,9 +166,9 @@ export class Animation extends Interaction {
         const closestModal = el.closest(".modal");
         let scrollTop = this.scrollingElement.scrollTop;
         if (closestModal && isVisible(closestModal)) {
-            scrollTop = closestModal.classList.contains("s_popup_no_backdrop") ?
-                closestModal.querySelector(".modal-content").scrollTop :
-                closestModal.scrollTop;
+            scrollTop = closestModal.classList.contains("s_popup_no_backdrop")
+                ? closestModal.querySelector(".modal-content").scrollTop
+                : closestModal.scrollTop;
         }
         const elTop = this.getElementOffsetTop(el) - scrollTop;
         let visible;
@@ -176,11 +191,12 @@ export class Animation extends Interaction {
             if (visible) {
                 const start = 100 / (parseFloat(el.dataset.scrollZoneStart) || 1);
                 const end = 100 / (parseFloat(el.dataset.scrollZoneEnd) || 1);
-                const out = el.classList.contains('o_animate_out');
-                const ratio = (out ? elTop + elHeight : elTop) / (windowsHeight - (windowsHeight / start));
+                const out = el.classList.contains("o_animate_out");
+                const ratio =
+                    (out ? elTop + elHeight : elTop) / (windowsHeight - windowsHeight / start);
                 const duration = parseFloat(window.getComputedStyle(el).animationDuration);
                 const delay = (ratio - 1) * (duration * end);
-                this.delay = (out ? - duration - delay : delay) + "s";
+                this.delay = (out ? -duration - delay : delay) + "s";
                 this.isAnimating = true;
             } else if (el.classList.contains("o_animating")) {
                 this.isAnimating = false;
@@ -189,7 +205,11 @@ export class Animation extends Interaction {
             if (visible && this.playState === "paused") {
                 el.classList.add("o_visible");
                 this.startAnimation();
-            } else if (!visible && el.classList.contains("o_animate_both_scroll") && this.playState === "running") {
+            } else if (
+                !visible &&
+                el.classList.contains("o_animate_both_scroll") &&
+                this.playState === "running"
+            ) {
                 el.classList.remove("o_visible");
                 this.resetAnimation();
             }
@@ -202,6 +222,4 @@ export class Animation extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.animation", Animation);
+registry.category("public.interactions").add("website.animation", Animation);

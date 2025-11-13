@@ -190,18 +190,18 @@
                                     <t t-if="is_section">
                                         <t t-set="current_section" t-value="line"/>
                                         <t t-set="current_subsection" t-value="None"/>
-                                        <t t-set="line_padding" t-value="0"/>
+                                        <t t-set="line_padding" t-value="1"/>
                                     </t>
                                     <t t-elif="is_subsection">
                                         <t t-set="current_subsection" t-value="line"/>
-                                        <t t-set="line_padding" t-value="2"/>
+                                        <t t-set="line_padding" t-value="3"/>
                                     </t>
                                     <t t-else="">
                                         <t t-set="line_padding"
-                                           t-value="3 if current_subsection else (2 if current_section else 0)"
+                                           t-value="4 if current_subsection else (3 if current_section else 0)"
                                         />
                                     </t>
-                                    <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or 'padding-left: 4px'"/>
+                                    <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or ''"/>
                                     <t t-set="hide_details" t-value="line.collapse_composition"/>
                                     <t t-set="hide_prices" t-value="line.collapse_prices"/>
 
@@ -211,7 +211,7 @@
                                             'fw-bold o_line_subsection' if is_subsection else
                                             'fst-italic o_line_note' if is_note
                                             else ''">
-                                            <t t-set="line_colspan" t-value="line.get_column_to_exclude_for_colspan_calculation(line.tax_ids)"/>
+                                            <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)"/>
                                             <t t-if="is_product" name="account_invoice_line_accountable">
                                                 <td name="account_invoice_line_name" t-att-style="padding_style">
                                                     <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
@@ -244,7 +244,7 @@
                                                 <t t-set="section_subtotal" t-value="line.get_section_subtotal()"/>
                                                 <!-- For desktop -->
                                                 <td name="line_name_td"
-                                                    t-att-colspan="(1 if is_product else 6 if display_discount else 5) - line_colspan"
+                                                    t-att-colspan="(1 if is_product else line_colspan)"
                                                     t-attf-class="{{'d-none d-md-table-cell' if report_type == 'html' else ''}} border-end-0" t-att-style="padding_style">
                                                     <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                                 </td>
@@ -264,8 +264,7 @@
                                         </tr>
                                     </t>
                                     <t t-else="">
-                                        <t t-if="hide_details" t-set="grouped_lines" t-value="line._get_child_lines()"/>
-                                        <t t-if="hide_prices" t-set="grouped_lines" t-value="line._get_child_lines(False)"/>
+                                        <t t-set="grouped_lines" t-value="line._get_child_lines()"/>
                                         <t t-foreach="grouped_lines" t-as="grouped_line">
                                             <t t-if="grouped_line['display_type'] == 'product'">
                                                 <t t-set="line_colspan" t-value="1"/>
@@ -274,11 +273,10 @@
                                                 <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not grouped_line.get('taxes') else 0)"/>
                                             </t>
                                             <t t-if="hide_prices">
-                                                <t t-set="line_padding"
-                                                   t-value="3 if current_subsection and grouped_line['display_type'] != 'line_subsection' and grouped_line.get('original_display_type') != 'line_subsection' else
-                                                            2 if current_section and grouped_line['display_type'] != 'line_section' and grouped_line.get('original_display_type') != 'line_section' else
-                                                            0"/>
-                                                <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                                                <t t-if="grouped_line['display_type'] == 'line_section'">
+                                                    <t t-set="current_section" t-value="grouped_line"/>
+                                                    <t t-set="current_subsection" t-value="None"/>
+                                                </t>
                                                 <t t-if="grouped_line['display_type'] == 'line_subsection'">
                                                     <t t-set="current_subsection" t-value="grouped_line"/>
                                                 </t>
@@ -437,7 +435,7 @@
                                                         <span t-out="term_index + 1">1</span> - Installment of
                                                         <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end">31.05</t>
                                                         <span> due on </span>
-                                                        <t t-out="term.get('date')" class="text-start">2024-01-01</t>
+                                                        <t t-out="term.get('date')">2024-01-01</t>
                                                     </div>
                                                 </t>
                                             </div>
@@ -523,7 +521,7 @@
 
                 <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
                     <tr class="o_taxes">
-                        <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
+                        <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is False">
                             <td style="max-width: 200px;">
                                 <span t-out="tax_group['group_name']">Tax 15%</span>
                             </td>
@@ -598,7 +596,7 @@
                         </tr>
                         <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
                             <tr class="o_taxes">
-                                <t t-if="same_tax_base or tax_group['display_base_amount'] is None">
+                                <t t-if="same_tax_base or tax_group['display_base_amount'] is False">
                                     <td>
                                         <span class="text-nowrap" t-out="tax_group['group_name']"/>
                                     </td>

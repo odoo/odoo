@@ -5,6 +5,7 @@ import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_h
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
+import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
 import { Component, useEffect, useRef } from "@odoo/owl";
 
@@ -15,9 +16,11 @@ export class CalendarYearRenderer extends Component {
     static template = "web.CalendarYearRenderer";
     static props = {
         model: Object,
+        initialDate: Object,
         createRecord: Function,
         editRecord: Function,
         deleteRecord: Function,
+        isDisabled: { type: Boolean, optional: true },
         isWeekendVisible: { type: Boolean, optional: true },
     };
 
@@ -38,43 +41,60 @@ export class CalendarYearRenderer extends Component {
         });
     }
 
-    get options() {
+    get disabledOptions() {
         return {
-            dayHeaderFormat: "EEEEE",
-            dateClick: this.onDateClick,
-            dayCellClassNames: this.getDayCellClassNames,
-            initialDate: this.props.model.date.toISO(),
-            initialView: "dayGridMonth",
-            direction: localization.direction,
+            ...this.options,
+            editable: false,
+            selectable: false,
+            eventStartEditable: false,
+            eventDurationEditable: false,
+            droppable: false,
+        }
+    }
+
+    get interactiveOptions() {
+        return {
+            ...this.options,
+            dateClick: this.handleDateClick,
+            dayMaxEventRows: this.props.model.eventLimit,
             droppable: true,
             editable: this.props.model.canEdit,
-            dayMaxEventRows: this.props.model.eventLimit,
             eventClassNames: this.eventClassNames,
             eventDidMount: this.onEventDidMount,
             eventResizableFromStart: true,
+            longPressDelay: TOUCH_SELECTION_THRESHOLD,
+            select: this.onSelect,
+            selectMinDistance: 5, // needed to not trigger select when click
+            selectMirror: true,
+            selectable: this.props.model.canCreate,
+            unselectAuto: false,
+            windowResize: this.onWindowResize,
+            eventContent: this.onEventContent,
+            weekends: this.props.isWeekendVisible,
+        }
+    }
+
+    get options() {
+        return {
+            dayHeaderFormat: "EEEEE",
+            dayCellClassNames: this.getDayCellClassNames,
+            initialDate: this.props.initialDate.toISO(),
+            initialView: "dayGridMonth",
+            direction: localization.direction,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
             firstDay: this.props.model.firstDayOfWeek,
             headerToolbar: { start: false, center: "title", end: false },
             height: "auto",
             locale: luxon.Settings.defaultLocale,
-            longPressDelay: 500,
             navLinks: false,
             nowIndicator: true,
-            select: this.onSelect,
-            selectMinDistance: 5, // needed to not trigger select when click
-            selectMirror: true,
-            selectable: this.props.model.canCreate,
             showNonCurrentDates: false,
             timeZone: luxon.Settings.defaultZone.name,
             titleFormat: { month: "long", year: "numeric" },
-            unselectAuto: false,
+            viewDidMount: this.viewDidMount,
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: false,
             weekNumberFormat: { week: "numeric" },
-            windowResize: this.onWindowResize,
-            eventContent: this.onEventContent,
-            viewDidMount: this.viewDidMount,
-            weekends: this.props.isWeekendVisible,
             fixedWeekCount: false,
         };
     }
@@ -93,9 +113,9 @@ export class CalendarYearRenderer extends Component {
             makeWeekColumn({ el, weekText });
         }
     }
-
     mapRecordsToEvents() {
-        return Object.values(this.props.model.records).map((r) => this.convertRecordToEvent(r));
+        const { records } = this.props.model.data;
+        return Object.values(records).map((r) => this.convertRecordToEvent(r))
     }
     convertRecordToEvent(record) {
         return {
@@ -104,11 +124,12 @@ export class CalendarYearRenderer extends Component {
         };
     }
     getDateWithMonth(month) {
-        return this.props.model.date.set({ month: this.months.indexOf(month) + 1 }).toISO();
+        return this.props.initialDate.set({ month: this.months.indexOf(month) + 1 }).toISO();
     }
     getOptionsForMonth(month) {
+        const options = this.props.isDisabled ? this.disabledOptions : this.interactiveOptions;
         return {
-            ...this.options,
+            ...options,
             initialDate: this.getDateWithMonth(month),
         };
     }
@@ -121,6 +142,13 @@ export class CalendarYearRenderer extends Component {
             deleteRecord: this.props.deleteRecord,
             editRecord: this.props.editRecord,
         };
+    }
+    handleDateClick(info) {
+        if (!info.jsEvent || info.jsEvent.defaultPrevented) {
+            // The event might be fired after a touch pointerup without any jsEvent
+            return;
+        }
+        this.onDateClick(info)
     }
     openPopover(target, date, records) {
         this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover");

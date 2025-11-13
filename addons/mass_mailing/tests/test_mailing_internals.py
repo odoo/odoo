@@ -22,6 +22,7 @@ BASE_64_STRING = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A
 
 
 @tagged("mass_mailing")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailValues(MassMailCommon):
 
     @classmethod
@@ -527,6 +528,7 @@ class TestMassMailValues(MassMailCommon):
 
 
 @tagged("mass_mailing", "utm")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailUTM(MassMailCommon):
 
     @freeze_time('2022-01-02')
@@ -600,6 +602,7 @@ class TestMassMailUTM(MassMailCommon):
 
 
 @tagged('mass_mailing')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
     @classmethod
@@ -810,6 +813,7 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
 
 
 @tagged("mail_mail")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingHeaders(MassMailCommon, HttpCase):
     """ Test headers + linked controllers """
 
@@ -867,6 +871,7 @@ class TestMailingHeaders(MassMailCommon, HttpCase):
             self.assertTrue(contact.subscription_ids.opt_out)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingScheduleDateWizard(MassMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -891,6 +896,7 @@ class TestMailingScheduleDateWizard(MassMailCommon):
         self.assertEqual(mailing.state, 'in_queue')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailingActions(MassMailCommon):
     def test_mailing_action_open(self):
         mass_mailings = self.env['mailing.mailing'].create([

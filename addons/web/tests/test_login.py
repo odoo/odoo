@@ -31,6 +31,7 @@ class TestWebLoginCommon(HttpCase):
         return res_post
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebLogin(TestWebLoginCommon):
     def test_web_login(self):
         res_post = self.login('internal_user', 'internal_user')

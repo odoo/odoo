@@ -211,8 +211,8 @@ class LivechatController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        partner, guest = request.env["res.partner"]._get_current_persona()
-        tz = timezone(partner.tz or guest.timezone or "UTC")
+        user, guest = request.env["res.users"]._get_current_persona()
+        tz = timezone(user.tz or guest.timezone or "UTC")
         pdf, _type = (
             request.env["ir.actions.report"]
             .sudo()

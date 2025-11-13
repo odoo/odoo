@@ -3,11 +3,10 @@
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
-from odoo.tests import HttpCase, tagged, new_test_user
+from odoo.tests import HttpCase, new_test_user
 from ..models.mail_presence import PRESENCE_OUTDATED_TIMER
 
 
-@tagged("-at_install", "post_install")
 class TestMailPresence(HttpCase):
     def test_bus_presence_auto_vacuum(self):
         user = new_test_user(self.env, login="bob_user")

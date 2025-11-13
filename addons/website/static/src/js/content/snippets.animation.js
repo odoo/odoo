@@ -66,7 +66,7 @@ window.SelectorEngine.find = function (...args) {
     try {
         return baseSelectorEngineFind.call(this, ...args);
     } catch {
-        return [document.createElement('div')];
+        return [document.createElement("div")];
     }
 };
 

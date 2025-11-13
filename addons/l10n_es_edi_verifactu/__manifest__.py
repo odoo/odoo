@@ -23,7 +23,6 @@
         'demo/demo_certificate.xml',
         'demo/demo_company.xml',
     ],
-    'post_init_hook': '_l10n_es_edi_verifactu_post_init_hook',
     'assets': {
         'web.assets_backend': [
             'l10n_es_edi_verifactu/static/src/css/warning.scss',

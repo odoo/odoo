@@ -1116,7 +1116,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         ])
 
     def test_limited_products_loading(self):
-        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', 3)
+        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 3)
 
         # Make the service products that are available in the pos inactive.
         # We don't need them to test the loading of 'consu' products.
@@ -1147,7 +1147,7 @@ class TestPoSBasicConfig(TestPoSCommon):
 
     def test_closing_entry_by_product(self):
         # set the Group by Product at Closing Entry
-        self.config.is_closing_entry_by_product = True
+        self.config.use_closing_entry_by_product = True
         self.open_new_session()
 
         # 4 orders

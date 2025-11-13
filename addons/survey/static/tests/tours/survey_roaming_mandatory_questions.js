@@ -48,15 +48,15 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
         content: 'Check if question is Q1',
         trigger: 'div.js_question-wrapper:contains("Q1")',
     }, {
-        content: 'Click on "Next Skipped" button',
-        trigger: 'button.btn:contains("Next Skipped")',
+        content: 'Click on "Continue" button',
+        trigger: 'button.btn:contains("Continue")',
         run: "click",
     }, {
         content: 'Check if question is Q2',
         trigger: 'div.js_question-wrapper:contains("Q2")',
     }, {
-        content: 'Click on "Next Skipped" button',
-        trigger: 'button.btn:contains("Next Skipped")',
+        content: 'Click on "Continue" button',
+        trigger: 'button.btn:contains("Continue")',
         run: "click",
     }, {
         content: 'Check if question is Q1 again (should loop on skipped questions)',
@@ -71,6 +71,20 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Answer Q2',
         trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 3")',
+        run: "click",
+    }, {
+        content: 'Check if the visible question is the indirectly skipped mandatory conditional question Q4',
+        trigger: 'div.js_question-wrapper:contains("Q4")',
+    }, {
+        content: 'Answer Q4',
+        trigger: 'div.js_question-wrapper:contains("Q4") label:contains("Answer 1")',
+        run: "click",
+    }, {
+        content: 'Check if the visible question is the indirectly skipped non-mandatory conditional question Q5',
+        trigger: 'div.js_question-wrapper:contains("Q5")',
+    }, {
+        content: 'Answer Q5',
+        trigger: 'div.js_question-wrapper:contains("Q5") label:contains("Answer 1")',
         run: "click",
     }, {
         content: 'Click on Submit',

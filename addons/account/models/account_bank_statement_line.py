@@ -5,7 +5,6 @@ from odoo.fields import Command, Domain
 from xmlrpc.client import MAXINT
 
 from odoo.tools import SQL
-from odoo.tools.misc import str2bool
 
 
 class AccountBankStatementLine(models.Model):
@@ -280,7 +279,7 @@ class AccountBankStatementLine(models.Model):
                                       f'{st_line._origin.id:0>10}'
 
     @api.depends('journal_id', 'currency_id', 'amount', 'foreign_currency_id', 'amount_currency',
-                 'move_id.checked',
+                 'move_id.review_state',
                  'move_id.line_ids.account_id', 'move_id.line_ids.amount_currency',
                  'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.currency_id',
                  'move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids')
@@ -293,7 +292,7 @@ class AccountBankStatementLine(models.Model):
             _liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
 
             # Compute residual amount
-            if not st_line.checked:
+            if st_line.review_state in ('todo', 'anomaly'):
                 st_line.amount_residual = -st_line.amount_currency if st_line.foreign_currency_id else -st_line.amount
             elif suspense_lines.account_id.reconcile:
                 st_line.amount_residual = sum(suspense_lines.mapped('amount_residual_currency'))
@@ -466,7 +465,7 @@ class AccountBankStatementLine(models.Model):
 
         for st_line in self:
             st_line.with_context(force_delete=True, skip_readonly_check=True).write({
-                'checked': True,
+                'review_state': 'reviewed',
                 'line_ids': [Command.clear()] + [
                     Command.create(line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
             })
@@ -474,6 +473,12 @@ class AccountBankStatementLine(models.Model):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
+
+    @api.ondelete(at_uninstall=False)
+    def _check_allow_unlink(self):
+        if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
+            raise UserError(_("You can not delete a transaction from a valid statement.\n"
+                              "If you want to delete it, please remove the statement first."))
 
     def _find_or_create_bank_account(self):
         self.ensure_one()
@@ -487,9 +492,7 @@ class AccountBankStatementLine(models.Model):
             ('acc_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
-        if not bank_account and not str2bool(
-                self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
-        ):
+        if not bank_account and not self.env['ir.config_parameter'].sudo().get_bool("account.skip_create_bank_account_on_reconcile"):
             bank_account = self.env['res.partner.bank'].create({
                 'acc_number': self.account_number,
                 'partner_id': self.partner_id.id,

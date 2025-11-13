@@ -6,9 +6,9 @@ from . import report
 
 
 def _post_init_hook(env):
-    terms_conditions = env['ir.config_parameter'].get_param('account.use_invoice_terms')
+    terms_conditions = env['ir.config_parameter'].get_bool('account.use_invoice_terms')
     if not terms_conditions:
-        env['ir.config_parameter'].set_param('account.use_invoice_terms', True)
+        env['ir.config_parameter'].set_bool('account.use_invoice_terms', True)
     companies = env['res.company'].search([])
     for company in companies:
         company.terms_type = 'html'

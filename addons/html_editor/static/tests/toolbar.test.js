@@ -51,6 +51,7 @@ import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
+import { Editor } from "@html_editor/editor";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -572,6 +573,7 @@ test("toolbar should not open on keypress tab inside table", async () => {
         </table>
     `);
     const contentAfter = unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -580,6 +582,7 @@ test("toolbar should not open on keypress tab inside table", async () => {
                 </tr>
             </tbody>
         </table>
+        <p data-selection-placeholder=""><br></p>
     `);
 
     const { el } = await setupEditor(contentBefore);
@@ -718,6 +721,7 @@ test("toolbar should close on keypress tab inside table", async () => {
         </table>
     `);
     const contentAfter = unformat(`
+        <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
                 <tr>
@@ -726,6 +730,7 @@ test("toolbar should close on keypress tab inside table", async () => {
                 </tr>
             </tbody>
         </table>
+        <p data-selection-placeholder=""><br></p>
     `);
 
     const { el } = await setupEditor(contentBefore);
@@ -763,6 +768,7 @@ test("toolbar works: show the correct vertical alignment", async () => {
     expect(".dropdown-menu button.active svg[name='vertical_align_middle']").toHaveCount(1);
     expect(getContent(el)).toBe(
         unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr style="height: 100px;">
@@ -777,6 +783,7 @@ test("toolbar works: show the correct vertical alignment", async () => {
                     </tr>
                 </tbody>
             </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
 });
@@ -807,6 +814,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
     expect(".dropdown-menu button.active svg[name='vertical_align_bottom']").toHaveCount(1);
     expect(getContent(el)).toBe(
         unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr style="height: 100px;">
@@ -819,6 +827,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
                     </tr>
                 </tbody>
             </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
     await press(["ctrl", "z"]);
@@ -826,6 +835,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
     expect("button[name='vertical_align'] svg[name='vertical_align_top']").toHaveCount(1);
     expect(getContent(el)).toBe(
         unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table">
                 <tbody>
                     <tr style="height: 100px;">
@@ -838,6 +848,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
                     </tr>
                 </tbody>
             </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
     await press(["ctrl", "y"]);
@@ -846,6 +857,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
     expect(".dropdown-menu button.active svg[name='vertical_align_bottom']").toHaveCount(1);
     expect(getContent(el)).toBe(
         unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr style="height: 100px;">
@@ -858,6 +870,7 @@ test("toolbar works: show the correct vertical alignment after undo/redo", async
                     </tr>
                 </tbody>
             </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
 });
@@ -959,7 +972,7 @@ describe("compact toolbar", () => {
     });
 
     const patchToUseOnlyTestButtons = () =>
-        patchWithCleanup(ToolbarPlugin.prototype, {
+        patchWithCleanup(Editor.prototype, {
             getResource(resourceName) {
                 const result = super.getResource(resourceName);
                 if (resourceName === "toolbar_groups") {

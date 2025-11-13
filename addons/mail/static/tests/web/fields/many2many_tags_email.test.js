@@ -8,13 +8,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import {
-    asyncStep,
-    clickFieldDropdown,
-    clickFieldDropdownItem,
-    onRpc,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { clickFieldDropdown, clickFieldDropdownItem, onRpc } from "@web/../tests/web_test_helpers";
 import { queryAll } from "@odoo/hoot-dom";
 import { ResPartner } from "../../mock_server/mock_models/res_partner";
 
@@ -40,11 +34,11 @@ test("fieldmany2many tags email (edition)", async () => {
     const messageId = pyEnv["mail.message"].create({ partner_ids: [partnerId_1] });
     onRpc("res.partner", "web_read", (params) => {
         expect(params.kwargs.specification).toInclude("email");
-        asyncStep(`web_read ${JSON.stringify(params.args[0])}`);
+        expect.step(`web_read ${JSON.stringify(params.args[0])}`);
     });
     onRpc("res.partner", "web_save", (params) => {
         expect(params.kwargs.specification).toInclude("email");
-        asyncStep(`web_save ${JSON.stringify(params.args[0])}`);
+        expect.step(`web_save ${JSON.stringify(params.args[0])}`);
     });
     onRpc("res.partner", "get_formview_id", () => false);
     await start();
@@ -56,7 +50,7 @@ test("fieldmany2many tags email (edition)", async () => {
             </form>
         `,
     });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "gold, Invoice");
@@ -75,7 +69,7 @@ test("fieldmany2many tags email (edition)", async () => {
         "coucou@petite.perruche"
     );
     // should have read Partner_2 2 times: when opening the dropdown and when saving the new email.
-    await waitForSteps([`web_read [${partnerId_2}]`, `web_save [${partnerId_2}]`]);
+    await expect.waitForSteps([`web_read [${partnerId_2}]`, `web_save [${partnerId_2}]`]);
 });
 
 test("fieldmany2many tags email popup close without filling", async () => {

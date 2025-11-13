@@ -12,7 +12,6 @@ from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.tools import SQL, OrderedSet, float_is_zero, format_amount, is_html_empty
 from odoo.tools.mail import html_keep_url
-from odoo.tools.misc import str2bool
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -37,6 +36,7 @@ class SaleOrder(models.Model):
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
+    _mail_post_access = 'read'
 
     _date_order_conditional_required = models.Constraint(
         "CHECK((state = 'sale' AND date_order IS NOT NULL) OR state != 'sale')",
@@ -377,7 +377,7 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id')
     def _compute_note(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_bool('account.use_invoice_terms')
         if not use_invoice_terms:
             return
         for order in self:
@@ -819,7 +819,7 @@ class SaleOrder(models.Model):
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.sale_warn_msg:
-                warnings.add(order.partner_id.name + ' - ' + partner_msg)
+                warnings.add((order.partner_id.name or order.partner_id.display_name) + ' - ' + partner_msg)
             for line in order.order_line:
                 if product_msg := line.sale_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
@@ -1114,11 +1114,10 @@ class SaleOrder(models.Model):
         :return: `mail.template` record or None if default template wasn't found
         """
         self.ensure_one()
-        default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_param(
+        default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_int(
             'sale.default_confirmation_template'
         )
-        default_confirmation_template = default_confirmation_template_id \
-            and self.env['mail.template'].browse(int(default_confirmation_template_id)).exists()
+        default_confirmation_template = self.env['mail.template'].browse(default_confirmation_template_id).exists()
         if default_confirmation_template:
             return default_confirmation_template
         else:
@@ -1246,7 +1245,7 @@ class SaleOrder(models.Model):
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
 
-        async_send = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+        async_send = self.env['ir.config_parameter'].sudo().get_bool('sale.async_emails')
         cron = self.env.ref('sale.send_pending_emails_cron', raise_if_not_found=False)
         cron_enabled = cron and cron.sudo().active
         if async_send and cron_enabled and allow_deferred_sending:
@@ -1277,7 +1276,7 @@ class SaleOrder(models.Model):
         pending_email_orders = self.search([('pending_email_template_id', '!=', False)])
         self.env['ir.cron']._commit_progress(remaining=len(pending_email_orders))
         for order in pending_email_orders:
-            order = order[0]  # Avoid pre-fetching after each cache invalidation due to committing.
+            order = order.with_prefetch()  # Avoid pre-fetching after each cache invalidation due to committing.
             order._send_order_notification_mail(
                 order.pending_email_template_id, allow_deferred_sending=False
             )  # Resume the email sending.
@@ -1451,7 +1450,7 @@ class SaleOrder(models.Model):
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id']
+        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id', 'fiscal_position_id']
 
     def _nothing_to_invoice_error_message(self):
         return _(
@@ -2191,7 +2190,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
-        return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
+        return sol._get_discounted_price()
 
     # === Product Documents === #
 

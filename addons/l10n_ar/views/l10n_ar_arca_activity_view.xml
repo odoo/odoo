@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_arca_activity_list" model="ir.ui.view">
+        <field name="name">l10n_ar.arca.activity.list</field>
+        <field name="model">l10n_ar.arca.activity</field>
+        <field name="arch" type="xml">
+            <list string="Activities" default_order="code" create="true" edit="true" delete="true" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_arca_activity_search" model="ir.ui.view">
+        <field name="name">l10n_ar.arca.activity.search</field>
+        <field name="model">l10n_ar.arca.activity</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="display_name"/>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_arca_activity">
+        <field name="name">Activities</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_ar.arca.activity</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_arca_activity_search"/>
+    </record>
+
+    <menuitem name="Activities" action="act_arca_activity" id="menu_action_arca_activity" sequence="30" parent="l10n_ar.menu_afip_config"/>
+
+</odoo>

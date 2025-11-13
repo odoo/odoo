@@ -33,8 +33,8 @@ test("crm team form activate multi-team option via alert", async () => {
         expect(args[1]).toBe("sales_team.group_sale_manager");
         return true;
     });
-    onRpc("set_param", ({ args }) => {
-        expect.step("set_param");
+    onRpc("set_bool", ({ args }) => {
+        expect.step("set_bool");
         expect(args[0]).toBe("sales_team.membership_multi");
         return true;
     });
@@ -75,6 +75,6 @@ test("crm team form activate multi-team option via alert", async () => {
     await contains(".alert:visible", { count: 0 });
     expect.verifySteps([
         "has_group",
-        "set_param",
+        "set_bool",
     ]);
 });

@@ -33,7 +33,7 @@ class AccountEdiProxyClientUser(models.Model):
         urls['l10n_my_edi'] = {
             'demo': False,
             'prod': 'https://l10n-my-edi.api.odoo.com',
-            'test': self.env['ir.config_parameter'].sudo().get_param('l10n_my_edi_test_server_url', 'https://l10n-my-edi.test.odoo.com'),
+            'test': self.env['ir.config_parameter'].sudo().get_str('l10n_my_edi_test_server_url') or 'https://l10n-my-edi.test.odoo.com',
         }
         return urls
 

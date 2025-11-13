@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDuplicatePartnerBank(SavepointCaseWithUserDemo):
 
     @classmethod
@@ -51,3 +52,7 @@ class TestDuplicatePartnerBank(SavepointCaseWithUserDemo):
             partner_form.bank_ids.remove(0)
 
         self.assertEqual(len(partner.bank_ids), 0)
+
+    def test_duplicate_acc_number_inactive_bank_account(self):
+        self.partner_bank_b.active = False
+        self.assertFalse(self.partner_bank_a.duplicate_bank_partner_ids)

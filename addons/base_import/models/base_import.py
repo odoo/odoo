@@ -398,8 +398,7 @@ class Base_ImportImport(models.TransientModel):
                 if callable(handler):
                     return handler(options)
             except ImportError as exc:
-                # exc.name_from attribute is present as of python 3.12
-                requires = str(getattr(exc, 'name_from', None) or exc.name)
+                requires = exc.name_from or exc.name
                 if file_extension == 'xlsx':
                     # if xlrd 2.x then xlrd.xlsx is not available
                     requires = 'openpyxl or xlrd >= 1.0.0 < 2.0'

@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add('passkeys_tour_login', {
             expectUnloadPage: true,
         }, {
             content: 'Check if we are logged in',
-            trigger: '.o_user_menu .dropdown-toggle',
+            trigger: '.o_user_menu',
         },
     ]
 })

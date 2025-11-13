@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -236,6 +237,92 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         with self.assertRaises(UserError):
             send_and_print.action_send_and_print()
 
+    def test_08_invoice_with_downpayment(self):
+        """Ensure downpayment with -ve quantity is normalized for ECPay JSON."""
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_a, products=self.product_a,
+        )
+        invoice.write({
+            "invoice_line_ids": [
+                Command.create({
+                    "name": "Downpayment",
+                    "price_unit": 10.0,
+                    "quantity": -1.0,
+                    "tax_ids": self.tax_sale_a,
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        self.assertListEqual(
+            invoice._l10n_tw_edi_generate_invoice_json()['Items'],
+            [
+                {
+                    'ItemSeq': 1,
+                    'ItemName': 'product_a',
+                    'ItemCount': 1.0,
+                    'ItemWord': 'Units',
+                    'ItemPrice': 1000.0,
+                    'ItemTaxType': '1',
+                    'ItemAmount': 1000.0
+                },
+                {
+                    'ItemSeq': 2,
+                    'ItemName': 'Downpayment',
+                    'ItemCount': 1.0,
+                    'ItemWord': False,
+                    'ItemPrice': -10.0,
+                    'ItemTaxType': '1',
+                    'ItemAmount': -10.0
+                },
+            ],
+        )
+
+    def test_09_refund_invoice_with_payment(self):
+        """
+        This tests the flow of refunding an invoice that has the payment has been registered and
+        has already been sent to the ECpay platform with an offline agreement type.
+        Make sure that the credit note is created with the correct fields and values from the wizard
+        and the credit note is successfully sent to the ECpay platform
+        """
+        send_and_print = self.create_send_and_print(self.basic_invoice)
+        with patch(CALL_API_METHOD, new=self._test_09_mock):
+            basic_invoice_json = self.basic_invoice._l10n_tw_edi_generate_invoice_json()
+            send_and_print.action_send_and_print()
+            # register payment
+            self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.basic_invoice.ids).create({
+                'amount': self.basic_invoice.amount_total,
+            })._create_payments()
+            self.assertEqual(self.basic_invoice.payment_state, self.env['account.move']._get_invoice_in_payment_state())
+            # create credit note
+            wizard_vals = {
+                'journal_id': self.basic_invoice.journal_id.id,
+                'l10n_tw_edi_refund_agreement_type': 'offline',
+                'l10n_tw_edi_allowance_notify_way': 'email',
+                'reason': 'refund',
+            }
+            wizard_reverse = self.env['account.move.reversal']\
+                .with_context(active_ids=self.basic_invoice.id, active_model='account.move').create(wizard_vals)
+            wizard_reverse.reverse_moves(is_modify=False)
+            credit_note = wizard_reverse.new_move_ids
+            credit_note.action_post()
+            credit_note_json = credit_note._l10n_tw_edi_generate_issue_allowance_json()
+            # Ensure that the sale amount on invoice json and the allowance amount on credit note json are the same
+            self.assertEqual(basic_invoice_json.get('SalesAmount'), credit_note_json.get('AllowanceAmount'))
+            send_and_print_credit_note = self.create_send_and_print(credit_note)
+            send_and_print_credit_note.action_send_and_print()
+        self.assertRecordValues(
+            credit_note,
+            [{
+                'reversed_entry_id': self.basic_invoice.id,
+                'l10n_tw_edi_refund_agreement_type': 'offline',
+                'l10n_tw_edi_refund_invoice_number': '20250106000000021',
+                'l10n_tw_edi_refund_state': 'agreed',
+                'l10n_tw_edi_ecpay_invoice_id': 'AB11100099',
+                'l10n_tw_edi_invoice_create_date': datetime(2025, 1, 6, 15, 0, 0),
+            }]
+        )
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
@@ -376,6 +463,43 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             }
             return return_data
         elif endpoint == "/AllowanceByCollegiate":
+            return {
+                "RtnCode": 1,
+                "RtnMsg": "Success",
+                "IA_Allow_No": "20250106000000021",
+                "IA_Invoice_No": "AB11100099",
+                "IA_Date": "2025-01-06 23:00:00",
+                "IA_Remain_Allowance_Amt": 0,
+            }
+        elif endpoint == "/GetCompanyNameByTaxID":
+            return {
+                "RtnCode": 1,
+                "CompanyName": "Test Company",
+            }
+        else:
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_09_mock(self, endpoint, params, company_id, is_b2b=False):
+        if endpoint == "/Issue":
+            return {
+                "RtnCode": 1,
+                "RtnMsg": "Success",
+                "InvoiceNo": "AB11100099",
+                "InvoiceDate": "2025-01-06 23:00:00",
+                "RandomNumber": "6868"
+            }
+        elif endpoint == "/GetIssue":
+            return_data = {
+                "RtnCode": 1,
+                "RtnMsg": "Success",
+                "IIS_Sales_Amount": self.basic_invoice.amount_total,
+                "IIS_Invalid_Status": "0",
+                "IIS_Issue_Status": "1",
+                "IIS_Relate_Number": "20250106000000020",
+                "IIS_Remain_Allowance_Amt": 0,
+            }
+            return return_data
+        elif endpoint == "/Allowance":
             return {
                 "RtnCode": 1,
                 "RtnMsg": "Success",

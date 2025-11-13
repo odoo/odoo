@@ -47,7 +47,7 @@ export class SoundEffects {
         if (!soundEffect.audio) {
             const audio = new browser.Audio();
             const ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-            audio.src = url(soundEffect.path + ext);
+            this._setAudioSrc(audio, url(soundEffect.path + ext));
             soundEffect.audio = audio;
         }
         if (!soundEffect.audio.paused) {
@@ -57,6 +57,10 @@ export class SoundEffects {
         soundEffect.audio.loop = loop;
         soundEffect.audio.volume = volume ?? soundEffect.defaultVolume ?? 1;
         Promise.resolve(soundEffect.audio.play()).catch(() => {});
+    }
+    /** To be patched in tests to use data-src */
+    _setAudioSrc(audio, srcPath) {
+        audio.src = srcPath;
     }
     /**
      * Resets the audio to the start of the track and pauses it.

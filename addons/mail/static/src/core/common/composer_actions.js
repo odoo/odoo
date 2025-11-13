@@ -1,10 +1,12 @@
+import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
+
 import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action, UseActions } from "@mail/core/common/action";
+import { Action, useAction, UseActions } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
@@ -14,7 +16,6 @@ export const composerActionsRegistry = registry.category("mail.composer/actions"
 /** @typedef {import("models").Composer} Composer */
 /**
  * @typedef {Object} ComposerActionSpecificDefinition
- * @property {boolean|(comp: Component) => boolean} [condition=true]
  * @property {boolean} [isPicker]
  * @property {string|(comp: Component) => string} [pickerName]
  */
@@ -149,6 +150,21 @@ registerComposerAction("add-canned-response", {
     onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),
     sequence: 5,
 });
+registerComposerAction("start-poll", {
+    name: _t("Start a poll"),
+    icon: "oi oi-view-cohort",
+    condition: ({ composer, store }) => {
+        if (!store.self_user) {
+            return false;
+        }
+        return ["channel", "group"].includes(composer.targetThread?.channel_type);
+    },
+    onSelected: ({ composer, owner }) =>
+        owner.dialogService.add(CreatePollDialog, { thread: composer.targetThread }),
+    setup: ({ owner }) => {
+        owner.dialogService = useService("dialog");
+    },
+});
 
 export class ComposerAction extends Action {
     /** @type {() => Composer} */
@@ -179,6 +195,8 @@ export class ComposerAction extends Action {
 }
 
 class UseComposerActions extends UseActions {
+    ActionClass = ComposerAction;
+
     get partition() {
         const res = super.partition;
         const actions = this.transformedActions.filter((action) => action.condition);
@@ -198,19 +216,11 @@ class UseComposerActions extends UseActions {
  * @param {Composer|() => Composer} composer
  */
 export function useComposerActions({ composer } = {}) {
+    const actions = useAction(composerActionsRegistry, UseComposerActions, ComposerAction, {
+        composer,
+    });
     const component = useComponent();
-    const transformedActions = composerActionsRegistry
-        .getEntries()
-        .map(
-            ([id, definition]) => new ComposerAction({ owner: component, id, definition, composer })
-        );
-    for (const action of transformedActions) {
-        action.setup();
-    }
-    const state = useState(
-        new UseComposerActions(component, transformedActions, useService("mail.store"))
-    );
-    component.getActivePicker = () => state.activePicker;
-    component.setActivePicker = (newActivePicker) => (state.activePicker = newActivePicker);
-    return state;
+    component.getActivePicker = () => actions.activePicker;
+    component.setActivePicker = (newActivePicker) => (actions.activePicker = newActivePicker);
+    return actions;
 }

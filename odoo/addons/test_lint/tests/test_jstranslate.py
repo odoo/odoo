@@ -8,6 +8,8 @@ import re
 from odoo import tools
 from odoo.modules import get_resource_from_path
 
+from odoo.tests import tagged
+
 from . import lint_case
 
 _logger = logging.getLogger(__name__)
@@ -16,6 +18,8 @@ TSTRING_RE = re.compile(r'_t\(\s*`.*?\s*`\s*\)', re.DOTALL)
 EXPRESSION_RE = re.compile(r'\$\{.+?\}')
 UNDERSCORE_RE = re.compile(r'\b_\(\s*[\'"]')
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestJsTranslations(lint_case.LintCase):
 
     def check_text(self, text):

@@ -23,7 +23,7 @@
         id="menu_crm_opportunities"
         name="My Pipeline"
         parent="crm_menu_sales"
-        action="crm.action_your_pipeline"
+        action="crm.crm_lead_action_pipeline"
         sequence="1"/>
     <menuitem
         id="crm_lead_menu_my_activities"
@@ -66,7 +66,7 @@
         id="crm_menu_forecast"
         name="Forecast"
         parent="crm_menu_report"
-        action="crm.action_opportunity_forecast"
+        action="crm.crm_lead_action_forecast"
         sequence="1"/>
     <menuitem
         id="crm_opportunity_report_menu" 
@@ -92,7 +92,7 @@
         id="crm_menu_config"
         name="Configuration"
         parent="crm_menu_root"
-        action="crm.action_your_pipeline"
+        action="crm.crm_lead_action_pipeline"
         sequence="25" groups="sales_team.group_sale_manager"/>
     <menuitem
         id="crm_config_settings_menu"

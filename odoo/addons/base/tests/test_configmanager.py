@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import call, patch
 
 import odoo
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.tools import file_open, file_open_temporary_directory, file_path
 from odoo.tools.config import configmanager
 
@@ -12,6 +12,7 @@ PROJECT_PATH = odoo.tools.config.root_path.removesuffix('/odoo')
 DEFAULT_DATADIR = odoo.tools.config._default_options['data_dir']
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestConfigManager(TransactionCase):
     maxDiff = None
 
@@ -41,10 +42,8 @@ class TestConfigManager(TransactionCase):
                 try:
                     self.assertEqual(self.config.options[k], truth[k], f"{k!r} doesn't match")
                 except AssertionError as exc2:
-                    if hasattr(Exception, 'add_note'):  # 3.11
-                        exc2.add_note(str(self.config._get_sources(k)))
-                        raise exc2 from exc1
-                    raise AssertionError(f"{exc2.args[0]}\n{self.config._get_sources(k)}") from exc1
+                    exc2.add_note(str(self.config._get_sources(k)))
+                    raise exc2 from exc1
             if missing := set(self.config.options).difference(truth):
                 e = "missing from the test dict: " + ', '.join(missing)
                 raise AssertionError(e) from exc1

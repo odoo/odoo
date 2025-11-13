@@ -158,32 +158,30 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
-        session = pos_config.current_session_id
         table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
+        domain = False
 
-        if not table_identifier:
-            domain = Domain.FALSE
+        if not table_identifier or pos_config.self_ordering_pay_after == 'each':
+            domain = [(False, '=', True)]
         else:
-            domain = Domain([
+            domain = ['&', '&',
                 ('table_id', '=', table.id),
                 ('state', '=', 'draft'),
                 ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
-            ])
+            ]
 
         for data in order_access_tokens:
-            domain |= Domain([
-                ('access_token', '=', data.get('access_token')),
+            domain = Domain.OR([domain, ['&',
+                ('access_token', '=', data['access_token']),
                 '|',
                 ('write_date', '>', data.get('write_date')),
-                ('state', '!=', data.get('state'))
-            ])
-            domain |= Domain('access_token', '=', data.get('access_token')) \
-                & Domain('write_date', '>', data.get('write_date'))
+                ('state', '!=', data.get('state')),
+            ]])
 
-        orders = session.order_ids.filtered_domain(domain)
+        # Do not use session.order_ids, it may fail if there is shared sessions
+        orders = pos_config.env['pos.order'].search(domain)
         if not orders:
             return {}
-
         return self._generate_return_values(orders, pos_config)
 
     @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='jsonrpc', website=True)

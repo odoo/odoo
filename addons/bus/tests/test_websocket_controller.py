@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import JsonRpcException
+from odoo import http
+from odoo.tests import tagged, JsonRpcException
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsocketController(HttpCaseWithUserDemo):
     def test_websocket_peek(self):
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
@@ -56,7 +58,12 @@ class TestWebsocketController(HttpCaseWithUserDemo):
             'last': 0,
             'is_first_poll': True,
         })
-        self.url_open('/web/session/logout')
+        self.url_open('/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
         # rpc with outdated session should lead to error.
         with self.assertRaises(JsonRpcException, msg='odoo.http.SessionExpiredException'):
             self.make_jsonrpc_request('/websocket/peek_notifications', {

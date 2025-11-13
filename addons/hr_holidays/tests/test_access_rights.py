@@ -10,6 +10,8 @@ from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import date_utils
+from odoo.tests import tagged
+
 from odoo.tools import mute_logger
 
 
@@ -431,6 +433,8 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
         with self.assertRaises(UserError):
             leave.with_user(self.user_employee.id).unlink()
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompany(TestHrHolidaysCommon):
 
     @classmethod

@@ -422,7 +422,9 @@ describe("selection", () => {
         setSelection({ anchorNode: icon, anchorOffset: 0 });
         await tick();
         expect(getContent(el)).toBe(
-            `<p contenteditable="false">abc[<span class="fa fa-glass" contenteditable="false">\u200b</span>]def</p>`
+            '<p data-selection-placeholder=""><br></p>' +
+                '<p contenteditable="false">abc[<span class="fa fa-glass" contenteditable="false">\u200b</span>]def</p>' +
+                '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>'
         );
     });
 });

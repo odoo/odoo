@@ -12,7 +12,6 @@ const actionListProps = [
     "fw?",
     "hasBtnBg?",
     "odooControlPanelSwitchStyle?",
-    "thread?",
 ];
 
 class Action extends Component {

@@ -20,12 +20,12 @@ according to the enabled options.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 <span class="me-1">Show:</span>
                 <div class="btn-group btn-group-sm">
-                    <a t-attf-class="btn #{state == 'published' and 'btn-success' or 'btn-default bg-white border'}"
+                    <a t-attf-class="btn #{state == 'published' and 'btn-success' or 'bg-white border'}"
                        t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">
                         <i t-attf-class="fa me-1 #{state == 'published' and 'fa-check-square-o' or 'fa-square-o'}"/>
                         Published (<t t-out="state_info['published']" />)
                     </a>
-                    <a t-attf-class="btn #{state == 'unpublished' and 'btn-success' or 'btn-default bg-white border'}"
+                    <a t-attf-class="btn #{state == 'unpublished' and 'btn-success' or 'bg-white border'}"
                        t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">
                         <i t-attf-class="fa me-1 #{state == 'unpublished' and 'fa-check-square-o' or 'fa-square-o'}"/>
                         Unpublished (<t t-out="state_info['unpublished']" />)
@@ -66,7 +66,7 @@ according to the enabled options.
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                     <i class="fa fa-calendar-o me-2 text-muted"/>
                     <t t-out="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"></t>
-                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1">&#215;</a>
+                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1 post_link">&#215;</a>
                 </span>
                 <hr class="mt-2"/>
             </div>
@@ -114,7 +114,7 @@ according to the enabled options.
                             <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
                                 <t t-call="website_blog.post_teaser"/>
                             </div>
-                            <div t-if="opt_blog_cards_design" t-attf-class="opt_blog_cards_design and 'card-body pt-0 pb-2'}">
+                            <div t-if="opt_blog_cards_design" t-att-class="opt_blog_cards_design and 'card-body pt-0 pb-2'">
                                 <t t-call="website_blog.post_info"></t>
                             </div>
                             <div t-else="" class="mt-3">

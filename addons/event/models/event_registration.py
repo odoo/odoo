@@ -365,7 +365,7 @@ class EventRegistration(models.Model):
             return
 
         # either trigger the cron, either run schedulers immediately (scaling choice)
-        async_scheduler = self.env['ir.config_parameter'].sudo().get_param('event.event_mail_async')
+        async_scheduler = self.env['ir.config_parameter'].sudo().get_bool('event.event_mail_async')
         if async_scheduler:
             self.env.ref('event.event_mail_scheduler')._trigger()
             self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger()

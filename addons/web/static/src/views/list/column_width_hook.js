@@ -106,6 +106,37 @@ export const FIELD_WIDTHS = Object.freeze({
     text: [80, 1200],
 });
 
+/**
+ * @typedef {Object} Widths
+ * @property {number} min - The min width
+ * @property {number} [max] - The max width
+ */
+/**
+ * Parses the value of the `width` attribute set on columns in list view archs.
+ * The value can be either:
+ *   - a fixed width, e.g. `width="100px"`,
+ *   - a min width, e.g. `width="[100px]"`,
+ *   - a min and a max widths, e.g. `width="[100px,200px]"`.
+ * Note: the value is always in px, so in all cases above, "px" can be omitted (e.g. `width="100"`).
+ *
+ * @param {string} attr
+ * @returns Widths
+ */
+export function parseWidthAttribute(attr) {
+    const widths = {};
+    const widthAttr = attr.replaceAll("px", "");
+    const match = /\[(?<minWidth>\d+)(,(?<maxWidth>\d+))?\]/.exec(widthAttr);
+    if (match) {
+        widths.min = parseInt(match.groups.minWidth, 10);
+        if (match.groups.maxWidth) {
+            widths.max = parseInt(match.groups.maxWidth, 10);
+        }
+    } else {
+        widths.min = widths.max = parseInt(widthAttr, 10);
+    }
+    return widths;
+}
+
 export function resetDateFieldWidths() {
     // useful for tests
     _dateWidths = null;
@@ -316,7 +347,9 @@ function getWidthSpecs(columns) {
         let minWidth;
         let maxWidth;
         if (column.attrs && column.attrs.width) {
-            minWidth = maxWidth = parseInt(column.attrs.width.split("px")[0]);
+            const { min, max } = parseWidthAttribute(column.attrs.width);
+            minWidth = min;
+            maxWidth = max;
         } else {
             let width;
             if (column.type === "field") {

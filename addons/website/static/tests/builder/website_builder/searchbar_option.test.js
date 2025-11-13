@@ -1,9 +1,12 @@
-import { after, beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    addPlugin,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -39,10 +42,7 @@ class SearchbarTestPlugin extends Plugin {
 }
 
 beforeEach(() => {
-    registry.category("website-plugins").add(SearchbarTestPlugin.id, SearchbarTestPlugin);
-    after(() => {
-        registry.category("website-plugins").remove(SearchbarTestPlugin);
-    });
+    addPlugin(SearchbarTestPlugin);
 });
 
 test("Available 'order by' options are updated after switching search type", async () => {
@@ -88,4 +88,15 @@ test("Switching search type keeps 'order by' option if it exists on both types",
     await contains(".o_popover[role=menu] [data-action-value='/website/search']").click();
     expect("[data-label='Search within'] button.o-dropdown").toHaveText("Everything");
     expect("[data-label='Order by'] button.o-dropdown").toHaveText("something");
+});
+
+test("Input parent is not contenteditable, while all other children beside the input are", async () => {
+    await setupWebsiteBuilder(searchbarHTML("name asc"));
+
+    expect(":iframe .input-group:has(:scope > input)").toHaveAttribute("contenteditable", "false");
+
+    expect(":iframe .input-group:has(:scope > input) > *:not(input)").toHaveAttribute(
+        "contenteditable",
+        "true"
+    );
 });

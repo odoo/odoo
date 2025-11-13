@@ -3339,7 +3339,7 @@ test("one2many list: cannot open record in editable=bottom and edit=false list",
     expect(".modal-dialog").toHaveCount(0);
 });
 
-test("one2many list: conditional create/delete actions", async () => {
+test("one2many list: conditional create/delete attrs", async () => {
     Partner._records[0].p = [2, 4];
     await mountView({
         type: "form",
@@ -3347,7 +3347,7 @@ test("one2many list: conditional create/delete actions", async () => {
         arch: `
             <form>
                 <field name="bar"/>
-                <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
+                <field name="p" create="bar == True" delete="bar == True">
                     <list>
                         <field name="name"/>
                     </list>
@@ -3617,7 +3617,7 @@ test("one2many kanban: create action disabled", async () => {
     expect(".o_field_x2many_kanban .delete_icon").toHaveCount(1);
 });
 
-test("one2many kanban: conditional create/delete actions", async () => {
+test("one2many kanban: conditional create/delete attrs", async () => {
     Partner._records[0].p = [2, 4];
 
     await mountView({
@@ -3626,7 +3626,7 @@ test("one2many kanban: conditional create/delete actions", async () => {
         arch: `
             <form>
                 <field name="bar"/>
-                <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
+                <field name="p" create="bar == True" delete="bar == True">
                     <kanban>
                         <templates>
                             <t t-name="card">
@@ -3661,6 +3661,56 @@ test("one2many kanban: conditional create/delete actions", async () => {
     expect(".modal .modal-footer .o_btn_remove").toHaveCount(0, {
         message: "There should not be a Remove Button as bar field is False",
     });
+});
+
+test("one2many kanban: conditional write action", async () => {
+    Partner._records[0].p = [2, 4];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="bar"/>
+                <field name="p" write="bar == True">
+                    <kanban>
+                        <templates>
+                            <t t-name="card">
+                                <field name="name"/>
+                                <field name="bar" widget="boolean_toggle"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                    <form>
+                        <field name="name"/>
+                        <field name="foo"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_kanban_record:first span").toHaveText("second record");
+    expect(".o_field_widget[name=bar]:first input").toBeChecked();
+
+    // bar is initially true -> edit action is available
+    expect(".o_kanban_record:first .o_field_widget[name=bar] input").toBeEnabled();
+    expect(".o-kanban-button-new").toHaveCount(1); // can create
+    await contains(".o_kanban_record:first").click();
+    expect(".o_dialog .o_form_renderer").toHaveClass("o_form_editable");
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("second record edited");
+    await contains(".modal .o_form_button_save").click();
+    expect(".o_kanban_record:first span").toHaveText("second record edited");
+
+    // set bar false -> edit action is no longer available
+    await contains('.o_field_widget[name="bar"] input').click();
+    expect(".o_kanban_record:first .o_field_widget[name=bar] input").not.toBeEnabled();
+    expect(".o-kanban-button-new").toHaveCount(1); // can still create
+    await contains(".o_kanban_record:first").click();
+    expect(".o_dialog .o_form_renderer").toHaveClass("o_form_readonly");
+    expect(".o_dialog .o_form_button_save").toHaveCount(0);
+    await contains(".modal .o_form_button_cancel").click();
+    expect(".o_dialog").toHaveCount(0);
 });
 
 test.tags("desktop");

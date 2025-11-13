@@ -39,7 +39,7 @@ const defaultCarouselStyleSnippet = (bsRide, bsInterval) => `
         </div>
     </section>`;
 
-const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) =>`
+const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => `
     <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default" data-snippet="s_image_gallery" data-vcss="002" data-columns="3">
         <div class="o_container_small overflow-hidden">
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="${bsRide}" data-bs-interval="${bsInterval}">

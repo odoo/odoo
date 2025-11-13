@@ -4,11 +4,10 @@ import { getCSSVariableValue } from "@html_editor/utils/formatting";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
-    static props = {};
     setup() {
         super.setup();
         this.palettes = this.getPalettes();
-        this.colorPresetToShow = this.env.colorPresetToShow,
+        this.colorPresetToShow = this.env.colorPresetToShow;
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));

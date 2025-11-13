@@ -1,10 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    service_count = fields.Integer(compute="_compute_service_count", string='Services')
+
+    @api.depends("line_ids.vehicle_log_service_ids")
+    def _compute_service_count(self):
+        for record in self:
+            record.service_count = len(record.line_ids.vehicle_log_service_ids)
 
     def _post(self, soft=True):
         vendor_bill_service = self.env.ref('account_fleet.data_fleet_service_type_vendor_bill', raise_if_not_found=False)
@@ -27,6 +34,18 @@ class AccountMove(models.Model):
         for log_service_id, log in zip(log_service_ids, log_list):
             log_service_id.message_post(body=log)
         return posted
+
+    def action_show_services(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Services"),
+            'res_model': 'fleet.vehicle.log.services',
+            'domain': [
+                ('account_move_line_id', 'in', self.line_ids.ids),
+            ],
+            "view_mode": "list,form",
+        }
 
 
 class AccountMoveLine(models.Model):

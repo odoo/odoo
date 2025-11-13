@@ -6,9 +6,10 @@ from datetime import timedelta
 from odoo import fields
 from odoo.addons.stock.tests.common import TestStockCommon
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSaleMrpLeadTime(TestStockCommon):
 
     @classmethod

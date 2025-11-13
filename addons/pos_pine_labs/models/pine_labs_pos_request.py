@@ -59,7 +59,7 @@ def pine_labs_request_body(payment_mode: bool, payment_method: object) -> dict:
     }
     if payment_mode:
         # Added AutoCancelDurationInMinutes set to 10 minutes for automatically cancelling transactions on the Pine Labs side in case of lost transaction request data from the PoS system.
-        pine_labs_auto_cancel_duration = payment_method.env['ir.config_parameter'].sudo().get_param('pos_pine_labs.payment_auto_cancel_duration', PINE_LABS_AUTO_CANCEL_DURATION_MIN)
+        pine_labs_auto_cancel_duration = payment_method.env['ir.config_parameter'].sudo().get_int('pos_pine_labs.payment_auto_cancel_duration') or PINE_LABS_AUTO_CANCEL_DURATION_MIN
         request_parameters.update({
             'AllowedPaymentMode': ALLOWED_PAYMENT_MODES_MAPPING.get(payment_method.pine_labs_allowed_payment_mode),
             'AutoCancelDurationInMinutes': pine_labs_auto_cancel_duration
@@ -67,8 +67,8 @@ def pine_labs_request_body(payment_mode: bool, payment_method: object) -> dict:
     return request_parameters
 
 def _get_pine_labs_url(payment_method) -> str:
-    if payment_method.env['ir.config_parameter'].sudo().get_param('pos_pine_labs.pine_labs_proxy_endpoint', ''):
-        return payment_method.env['ir.config_parameter'].sudo().get_param('pos_pine_labs.pine_labs_proxy_endpoint')
+    if endpoint := payment_method.env['ir.config_parameter'].sudo().get_str('pos_pine_labs.pine_labs_proxy_endpoint'):
+        return endpoint
     _logger.warning('To use Pine Labs outside India and Malesia, the Pine Labs Proxy Endpoint must be set because the Pine Labs URL is only accessible in India and Malesia.')
     if payment_method.pine_labs_test_mode:
         return 'https://www.plutuscloudserviceuat.in:8201/API/CloudBasedIntegration/V1/'

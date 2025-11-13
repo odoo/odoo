@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.GoogleMapsDescription">
-    <div class="description">
-        <font>Visit us:</font>
-        <span>Our office is located in the northeast of Brussels. TEL (555) 432 2365</span>
-    </div>
-</t>
-
 <t t-name="website.GoogleMapsOption">
     <BuilderRow label.translate="Address" preview="false">
         <input
@@ -69,9 +62,7 @@
     <BuilderRow label.translate="Zoom" preview="false">
         <BuilderNumberInput dataAttributeAction="'mapZoom'" default="12" step="1" min="0" max="22"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description" preview="false">
-        <BuilderCheckbox action="'showDescription'"/>
-    </BuilderRow>
+    <t t-call="website.MapDescriptionOption"/>
 </t>
 
 </templates>

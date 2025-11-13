@@ -17,7 +17,7 @@ export class ProductWishlist extends Interaction {
      * @param {Event} ev
      */
     async removeProduct(ev) {
-        await this._removeProduct(ev.currentTarget);
+        await this._removeProduct(ev.currentTarget, '/shop');
     }
 
     /**

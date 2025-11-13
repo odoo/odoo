@@ -13,10 +13,11 @@ There is also one permanent generation that is never collected (see
 The GC is triggered by the number of created objects. For the first collection,
 at every allocation and deallocation, a counter is respectively increased and
 decreased. Once it reaches a threshold, that collection is automatically
-collected. Other thresolds indicate that every X collections, the next
-collection is collected.
-
-Default thresolds are 700, 10, 10.
+collected.
+Before 3.14, other thresolds indicate that every X collections, the next
+collection is collected. Since the, there is only one additional collection
+which is collected inrementally; `1 / threshold1` percent of the heap is
+collected.
 """
 import contextlib
 import gc
@@ -39,6 +40,7 @@ def _timing_gc_callback(event, info):
     gen = info['generation']
     if event == 'start':
         _gc_start = _gc_time()
+        # python 3.14; gen2 is only collected when calling gc.collect() manually
         if gen == 2 and _logger.isEnabledFor(logging.DEBUG):
             _logger.debug("info %s, starting collection of gen2", gc_info())
     else:

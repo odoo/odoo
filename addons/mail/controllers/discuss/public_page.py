@@ -64,7 +64,7 @@ class PublicPageController(http.Controller):
 
     def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
         # sudo: ir.config_parameter - reading hard-coded key and using it in a simple condition
-        if not request.env["ir.config_parameter"].sudo().get_param("mail.chat_from_token"):
+        if not request.env["ir.config_parameter"].sudo().get_bool("mail.chat_from_token"):
             raise NotFound()
         # sudo: discuss.channel - channel access is validated with invitation_token
         channel_sudo = request.env["discuss.channel"].sudo().search([("uuid", "=", create_token)])

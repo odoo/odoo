@@ -8,9 +8,8 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
-import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 
@@ -145,7 +144,7 @@ test("attachment counter while loading attachments", async () => {
     const partnerId = pyEnv["res.partner"].create({});
     listenStoreFetch("mail.thread", {
         async onRpc() {
-            asyncStep("before mail.thread");
+            expect.step("before mail.thread");
             await def;
         },
     });
@@ -155,7 +154,7 @@ test("attachment counter while loading attachments", async () => {
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
     await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
-    await waitForSteps(["before mail.thread"]);
+    await expect.waitForSteps(["before mail.thread"]);
     def.resolve();
     await waitStoreFetch("mail.thread");
 });
@@ -166,7 +165,7 @@ test("attachment counter transition when attachments become loaded", async () =>
     const partnerId = pyEnv["res.partner"].create({});
     listenStoreFetch("mail.thread", {
         async onRpc() {
-            asyncStep("before mail.thread");
+            expect.step("before mail.thread");
             await def;
         },
     });
@@ -175,7 +174,7 @@ test("attachment counter transition when attachments become loaded", async () =>
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
-    await waitForSteps(["before mail.thread"]);
+    await expect.waitForSteps(["before mail.thread"]);
     def.resolve();
     await waitStoreFetch("mail.thread");
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });

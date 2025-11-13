@@ -8,22 +8,53 @@ import { VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 export class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "verticalAlignmentOption";
     resources = {
-        builder_options: [
-            withSequence(VERTICAL_ALIGNMENT, {
-                OptionComponent: VerticalAlignmentOption,
-                selector:
-                    ".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall",
-                applyTo: ".row",
-                props: {
-                    level: 1,
-                },
-                name: "verticalAlignmentOption",
-            }),
-        ],
+        builder_options: [withSequence(VERTICAL_ALIGNMENT, VerticalAlignmentOption)],
         builder_actions: {
             SetVerticalAlignmentAction,
         },
     };
+
+    setup() {
+        this.upgradeContainers();
+    }
+
+    // TODO: Remove once data-vxml="number" snippet comparison is restored.
+    upgradeContainers() {
+        // Upgrade legacy card snippets for visual consistency on new versions.
+        const snippetEls = this.document.querySelectorAll(
+            ".s_cards_soft:not([data-vxml]), .s_cards_grid:not([data-vxml])"
+        );
+
+        for (const snippetEl of snippetEls) {
+            // Handle all cards inside the section
+            for (const cardEl of snippetEl.querySelectorAll(".s_card")) {
+                const rowEl = cardEl.closest(".row");
+                // Preserve top alignment for cards that originally lacked h-100
+                if (!rowEl?.classList.contains("align-items-start")) {
+                    rowEl.classList.add("align-items-start");
+                }
+
+                // Ensure each card stretches fully
+                cardEl.classList.add("h-100");
+
+                // Additional handling for .s_cards_grid
+                if (snippetEl.classList.contains("s_cards_grid")) {
+                    const colAncestor = cardEl.closest("[class*='col-']");
+                    if (colAncestor) {
+                        colAncestor.classList.add("d-flex", "flex-column");
+                    }
+
+                    const cardImg = cardEl.querySelector(".o_card_img, img");
+                    if (cardImg) {
+                        cardImg.classList.add("object-fit-cover");
+                    }
+                }
+            }
+
+            // Once all cards in this section are updated, mark it as vxml 001
+            snippetEl.dataset.vxml = "001";
+        }
+    }
 }
 
 export class SetVerticalAlignmentAction extends ClassAction {

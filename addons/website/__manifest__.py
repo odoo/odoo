@@ -180,6 +180,7 @@
         'views/snippets/s_freegrid.xml',
         'views/snippets/s_card_offset.xml',
         'views/snippets/s_image.xml',
+        'views/snippets/s_icon.xml',
         'views/snippets/s_video.xml',
         'views/snippets/s_cta_badge.xml',
         'views/snippets/s_unveil.xml',
@@ -263,7 +264,7 @@
             'website/static/src/js/text_processing.js',
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
-            'website/static/src/components/user_switch.js',
+            'website/static/src/components/user_switch.*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -390,7 +391,6 @@
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
             'website/static/src/scss/website.edit_mode.scss',
-            'website/static/src/snippets/s_image_gallery/000.xml',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website_form_editor.xml',
@@ -439,7 +439,7 @@
             ('remove', 'website/static/src/builder/**/*.edit.*'),
         ],
         'html_builder.iframe_add_dialog': [
-            'website/static/src/snippets/**/*.iframe_add_dialog.scss',
+            'website/static/src/snippets/**/*.preview.scss',
         ],
     },
     'configurator_snippets': {

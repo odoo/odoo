@@ -5,6 +5,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Domain
 
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
+from odoo.tools.float_utils import float_round
 
 
 class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
@@ -60,7 +61,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         return self.env._(
             '%(name)s (%(duration)s %(request_unit)s(s))',
             name=self.holiday_status_id.name,
-            duration=self.duration,
+            duration=float_round(self.duration, precision_digits=2),
             request_unit=self.request_unit
         )
 

@@ -44,16 +44,16 @@ def get_twilio_credentials(env) -> tuple[str | None, str | None]:
     :return: tuple(account_sid: str, auth_token: str) or (None, None) if Twilio is disabled
     """
     params = env["ir.config_parameter"].sudo()
-    if not params.get_param("mail.use_twilio_rtc_servers"):
+    if not params.get_bool("mail.use_twilio_rtc_servers"):
         return None, None
-    account_sid = params.get_param("mail.twilio_account_sid")
-    auth_token = params.get_param("mail.twilio_account_token")
+    account_sid = params.get_str("mail.twilio_account_sid")
+    auth_token = params.get_str("mail.twilio_account_token")
     return account_sid, auth_token
 
 
 def get_sfu_url(env) -> str | None:
     params = env["ir.config_parameter"].sudo()
-    sfu_url = params.get_param("mail.sfu_server_url") if params.get_param("mail.use_sfu_server") else None
+    sfu_url = params.get_str("mail.sfu_server_url") if params.get_bool("mail.use_sfu_server") else None
     if not sfu_url:
         sfu_url = os.getenv("ODOO_SFU_URL")
     if sfu_url:
@@ -61,7 +61,7 @@ def get_sfu_url(env) -> str | None:
 
 
 def get_sfu_key(env) -> str | None:
-    sfu_key = env['ir.config_parameter'].sudo().get_param('mail.sfu_server_key')
+    sfu_key = env['ir.config_parameter'].sudo().get_str('mail.sfu_server_key')
     if not sfu_key:
         return os.getenv("ODOO_SFU_KEY")
     return sfu_key
@@ -109,7 +109,7 @@ class Store:
                     if hasattr(records, "_to_store_defaults")
                     else []
                 )
-        fields = self._format_fields(records, fields) + self._format_fields(records, extra_fields)
+        fields = Store._format_fields(fields) + Store._format_fields(extra_fields)
         if as_thread:
             if hasattr(records, "_thread_to_store"):
                 records._thread_to_store(self, fields, **kwargs)
@@ -158,7 +158,7 @@ class Store:
         assert isinstance(records, models.Model)
         if not fields:
             return self
-        fields = self._format_fields(records, fields)
+        fields = Store._format_fields(fields)
         for record, record_data_list in zip(records, self._get_records_data_list(records, fields)):
             for record_data in record_data_list:
                 if as_thread:
@@ -245,14 +245,15 @@ class Store:
         if index not in self.data[model_name]:
             self.data[model_name][index] = {}
 
-    def _format_fields(self, records, fields):
+    @staticmethod
+    def _format_fields(fields):
         if fields is None:
             return []
         if isinstance(fields, dict):
-            fields = [Store.Attr(key, value) for key, value in fields.items()]
+            return [Store.Attr(key, value) for key, value in fields.items()]
         if not isinstance(fields, list):
-            fields = [fields]
-        return fields
+            return [fields]
+        return list(fields)  # prevent mutation of original list
 
     def _get_records_data_list(self, records, fields):
         abstract_fields = [field for field in fields if isinstance(field, (dict, Store.Attr))]
@@ -415,7 +416,7 @@ class Store:
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
-            extra_fields = self.kwargs.get("extra_fields", [])
+            extra_fields = Store._format_fields(self.kwargs.get("extra_fields"))
             if self.dynamic_fields:
                 extra_fields += self.dynamic_fields(calling_record)
             params = {
@@ -517,7 +518,7 @@ class Store:
         def _add_to_store(self, store: "Store", target, key):
             self._sort_recods()
             super()._add_to_store(store, target, key)
-            if not self.only_data:
+            if not self.only_data and (self.records or self.mode == "REPLACE"):
                 rel_val = self._get_id()
                 target[key] = (
                     target[key] + rel_val if key in target and self.mode != "REPLACE" else rel_val

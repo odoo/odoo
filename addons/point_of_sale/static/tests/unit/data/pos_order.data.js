@@ -13,15 +13,14 @@ export class PosOrder extends models.ServerModel {
 
     read_pos_orders(domain) {
         const results = this.search(domain, this._load_pos_data_fields(), false);
-        const ids = results.filter((record) => record.state === "draft").map((record) => record.id);
-        return this.read_pos_data(ids);
+        return this.read_pos_data(results);
     }
 
     _load_pos_data_fields() {
         return [];
     }
 
-    action_pos_order_cancel(self) {
+    cancel_order_from_pos(self) {
         const records = this.browse(self);
         const orderIds = [];
 

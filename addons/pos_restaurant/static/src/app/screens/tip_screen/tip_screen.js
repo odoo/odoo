@@ -19,7 +19,7 @@ export class TipScreen extends Component {
         this.dialog = useService("dialog");
         this.printer = useService("printer");
         this.state = this.currentOrder.uiState.TipScreen;
-        this._totalAmount = this.currentOrder.getTotalWithTax();
+        this._totalAmount = this.currentOrder.priceIncl;
         useRouterParamsChecker();
 
         onMounted(async () => {
@@ -49,7 +49,7 @@ export class TipScreen extends Component {
     async validateTip() {
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.getOrder();
-        const serverId = typeof order.id === "number" && order.id;
+        const serverId = order.isSynced && order.id;
 
         if (!serverId) {
             this.dialog.add(AlertDialog, {
@@ -96,7 +96,7 @@ export class TipScreen extends Component {
         const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
         await this.pos.data.write("pos.order", [serverId], {
             is_tipped: true,
-            tip_amount: serverTipLine[0].price_subtotal_incl,
+            tip_amount: serverTipLine[0].priceIncl,
         });
         this.goNextScreen();
     }

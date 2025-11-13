@@ -21,6 +21,7 @@ export class RecordAutocomplete extends Component {
         fieldString: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         slots: { optional: true },
+        buildQuickCreate: { type: Function, optional: true },
     };
     static components = { AutoComplete };
     static template = "web.RecordAutocomplete";
@@ -72,9 +73,20 @@ export class RecordAutocomplete extends Component {
             });
         }
         if (options.length === 0) {
-            options.push({ label: _t("(no result)") });
+            const quickCreateOption = this.getQuickCreateOption({ request: name });
+            if (quickCreateOption) {
+                options.push(quickCreateOption);
+            } else {
+                options.push({ label: _t("(no result)") });
+            }
         }
         return options;
+    }
+
+    getQuickCreateOption({ request }) {
+        if (!!this.props.buildQuickCreate && request.length > 0) {
+            return this.props.buildQuickCreate({ request });
+        }
     }
 
     async onSearchMore(name) {

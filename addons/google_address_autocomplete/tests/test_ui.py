@@ -52,7 +52,7 @@ class TestUI(HttpCase):
                 ]
             },
         ):
-            self.env["ir.config_parameter"].sudo().set_param(
+            self.env["ir.config_parameter"].sudo().set_str(
                 "google_address_autocomplete.google_places_api_key", MOCK_API_KEY
             )
             self.start_tour(
@@ -60,7 +60,7 @@ class TestUI(HttpCase):
             )
 
     def test_google_api_calls(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "google_address_autocomplete.google_places_api_key", MOCK_API_KEY
         )
 
@@ -169,7 +169,7 @@ class TestUI(HttpCase):
         self.assertEqual(steps, ["/autocomplete/json", "/details/json"])
 
     def test_google_api_calls2(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "google_address_autocomplete.google_places_api_key", MOCK_API_KEY
         )
 
@@ -236,7 +236,7 @@ class TestUI(HttpCase):
 
     @mute_logger("odoo.http")
     def test_no_access(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["ir.config_parameter"].sudo().set_str(
             "google_address_autocomplete.google_places_api_key", MOCK_API_KEY
         )
         self.patch(

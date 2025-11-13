@@ -21,7 +21,6 @@
                     </group>
                     <group colspan="1" string="Settings">
                         <field name="model_id" readonly="id"/>
-                        <field name="model" invisible="1" />
                         <field name="record_domain" widget="domain" options="{'in_dialog': True, 'model': 'model'}"/>
                         <field name="default_layout"/>
                     </group>
@@ -54,7 +53,6 @@
             when the group is enabled, but we need the field to be there all the
             time for `PageRendererMixin`'s `recordFilter' to be able to filter
             correctly. -->
-            <field name="website_id" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>
             <field name="url_demo"/>
             <field name="is_published" widget="boolean_toggle"/>
@@ -68,7 +66,6 @@
     <field name="arch" type="xml">
         <kanban class="o-website-controller-page-kanban">
             <t t-name="card">
-                <field name="website_published" invisible="1" />
                 <widget name="web_ribbon" text="Published" invisible="not website_published" />
                 <widget name="web_ribbon" text="Unpublished" invisible="website_published" bg_color="text-bg-danger" />
                     <div data-section="data" class="d-flex align-items-center">

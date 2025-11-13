@@ -189,7 +189,7 @@ test("Mouse move on throttleForAnimation", async () => {
 
     const keyDownEvent = new KeyboardEvent("keydown", { bubbles: true });
     const mouseMoveEvent = new KeyboardEvent("mousemove", { bubbles: true });
-    const p = queryOne(":iframe p");
+    const p = queryOne(":iframe p:not([data-selection-placeholder])");
 
     p.dispatchEvent(keyDownEvent);
     expect(".oe_overlay.oe_active.o_overlay_hidden").toHaveCount(1);

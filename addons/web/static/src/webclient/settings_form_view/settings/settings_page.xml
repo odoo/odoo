@@ -15,15 +15,13 @@
                 </div>
             </div>
             <ActionSwiper
-                    onRightSwipe = " hasRightSwipe() ? {
+                    onRightSwipe="hasRightSwipe() ? {
                         action: onRightSwipe.bind(this),
                     } : undefined"
-                    onLeftSwipe = " hasLeftSwipe() ? {
+                    onLeftSwipe="hasLeftSwipe() ? {
                         action: onLeftSwipe.bind(this),
                     } : undefined"
-                    animationOnMove="false"
-                    animationType="'forwards'"
-                    swipeDistanceRatio="6">
+                    animationType="'forwards'">
                 <div class="settings" t-ref="settings">
                     <t t-slot="NoContentHelper" t-if="props.slots['NoContentHelper'].isVisible"/>
                     <t t-slot="default" selectedTab="state.selectedTab"/>

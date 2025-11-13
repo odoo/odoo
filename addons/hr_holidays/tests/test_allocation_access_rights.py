@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.tests import tagged
+
 from odoo.exceptions import AccessError, UserError
 import time
 
@@ -47,6 +49,7 @@ class TestAllocationRights(TestHrHolidaysCommon):
         return self.env['hr.leave.allocation'].with_user(user).create(values)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRightsSimpleUser(TestAllocationRights):
 
     def test_simple_user_request_allocation(self):
@@ -87,6 +90,7 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
         self.assertEqual(allocation.state, 'confirm', "The allocation should be in 'confirm' state")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRightsEmployeeManager(TestAllocationRights):
 
     @classmethod
@@ -137,6 +141,7 @@ class TestAccessRightsEmployeeManager(TestAllocationRights):
             allocation.action_approve()
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRightsHolidayUser(TestAllocationRights):
 
     def test_holiday_user_request_allocation(self):
@@ -179,6 +184,7 @@ class TestAccessRightsHolidayUser(TestAllocationRights):
         self.assertEqual(allocation.state, 'validate')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRightsHolidayManager(TestAllocationRights):
 
     def test_holiday_manager_can_approve_own(self):

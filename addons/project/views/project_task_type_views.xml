@@ -32,7 +32,11 @@
                                 <field name="user_id" invisible="True"/>
                                 <field name="auto_validation_state" invisible="not rating_template_id"/>
                                 <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'edit_tags': True}" invisible="user_id" required="not user_id"/>
-                                <field name="rotting_threshold_days"/>
+                                <label for="rotting_threshold_days" string="Rotting in"/>
+                                <div>
+                                    <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
+                                    <span>days</span>
+                                </div>
                                 <field name="color" widget="color_picker"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts, queryFirst, queryOne, queryText } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryFirst, queryOne, queryText, resize } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockDate } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import {
@@ -183,10 +183,25 @@ class Currency extends models.Model {
         ],
     });
     inverse_rate = fields.Float();
+    rate_date = fields.Date();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
-        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
+        {
+            id: 1,
+            name: "USD",
+            symbol: "$",
+            position: "before",
+            inverse_rate: 1,
+            rate_date: "2017-01-08",
+        },
+        {
+            id: 2,
+            name: "EUR",
+            symbol: "€",
+            position: "after",
+            inverse_rate: 0.5,
+            rate_date: "2019-06-13",
+        },
     ];
 }
 
@@ -2799,12 +2814,9 @@ test("empty pivot view with sample data", async () => {
 
     expect(".o_pivot_view .o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(1);
-    expect(".ribbon").toHaveCount(1);
-    expect(".ribbon").toHaveText("SAMPLE DATA");
     await removeFacet();
     expect(".o_pivot_view .o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(0);
-    expect(".ribbon").toHaveCount(0);
     expect("table").toHaveCount(1);
 });
 
@@ -2828,13 +2840,11 @@ test("non empty pivot view with sample data", async () => {
 
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(0);
-    expect(".ribbon").toHaveCount(0);
     expect("table").toHaveCount(1);
     await toggleSearchBarMenu();
     await toggleMenuItem("Small Than 0");
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(1);
-    expect(".ribbon").toHaveCount(0);
     expect("table").toHaveCount(0);
 });
 
@@ -3570,8 +3580,8 @@ test("filter -> sort -> unfilter should not crash", async () => {
     await toggleSearchBarMenu();
     await toggleMenuItem("xphone");
     expect(getFacetTexts()).toEqual([]);
-    expect(queryAllTexts("tbody th")).toEqual(["Total", "xphone", "Yes", "xpad"]);
-    expect(getCurrentValues()).toBe(["4", "1", "1", "3"].join());
+    expect(queryAllTexts("tbody th")).toEqual(["Total", "xphone", "Yes", "xpad", "No", "Yes"]);
+    expect(getCurrentValues()).toBe(["4", "1", "1", "3", "1", "2"].join());
 });
 
 test("no class 'o_view_sample_data' when real data are presented", async () => {
@@ -3984,7 +3994,7 @@ test("pivot view with monetary with multiple currencies", async () => {
     // multi currencies popover
     await toggleMultiCurrencyPopover(".o_pivot table tbody tr:first .o_value sup");
     expect(".o_multi_currency_popover").toHaveCount(1);
-    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
+    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50 on Jun 13");
 
     // test sorting
     await contains("th.o_pivot_measure_row").click();
@@ -3993,4 +4003,103 @@ test("pivot view with monetary with multiple currencies", async () => {
     await contains("th.o_pivot_measure_row").click();
     expect(".o_pivot table tbody tr:eq(1)").toHaveText("USD \n$ 1,000.00");
     expect(".o_pivot table tbody tr:last").toHaveText("EUR \n400.00 €");
+});
+
+test.tags("desktop");
+test("scroll position is restored when coming back to pivot view", async () => {
+    Partner._views = {
+        kanban: `
+            <pivot>
+                <field name="foo" type="row"/>
+            </pivot>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 20; i++) {
+        Partner._records.push({ id: 100 + i, foo: 100 + i });
+    }
+
+    let def;
+    onRpc("formatted_read_grouping_sets", () => def);
+    await resize({ width: 800, height: 300 });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "pivot"],
+            [false, "list"],
+        ],
+        context: {
+            group_by: ["foo"],
+        },
+    });
+
+    expect(".o_pivot_view").toHaveCount(1);
+    // simulate a scroll in the pivot view
+    queryOne(".o_content").scrollTop = 200;
+
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // the pivot is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("pivot");
+    expect(".o_pivot_view").toHaveCount(1);
+    expect(".o_content .o_pivot").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_content .o_pivot").toHaveCount(1);
+    expect(".o_content").toHaveProperty("scrollTop", 200);
+});
+
+test.tags("mobile");
+test("scroll position is restored when coming back to pivot view (mobile)", async () => {
+    Partner._views = {
+        kanban: `
+            <pivot>
+                <field name="foo" type="row"/>
+            </pivot>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 20; i++) {
+        Partner._records.push({ id: 100 + i, foo: 100 + i });
+    }
+
+    let def;
+    onRpc("formatted_read_grouping_sets", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "pivot"],
+            [false, "list"],
+        ],
+        context: {
+            group_by: ["foo"],
+        },
+    });
+
+    expect(".o_pivot_view").toHaveCount(1);
+    // simulate a scroll in the pivot view
+    queryOne(".o_pivot_view").scrollTop = 200;
+
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // the pivot is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("pivot");
+    expect(".o_pivot_view").toHaveCount(1);
+    expect(".o_content .o_pivot").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_content .o_pivot").toHaveCount(1);
+    expect(".o_pivot_view").toHaveProperty("scrollTop", 200);
 });

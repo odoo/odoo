@@ -44,7 +44,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'module_pos_restaurant': True,
             'iface_splitbill': True,
             'iface_printbill': True,
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [(4, printer.id)],
             'iface_tipproduct': False,
             'company_id': cls.env.company.id,
@@ -264,12 +264,12 @@ class TestFrontend(TestFrontendCommon):
 
     def test_02_others_bis(self):
         # disable kitchen printer to avoid printing errors
-        self.pos_config.is_order_printer = False
+        self.pos_config.use_order_printer = False
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('ControlButtonsTour', login="pos_admin")
 
     def test_04_ticket_screen(self):
-        self.pos_config.is_order_printer = False
+        self.pos_config.use_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosResTicketScreenTour')
 
@@ -296,9 +296,10 @@ class TestFrontend(TestFrontendCommon):
 
     def test_07_split_bill_screen(self):
         # disable kitchen printer to avoid printing errors
-        self.pos_config.is_order_printer = False
+        self.pos_config.use_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
+        self.start_pos_tour('SplitBillScreenTourPay')
 
     def test_08_refund_stay_current_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -308,7 +309,7 @@ class TestFrontend(TestFrontendCommon):
         setup_product_combo_items(self)
         self.office_combo.product_variant_id.write({'lst_price': 40})
         # disable kitchen printer to avoid printing errors
-        self.pos_config.is_order_printer = False
+        self.pos_config.use_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour4ProductCombo')
 
@@ -412,7 +413,7 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.main_pos_config.write({
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
         })
 
@@ -471,7 +472,7 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.main_pos_config.write({
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -490,7 +491,7 @@ class TestFrontend(TestFrontendCommon):
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
         self.pos_config.write({
-            'is_order_printer' : True,
+            'use_order_printer': True,
             'printer_ids': [Command.set(pos_printer.ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -520,7 +521,7 @@ class TestFrontend(TestFrontendCommon):
 
 
         self.main_pos_config.write({
-            'is_order_printer' : True,
+            'use_order_printer': True,
             'printer_ids': [Command.set([printer_1.id, printer_2.id])],
         })
 
@@ -563,7 +564,7 @@ class TestFrontend(TestFrontendCommon):
             'taxes_id': self.tax_sale_a,
             'pos_categ_ids': [(4, drinks_category.id)]
         })
-        self.pos_config.is_order_printer = False
+        self.pos_config.use_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tax_in_merge_table_order_line_tour', login="pos_admin")
         line_1 = self.env['pos.order.line'].search([('full_product_name', '=', 'product_1')])
@@ -594,7 +595,7 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.main_pos_config.write({
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [Command.set([printer_1.id, printer_2.id])],
         })
 
@@ -658,7 +659,7 @@ class TestFrontend(TestFrontendCommon):
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
         self.pos_config.write({
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [Command.set(pos_printer.ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -705,7 +706,7 @@ class TestFrontend(TestFrontendCommon):
         self.main_pos_config.write({
             'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
             'iface_print_auto': True,
             'iface_print_skip_screen': True,
@@ -729,7 +730,7 @@ class TestFrontend(TestFrontendCommon):
         self.main_pos_config.write({
             'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
             'other_devices': True,
             'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
@@ -758,6 +759,12 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(orders[1].floating_order_name, "Test")
         self.assertEqual(orders[0].floating_order_name, False)
         self.assertIsNotNone(orders[0].table_id)
+
+    def test_cancel_order_from_ui(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_cancel_order_from_ui')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, "cancel", "The order should be in cancel state")
 
     def test_sync_lines_qty_update(self):
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -802,6 +809,6 @@ class TestFrontend(TestFrontendCommon):
            if this is not the case, the combo lines would lose their link to the parent combo line and appear as
            normal line"""
         setup_product_combo_items(self)
-        self.pos_config.is_order_printer = False
+        self.pos_config.use_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_combo_synchronisation')

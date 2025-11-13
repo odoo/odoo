@@ -9,10 +9,11 @@ business objects.
 from lxml import etree
 from operator import itemgetter
 
-from odoo.tests import TransactionCase, Form
+from odoo.tests import tagged, TransactionCase, Form
 from odoo import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBasic(TransactionCase):
     def test_defaults(self):
         """
@@ -108,6 +109,8 @@ class TestBasic(TransactionCase):
         with self.assertRaises(AssertionError):
             f.f2 = 6
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestM2O(TransactionCase):
     def test_default_and_onchange(self):
         """ Checks defaults & onchanges impacting m2o fields
@@ -163,6 +166,8 @@ class TestM2O(TransactionCase):
         r = f.save()
         self.assertEqual(r.f2, r2)
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestM2M(TransactionCase):
     def test_add(self):
         Sub = self.env['test_testing_utilities.sub2']
@@ -290,7 +295,11 @@ class TestM2M(TransactionCase):
             ['ok', '1', '2', '3', '4']
         )
 
+
 get = itemgetter('name', 'value', 'v')
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestO2M(TransactionCase):
     def test_basic_alterations(self):
         """ Tests that the o2m proxy allows adding, removing and editing o2m
@@ -627,6 +636,8 @@ class TestO2M(TransactionCase):
         self.assertEqual(r.mapped('line_ids.vv'), [1, 2])
         self.assertEqual(r.mapped('line_ids.v'), [7, 7])
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNestedO2M(TransactionCase):
     def test_id_cannot_be_assigned(self):
         # MO with:
@@ -748,6 +759,8 @@ class TestNestedO2M(TransactionCase):
         self.assertEqual(r.line_ids.line_ids.v, 0)
         self.assertEqual(r.line_ids.line_ids.vv, 0)
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
     post-save (we already have it) and it's easier to see what bits act on

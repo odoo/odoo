@@ -933,7 +933,7 @@ export async function mail_data(request) {
 registerRoute("/discuss/search", search);
 /** @type {RouteCallback} */
 async function search(request) {
-    const { term, limit = 8 } = await parseRequestParams(request);
+    const { term, limit = 10 } = await parseRequestParams(request);
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
@@ -1082,6 +1082,20 @@ function _process_request_for_all(store, name, params, context = {}) {
             makeKwArgs({ for_current_user: true })
         );
         store.add(channels);
+        store.add(
+            DiscussChannelMember.browse(
+                channels
+                    .map(
+                        (channel) =>
+                            DiscussChannelMember._filter([
+                                ["channel_id", "=", channel.id],
+                                ["is_self", "=", true],
+                            ])[0]
+                    )
+                    .map((channelMember) => channelMember.id)
+            ),
+            ["is_favorite"]
+        );
     }
     if (name === "mail.thread") {
         store.add(
@@ -1097,6 +1111,15 @@ function _process_request_for_all(store, name, params, context = {}) {
             // limitation of mock server: cannot browse non-existing record
             channel.push({ id: channelId });
             store.add(channel, makeKwArgs({ delete: true }));
+        }
+    }
+    if (name === "/discuss/channel/favorite") {
+        const memberIds = DiscussChannelMember.search([
+            ["channel_id", "=", params.channel_id],
+            ["is_self", "=", true],
+        ]);
+        if (memberIds.length) {
+            DiscussChannelMember.write(memberIds, { is_favorite: params.is_favorite });
         }
     }
     if (name === "/discuss/get_or_create_chat") {
@@ -1307,6 +1330,7 @@ export class StoreMany extends StoreRelation {
             })
         );
         this.mode = mode;
+        this.sort = sort;
     }
     _copy_with_records(target, record) {
         const res = super._copy_with_records(target, record);
@@ -1329,9 +1353,6 @@ export class StoreMany extends StoreRelation {
         target[key] = (previous_value || []).concat(rel_val);
     }
     _get_id() {
-        if (!this.records || !this.records.length) {
-            return [];
-        }
         const res = [];
 
         if (this.records._name === "mail.message.reaction") {

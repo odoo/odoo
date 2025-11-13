@@ -5,9 +5,10 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.addons.website_event_exhibitor.tests.common import TestEventExhibitorCommon
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSponsorData(TestEventExhibitorCommon):
 
     @users('user_eventmanager')

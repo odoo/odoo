@@ -127,3 +127,11 @@ class ResourceResource(models.Model):
                     calendars_within_period_per_resource[resource_id][calendar_id] = intervals & resource_default_work_intervals[resource_id]
 
         return calendars_within_period_per_resource
+
+    def _get_calendar_at(self, date_target, tz=False):
+        result = super()._get_calendar_at(date_target)
+        resources_with_employee = self.filtered(lambda r: r.employee_id)
+        employee_calendars = resources_with_employee.employee_id._get_calendars(date_target.astimezone(tz))
+        for resource in resources_with_employee:
+            result[resource] = employee_calendars[resource.employee_id.id]
+        return result

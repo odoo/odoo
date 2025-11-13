@@ -44,7 +44,8 @@ export class WebsiteSystrayItem extends Component {
 
     get hasEditableRecordInBackend() {
         return (
-            this.website.currentWebsite && this.website.currentWebsite.metadata.editableInBackend
+            this.website.currentWebsite &&
+            this.website.currentWebsite.metadata.editableInBackend &&
             // TODO the functional desire is to have read access on all
             // "website" models for all internal users, but there are many
             // fields preventing that... to review in master (should views just
@@ -53,11 +54,11 @@ export class WebsiteSystrayItem extends Component {
             // known to lead to access rights lock. At least, list views are
             // accessible at the moment.
             // See WEBSITE_RECORDS_VIEWS_ACCESS_RIGHTS.
-            && (
-                !this.website.currentWebsite.metadata.mainObject
-                || !['event.event', 'hr.job'].includes(this.website.currentWebsite.metadata.mainObject.model)
-                || this.website.currentWebsite.metadata.canPublish
-            )
+            (!this.website.currentWebsite.metadata.mainObject ||
+                !["event.event", "hr.job"].includes(
+                    this.website.currentWebsite.metadata.mainObject.model
+                ) ||
+                this.website.currentWebsite.metadata.canPublish)
         );
     }
 

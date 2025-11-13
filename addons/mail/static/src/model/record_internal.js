@@ -195,6 +195,9 @@ export class RecordInternal {
      */
     compute(record, fieldName) {
         const Model = record.Model;
+        if (!Model._.fieldsCompute.get(fieldName)) {
+            return;
+        }
         const store = record._rawStore;
         this.fieldsComputing.set(fieldName, true);
         this.fieldsComputeOnNeed.delete(fieldName);

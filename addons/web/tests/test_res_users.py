@@ -5,6 +5,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tests.common import tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResUsers(TransactionCase):
     @classmethod
     def setUpClass(cls):

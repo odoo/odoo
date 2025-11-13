@@ -4,7 +4,8 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL, Query, unique
+from odoo.models import Query
+from odoo.tools import SQL, unique
 from odoo.tools.float_utils import float_compare, float_round
 
 
@@ -111,18 +112,17 @@ class AnalyticMixin(models.AbstractModel):
         """To group by `analytic_distribution`, we first need to separate the analytic_ids and associate them with the ids to be counted
         Do note that only '__count' can be passed in the `aggregates`"""
         if groupby_spec == 'analytic_distribution':
-            query._tables = {
-                'distribution': SQL(
+            query._joins = {
+                'distribution': (SQL(), SQL(
                     r"""(SELECT DISTINCT %s, (regexp_matches(jsonb_object_keys(%s), '\d+', 'g'))[1]::int AS account_id FROM %s WHERE %s)""",
                     self._get_count_id(query),
                     self._field_to_sql(self._table, 'analytic_distribution', query),
                     query.from_clause,
                     query.where_clause,
-                )
+                ), SQL())
             }
 
             # After using the from and where clauses in the nested query, they are no longer needed in the main one
-            query._joins = {}
             query._where_clauses = []
             return SQL("account_id")
 

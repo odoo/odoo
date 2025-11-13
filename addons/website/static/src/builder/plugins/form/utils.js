@@ -212,6 +212,7 @@ export function getFieldFormat(fieldEl) {
         labelWidth: fieldEl.querySelector(".s_website_form_label").style.width,
         multiPosition: (multipleInputEl && multipleInputEl.dataset.display) || "horizontal",
         col: [...fieldEl.classList].filter((el) => el.match(/^col-/g)).join(" "),
+        offset: [...fieldEl.classList].filter((el) => el.match(/^offset-/g)).join(" "),
         requiredMark: requiredMark,
         optionalMark: optionalMark,
         mark: mark && mark.textContent,

@@ -1,5 +1,5 @@
-import { isArtificialVoidElement } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { isMediaElement } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -7,8 +7,8 @@ import { withSequence } from "@html_editor/utils/resource";
  * This plugin is responsible for setting the contenteditable attribute on some
  * elements.
  *
- * The force_editable_selector and force_not_editable_selector resources allow
- * other plugins to easily add editable or non editable elements.
+ * The content_editable_providers and content_not_editable_providers resources
+ * allow other plugins to easily add editable or non editable elements.
  */
 
 export class ContentEditablePlugin extends Plugin {
@@ -19,37 +19,33 @@ export class ContentEditablePlugin extends Plugin {
     };
 
     normalize(root) {
-        const toDisableSelector = this.getResource("force_not_editable_selector").join(",");
-        const toDisableEls = toDisableSelector ? [...selectElements(root, toDisableSelector)] : [];
-        for (const toDisable of toDisableEls) {
-            toDisable.setAttribute("contenteditable", "false");
+        const contentNotEditableEls = [];
+        for (const fn of this.getResource("content_not_editable_providers")) {
+            contentNotEditableEls.push(...fn(root));
         }
-        const toEnableSelector = this.getResource("force_editable_selector").join(",");
-        let filteredContentEditableEls = toEnableSelector
-            ? [...selectElements(root, toEnableSelector)]
-            : [];
-        for (const fn of this.getResource("filter_contenteditable_handlers")) {
-            filteredContentEditableEls = [...fn(filteredContentEditableEls)];
+        for (const contentNotEditableEl of contentNotEditableEls) {
+            contentNotEditableEl.setAttribute("contenteditable", "false");
         }
-        const extraContentEditableEls = [];
-        for (const fn of this.getResource("extra_contenteditable_handlers")) {
-            extraContentEditableEls.push(...fn(filteredContentEditableEls));
+        const contentEditableEls = [];
+        for (const fn of this.getResource("content_editable_providers")) {
+            contentEditableEls.push(...fn(root));
         }
-        for (const contentEditableEl of [
-            ...filteredContentEditableEls,
-            ...extraContentEditableEls,
-        ]) {
-            if (!contentEditableEl.isContentEditable) {
-                if (
-                    isArtificialVoidElement(contentEditableEl) ||
-                    contentEditableEl.nodeName === "IMG"
-                ) {
-                    contentEditableEl.classList.add("o_editable_media");
-                    continue;
-                }
-                if (!contentEditableEl.matches(toDisableSelector)) {
-                    contentEditableEl.setAttribute("contenteditable", true);
-                }
+        const filteredContentEditableEls = contentEditableEls.filter((contentEditableEl) =>
+            this.getResource("valid_contenteditable_predicates").every((p) => p(contentEditableEl))
+        );
+        for (const contentEditableEl of filteredContentEditableEls) {
+            if (
+                isMediaElement(contentEditableEl) &&
+                !contentEditableEl.parentNode.isContentEditable
+            ) {
+                contentEditableEl.classList.add("o_editable_media");
+                continue;
+            }
+            if (
+                !contentEditableEl.isContentEditable &&
+                !contentNotEditableEls.includes(contentEditableEl)
+            ) {
+                contentEditableEl.setAttribute("contenteditable", true);
             }
         }
     }

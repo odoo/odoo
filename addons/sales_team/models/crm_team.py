@@ -10,6 +10,7 @@ class CrmTeam(models.Model):
     _description = "Sales Team"
     _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
+    _mail_post_access = 'read'
 
     def _get_default_color(self):
         return random.randint(1, 11)
@@ -123,7 +124,7 @@ class CrmTeam(models.Model):
 
     @api.depends('sequence')  # TDE FIXME: force compute in new mode
     def _compute_is_membership_multi(self):
-        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
+        multi_enabled = self.env['ir.config_parameter'].sudo().get_bool('sales_team.membership_multi')
         self.is_membership_multi = multi_enabled
 
     @api.depends('crm_team_member_ids.active')

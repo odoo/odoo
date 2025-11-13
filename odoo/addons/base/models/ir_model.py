@@ -225,7 +225,7 @@ class IrModel(models.Model):
                                default=_default_field_id)
     inherited_model_ids = fields.Many2many('ir.model', compute='_inherited_models', string="Inherited models",
                                            help="The list of models that extends the current model.")
-    state = fields.Selection([('manual', 'Custom Object'), ('base', 'Base Object')], string='Type', default='manual', readonly=True)
+    state = fields.Selection([('manual', 'Custom'), ('base', 'Base')], string='Type', default='manual', readonly=True)
     access_ids = fields.One2many('ir.model.access', 'model_id', string='Access')
     rule_ids = fields.One2many('ir.rule', 'model_id', string='Record Rules')
     abstract = fields.Boolean(string="Abstract Model")
@@ -1015,11 +1015,16 @@ class IrModelFields(models.Model):
                 if relation and not IrModel._get_id(relation):
                     raise UserError(_("Model %s does not exist!", vals['relation']))
 
-                if vals.get('ttype') == 'one2many' and not self.search_count([
-                    ('ttype', '=', 'many2one'),
-                    ('model', '=', vals['relation']),
-                    ('name', '=', vals['relation_field']),
-                ]):
+                if (
+                    vals.get('ttype') == 'one2many' and
+                    vals.get("store", True) and
+                    not vals.get("related") and
+                    not self.search_count([
+                        ('ttype', '=', 'many2one'),
+                        ('model', '=', vals['relation']),
+                        ('name', '=', vals['relation_field']),
+                    ])
+                ):
                     raise UserError(_("Many2one %(field)s on model %(model)s does not exist!", field=vals['relation_field'], model=vals['relation']))
 
         if any(model in self.pool for model in models):

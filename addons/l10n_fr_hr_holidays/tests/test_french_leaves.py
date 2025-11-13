@@ -417,3 +417,35 @@ class TestFrenchLeaves(TransactionCase):
         self.assertEqual(leave_2.number_of_days, 5.0)
         self.assertEqual(leave_2.date_from.date(), date(2024, 10, 21))
         self.assertEqual(leave_2.date_to.date(), date(2024, 10, 27))
+
+    def test_leave_employee_different_schedule_from_company(self):
+        self.company.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Company Calendar',
+            'attendance_ids': [attendance for i in range(5) for attendance in [
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})]
+            ]
+        })
+        self.employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [attendance for i in range(5) for attendance in [
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 13, 'hour_to': 17.50, 'day_period': 'afternoon'})]
+            ]
+        })
+
+        leave_1 = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2025-08-04',
+            'request_date_to': '2025-08-04',
+        })
+
+        work_hours_data = leave_1.employee_id._list_work_time_per_day(
+            leave_1.date_from,
+            leave_1.date_to)
+
+        self.assertEqual(work_hours_data[leave_1.employee_id.id][0][1], 7.50)

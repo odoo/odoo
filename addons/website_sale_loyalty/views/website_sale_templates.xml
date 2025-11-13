@@ -173,27 +173,6 @@
         </xpath>
     </template>
 
-    <template
-        id="website_sale_loyalty.cart_discount"
-        inherit_id="website_sale.total"
-        name="Show Discount in Subtotal"
-        active="False"
-    >
-        <xpath expr="//tr[@name='o_order_total_untaxed']" position="before">
-            <tr t-if="website_sale_order and website_sale_order.reward_amount">
-            <td class="text-end border-0 text-muted" title="Discounted amount">Discount:</td>
-            <td class="text-xl-end border-0 text-muted">
-                <span t-field="website_sale_order.reward_amount" style="white-space: nowrap;"
-                    class="monetary_field"
-                    t-options='{
-                            "widget": "monetary",
-                            "display_currency": website_sale_order.currency_id,
-                    }'/>
-            </td>
-            </tr>
-        </xpath>
-    </template>
-
     <template id="website_sale_loyalty.reduction_coupon_code" inherit_id="website_sale.reduction_code">
         <xpath expr="//t[@t-set='force_coupon']" position="after">
             <t t-set="_placeholder">Discount code or gift card</t>

@@ -13,8 +13,9 @@ class ResPartner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
     _name = 'res.partner'
-    _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
+    _inherit = ['mail.thread.blacklist', 'res.partner', 'mail.activity.mixin']
     _mail_flat_thread = False
+    _mail_post_access = 'read'
 
     # override to add and order tracking
     name = fields.Char(tracking=1)
@@ -334,9 +335,3 @@ class ResPartner(models.Model):
             query = self._search(Domain('id', 'not in', partners.ids) & domain, limit=remaining_limit)
             partners |= self.browse(query)
         return partners
-
-    @api.model
-    def _get_current_persona(self):
-        if not self.env.user or self.env.user._is_public():
-            return (self.env["res.partner"], self.env["mail.guest"]._get_guest_from_context())
-        return (self.env.user.partner_id, self.env["mail.guest"])

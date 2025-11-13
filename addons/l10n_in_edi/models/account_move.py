@@ -598,7 +598,14 @@ class AccountMove(models.Model):
                 "TaxSch": "GST",
                 "SupTyp": self._l10n_in_get_supply_type(tax_details_by_code.get('igst_amount')),
                 "RegRev": tax_details_by_code.get('is_reverse_charge') and "Y" or "N",
-                "IgstOnIntra": is_intra_state and tax_details_by_code.get('igst_amount') and "Y" or "N",
+                "IgstOnIntra": (
+                    # for Export SEZ LUT tax as per e-invoice api doc validation point 32
+                    # Export and SEZ must be treated as Inter state supply
+                    self.l10n_in_gst_treatment not in ('special_economic_zone', 'overseas')
+                    and is_intra_state
+                    and tax_details_by_code.get("igst_amount")
+                    and "Y" or "N"
+                ),
             },
             "DocDtls": {
                 "Typ": (self.move_type == "out_refund" and "CRN") or (self.debit_origin_id and "DBN") or "INV",
@@ -620,7 +627,7 @@ class AccountMove(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": in_round(tax_details['base_amount'] + global_discount_amount),
+                "AssVal": in_round(tax_details['base_amount']),
                 "CgstVal": in_round(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": in_round(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": in_round(tax_details_by_code.get("igst_amount", 0.00)),
@@ -635,7 +642,11 @@ class AccountMove(models.Model):
                 "Discount": in_round(global_discount_amount),
                 "RndOffAmt": in_round(rounding_amount),
                 "TotInvVal": in_round(
-                    (tax_details["base_amount"] + tax_details["tax_amount"] + rounding_amount)),
+                    tax_details["base_amount"]
+                    + tax_details["tax_amount"]
+                    + rounding_amount
+                    - global_discount_amount
+                ),
             },
         }
         if self.company_currency_id != self.currency_id:

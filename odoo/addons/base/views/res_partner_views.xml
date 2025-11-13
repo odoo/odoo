@@ -157,7 +157,7 @@
                                 placeholder="Company Name..."
                                 string="Company"
                                 domain="[('is_company', '=', True)]"
-                                context="{'default_is_company': True, 'default_user_id': user_id}"
+                                context="{'default_is_company': True, 'default_user_id': user_id, 'show_address': False}"
                                 invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
                             <div colspan="2" class="d-flex gap-2" invisible="not company_name or company_name == '' or is_company">
                                 <label for="company_name" class="fw-bold text-nowrap"/>

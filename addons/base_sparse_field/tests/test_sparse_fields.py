@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSparseFields(common.TransactionCase):
 
     def test_sparse(self):

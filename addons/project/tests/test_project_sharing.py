@@ -85,6 +85,7 @@ class TestProjectSharingCommon(TestProjectCommon):
 
 
 @tagged('project_sharing')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectSharing(TestProjectSharingCommon):
 
     def test_project_share_wizard(self):

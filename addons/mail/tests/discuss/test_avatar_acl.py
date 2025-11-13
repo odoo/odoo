@@ -2,10 +2,8 @@
 
 from odoo import fields, Command
 from odoo.tests import HttpCase
-from odoo.tests.common import tagged
 
 
-@tagged("post_install", "-at_install")
 class TestAvatarAcl(HttpCase):
     def get_avatar_url(self, record, add_token=False):
         access_token = ""

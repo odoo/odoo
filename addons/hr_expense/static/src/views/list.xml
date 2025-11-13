@@ -12,9 +12,6 @@
                 Post Entries
             </button>
         </xpath>
-    </t>
-
-    <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
             <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
             <button t-if="!env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
@@ -24,7 +21,9 @@
                 Scan
             </button>
         </xpath>
+    </t>
 
+    <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
         <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
             <attribute name="uploadDocument.bind">uploadDocument</attribute>
         </xpath>

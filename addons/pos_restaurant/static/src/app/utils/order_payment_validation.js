@@ -1,7 +1,5 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
-import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { _t } from "@web/core/l10n/translation";
 
 patch(OrderPaymentValidation.prototype, {
     get nextPage() {
@@ -27,30 +25,5 @@ patch(OrderPaymentValidation.prototype, {
             this.pos.data.write("restaurant.table", changedTables, { parent_id: null });
         }
         return await super.afterOrderValidation(...arguments);
-    },
-    async askBeforeValidation() {
-        if (
-            this.pos.config.module_pos_restaurant &&
-            this.pos.categoryCount.length &&
-            !this.order.isRefund
-        ) {
-            const confirmed = await ask(this.pos.dialog, {
-                title: _t("Warning !"),
-                body: _t(
-                    "It seems that the order has not been sent. Would you like to send it to preparation?"
-                ),
-                confirmLabel: _t("Order"),
-                cancelLabel: _t("Discard"),
-            });
-            if (confirmed) {
-                try {
-                    this.pos.env.services.ui.block();
-                    await this.pos.sendOrderInPreparationUpdateLastChange(this.order);
-                } finally {
-                    this.pos.env.services.ui.unblock();
-                }
-            }
-        }
-        return await super.askBeforeValidation();
     },
 });

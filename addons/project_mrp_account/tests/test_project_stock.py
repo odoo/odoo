@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import tagged
+
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectStock(TestProjectCommon):
     def test_check_company(self):
         """

@@ -321,3 +321,33 @@ class TestAnalyticAccount(AnalyticCommon):
             plan_1_col: self.analytic_account_1.id,
             plan_2_col: False,
         }])
+
+    def test_update_analytic_distribution_clean_all_plans(self):
+        """
+        This test ensures no IndexError occurs and no changes are made when clearing all percentages
+        in the analytic distribution wizard.
+        """
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+
+        line = self.env['account.analytic.line'].create({
+            'name': 'Test line',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_3.id,
+        })
+
+        # Simulate the wizard cleaning all percentages: update all plans but provide no values
+        # This results in an empty final distribution in the inverse method.
+        line.write({
+            'analytic_distribution': {
+                '__update__': [plan_1_col, plan_2_col],
+                # No other entries -> cleaned percentages
+            }
+        })
+
+        # No crash and the line remains unchanged (no lines created/deleted, same accounts)
+        self.assertTrue(line.exists(), "The analytic line should still exist after update")
+        self.assertRecordValues(line, [{
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_3.id,
+        }])

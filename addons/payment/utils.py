@@ -234,5 +234,5 @@ def generate_idempotency_key(tx, scope=None):
     :return: The generated idempotency key.
     :rtype: str
     """
-    database_uuid = tx.env['ir.config_parameter'].sudo().get_param('database.uuid')
+    database_uuid = tx.env['ir.config_parameter'].sudo().get_str('database.uuid')
     return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()

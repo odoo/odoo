@@ -163,8 +163,9 @@ class LunchOrder(models.Model):
             lines = self._find_matching_lines({
                 **vals,
                 'toppings': self._extract_toppings(vals),
+                'state': 'new',
             })
-            if lines.filtered(lambda l: l.state == 'new'):
+            if lines:
                 # YTI FIXME This will update multiple lines in the case there are multiple
                 # matching lines which should not happen through the interface
                 lines.update_quantity(1)

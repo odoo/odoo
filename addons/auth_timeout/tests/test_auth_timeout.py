@@ -14,6 +14,7 @@ from odoo.addons.auth_totp.models.totp import TOTP
 from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_COOKIE
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAuthTimeout(TransactionCase):
     @classmethod
     def setUpClass(cls):

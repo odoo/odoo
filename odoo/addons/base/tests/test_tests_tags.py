@@ -6,6 +6,7 @@ from odoo.tests.tag_selector import TagsSelector
 
 
 @tagged('nodatabase')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSetTags(TransactionCase):
 
     def test_set_tags_empty(self):
@@ -17,7 +18,7 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard'})
+        self.assertEqual(fc.test_tags, {'post_install', 'standard'})
         self.assertEqual(fc.test_module, 'base')
 
     def test_set_tags_not_decorated(self):
@@ -28,7 +29,7 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard'})
+        self.assertEqual(fc.test_tags, {'post_install', 'standard'})
         self.assertEqual(fc.test_module, 'base')
 
     def test_set_tags_single_tag(self):
@@ -40,7 +41,7 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'slow'})
+        self.assertEqual(fc.test_tags, {'post_install', 'standard', 'slow'})
         self.assertEqual(fc.test_module, 'base')
 
     def test_set_tags_multiple_tags(self):
@@ -52,7 +53,7 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'slow', 'nightly'})
+        self.assertEqual(fc.test_tags, {'post_install', 'standard', 'slow', 'nightly'})
         self.assertEqual(fc.test_module, 'base')
 
     def test_inheritance(self):
@@ -66,14 +67,14 @@ class TestSetTags(TransactionCase):
             pass
 
         fc = FakeClassC()
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'slow'})
+        self.assertEqual(fc.test_tags, {'post_install', 'standard', 'slow'})
 
         @tagged('-standard')
         class FakeClassD(FakeClassA):
             pass
 
         fc = FakeClassD()
-        self.assertEqual(fc.test_tags, {'at_install', 'slow'})
+        self.assertEqual(fc.test_tags, {'post_install', 'slow'})
 
     def test_untagging(self):
         """Test that one can remove the 'standard' tag"""
@@ -83,22 +84,22 @@ class TestSetTags(TransactionCase):
             pass
 
         fc = FakeClassA()
-        self.assertEqual(fc.test_tags, {'at_install'})
+        self.assertEqual(fc.test_tags, {'post_install'})
         self.assertEqual(fc.test_module, 'base')
 
-        @tagged('-standard', '-base', '-at_install', 'post_install')
+        @tagged('-standard', '-base', '-post_install', 'at_install')
         class FakeClassB(TransactionCase):
             pass
 
         fc = FakeClassB()
-        self.assertEqual(fc.test_tags, {'post_install'})
+        self.assertEqual(fc.test_tags, {'at_install'})
 
         @tagged('-standard', '-base', 'fast')
         class FakeClassC(TransactionCase):
             pass
 
         fc = FakeClassC()
-        self.assertEqual(fc.test_tags, {'fast', 'at_install'})
+        self.assertEqual(fc.test_tags, {'fast', 'post_install'})
 
     def test_parental_advisory(self):
         """Explicit test tags on the class should override anything
@@ -109,10 +110,11 @@ class TestSetTags(TransactionCase):
         class FakeClassB(FakeClassA):
             test_tags = {'foo', 'bar'}
 
-        self.assertEqual(FakeClassA().test_tags, {'standard', 'at_install', 'flow'})
+        self.assertEqual(FakeClassA().test_tags, {'standard', 'post_install', 'flow'})
         self.assertEqual(FakeClassB().test_tags, {'foo', 'bar'})
 
 @tagged('nodatabase')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelector(TransactionCase):
 
     def test_selector_parser(self):
@@ -223,6 +225,7 @@ class TestSelector(TransactionCase):
 
 
 @tagged('nodatabase')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectorSelection(TransactionCase):
     def test_selector_selection(self):
         """Test check_tags use cases"""
@@ -419,6 +422,8 @@ class TestSelectorSelection(TransactionCase):
         self.assertTrue(tags.check(self), "A parametric tag should enable test")
         self.assertEqual(self._test_params, [('+', '-someparam')])
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTestClass(BaseCase):
     def test_canonical_tag(self):
         self.assertEqual(self.canonical_tag, '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')

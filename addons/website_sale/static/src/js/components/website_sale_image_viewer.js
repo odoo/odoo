@@ -1,6 +1,7 @@
 import { onMounted, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useDebounced } from "@web/core/utils/timing";
 
 const ZOOM_STEP = 0.1;
 const TOUCHMOVE_STEP = 96;
@@ -11,8 +12,15 @@ export class ProductImageViewer extends Dialog {
         ...Dialog.props,
         images: { type: NodeList, required: true },
         selectedImageIdx: { type: Number, optional: true },
+        imageRatio: { type: String, optional: true },
+        imageRatioMobile: { type: String, optional: true },
         close: Function,
     };
+    static defaultProps = {
+        ...Dialog.defaultProps,
+        imageRatio: 'auto',
+        imageRatioMobile: 'auto',
+    }
 
     setup() {
         super.setup();
@@ -26,6 +34,7 @@ export class ProductImageViewer extends Dialog {
         this.state = useState({
             selectedImageIdx: this.props.selectedImageIdx || 0,
             imageScale: 1,
+            carouselOffset: 0,
         });
         this.isDragging = false;
         this.dragStartPos = { x: 0, y: 0 };
@@ -40,6 +49,12 @@ export class ProductImageViewer extends Dialog {
             this.updateImage();
         });
 
+        // Debounce update in line with `ease-out` animation.
+        this.updateCarousel = useDebounced(this._updateCarousel, 250, {
+            immediate: true,
+            trailing: true,
+        });
+
         // Not using a t-on-click on purpose because we want to be able to cancel the drag
         // when we go outside of the window.
         useEffect(
@@ -51,15 +66,13 @@ export class ProductImageViewer extends Dialog {
             () => [document],
         );
         onMounted(() => {
-            const carousel = document.querySelector('.o_wsale_image_viewer_carousel');
-            carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
-            carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
-            this._updateCarousel();
+            document.querySelector(
+                '.o_wsale_image_viewer_carousel li:last-of-type img'
+            )?.addEventListener('load', this.updateCarousel.bind(this), { once: true });
         });
         // For some reason the styling does not always update properly.
         onRendered(() => {
             this.updateImage();
-            this._updateCarousel();
         })
     }
 
@@ -71,6 +84,7 @@ export class ProductImageViewer extends Dialog {
         this.state.imageScale = 1;
         this.imageTranslate = { x: 0, y: 0 };
         this.state.selectedImageIdx = this.images.indexOf(image);
+        this.updateCarousel();
     }
 
     get imageStyle() {
@@ -111,18 +125,21 @@ export class ProductImageViewer extends Dialog {
         }
         const { selectedImageIdx } = this.state;
         const thumbnail = thumbnailList.childNodes[selectedImageIdx];
+        const { left: thumbOffset, width: thumbWidth } = thumbnail.getBoundingClientRect();
 
-        const thumbWidth = thumbnail.clientWidth;
-        const parentOffset = thumbnailList.parentElement.offsetLeft;
-        const offset = (viewWidth - thumbWidth) / 2 - thumbWidth * selectedImageIdx - parentOffset;
-        thumbnailList.style.transform = `translate(${offset}px)`;
+        this.state.carouselOffset += (viewWidth - thumbWidth) / 2 - thumbOffset;
+        thumbnailList.style.transform = `translate(${this.state.carouselOffset}px)`;
     }
 
     onGlobalClick(ev) {
         if (ev.target.tagName === "IMG") {
             // Only zoom if the image did not move
             if (this.dragStartPos.clientX === ev.clientX && this.dragStartPos.clientY === ev.clientY) {
-                this.zoomIn(ZOOM_STEP * 3);
+                if (this.state.imageScale <= 1) {
+                    this.zoomIn(ZOOM_STEP * 3);
+                } else {
+                    this.zoomOut(this.state.imageScale - 1);
+                }
             }
         }
         if (ev.target.classList.contains('o_wsale_image_viewer_void') && !this.isDragging) {

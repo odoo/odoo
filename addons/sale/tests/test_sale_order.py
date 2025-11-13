@@ -182,7 +182,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_invoicing_terms(self):
         # Enable invoicing terms
-        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', True)
+        self.env['ir.config_parameter'].sudo().set_bool('account.use_invoice_terms', True)
 
         # Plain invoice terms
         self.env.company.terms_type = 'plain'
@@ -241,7 +241,7 @@ class TestSaleOrder(SaleCommon):
         })
         no_variant_product = no_variant_product_tmpl.product_variant_id
         ptals = no_variant_product_tmpl.valid_product_template_attribute_line_ids
-        ptav1 = next(iter(ptals.product_template_value_ids))
+        ptav1 = ptals.product_template_value_ids[0]
         product_with_desc = self.env['product.product'].create({
             'name': "Product with description",
             'description_sale': "Additional\ninfo.",
@@ -416,7 +416,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_order_status_email_is_sent_synchronously_if_not_configured(self):
         """ Test that the order status email is sent synchronously when nothing is configured. """
-        self.env['ir.config_parameter'].set_param('sale.async_emails', 'False')
+        self.env['ir.config_parameter'].set_bool('sale.async_emails', False)
 
         self.sale_order._send_order_notification_mail(self.confirmation_email_template)
         self.assertFalse(
@@ -426,7 +426,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_order_status_email_is_sent_asynchronously_if_configured(self):
         """ Test that the order status email is sent asynchronously when configured. """
-        self.env['ir.config_parameter'].set_param('sale.async_emails', 'True')
+        self.env['ir.config_parameter'].set_bool('sale.async_emails', True)
 
         self.sale_order._send_order_notification_mail(self.confirmation_email_template)
         self.assertTrue(
@@ -440,7 +440,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_async_emails_cron_does_not_trigger_itself(self):
         """ Test that the asynchronous email sending cron does not loop indefinitely. """
-        self.env['ir.config_parameter'].set_param('sale.async_emails', 'True')
+        self.env['ir.config_parameter'].set_bool('sale.async_emails', True)
         self.sale_order.pending_email_template_id = self.confirmation_email_template
 
         with self.enter_registry_test_mode():
@@ -687,7 +687,10 @@ class TestSaleOrder(SaleCommon):
         """Test warnings when partner/products with sale warnings are used."""
         partner_with_warning = self.env['res.partner'].create({
             'name': 'Test Partner', 'sale_warn_msg': 'Highly infectious disease'})
+        child_partner = self.env['res.partner'].create({
+            'type': 'invoice', 'parent_id': partner_with_warning.id, 'sale_warn_msg': 'Slightly infectious disease'})
         sale_order = self.env['sale.order'].create({'partner_id': partner_with_warning.id})
+        sale_order2 = self.env['sale.order'].create({'partner_id': child_partner.id})
 
         product_with_warning1 = self.env['product.product'].create({
             'name': 'Test Product 1', 'sale_line_warn_msg': 'Highly corrosive'})
@@ -707,12 +710,34 @@ class TestSaleOrder(SaleCommon):
                 'order_id': sale_order.id,
                 'product_id': product_with_warning1.id,
             },
+            {
+                'order_id': sale_order2.id,
+                'product_id': product_with_warning1.id,
+            },
+            {
+                'order_id': sale_order2.id,
+                'product_id': product_with_warning2.id,
+            },
+            # Warnings for duplicate products should not appear.
+            {
+                'order_id': sale_order2.id,
+                'product_id': product_with_warning1.id,
+            },
         ])
+
+        sale_order2.action_confirm()
+        sale_order2._create_invoices()
+        invoice = Form(sale_order2.invoice_ids[0])
 
         expected_warnings = ('Test Partner - Highly infectious disease',
                              'Test Product 1 - Highly corrosive',
                              'Test Product 2 - Toxic pollutant')
+        expected_warnings_for_sale_order2 = ('Test Partner, Invoice - Slightly infectious disease',
+                                             'Test Product 1 - Highly corrosive',
+                                             'Test Product 2 - Toxic pollutant')
         self.assertEqual(sale_order.sale_warning_text, '\n'.join(expected_warnings))
+        self.assertEqual(sale_order2.sale_warning_text, '\n'.join(expected_warnings_for_sale_order2))
+        self.assertEqual(invoice.sale_warning_text, '\n'.join(expected_warnings_for_sale_order2))
 
     def test_sale_order_email_subtitle(self):
         """Test email notification subtitle for Sale Order with and without partner name."""

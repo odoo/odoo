@@ -51,7 +51,7 @@ class ResConfigSettings(models.TransientModel):
                 proxy_user._toggle_proxy_user_active()
             elif config.l10n_it_edi_register and not proxy_user:
                 # Create a new proxy user
-                edi_mode = self.env['ir.config_parameter'].sudo().get_param('l10n_it_edi.proxy_user_edi_mode') or 'prod'
+                edi_mode = self.env['ir.config_parameter'].sudo().get_str('l10n_it_edi.proxy_user_edi_mode') or 'prod'
                 proxy_user = self._create_proxy_user(company, edi_mode)
 
             if proxy_user:

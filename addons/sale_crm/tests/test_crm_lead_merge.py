@@ -6,6 +6,7 @@ from odoo.tests.common import tagged, users
 
 
 @tagged('lead_manage')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadSaleMerge(TestLeadMergeCommon):
 
     @users('user_sales_manager')

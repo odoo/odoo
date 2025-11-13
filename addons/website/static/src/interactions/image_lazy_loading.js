@@ -44,6 +44,4 @@ export class ImageLazyLoading extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.image_lazy_loading", ImageLazyLoading);
+registry.category("public.interactions").add("website.image_lazy_loading", ImageLazyLoading);

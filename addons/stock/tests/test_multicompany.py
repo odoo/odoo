@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompany(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -658,7 +659,7 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(out_move.state, 'cancel')
 
         # Propagate cancel
-        self.env['ir.config_parameter'].sudo().set_param('stock.cancel_moves_origin', True)
+        self.env['ir.config_parameter'].sudo().set_bool('stock.cancel_moves_origin', True)
         orderpoint._procure_orderpoint_confirm()
         moves = self.env['stock.move'].search([('product_id', '=', product.id), ('state', '!=', 'cancel')])
         self.assertEqual(len(moves), 2)

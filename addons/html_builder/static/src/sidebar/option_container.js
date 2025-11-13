@@ -14,6 +14,7 @@ import {
 
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
+    static dependencies = ["builderOptions", "overlayButtons", "builderOverlay", "remove", "clone"];
     static components = {
         BorderConfigurator,
         ShadowOption,
@@ -78,6 +79,10 @@ export class OptionsContainer extends BaseOptionComponent {
     get title() {
         let title;
         for (const option of this.props.options) {
+            if (option.getSnippetTitle) {
+                title = option.getSnippetTitle.call(this);
+                continue;
+            }
             title = option.title || title;
         }
         const titleExtraInfo = this.props.containerTitle.getTitleExtraInfo
@@ -88,16 +93,16 @@ export class OptionsContainer extends BaseOptionComponent {
     }
 
     selectElement() {
-        this.env.editor.shared["builderOptions"].updateContainers(this.props.editingElement);
+        this.dependencies.builderOptions.updateContainers(this.props.editingElement);
     }
 
     toggleOverlayPreview(el, show) {
         if (show) {
-            this.env.editor.shared.overlayButtons.hideOverlayButtons();
-            this.env.editor.shared.builderOverlay.showOverlayPreview(el);
+            this.dependencies.overlayButtons.hideOverlayButtons();
+            this.dependencies.builderOverlay.showOverlayPreview(el);
         } else {
-            this.env.editor.shared.overlayButtons.showOverlayButtons();
-            this.env.editor.shared.builderOverlay.hideOverlayPreview(el);
+            this.dependencies.overlayButtons.showOverlayButtons();
+            this.dependencies.builderOverlay.hideOverlayPreview(el);
         }
     }
 
@@ -112,13 +117,13 @@ export class OptionsContainer extends BaseOptionComponent {
     // Actions of the buttons in the title bar.
     removeElement() {
         this.callOperation(() => {
-            this.env.editor.shared.remove.removeElement(this.props.editingElement);
+            this.dependencies.remove.removeElement(this.props.editingElement);
         });
     }
 
     cloneElement() {
         this.callOperation(async () => {
-            await this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
+            await this.dependencies.clone.cloneElement(this.props.editingElement, {
                 activateClone: false,
             });
         });

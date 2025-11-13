@@ -156,7 +156,7 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     await contains(".o_avatar_card", { count: 0 });
     // 2. Clicking on human resource's avatar with no user associated
     await click(".o_kanban_record:nth-of-type(2) .o_m2o_avatar > img");
-    await contains(".o_card_user_infos span", { text: "Marie" });
+    await contains(".o-mail-avatar-card-name", { text: "Marie" });
     await contains(
         ".o_avatar_card",
         { count: 1 },
@@ -169,7 +169,7 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     );
     // 3. Clicking on human resource's avatar with one user associated
     await click(".o_kanban_record:nth-of-type(3) .o_m2o_avatar > img");
-    await contains(".o_card_user_infos span", { text: "Pierre" });
+    await contains(".o-mail-avatar-card-name", { text: "Pierre" });
     await contains(
         ".o_avatar_card",
         { count: 1 },

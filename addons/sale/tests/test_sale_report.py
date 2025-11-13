@@ -61,11 +61,6 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
         self.assertEqual(self.product.currency_id, usd)
 
-        # Needed to get conversion rates between companies.
-        currency_rates = (companies + self.env.company).mapped('currency_id')._get_rates(
-            self.env.company, today
-        )
-
         sale_orders = self.env['sale.order']
         expected_reported_amount = 0  # The total amount of all sale orders in the report.
         qty = 0  # to add variety to the data
@@ -111,9 +106,7 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
                     # The amount in the report is converted first to the currency of the company and
                     # then to the currency of the current company (self.env.company).
-                    current_company_rate = currency_rates[self.env.company.currency_id.id]
-                    so_company_rate = currency_rates[company.currency_id.id]
-                    conversion_rate = (current_company_rate / so_company_rate)
+                    conversion_rate = company.currency_id.with_context(date=today).rate
                     expected_reported_amount += (
                         order.amount_total / order.currency_rate * conversion_rate
                     )

@@ -49,7 +49,7 @@ class ResUsers(models.Model):
     @api.model
     def _default_user_calendar_default_privacy(self):
         """ Get the calendar default privacy from the Default User Template, set public as default. """
-        return self.env['ir.config_parameter'].sudo().get_param('calendar.default_privacy', 'public')
+        return self.env['ir.config_parameter'].sudo().get_str('calendar.default_privacy', 'public')
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -2,20 +2,6 @@ import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { STORE_SYMBOL } from "@point_of_sale/app/models/related_models/utils";
 import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 
-export function computeProductPrice(selfOrder, productTemplate, selectedAttributes, qty) {
-    const lineValues = getOrderLineValues(selfOrder, productTemplate, qty, "", selectedAttributes);
-    const order = lineValues.order_id;
-    const line = createTransientLine(order, {
-        ...lineValues,
-        order_id: order.id,
-        product_id: lineValues.product_id.id,
-        tax_ids: lineValues.tax_ids.map((t) => t.id),
-        attribute_value_ids: lineValues.attribute_value_ids?.map((a) => a.id),
-    });
-
-    return selfOrder.isTaxesIncludedInPrice() ? line.getPriceWithTax() : line.getPriceWithoutTax();
-}
-
 export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, qty) {
     if (!comboValues || !comboValues.length) {
         return selfOrder.getProductDisplayPrice(productTemplate);
@@ -43,9 +29,9 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
             attribute_value_ids: comboLine.attribute_value_ids?.map((a) => a.id),
         });
     });
-    return selfOrder.isTaxesIncludedInPrice()
-        ? order.getTotalWithTaxOfLines(transientLines)
-        : order.getTotalWithoutTaxOfLines(transientLines);
+
+    const taxDetails = order.getPriceWithOptions({ lines: transientLines }).taxDetails;
+    return selfOrder.isTaxesIncludedInPrice() ? taxDetails.total_amount : taxDetails.base_amount;
 }
 
 export function getOrderLineValues(

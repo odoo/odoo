@@ -2,11 +2,12 @@
 import pytz
 from datetime import datetime, date
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 UTC = pytz.timezone('UTC')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFlexibleResourceCalendar(TransactionCase):
 
     def test_flexible_resource_work_intervals(self):

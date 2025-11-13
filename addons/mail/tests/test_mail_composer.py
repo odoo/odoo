@@ -15,7 +15,7 @@ class TestMailComposer(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailComposer, cls).setUpClass()
-        cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
+        cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
         cls.test_record = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test',
@@ -42,6 +42,7 @@ class TestMailComposer(MailCommon):
         })
 
 @tagged('mail_composer')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerForm(TestMailComposer):
     """ Test mail composer form view usage. """
 
@@ -216,6 +217,7 @@ class TestMailComposerForm(TestMailComposer):
 
 
 @tagged('mail_composer')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerRendering(TestMailComposer):
     """ Test rendering and support of various html tweaks in composer """
 
@@ -262,7 +264,7 @@ class TestMailComposerRendering(TestMailComposer):
         )
 
 
-@tagged("mail_composer", "-at_install", "post_install")
+@tagged("mail_composer")
 class TestMailComposerUI(MailCommon, HttpCase):
 
     def test_mail_composer_test_tour(self):

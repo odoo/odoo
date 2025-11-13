@@ -4,15 +4,8 @@
     <t t-name="web.KanbanView">
         <div t-attf-class="{{ className }} {{ hasSelectedRecords ? 'o_kanban_selection_active' : 'o_kanban_selection_available' }}" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                <t t-set-slot="control-panel-create-button">
-                    <button t-if="canCreate and props.showButtons" type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
-                        New
-                    </button>
-                </t>
-                <t t-set-slot="layout-buttons">
-                    <t t-if="props.showButtons" t-call="{{ props.buttonTemplate }}"/>
-                </t>
-                <t t-set-slot="control-panel-always-buttons">
+                <t t-set-slot="control-panel-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
                     <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
                         <MultiRecordViewButton
                             t-if="button.display === 'always'"
@@ -73,7 +66,7 @@
                         </t>
                     </CogMenu>
                 </t>
-                <t t-set-slot="layout-actions">
+                <t t-set-slot="control-panel-actions">
                     <SearchBar toggler="searchBarToggler" autofocus="firstLoad"/>
                 </t>
                 <t t-set-slot="control-panel-navigation-additional">
@@ -97,6 +90,10 @@
         </div>
     </t>
 
-    <t t-name="web.KanbanView.Buttons"/>
+    <t t-name="web.KanbanView.Buttons">
+        <button t-if="!env.inDialog and canCreate" type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
+            New
+        </button>
+    </t>
 
 </templates>

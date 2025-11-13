@@ -123,3 +123,11 @@ export function clickMissingRequireds() {
         run: "click",
     };
 }
+export function checkConfirmationString(timingPreset = false) {
+    return {
+        content: `Check confirmation string`,
+        trigger: timingPreset
+            ? `.confirmation-block h1:contains("Order for")`
+            : `.confirmation-block h1:contains("We're preparing your order!")`,
+    };
+}

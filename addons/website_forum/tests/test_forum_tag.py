@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.tests import tagged
+
 from odoo.addons.website_forum.tests.common import TestForumCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumTag(TestForumCommon):
     def _check_tags_post_counts(self, tags, expected_counts):
         self.assertEqual(tags.mapped('posts_count'), expected_counts)

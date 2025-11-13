@@ -22,8 +22,8 @@ class ResConfigSettings(models.TransientModel):
     group_discount_per_so_line = fields.Boolean(
         string="Discounts", implied_group='sale.group_discount_per_so_line')
     group_proforma_sales = fields.Boolean(
-        string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
-        help="Allows you to send pro-forma invoice.")
+        string="Pro Forma Invoice", implied_group='sale.group_proforma_sales',
+        help="Allows you to send pro forma invoice.")
     group_warning_sale = fields.Boolean(
         string="Sale Order Warnings", implied_group='sale.group_warning_sale')
 
@@ -123,11 +123,11 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super().set_values()
         if self.default_invoice_policy != 'order':
-            self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
+            self.env['ir.config_parameter'].set_bool('sale.automatic_invoice', False)
 
     # === ACTION METHODS === #
 
     # Unique name to avoid colliding with `website_payment`.
     def action_sale_start_payment_onboarding(self):
         menu = self.env.ref('sale.menu_sale_general_settings', raise_if_not_found=False)
-        return self._start_payment_onboarding(menu and menu.id)
+        return self.company_id._start_payment_onboarding(menu and menu.id)

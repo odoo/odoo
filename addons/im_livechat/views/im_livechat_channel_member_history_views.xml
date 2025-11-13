@@ -53,7 +53,6 @@
                     <field name="session_livechat_channel_id"/>
                     <field name="session_country_id"/>
                     <field name="agent_expertise_ids" string="Expertise"/>
-                    <field name="conversation_tag_ids" string="Tags"/>
                     <filter name="my_session" domain="[('partner_id.user_ids', '=', uid)]" string="My Sessions"/>
                     <separator/>
                     <filter name="escalated" string="Escalated" domain="[('session_outcome', '=', 'escalated')]"/>
@@ -76,7 +75,6 @@
                         <filter name="group_by_country" string="Country" domain="[]" context="{'group_by':'session_country_id'}"/>
                         <filter name="group_by_outcome" string="Status" domain="[]" context="{'group_by':'session_outcome'}"/>
                         <filter name="group_by_expertise" string="Expertise" domain="[]" context="{'group_by':'agent_expertise_ids'}"/>
-                        <filter name="group_by_conversation_tag" string="Tags" domain="[]" context="{'group_by':'conversation_tag_ids'}"/>
                         <separator orientation="vertical" />
                         <filter name="group_by_start_hour" string="Hour of Day" domain="[]" context="{'group_by':'session_start_hour'}"/>
                         <filter name="group_by_week_day" string="Day of Week" domain="[]" context="{'group_by':'session_week_day'}"/>

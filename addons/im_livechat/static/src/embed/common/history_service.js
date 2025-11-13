@@ -17,18 +17,15 @@ export class HistoryService {
     setup() {
         this.updateHistory();
         this.busService.subscribe("im_livechat.history_command", async (payload) => {
-            const thread = await this.store["mail.thread"].getOrFetch({
-                id: payload.id,
-                model: "discuss.channel",
-            });
-            if (thread?.channel?.channel_type !== "livechat") {
+            const channel = await this.store["discuss.channel"].getOrFetch(payload.id);
+            if (channel?.channel_type !== "livechat") {
                 return;
             }
             const data = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
             const history = data ? JSON.parse(data) : [];
             rpc("/im_livechat/history", {
                 pid: payload.partner_id,
-                channel_id: thread.id,
+                channel_id: channel.id,
                 page_history: history,
             });
         });

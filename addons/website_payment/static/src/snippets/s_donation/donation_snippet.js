@@ -15,7 +15,10 @@ export class DonationSnippet extends Interaction {
             "t-on-click.withTarget": this.onPrefilledClick,
             "t-att-class": (el) => ({ "active": el === this.activeButtonEl }),
         },
-        ".s_donation_donate_btn": { "t-on-click.withTarget": this.onDonateClick },
+        ".s_donation_donate_btn": {
+            "t-on-click.withTarget": this.locked(this.onDonateClick, true),
+            "t-att-class": () => ({ "o_ready_to_donate": true }), // See TEST_01_DONATION_FIX
+        },
         "#s_donation_range_slider": { "t-on-input": this.onRangeSliderInput },
         "#s_donation_amount_input": {
             "t-on-input": () => {
@@ -36,6 +39,16 @@ export class DonationSnippet extends Interaction {
     }
 
     async willStart() {
+        // TODO this is not perfect compared to 18.0: there can be a delay where
+        // the donation button does nothing because the currency is being
+        // loaded (while before it waited for the currency inside the handler).
+        // See TEST_01_DONATION_FIX which was adapted to this new behavior, as
+        // it cannot be restored at the moment: if willStart don't await this,
+        // there needs to be an asynchronous update of the DOM in start... which
+        // edit mode warns about, as start is not awaited anywhere.
+        // TODO the "cached" parameters has no effect: the actual cache is not
+        // initialized on the frontend side at the moment.
+        // TODO Also it should be the third param of rpc, not the second one...
         this.currency = await rpc("/website/get_current_currency", { cache: true });
     }
 
@@ -151,6 +164,9 @@ export class DonationSnippet extends Interaction {
         }
 
         formEl.submit();
+
+        // Keep the button locked with loading effect during page reload
+        return new Promise(() => {});
     }
 
     onRangeSliderInput() {

@@ -61,6 +61,7 @@ class TestScheduledMessage(MailCommon, TestRecipients):
             })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestScheduledMessageAccess(TestScheduledMessage):
 
     @users('employee')
@@ -112,6 +113,7 @@ class TestScheduledMessageAccess(TestScheduledMessage):
         scheduled_message.unlink()
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
 
     @users('employee')

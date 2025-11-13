@@ -1,21 +1,51 @@
-import { contains, dragenterFiles, dropFiles, scroll } from "@web/../tests/utils";
-import { registry } from "@web/core/registry";
+import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 
+import { status } from "@odoo/owl";
+
+import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
+import { patch } from "@web/core/utils/patch";
+import { effect } from "@web/core/utils/reactive";
+import { contains, dragenterFiles, dropFiles, scroll } from "@web/../tests/utils";
+
+let waitForLoadMoreToDisappearDef;
 registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
     steps: () => [
+        {
+            trigger: "body",
+            run() {
+                patch(SubChannelList.prototype, {
+                    setup() {
+                        super.setup(...arguments);
+                        effect(
+                            (state) => {
+                                if (status(this) === "destroyed") {
+                                    return;
+                                }
+                                if (!state.isVisible) {
+                                    waitForLoadMoreToDisappearDef?.resolve();
+                                }
+                            },
+                            [this.loadMoreState]
+                        );
+                    },
+                });
+            },
+        },
         {
             trigger: "button[title='Threads']",
             run: "click",
         },
         {
-            trigger: ".o-mail-SubChannelList",
-            async run() {
+            trigger: ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(30)",
+            async run({ waitFor }) {
                 // 30 newest sub channels are loaded initially.
                 for (let i = 99; i > 69; i--) {
                     await contains(".o-mail-SubChannelPreview", {
                         text: `Sub Channel ${i}`,
                     });
-                    await contains(".o-mail-SubChannelPreview", { count: 30 });
+                    // If any sub channel was added or removed during the previous await, this fails.
+                    await waitFor(".o-mail-SubChannelPreview:count(30)");
                 }
             },
         },
@@ -29,9 +59,10 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             run: "click",
         },
         {
-            trigger: ".o-mail-SubChannelPreview:contains(Sub Channel 10)",
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(1):contains(Sub Channel 10)",
             async run() {
-                await contains(".o-mail-SubChannelPreview", { count: 1 });
+                waitForLoadMoreToDisappearDef = new Deferred();
             },
         },
         {
@@ -39,9 +70,9 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             run: "clear",
         },
         {
-            trigger: ".o-mail-SubChannelPreview:contains(Sub Channel 99)",
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(31):contains(Sub Channel 99)",
             async run() {
-                await contains(".o-mail-SubChannelPreview", { count: 31 });
                 // Already fetched sub channels are shown in addition to the one
                 // that was fetched during the search.
                 for (let i = 99; i > 69; i--) {
@@ -51,38 +82,43 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 }
                 await contains(".o-mail-SubChannelPreview", { text: `Sub Channel 10` });
                 // Ensure lazy loading is still working after a search.
+                await waitForLoadMoreToDisappearDef;
+                waitForLoadMoreToDisappearDef = new Deferred();
                 await scroll(".o-mail-ActionPanel:has(.o-mail-SubChannelList)", "bottom");
             },
         },
         {
-            trigger: ".o-mail-SubChannelPreview:contains(Sub Channel 40)",
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(61):contains(Sub Channel 40)",
             async run() {
-                await contains(".o-mail-SubChannelPreview", { count: 61 });
                 for (let i = 99; i > 39; i--) {
                     await contains(".o-mail-SubChannelPreview", {
                         text: `Sub Channel ${i}`,
                     });
                 }
+                await waitForLoadMoreToDisappearDef;
+                waitForLoadMoreToDisappearDef = new Deferred();
                 await scroll(".o-mail-ActionPanel:has(.o-mail-SubChannelList)", "bottom");
             },
         },
         {
-            trigger: ".o-mail-SubChannelPreview:contains(Sub Channel 11)",
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(90):contains(Sub Channel 11)",
             async run() {
-                await contains(".o-mail-SubChannelPreview", { count: 90 });
                 for (let i = 99; i > 9; i--) {
                     await contains(".o-mail-SubChannelPreview", {
                         text: `Sub Channel ${i}`,
                     });
                 }
+                await waitForLoadMoreToDisappearDef;
                 await scroll(".o-mail-ActionPanel:has(.o-mail-SubChannelList)", "bottom");
             },
         },
         {
-            trigger: ".o-mail-SubChannelPreview:contains(Sub Channel 0)",
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(100):contains(Sub Channel 0)",
             async run() {
-                await contains(".o-mail-SubChannelPreview", { count: 100 });
-                for (let i = 99; i > 0; i--) {
+                for (let i = 99; i >= 0; i--) {
                     await contains(".o-mail-SubChannelPreview", {
                         text: `Sub Channel ${i}`,
                     });

@@ -19,18 +19,25 @@ class HrWorkEntry(models.Model):
     _description = 'HR Work Entry'
     _order = 'create_date'
 
-    name = fields.Char()
+    name = fields.Char("Description")
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
-    version_id = fields.Many2one('hr.version', string="Employee Record", required=True)
+    version_id = fields.Many2one('hr.version', string="Employee Record", required=True, index=True)
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
+    resource_calendar_id = fields.Many2one(related='version_id.resource_calendar_id')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        index=True,
+        default=lambda self: self.env['hr.work.entry.type'].search([], limit=1),
+        domain=lambda self: self._get_work_entry_type_domain())
     display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
+    is_leave = fields.Boolean(related='work_entry_type_id.is_leave')
+    is_manual = fields.Boolean(help="Marks if the work entry came from manual creation or split")
     state = fields.Selection([
         ('draft', 'New'),
         ('conflict', 'In Conflict'),
@@ -52,14 +59,6 @@ class HrWorkEntry(models.Model):
         for work_entry in self:
             duration = str(timedelta(hours=work_entry.duration)).split(":")
             work_entry.display_name = "%s - %sh%s" % (work_entry.work_entry_type_id.name, duration[0], duration[1])
-
-    @api.depends('work_entry_type_id', 'employee_id')
-    def _compute_name(self):
-        for work_entry in self:
-            if not work_entry.employee_id:
-                work_entry.name = _('Undefined')
-            else:
-                work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name or _('Undefined Type'), work_entry.employee_id.name)
 
     @api.depends('state')
     def _compute_conflict(self):
@@ -128,6 +127,7 @@ class HrWorkEntry(models.Model):
                 )
             )
         self.duration -= split_duration
+        self.is_manual = True
         split_work_entry = self.copy()
         split_work_entry.write(vals)
         return split_work_entry.id
@@ -196,7 +196,10 @@ class HrWorkEntry(models.Model):
             datetime_start = datetime.combine(min(entries.mapped('date')), time.min)
             datetime_stop = datetime.combine(max(entries.mapped('date')), time.max)
 
-            calendar_intervals = calendar._attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))[False]
+            if calendar:
+                calendar_intervals = calendar._attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))[False]
+            else:
+                calendar_intervals = Intervals([(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop), self.env['resource.calendar.attendance'])])
             entries_intervals = entries._to_intervals()
             overlapping_entries = self._from_intervals(entries_intervals & calendar_intervals)
             outside_entries |= entries - overlapping_entries
@@ -282,8 +285,8 @@ class HrWorkEntry(models.Model):
             stop = stop or max(self.mapped('date'), default=False)
             if not skip and start and stop:
                 domain = (
-                    Domain('date', '<', stop)
-                    & Domain('date', '>', start)
+                    Domain('date', '<=', stop)
+                    & Domain('date', '>=', start)
                     & Domain('state', 'not in', ('validated', 'cancelled'))
                 )
                 if employee_ids:
@@ -301,3 +304,8 @@ class HrWorkEntry(models.Model):
                 # New work entries are handled in the create method,
                 # no need to reload work entries.
                 work_entries.exists()._check_if_error()
+
+    def _get_work_entry_type_domain(self):
+        if len(self.env.companies.country_id.ids) > 1:
+            return [('country_id', '=', False)]
+        return ['|', ('country_id', '=', False), ('country_id', 'in', self.env.companies.country_id.ids)]

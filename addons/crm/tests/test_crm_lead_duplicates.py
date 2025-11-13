@@ -7,6 +7,7 @@ from odoo.tests.common import tagged, users
 
 
 @tagged('lead_internals')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLead(TestCrmCommon):
 
     @classmethod

@@ -36,4 +36,5 @@ Allows users to send documents by post
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'iap_paid_service': True,
 }

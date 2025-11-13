@@ -161,7 +161,7 @@ test("create favorite filter", async () => {
     expect(".o_mass_mailing_remove_filter").toBeVisible();
     expect(".o_mass_mailing_save_filter_container").not.toBeVisible();
     await contains(".o_field_mailing_filter input").click();
-    expect(".o_field_mailing_filter .dropdown li.ui-menu-item").toHaveCount(3);
+    expect(".o_field_mailing_filter .dropdown li.ui-menu-item").toHaveCount(2);
     await clickSave();
 });
 

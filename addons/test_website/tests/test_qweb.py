@@ -6,9 +6,12 @@ import re
 
 from odoo import tools
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.tests import tagged
+
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQweb(TransactionCaseWithUserDemo):
     def _load(self, module, filepath):
         tools.convert_file(self.env, module, filepath, {}, 'init')

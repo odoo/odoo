@@ -24,7 +24,8 @@
 </t>
 
 <t t-name="website.Configurator.DescriptionScreen">
-    <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen"
+         t-on-focusin="onConfiguratorScreenFocusin">
         <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
             <div class="container align-self-center">
                 <div class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
@@ -74,7 +75,7 @@
                             menuPositionOptions="{ position: 'bottom-fit' }"
                             menuCssClass="'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown'"
                             selectOnBlur="true"
-                            selectOnTab="true"
+                            autoSelect="true"
                         />
                     </label>
                     <span> business</span>

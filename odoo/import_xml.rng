@@ -208,12 +208,45 @@
                 <rng:optional><rng:attribute name="active"></rng:attribute></rng:optional>
                 <rng:optional><rng:attribute name="customize_show"></rng:attribute></rng:optional>
             </rng:group>
+            <rng:group>
+                <rng:optional><rng:attribute name="data-number-of-elements"/></rng:optional>
+                <rng:optional><rng:attribute name="data-number-of-elements-sm"/></rng:optional>
+                <rng:optional><rng:attribute name="data-number-of-elements-fetch"/></rng:optional>
+                <rng:optional><rng:attribute name="data-row-per-slide"/></rng:optional>
+                <rng:optional><rng:attribute name="data-arrow-position"/></rng:optional>
+                <rng:optional><rng:attribute name="data-extra-classes"/></rng:optional>
+                <rng:optional><rng:attribute name="data-extra-snippet-classes"/></rng:optional>
+                <rng:optional><rng:attribute name="data-container-classes"/></rng:optional>
+                <rng:optional><rng:attribute name="data-content-classes"/></rng:optional>
+                <rng:optional><rng:attribute name="data-column-classes"/></rng:optional>
+                <rng:optional><rng:attribute name="data-thumb"/></rng:optional>
+            </rng:group>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
                     <rng:ref name="any"/>
                 </rng:choice>
             </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="asset">
+        <rng:element name="asset">
+            <rng:attribute name="id" />
+            <rng:attribute name="name" />
+            <rng:optional><rng:attribute name="active" /></rng:optional>
+            <rng:interleave>
+                <rng:element name="bundle">
+                    <rng:optional><rng:attribute name="directive" /></rng:optional>
+                    <rng:text/>
+                </rng:element>
+                <rng:element name="path">
+                    <rng:text/>
+                </rng:element>
+                <rng:zeroOrMore>
+                    <rng:ref name="field" />
+                </rng:zeroOrMore>
+            </rng:interleave>
         </rng:element>
     </rng:define>
 
@@ -323,6 +356,7 @@
                     <rng:ref name="menuitem" />
                     <rng:ref name="record" />
                     <rng:ref name="template" />
+                    <rng:ref name="asset" />
                     <rng:ref name="delete" />
                     <rng:ref name="act_window" />
                     <rng:ref name="report" />

@@ -44,7 +44,7 @@ class Profiling(Controller):
             'profiles': profiles,
             'speedscope_base64': base64.b64encode(speedscope_result).decode('utf-8'),
             'url_root': request.httprequest.url_root,
-            'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
+            'cdn': icp.sudo().get_str('speedscope_cdn') or "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/"
         }
         response = request.render('web.view_speedscope_index', context)
         if action == 'speedscope_download_html':

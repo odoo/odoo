@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, users, warmup, tagged
 from odoo.tools import mute_logger
 
 
@@ -61,6 +61,11 @@ class ThreadRecipients(MailCommon, TestRecipients):
                 'alias_domain_id': cls.mail_alias_domain.id,
                 'alias_model_id': cls.env['ir.model']._get_id('mail.test.ticket.mc'),
                 'alias_name': 'test.alias.partner',
+            }, {
+                'alias_domain_id': cls.mail_alias_domain.id,
+                'alias_incoming_local': True,
+                'alias_model_id': cls.env['ir.model']._get_id('mail.test.ticket.mc'),
+                'alias_name': 'test.alias.free.local',
             }
         ])
         cls.test_partner_alias = cls.env['res.partner'].create({
@@ -74,6 +79,7 @@ class ThreadRecipients(MailCommon, TestRecipients):
 
 
 @tagged('mail_thread', 'mail_thread_api', 'mail_tools')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAPI(ThreadRecipients):
 
     @classmethod
@@ -372,6 +378,7 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(partner.phone, '+32455998877')
 
     @users('employee')
+    @warmup
     def test_message_get_default_recipients(self):
         void_partner = self.env['res.partner'].sudo().create({'name': 'No Email'})
         test_records = self.env['mail.test.recipients'].create([
@@ -481,6 +488,11 @@ class TestAPI(ThreadRecipients):
                 'email_from': self.test_aliases[0].alias_full_name,
                 'name': 'Alias email',
             },
+            # do not propose alias email (left-part pre-17 support)
+            {
+                'email_from': f'{self.test_aliases[2].alias_name}@other.domain',
+                'name': 'Alias email (left-part compat)',
+            },
             # do not propose alias email (even if linked to a partner)
             {
                 'email_from': self.test_aliases[1].alias_full_name,
@@ -507,6 +519,8 @@ class TestAPI(ThreadRecipients):
             # partner with alias email is not ok
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # alias email is not ok
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # left-part compat alias email is not ok
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # alias email is not ok even if linked to partner
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
@@ -569,11 +583,18 @@ class TestAPI(ThreadRecipients):
             'email_from': self.partner_employee.email_formatted,
             'name': 'Partner follower (user)',
         })
+        # existing partner with multiple emails -> should propose only the first one
+        partner_multiemail = self.test_partner.copy({'email': 'test1.external@example.com,test2.external@example.com'})
+        ticket_partner_multiemail = self.env['mail.test.ticket.mc'].create({
+            'customer_id': partner_multiemail.id,
+            'email_from': partner_multiemail.email_formatted,
+            'name': 'Partner Multi-Emails',
+        })
         ticket_partner_fol.message_subscribe(partner_ids=self.test_partner.ids)
         ticket_partner_fol.message_subscribe(partner_ids=self.partner_employee.ids)
         for ticket, sugg_partner in zip(
-            ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user,
-            (self.test_partner, self.test_partner, self.test_partner, False),
+            ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user + ticket_partner_multiemail,
+            (self.test_partner, self.test_partner, self.test_partner, False, partner_multiemail),
             strict=True,
         ):
             with self.subTest(ticket=ticket.name):
@@ -938,13 +959,13 @@ class TestAPI(ThreadRecipients):
         )
         ticket_record._message_update_content(
             message,
-            body=Markup("<p>New Body</p>"),
+            body=Markup("<div>New Body</div>"),
             attachment_ids=new_attachments.ids,
         )
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
         self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
-        self.assertEqual(message.body, Markup('<p>New Body</p><span class="o-mail-Message-edited"></span>'))
+        self.assertEqual(message.body, Markup('<div>New Body <span class="o-mail-Message-edited"></span></div>'))
 
         # void attachments
         ticket_record._message_update_content(
@@ -954,7 +975,7 @@ class TestAPI(ThreadRecipients):
         )
         self.assertFalse(message.attachment_ids)
         self.assertFalse((attachments + new_attachments).exists())
-        self.assertEqual(message.body, Markup('<p>Another Body, void attachments</p><span class="o-mail-Message-edited"></span>'))
+        self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited"></span></p>'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
@@ -980,6 +1001,7 @@ class TestAPI(ThreadRecipients):
 
 
 @tagged('mail_thread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestChatterTweaks(ThreadRecipients):
 
     @classmethod
@@ -1132,6 +1154,7 @@ class TestChatterTweaks(ThreadRecipients):
 
 
 @tagged('mail_thread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDiscuss(MailCommon, TestRecipients):
 
     @classmethod
@@ -1239,6 +1262,7 @@ class TestDiscuss(MailCommon, TestRecipients):
 
 
 @tagged('mail_thread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNotification(MailCommon):
 
     @classmethod
@@ -1279,6 +1303,7 @@ class TestNotification(MailCommon):
 
 
 @tagged('mail_thread', 'mail_nothread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
 

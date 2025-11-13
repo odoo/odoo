@@ -10,7 +10,7 @@
                 <attribute name="invisible">parent_id or not is_company or l10n_fr_is_french</attribute>
             </field>
             <field name="vat" position="after">
-                <field name="company_registry" string="Siret" invisible="not l10n_fr_is_french" placeholder="33417522101010"/>
+                <field name="company_registry" string="Siret" invisible="not l10n_fr_is_french" options="{'placeholder_field': 'company_registry_placeholder'}"/>
             </field>
         </field>
     </record>

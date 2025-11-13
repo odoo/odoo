@@ -1,6 +1,10 @@
 import { ColorSelector } from "@html_editor/main/font/color_selector";
 import { Component, useComponent, useRef } from "@odoo/owl";
-import { useColorPicker } from "@web/core/color_picker/color_picker";
+import {
+    useColorPicker,
+    DEFAULT_COLORS,
+    DEFAULT_THEME_COLOR_VARS,
+} from "@web/core/color_picker/color_picker";
 import { BuilderComponent } from "./builder_component";
 import {
     basicContainerBuilderComponentProps,
@@ -17,6 +21,7 @@ export function useColorPickerBuilderComponent() {
     const comp = useComponent();
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
+    let selectedTab;
     const state = useDomState(getState);
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(
         (applySpecs, isPreviewing) => {
@@ -47,13 +52,16 @@ export function useColorPickerBuilderComponent() {
         const { actionId, actionParam } = actionWithGetValue;
         const actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
         return {
-            mode: actionParam.mainParam || actionId,
+            // defaultTab is the tab to open if the user has not done a selection yet.
+            // If the user has already selected a color, the tab of the last selection is opened
+            defaultTab: comp.props.selectedTab,
             selectedColor: actionValue || comp.props.defaultColor,
             selectedColorCombination: comp.env.editor.shared.color.getColorCombination(
                 editingElement,
                 actionParam
             ),
             getTargetedElements: () => [editingElement],
+            selectedTab,
         };
     }
     function getColor(colorValue) {
@@ -65,6 +73,7 @@ export function useColorPickerBuilderComponent() {
     let previewValue = null;
     function onApply(colorValue) {
         previewValue = null;
+        selectedTab = comp.getCorrespondingColorPickerTab(colorValue);
         callOperation(applyOperation.commit, { userInputValue: getColor(colorValue) });
     }
     let onPreview = (colorValue) => {
@@ -116,6 +125,7 @@ export class BuilderColorPicker extends Component {
     static defaultProps = {
         enabledTabs: ["theme", "gradient", "custom"],
         defaultColor: "#FFFFFF00",
+        selectedTab: "theme",
     };
     static components = {
         ColorSelector: ColorSelector,
@@ -127,7 +137,6 @@ export class BuilderColorPicker extends Component {
         const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
         this.colorButton = useRef("colorButton");
         this.state = state;
-        this.state.defaultTab = this.props.selectedTab || "solid"; // TODO: select the correct tab based on the color
         useColorPicker(
             "colorButton",
             {
@@ -178,5 +187,34 @@ export class BuilderColorPicker extends Component {
 
     getUsedCustomColors() {
         return getAllUsedColors(this.env.editor.editable);
+    }
+
+    getCorrespondingColorPickerTab(selectedColor) {
+        if (!selectedColor) {
+            return;
+        }
+
+        selectedColor = selectedColor.replace(/color-prefix-/g, "");
+        const isTabEnabled = (tab) => this.props.enabledTabs.includes(tab);
+
+        if (isTabEnabled("gradient") && isColorGradient(selectedColor)) {
+            return "gradient";
+        }
+
+        const solidTabColors = [
+            ...DEFAULT_COLORS.flat(),
+            ...DEFAULT_THEME_COLOR_VARS.map((color) => color.toUpperCase()),
+        ];
+        if (isTabEnabled("solid") && solidTabColors.includes(selectedColor.toUpperCase())) {
+            return "solid";
+        }
+
+        if (isTabEnabled("theme") && /^o_cc\d+$/.test(selectedColor)) {
+            return "theme";
+        }
+
+        if (isTabEnabled("custom")) {
+            return "custom";
+        }
     }
 }

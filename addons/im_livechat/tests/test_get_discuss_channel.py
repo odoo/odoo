@@ -7,10 +7,9 @@ from unittest.mock import patch, PropertyMock
 from odoo import fields
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user
 
 
-@tagged("post_install", "-at_install")
 class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
     def test_get_discuss_channel(self):
         """For a livechat with 5 available operators, we open 5 channels 5 times (25 channels total).
@@ -81,8 +80,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": operator.partner_id._get_avatar_128_access_token(),
                     "country_id": False,
                     "id": operator.partner_id.id,
-                    "im_status": "offline",
-                    "im_status_access_token": operator.partner_id._get_im_status_access_token(),
                     "is_public": False,
                     "mention_token": operator.partner_id._get_mention_token(),
                     "user_livechat_username": "Michel Operator",
@@ -168,7 +165,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 {
                     "id": test_user.id,
                     "is_admin": False,
+                    "is_livechat_manager": False,
                     "notification_type": "email",
+                    "partner_id": test_user.partner_id.id,
                     "signature": ["markup", str(test_user.signature)],
                     "share": False,
                 },
@@ -186,6 +185,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "partner_id": operator.partner_id.id,
                     "seen_message_id": False,
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_role": False,
                 },
                 {
                     "create_date": fields.Datetime.to_string(visitor_member.create_date),
@@ -205,6 +205,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "seen_message_id": False,
                     "unpin_dt": False,
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_role": False,
                 },
             ],
         )
@@ -278,6 +279,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "seen_message_id": False,
                     "unpin_dt": fields.Datetime.to_string(operator_member.unpin_dt),
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_role": False,
                 },
             ],
         )
@@ -288,7 +290,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 {
                     "id": operator.id,
                     "is_admin": False,
+                    "is_livechat_manager": False,
                     "notification_type": "email",
+                    "partner_id": operator.partner_id.id,
                     "share": False,
                     "signature": ["markup", str(operator.signature)],
                 },

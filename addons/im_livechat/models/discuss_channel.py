@@ -4,7 +4,9 @@ from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
+from odoo.tools.mimetypes import get_extension
 
+import json
 from markupsafe import Markup
 from pytz import timezone
 
@@ -128,13 +130,6 @@ class DiscussChannel(models.Model):
         ],
         compute="_compute_livechat_outcome",
         store=True,
-    )
-    livechat_conversation_tag_ids = fields.Many2many(
-        "im_livechat.conversation.tag",
-        "livechat_conversation_tag_rel",
-        groups="im_livechat.im_livechat_group_user",
-        string="Live Chat Conversation Tags",
-        help="Tags to qualify the conversation.",
     )
     livechat_start_hour = fields.Float(
         "Session Start Hour", compute="_compute_livechat_start_hour", store=True
@@ -410,13 +405,6 @@ class DiscussChannel(models.Model):
                 Store.Attr("livechat_note", predicate=is_livechat_channel),
                 Store.Attr("livechat_status", predicate=is_livechat_channel),
                 Store.Many("livechat_expertise_ids", ["name"], predicate=is_livechat_channel),
-                # sudo: internal users having access to the channel can read its tags
-                Store.Many(
-                    "livechat_conversation_tag_ids",
-                    ["name", "color"],
-                    predicate=is_livechat_channel,
-                    sudo=True,
-                ),
             ],
         )
         return field_names
@@ -454,13 +442,6 @@ class DiscussChannel(models.Model):
                     Store.Attr("livechat_outcome", predicate=is_livechat_channel),
                     Store.Attr("livechat_status", predicate=is_livechat_channel),
                     Store.Many("livechat_expertise_ids", ["name"], predicate=is_livechat_channel),
-                    # sudo: internal users having access to the channel can read its tags
-                    Store.Many(
-                        "livechat_conversation_tag_ids",
-                        ["name", "color"],
-                        predicate=is_livechat_channel,
-                        sudo=True,
-                    ),
                 ],
             )
         return super()._to_store_defaults(target) + fields
@@ -586,27 +567,55 @@ class DiscussChannel(models.Model):
         })
         mail.send()
 
+    def _attachment_to_html(self, attachment):
+        if attachment.mimetype.startswith("image/"):
+            return Markup(
+                "<img src='%s?access_token=%s' alt='%s' style='max-width: 75%%; height: auto; padding: 5px;'>",
+            ) % (
+                attachment.image_src,
+                attachment.generate_access_token()[0],
+                attachment.name,
+            )
+        file_extension = get_extension(attachment.display_name)
+        attachment_data = {
+            "id": attachment.id,
+            "access_token": attachment.generate_access_token()[0],
+            "checksum": attachment.checksum,
+            "extension": file_extension.lstrip("."),
+            "mimetype": attachment.mimetype,
+            "filename": attachment.display_name,
+            "url": attachment.url,
+        }
+        return Markup(
+            "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
+        ) % json.dumps({"fileData": attachment_data})
+
     def _get_channel_history(self):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
         self.ensure_one()
         parts = []
-        # sudo: res.partner: accessing chat bot partner is acceptable to build channel history.
-        chatbot_op = self.sudo().chatbot_message_ids[
-            :1
-        ].script_step_id.chatbot_script_id.operator_partner_id
-        last_msg_from_chatbot = False
+        previous_message_author = None
         # sudo - mail.message: getting empty messages to exclude them is allowed.
         for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
-            if message.author_id == chatbot_op and not last_msg_from_chatbot:
-                parts.append(Markup("<br/>"))
+            # sudo - res.partner: accessing livechat username or name is allowed to visitor
+            message_author = message.author_id.sudo() or message.author_guest_id
+            if previous_message_author != message_author:
+                parts.append(
+                    Markup("<br/><strong>%s:</strong><br/>")
+                    % (
+                        (message_author.user_livechat_username if message_author._name == "res.partner" else None)
+                        or message_author.name
+                    ),
+                )
             if not tools.is_html_empty(message.body):
-                if message.author_id == chatbot_op:
-                    parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
-                else:
-                    parts.append(Markup("%s<br/>") % html2plaintext(message.body))
-                last_msg_from_chatbot = message.author_id == chatbot_op
+                parts.append(Markup("%s<br/>") % html2plaintext(message.body))
+                previous_message_author = message_author
+            for attachment in message.attachment_ids:
+                previous_message_author = message_author
+                # sudo - ir.attachment: public user can read attachment metadata
+                parts.append(Markup("%s<br/>") % self._attachment_to_html(attachment.sudo()))
         return Markup("").join(parts)
 
     def _get_livechat_session_fields_to_store(self):
@@ -625,7 +634,7 @@ class DiscussChannel(models.Model):
         if rating_sudo := self.sudo().rating_ids[:1]:
             rating_sudo.write({"rating": rate, "feedback": reason})
         else:
-            partner, _ = self.env["res.partner"]._get_current_persona()
+            user, _ = self.env["res.users"]._get_current_persona()
             # sudo: rating.rating - live chat customers can create ratings
             rating_values = {
                 "rating": rate,
@@ -635,7 +644,7 @@ class DiscussChannel(models.Model):
                 "res_id": self.id,
                 "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
                 "rated_partner_id": self.livechat_agent_partner_ids[:1].id,
-                "partner_id": partner.id,
+                "partner_id": user.partner_id.id,
             }
             rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
         rating_body = Markup(
@@ -746,13 +755,13 @@ class DiscussChannel(models.Model):
         It's created only if the mail channel is linked to a chatbot step. We also need to save the
         user answer if the current step is a question selection.
         """
-        if self.chatbot_current_step_id:
+        if self.chatbot_current_step_id and not self.livechat_agent_history_ids:
             selected_answer = (
                 self.env["chatbot.script.answer"]
                 .browse(self.env.context.get("selected_answer_id"))
                 .exists()
             )
-            if selected_answer in self.chatbot_current_step_id.answer_ids:
+            if selected_answer and selected_answer in self.chatbot_current_step_id.answer_ids:
                 # sudo - chatbot.message: finding the question message to update the user answer is allowed.
                 question_msg = (
                     self.env["chatbot.message"]
@@ -770,8 +779,8 @@ class DiscussChannel(models.Model):
                 question_msg.user_raw_script_answer_id = selected_answer.id
                 if store := self.env.context.get("message_post_store"):
                     store.add(message).add(question_msg.mail_message_id)
-                partner, guest = self.env["res.partner"]._get_current_persona()
-                Store(bus_channel=partner or guest).add_model_values(
+                user, guest = self.env["res.users"]._get_current_persona()
+                Store(bus_channel=user or guest).add_model_values(
                     "ChatbotStep",
                     {
                         "id": (self.chatbot_current_step_id.id, question_msg.mail_message_id.id),

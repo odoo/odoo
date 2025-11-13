@@ -10,7 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, waitForSteps, Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { press } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
@@ -390,7 +390,7 @@ test("Delete all link previews at once", async () => {
 test("link preview request is only made when message contains URL", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
-    onRpcBefore("/mail/link_preview$", () => asyncStep("/mail/link_preview"));
+    onRpcBefore("/mail/link_preview$", () => expect.step("/mail/link_preview"));
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
@@ -398,15 +398,15 @@ test("link preview request is only made when message contains URL", async () => 
     await contains(".o-mail-Message", {
         text: "Hello, this message does not contain any link",
     });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-NavigableList-item", { text: "Sales" });
     await press("Enter");
     await contains(".o-mail-Message", { text: "Sales" });
-    await waitForSteps([]);
+    await expect.waitForSteps([]);
     await insertText(".o-mail-Composer-input", "https://www.odoo.com");
     await press("Enter");
-    await waitForSteps(["/mail/link_preview"]);
+    await expect.waitForSteps(["/mail/link_preview"]);
 });
 
 test("youtube and gdrive videos URL are embed", async () => {
@@ -466,7 +466,7 @@ test("Internal user can't delete others preview", async () => {
             og_description: "Description",
             og_title: "Article title 2",
             og_type: "article",
-            source_url: "https://www.test.odoo.com/",
+            source_url: "https://example.com",
         },
     ]);
     const partnerId = pyEnv["res.partner"].create({ name: "Test User" });

@@ -17,7 +17,7 @@ export class CallParticipantCard extends Component {
     static props = [
         "className",
         "cardData",
-        "thread",
+        "channel",
         "minimized?",
         "inset?",
         "isSidebarItem?",
@@ -25,6 +25,8 @@ export class CallParticipantCard extends Component {
     ];
     static components = { CallParticipantVideo, CallContextMenu, CallDropdown };
     static template = "discuss.CallParticipantCard";
+    /** @type {import("models").Rtc} */
+    rtc;
 
     setup() {
         super.setup();
@@ -59,12 +61,10 @@ export class CallParticipantCard extends Component {
     }
 
     get isContextMenuAvailable() {
-        if (!this.rtcSession) {
-            return false;
-        }
         return (
-            !this.rtcSession.eq(this.rtc.selfSession) ||
-            (this.env.debug && this.rtc.state.connectionType === CONNECTION_TYPES.SERVER)
+            this.isOfActiveCall &&
+            (this.rtcSession.notEq(this.rtc.selfSession) ||
+                (this.env.debug && this.rtc.connectionType === CONNECTION_TYPES.SERVER))
         );
     }
 
@@ -124,23 +124,17 @@ export class CallParticipantCard extends Component {
     get showConnectionState() {
         if (
             !this.rtcSession ||
+            !this.rtc.isHost ||
             !this.isOfActiveCall ||
             HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
         ) {
             return false;
         }
-        if (this.rtc.state.connectionType === CONNECTION_TYPES.SERVER) {
+        if (this.rtc.connectionType === CONNECTION_TYPES.SERVER) {
             return this.rtcSession.eq(this.rtc?.selfSession);
         } else {
             return this.rtcSession.notEq(this.rtc?.selfSession);
         }
-    }
-
-    /**
-     * @deprecated use `showConnectionState` instead
-     */
-    get showServerState() {
-        return false;
     }
 
     get name() {
@@ -201,7 +195,7 @@ export class CallParticipantCard extends Component {
             return;
         }
         await rpc("/mail/rtc/channel/cancel_call_invitation", {
-            channel_id: this.props.thread.id,
+            channel_id: this.props.channel.id,
             member_ids: [this.channelMember.id],
         });
     }

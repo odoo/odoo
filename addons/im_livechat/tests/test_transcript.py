@@ -1,10 +1,10 @@
-from odoo.tests.common import tagged
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 
-@tagged("-at_install", "post_install")
 class TestImLivechatTranscript(TestImLivechatCommon, HttpCaseWithUserDemo):
     def test_download_transcript(self):
         data = self.make_jsonrpc_request(

@@ -45,10 +45,10 @@ class Website(models.Model):
             return False
 
     def _default_confirmation_email_template(self):
-        template_id = self.env['ir.config_parameter'].sudo().get_param(
+        template_id = self.env['ir.config_parameter'].sudo().get_int(
             'sale.default_confirmation_template'
         )
-        default_template = template_id and self.env['mail.template'].browse(int(template_id))
+        default_template = template_id and self.env['mail.template'].browse(template_id)
         if default_template.exists():
             return default_template
         return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
@@ -479,7 +479,7 @@ class Website(models.Model):
                 f"Now, generate the 8 eCommerce categories for the {industry_name_}, adhering to the specified format and constraints."
             )
             IrConfigParameterSudo = self.env['ir.config_parameter'].sudo()
-            database_id = IrConfigParameterSudo.get_param('database.uuid')
+            database_id = IrConfigParameterSudo.get_str('database.uuid')
             try:
                 response = self._OLG_api_rpc('/api/olg/1/chat', {
                     'prompt': prompt,

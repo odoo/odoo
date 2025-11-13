@@ -171,6 +171,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         self.assertIn('token=', str(mail_partner.body), 'The message link should contain a personalized token to register to the portal')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_post_chatter_as_portal_user(self):

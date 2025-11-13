@@ -12,6 +12,7 @@ import { deepEqual } from "@web/core/utils/objects";
 import { formatList } from "@web/core/l10n/utils";
 
 export const globalFieldMatchingRegistry = new Registry();
+export const globalFilterDateRegistry = new Registry();
 
 const { DateTime, Interval } = luxon;
 
@@ -24,28 +25,16 @@ const { DateTime, Interval } = luxon;
  * @typedef {import("@spreadsheet").DateRangeValue} DateRangeValue
  */
 
-export const RELATIVE_PERIODS = {
-    today: _t("Today"),
-    yesterday: _t("Yesterday"),
-    last_7_days: _t("Last 7 Days"),
-    last_30_days: _t("Last 30 Days"),
-    last_90_days: _t("Last 90 Days"),
-    month_to_date: _t("Month to Date"),
-    last_month: _t("Last Month"),
-    last_12_months: _t("Last 12 Months"),
-    year_to_date: _t("Year to Date"),
-};
-
 /**
  * @param {DateValue} dateFilterValue
  * @param {{ chain: string, type: string }} [fieldMatching]
  * @returns {string}
  */
-export function getBestGranularity(dateFilterValue, fieldMatching) {
+export function getBestGranularity(dateFilterValue, fieldMatching, getters) {
     if (!dateFilterValue) {
         return "year";
     }
-    const { from, to } = getDateRange(dateFilterValue);
+    const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return fieldMatching?.type === "datetime" ? "hour" : "day";
@@ -62,11 +51,11 @@ export function getBestGranularity(dateFilterValue, fieldMatching) {
  * @param {DateValue} dateFilterValue
  * @returns {string[]}
  */
-export function getValidGranularities(dateFilterValue) {
+export function getValidGranularities(dateFilterValue, getters) {
     if (!dateFilterValue) {
         return ["week", "month", "quarter", "year"];
     }
-    const { from, to } = getDateRange(dateFilterValue);
+    const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return ["hour", "day"];
@@ -81,46 +70,39 @@ export function getValidGranularities(dateFilterValue) {
     }
 }
 
+export function getDateGlobalFilterRegistryItem(value) {
+    const registryKey = value.type === "relative" ? value.period : value.type;
+    return globalFilterDateRegistry.get(registryKey);
+}
+
+export function getDateGlobalFilterValueFromDefault(value) {
+    if (!value || typeof value !== "string") {
+        return undefined;
+    }
+    const now = DateTime.local();
+    const registryItem = globalFilterDateRegistry.get(value);
+    return registryItem.canOnlyBeDefault
+        ? registryItem.getDefaultValue(now)
+        : { type: "relative", period: value };
+}
+
+export function getDateGlobalFilterTypes() {
+    return globalFilterDateRegistry
+        .getKeys()
+        .sort(
+            (a, b) =>
+                globalFilterDateRegistry.get(a).sequence - globalFilterDateRegistry.get(b).sequence
+        );
+}
+
 /**
  * Compute the display name of a date filter value.
  */
-export function dateFilterValueToString(value) {
-    switch (value?.type) {
-        case "relative":
-            return RELATIVE_PERIODS[value.period];
-        case "month": {
-            const month = DateTime.local().set({
-                year: value.year,
-                month: value.month,
-            });
-            return month.toFormat("LLLL yyyy");
-        }
-        case "quarter": {
-            return _t("Q%(quarter)s %(year)s", {
-                quarter: value.quarter,
-                year: value.year,
-            });
-        }
-        case "year":
-            return String(value.year);
-        case "range":
-            if (value.from && value.to) {
-                const interval = Interval.fromDateTimes(
-                    DateTime.fromISO(value.from).startOf("day"),
-                    DateTime.fromISO(value.to).endOf("day")
-                );
-                return interval.toLocaleString(DateTime.DATE_FULL);
-            } else if (value.from) {
-                return _t("Since %(from)s", {
-                    from: DateTime.fromISO(value.from).toLocaleString(DateTime.DATE_FULL),
-                });
-            } else if (value.to) {
-                return _t("Until %(to)s", {
-                    to: DateTime.fromISO(value.to).toLocaleString(DateTime.DATE_FULL),
-                });
-            }
+export function dateFilterValueToString(value, getters) {
+    if (!value || !value.type) {
+        return _t("All time");
     }
-    return _t("All time");
+    return getDateGlobalFilterRegistryItem(value).getValueString(value, getters);
 }
 
 /**
@@ -390,10 +372,7 @@ function isSetValueValid(value) {
  * @returns {boolean}
  */
 function isDateFilterDefaultValueValid(value) {
-    return (
-        Object.keys(RELATIVE_PERIODS).includes(value) ||
-        ["this_month", "this_quarter", "this_year"].includes(value)
-    );
+    return globalFilterDateRegistry.contains(value);
 }
 
 /**
@@ -406,32 +385,11 @@ function isDateFilterDefaultValueValid(value) {
  * @returns {boolean}
  */
 function isDateFilterValueValid(value) {
-    switch (value.type) {
-        case "relative":
-            return Object.keys(RELATIVE_PERIODS).includes(value.period);
-        case "month":
-            return (
-                typeof value.year === "number" &&
-                typeof value.month === "number" &&
-                value.month >= 1 &&
-                value.month <= 12
-            );
-        case "quarter":
-            return (
-                typeof value.year === "number" &&
-                typeof value.quarter === "number" &&
-                value.quarter >= 1 &&
-                value.quarter <= 4
-            );
-        case "year":
-            return typeof value.year === "number";
-        case "range":
-            return (
-                (value.from === undefined || typeof value.from === "string") &&
-                (value.to === undefined || typeof value.to === "string")
-            );
+    try {
+        return getDateGlobalFilterRegistryItem(value).isValueValid(value);
+    } catch {
+        return false;
     }
-    return false;
 }
 
 /**
@@ -448,29 +406,226 @@ export function checkFilterFieldMatching(fieldMatchings) {
     return CommandResult.Success;
 }
 
+globalFilterDateRegistry
+    .add("today", {
+        sequence: 10,
+        label: _t("Today"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "today"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("today"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("today"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Today"),
+        isFixedPeriod: false,
+        category: "day",
+    })
+    .add("yesterday", {
+        sequence: 20,
+        label: _t("Yesterday"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "yesterday"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("yesterday"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("yesterday"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Yesterday"),
+        isFixedPeriod: false,
+        category: "day",
+    })
+    .add("last_7_days", {
+        sequence: 30,
+        label: _t("Last 7 Days"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "last_7_days"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("last_7_days"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("last_7_days"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Last 7 Days"),
+        isFixedPeriod: false,
+        category: "last_period",
+    })
+    .add("last_30_days", {
+        sequence: 40,
+        label: _t("Last 30 Days"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "last_30_days"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("last_30_days"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("last_30_days"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Last 30 Days"),
+        isFixedPeriod: false,
+        category: "last_period",
+    })
+    .add("last_90_days", {
+        sequence: 50,
+        label: _t("Last 90 Days"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "last_90_days"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("last_90_days"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("last_90_days"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Last 90 Days"),
+        isFixedPeriod: false,
+        category: "last_period",
+    })
+    .add("month_to_date", {
+        sequence: 60,
+        label: _t("Month to Date"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "month_to_date"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("month_to_date"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("month_to_date"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Month to Date"),
+        isFixedPeriod: false,
+        category: "month",
+    })
+    .add("last_month", {
+        sequence: 70,
+        label: _t("Last Month"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "last_month"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("last_month"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("last_month"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Last Month"),
+        isFixedPeriod: false,
+        category: "month",
+    })
+    .add("this_month", {
+        sequence: 80,
+        label: _t("Current Month"),
+        canOnlyBeDefault: true,
+        getDefaultValue: (now) => ({ type: "month", year: now.year, month: now.month }),
+        category: "month",
+    })
+    .add("month", {
+        sequence: 90,
+        label: _t("Month"),
+        getDateRange: (now, value, offset) => getFixedPeriodFromTo(now, offset, value),
+        getNextDateFilterValue: (value) => getNextFixedDateFilterValue(value),
+        getPreviousDateFilterValue: (value) => getPreviousFixedDateFilterValue(value),
+        isValueValid: (value) =>
+            typeof value.year === "number" &&
+            typeof value.month === "number" &&
+            value.month >= 1 &&
+            value.month <= 12,
+        getValueString: (value) =>
+            DateTime.local().set({ year: value.year, month: value.month }).toFormat("LLLL yyyy"),
+        isFixedPeriod: true,
+        getCurrentFixedPeriod: (now) => ({ type: "month", year: now.year, month: now.month }),
+        category: "month",
+    })
+    .add("this_quarter", {
+        sequence: 100,
+        label: _t("Current Quarter"),
+        canOnlyBeDefault: true,
+        getDefaultValue: (now) => ({
+            type: "quarter",
+            year: now.year,
+            quarter: Math.floor((now.month - 1) / 3) + 1,
+        }),
+        category: "month",
+    })
+    .add("quarter", {
+        sequence: 110,
+        label: _t("Quarter"),
+        getDateRange: (now, value, offset) => getFixedPeriodFromTo(now, offset, value),
+        getNextDateFilterValue: (value) => getNextFixedDateFilterValue(value),
+        getPreviousDateFilterValue: (value) => getPreviousFixedDateFilterValue(value),
+        isValueValid: (value) =>
+            typeof value.year === "number" &&
+            typeof value.quarter === "number" &&
+            value.quarter >= 1 &&
+            value.quarter <= 4,
+        getValueString: (value) =>
+            _t("Q%(quarter)s %(year)s", { quarter: value.quarter, year: value.year }),
+        isFixedPeriod: true,
+        getCurrentFixedPeriod: (now) => ({
+            type: "quarter",
+            year: now.year,
+            quarter: Math.floor((now.month - 1) / 3) + 1,
+        }),
+        category: "month",
+    })
+    .add("year_to_date", {
+        sequence: 120,
+        label: _t("Year to Date"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "year_to_date"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("year_to_date"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("year_to_date"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Year to Date"),
+        isFixedPeriod: false,
+        category: "year",
+    })
+    .add("last_12_months", {
+        sequence: 130,
+        label: _t("Last 12 Months"),
+        getDateRange: (now, value, offset) => getRelativeDateFromTo(now, offset, "last_12_months"),
+        getNextDateFilterValue: () => getNextValueForRelativeDatePeriod("last_12_months"),
+        getPreviousDateFilterValue: () => getPreviousValueForRelativeDatePeriod("last_12_months"),
+        isValueValid: (value) => true,
+        getValueString: (value) => _t("Last 12 Months"),
+        isFixedPeriod: false,
+        category: "year",
+    })
+    .add("this_year", {
+        sequence: 140,
+        label: _t("Current Year"),
+        canOnlyBeDefault: true,
+        getDefaultValue: (now) => ({ type: "year", year: now.year }),
+        category: "year",
+    })
+    .add("year", {
+        sequence: 150,
+        label: _t("Year"),
+        getDateRange: (now, value, offset) => getFixedPeriodFromTo(now, offset, value),
+        getNextDateFilterValue: (value) => getNextFixedDateFilterValue(value),
+        getPreviousDateFilterValue: (value) => getPreviousFixedDateFilterValue(value),
+        isValueValid: (value) => typeof value.year === "number",
+        getValueString: (value) => String(value.year),
+        isFixedPeriod: true,
+        getCurrentFixedPeriod: (now) => ({ type: "year", year: now.year }),
+        category: "year",
+    })
+    .add("range", {
+        sequence: 160,
+        label: _t("Custom Range"),
+        getDateRange: (now, value, offset) => ({
+            from: value.from && DateTime.fromISO(value.from).startOf("day"),
+            to: value.to && DateTime.fromISO(value.to).endOf("day"),
+        }),
+        getNextDateFilterValue: (value) => getNextRangeDateFilterValue(value),
+        getPreviousDateFilterValue: (value) => getPreviousRangeDateFilterValue(value),
+        isValueValid: (value) =>
+            (value.from === undefined || typeof value.from === "string") &&
+            (value.to === undefined || typeof value.to === "string"),
+        getValueString: (value) => {
+            if (value.from && value.to) {
+                const interval = Interval.fromDateTimes(
+                    DateTime.fromISO(value.from).startOf("day"),
+                    DateTime.fromISO(value.to).endOf("day")
+                );
+                return interval.toLocaleString(DateTime.DATE_FULL);
+            } else if (value.from) {
+                return _t("Since %(from)s", {
+                    from: DateTime.fromISO(value.from).toLocaleString(DateTime.DATE_FULL),
+                });
+            } else if (value.to) {
+                return _t("Until %(to)s", {
+                    to: DateTime.fromISO(value.to).toLocaleString(DateTime.DATE_FULL),
+                });
+            }
+            return _t("All time");
+        },
+        isFixedPeriod: true,
+        getCurrentFixedPeriod: () => ({ from: "", to: "", type: "range" }),
+        category: "misc",
+    });
+
 /**
  * The from-to date range from a date filter value.
  *
  * @returns {{ from?: DateTime, to?: DateTime }}
  */
-export function getDateRange(value, offset = 0) {
+export function getDateRange(value, offset = 0, now = DateTime.local(), getters) {
     if (!value) {
         return {};
     }
-    const now = DateTime.local();
-    switch (value.type) {
-        case "month":
-        case "quarter":
-        case "year":
-            return getFixedPeriodFromTo(now, offset, value);
-        case "relative":
-            return getRelativeDateFromTo(now, offset, value.period);
-        case "range":
-            return {
-                from: value.from && DateTime.fromISO(value.from).startOf("day"),
-                to: value.to && DateTime.fromISO(value.to).endOf("day"),
-            };
-    }
+    return getDateGlobalFilterRegistryItem(value).getDateRange(now, value, offset, getters);
 }
 
 function getFixedPeriodFromTo(now, offset, value) {
@@ -512,7 +667,7 @@ function getFixedPeriodFromTo(now, offset, value) {
     };
 }
 
-export function getRelativeDateFromTo(now, offset, period) {
+function getRelativeDateFromTo(now, offset, period) {
     const startOfNextDay = now.plus({ days: 1 }).startOf("day");
     let to = now.endOf("day");
     let from = to;
@@ -577,13 +732,7 @@ export function getRelativeDateFromTo(now, offset, period) {
     return { from, to };
 }
 
-/**
- * Compute the next date filter value.
- *
- * @param {DateValue | undefined} value
- * @returns {DateValue | undefined}
- */
-export function getNextDateFilterValue(value) {
+function getNextFixedDateFilterValue(value) {
     switch (value?.type) {
         case "quarter":
             return {
@@ -602,15 +751,24 @@ export function getNextDateFilterValue(value) {
                 type: "year",
                 year: value.year + 1,
             };
-        case "relative":
-            return getNextRelativeDateFilterValue(value);
-        case "range":
-            return getNextRangeDateFilterValue(value);
     }
     return undefined;
 }
 
-export function getPreviousDateFilterValue(value) {
+/**
+ * Compute the next date filter value.
+ *
+ * @param {DateValue | undefined} value
+ * @returns {DateValue | undefined}
+ */
+export function getNextDateFilterValue(value) {
+    if (!value) {
+        return undefined;
+    }
+    return getDateGlobalFilterRegistryItem(value).getNextDateFilterValue(value);
+}
+
+function getPreviousFixedDateFilterValue(value) {
     switch (value?.type) {
         case "quarter":
             return {
@@ -629,28 +787,31 @@ export function getPreviousDateFilterValue(value) {
                 type: "year",
                 year: value.year - 1,
             };
-        case "relative":
-            return getPreviousRelativeDateFilterValue(value);
-        case "range":
-            return getPreviousRangeDateFilterValue(value);
     }
     return undefined;
 }
 
+export function getPreviousDateFilterValue(value) {
+    if (!value) {
+        return undefined;
+    }
+    return getDateGlobalFilterRegistryItem(value).getPreviousDateFilterValue(value);
+}
+
 /**
- * Compute the next relative date filter value.
+ * Compute the next value for the given relative period.
  *
- * @param {RelativeDateValue} value
- * @returns {RelativeDateValue}
+ * @param {RelativeDateValue.period} period
+ * @returns {DateValue}
  */
-function getNextRelativeDateFilterValue(value) {
-    switch (value.period) {
+function getNextValueForRelativeDatePeriod(period) {
+    switch (period) {
         case "today":
         case "yesterday":
         case "last_7_days":
         case "last_30_days":
         case "last_90_days": {
-            const { from, to } = getRelativeDateFromTo(DateTime.local(), 1, value.period);
+            const { from, to } = getRelativeDateFromTo(DateTime.local(), 1, period);
             return {
                 type: "range",
                 from: from.toISODate(),
@@ -658,7 +819,7 @@ function getNextRelativeDateFilterValue(value) {
             };
         }
         case "last_12_months": {
-            const { from, to } = getRelativeDateFromTo(DateTime.local(), 1, value.period);
+            const { from, to } = getRelativeDateFromTo(DateTime.local(), 1, period);
             return {
                 type: "range",
                 from: from.startOf("month").toISODate(),
@@ -691,19 +852,19 @@ function getNextRelativeDateFilterValue(value) {
 }
 
 /**
- * Compute the previous relative date filter value.
+ * Compute the previous value for the given relative period.
  *
- * @param {RelativeDateValue} value
- * @returns {RelativeDateValue}
+ * @param {RelativeDateValue.period} period
+ * @returns {DateValue}
  */
-function getPreviousRelativeDateFilterValue(value) {
-    switch (value.period) {
+function getPreviousValueForRelativeDatePeriod(period) {
+    switch (period) {
         case "today":
         case "yesterday":
         case "last_7_days":
         case "last_30_days":
         case "last_90_days": {
-            const { from, to } = getRelativeDateFromTo(DateTime.local(), -1, value.period);
+            const { from, to } = getRelativeDateFromTo(DateTime.local(), -1, period);
             return {
                 type: "range",
                 from: from.toISODate(),
@@ -711,7 +872,7 @@ function getPreviousRelativeDateFilterValue(value) {
             };
         }
         case "last_12_months": {
-            const { from, to } = getRelativeDateFromTo(DateTime.local(), -1, value.period);
+            const { from, to } = getRelativeDateFromTo(DateTime.local(), -1, period);
             return {
                 type: "range",
                 from: from.startOf("month").toISODate(),
@@ -750,7 +911,7 @@ function getPreviousRelativeDateFilterValue(value) {
  * @param {DateRangeValue} value
  * @returns {DateRangeValue}
  */
-export function getNextRangeDateFilterValue(value) {
+function getNextRangeDateFilterValue(value) {
     if (!value.from && !value.to) {
         return value;
     }
@@ -770,7 +931,7 @@ export function getNextRangeDateFilterValue(value) {
  * @param {DateRangeValue} value
  * @returns {DateRangeValue}
  */
-export function getPreviousRangeDateFilterValue(value) {
+function getPreviousRangeDateFilterValue(value) {
     if (!value.from && !value.to) {
         return value;
     }
@@ -873,7 +1034,7 @@ export function getFilterCellValue(getters, filter, filterValue) {
     );
 }
 
-export async function getFacetInfo(env, filter, filterValue) {
+export async function getFacetInfo(env, filter, filterValue, getters) {
     let values;
     const separator = _t("or");
     switch (filter.type) {
@@ -881,7 +1042,7 @@ export async function getFacetInfo(env, filter, filterValue) {
             if (!filterValue) {
                 throw new Error("Should be defined at this point");
             }
-            values = [dateFilterValueToString(filterValue)];
+            values = [dateFilterValueToString(filterValue, getters)];
             break;
         }
         default: {

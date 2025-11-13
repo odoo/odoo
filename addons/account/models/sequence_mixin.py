@@ -155,10 +155,9 @@ class SequenceMixin(models.AbstractModel):
     def _constrains_date_sequence(self):
         # Make it possible to bypass the constraint to allow edition of already messed up documents.
         # /!\ Do not use this to completely disable the constraint as it will make this mixin unreliable.
-        constraint_date = fields.Date.to_date(self.env['ir.config_parameter'].sudo().get_param(
-            'sequence.mixin.constraint_start_date',
-            '1970-01-01'
-        ))
+        constraint_date = fields.Date.to_date(self.env['ir.config_parameter'].sudo().get_str(
+            'sequence.mixin.constraint_start_date') or '1970-01-01'
+        )
         for record in self:
             if not record._must_check_constrains_date_sequence():
                 continue

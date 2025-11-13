@@ -144,6 +144,7 @@ class StockPickingType(models.Model):
     )
     is_favorite = fields.Boolean(
         compute='_compute_is_favorite', inverse='_inverse_is_favorite', search='_search_is_favorite',
+        compute_sql='_compute_sql_is_favorite',
         compute_sudo=True, string='Show Operation in Overview'
     )
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
@@ -236,15 +237,11 @@ class StockPickingType(models.Model):
         to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
         (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
 
-    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
-        if field_name == 'is_favorite':
-            sql_field = SQL(
-                "%s IN (SELECT picking_type_id FROM picking_type_favorite_user_rel WHERE user_id = %s)",
-                SQL.identifier(alias, 'id'), self.env.uid,
-            )
-            return SQL("%s %s %s", sql_field, direction, nulls)
-
-        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
+    def _compute_sql_is_favorite(self, alias, query):
+        return SQL(
+            "%s IN (SELECT picking_type_id FROM picking_type_favorite_user_rel WHERE user_id = %s)",
+            SQL.identifier(alias, 'id'), self.env.uid,
+        )
 
     @api.depends('code')
     def _compute_hide_reservation_method(self):
@@ -657,6 +654,8 @@ class StockPicking(models.Model):
     is_locked = fields.Boolean(default=True, copy=False, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
+    is_date_editable = fields.Boolean(
+        'Is Scheduled Date Editable', compute='_compute_is_date_editable')
 
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
@@ -742,6 +741,13 @@ class StockPicking(models.Model):
     def _compute_is_signed(self):
         for picking in self:
             picking.is_signed = picking.signature
+
+    def _compute_is_date_editable(self):
+        for picking in self:
+            if picking.state in ['done', 'cancel']:
+                picking.is_date_editable = not picking.is_locked
+            else:
+                picking.is_date_editable = True
 
     @api.depends('state', 'picking_type_code', 'scheduled_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_products_availability(self):
@@ -880,7 +886,7 @@ class StockPicking(models.Model):
             packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
 
             shipping_weight = picking.weight_bulk
-            relevant_packages = picking.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+            relevant_packages = picking.move_line_ids.result_package_id.outermost_package_id
             children_packages_by_pack = relevant_packages._get_all_children_package_dest_ids()[0]
             for package in relevant_packages:
                 if package.shipping_weight:
@@ -1904,7 +1910,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('picking_ids', 'in', self.ids)],
             'context': {
-                'picking_id': self.id,
+                'picking_ids': self.ids,
                 'location_id': self.location_id.id,
                 'can_add_entire_packs': self.picking_type_code != 'incoming',
                 'search_default_main_packages': True,

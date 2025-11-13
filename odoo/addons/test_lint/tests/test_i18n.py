@@ -3,11 +3,14 @@ import re
 
 from . import lint_case
 
+from odoo.tests import tagged
+
 from odoo import tools
 
 _logger = logging.getLogger(__name__)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestI18n(lint_case.LintCase):
     PROPS_RE = re.compile(
         r"""

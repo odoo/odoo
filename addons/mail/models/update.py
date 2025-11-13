@@ -24,8 +24,8 @@ class Publisher_WarrantyContract(AbstractModel):
         Users = self.env['res.users']
         IrParamSudo = self.env['ir.config_parameter'].sudo()
 
-        dbuuid = IrParamSudo.get_param('database.uuid')
-        db_create_date = IrParamSudo.get_param('database.create_date')
+        dbuuid = IrParamSudo.get_str('database.uuid')
+        db_create_date = IrParamSudo.get_str('database.create_date')
         limit_date = fields.Datetime.now() - datetime.timedelta(15)
         nbr_users = Users.search_count([('active', '=', True)])
         nbr_active_users = Users.search_count([("login_date", ">=", limit_date), ('active', '=', True)])
@@ -38,9 +38,9 @@ class Publisher_WarrantyContract(AbstractModel):
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])
 
-        enterprise_code = IrParamSudo.get_param('database.enterprise_code')
+        enterprise_code = IrParamSudo.get_str('database.enterprise_code')
 
-        web_base_url = IrParamSudo.get_param('web.base.url')
+        web_base_url = IrParamSudo.get_str('web.base.url')
         msg = {
             "dbuuid": dbuuid,
             "nbr_users": nbr_users,
@@ -100,13 +100,13 @@ class Publisher_WarrantyContract(AbstractModel):
                     pass
             if result.get('enterprise_info'):
                 # Update expiration date
-                set_param = self.env['ir.config_parameter'].sudo().set_param
-                set_param('database.expiration_date', result['enterprise_info'].get('expiration_date'))
-                set_param('database.expiration_reason', result['enterprise_info'].get('expiration_reason', 'trial'))
-                set_param('database.enterprise_code', result['enterprise_info'].get('enterprise_code'))
-                set_param('database.already_linked_subscription_url', result['enterprise_info'].get('database_already_linked_subscription_url'))
-                set_param('database.already_linked_email', result['enterprise_info'].get('database_already_linked_email'))
-                set_param('database.already_linked_send_mail_url', result['enterprise_info'].get('database_already_linked_send_mail_url'))
+                set_str = self.env['ir.config_parameter'].sudo().set_str
+                set_str('database.expiration_date', result['enterprise_info'].get('expiration_date'))
+                set_str('database.expiration_reason', result['enterprise_info'].get('expiration_reason', 'trial'))
+                set_str('database.enterprise_code', result['enterprise_info'].get('enterprise_code'))
+                set_str('database.already_linked_subscription_url', result['enterprise_info'].get('database_already_linked_subscription_url'))
+                set_str('database.already_linked_email', result['enterprise_info'].get('database_already_linked_email'))
+                set_str('database.already_linked_send_mail_url', result['enterprise_info'].get('database_already_linked_send_mail_url'))
 
         except Exception:
             if cron_mode:

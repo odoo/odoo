@@ -1,6 +1,7 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTransactionEnvs(TransactionCase):
     def test_transation_envs_weakrefs(self):
         transaction = self.env.transaction

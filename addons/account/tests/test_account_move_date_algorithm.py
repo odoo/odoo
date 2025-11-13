@@ -20,7 +20,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     # HELPERS
     # -------------------------------------------------------------------------
 
-    def _create_invoice(self, move_type, date, **kwargs):
+    def _create_invoice_with_date(self, move_type, date, **kwargs):
         return self.env['account.move'].create({
             'invoice_date': date,
             'partner_id': self.partner_a.id,
@@ -52,16 +52,6 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     def _set_lock_date(self, lock_date):
         self.env.company.fiscalyear_lock_date = fields.Date.from_string(lock_date)
 
-    def _reverse_invoice(self, invoice):
-        move_reversal = self.env['account.move.reversal']\
-            .with_context(active_model="account.move", active_ids=invoice.ids)\
-            .create({
-                'journal_id': invoice.journal_id.id,
-                'reason': "no reason",
-            })
-        reversal = move_reversal.refund_moves()
-        return self.env['account.move'].browse(reversal['res_id'])
-
     # -------------------------------------------------------------------------
     # TESTS
     # -------------------------------------------------------------------------
@@ -69,7 +59,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     @freezegun.freeze_time('2017-01-12')
     def test_out_invoice_date_with_lock_date(self):
         self._set_lock_date('2016-12-31')
-        move = self._create_invoice('out_invoice', '2016-01-01')
+        move = self._create_invoice_with_date('out_invoice', '2016-01-01')
         move.action_post()
 
         self.assertRecordValues(move, [{
@@ -79,7 +69,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-01-12')
     def test_out_invoice_reverse_date_with_lock_date(self):
-        move = self._create_invoice('out_invoice', '2016-01-01')
+        move = self._create_invoice_with_date('out_invoice', '2016-01-01')
         move.action_post()
         self._set_lock_date('2016-12-31')
         reverse_move = self._reverse_invoice(move)
@@ -92,7 +82,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     @freezegun.freeze_time('2017-01-12')
     def test_out_refund_date_with_lock_date(self):
         self._set_lock_date('2016-12-31')
-        move = self._create_invoice('out_refund', '2016-01-01')
+        move = self._create_invoice_with_date('out_refund', '2016-01-01')
         move.action_post()
 
         self.assertRecordValues(move, [{
@@ -102,7 +92,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-01-12')
     def test_out_refund_reverse_date_with_lock_date(self):
-        move = self._create_invoice('out_refund', '2016-01-01')
+        move = self._create_invoice_with_date('out_refund', '2016-01-01')
         move.action_post()
         self._set_lock_date('2016-12-31')
         reverse_move = self._reverse_invoice(move)
@@ -112,7 +102,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     @freezegun.freeze_time('2017-01-12')
     def test_in_invoice_date_with_lock_date(self):
         self._set_lock_date('2016-12-31')
-        move = self._create_invoice('in_invoice', '2016-01-01')
+        move = self._create_invoice_with_date('in_invoice', '2016-01-01')
         move.action_post()
 
         self.assertRecordValues(move, [{
@@ -122,7 +112,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-01-12')
     def test_in_invoice_reverse_date_with_lock_date(self):
-        move = self._create_invoice('in_invoice', '2016-01-01')
+        move = self._create_invoice_with_date('in_invoice', '2016-01-01')
         move.action_post()
         self._set_lock_date('2016-12-31')
         reverse_move = self._reverse_invoice(move)
@@ -135,7 +125,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     @freezegun.freeze_time('2017-01-12')
     def test_in_refund_date_with_lock_date(self):
         self._set_lock_date('2016-12-31')
-        move = self._create_invoice('in_refund', '2016-01-01')
+        move = self._create_invoice_with_date('in_refund', '2016-01-01')
         move.action_post()
 
         self.assertRecordValues(move, [{
@@ -145,7 +135,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-01-12')
     def test_in_refund_reverse_date_with_lock_date(self):
-        move = self._create_invoice('in_refund', '2016-01-01')
+        move = self._create_invoice_with_date('in_refund', '2016-01-01')
         move.action_post()
         self._set_lock_date('2016-12-31')
         reverse_move = self._reverse_invoice(move)
@@ -154,8 +144,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-02-12')
     def test_reconcile_with_lock_date(self):
-        invoice = self._create_invoice('out_invoice', '2016-01-01', currency_id=self.other_currency.id)
-        refund = self._create_invoice('out_refund', '2017-01-01', currency_id=self.other_currency.id)
+        invoice = self._create_invoice_with_date('out_invoice', '2016-01-01', currency_id=self.other_currency.id)
+        refund = self._create_invoice_with_date('out_refund', '2017-01-01', currency_id=self.other_currency.id)
         (invoice + refund).action_post()
         self._set_lock_date('2017-01-31')
 
@@ -170,8 +160,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
     @freezegun.freeze_time('2017-02-12')
     def test_unreconcile_with_lock_date(self):
-        invoice = self._create_invoice('out_invoice', '2016-01-01', currency_id=self.other_currency.id)
-        refund = self._create_invoice('out_refund', '2017-01-01', currency_id=self.other_currency.id)
+        invoice = self._create_invoice_with_date('out_invoice', '2016-01-01', currency_id=self.other_currency.id)
+        refund = self._create_invoice_with_date('out_refund', '2017-01-01', currency_id=self.other_currency.id)
         (invoice + refund).action_post()
 
         amls = (invoice + refund).line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
@@ -205,7 +195,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': tax_waiting_account.id,
         })
 
-        invoice = self._create_invoice(
+        invoice = self._create_invoice_with_date(
             'out_invoice', '2016-01-01',
             currency_id=self.other_currency.id,
             invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
@@ -272,7 +262,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
                 self.assertTrue(self.env.user.has_group(group))
 
-                invoice = self._create_invoice(
+                invoice = self._create_invoice_with_date(
                     'out_invoice', '2023-01-02',
                     invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
                 )

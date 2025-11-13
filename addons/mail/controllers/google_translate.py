@@ -52,7 +52,7 @@ class GoogleTranslateController(Controller):
 
     def _post(self, endpoint="", data=None):
         # sudo: ir.config_parameter - reading google translate api key, using it to make the request
-        api_key = request.env["ir.config_parameter"].sudo().get_param("mail.google_translate_api_key")
+        api_key = request.env["ir.config_parameter"].sudo().get_str("mail.google_translate_api_key")
         url = f"https://translation.googleapis.com/language/translate/v2/{endpoint}?key={api_key}"
         response = requests.post(url, data=data, timeout=3)
         response.raise_for_status()

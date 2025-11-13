@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <ActionSwiper onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+        <ActionSwiper onRightSwipe="props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <t t-set="dummy" t-value="computeActions()"/>
             <div class="o-mail-Message position-relative rounded-0 bg-inherit"
                 t-att-data-starred="message.starred"
@@ -18,7 +18,7 @@
             >
                 <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
                 <div t-if="props.asCard and isMobileOS" class="position-absolute end-0 z-1 m-n2"><t t-call="mail.Message.actions"/></div>
-                <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit" t-att-class="{ 'ps-xl-2': env.inDiscussApp and !ui.isSmall }">
+                <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
                         <t t-if="!props.squashed">
                             <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="getAvatarContainerAttClass()">
@@ -53,7 +53,7 @@
                                     (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.thread.displayName or message.default_subject"/></a>)
                                 </t>
                             </small>
-                            <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': (props.isInChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="props.message.scheduledDateSimple">
+                            <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': (env.inChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="props.message.scheduledDateSimple">
                                 <span class="text-600 cursor-pointer">
                                     <i class="fa fa-calendar-o"/>
                                 </span>
@@ -62,7 +62,7 @@
                             <t t-if="!isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': isAlignedRight }">
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote, 'o-mail-Message-pollContent flex-grow-1': message.poll }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.edited))">
@@ -127,6 +127,8 @@
                                         </t>
                                     </t>
                                     <t t-if="message.bubbleColor and message.hasTextContent and !env.inChatWindow and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
+                                    <PollResult t-if="message.ended_poll_ids.length" poll="message.poll"/>
+                                    <Poll t-elif="message.poll" poll="message.poll"/>
                                 </div>
                                 <div class="position-relative">
                                     <AttachmentList

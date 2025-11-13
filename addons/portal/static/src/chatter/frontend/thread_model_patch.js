@@ -9,7 +9,7 @@ patch(Thread.prototype, {
         this.hasReadAccess;
     },
     get effectiveSelf() {
-        if (this.portal_partner && !this.store.self_partner) {
+        if (this.portal_partner && !this.store.self_user?.partner_id) {
             return this.portal_partner;
         }
         return super.effectiveSelf;

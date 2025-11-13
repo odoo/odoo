@@ -1,8 +1,8 @@
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
-import { getSelectorParams } from "@html_builder/utils/utils";
+import { filterExtends } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { WebsiteBackgroundOption } from "./background_option";
+import { BaseWebsiteBackgroundOption } from "./background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 class WebsiteParallaxPlugin extends Plugin {
@@ -14,13 +14,14 @@ class WebsiteParallaxPlugin extends Plugin {
             SetParallaxTypeAction,
         },
         on_bg_image_hide_handlers: this.onBgImageHide.bind(this),
-        force_not_editable_selector: ".s_parallax_bg, section.s_parallax > .oe_structure",
+        content_not_editable_selectors: ".s_parallax_bg, section.s_parallax > .oe_structure",
+        system_node_selectors: ".s_parallax_bg, .s_parallax_bg_wrap",
         get_target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {
-        this.backgroundOptionSelectorParams = getSelectorParams(
+        this.backgroundOptionClasses = filterExtends(
             this.getResource("builder_options"),
-            WebsiteBackgroundOption
+            BaseWebsiteBackgroundOption
         );
     }
     applyParallaxType({ editingElement, value }) {
@@ -49,8 +50,9 @@ class WebsiteParallaxPlugin extends Plugin {
             delete editingElement.dataset.parallaxType;
         }
 
-        let parallaxBgEl = editingElement
-            .querySelector(":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap .s_parallax_bg");
+        let parallaxBgEl = editingElement.querySelector(
+            ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap .s_parallax_bg"
+        );
         const parallaxBgWrapEl = editingElement.querySelector(":scope > .s_parallax_bg_wrap");
         if (isParallax) {
             if (!parallaxBgEl) {
@@ -64,7 +66,10 @@ class WebsiteParallaxPlugin extends Plugin {
                 newWrapEl.classList.add("s_parallax_bg_wrap");
                 newWrapEl.appendChild(parallaxBgEl);
                 editingElement.prepend(newWrapEl);
-                this.dependencies.backgroundImageOption.changeEditingEl(editingElement, parallaxBgEl);
+                this.dependencies.backgroundImageOption.changeEditingEl(
+                    editingElement,
+                    parallaxBgEl
+                );
             }
         } else if (parallaxBgEl) {
             this.dependencies.backgroundImageOption.changeEditingEl(parallaxBgEl, editingElement);
@@ -76,18 +81,19 @@ class WebsiteParallaxPlugin extends Plugin {
         }
     }
     onBgImageHide(rootEl) {
-        for (const backgroundOptionSelector of this.backgroundOptionSelectorParams) {
+        for (const backgroundClass of this.backgroundOptionClasses) {
             applyFunDependOnSelectorAndExclude(
                 this.removeParallax.bind(this),
                 rootEl,
-                backgroundOptionSelector
+                backgroundClass
             );
         }
     }
     removeParallax(editingEl) {
         // ":scope > .s_parallax_bg" is kept for compatibility
-        const parallaxEl = editingEl
-            .querySelector(":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap");
+        const parallaxEl = editingEl.querySelector(
+            ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap"
+        );
         const bgImage = parallaxEl?.style.backgroundImage;
         if (
             !parallaxEl ||

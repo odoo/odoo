@@ -113,6 +113,12 @@ class AccountMove(models.Model):
         document 61 could not be used as refunds. """
         return ['99', '186', '188', '189', '60']
 
+    def _l10n_ar_is_refund_invoice(self):
+        """ This method is used to check if the document type is in the list of document types that can be used as
+        an invoice and refund and if the move type is 'in_refund' or 'out_refund'. """
+        return self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() \
+            and self.move_type in ['in_refund', 'out_refund']
+
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
@@ -179,12 +185,12 @@ class AccountMove(models.Model):
             ]
             journal = self.env['account.journal']
             msg = False
-            if res_code in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
-                # if partner is foregin and journal is not of expo, we try to change to expo journal
+            if res_code in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
+                # if it is a foreign partner and journal is not for expo, we try to change it to an expo journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'in', expo_journals)], limit=1)
                 msg = _('You are trying to create an invoice for foreign partner but you don\'t have an exportation journal')
-            elif res_code not in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
-                # if partner is NOT foregin and journal is for expo, we try to change to local journal
+            elif res_code not in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
+                # if it is NOT a foreign partner and journal is for expo, we try to change it to a local journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'not in', expo_journals)], limit=1)
                 msg = _('You are trying to create an invoice for domestic partner but you don\'t have a domestic market journal')
             if journal:
@@ -193,6 +199,21 @@ class AccountMove(models.Model):
                 # Throw an error to user in order to proper configure the journal for the type of operation
                 action = self.env.ref('account.action_account_journal_form')
                 raise RedirectWarning(msg, action.id, _('Go to Journals'))
+
+    def _compute_l10n_latam_document_type(self):
+        """We correct the default document type in vendor bills in case the partner is foreign (code 8)
+        so that it is always 'Foreign invoices and receipts'.
+        """
+        super()._compute_l10n_latam_document_type()
+        foreign_vendor_bills = self.filtered(lambda x: (
+            x.company_id.account_fiscal_country_id.code == "AR"
+            and x.state == 'draft'
+            and x.move_type in ['in_invoice', 'in_refund']
+            and x.l10n_latam_document_type_id
+            and x.partner_id.l10n_ar_afip_responsibility_type_id.code == '8'))
+        doctype_fa_exterior = self.env.ref('l10n_ar.fa_exterior', raise_if_not_found=False)
+        if doctype_fa_exterior:
+            foreign_vendor_bills.l10n_latam_document_type_id = doctype_fa_exterior
 
     def _post(self, soft=True):
         ar_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)
@@ -345,10 +366,35 @@ class AccountMove(models.Model):
             return 'l10n_ar.report_invoice_document'
         return super()._get_name_invoice_report()
 
+    def _apply_refund_adjustments(self, tax_totals):
+        """Helper method to adjust tax totals for refund invoices that share the same AFIP codes as the invoice
+        it is reversing."""
+        for suffix in ('', '_currency'):
+            for prefix in ('base', 'tax', 'total'):
+                field = f'{prefix}_amount{suffix}'
+                if tax_totals[field]:
+                    tax_totals[field] *= -1
+            for subtotal in tax_totals['subtotals']:
+                for prefix in ('base', 'tax'):
+                    field = f'{prefix}_amount{suffix}'
+                    if subtotal[field]:
+                        subtotal[field] *= -1
+                for tax_group in subtotal['tax_groups']:
+                    for prefix in ('display_base', 'base', 'tax'):
+                        field = f'{prefix}_amount{suffix}'
+                        if tax_group[field]:
+                            tax_group[field] *= -1
+
     def _l10n_ar_get_invoice_totals_for_report(self):
-        """If the invoice document type indicates that vat should not be detailed in the printed report (result of _l10n_ar_include_vat()) then we overwrite tax_totals field so that includes taxes in the total amount, otherwise it would be showing amount_untaxed in the amount_total"""
+        """If the invoice document type indicates that vat should not be detailed in the printed report (result of
+        _l10n_ar_include_vat()) then we overwrite tax_totals field so that includes taxes in the total amount, otherwise
+         it would be showing amount_untaxed in the amount_total.
+         Also, if the invoice is a refund and share the same ARCA code as the invoice it is reversing, we apply
+         adjustments to the tax totals to reflect the amounts in negative."""
         self.ensure_one()
         tax_totals = self.tax_totals
+        if self._l10n_ar_is_refund_invoice():
+            self._apply_refund_adjustments(tax_totals)
         include_vat = self._l10n_ar_include_vat()
         if not include_vat:
             return tax_totals
@@ -365,7 +411,10 @@ class AccountMove(models.Model):
                 or self._l10n_ar_is_tax_group_vat(tax_group)
             )).ids
         if tax_group_ids_to_exclude:
+            if self._l10n_ar_is_refund_invoice():
+                self._apply_refund_adjustments(tax_totals)
             tax_totals = self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
+
         return tax_totals
 
     def _l10n_ar_get_invoice_custom_tax_summary_for_report(self):

@@ -80,6 +80,29 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SplitBillScreenTourPay", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Split pay by selecting products
+            FloorScreen.clickTable("4"),
+            ProductScreen.addOrderline("Water"),
+            ProductScreen.addOrderline("Minute Maid"),
+            ProductScreen.clickControlButton("Split"),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickContinueOrder(),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("SplitBillScreenTour2", {
     steps: () =>
         [

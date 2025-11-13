@@ -426,7 +426,7 @@ class MailGroup(models.Model):
             for member in self.member_ids
         }
 
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.session.batch.size', GROUP_SEND_BATCH_SIZE))
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.session.batch.size') or GROUP_SEND_BATCH_SIZE
         for batch_email_member in tools.split_every(batch_size, member_emails.items()):
             mail_values = []
             for email_member_normalized, email_member in batch_email_member:

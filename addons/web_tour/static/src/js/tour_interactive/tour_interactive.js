@@ -1,10 +1,9 @@
 import { tourState } from "@web_tour/js/tour_state";
-import { debounce } from "@web/core/utils/timing";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
 import { TourStep } from "@web_tour/js/tour_step";
 import { MacroMutationObserver } from "@web/core/macro";
-import { getScrollParent } from "@web_tour/js/utils/tour_utils";
+import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 
 /**
  * @typedef ConsumeEvent
@@ -14,6 +13,7 @@ import { getScrollParent } from "@web_tour/js/utils/tour_utils";
  */
 
 export class TourInteractive {
+    static observer = null;
     mode = "manual";
     currentAction;
     currentActionIndex;
@@ -34,17 +34,17 @@ export class TourInteractive {
      * @param {import("@web_tour/js/tour_pointer/tour_pointer").TourPointer} pointer
      * @param {Function} onTourEnd
      */
-    start(env, pointer, onTourEnd) {
-        env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
-        env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
-
-        this.pointer = pointer;
-        this.debouncedToggleOpen = debounce(this.pointer.showContent, 50, true);
+    start(env, onTourEnd) {
         this.onTourEnd = onTourEnd;
-        this.observer = new MacroMutationObserver(() => this._onMutation());
-        this.observer.observe(document.body);
+        if (TourInteractive.observer) {
+            TourInteractive.observer.disconnect();
+        }
+        TourInteractive.observer = new MacroMutationObserver(() => this._onMutation());
+        TourInteractive.observer.observe(document.body);
         this.currentActionIndex = tourState.getCurrentIndex();
         this.play();
+        env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
+        env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
     }
 
     backward() {
@@ -85,7 +85,7 @@ export class TourInteractive {
     play() {
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
-            this.observer.disconnect();
+            TourInteractive.observer.disconnect();
             this.onTourEnd();
             return;
         }
@@ -110,51 +110,32 @@ export class TourInteractive {
     }
 
     updatePointer() {
+        pointerState.trigger = undefined;
         if (this.anchorEls.length) {
-            this.pointer.pointTo(
-                this.anchorEls[0],
-                this.currentAction.pointerInfo,
-                this.currentAction.event === "drop"
-            );
-            this.pointer.setState({
-                onMouseEnter: () => this.debouncedToggleOpen(true),
-                onMouseLeave: () => this.debouncedToggleOpen(false),
-            });
+            pointerState.trigger = this.anchorEls[0];
+            pointerState.content = this.currentAction.content;
+            pointerState.position = this.currentAction.tooltipPosition;
+            pointerState.isZone = this.currentAction.event === "drop";
         }
     }
 
     setActionListeners() {
-        const cleanups = this.anchorEls.flatMap((anchorEl, index) => {
-            const toListen = {
+        const cleanups = this.anchorEls.flatMap((anchorEl, index) =>
+            this.setupListeners({
                 anchorEl,
                 consumeEvents: this.getConsumeEventType(anchorEl, this.currentAction.event),
                 onConsume: () => {
-                    this.pointer.hide();
                     this.currentActionIndex++;
                     this.play();
                 },
                 onError: () => {
                     if (this.currentAction.event === "drop") {
-                        this.pointer.hide();
                         this.currentActionIndex--;
                         this.play();
                     }
                 },
-            };
-            if (index === 0) {
-                return this.setupListeners({
-                    ...toListen,
-                    onMouseEnter: () => this.pointer.showContent(true),
-                    onMouseLeave: () => this.pointer.showContent(false),
-                    onScroll: () => this.updatePointer(),
-                });
-            } else {
-                return this.setupListeners({
-                    ...toListen,
-                    onScroll: () => {},
-                });
-            }
-        });
+            })
+        );
         this.removeListeners = () => {
             this.anchorEls = [];
             while (cleanups.length) {
@@ -166,21 +147,10 @@ export class TourInteractive {
     /**
      * @param {HTMLElement} params.anchorEl
      * @param {import("../../tour_utils").ConsumeEvent[]} params.consumeEvents
-     * @param {() => void} params.onMouseEnter
-     * @param {() => void} params.onMouseLeave
-     * @param {(ev: Event) => any} params.onScroll
      * @param {(ev: Event) => any} params.onConsume
      * @param {() => any} params.onError
      */
-    setupListeners({
-        anchorEl,
-        consumeEvents,
-        onMouseEnter,
-        onMouseLeave,
-        onScroll,
-        onConsume,
-        onError = () => {},
-    }) {
+    setupListeners({ consumeEvents, onConsume, onError = () => {} }) {
         consumeEvents = consumeEvents.map((c) => ({
             target: c.target,
             type: c.name,
@@ -196,26 +166,13 @@ export class TourInteractive {
         for (const consume of consumeEvents) {
             consume.target.addEventListener(consume.type, consume.listener, true);
         }
-        anchorEl.addEventListener("mouseenter", onMouseEnter);
-        anchorEl.addEventListener("mouseleave", onMouseLeave);
-
         const cleanups = [
             () => {
                 for (const consume of consumeEvents) {
                     consume.target.removeEventListener(consume.type, consume.listener, true);
                 }
-                anchorEl.removeEventListener("mouseenter", onMouseEnter);
-                anchorEl.removeEventListener("mouseleave", onMouseLeave);
             },
         ];
-
-        const scrollEl = getScrollParent(anchorEl);
-        if (scrollEl) {
-            const debouncedOnScroll = debounce(onScroll, 50);
-            scrollEl.addEventListener("scroll", debouncedOnScroll);
-            cleanups.push(() => scrollEl.removeEventListener("scroll", debouncedOnScroll));
-        }
-
         return cleanups;
     }
 
@@ -247,7 +204,7 @@ export class TourInteractive {
             let action = m.groups?.action;
             const anchor = m.groups?.arguments || step.trigger;
             const pointerInfo = {
-                content: step.content,
+                content: step.content || this.getStepContent(action, anchor),
                 tooltipPosition: step.tooltipPosition,
             };
 
@@ -256,7 +213,7 @@ export class TourInteractive {
                     step,
                     event: "drag",
                     anchor: step.trigger,
-                    pointerInfo,
+                    ...pointerInfo,
                 });
                 action = "drop";
             }
@@ -265,11 +222,24 @@ export class TourInteractive {
                 step,
                 event: action,
                 anchor: action === "edit" ? step.trigger : anchor,
-                pointerInfo,
+                ...pointerInfo,
             });
         }
 
         return actions;
+    }
+
+    getStepContent(action, anchor) {
+        if (action === "click") {
+            return `Click on element`;
+        } else if (action === "edit") {
+            return `Edit element`;
+        } else if (action === "drag_and_drop") {
+            return `Drag element`;
+        } else if (action === "press") {
+            return `Press ${anchor}`;
+        }
+        return ``;
     }
 
     /**
@@ -458,13 +428,14 @@ export class TourInteractive {
                 this.anchorEls = tempAnchors;
                 this.setActionListeners();
             } else if (!tempAnchors.length && this.anchorEls.length) {
-                this.pointer.hide();
                 if (
                     !hoot.queryFirst(".o_home_menu", { visible: true }) &&
                     !hoot.queryFirst(".dropdown-item.o_loading", { visible: true }) &&
                     !this.isBusy
                 ) {
                     this.backward();
+                } else {
+                    pointerState.trigger = undefined;
                 }
                 return;
             }

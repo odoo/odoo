@@ -1,6 +1,7 @@
 
 .s_share {
     user-select: none;
+    $-size: map-get($spacers, 5);
     > * {
         display: inline-block;
         vertical-align: middle;
@@ -13,6 +14,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            &[class*="o_cc"] {
+                background-color: var(--o-cc-bg);
+            }
+            &:not(.small_social_icon, .fa-2x, .fa-3x, .fa-4x, .fa-5x) {
+                &.rounded-circle,
+                &.rounded,
+                &.fa-stack {
+                    width: $-size - .5rem;
+                    height: $-size - .5rem;
+                }
+            }
         }
         margin: .2rem;
     }

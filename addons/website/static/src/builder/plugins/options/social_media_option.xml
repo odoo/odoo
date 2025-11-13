@@ -21,14 +21,26 @@
 
     <BuilderRow label.translate="Size">
         <BuilderSelect applyTo="'.fa'">
-            <BuilderSelectItem classAction="''">Small</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-2x'">Medium</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-3x'">Big</BuilderSelectItem>
+            <BuilderSelectItem classAction="'small_social_icon'">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">Medium</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-2x'">Large</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-3x'">Huge</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Color">
+    <BuilderRow label.translate="Color" tooltip.translate="Keep the original icon color">
         <BuilderCheckbox classAction="'no_icon_color'" inverseAction="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Link Style">
+        <BuilderSelect dataAttributeAction="'iconUnderline'">
+            <BuilderSelectItem dataAttributeActionValue="''">No Underline</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'hover'">Underline On Hover</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'always'">Always Underline</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Background Color">
+        <BuilderColorPicker applyTo="'.fa'" styleAction="'background-color'"/>
     </BuilderRow>
 </t>
 

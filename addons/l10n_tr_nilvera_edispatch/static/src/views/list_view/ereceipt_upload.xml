@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_tr_nilvera_edispatch.L10nTrEreceiptUploader">
+        <FileUploader
+            acceptedFileExtensions="'.xml'"
+            multiUpload="true"
+            onUploaded.bind="onEreceiptFileUpload"
+            onUploadComplete.bind="onEreceiptUploadComplete"
+            >
+            <t t-set-slot="toggler">
+                <t t-slot="toggler"/>
+            </t>
+        </FileUploader>
+    </t>
+
+    <t t-name="l10n_tr_nilvera_edispatch.EReceiptViewImportButton">
+        <L10nTrEreceiptUploader>
+            <t t-set-slot="toggler">
+                <button type="button" class="btn btn-secondary">
+                    Upload e-Receipt (XML)
+                </button>
+            </t>
+        </L10nTrEreceiptUploader>
+    </t>
+
+    <t t-name="l10n_tr_nilvera_edispatch.ListView.buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <t t-if="this.isActionDisplayed" t-call="l10n_tr_nilvera_edispatch.EReceiptViewImportButton" />
+        </xpath>
+    </t>
+
+</templates>

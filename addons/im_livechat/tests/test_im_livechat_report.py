@@ -5,10 +5,9 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
-from odoo.tests.common import new_test_user, tagged
+from odoo.tests.common import new_test_user
 
 
-@tagged("post_install", "-at_install")
 class TestImLivechatReport(TestImLivechatCommon):
     def setUp(self):
         super().setUp()
@@ -70,6 +69,11 @@ class TestImLivechatReport(TestImLivechatCommon):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["time_to_answer:avg"], 7800 / 3600)
         self.assertEqual(int(result[0]['duration:avg']), 195)
+        channel = self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)])
+        rated_channel = channel.copy({"rating_last_value": 5})
+        self._create_message(rated_channel, self.operator, "2023-03-18 11:00:00")
+        result = self.env["im_livechat.report.channel"].formatted_read_group([], aggregates=["rating:avg"])
+        self.assertEqual(result[0]["rating:avg"], 5, "Rating average should be 5, excluding unrated sessions")
 
     @classmethod
     def _create_message(cls, channel, author, date):

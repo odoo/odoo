@@ -71,23 +71,40 @@ $lato-font-path: './lato';
 // ------------------------------------------------------------------
 $google-font-path: './google';
 
-@mixin google-font($family, $type, $weight, $style) {
+@mixin google-font($family, $type, $weight, $style, $file_type) {
     @font-face {
+        $style_name: if($weight == 400 and $style == italic, "Italic", "#{$type}#{if($style != normal, $style, "")}");
+        $format: if($file_type == 'ttf', 'truetype', $file_type);
+        $file_name: "#{$family}-#{$style_name}.#{$file_type}";
+
         font-family: $family;
-        src: url('#{$google-font-path}/#{$family}/#{$family}-#{$type}.ttf') format('truetype');
+        src: url('#{$google-font-path}/#{$family}/#{$file_name}') format('#{$format}');
         font-weight: $weight;
         font-style: $style;
     }
 }
 
-@mixin google-font-pair($family) {
-    @include google-font('#{$family}', 'Regular', 400, normal);
+@mixin google-font-pair($family, $italic: true, $file_type: 'ttf', $font-weights: (
+    'Regular': 400,
+    'Medium': 500,
+    'Bold': 700)) {
+
+    @each $type, $weight in $font-weights {
+        @include google-font('#{$family}', $type, $weight, normal, $file_type);
+        @if $italic {
+            @include google-font('#{$family}', $type, $weight, italic, $file_type);
+        }
+    }
 }
 
 @include google-font-pair('Montserrat');
-@include google-font-pair('Open_Sans');
-@include google-font-pair('Oswald');
+@include google-font-pair('Open_Sans', $font-weights: (
+    'Regular': 400,
+    'Bold': 700,
+));
+@include google-font-pair('Oswald', $italic: false);
 @include google-font-pair('Raleway');
 @include google-font-pair('Roboto');
-@include google-font-pair('Tajawal');
-@include google-font-pair('Fira_Mono');
+@include google-font-pair('Tajawal', $italic: false);
+@include google-font-pair('Fira_Mono', $italic: false);
+@include google-font-pair('Noto_Sans_Mono', $italic: false, $file_type: 'woff');

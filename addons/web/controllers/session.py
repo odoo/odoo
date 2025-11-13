@@ -75,8 +75,8 @@ class Session(http.Controller):
         ICP = request.env['ir.config_parameter'].sudo()
         params = {
             'response_type': 'token',
-            'client_id': ICP.get_param('database.uuid') or '',
-            'state': json.dumps({'d': request.db, 'u': ICP.get_param('web.base.url')}),
+            'client_id': ICP.get_str('database.uuid'),
+            'state': json.dumps({'d': request.db, 'u': ICP.get_str('web.base.url')}),
             'scope': 'userinfo',
         }
         return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)
@@ -85,7 +85,7 @@ class Session(http.Controller):
     def destroy(self):
         request.session.logout()
 
-    @http.route('/web/session/logout', type='http', auth='none', readonly=True)
+    @http.route('/web/session/logout', type='http', auth='none', methods=['POST'], readonly=True)
     def logout(self, redirect='/odoo'):
         request.session.logout(keep_db=True)
         return request.redirect(redirect, 303)

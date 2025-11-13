@@ -39,7 +39,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(First review)",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Delete']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
             trigger: "#chatterRoot:shadow button:contains(Delete)",
@@ -163,7 +167,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Second review is editable in rating composer after editing in message composer)",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Delete']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
             trigger: "#chatterRoot:shadow button:contains(Delete)",
@@ -175,6 +183,45 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: ".modal.modal_shown.show .o-mail-Composer-starCard:has(input[value='4'])",
+        },
+        {
+            trigger:
+                ".modal.modal_shown.show button.o_portal_chatter_composer_btn:contains(Post review)",
+            run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:not(:has(.o-mail-Message-body)) .o_website_rating_static[title='4 stars on 5']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
+            run: "edit Fill the message body",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
+            run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message[data-persistent] .o-mail-Message-body:contains(Fill the message body)",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:contains(Fill the message body)",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
+            run: "edit",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
+            run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:not(:has(Fill the message body)):contains( (edited))",
         },
     ],
 });

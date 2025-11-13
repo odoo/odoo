@@ -45,7 +45,7 @@ def render_res_ids(model, res_ids, results):
     For falsy ids, use an empty recordset.
     """
     res_ids, falsy_ids = tools.partition(lambda id_: id_ or isinstance(id_, api.NewId), res_ids)
-    yield from model.browse(res_ids)
+    yield from model.browse(res_ids).with_context(property_selection_get_label=True)
     if not falsy_ids:
         return
     yield model.browse()
@@ -156,7 +156,7 @@ class MailRenderMixin(models.AbstractModel):
             # compute here to do it only if really necessary + cache will ensure it is done only once
             # if not base_url
             if not _sub_relative2absolute.base_url:
-                _sub_relative2absolute.base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+                _sub_relative2absolute.base_url = self.env["ir.config_parameter"].sudo().get_str("web.base.url")
             return match.group(1) + urls.urljoin(_sub_relative2absolute.base_url, match.group(2))
 
         _sub_relative2absolute.base_url = base_url

@@ -256,3 +256,36 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_integration_dynamic_always_never_variant_price', login="pos_user")
+
+    def test_image_variants_displayed(self):
+        """
+        Tests that the user can correctly chose variants in the product_configurator_popup
+        if the variant was set as Image
+        """
+        image_attribute = self.env['product.attribute'].create({
+            'name': 'Images',
+            'display_type': 'image',
+            'create_variant': 'always',
+        })
+        images = self.env['product.attribute.value'].create([{
+            'name': 'First Image',
+            'attribute_id': image_attribute.id,
+        }, {
+            'name': 'Second Image',
+            'attribute_id': image_attribute.id,
+            'default_extra_price': 20,
+        }])
+        product_template = self.env['product.template'].create({
+            'name': 'Image Product',
+            'is_storable': True,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': image_attribute.id,
+            'value_ids': [Command.set([images[0].id, images[1].id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_image_variants_displayed', login="pos_user")

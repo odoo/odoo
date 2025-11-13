@@ -47,6 +47,9 @@ test("highlightText", () => {
     expect(highlightText("b", "abcb", "hl").toString()).toBe(
         'a<span class="hl">b</span>c<span class="hl">b</span>'
     );
+    expect(highlightText("b", "abbc", "hl").toString()).toBe(
+        'a<span class="hl">b</span><span class="hl">b</span>c'
+    );
     expect(highlightText("b", "<p>ab</p>", "hl").toString()).toBe(
         '&lt;p&gt;a<span class="hl">b</span>&lt;/p&gt;'
     );

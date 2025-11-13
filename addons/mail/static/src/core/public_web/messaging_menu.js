@@ -135,7 +135,7 @@ export class MessagingMenu extends Component {
     get _tabs() {
         return [
             {
-                counter: this.store.discuss.chats.threadsWithCounter.length,
+                counter: this.store.discuss.chatCategory.threadsWithCounter.length,
                 icon: "oi oi-users",
                 id: "chat",
                 label: _t("Chats"),
@@ -143,7 +143,7 @@ export class MessagingMenu extends Component {
             },
             {
                 channelHasUnread: Boolean(this.store.discuss.unreadChannels.length),
-                counter: this.store.discuss.channels.threadsWithCounter.length,
+                counter: this.store.discuss.channelCategory.threadsWithCounter.length,
                 icon: "fa fa-hashtag",
                 id: "channel",
                 label: _t("Channels"),

@@ -1,7 +1,10 @@
 import json
+from odoo.tests import tagged
+
 from .test_common import TestHttpBase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHttpSecurity(TestHttpBase):
     def test_httprequest_attrs(self):
         res = self.db_url_open('/test_http/httprequest_attrs')

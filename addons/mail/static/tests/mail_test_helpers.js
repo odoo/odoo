@@ -4,7 +4,6 @@ import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import {
     MockServer,
-    asyncStep,
     authenticate,
     defineModels,
     defineParams,
@@ -18,14 +17,13 @@ import {
     patchWithCleanup,
     restoreRegistry,
     serverState,
-    waitForSteps,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { contains } from "./mail_test_helpers_contains";
 
-import { mailGlobal } from "@mail/utils/common/misc";
+import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
@@ -42,6 +40,7 @@ import {
     mailDataHelpers,
 } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
+import { DiscussCategory } from "./mock_server/mock_models/discuss_category";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { DiscussChannelRtcSession } from "./mock_server/mock_models/discuss_channel_rtc_session";
@@ -76,6 +75,10 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+import { Network } from "@mail/discuss/call/common/rtc_service";
+import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
+import { SoundEffects } from "@mail/core/common/sound_effects_service";
+import { DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
 
 export * from "./mail_test_helpers_contains";
 
@@ -109,6 +112,7 @@ export const mailModels = {
     ...busModels,
     Base,
     DiscussChannel,
+    DiscussCategory,
     DiscussChannelMember,
     DiscussChannelRtcSession,
     DiscussGifFavorite,
@@ -356,6 +360,11 @@ export async function start(options) {
         env = getMockEnv() || (await makeMockEnv({}));
     }
     env.testEnv = true;
+    patchWithCleanup(SoundEffects.prototype, {
+        _setAudioSrc(audio, srcPath) {
+            audio["data-src"] = srcPath;
+        },
+    });
     await mountWithCleanup(WebClient, { env, target });
     await loadEmoji();
     return Object.assign(env, { ...options?.env, target });
@@ -430,52 +439,31 @@ export async function patchUiSize({ height, size, width }) {
     await resize({ width, height });
 }
 
+function createAudioStream() {
+    const ctx = new window.AudioContext();
+    const dest = ctx.createMediaStreamDestination();
+    after(() => {
+        closeStream(dest.stream);
+        ctx.close().catch(() => {});
+    });
+    return dest.stream;
+}
+
+export function createVideoStream() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = 1;
+    const stream = canvas.captureStream();
+    after(() => closeStream(stream));
+    return stream;
+}
+
 /**
  * Mocks the browser's `navigator.mediaDevices.getUserMedia` and `navigator.mediaDevices.getDisplayMedia`
  * Also mocks the permissions API to return "granted" for camera and microphone permissions by default.
  */
 export function mockGetMedia() {
-    class MockMediaStreamTrack extends EventTarget {
-        enabled = true;
-        readyState = "live";
-        constructor(kind) {
-            super();
-            this.kind = kind;
-        }
-        stop() {
-            this.readyState = "ended";
-        }
-        clone() {
-            return Object.assign(new MockMediaStreamTrack(this.kind), { ...this });
-        }
-    }
-    /**
-     * The audio streams are mocked as there is no way to create a MediaStream
-     * with an audio track without really requesting it from the device.
-     */
-    class MockAudioMediaStream extends MediaStream {
-        mockTracks = [new MockMediaStreamTrack("audio")];
-        getTracks() {
-            return this.mockTracks;
-        }
-        getAudioTracks() {
-            return this.mockTracks;
-        }
-        getVideoTracks() {
-            return [];
-        }
-    }
     const streams = [];
-    /**
-     * The video streams are real MediaStreams created from a 1x1 canvas at 1fps.
-     */
-    const createVideoStream = (constraints) => {
-        const canvas = document.createElement("canvas");
-        canvas.width = 1;
-        canvas.height = 1;
-        const stream = canvas.captureStream(1);
-        return stream;
-    };
     // Mock permissions API to return "granted" by default.
     patchWithCleanup(browser.navigator.permissions, {
         async query() {
@@ -489,28 +477,110 @@ export function mockGetMedia() {
     });
     patchWithCleanup(browser.navigator.mediaDevices, {
         getUserMedia(constraints) {
-            let stream;
             if (constraints.audio) {
-                stream = new MockAudioMediaStream();
+                const audioStream = createAudioStream();
+                streams.push(audioStream);
+                return audioStream;
             } else {
-                // The video streams are real MediaStreams
-                stream = createVideoStream();
+                const videoStream = createVideoStream();
+                streams.push(videoStream);
+                return videoStream;
             }
-            streams.push(stream);
-            return stream;
         },
-        getDisplayMedia() {
-            const stream = createVideoStream();
-            streams.push(stream);
-            return stream;
+        getDisplayMedia: () => {
+            const videoStream = createVideoStream();
+            streams.push(videoStream);
+            return videoStream;
         },
     });
-    after(() => {
-        // stop all streams as some tests may not do actions that lead to the ending of tracks
-        streams.forEach((stream) => {
-            stream.getTracks().forEach((track) => track.stop());
-        });
+    return streams;
+}
+
+/**
+ * A MockRemote represents the network API of a remote user, for example calling remote.updateUpload() behaves as if that remote user
+ * had called this function on their own rtc_service.network
+ *
+ * @typedef {Object} MockRemote
+ * @property {number} sessionId
+ * @property {function(string):Promise} updateConnectionState (emits "update" event)
+ * @property {function(import("@mail/discuss/call/common/rtc_service").streamType,MediaStreamTrack):Promise} updateUpload (emits "update" event)
+ * @property {function(import("@mail/discuss/call/common/rtc_session_model").SessionInfo):Promise} updateInfo (emits "update" event)
+ */
+
+/**
+ * @typedef {Object} MockNetwork
+ * @property { function(number): MockRemote } makeMockRemote
+ */
+
+/**
+ * Mocks {import("@mail/discuss/call/common/rtc_service").Network} and allows testing of features that rely on network behavior, such
+ * as other participants changing the state of their microphone, sharing screen,...
+ *
+ * @param {Object} param0
+ * @param {Partial<OdooEnv>} param0.env
+ * @param {number} param0.channelId
+ * @returns {Promise<MockNetwork>}
+ */
+export async function makeMockRtcNetwork({ env, channelId }) {
+    const mockNetwork = new EventTarget();
+    const pyEnv = MockServer.current.env;
+    const rtc = env.services["discuss.rtc"];
+    const dispatchUpdate = (payload) => {
+        mockNetwork.dispatchEvent(new CustomEvent("update", { detail: payload }));
+    };
+    const rtcServiceIsListening = new Deferred();
+    patchWithCleanup(Network.prototype, {
+        addEventListener(name, f) {
+            if (name === "update") {
+                rtcServiceIsListening.resolve();
+                // disabling the p2p network so that it does not try to send webRTC events like candidates and offers.
+                rtc.network.p2p.disconnect();
+            }
+            mockNetwork.addEventListener(name, f);
+            after(() => mockNetwork.removeEventListener(name, f));
+        },
     });
+
+    return {
+        makeMockRemote(channelMemberId) {
+            const sessionId = pyEnv["discuss.channel.rtc.session"].create({
+                channel_member_id: channelMemberId,
+                channel_id: channelId,
+            });
+            return {
+                sessionId,
+                async updateConnectionState(state) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.CONNECTION_CHANGE,
+                        payload: {
+                            id: sessionId,
+                            state,
+                        },
+                    });
+                },
+                async updateInfo(info) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.INFO_CHANGE,
+                        payload: { [sessionId]: info },
+                    });
+                },
+                async updateUpload(type, track) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.TRACK,
+                        payload: {
+                            sessionId,
+                            type,
+                            track,
+                            active: Boolean(track),
+                        },
+                    });
+                },
+            };
+        },
+    };
 }
 
 /**
@@ -693,11 +763,23 @@ function toChatHubData(opened, folded) {
 }
 
 function convertChatHubParam(param) {
-    return typeof param === "number" ? { id: param, model: "discuss.channel" } : param;
+    return typeof param === "number" ? { id: param } : param;
 }
 
 export function setupChatHub({ opened = [], folded = [] } = {}) {
     browser.localStorage.setItem(CHAT_HUB_KEY, toChatHubData(opened, folded));
+}
+
+export function setDiscussSidebarCategoryFoldState(categoryId, val) {
+    if (val) {
+        localStorage.setItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${categoryId}`, val);
+    } else {
+        localStorage.removeItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${categoryId}`);
+    }
+}
+
+export function isDiscussSidebarCategoryFolded(categoryId) {
+    return localStorage.getItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${categoryId}`) === "true";
 }
 
 export function assertChatHub({ opened = [], folded = [] }) {
@@ -716,15 +798,15 @@ export const STORE_FETCH_ROUTES = ["/mail/action", "/mail/data"];
  * @param {Object} [options={}]
  * @param {function} [options.onRpc] entry point to override the onRpc of the intercepted calls.
  * @param {string[]} [options.logParams=[]] names of the store fetch params for which both the name
- *  and the specific params should be logged in asyncStep. By default only the name is logged.
+ *  and the specific params should be logged in expect.step. By default only the name is logged.
  */
 export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
     async function registerStep(request, name, params) {
         const res = await onRpcOverride?.(request);
         if (logParams.includes(name)) {
-            asyncStep(`store fetch: ${name} - ${JSON.stringify(params)}`);
+            expect.step(`store fetch: ${name} - ${JSON.stringify(params)}`);
         } else {
-            asyncStep(`store fetch: ${name}`);
+            expect.step(`store fetch: ${name}`);
         }
         return res;
     }
@@ -761,7 +843,7 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
 /**
  * Waits for the given name or names of store fetch parameters to have been fetched from the server,
  * in the given order. Expected names have to be registered with listenStoreFetch beforehand.
- * If other asyncStep are resolving in the same flow, they must be provided to stepsAfter (if they
+ * If other expect.step are resolving in the same flow, they must be provided to stepsAfter (if they
  * are resolved after the fetch) or stepsBefore (if they are resolved before the fetch). The order
  * can be ignored with ignoreOrder option.
  *
@@ -775,7 +857,7 @@ export async function waitStoreFetch(
     nameOrNames = [],
     { ignoreOrder = false, stepsAfter = [], stepsBefore = [] } = {}
 ) {
-    await waitForSteps(
+    await expect.waitForSteps(
         [
             ...stepsBefore,
             ...(typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames).map(
@@ -794,7 +876,7 @@ export async function waitStoreFetch(
     );
     /**
      * Extra tick necessary to ensure the RPC is fully processed before resolving.
-     * This is necessary because the asyncStep in onRpc is not synchronous with the moment
+     * This is necessary because the expect.step in onRpc is not synchronous with the moment
      * the RPC result is resolved and processed in the business code. Removing this tick
      * won't make everything fail, but it might create subtle race conditions.
      */
@@ -845,7 +927,7 @@ export function patchVoiceMessageAudio() {
                     addModule(url) {},
                 };
             }
-            close() {}
+            async close() {}
             /** @returns {AnalyserNode} */
             createAnalyser() {
                 return new browser.AnalyserNode();

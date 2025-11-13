@@ -52,7 +52,7 @@ class TransifexTranslation(models.AbstractModel):
         """
 
         # e.g. 'https://www.transifex.com/odoo/'
-        base_url = self.env['ir.config_parameter'].sudo().get_param('transifex.project_url')
+        base_url = self.env['ir.config_parameter'].sudo().get_str('transifex.project_url')
         if not base_url:
             return
         base_url = base_url.rstrip('/')

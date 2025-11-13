@@ -6,10 +6,10 @@ import { isScrollableY } from "@web/core/utils/scrolling";
 export class NoBackdropPopup extends Interaction {
     static selector = ".s_popup_no_backdrop";
     dynamicContent = {
-        "_root": {
+        _root: {
             "t-on-shown.bs.modal": this.addModalNoBackdropEvents,
             "t-on-hide.bs.modal": this.removeModalNoBackdropEvents,
-        }
+        },
     };
 
     setup() {
@@ -47,7 +47,11 @@ export class NoBackdropPopup extends Interaction {
 
     addModalNoBackdropEvents() {
         this.updateScrollbar();
-        this.removeResizeListener = this.addListener(window, "resize", this.throttledUpdateScrollbar);
+        this.removeResizeListener = this.addListener(
+            window,
+            "resize",
+            this.throttledUpdateScrollbar
+        );
         this.resizeObserver = new window.ResizeObserver(() => {
             // When the size of the modal changes, the scrollbar needs to be
             // adjusted.
@@ -66,6 +70,4 @@ export class NoBackdropPopup extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.no_backdrop_popup", NoBackdropPopup);
+registry.category("public.interactions").add("website.no_backdrop_popup", NoBackdropPopup);

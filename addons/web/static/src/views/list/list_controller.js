@@ -54,7 +54,6 @@ export class ListController extends Component {
         allowSelectors: { type: Boolean, optional: true },
         onSelectionChanged: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
-        showButtons: { type: Boolean, optional: true },
         allowOpenAction: { type: Boolean, optional: true },
         Model: Function,
         Renderer: Function,
@@ -65,7 +64,6 @@ export class ListController extends Component {
         allowSelectors: true,
         createRecord: () => {},
         selectRecord: () => {},
-        showButtons: true,
         allowOpenAction: true,
     };
 
@@ -104,17 +102,6 @@ export class ListController extends Component {
         onWillStart(async () => {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
-        let { rendererScrollPositions } = this.props.state || {};
-        useEffect(() => {
-            if (rendererScrollPositions) {
-                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                if (renderer) {
-                    renderer.scrollLeft = rendererScrollPositions.left;
-                    renderer.scrollTop = rendererScrollPositions.top;
-                    rendererScrollPositions = null;
-                }
-            }
-        });
 
         this.archiveEnabled =
             "active" in this.props.fields
@@ -128,7 +115,7 @@ export class ListController extends Component {
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: () => this.model.load(),
         });
-        useSetupAction({
+        const { setScrollFromState } = useSetupAction({
             rootRef: this.rootRef,
             beforeLeave: this.beforeLeave.bind(this),
             beforeUnload: this.beforeUnload.bind(this),
@@ -144,6 +131,24 @@ export class ListController extends Component {
             },
             getOrderBy: () => this.model.root.orderBy,
         });
+
+        useEffect(
+            (isReady) => {
+                if (isReady) {
+                    if (this.env.isSmall) {
+                        setScrollFromState();
+                    } else {
+                        const { rendererScrollPositions } = this.props.state || {};
+                        if (rendererScrollPositions) {
+                            const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                            renderer.scrollLeft = rendererScrollPositions.left;
+                            renderer.scrollTop = rendererScrollPositions.top;
+                        }
+                    }
+                }
+            },
+            () => [this.model.isReady]
+        );
 
         usePager(() => {
             if (this.model.useSampleModel) {
@@ -224,6 +229,7 @@ export class ListController extends Component {
                 onAskMultiSaveConfirmation: this.onAskMultiSaveConfirmation.bind(this),
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
             },
+            useSendBeaconToSaveUrgently: true,
         };
     }
 
@@ -317,7 +323,7 @@ export class ListController extends Component {
         if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
             // If the view isn't grouped and the list is editable, a new record row will be added,
             // in edition. In this situation, we must wait for the model to be ready.
-            await this.model.whenReady;
+            await this.model.whenReady.promise;
         }
         const list = (group && group.list) || this.model.root;
         if (this.editable && !list.isGrouped) {
@@ -493,7 +499,7 @@ export class ListController extends Component {
             ...this.props.display,
             controlPanel: {
                 ...controlPanel,
-                layoutActions: !this.hasSelectedRecords,
+                actions: !this.hasSelectedRecords,
             },
         };
     }

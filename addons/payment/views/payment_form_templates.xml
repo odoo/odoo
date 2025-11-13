@@ -322,11 +322,7 @@
         </div>
         <!-- === Inline form === -->
         <div name="o_payment_inline_form" class="position-relative d-none">
-            <t t-if="inline_form_xml_id and provider_sudo._should_build_inline_form(
-                         is_validation=mode == 'validation'
-                     )"
-               t-call="{{inline_form_xml_id}}"
-            >
+            <t t-if="inline_form_xml_id" t-call="{{inline_form_xml_id}}">
                 <t t-set="provider_id" t-value="provider_sudo.id"/>
             </t>
             <div class="d-flex flex-column flex-sm-row align-md-items-center justify-content-between
@@ -421,7 +417,7 @@
                 </p>
                 <t
                     t-set="onboarding_provider"
-                    t-value="request.env['res.config.settings'].sudo().new({}).onboarding_payment_module"
+                    t-value="request.env.company.onboarding_payment_module"
                 />
                 <a
                     t-if="onboarding_provider and not providers_sudo"
@@ -430,7 +426,7 @@
                     role="button"
                     class="btn btn-primary me-2"
                 >
-                    ACTIVATE <t t-out="onboarding_provider.upper()"/>
+                    CONNECT <t t-out="onboarding_provider.upper()"/>
                 </a>
                 <a
                     t-if="availability_report"

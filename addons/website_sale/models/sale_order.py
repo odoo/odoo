@@ -403,7 +403,12 @@ class SaleOrder(models.Model):
         if not filtered_sol:
             return self.env['sale.order.line']
 
-        if product.product_tmpl_id._has_no_variant_attributes():
+        has_configurable_no_variant_attributes = any(
+            len(line.value_ids) > 1 or line.attribute_id.display_type == 'multi'
+            for line in product.attribute_line_ids
+            if line.attribute_id.create_variant == 'no_variant'
+        )
+        if has_configurable_no_variant_attributes:
             filtered_sol = filtered_sol.filtered(
                 lambda sol:
                     sol.product_no_variant_attribute_value_ids.ids == no_variant_attribute_value_ids
@@ -617,7 +622,8 @@ class SaleOrder(models.Model):
         :returns: whether the combo quantities had to be updated
         """
         # Ensure all combo lines have the same quantity
-        combo_lines = line.linked_line_ids
+        if not (combo_lines := line.linked_line_ids):
+            return False
         available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
         if available_combo_quantity < line.product_uom_qty:
             line._set_shop_warning_stock(

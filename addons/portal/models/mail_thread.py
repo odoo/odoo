@@ -77,7 +77,7 @@ class MailThread(models.AbstractModel):
                 field_name=self._mail_post_token_field
             ))
         # sign token
-        secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
+        secret = self.env["ir.config_parameter"].sudo().get_str("database.secret")
         token = (self.env.cr.dbname, self[self._mail_post_token_field], pid)
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha256).hexdigest()
 

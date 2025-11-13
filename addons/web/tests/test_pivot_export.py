@@ -4,9 +4,10 @@ from lxml import etree
 from zipfile import ZipFile
 
 from odoo import http
-from odoo.tests.common import HttpCase
+from odoo.tests.common import tagged, HttpCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPivotExport(HttpCase):
 
     def test_export_xlsx_with_integer_column(self):

@@ -64,12 +64,14 @@ class PosConfig(models.Model):
         'ir.attachment',
         string="Add images",
         help="Image to display on the self order screen",
+        bypass_search_access=True,
     )
     self_ordering_image_background_ids = fields.Many2many(
         'ir.attachment',
         string="Set background image",
         help="Image to be displayed in the background",
         relation="pos_self_order_background_rels",
+        bypass_search_access=True,
     )
     self_ordering_default_user_id = fields.Many2one(
         "res.users",
@@ -268,15 +270,6 @@ class PosConfig(models.Model):
             "target": "new",
         }
 
-    def _get_self_ordering_attachment(self, images):
-        encoded_images = []
-        for image in images:
-            encoded_images.append({
-                'id': image.id,
-                'data': image.sudo().datas.decode('utf-8'),
-            })
-        return encoded_images
-
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
             'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
@@ -334,23 +327,14 @@ class PosConfig(models.Model):
 
         return response
 
-    def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
-        """
-        :floors: the list of floors
-        :cols: the number of qr codes per row
-        """
-        self.ensure_one()
-        return [
-            {
-                "name": floor.get("name"),
-                "rows_of_tables": list(split_every(cols, floor["tables"], list)),
-            }
-            for floor in floors
-        ]
-
     def _compute_self_ordering_url(self):
         for record in self:
             record.self_ordering_url = record.get_base_url() + record._get_self_order_route()
+
+    def close_ui(self):
+        if self.self_ordering_mode == "kiosk":
+            return self.action_close_kiosk_session()
+        return super().close_ui()
 
     def action_close_kiosk_session(self):
         if self.current_session_id and self.current_session_id.order_ids:
@@ -390,9 +374,8 @@ class PosConfig(models.Model):
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """
         self.ensure_one()
-        if self.self_ordering_mode == 'mobile':
-            return False
-        return any(pm.use_payment_terminal in self._supported_kiosk_payment_terminal() for pm in self.payment_method_ids)
+        domain = self.payment_method_ids._load_pos_self_data_domain({}, self)
+        return bool(self.payment_method_ids.filtered_domain(domain))
 
     @api.model
     def load_onboarding_kiosk_scenario(self):

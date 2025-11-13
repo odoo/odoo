@@ -24,14 +24,8 @@ class Auth_TotpDevice(models.Model):
 
     def _get_trusted_device_age(self):
         ICP = self.env['ir.config_parameter'].sudo()
-        try:
-            nbr_days = int(ICP.get_param('auth_totp.trusted_device_age', TRUSTED_DEVICE_AGE_DAYS))
-            if nbr_days <= 0:
-                nbr_days = None
-        except ValueError:
-            nbr_days = None
-
-        if nbr_days is None:
+        nbr_days = ICP.get_int('auth_totp.trusted_device_age', TRUSTED_DEVICE_AGE_DAYS)
+        if nbr_days <= 0:
             _logger.warning("Invalid value for 'auth_totp.trusted_device_age', using default value.")
             nbr_days = TRUSTED_DEVICE_AGE_DAYS
 

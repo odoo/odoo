@@ -38,7 +38,10 @@ patch(ControlButtons.prototype, {
 
         const discountableLines = lines.filter((line) => line.isGlobalDiscountApplicable());
         const baseLines = discountableLines.map((line) =>
-            line.prepareBaseLineForTaxesComputationExtraValues()
+            accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                line,
+                line.prepareBaseLineForTaxesComputationExtraValues()
+            )
         );
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, order.company_id);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, order.company_id);
@@ -73,6 +76,7 @@ patch(ControlButtons.prototype, {
             if (line) {
                 tobeRemoved?.delete();
             }
+            this.pos.numpadMode = "price";
         }
     },
 });

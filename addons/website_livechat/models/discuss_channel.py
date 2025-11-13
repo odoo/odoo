@@ -51,9 +51,6 @@ class DiscussChannel(models.Model):
             ),
         ]
 
-    def _get_visitor_history(self, visitor):
-        return visitor._get_visitor_history()
-
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         if not cancel:
             if self.livechat_visitor_id.id:

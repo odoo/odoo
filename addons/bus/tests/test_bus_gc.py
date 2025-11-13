@@ -24,7 +24,7 @@ class TestBusGC(HttpCase):
 
     def test_custom_gc_retention_window(self):
         self.env["bus.bus"].search([]).unlink()
-        self.env["ir.config_parameter"].set_param("bus.gc_retention_seconds", 25000)
+        self.env["ir.config_parameter"].set_int("bus.gc_retention_seconds", 25000)
         self.env["bus.bus"].create({"channel": "foo", "message": "bar"})
         self.assertEqual(self.env["bus.bus"].search_count([]), 1)
 

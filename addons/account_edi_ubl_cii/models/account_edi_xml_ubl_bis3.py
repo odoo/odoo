@@ -4,7 +4,7 @@ from typing import Literal
 
 from odoo import models, _
 from odoo.addons.account.tools import dict_to_xml
-from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import FloatFmt, UBL_NAMESPACES
 
 from stdnum.no import mva
 
@@ -94,18 +94,26 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         invoice = vals['invoice']
         customer = vals['customer']
         supplier = vals['supplier']
+        shipping_partner = vals['partner_shipping']
+
         intracom_delivery = (
             customer.country_id.code in (economic_area := self.env.ref('base.europe').country_ids.mapped('code') + ['NO'])
             and supplier.country_id.code in economic_area
             and supplier.country_id != customer.country_id
         )
-        if intracom_delivery:
-            document_node['cac:Delivery'] = {
-                'cbc:ActualDeliveryDate': {'_text': invoice.invoice_date},
-                'cac:DeliveryLocation': {
-                    'cac:Address': self._get_address_node({'partner': vals['partner_shipping']})
-                },
-            }
+        delivery_date = invoice.invoice_date if intracom_delivery else invoice.delivery_date
+
+        document_node['cac:Delivery'] = {
+            'cbc:ActualDeliveryDate': {'_text': delivery_date},
+            'cac:DeliveryParty': {
+                'cac:PartyName': {
+                    'cbc:Name': {'_text': shipping_partner.name or customer.name},
+                }
+            },
+            'cac:DeliveryLocation': {
+                'cac:Address': self._get_address_node({'partner': shipping_partner})
+            },
+        }
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         super()._add_invoice_payment_means_nodes(document_node, vals)
@@ -282,8 +290,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _add_document_line_price_nodes(self, line_node, vals):
         super()._add_document_line_price_nodes(line_node, vals)
-        if vals['base_line']['price_unit'] < 0.0:
-            line_node['cac:Price']['cbc:PriceAmount']['_text'] = -line_node['cac:Price']['cbc:PriceAmount']['_text']
+        currency_suffix = vals['currency_suffix']
+        sign = 1 if vals['base_line']['price_unit'] >= 0.0 else -1
+        line_node['cac:Price']['cbc:PriceAmount']['_text'] = FloatFmt(sign * vals[f'gross_price_unit{currency_suffix}'], 1, 8)
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints

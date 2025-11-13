@@ -3,9 +3,12 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from odoo.tests import tagged
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimeoffEvent(TestHrHolidaysCommon):
 
     def test_no_videocall_url_in_timeoff_event(self):

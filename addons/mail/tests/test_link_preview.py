@@ -11,7 +11,7 @@ from odoo.addons.mail.tools import link_preview
 from odoo.tests.common import tagged
 
 
-@tagged("mail_link_preview", "mail_message", "post_install", "-at_install")
+@tagged("mail_link_preview", "mail_message")
 class TestLinkPreview(MailCommon):
 
     @classmethod
@@ -256,7 +256,7 @@ class TestLinkPreview(MailCommon):
             self.assertEqual(link_preview_count, 1)
 
     def test_link_preview_throttle(self):
-        self.env["ir.config_parameter"].sudo().set_param("mail.link_preview_throttle", 1)
+        self.env["ir.config_parameter"].sudo().set_int("mail.link_preview_throttle", 1)
         with (
             patch.object(requests.Session, "get", self._patch_with_og_properties),
             patch.object(requests.Session, "head", self._patch_head_html),

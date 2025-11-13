@@ -16,8 +16,8 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { asyncStep, Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { queryFirst } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
@@ -47,7 +47,7 @@ test("new message from operator displays unread counter", async () => {
         })
     );
     setupChatHub({ opened: [channelId] });
-    onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/message"));
+    onRpc("/discuss/channel/messages", () => expect.step("/discuss/channel/message"));
     const userId = serverState.userId;
     listenStoreFetch(["init_messaging", "init_livechat", "discuss.channel"]);
     await start({

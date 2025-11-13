@@ -14,6 +14,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('res_partner', 'mail_tools', 'mail_thread_api')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPartner(MailCommon):
 
     @classmethod

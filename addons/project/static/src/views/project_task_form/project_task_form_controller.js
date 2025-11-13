@@ -16,7 +16,6 @@ Are you sure you want to proceed?`
 );
 
 export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
-    static template = "project.ProjectTaskFormView";
     static components = {
         ...FormControllerWithHTMLExpander.components,
         ProjectTaskTemplateDropdown,

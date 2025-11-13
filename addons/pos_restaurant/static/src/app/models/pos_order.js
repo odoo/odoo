@@ -33,7 +33,7 @@ patch(PosOrder.prototype, {
         if (numCustomers === 0) {
             return 0;
         }
-        return this.getTotalDue() / numCustomers;
+        return this.totalDue / numCustomers;
     },
     setBooked(booked) {
         this.uiState.booked = booked;
@@ -171,5 +171,12 @@ patch(PosOrder.prototype, {
                 0
             ) + 1
         );
+    },
+
+    getOrderData(reprint) {
+        return {
+            ...super.getOrderData(reprint),
+            customer_count: this.getCustomerCount(),
+        };
     },
 });

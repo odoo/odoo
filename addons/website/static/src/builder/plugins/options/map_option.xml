@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+
+<t t-name="website.MapsDescription">
+    <div class="description">
+        Visit us: Our office is located in the northeast of Brussels. TEL (555) 432 2365
+    </div>
+</t>
+
 <t t-name="website.mapOption">
     <BuilderRow label.translate="Address" action="'mapUpdateSrc'" preview="false">
         <BuilderTextInput
@@ -55,8 +62,32 @@
                     'solid': [],
                 }"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description">
-        <BuilderCheckbox action="'mapDescription'"/>
+    <BuilderRow label.translate="Roundness" preview="false">
+        <BuilderRange
+            action="'setClassRange'"
+            actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5']"
+            max="5"
+        />
     </BuilderRow>
+    <t t-call="website.MapDescriptionOption"/>
+</t>
+
+<t t-name="website.MapDescriptionOption">
+    <BuilderRow label.translate="Description">
+        <BuilderCheckbox id="'map_description'" action="'mapDescription'"/>
+    </BuilderRow>
+    <t t-if="isActiveItem('map_description')">
+        <BuilderRow label.translate="Description Text" level="1">
+            <BuilderTextInput action="'mapDescriptionTextValue'"/>
+        </BuilderRow>
+        <BuilderContext applyTo="'.description'">
+            <BuilderRow label.translate="Text Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom']" styleAction="'color'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Background Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom', 'gradient']" styleAction="'background-color'"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
 </t>
 </templates>

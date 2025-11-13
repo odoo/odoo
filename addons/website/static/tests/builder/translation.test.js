@@ -117,6 +117,29 @@ test("add text in translate mode do not split", async () => {
     expect(":iframe .s_allow_columns p").toHaveCount(1);
 });
 
+test("only have translation editors on deepest nodes", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: getTranslateEditable({ inWrap: "Hello" }).match(/<span.*<\/span>/)[0],
+        }),
+    });
+    expect(":iframe .o_editable:has(.o_editable)").not.toHaveAttribute("contenteditable");
+    expect(":iframe .o_editable .o_editable").toHaveAttribute("contenteditable", "true");
+});
+
+test("only [data-oe-model] not o_editable in translation", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div data-oe-model="test"><section>${getTranslateEditable({
+                inWrap: "Hello",
+            })}</section></div>
+        `,
+    });
+    expect(":iframe [data-oe-model='test']").not.toHaveClass("o_editable");
+    expect(":iframe .container").not.toHaveAttribute("contenteditable");
+    expect(":iframe .container span.o_editable").toHaveAttribute("contenteditable", "true");
+});
+
 test("404 page in translate mode", async () => {
     patchWithCleanup(EditWebsiteSystrayItem.prototype, {
         setup() {
@@ -199,11 +222,17 @@ test("translate select", async () => {
         `,
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expect(":iframe .form-select.s_website_form_input option").toHaveCount(2);
     await contains(":iframe [data-initial-translation-value='Option 1']").click();
-    await contains(".modal .modal-body input").edit("Option fr");
-    await contains(".modal .btn:contains('Ok')").click();
+    expect(".modal .modal-body input").toHaveCount(2);
+    await contains(".modal .modal-body > :nth-child(1)").edit("Option fr 1");
+    await contains(".modal .modal-body > :nth-child(2)").edit("Option fr 2");
+    await contains(".modal .btn:contains('Save')").click();
     expect(queryAllTexts(":iframe [data-initial-translation-value='Option 1']")).toEqual([
-        "Option fr",
+        "Option fr 1",
+    ]);
+    expect(queryAllTexts(":iframe [data-initial-translation-value='Option 2']")).toEqual([
+        "Option fr 2",
     ]);
 });
 

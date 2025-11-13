@@ -74,7 +74,13 @@ export class DiscussChannelMember extends models.ServerModel {
     }
 
     _sync_field_names() {
-        return ["last_interest_dt", "message_unread_counter", "new_message_separator", "unpin_dt"];
+        return [
+            "is_favorite",
+            "last_interest_dt",
+            "message_unread_counter",
+            "new_message_separator",
+            "unpin_dt",
+        ];
     }
 
     /**

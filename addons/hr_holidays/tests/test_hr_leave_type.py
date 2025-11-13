@@ -4,9 +4,12 @@ from freezegun import freeze_time
 
 from odoo.exceptions import AccessError, ValidationError
 
+from odoo.tests import tagged
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrLeaveType(TestHrHolidaysCommon):
 
     def test_time_type(self):

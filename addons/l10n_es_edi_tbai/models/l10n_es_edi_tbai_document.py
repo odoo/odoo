@@ -112,7 +112,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         if not self.company_id.vat:
             return _("Please configure the Tax ID on your company for TicketBAI.")
 
-        if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.company_id._l10n_es_freelancer() and not self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', False):
+        if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.company_id._l10n_es_freelancer() and not self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe'):
             return _("In order to use Ticketbai Batuz for freelancers, you will need to configure the "
                         "Epigrafe or Main Activity.  In this version, you need to go in debug mode to "
                         "Settings > Technical > System Parameters and set the parameter 'l10n_es_edi_tbai.epigrafe'"
@@ -304,7 +304,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
             'fiscal_year': str(self.date.year),
             'freelancer': freelancer,
-            'epigrafe': self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', '')
+            'epigrafe': self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe')
         }
         lroe_values.update({'tbai_b64_list': [base64.b64encode(self.xml_attachment_id.raw).decode()]})
         lroe_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
@@ -439,6 +439,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             **self._get_regime_code_value(values['taxes'], values['is_simplified']),
             **self._get_refunded_values(values),
         }
+        # Regime key override for Canarias/Ceuta/Melilla and no_sujeto_loc
+        if values['partner'] and values['partner'].country_id.code == 'ES' and values['partner'].state_id.code in ('TF', 'GC', 'CE', 'ME'):
+            if any(t.l10n_es_type == 'no_sujeto_loc' for t in values['taxes']):
+                sale_values.update({'regime_key': ['08']})
 
         if not values['partner'] or not values['partner']._l10n_es_is_foreign() or values["is_simplified"]:
             sale_values.update(**self._get_importe_desglose_es_partner(values['base_lines'], values['is_refund']))
@@ -743,7 +747,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'sender': sender,
             'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
             'fiscal_year': str(self.date.year),
-            'epigrafe': self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', ''),
+            'epigrafe': self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe'),
             'batuz_correction': self.env.context.get('batuz_correction'),
         }
         lroe_values.update(values)

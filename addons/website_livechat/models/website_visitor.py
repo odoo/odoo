@@ -118,17 +118,38 @@ class WebsiteVisitor(models.Model):
         return visitor_id, upsert
 
     def _get_store_visitor_history_fields(self):
+        if not self:
+            return []
+        self.env.cr.execute(
+            """
+                SELECT website_visitor.id AS visitor_id,
+                       ARRAY_AGG(website_track.id ORDER BY website_track.visit_datetime DESC, website_track.id DESC) AS track_ids
+                  FROM website_visitor
+          JOIN LATERAL
+                  (
+                      SELECT website_track.id,
+                             website_track.visit_datetime
+                        FROM website_track
+                       WHERE website_track.visitor_id = website_visitor.id
+                         AND website_track.page_id IS NOT NULL
+                    ORDER BY website_track.visit_datetime DESC, website_track.id DESC
+                       LIMIT 3
+                  ) AS website_track ON TRUE
+                 WHERE website_visitor.id IN %s
+              GROUP BY website_visitor.id;
+            """,
+            [tuple(self.ids)],
+        )
+        results = dict(self.env.cr.fetchall())
+        all_track_ids = [track_id for track_list in results.values() for track_id in track_list]
         return [
             # sudo: website.track - reading the history of accessible visitor is acceptable
-            Store.Attr("page_visit_history", lambda visitor: visitor.sudo()._get_visitor_history()),
-        ]
-
-    def _get_visitor_history(self):
-        self.ensure_one()
-        recent_history = self.env["website.track"].search(
-            [("page_id", "!=", False), ("visitor_id", "=", self.id)], limit=3
-        )
-        return [
-            (visit.page_id.name, fields.Datetime.to_string(visit.visit_datetime))
-            for visit in reversed(recent_history)
+            Store.Many(
+                "last_track_ids",
+                [Store.One("page_id", ["name"]), "visit_datetime"],
+                value=lambda visitor: self.env["website.track"]
+                .browse(results.get(visitor.id))
+                .with_prefetch(all_track_ids),
+                sudo=True,
+            ),
         ]

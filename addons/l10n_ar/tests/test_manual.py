@@ -23,7 +23,7 @@ class TestManual(common.TestAr):
         * Properly set the tax amount of the product / partner
         * Proper fiscal position (this case not fiscal position is selected)
         """
-        invoice = self._create_invoice()
+        invoice = self._create_invoice_ar()
         self.assertEqual(invoice.company_id, self.company_ri, 'created with wrong company')
         self.assertEqual(invoice.amount_tax, 21, 'invoice taxes are not properly set')
         self.assertEqual(invoice.amount_total, 121.0, 'invoice taxes has not been applied to the total')
@@ -36,19 +36,19 @@ class TestManual(common.TestAr):
 
     def test_02_fiscal_position(self):
         # ADHOC SA > IVA Responsable Inscripto > Without Fiscal Positon
-        invoice = self._create_invoice({'partner': self.partner})
+        invoice = self._create_invoice_ar({'partner': self.partner})
         self.assertFalse(invoice.fiscal_position_id, 'Fiscal position should be set to empty')
 
         # Consumidor Final > IVA Responsable Inscripto > Without Fiscal Positon
-        invoice = self._create_invoice({'partner': self.partner_cf})
+        invoice = self._create_invoice_ar({'partner': self.partner_cf})
         self.assertFalse(invoice.fiscal_position_id, 'Fiscal position should be set to empty')
 
         # Montana Sur > IVA Liberado - Ley Nº 19.640 > Compras / Ventas Zona Franca > IVA Exento
-        invoice = self._create_invoice({'partner': self.res_partner_montana_sur})
+        invoice = self._create_invoice_ar({'partner': self.res_partner_montana_sur})
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales Free Trade Zone'))
 
         # Barcelona food > Cliente / Proveedor del Exterior >  > IVA Exento
-        invoice = self._create_invoice({'partner': self.res_partner_barcelona_food})
+        invoice = self._create_invoice_ar({'partner': self.res_partner_barcelona_food})
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales abroad'))
 
     def test_03_corner_cases(self):
@@ -110,7 +110,7 @@ class TestManual(common.TestAr):
         self.assertTrue(self.journal.l10n_ar_is_pos)
 
         # If we create an invoice it will not use manual numbering
-        invoice = self._create_invoice({'partner': self.partner})
+        invoice = self._create_invoice_ar({'partner': self.partner})
         self.assertFalse(invoice.l10n_latam_manual_document_number)
 
         # Create a new sale journal that is not ARCA POS
@@ -247,7 +247,7 @@ class TestManual(common.TestAr):
                             'id': self.tax_other.tax_group_id.id,
                             'base_amount_currency': 10000.0,
                             'tax_amount_currency': 100.0,
-                            'display_base_amount_currency': None,
+                            'display_base_amount_currency': False,
                         },
                     ],
                 },
@@ -357,3 +357,48 @@ class TestManual(common.TestAr):
                 partner_form.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
                 partner_form.vat = "test"
         self.assertIn('Only numbers allowed for "DNI"', str(e.exception))
+
+    def test_l10n_ar_get_invoice_totals_for_report_refund_with_same_code(self):
+        """Test _l10n_ar_get_invoice_totals_for_report for refund invoices with ARCA codes that can be used for both invoice and refund"""
+        # Create a credit note with document type 60 that can be used as both invoice and refund
+        doc_60_lp_a = self.env.ref('l10n_ar.dc_a_cvl')
+
+        credit_note = self._create_invoice_from_dict({
+            'ref': 'test_credit_note_refund: Credit note with document type 60 for refund test',
+            "move_type": 'out_refund',
+            "partner_id": self.res_partner_adhoc,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_21, 'price_unit': 100.0, 'quantity': 1,
+                 'tax_ids': [Command.set([self.tax_21.id])]},
+            ],
+        })
+        credit_note.l10n_latam_document_type_id = doc_60_lp_a
+
+        # Verify this is considered a refund invoice with special ARCA code
+        self.assertTrue(credit_note._l10n_ar_is_refund_invoice())
+
+        # Test the _l10n_ar_get_invoice_totals_for_report method
+        self._assert_tax_totals_summary(credit_note._l10n_ar_get_invoice_totals_for_report(), {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': -100.0,
+            'tax_amount_currency': -21.0,
+            'total_amount_currency': -121.0,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': -100.0,
+                    'tax_amount_currency': -21.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_21.tax_group_id.id,
+                            'base_amount_currency': -100.0,
+                            'tax_amount_currency': -21.0,
+                            'display_base_amount_currency': -100.0,
+                        },
+                    ],
+                },
+            ],
+        })

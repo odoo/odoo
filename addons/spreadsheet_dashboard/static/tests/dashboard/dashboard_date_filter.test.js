@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { makeMockEnv, contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { DashboardDateFilter } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_date_filter/dashboard_date_filter";
+import { Model } from "@odoo/o-spreadsheet";
 
 describe.current.tags("desktop");
 defineSpreadsheetModels();
@@ -11,7 +12,8 @@ defineSpreadsheetModels();
  * @param {{ model: Model, filter: object}} props
  */
 async function mountDashboardFilterValue(env, props) {
-    await mountWithCleanup(DashboardDateFilter, { props, env });
+    const model = new Model();
+    await mountWithCleanup(DashboardDateFilter, { props: { model, ...props }, env });
 }
 
 test("Can display the input as a button", async function () {

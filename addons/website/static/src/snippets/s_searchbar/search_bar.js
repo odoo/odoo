@@ -11,10 +11,10 @@ export class SearchBar extends Interaction {
     dynamicContent = {
         _root: {
             "t-on-focusout": this.debounced(this.onFocusOut, 100),
-            "t-on-safarihack": (ev) => this.linkHasFocus = ev.detail.linkHasFocus,
+            "t-on-safarihack": (ev) => (this.linkHasFocus = ev.detail.linkHasFocus),
             "t-att-class": () => ({
-                "dropdown": this.hasDropdown,
-                "show": this.hasDropdown,
+                dropdown: this.hasDropdown,
+                show: this.hasDropdown,
             }),
         },
         ".search-query": {
@@ -41,24 +41,26 @@ export class SearchBar extends Interaction {
         }
         const dataset = this.inputEl.dataset;
         this.options = {
-            "displayImage": dataset.displayImage,
-            "displayDescription": dataset.displayDescription,
-            "displayExtraLink": dataset.displayExtraLink,
-            "displayDetail": dataset.displayDetail,
+            displayImage: dataset.displayImage,
+            displayDescription: dataset.displayDescription,
+            displayExtraLink: dataset.displayExtraLink,
+            displayDetail: dataset.displayDetail,
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
-            "allowFuzzy": !dataset.noFuzzy,
+            allowFuzzy: !dataset.noFuzzy,
         };
         for (const fieldEl of form.querySelectorAll("input[type='hidden']")) {
             this.options[fieldEl.name] = fieldEl.value;
         }
-        const action = form.getAttribute("action") || window.location.pathname + window.location.search;
+        const action =
+            form.getAttribute("action") || window.location.pathname + window.location.search;
         const [urlPath, urlParams] = action.split("?");
         if (urlParams) {
             for (const keyValue of urlParams.split("&")) {
                 const [key, value] = keyValue.split("=");
                 if (value && key !== "search") {
                     // Decode URI parameters: revert + to space then decodeURIComponent.
-                    this.options[decodeURIComponent(key.replace(/\+/g, "%20"))] = decodeURIComponent(value.replace(/\+/g, "%20"));
+                    this.options[decodeURIComponent(key.replace(/\+/g, "%20"))] =
+                        decodeURIComponent(value.replace(/\+/g, "%20"));
                 }
             }
         }
@@ -66,7 +68,8 @@ export class SearchBar extends Interaction {
         for (const index in pathParts) {
             const value = decodeURIComponent(pathParts[index]);
             const indexNumber = parseInt(index);
-            if (indexNumber > 0 && /-[0-9]+$/.test(value)) { // is sluggish
+            if (indexNumber > 0 && /-[0-9]+$/.test(value)) {
+                // is sluggish
                 this.options[decodeURIComponent(pathParts[indexNumber - 1])] = value;
             }
         }
@@ -88,15 +91,17 @@ export class SearchBar extends Interaction {
 
     async fetch() {
         const res = await rpc("/website/snippet/autocomplete", {
-            "search_type": this.searchType,
-            "term": this.inputEl.value,
-            "order": this.order,
-            "limit": this.limit,
-            "max_nb_chars": Math.round(Math.max(this.autocompleteMinWidth, parseInt(this.el.clientWidth)) * 0.22),
-            "options": this.options,
+            search_type: this.searchType,
+            term: this.inputEl.value,
+            order: this.order,
+            limit: this.limit,
+            max_nb_chars: Math.round(
+                Math.max(this.autocompleteMinWidth, parseInt(this.el.clientWidth)) * 0.22
+            ),
+            options: this.options,
         });
         const fieldNames = this.getFieldsNames();
-        res.results.forEach(record => {
+        res.results.forEach((record) => {
             for (const fieldName of fieldNames) {
                 if (record[fieldName]) {
                     record[fieldName] = markup(record[fieldName]);
@@ -121,28 +126,25 @@ export class SearchBar extends Interaction {
             if (getTemplate(candidate)) {
                 template = candidate;
             }
-            this.menuEl = this.renderAt(template, {
-                results: results,
-                parts: res["parts"],
-                hasMoreResults: results.length < res["results_count"],
-                search: this.inputEl.value,
-                fuzzySearch: res["fuzzy_search"],
-                widget: this.options,
-            }, this.el)[0];
+            this.menuEl = this.renderAt(
+                template,
+                {
+                    results: results,
+                    parts: res["parts"],
+                    hasMoreResults: results.length < res["results_count"],
+                    search: this.inputEl.value,
+                    fuzzySearch: res["fuzzy_search"],
+                    widget: this.options,
+                },
+                this.el
+            )[0];
         }
         this.hasDropdown = !!res;
         prevMenuEl?.remove();
     }
 
     getFieldsNames() {
-        return [
-            "description",
-            "detail",
-            "detail_extra",
-            "detail_strike",
-            "extra_link",
-            "name",
-        ];
+        return ["description", "detail", "detail_extra", "detail_strike", "extra_link", "name"];
     }
 
     async onInput() {
@@ -158,7 +160,10 @@ export class SearchBar extends Interaction {
     }
 
     onFocusOut() {
-        if (!this.linkHasFocus && document.activeElement?.closest(".o_searchbar_form") !== this.el) {
+        if (
+            !this.linkHasFocus &&
+            document.activeElement?.closest(".o_searchbar_form") !== this.el
+        ) {
             this.render();
         }
     }
@@ -194,15 +199,15 @@ export class SearchBar extends Interaction {
      * @param {MouseEvent} ev
      */
     onSearch(ev) {
-        if (this.inputEl.value) { // actual search
+        if (this.inputEl.value) {
+            // actual search
             this.limit = 0; // prevent autocomplete
-        } else { // clear button clicked
+        } else {
+            // clear button clicked
             this.render(); // remove existing suggestions
             ev.preventDefault();
         }
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.search_bar", SearchBar);
+registry.category("public.interactions").add("website.search_bar", SearchBar);

@@ -7,11 +7,12 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 from odoo.addons.lunch.tests.common import TestsCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSupplier(TestsCommon):
     def setUp(self):
         super(TestSupplier, self).setUp()

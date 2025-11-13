@@ -15,6 +15,7 @@ import signal
 import socket
 import subprocess
 import sys
+import textwrap
 import threading
 import time
 from collections import deque
@@ -59,7 +60,7 @@ from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config, gc, osutil, OrderedSet, profiler
 from odoo.tools.cache import log_ormcache_stats
-from odoo.tools.misc import stripped_sys_argv, dumpstacks
+from odoo.tools.misc import stripped_sys_argv, dumpstacks, mute_logger
 from .db import list_dbs
 
 _logger = logging.getLogger(__name__)
@@ -474,8 +475,7 @@ class ThreadedServer(CommonServer):
                 if getattr(thread, 'start_time', None):
                     thread_execution_time = time.time() - thread.start_time
                     thread_limit_time_real = config['limit_time_real']
-                    if (getattr(thread, 'type', None) == 'cron' and
-                            config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0):
+                    if (getattr(thread, 'type', None) == 'cron' and config['limit_time_real_cron'] >= 0):
                         thread_limit_time_real = config['limit_time_real_cron']
                     if thread_limit_time_real and thread_execution_time > thread_limit_time_real:
                         _logger.warning(
@@ -647,10 +647,20 @@ class ThreadedServer(CommonServer):
                     thread.join(0.05)
                     time.sleep(0.05)
 
-        sql_db.close_all()
+        log_ctx = contextlib.nullcontext()
+        if config['log_db']:
+            _logger.info("Logging uses the database, stop logging then close DB connections")
+            log_ctx = mute_logger('')
 
-        _logger.debug('--')
-        logging.shutdown()
+        current_process = psutil.Process()
+        children = current_process.children(recursive=False)
+        for child in children:
+            _logger.info('A child process was found, pid is %s, process may hang', child)
+
+        with log_ctx:
+            sql_db.close_all()
+            _logger.debug('--')
+            logging.shutdown()
 
     def run(self, preload=None, stop=False):
         """ Start the http server and the cron thread then wait for a signal.
@@ -672,6 +682,10 @@ class ThreadedServer(CommonServer):
                          else logger.warning if not report.testsRun \
                          else logger.info
                         log("%s when loading database %r", report, db)
+                        for test, errmsg in report.errors:
+                            _logger.info("Error: %s - %s", test, textwrap.shorten(errmsg, width=50))
+                        for test, errmsg in report.failures:
+                            _logger.info("Failed: %s - %s", test, textwrap.shorten(errmsg, width=50))
             self.stop()
             return rc
 

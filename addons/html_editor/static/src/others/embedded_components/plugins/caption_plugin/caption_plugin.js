@@ -1,10 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { closestBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { renderToElement } from "@web/core/utils/render";
-import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
+import { unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { EDITABLE_MEDIA_CLASS, isShrunkBlock } from "@html_editor/utils/dom_info";
+import { EDITABLE_MEDIA_CLASS, isVisible } from "@html_editor/utils/dom_info";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -49,6 +49,13 @@ export class CaptionPlugin extends Plugin {
         ],
         image_name_predicates: [this.getImageName.bind(this)],
         link_compatible_selection_predicates: [this.isLinkAllowedOnSelection.bind(this)],
+        // Consider a <figure> element as empty if it only contains a
+        // <figcaption> element (e.g. when its image has just been
+        // removed).
+        empty_node_predicates: (el) =>
+            el.matches?.("figure") &&
+            el.children.length === 1 &&
+            el.children[0].matches("figcaption"),
         move_node_whitelist_selectors: "figure",
     };
 
@@ -117,7 +124,13 @@ export class CaptionPlugin extends Plugin {
             closestBlock(image) !== this.editable
         ) {
             // <p>wx<img/>yz</p> => <p>wx</p><p><img/></p><p>yz</p>
-            this.dependencies.split.splitAroundUntil(image, closestBlock(image));
+            const block = this.dependencies.split.splitAroundUntil(image, closestBlock(image));
+            if (isBlock(block.previousSibling) && !isVisible(block.previousSibling)) {
+                block.previousSibling.remove();
+            }
+            if (isBlock(block.nextSibling) && !isVisible(block.nextSibling)) {
+                block.nextSibling.remove();
+            }
         }
         // => <p><figure><img/></figure></p>
         // or <p><a><figure><img/></figure></a></p>
@@ -127,6 +140,10 @@ export class CaptionPlugin extends Plugin {
             // => <figure><img/></figure></p>
             // but still <p><a><figure><img/></figure></p>
             unwrapContents(figure.parentElement);
+            // Figure is contenteditable="false", so selection would jump
+            // to the nearest editable sibling <div>. Setting cursor at
+            // the end ensures caption input receives focus correctly.
+            this.dependencies.selection.setCursorEnd(figure);
         }
         // Set the caption and its ID.
         const captionId = this.getCaptionId();
@@ -136,22 +153,6 @@ export class CaptionPlugin extends Plugin {
         // Ensure it's not possible to write inside the figure.
         figure.setAttribute("contenteditable", "false");
         image.classList.add(EDITABLE_MEDIA_CLASS);
-        // Ensure it's possible to write before and after the figure.
-        const block = closestBlock(link || image);
-        if (!block.previousSibling) {
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            block.before(baseContainer);
-            fillEmpty(baseContainer);
-        } else if (isShrunkBlock(block.previousSibling)) {
-            fillEmpty(block.previousSibling);
-        }
-        if (!block.nextSibling) {
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            block.after(baseContainer);
-            fillEmpty(baseContainer);
-        } else if (isShrunkBlock(block.nextSibling)) {
-            fillEmpty(block.nextSibling);
-        }
         // Add the caption component.
         // => <p><figure><img/><figcaption>...</figcaption></figure></p>
         // or <p><a><figure><img/><figcaption>...</figcaption></figure></a></p>

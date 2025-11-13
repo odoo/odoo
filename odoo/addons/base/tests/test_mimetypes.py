@@ -5,7 +5,7 @@ try:
 except ImportError:
     magic = None
 
-from odoo.tests.common import BaseCase
+from odoo.tests.common import tagged, BaseCase
 from odoo.tools.mimetypes import fix_filename_extension, get_extension, guess_mimetype
 
 PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
@@ -62,6 +62,8 @@ TXT = b"""\
 Hello world!
 """
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_guess_mimetype(BaseCase):
 
     def test_default_mimetype_empty(self):

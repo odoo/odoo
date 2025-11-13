@@ -4,7 +4,7 @@ import logging
 from os.path import join as opj
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
-from odoo.tests import BaseCase
+from odoo.tests import tagged, BaseCase
 from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
@@ -19,6 +19,7 @@ MANIFEST_KEYS = {
 }
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class ManifestLinter(BaseCase):
 
     def test_manifests(self):
@@ -30,7 +31,7 @@ class ManifestLinter(BaseCase):
                 self._test_manifest_values(manifest)
 
     def _test_manifest_keys(self, manifest_data: Manifest):
-        manifest_keys = manifest_data._manifest_content.keys()
+        manifest_keys = manifest_data._Manifest__manifest_content.keys()
         unknown_keys = manifest_keys - MANIFEST_KEYS
         self.assertEqual(unknown_keys, set(), f"Unknown manifest keys in module {manifest_data.name!r}. Either there are typos or they must be white listed.")
 
@@ -48,7 +49,7 @@ class ManifestLinter(BaseCase):
                 "Module %r specific to one single country %r should contain `l10n` in their name.",
                 module, manifest_data['countries'][0])
 
-        for key, value in manifest_data._manifest_content.items():
+        for key, value in manifest_data._Manifest__manifest_content.items():
             if key in _DEFAULT_MANIFEST:
                 if key in verified_keys:
                     self.assertNotEqual(

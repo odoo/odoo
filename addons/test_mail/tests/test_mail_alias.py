@@ -37,6 +37,7 @@ class TestMailAliasCommon(MailCommon):
 
 
 @tagged('mail_gateway', 'mail_alias', 'multi_company')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailAlias(TestMailAliasCommon):
     """ Test alias model features, constraints and behavior. """
 
@@ -45,17 +46,17 @@ class TestMailAlias(TestMailAliasCommon):
         """ Check the validation of `mail.catchall.domain.allowed` system parameter"""
         for value in [',', ',,', ', ,']:
             with self.assertRaises(exceptions.ValidationError):
-                self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
+                self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', value)
 
         for value, expected in [
-            ('', False),
+            ('', ''),
             ('hello.com', 'hello.com'),
             ('hello.com,,', 'hello.com'),
             ('hello.com,bonjour.com', 'hello.com,bonjour.com'),
             ('hello.COM, BONJOUR.com', 'hello.com,bonjour.com'),
         ]:
-            self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
-            self.assertEqual(self.env['ir.config_parameter'].get_param('mail.catchall.domain.allowed'), expected)
+            self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', value)
+            self.assertEqual(self.env['ir.config_parameter'].get_str('mail.catchall.domain.allowed'), expected)
 
     @users('erp_manager')
     def test_alias_domain_company_check(self):
@@ -394,6 +395,7 @@ class TestMailAlias(TestMailAliasCommon):
 
 
 @tagged('mail_alias', 'multi_company')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAliasCompany(TestMailAliasCommon):
     """ Test company / alias domain and configuration synchronization """
 
@@ -578,6 +580,7 @@ class TestAliasCompany(TestMailAliasCommon):
 
 
 @tagged('mail_gateway', 'mail_alias', 'multi_company')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailAliasDomain(TestMailAliasCommon):
 
     @users('admin')
@@ -771,6 +774,7 @@ class TestMailAliasDomain(TestMailAliasCommon):
 
 
 @tagged('mail_gateway', 'mail_alias', 'mail_alias_mixin', 'multi_company')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailAliasMixin(TestMailAliasCommon):
     """ Test alias mixin implementation, synchronization of alias records
     based on owner records. """

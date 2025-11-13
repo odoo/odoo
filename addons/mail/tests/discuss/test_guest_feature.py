@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from odoo.tests import tagged
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.mail.tests.common import MailCommon
 
 
-@tagged("post_install", "-at_install")
 class TestGuestFeature(WebsocketCase, MailCommon):
     def test_mark_as_read_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})

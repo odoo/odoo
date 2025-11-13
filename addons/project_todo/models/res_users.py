@@ -104,4 +104,4 @@ class ResUsers(models.Model):
                 "name": title,
             })
         if create_vals:
-            self.env["project.task"].with_user(SUPERUSER_ID).with_context(mail_auto_subscribe_no_notify=True).create(create_vals)
+            self.env["project.task"].with_user(SUPERUSER_ID).with_context({'mail_auto_subscribe_no_notify': True}).create(create_vals)

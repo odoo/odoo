@@ -33,6 +33,7 @@ class TestMailThreadInternalsCommon(TestMailFullCommon, TestSMSRecipients):
 
 
 @tagged('mail_thread', 'portal')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailThreadInternals(TestMailThreadInternalsCommon):
 
     @users('employee')

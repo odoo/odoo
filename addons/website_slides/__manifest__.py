@@ -119,11 +119,9 @@ Featuring
 
             ('include', 'web._assets_bootstrap_frontend'),
 
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/lib/odoo_ui_icons/*',
+            ('include', 'web.icons_fonts'),
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/core/color_picker/color_picker.scss',

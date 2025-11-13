@@ -11,7 +11,7 @@ from odoo.tests.common import HttpCase, new_test_user, tagged, users
 from odoo.tools.misc import mute_logger
 
 
-@tagged("RTC", "post_install", "-at_install")
+@tagged("RTC")
 class TestChannelRTC(MailCommon, HttpCase):
 
     @users('employee')
@@ -277,6 +277,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     def test_11_start_call_in_group_should_invite_all_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["mail.presence"]._update_presence(test_guest)
         channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel._add_members(guests=test_guest)
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
@@ -456,6 +457,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     def test_20_join_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["mail.presence"]._update_presence(test_guest)
         channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel._add_members(guests=test_guest)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
@@ -670,6 +672,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     def test_21_leave_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["mail.presence"]._update_presence(test_guest)
         channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel._add_members(guests=test_guest)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
@@ -799,6 +802,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     def test_25_lone_call_participant_leaving_call_should_cancel_pending_invitations(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["mail.presence"]._update_presence(test_guest)
         channel = self.env['discuss.channel']._create_group(partners_to=(self.user_employee.partner_id + test_user.partner_id).ids)
         channel._add_members(guests=test_guest)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
@@ -931,6 +935,7 @@ class TestChannelRTC(MailCommon, HttpCase):
     def test_30_add_members_while_in_call_should_invite_new_members_to_call(self):
         test_user = self.env['res.users'].sudo().create({'name': "Test User", 'login': 'test'})
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
+        self.env["mail.presence"]._update_presence(test_guest)
         channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda member: member.partner_id == self.user_employee.partner_id)
         now = fields.Datetime.now()
@@ -1292,4 +1297,5 @@ class TestChannelRTC(MailCommon, HttpCase):
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         channel = self.env["discuss.channel"].with_user(bob)._create_group(partners_to=(bob | john).partner_id.ids)
         channel.with_user(bob).self_member_id.sudo()._rtc_join_call()
+        self._reset_bus()
         self.start_tour("/odoo", "discuss_call_invitation.js", login="john")

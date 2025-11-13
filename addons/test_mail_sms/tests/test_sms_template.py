@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sms.tests.common import SMSCommon
+from odoo.tests import tagged
+
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSmsTemplate(SMSCommon, TestSMSRecipients):
 
     @classmethod

@@ -27,6 +27,7 @@ def _extract_values_from_document(rendered_document):
     }
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMarketingCardMail(MailCase, MarketingCardCommon):
 
     def assertSentMailCorrectCard(self, sent_mails, cards):
@@ -114,7 +115,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
     def test_campaign_send_mailing_with_duplicates(self):
         # set a low batch size to make sure mailing "seen list" does not affect card mailings
         # as it is based on traces existing with some email -> traces created in batches with mail.mail
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', 5)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', 5)
 
         campaign = self.campaign.with_user(self.env.user)
         self.env.user.sudo().group_ids += self.env.ref('mass_mailing.group_mass_mailing_user')
@@ -140,6 +141,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         self.assertSentMailCorrectCard(self._mails, cards)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMarketingCardRender(MarketingCardCommon):
 
     @users('marketing_card_user')
@@ -173,6 +175,7 @@ class TestMarketingCardRender(MarketingCardCommon):
         ])
         self.assertEqual(len(card), 1)
         self.assertTrue(card.image)
+        self.assertTrue(card.requires_sync)
         self.assertEqual(card.res_id, self.partners[0].id)
 
         # second record, modified tags
@@ -193,6 +196,8 @@ class TestMarketingCardRender(MarketingCardCommon):
             ('campaign_id', '=', campaign.id),
             ('active', '=', False)
         ])
+        self.assertEqual(cards.mapped('requires_sync'), [True] * 2)
+        self.assertEqual(cards.mapped('active'), [False] * 2)
         self.assertTrue(cards.mapped('res_id'), self.partners.ids)
 
         # update previewed record fields
@@ -337,6 +342,7 @@ class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
         self.assertEqual(self.campaign.card_share_count, 11)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMarketingCardSecurity(MarketingCardCommon):
 
     @users('marketing_card_manager')

@@ -17,7 +17,7 @@ class TestSendAndPrintEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
     def test_post_and_cancel_invoice_tbai_success(self):
         self.company_data['company'].l10n_es_tbai_tax_agency = 'bizkaia'
         self.company_data['company'].vat = '09760433S'
-        self.env['ir.config_parameter'].sudo().set_param('l10n_es_edi_tbai.epigrafe', '102100')
+        self.env['ir.config_parameter'].sudo().set_str('l10n_es_edi_tbai.epigrafe', '102100')
         invoice = self._create_posted_invoice()
         invoice_send_wizard = self._get_invoice_send_wizard(invoice)
 

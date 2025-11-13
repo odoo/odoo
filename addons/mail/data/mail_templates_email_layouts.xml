@@ -67,7 +67,7 @@
         <li><t t-out="tracking[0]"/>: <t t-if="tracking[1]" t-out="tracking[1]"/><em t-else="">None</em> &#8594; <t t-if="tracking[2]" t-out="tracking[2]"/><em t-else="">None</em></li>
     </t>
 </ul>
-<t class="o_signature">
+<t name="o_signature">
     <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" class="o_signature" style="font-size: 13px;"/>
 </t>
 <!-- FOOTER -->
@@ -184,8 +184,8 @@
         <template id="mail_notification_layout_with_responsible_signature"
                   name="Mail: mail notification layout with responsible signature (user_id of the record)"
                   inherit_id="mail.mail_notification_layout" primary="True">
-            <xpath expr="//t[hasclass('o_signature')]" position="replace">
-                <t class="o_signature">
+            <xpath expr="//t[@name='o_signature']" position="replace">
+                <t name="o_signature">
                     <div t-if="email_add_signature and record and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)"
                          t-out="record.user_id.sudo().signature" class="o_signature" style="font-size: 13px;"/>
                 </t>

@@ -136,13 +136,15 @@
     </template>
 
     <template id="portal_invoice_page" name="Invoice/Bill" inherit_id="portal.portal_sidebar" primary="True">
-        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+        <t t-call="portal.portal_layout" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
                 <t t-call="portal.portal_back_in_edit_mode">
                     <t t-set="backend_url" t-value="'/odoo/action-account.action_move_out_invoice_type/%s' % invoice.id"/>
                 </t>
             </t>
+        </t>
 
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div class="row o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
@@ -278,11 +280,13 @@
 
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <div name="address_details" position="inside">
-            <div class="col-12 d-none d-xl-block">
-                <small class="form-text text-muted">
-                    You can choose how you want us to send your invoices, and with which electronic format.
-                </small>
-            </div>
+            <t t-if="len(invoice_sending_methods) > 1 and invoice_edi_format">
+                <div class="col-12 d-none d-xl-block">
+                    <small class="form-text text-muted">
+                        You can choose how you want us to send your invoices, and with which electronic format.
+                    </small>
+                </div>
+            </t>
             <div t-if="len(invoice_sending_methods) > 1" class="row m-0 p-0">
                 <div class="col-xl-6">
                     <label class="col-form-label label-optional" for="invoice_sending_method">

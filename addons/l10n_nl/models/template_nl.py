@@ -35,5 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'btw_21_buy',
                 'expense_account_id': '7001',
                 'income_account_id': '8001',
+                'deferred_expense_account_id': '1205',
+                'deferred_revenue_account_id': '1405',
             },
         }

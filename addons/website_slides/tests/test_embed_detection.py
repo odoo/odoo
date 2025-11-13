@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_slides.tests import common
-from odoo.tests import HttpCase
+from odoo.tests import tagged, HttpCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmbedDetection(HttpCase, common.SlidesCase):
 
     @classmethod
@@ -47,6 +48,22 @@ class TestEmbedDetection(HttpCase, common.SlidesCase):
     def test_embed_not_external(self):
         """ When hitting the non-external URL, we should not add a slide_embed record. """
         self.url_open(f'/slides/embed/{self.slide.id}')
+        self.assertFalse(bool(self.env['slide.embed'].search([
+            ('slide_id', '=', self.slide.id)
+        ])))
+
+    def test_embed_category_slide(self):
+        self.slide.channel_id.website_id = False
+        res = self.url_open(f'/slides/embed/{self.category.id}')
+        res.raise_for_status()
+        self.assertFalse(bool(self.env['slide.embed'].search([
+            ('slide_id', '=', self.category.id)
+        ])))
+
+    def test_embed_if_no_website_id(self):
+        self.slide.channel_id.website_id = False
+        res = self.url_open(f'/slides/embed/{self.slide.id}')
+        res.raise_for_status()
         self.assertFalse(bool(self.env['slide.embed'].search([
             ('slide_id', '=', self.slide.id)
         ])))

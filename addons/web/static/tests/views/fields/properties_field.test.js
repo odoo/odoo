@@ -1,8 +1,3 @@
-import { PropertiesField } from "@web/views/fields/properties/properties_field";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { WebClient } from "@web/webclient/webclient";
-
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
@@ -33,6 +28,11 @@ import {
     toggleActionMenu,
     toggleMenuItem,
 } from "@web/../tests/web_test_helpers";
+import { PropertiesField } from "@web/views/fields/properties/properties_field";
+import { PROPERTY_TYPES } from "@web/views/fields/properties/property_definition";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { WebClient } from "@web/webclient/webclient";
 
 async function closePopover() {
     // Close the popover by clicking outside
@@ -42,23 +42,7 @@ async function closePopover() {
 }
 
 async function changeType(propertyType) {
-    const TYPES = [
-        "char",
-        "text",
-        "html",
-        "boolean",
-        "integer",
-        "float",
-        "monetary",
-        "date",
-        "datetime",
-        "selection",
-        "tags",
-        "many2one",
-        "many2many",
-        "separator"
-    ];
-    const propertyTypeIndex = TYPES.indexOf(propertyType);
+    const propertyTypeIndex = PROPERTY_TYPES.indexOf(propertyType);
     await click(".o_field_property_definition_type input");
     await animationFrame();
     await click(`.o-dropdown--menu .dropdown-item:eq(${propertyTypeIndex})`);
@@ -116,7 +100,7 @@ async function makePropertiesGroupView(propertySpecs) {
 }
 
 async function toggleSeparator(separatorName, isSeparator) {
-    await click(`[property-name="${separatorName}"] > * > .o_field_property_open_popover`);
+    await click(`[property-name="${separatorName}"] .o_field_property_open_popover`);
     await animationFrame();
     await changeType(isSeparator ? "separator" : "char");
     if (isSeparator) {
@@ -716,85 +700,6 @@ test("properties: text", async () => {
 
     expect(".o_field_properties textarea").toHaveCount(1);
     expect(".o_field_properties textarea").toHaveValue("text value");
-});
-
-/**
- * Test the properties re-arrangement
- */
-test.tags("desktop");
-test("properties: move properties", async () => {
-    onRpc("has_access", () => true);
-
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 2,
-        arch: /* xml */ `
-            <form>
-                <sheet>
-                    <group>
-                        <field name="company_id"/>
-                        <field name="properties"/>
-                    </group>
-                </sheet>
-            </form>`,
-        actionMenus: {},
-    });
-
-    expect(".o_field_properties").toHaveCount(1, { message: "The field must be in the view" });
-
-    await toggleActionMenu();
-    await toggleMenuItem("Edit Properties"); // Start the edition mode
-
-    // Edit the selection property
-    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
-    await waitFor(".o_property_field_popover");
-    const popover = queryFirst(".o_property_field_popover");
-    expect(popover).toHaveCount(1, { message: "Should have opened the definition popover" });
-    // Move the property up
-    await contains(queryFirst(".oi-chevron-up", { root: popover })).click();
-    expect(queryAllTexts(".o_field_properties .o_field_property_label")).toEqual([
-        "My Selection",
-        "My Char",
-        "My Char 3",
-        "My Char 4",
-    ]);
-    expect(".o_property_field:nth-child(1) .o_property_field_highlight").toHaveCount(1, {
-        message: "Should highlight the moved property",
-    });
-
-    // Move the property up again, should have no effect
-    await click(popover, ".oi-chevron-up");
-    expect(queryAllTexts(".o_field_properties .o_field_property_label")).toEqual([
-        "My Selection",
-        "My Char",
-        "My Char 3",
-        "My Char 4",
-    ]);
-    // Move the property down
-    await contains(queryFirst(".oi-chevron-down", { root: popover })).click();
-
-    expect(queryAllTexts(".o_field_properties .o_field_property_label")).toEqual([
-        "My Char",
-        "My Selection",
-        "My Char 3",
-        "My Char 4",
-    ]);
-
-    // Move the property at the bottom
-    await contains(queryFirst(".oi-chevron-down", { root: popover })).click();
-    await contains(queryFirst(".oi-chevron-down", { root: popover })).click();
-    expect(queryAllTexts(".o_field_properties .o_field_property_label")).toEqual([
-        "My Char",
-        "My Char 3",
-        "My Char 4",
-        "My Selection",
-    ]);
-
-    await closePopover();
-    expect(".o_property_field:nth-child(2) .o_property_field_highlight").toHaveCount(0, {
-        message: "Should have removed the highlight",
-    });
 });
 
 /**
@@ -2282,175 +2187,6 @@ test("properties: save separator folded state", async () => {
     ]]);
 });
 
-/**
- * Test the behavior of the properties when we move them inside folded groups
- */
-test.tags("desktop");
-test("properties: separators move properties", async () => {
-    await makePropertiesGroupView([false, true, true, false, true, true, false]);
-
-    // return true if the given separator is folded
-    const foldState = (separatorName) =>
-        !queryFirst(`div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`);
-
-    const assertFolded = (values) => {
-        expect(values.length).toBe(4);
-        expect(foldState("property_2")).toBe(values[0]);
-        expect(foldState("property_3")).toBe(values[1]);
-        expect(foldState("property_5")).toBe(values[2]);
-        expect(foldState("property_6")).toBe(values[3]);
-    };
-
-    // fold all groups
-    assertFolded([false, false, false, false]);
-
-    await click("div[property-name='property_2'] .o_field_property_group_label");
-    await click("div[property-name='property_3'] .o_field_property_group_label");
-    await click("div[property-name='property_5'] .o_field_property_group_label");
-    await click("div[property-name='property_6'] .o_field_property_group_label");
-    await animationFrame();
-    assertFolded([true, true, true, true]);
-
-    expect(getGroups()).toEqual([
-        [
-            ["", ""],
-            ["Property 1", "property_1"],
-        ],
-        [["SEPARATOR 2", "property_2"]],
-        [["SEPARATOR 3", "property_3"]],
-        [["SEPARATOR 5", "property_5"]],
-        [["SEPARATOR 6", "property_6"]],
-    ]);
-
-    await toggleActionMenu();
-    await toggleMenuItem("Edit Properties"); // Start the edition mode
-
-    // move the first property down
-    await click("[property-name='property_1'] .o_field_property_open_popover");
-    await animationFrame();
-    await click(".o_field_property_definition .oi-chevron-down");
-    await animationFrame();
-
-    expect(getGroups()).toEqual([
-        [
-            ["SEPARATOR 2", "property_2"],
-            ["Property 1", "property_1"],
-        ],
-        [["SEPARATOR 3", "property_3"]],
-        [["SEPARATOR 5", "property_5"]],
-        [["SEPARATOR 6", "property_6"]],
-    ]);
-    assertFolded([false, true, true, true]);
-
-    await click(".o_field_property_definition .oi-chevron-down");
-    await animationFrame();
-    expect(getGroups()).toEqual([
-        [["SEPARATOR 2", "property_2"]],
-        [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 1", "property_1"],
-            ["Property 4", "property_4"],
-        ],
-        [["SEPARATOR 5", "property_5"]],
-        [["SEPARATOR 6", "property_6"]],
-    ]);
-    assertFolded([false, false, true, true]);
-
-    await click(".o_field_property_definition .oi-chevron-down");
-    await animationFrame();
-    expect(getGroups()).toEqual([
-        [["SEPARATOR 2", "property_2"]],
-        [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 4", "property_4"],
-            ["Property 1", "property_1"],
-        ],
-        [["SEPARATOR 5", "property_5"]],
-        [["SEPARATOR 6", "property_6"]],
-    ]);
-    assertFolded([false, false, true, true]);
-
-    await click(".o_field_property_definition .oi-chevron-down");
-    await animationFrame();
-    expect(getGroups()).toEqual([
-        [["SEPARATOR 2", "property_2"]],
-        [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 4", "property_4"],
-        ],
-        [
-            ["SEPARATOR 5", "property_5"],
-            ["Property 1", "property_1"],
-        ],
-        [["SEPARATOR 6", "property_6"]],
-    ]);
-    assertFolded([false, false, false, true]);
-
-    // fold property 2 and 3
-    await closePopover();
-    await click("div[property-name='property_2'] .o_field_property_group_label");
-    await animationFrame();
-    await click("div[property-name='property_3'] .o_field_property_group_label");
-    await animationFrame();
-    assertFolded([true, true, false, true]);
-
-    // move the property up
-    await click("[property-name='property_1'] .o_field_property_open_popover");
-    await animationFrame();
-    await click(".o_field_property_definition .oi-chevron-up");
-    await animationFrame();
-    expect(getGroups()).toEqual([
-        [["SEPARATOR 2", "property_2"]],
-        [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 4", "property_4"],
-            ["Property 1", "property_1"],
-        ],
-        [["SEPARATOR 5", "property_5"]],
-        [["SEPARATOR 6", "property_6"]],
-    ]);
-    assertFolded([true, false, false, true]);
-
-    await click(".o_field_property_definition .oi-chevron-up");
-    await animationFrame();
-    await click(".o_field_property_definition .oi-chevron-up");
-    await animationFrame();
-    expect(getGroups()).toEqual([
-        [
-            ["SEPARATOR 2", "property_2"],
-            ["Property 1", "property_1"],
-        ],
-        [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 4", "property_4"],
-        ],
-        [["SEPARATOR 5", "property_5"]],
-        [["SEPARATOR 6", "property_6"]],
-    ]);
-    assertFolded([false, false, false, true]);
-
-    // now, create a new property, it must unfold the last group
-    await click(".o_field_property_add button");
-    await animationFrame();
-    expect(getGroups()).toEqual([
-        [
-            ["SEPARATOR 2", "property_2"],
-            ["Property 1", "property_1"],
-        ],
-        [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 4", "property_4"],
-        ],
-        [["SEPARATOR 5", "property_5"]],
-        [
-            ["SEPARATOR 6", "property_6"],
-            ["Property 7", "property_7"],
-            ["Property 8", "property_gen_2"],
-        ],
-    ]);
-    assertFolded([false, false, false, false]);
-});
-
 test.tags("desktop");
 test("properties: separators drag and drop", async () => {
     // 2 columns view, 5 properties
@@ -3033,4 +2769,39 @@ test("properties: monetary with multiple currency field", async () => {
     await closePopover();
     expect(".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(1)").toHaveText("€");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
+});
+
+test("properties: signature", async () => {
+    onRpc("has_access", () => true);
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+
+    await contains(".o_property_field:first-child .o_field_property_open_popover").click();
+    expect(".o_field_property_definition").toHaveCount(1);
+
+    await changeType("signature");
+    expect(queryAllTexts(".o_field_property_definition .o_form_label")).toEqual(["Label", "Field Type"]);
+
+    await closePopover();
+    expect(".o_field_property_definition").toHaveCount(0);
+    expect(".o_signature").toHaveCount(1);
+    expect(".o_property_field:eq(0) .o_property_field_value_suffix").toHaveCount(0, {
+        message: "suffix should be removed",
+    });
 });

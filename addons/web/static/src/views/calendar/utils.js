@@ -37,7 +37,15 @@ export function getColor(key) {
     return colorMap.get(key);
 }
 
-export function getFormattedDateSpan(start, end) {
+/**
+ * Formats a date span between two dates with various formatting options.
+ * @param {DateTime} start
+ * @param {DateTime} end
+ * @param {Object} options
+ * @param {string} [options.sameDayFormat] - Format string for when start and end are the same day. If not provided, the default is "DDD".
+ * @returns {string}
+ */
+export function getFormattedDateSpan(start, end, options = {}) {
     const isSameDay = start.hasSame(end, "days");
 
     if (!isSameDay && start.hasSame(end, "month")) {
@@ -45,7 +53,7 @@ export function getFormattedDateSpan(start, end) {
         return start.toFormat("LLLL d") + "-" + end.toFormat("d, y");
     } else {
         return isSameDay
-            ? start.toFormat("DDD")
+            ? start.toFormat(options.sameDayFormat ?? "DDD")
             : start.toFormat("DDD") + " - " + end.toFormat("DDD");
     }
 }

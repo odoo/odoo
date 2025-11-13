@@ -3,7 +3,7 @@ Tests for various autodetection magics for CSV imports
 """
 import codecs
 
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 
 class ImportCase(common.TransactionCase):
@@ -16,6 +16,7 @@ class ImportCase(common.TransactionCase):
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEncoding(ImportCase):
     """
     create + parse_preview -> check result options
@@ -69,6 +70,7 @@ class TestEncoding(ImportCase):
         self.assertEqual(r['preview'], [[s.decode('iso-8859-1'), 'text']])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFileSeparator(ImportCase):
 
     def setUp(self):
@@ -132,6 +134,7 @@ d|4
         self.assertEqual(r['options']['separator'], '')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNumberSeparators(common.TransactionCase):
     def test_parse_float(self):
         w = self.env['base_import.import'].create({

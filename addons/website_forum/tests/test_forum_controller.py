@@ -3,9 +3,12 @@
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_forum.controllers.website_forum import WebsiteForum
+from odoo.tests import tagged
+
 from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumController(TestForumCommon):
     @classmethod
     def setUpClass(cls):

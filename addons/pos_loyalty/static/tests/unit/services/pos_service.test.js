@@ -65,32 +65,4 @@ describe("PosStore - loyalty essentials", () => {
 
         expect(card.id).toBe(2);
     });
-
-    test("preSyncAllOrders", async () => {
-        const store = await setupPosEnv();
-        const models = store.models;
-
-        const coupon = models["loyalty.card"].create({
-            id: -5,
-            code: "X",
-            program_id: 1,
-            points: 0,
-        });
-        const rewardProduct = models["product.product"].get(1);
-
-        const fakeOrderData = {
-            lines: [
-                {
-                    uuid: "uuid-1",
-                    coupon_id: coupon,
-                    _reward_product_id: rewardProduct,
-                },
-            ],
-        };
-
-        await store.preSyncAllOrders([fakeOrderData]);
-
-        expect(store.couponByLineUuidCache["uuid-1"]).toBe(coupon.id);
-        expect(store.rewardProductByLineUuidCache["uuid-1"]).toBe(rewardProduct.id);
-    });
 });

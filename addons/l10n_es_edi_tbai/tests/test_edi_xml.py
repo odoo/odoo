@@ -227,7 +227,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
         """Test XML of vendor bill for LROE Batuz autonomos (modelo 140)"""
         self.company_data['company'].l10n_es_tbai_tax_agency = 'bizkaia'
         self.company_data['company'].vat = '09760433S'
-        self.env['ir.config_parameter'].sudo().set_param('l10n_es_edi_tbai.epigrafe', '102100')
+        self.env['ir.config_parameter'].sudo().set_str('l10n_es_edi_tbai.epigrafe', '102100')
 
         with freeze_time(self.frozen_today):
             self.in_invoice = self.env['account.move'].create({

@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase
 
 
-@tagged('-at_install', 'post_install')
 class TestMailUninstall(TransactionCase):
     def test_unlink_model(self):
         model = self.env['ir.model'].create({

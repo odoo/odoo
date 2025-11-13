@@ -54,7 +54,7 @@ export const imStatusService = {
                     partner?.updateImStatus(im_status);
                     guest?.updateImStatus(im_status);
                 }
-                if (partner?.eq(store.self_partner) || guest?.eq(store.self_guest)) {
+                if (partner?.eq(store.self_user?.partner_id) || guest?.eq(store.self_guest)) {
                     const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
                     if ((presence_status === "away" && isOnline) || presence_status === "offline") {
                         updateBusPresence();

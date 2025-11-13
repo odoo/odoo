@@ -249,7 +249,11 @@ class ResUsers(models.Model):
     def action_get(self):
         if self.env.user.employee_id:
             action = self.env['ir.actions.act_window']._for_xml_id('hr.res_users_action_my')
-            groups = {group_xml_id[0]: True for group_xml_id in self.env.user.all_group_ids._get_external_ids().values()}
+            groups = {
+                group_xml_id[0]: True
+                for group_xml_id in self.env.user.all_group_ids._get_external_ids().values()
+                if group_xml_id
+            }
             action_context = ast.literal_eval(action['context']) if action['context'] else {}
             action_context.update(groups)
             action['context'] = str(action_context)
@@ -267,7 +271,18 @@ class ResUsers(models.Model):
             user.employee_id = employee_per_user.get(user)
 
     def _search_company_employee(self, operator, value):
-        return [('employee_ids', operator, value)]
+        # Equivalent to `[('employee_ids', operator, value)]`,
+        # but we inline the ids directly to simplify final queries and improve performance,
+        # as it's part of a few ir.rules.
+        # If we're going to inject too many `ids`, we fall back on the default behavior
+        # to avoid a performance regression.
+        IN_MAX = 10_000
+        domain = [('employee_ids', operator, value)]
+        user_ids = self.env['res.users'].with_context(active_test=False)._search(domain, limit=IN_MAX).get_result_ids()
+        if len(user_ids) < IN_MAX:
+            return [('id', 'in', user_ids)]
+
+        return domain
 
     def action_create_employee(self):
         self.ensure_one()

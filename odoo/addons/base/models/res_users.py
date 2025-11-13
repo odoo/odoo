@@ -454,7 +454,7 @@ class ResUsers(models.Model):
     @api.depends('name')
     def _compute_signature(self):
         for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
-            user.signature = Markup('<p>%s</p>') % user['name']
+            user.signature = Markup('<div>%s</div>') % user['name']
 
     @api.depends('all_group_ids')
     def _compute_share(self):
@@ -580,7 +580,7 @@ class ResUsers(models.Model):
         users = super().create(vals_list)
         setting_vals = []
         for user in users:
-            if not user.res_users_settings_ids and user._is_internal():
+            if not user.sudo().res_users_settings_ids and user._is_internal():
                 setting_vals.append({'user_id': user.id})
             # if partner is global we keep it that way
             if user.partner_id.company_id:
@@ -623,6 +623,8 @@ class ResUsers(models.Model):
                     user.partner_id.write({'company_id': user.company_id.id})
 
         if 'company_id' in vals or 'company_ids' in vals:
+            # Access cache depends on the company, clear it
+            self.env.transaction.clear_access_cache()
             # Reset lazy properties `company` & `companies` on all envs,
             # This is unlikely in a business code to change the company of a user and then do business stuff
             # but in case it happens this is handled.
@@ -631,7 +633,7 @@ class ResUsers(models.Model):
                 if env.user in self:
                     reset_cached_properties(env)
 
-        if 'group_ids' in vals and self.ids:
+        if 'group_ids' in vals and any(self._ids):
             # clear caches linked to the users
             self.env['ir.model.access'].call_cache_clearing_methods()
 
@@ -639,7 +641,7 @@ class ResUsers(models.Model):
         # clear_cache/clear_caches methods pretty much just end up calling
         # Registry.clear_cache
         invalidation_fields = self._get_invalidation_fields()
-        if invalidation_fields & vals.keys():
+        if not invalidation_fields.isdisjoint(vals):
             self.env.registry.clear_cache()
 
         return res
@@ -801,8 +803,8 @@ class ResUsers(models.Model):
                 try:
                     base = user_agent_env['base_location']
                     ICP = env['ir.config_parameter']
-                    if not ICP.get_param('web.base.url.freeze'):
-                        ICP.set_param('web.base.url', base)
+                    if not ICP.get_bool('web.base.url.freeze'):
+                        ICP.set_str('web.base.url', base)
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
         return auth_info
@@ -1205,7 +1207,7 @@ class ResUsers(models.Model):
             # ``needs_update`` will indicate that the stored hash should be
             # replaced by a more recent algorithm.
             deprecated=['auto'],
-            pbkdf2_sha512__rounds=max(MIN_ROUNDS, int(cfg.get_param('password.hashing.rounds', 0))),
+            pbkdf2_sha512__rounds=max(MIN_ROUNDS, cfg.get_int('password.hashing.rounds')),
         )
 
     @contextlib.contextmanager
@@ -1296,11 +1298,11 @@ class ResUsers(models.Model):
         :rtype: bool
         """
         cfg = self.env['ir.config_parameter'].sudo()
-        min_failures = int(cfg.get_param('base.login_cooldown_after', 5))
+        min_failures = cfg.get_int('base.login_cooldown_after', 5)
         if min_failures == 0:
             return False
 
-        delay = int(cfg.get_param('base.login_cooldown_duration', 60))
+        delay = cfg.get_int('base.login_cooldown_duration') or 60
         return failures >= min_failures and (datetime.datetime.now() - previous) < datetime.timedelta(seconds=delay)
 
     def _register_hook(self):

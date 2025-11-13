@@ -34,8 +34,8 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
         Utils.clickBtn("Order"),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkIsNoBtn("Order Now"),
     ],
 });
@@ -73,8 +73,8 @@ registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
         Utils.clickBtn("Order"),
         Utils.clickBtn("Ok"),
         Utils.clickBtn("My Order"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order"),
+        CartPage.clickBack(),
         Utils.checkIsNoBtn("Order Now"),
     ],
 });

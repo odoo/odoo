@@ -430,7 +430,7 @@ class DockerIot(DockerWine):
         self.nt_service_name = "odoo-iot"
 
     def build_image(self):
-        shutil.copy(os.path.join(self.args.build_dir, 'odoo/addons/iot_box_image/configuration/requirements.txt'), self.docker_dir / 'requirements-iot.txt')
+        shutil.copy(os.path.join(self.args.build_dir, 'odoo/setup/iot_box_builder/configuration/requirements.txt'), self.docker_dir / 'requirements-iot.txt')
         self.tag = f'{self.tag}-iot'
         super().build_image()
 

@@ -3,7 +3,7 @@
 import base64
 
 from odoo import api, fields, models
-from odoo.tools import format_date, str2bool
+from odoo.tools import format_date
 from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
@@ -58,10 +58,8 @@ class AccountMove(models.Model):
         pending_transactions = transactions.filtered(
             lambda tx: tx.state in {'pending', 'authorized'}
                        and tx.provider_code not in {'none', 'custom'})
-        enabled_feature = str2bool(
-            self.env['ir.config_parameter'].sudo().get_param(
-                'account_payment.enable_portal_payment'
-            )
+        enabled_feature = self.env['ir.config_parameter'].sudo().get_bool(
+            'account_payment.enable_portal_payment'
         )
         return enabled_feature and bool(
             (self.amount_residual or not transactions)
@@ -82,10 +80,8 @@ class AccountMove(models.Model):
         pending_transactions = transactions.filtered(
             lambda tx: tx.state in {'pending', 'authorized'}
                        and tx.provider_code not in {'none', 'custom'})
-        enabled_feature = str2bool(
-            self.env['ir.config_parameter'].sudo().get_param(
-                'account_payment.enable_portal_payment'
-            )
+        enabled_feature = self.env['ir.config_parameter'].sudo().get_bool(
+            'account_payment.enable_portal_payment'
         )
         errors = []
         if not enabled_feature:

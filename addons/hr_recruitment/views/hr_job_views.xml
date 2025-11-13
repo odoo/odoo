@@ -22,7 +22,6 @@
                 >
                 <field name="active"/>
                 <field name="alias_email"/>
-                <field name="allowed_user_ids" invisible="1"/>
                 <templates>
                     <t t-name="menu" groups="hr_recruitment.group_hr_recruitment_user">
                         <div class="container">
@@ -245,12 +244,18 @@
                     <div name="alias_def">
                         <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"
                             groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                        <div class="oe_edit_only" name="edit_alias">
-                            <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@
-                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                   options="{'no_create': True, 'no_open': True}"/>
+                        <div class="oe_edit_only row" name="edit_alias">
+                            <div class="d-flex col-10 col-md-5 p-0">
+                                <field name="alias_name" class="o_job_alias o_field_highlight" placeholder="e.g. sales-manager"/>@
+                                <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                    options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <div class="col-2" invisible="not alias_email">
+                                <field name="alias_email" widget="CopyClipboardButton"
+                                    class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
+                            </div>
                         </div>
-                        <div class="text-muted">Incoming emails create applications automatically. Use it for direct applications or when posting job offers on LinkedIn, Monster, etc.</div>
+                        <div class="text-muted">Incoming emails create applications automatically. Use it for direct applications or when posting job opportunities on LinkedIn, Monster, etc.</div>
                     </div>
                 </group>
                 <footer>
@@ -300,10 +305,17 @@
                     string="Email Alias"
                     help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"
                 />
-                <div class="o_wrap_label d-flex flex-row gap-1 align-items-baseline">
-                    <field name="alias_name" placeholder="e.g. jobs"/>
-                    <span>@</span>
-                    <field name="alias_domain_id" placeholder="e.g. domain.com" options="{'no_create': True, 'no_open': True}"/>
+                <div class="row">
+                    <div class="d-flex col-10 p-0">
+                        <field name="alias_name" placeholder="e.g. jobs" class="o_field_highlight"/>
+                        <span>@</span>
+                        <field name="alias_domain_id" placeholder="e.g. domain.com"
+                            options="{'no_create': True, 'no_open': True}" class="o_field_highlight"/>
+                    </div>
+                    <div class="col-2 p-0" invisible="not alias_email">
+                        <field name="alias_email" widget="CopyClipboardButton"
+                            class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
+                    </div>
                 </div>
             </group>
 
@@ -418,7 +430,6 @@
                 <field name="alias_name" column_invisible="True"/>
                 <field name="alias_id" invisible="not alias_name" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                <field name="allowed_user_ids" invisible="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
             </field>

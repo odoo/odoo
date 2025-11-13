@@ -15,7 +15,7 @@ class PosVivaComController(http.Controller):
 
         viva_payment_methods = request.env['pos.payment.method'].sudo().search([
             ('use_payment_terminal', '=', 'viva_com'),
-            ('company_id.id', '=', company_id)
+            ('company_id.id', '=', int(company_id))
         ])
         payment_method_sudo = next(
             (pm for pm in viva_payment_methods if consteq(pm.viva_com_webhook_verification_key, token)),

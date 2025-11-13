@@ -1,0 +1,14 @@
+section[data-filter-domain]:not([data-filter-domain="[]"]) {
+    position: relative;
+    & > *:first-child::before {
+        right: 20px; // See Website for indicator values.
+        top: 0;
+        pointer-events: none;
+        opacity: 50%;
+        position: absolute;
+        font-family: "FontAwesome";
+        content: "\f070";
+        font-size: xx-large;
+        color: $o-we-color-accent;
+    }
+}

@@ -12,7 +12,7 @@ import {
     queryFirst,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTimeZone } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
@@ -239,6 +239,18 @@ test("search input is focused when being toggled", async () => {
     await contains(`button .fa-search`).click();
     expect(".o_searchview input").toHaveCount(1);
     expect(queryFirst`.o_searchview input`).toBeFocused();
+});
+
+test.tags("desktop");
+test("search input is not focused on larger touch devices", async () => {
+    mockTouch(true);
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+    expect(".o_searchview input").toHaveCount(1);
+    expect(".o_searchview input").not.toBeFocused();
 });
 
 test("search date and datetime fields. Support of timezones", async () => {
@@ -770,9 +782,9 @@ test("checks that an arrowUp always selects an item", async () => {
 test("many2one_reference fields are supported in search view", async () => {
     Partner._fields.res_id = fields.Many2oneReference({
         string: "Resource ID",
-        model_field: "bar",
-        relation: "partner",
+        model_field: "res_model",
     });
+    Partner._fields.res_model = fields.Char();
 
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -1926,4 +1938,22 @@ test("no crash when search component is destroyed with input", async () => {
     await animationFrame();
     await runAllTimers();
     expect(".o_form_view").toHaveCount(1);
+});
+
+test("search on full query without waiting for display synchronisation", async () => {
+    /* Typically a barcode scan where the dropdown display doesn't have the time to update */
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+
+    await editSearch("01234");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await press("5");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await press("6");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await keyDown("Enter");
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "0123456"]]);
 });

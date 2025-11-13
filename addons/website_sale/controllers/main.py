@@ -13,7 +13,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
-from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
+from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
 
@@ -288,7 +288,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         is_category_in_query = category and isinstance(category, str)
         category = self._validate_and_get_category(category)
@@ -408,8 +408,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTag = request.env['product.tag']
         if filter_by_tags_enabled and search_product:
             all_tags = ProductTag.search_fetch(Domain.AND([
-                Domain('product_ids.is_published', '=', True),
                 Domain('visible_to_customers', '=', True),
+                Domain.OR([
+                    Domain('product_template_ids.is_published', '=', True),
+                    Domain('product_ids.is_published', '=', True),
+                ]),
                 website_domain,
             ]))
         else:
@@ -445,7 +448,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
-        products = search_product[offset:offset + ppg]
+        products = search_product[offset:offset + ppg].with_prefetch()
         products.fetch()
 
         # map each product to its variant, and prefetch the variants
@@ -532,7 +535,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def product(self, product, category=None, pricelist=None, **kwargs):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         if pricelist is not None:
             try:
@@ -1490,8 +1493,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo._update_address(partner_id, partner_fnames)
 
     # === CHECKOUT FLOW - EXTRA STEP METHODS === #
+    def system_page_extra_info(env):
+        website = env['website'].get_current_website()
+        if website.is_view_active('website_sale.extra_info'):
+            return _lt("Shop Checkout - Extra Information")
+        return False
 
-    @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False, list_as_website_content=_lt("Shop Checkout - Extra Information"))
+    @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False, list_as_website_content=system_page_extra_info)
     def extra_info(self, **post):
         # Check that this option is activated
         extra_step = request.website.viewref('website_sale.extra_info')

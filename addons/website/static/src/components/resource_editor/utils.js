@@ -1,19 +1,22 @@
 import { _t } from "@web/core/l10n/translation";
 
 const MAPPING = {
-    '{': '}', '}': '{',
-    '(': ')', ')': '(',
-    '[': ']', ']': '[',
+    "{": "}",
+    "}": "{",
+    "(": ")",
+    ")": "(",
+    "[": "]",
+    "]": "[",
 };
-const OPENINGS = ['{', '(', '['];
-const CLOSINGS = ['}', ')', ']'];
+const OPENINGS = ["{", "(", "["];
+const CLOSINGS = ["}", ")", "]"];
 
 /**
  * Checks the syntax validity of some SCSS.
-*
-* @param {string} scss
-* @returns {Object} object with keys "isValid" and "error" if not valid
-*/
+ *
+ * @param {string} scss
+ * @returns {Object} object with keys "isValid" and "error" if not valid
+ */
 export function checkSCSS(scss) {
     const stack = [];
     let line = 1;
@@ -26,11 +29,11 @@ export function checkSCSS(scss) {
                     isValid: false,
                     error: {
                         line,
-                        message: _t("Unexpected %(char)s", {char: scss[i]}),
+                        message: _t("Unexpected %(char)s", { char: scss[i] }),
                     },
                 };
             }
-        } else if (scss[i] === '\n') {
+        } else if (scss[i] === "\n") {
             line++;
         }
     }
@@ -39,7 +42,7 @@ export function checkSCSS(scss) {
             isValid: false,
             error: {
                 line,
-                message: _t("Expected %(char)s", {char: MAPPING[stack.pop()]}),
+                message: _t("Expected %(char)s", { char: MAPPING[stack.pop()] }),
             },
         };
     }
@@ -53,18 +56,18 @@ export function checkSCSS(scss) {
  * @returns {Object} object with keys "isValid" and "error" if not valid
  */
 export function checkXML(xml) {
-    const xmlDoc = (new window.DOMParser()).parseFromString(xml, 'text/xml');
-    const errorEls = xmlDoc.getElementsByTagName('parsererror');
+    const xmlDoc = new window.DOMParser().parseFromString(xml, "text/xml");
+    const errorEls = xmlDoc.getElementsByTagName("parsererror");
     if (errorEls.length > 0) {
         const errorEl = errorEls[0];
-        const sourceTextEls = errorEl.querySelectorAll('sourcetext');
+        const sourceTextEls = errorEl.querySelectorAll("sourcetext");
         let codeEls = null;
         if (sourceTextEls.length) {
-            codeEls = [...sourceTextEls].map(el => {
-                const codeEl = document.createElement('code');
+            codeEls = [...sourceTextEls].map((el) => {
+                const codeEl = document.createElement("code");
                 codeEl.textContent = el.textContent;
-                const brEl = document.createElement('br');
-                brEl.classList.add('o_we_source_text_origin');
+                const brEl = document.createElement("br");
+                brEl.classList.add("o_we_source_text_origin");
                 el.parentElement.insertBefore(brEl, el);
                 return codeEl;
             });
@@ -72,18 +75,18 @@ export function checkXML(xml) {
                 el.remove();
             }
         }
-        for (const el of [...errorEl.querySelectorAll(':not(code):not(pre):not(br)')]) {
-            const pEl = document.createElement('p');
+        for (const el of [...errorEl.querySelectorAll(":not(code):not(pre):not(br)")]) {
+            const pEl = document.createElement("p");
             for (const cEl of [...el.childNodes]) {
                 pEl.appendChild(cEl);
             }
             el.parentElement.insertBefore(pEl, el);
             el.remove();
         }
-        errorEl.querySelectorAll('.o_we_source_text_origin').forEach((el, i) => {
+        errorEl.querySelectorAll(".o_we_source_text_origin").forEach((el, i) => {
             el.after(codeEls[i]);
         });
-        return {    
+        return {
             isValid: false,
             error: {
                 line: parseInt(errorEl.innerHTML.match(/[Ll]ine[^\d]+(\d+)/)[1], 10),

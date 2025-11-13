@@ -15,6 +15,7 @@ import { CallbackRecorder } from "@web/search/action_hook";
 
 const FAKE_PROPS = {
     model: FAKE_MODEL,
+    initialDate: FAKE_MODEL.date,
     createRecord() {},
     deleteRecord() {},
     editRecord() {},

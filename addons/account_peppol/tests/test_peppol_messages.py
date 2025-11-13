@@ -23,7 +23,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
+        cls.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
         cls.mocked_incoming_invoice_fname = 'incoming_invoice'
 
         cls.env.company.write({
@@ -97,15 +97,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         response = Response()
         response.status_code = 200
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A0477472701'):
+        url = r.path_url.lower()
+        if url.endswith(('iso6523-actorid-upis%3A%3A0208%3A0477472701'.lower(), 'iso6523-actorid-upis%3A%3A9925%3ABE0477472701'.lower())):
             response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0477472701</id:ParticipantIdentifier>'
             '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
             '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A3141592654'):
+        if url.endswith(('iso6523-actorid-upis%3A%3A0208%3A3141592654'.lower(), 'iso6523-actorid-upis%3A%3A9925%3ABE3141592654'.lower())):
             response.status_code = 404
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
+        if url.endswith(('iso6523-actorid-upis%3A%3A0208%3A2718281828'.lower(), 'iso6523-actorid-upis%3A%3A9925%3ABE2718281828'.lower())):
             response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier>
             '<smp:ServiceMetadataReferenceCollection>'
             '<smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
@@ -114,12 +115,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             '<smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3ACreditNote-2%3A%3ACreditNote%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Aselfbilling%3A3.0%3A%3A2.1"/>'
             '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'):
+        if url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'.lower()):
             response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0198:dk16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
             return response
 
-        url = r.path_url
-        body = json.loads(r.body) if r.body else None
+        body = json.loads(r.body)
         if url == '/api/peppol/1/send_document':
             if not body['params']['documents']:
                 raise UserError('No documents were provided')
@@ -424,8 +424,44 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         # the cron is ran asynchronously and should be agnostic from the current self.env.company
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
-        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
-        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'error'])
+        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should not be sent
+        self.assertRecordValues((move_1 + move_2 + move_3), [
+            {'peppol_move_state': 'processing', 'is_move_sent': True},
+            {'peppol_move_state': 'processing', 'is_move_sent': True},
+            {'peppol_move_state': False, 'is_move_sent': True},  # only sent by email
+        ])
+
+    def test_peppol_send_multi_async_mixed(self):
+        """Try to send invoices to partners with multiple sending methods each. """
+        peppol_partner = self.env['res.partner'].create({
+            'name': 'Peppol partner',
+            'country_id': self.env.ref('base.be').id,
+            'company_registry': '0477472701',
+        })
+        self.assertRecordValues(peppol_partner, [{
+            'peppol_verification_state': 'not_verified',
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }])
+        not_peppol_partner = self.env['res.partner'].create({
+            'name': 'Not Peppol partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        self.assertEqual(not_peppol_partner.peppol_verification_state, 'not_verified')
+        move_1 = self.create_move(peppol_partner)
+        move_2 = self.create_move(not_peppol_partner)
+        (move_1 + move_2).action_post()
+        wizard = self.create_send_and_print(move_1 + move_2)
+        self.assertEqual(peppol_partner.peppol_verification_state, 'valid')
+        self.assertEqual(not_peppol_partner.peppol_verification_state, 'not_verified')
+        wizard.action_send_and_print()
+        self.assertEqual((move_1 + move_2).mapped('is_being_sent'), [True, True])
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertRecordValues((move_1 + move_2), [
+            {'peppol_move_state': 'processing', 'is_move_sent': True},
+            {'peppol_move_state': False, 'is_move_sent': True},  # only sent by email
+        ])
 
     def test_available_peppol_sending_methods(self):
         company_us = self.setup_other_company()['company']  # not a valid Peppol country

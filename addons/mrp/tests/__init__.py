@@ -4,6 +4,7 @@ from . import test_bom
 from . import test_byproduct
 from . import test_cancel_mo
 from . import test_order
+from . import test_quant
 from . import test_stock
 from . import test_stock_report
 from . import test_warehouse_multistep_manufacturing

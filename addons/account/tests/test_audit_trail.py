@@ -86,11 +86,11 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.action_post()
-        messages.append("Updated\nFalse ⇨ True (Reviewed)\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)")
+        messages.append("Updated\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.button_draft()
-        messages.append("Updated\nTrue ⇨ False (Reviewed)\nPosted ⇨ Draft (Status)")
+        messages.append("Updated\nPosted ⇨ Draft (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.name = "nawak"

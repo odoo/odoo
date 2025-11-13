@@ -118,8 +118,8 @@ class ResUsers(models.Model):
             return r
         ICP = self.env['ir.config_parameter'].sudo()
         otp_required = False
-        if ICP.get_param('auth_totp.policy') == 'all_required' or \
-                (ICP.get_param('auth_totp.policy') == 'employee_required' and self._is_internal()):
+        if ICP.get_str('auth_totp.policy') == 'all_required' or \
+                (ICP.get_str('auth_totp.policy') == 'employee_required' and self._is_internal()):
             otp_required = True
         if otp_required:
             return 'totp_mail'

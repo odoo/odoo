@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.PollResult">
+        <div class="w-100">
+            <div class="o-mail-PollResult card border border-secondary rounded shadow-sm my-2 p-2 w-100">
+                <div class="d-flex gap-1 align-items-center fw-bold text-muted card-title small">
+                    <i class="oi oi-view-cohort"/>
+                    <span t-out="props.poll.pollClosedText"/>
+                </div>
+                <div class="card-body text-muted d-flex gap-2 align-items-center p-0 ms-3">
+                    <div class="d-flex align-items-center flex-grow-1 gap-2 smaller">
+                        <t t-if="!props.poll.winning_option_id">
+                            <i class="fa fa-2x fa-meh-o"/>
+                            <p class="text-start fw-bold mb-0">There was no winner</p>
+                        </t>
+                        <t t-else="">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    <p class="text-start fw-bold mb-0" t-esc="props.poll.winning_option_id.option_label"/>
+                                    <i t-if="props.poll.winning_option_id.selected_by_self" class="ms-1 fa fa-check-circle text-primary"/>
+                                </div>
+                                <p class="card-subtitle mb-0 text-muted smaller">Winning Answer<span class="mx-1">&#8729;</span><t t-esc="props.poll.winning_option_id.vote_percentage"/>%</p>
+                            </div>
+                        </t>
+                    </div>
+                    <button class="btn btn-secondary" t-on-click="onClickViewPoll">View Poll</button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

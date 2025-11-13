@@ -10,6 +10,7 @@ from odoo.tests import tagged
 
 
 @tagged('recruitment_interviewer')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecruitmentInterviewer(MailCase):
     @classmethod
     def setUpClass(cls):

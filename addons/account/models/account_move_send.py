@@ -693,7 +693,7 @@ class AccountMoveSend(models.AbstractModel):
         }
 
         # Use batch to avoid memory error
-        batch_size = self.env['ir.config_parameter'].sudo().get_param('account.pdf_generation_batch', '80')
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('account.pdf_generation_batch') or 80
         batches = []
         pdf_to_generate = {}
         for invoice, invoice_data in invoices_data_pdf.items():

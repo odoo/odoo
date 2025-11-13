@@ -2,31 +2,31 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("open-hr-profile", {
-    condition: ({ owner, thread }) =>
-        thread?.channel?.channel_type === "chat" &&
+    condition: ({ channel, owner }) =>
+        channel?.channel_type === "chat" &&
         owner.props.chatWindow?.isOpen &&
-        thread.correspondent?.partner_id?.employeeId &&
+        channel.correspondent?.partner_id?.employeeId &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-id-card",
     name: _t("Open Profile"),
-    open: async ({ store, thread }) =>
+    onSelected: async ({ store, thread }) =>
         store.env.services.action.doAction({
             type: "ir.actions.act_window",
             res_id: thread.correspondent.partner_id?.employeeId,
             res_model: "hr.employee.public",
             views: [[false, "form"]],
         }),
-    async setup({ thread }) {
+    async setup({ channel }) {
         let employeeId;
-        if (thread?.correspondent?.partner_id && !thread.correspondent.partner_id.employeeId) {
+        if (channel?.correspondent?.partner_id && !channel.correspondent.partner_id.employeeId) {
             const employees = await this.store.env.services.orm.silent.searchRead(
                 "hr.employee",
-                [["user_partner_id", "=", thread.correspondent.partner_id.id]],
+                [["user_partner_id", "=", channel.correspondent.partner_id.id]],
                 ["id"]
             );
             employeeId = employees[0]?.id;
             if (employeeId) {
-                thread.correspondent.partner_id.employeeId = employeeId;
+                channel.correspondent.partner_id.employeeId = employeeId;
             }
         }
     },

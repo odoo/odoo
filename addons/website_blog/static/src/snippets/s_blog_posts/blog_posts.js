@@ -17,12 +17,8 @@ export class BlogPosts extends DynamicSnippet {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website_blog.blog_posts", BlogPosts);
+registry.category("public.interactions").add("website_blog.blog_posts", BlogPosts);
 
-registry
-    .category("public.interactions.edit")
-    .add("website_blog.blog_posts", {
-        Interaction: BlogPosts,
-    });
+registry.category("public.interactions.edit").add("website_blog.blog_posts", {
+    Interaction: BlogPosts,
+});

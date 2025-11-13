@@ -6,7 +6,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
@@ -674,6 +674,7 @@ export function makeActionManager(env, router = _router) {
                     name: v.display_name,
                     type: v.type,
                     multiRecord: v.multiRecord,
+                    availableOffline: v.availableOffline,
                 };
                 if (view.type === v.type) {
                     viewSwitcherEntry.active = true;
@@ -1022,7 +1023,7 @@ export function makeActionManager(env, router = _router) {
                     };
 
                     controllerStack = nextStack; // the controller is mounted, commit the new stack
-                    pushState();
+                    pushState(controllerStack, { sync: true });
                     this.titleService.setParts({ action: controller.displayName });
                     browser.sessionStorage.setItem(
                         "current_action",
@@ -1118,16 +1119,16 @@ export function makeActionManager(env, router = _router) {
         }
 
         if (options.clearBreadcrumbs && !options.noEmptyTransition) {
-            const def = new Deferred();
+            const { promise, resolve } = Promise.withResolvers();
             env.bus.trigger("ACTION_MANAGER:UPDATE", {
                 id: ++id,
                 Component: BlankComponent,
                 componentProps: {
-                    onMounted: () => def.resolve(),
+                    onMounted: () => resolve(),
                     withControlPanel: action.type === "ir.actions.act_window",
                 },
             });
-            await def;
+            await promise;
         }
         if (options.onActionReady) {
             options.onActionReady(action);
@@ -1150,12 +1151,21 @@ export function makeActionManager(env, router = _router) {
         const w = browser.open(url, "_blank");
         if (!w || w.closed || typeof w.closed === "undefined") {
             const msg = _t(
-                "A popup window has been blocked. You may need to change your " +
-                    "browser settings to allow popup windows for this page."
+                "A popup window has been blocked. You may need to change your browser settings to allow popup windows for this page. You can also copy the link and paste it in a new tab."
             );
             env.services.notification.add(msg, {
                 sticky: true,
                 type: "warning",
+                buttons: [
+                    {
+                        name: _t("Copy"),
+                        primary: true,
+                        onClick: async () => {
+                            const fullUrl = new URL(url, window.location.origin).href;
+                            navigator.clipboard.writeText(fullUrl);
+                        },
+                    },
+                ],
             });
         }
     }
@@ -1209,8 +1219,13 @@ export function makeActionManager(env, router = _router) {
                 continue;
             }
             if (session.view_info[type]) {
-                const { icon, display_name, multi_record: multiRecord } = session.view_info[type];
-                views.push({ icon, display_name, multiRecord, type });
+                const {
+                    icon,
+                    display_name,
+                    multi_record: multiRecord,
+                    available_offline: availableOffline,
+                } = session.view_info[type];
+                views.push({ icon, display_name, multiRecord, type, availableOffline });
             } else {
                 unknown.push(type);
             }
@@ -1229,6 +1244,9 @@ export function makeActionManager(env, router = _router) {
         let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
         if (env.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
+        }
+        if (env.services.offline.status.offline && !view.availableOffline) {
+            view = views.find((v) => v.availableOffline);
         }
 
         const controller = _makeController({
@@ -1835,7 +1853,7 @@ export function makeActionManager(env, router = _router) {
         return Object.assign(newState, pick(newState.actionStack.at(-1), ...stateKeys));
     }
 
-    function pushState(cStack = controllerStack) {
+    function pushState(cStack = controllerStack, options) {
         if (!cStack.length) {
             return;
         }
@@ -1844,7 +1862,7 @@ export function makeActionManager(env, router = _router) {
         browser.sessionStorage.setItem("current_state", JSON.stringify(newState));
 
         cStack.at(-1).state = newState;
-        router.pushState(newState, { replace: true });
+        router.pushState(newState, Object.assign({ replace: true }, options));
     }
     return {
         doAction,
@@ -1866,7 +1884,7 @@ export function makeActionManager(env, router = _router) {
 }
 
 export const actionService = {
-    dependencies: ["dialog", "effect", "localization", "notification", "title", "ui"],
+    dependencies: ["dialog", "effect", "localization", "notification", "offline", "title", "ui"],
     start(env) {
         return makeActionManager(env);
     },

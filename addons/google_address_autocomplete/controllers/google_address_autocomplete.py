@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from pprint import pformat
 
 import requests
 
-from odoo import http, _
+from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext
-
 
 _logger = logging.getLogger(__name__)
 
@@ -24,6 +24,7 @@ FIELDS_MAPPING = {
     'country': ['country'],
     'street_number': ['number'],
     'locality': ['city'],  # If locality exists, use it instead of the more general administrative area
+    'postal_town': ['city'],  # Used instead of locality in some countries
     'route': ['street'],
     'sublocality_level_1': ['street2'],
     'postal_code': ['zip'],
@@ -32,7 +33,7 @@ FIELDS_MAPPING = {
 }
 
 # If a google fields may correspond to multiple standard fields, the first occurrence in the list will overwrite following entries.
-FIELDS_PRIORITY = ['country', 'street_number', 'neighborhood', 'locality', 'route', 'postal_code',
+FIELDS_PRIORITY = ['country', 'street_number', 'locality', 'postal_town', 'route', 'postal_code',
                    'administrative_area_level_1', 'administrative_area_level_2']
 GOOGLE_PLACES_ENDPOINT = 'https://maps.googleapis.com/maps/api/place'
 TIMEOUT = 2.5
@@ -53,6 +54,11 @@ class AutoCompleteController(http.Controller):
                     country = request.env['res.country'].search([('code', '=', google_field['short_name'].upper())], limit=1)
                     standard_data[field_standard] = [country.id, country.name]
                 elif field_standard == 'state':
+                    if 'country' not in standard_data:
+                        _logger.warning(
+                            "Cannot assign state before country:\n%s", pformat(google_fields),
+                        )
+                        continue
                     state = request.env['res.country.state'].search(
                         [('code', '=', google_field['short_name'].upper()),
                          ('country_id', '=', standard_data['country'][0])])
@@ -77,7 +83,7 @@ class AutoCompleteController(http.Controller):
         return guessed_house_number
 
     def _perform_place_search(self, partial_address, api_key=None, session_id=None, language_code=None, country_code=None):
-        minimal_input_size = int(request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.minimal_partial_address_size', '5'))
+        minimal_input_size = request.env['ir.config_parameter'].sudo().get_int('google_address_autocomplete.minimal_partial_address_size', 5)
         if len(partial_address) <= minimal_input_size:
             return {
                 'results': [],
@@ -148,9 +154,10 @@ class AutoCompleteController(http.Controller):
         except KeyError:
             return {'address': None}
 
-        # Keep only the first type from the list of types
+        # Keep only the first known type from the list of types
         for res in results:
-            res['type'] = res.pop('types')[0]
+            types = res.pop('types')
+            res['type'] = next(filter(FIELDS_MAPPING.get, types), types[0])
 
         # Sort the result by their priority.
         results.sort(key=lambda r: FIELDS_PRIORITY.index(r['type']) if r['type'] in FIELDS_PRIORITY else 100)
@@ -176,7 +183,7 @@ class AutoCompleteController(http.Controller):
 
     def _get_api_key(self, use_employees_key):
         assert request.env.user._is_internal()
-        return request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.google_places_api_key')
+        return request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
 
     @http.route('/autocomplete/address', methods=['POST'], type='jsonrpc', auth='public', website=True)
     def _autocomplete_address(self, partial_address, session_id=None, use_employees_key=None):

@@ -11,6 +11,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('security')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccess(common.TestSurveyCommon):
 
     def setUp(self):

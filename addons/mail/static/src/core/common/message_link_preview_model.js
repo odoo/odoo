@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/model/export";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -11,6 +11,10 @@ export class MessageLinkPreview extends Record {
 
     get gifPaused() {
         return !this.message_id.thread?.isFocused;
+    }
+
+    get hasDeleteAll() {
+        return this.message_id.message_link_preview_ids.length > 1;
     }
 
     hide() {

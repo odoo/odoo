@@ -10,7 +10,7 @@ import base64
 
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tests.common import TransactionCase
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError, UserError
 
 from ..utils.cloud_storage_azure_utils import UserDelegationKey
@@ -26,12 +26,12 @@ class TestCloudStorageAzureCommon(TransactionCase):
         self.DUMMY_AZURE_CLIENT_ID = 'clientid'
         self.DUMMY_AZURE_CLIENT_SECRET = 'secret'
         self.container_name = 'container-name'
-        self.env['ir.config_parameter'].set_param('cloud_storage_provider', 'azure')
-        self.env['ir.config_parameter'].set_param('cloud_storage_azure_account_name', self.DUMMY_AZURE_ACCOUNT_NAME)
-        self.env['ir.config_parameter'].set_param('cloud_storage_azure_tenant_id', self.DUMMY_AZURE_TENANT_ID)
-        self.env['ir.config_parameter'].set_param('cloud_storage_azure_client_id', self.DUMMY_AZURE_CLIENT_ID)
-        self.env['ir.config_parameter'].set_param('cloud_storage_azure_client_secret', self.DUMMY_AZURE_CLIENT_SECRET)
-        self.env['ir.config_parameter'].set_param('cloud_storage_azure_container_name', self.container_name)
+        self.env['ir.config_parameter'].set_str('cloud_storage_provider', 'azure')
+        self.env['ir.config_parameter'].set_str('cloud_storage_azure_account_name', self.DUMMY_AZURE_ACCOUNT_NAME)
+        self.env['ir.config_parameter'].set_str('cloud_storage_azure_tenant_id', self.DUMMY_AZURE_TENANT_ID)
+        self.env['ir.config_parameter'].set_str('cloud_storage_azure_client_id', self.DUMMY_AZURE_CLIENT_ID)
+        self.env['ir.config_parameter'].set_str('cloud_storage_azure_client_secret', self.DUMMY_AZURE_CLIENT_SECRET)
+        self.env['ir.config_parameter'].set_str('cloud_storage_azure_container_name', self.container_name)
 
         self.DUMMY_USER_DELEGATION_KEY = UserDelegationKey()
         self.DUMMY_USER_DELEGATION_KEY.signed_oid = 'signed_oid'
@@ -56,6 +56,7 @@ class TestCloudStorageAzureCommon(TransactionCase):
         CloudStorageAzureUserDelegationKeys.clear()
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
     def test_get_user_delegation_key_success(self):
         request_num = 0
@@ -84,7 +85,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 2, 'user_delegation_key should be reused if configuration is not changed')
 
-            self.env['ir.config_parameter'].set_param('cloud_storage_azure_account_name', 'newaccountname2')
+            self.env['ir.config_parameter'].set_str('cloud_storage_azure_account_name', 'newaccountname2')
             self.env.registry.clear_cache()
             get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 4, '2 requests to create new user_delegation_key when the configuration is changed')
@@ -343,9 +344,9 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
     def test_uninstall_success(self):
         uninstall_hook(self.env)
         # make sure all sensitive data are removed
-        self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_provider'))
-        self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_account_name'))
-        self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_tenant_id'))
-        self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_client_id'))
-        self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_client_secret'))
-        self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_container_name'))
+        self.assertFalse(self.env['ir.config_parameter'].get_str('cloud_storage_provider'))
+        self.assertFalse(self.env['ir.config_parameter'].get_str('cloud_storage_azure_account_name'))
+        self.assertFalse(self.env['ir.config_parameter'].get_str('cloud_storage_azure_tenant_id'))
+        self.assertFalse(self.env['ir.config_parameter'].get_str('cloud_storage_azure_client_id'))
+        self.assertFalse(self.env['ir.config_parameter'].get_str('cloud_storage_azure_client_secret'))
+        self.assertFalse(self.env['ir.config_parameter'].get_str('cloud_storage_azure_container_name'))

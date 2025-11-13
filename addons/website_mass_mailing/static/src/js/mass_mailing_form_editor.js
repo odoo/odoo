@@ -20,6 +20,5 @@ registry.category("website.form_editor_actions").add('create_mailing_contact', {
         modelRequired: true,
         string: _t('Subscribe to'),
         type: 'many2many',
-        fieldName: "name",
     }],
 });

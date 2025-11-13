@@ -1,10 +1,11 @@
 from odoo.fields import Domain
-from odoo.tests import common
+from odoo.tests import tagged, common
 from odoo.tools.translate import FIELD_TRANSLATE
 
 from odoo.addons.base.models.ir_model import field_xmlid, model_xmlid, selection_xmlid
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReflection(common.TransactionCase):
     """ Test the reflection into 'ir.model', 'ir.model.fields', etc. """
 
@@ -225,6 +226,7 @@ class TestReflection(common.TransactionCase):
                             self.assertEqual(field_description['sortable'], field.type != 'binary')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSchema(common.TransactionCase):
 
     def get_table_data(self, tablename):

@@ -1,17 +1,21 @@
-import { BurgerMenu } from '@web/webclient/burger_menu/burger_menu';
-import { useService } from '@web/core/utils/hooks';
+import { BurgerMenu } from "@web/webclient/burger_menu/burger_menu";
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
-const websiteSystrayRegistry = registry.category('website_systray');
+const websiteSystrayRegistry = registry.category("website_systray");
 
 patch(BurgerMenu.prototype, {
     setup() {
         super.setup();
-        this.websiteCustomMenus = useService('website_custom_menus');
+        this.websiteCustomMenus = useService("website_custom_menus");
 
-        if (!websiteSystrayRegistry.contains('burger_menu')) {
-            websiteSystrayRegistry.add('burger_menu', registry.category('systray').get('burger_menu'), {sequence: 0});
+        if (!websiteSystrayRegistry.contains("burger_menu")) {
+            websiteSystrayRegistry.add(
+                "burger_menu",
+                registry.category("systray").get("burger_menu"),
+                { sequence: 0 }
+            );
         }
     },
 
@@ -20,8 +24,10 @@ patch(BurgerMenu.prototype, {
      */
     get currentAppSections() {
         const currentAppSections = super.currentAppSections;
-        if (this.currentApp && this.currentApp.xmlid === 'website.menu_website_configuration') {
-            return this.websiteCustomMenus.addCustomMenus(currentAppSections).filter(section => section.childrenTree.length);
+        if (this.currentApp && this.currentApp.xmlid === "website.menu_website_configuration") {
+            return this.websiteCustomMenus
+                .addCustomMenus(currentAppSections)
+                .filter((section) => section.childrenTree.length);
         }
         return currentAppSections;
     },

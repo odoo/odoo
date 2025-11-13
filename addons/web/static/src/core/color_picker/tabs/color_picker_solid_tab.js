@@ -2,7 +2,7 @@ import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-class ColorPickerSolidTab extends Component {
+export class ColorPickerSolidTab extends Component {
     static template = "web.ColorPickerSolidTab";
     static props = {
         colorPickerNavigation: Function,

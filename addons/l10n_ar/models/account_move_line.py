@@ -12,6 +12,7 @@ class AccountMoveLine(models.Model):
 
         AccountTax = self.env['account.tax']
         base_line = invoice._prepare_product_base_line_for_taxes_computation(self)
+
         if include_vat:
             base_line['tax_ids'] = self.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code')
         AccountTax._add_tax_details_in_base_line(base_line, self.company_id, rounding_method='round_globally')
@@ -20,6 +21,7 @@ class AccountMoveLine(models.Model):
         discount = base_line['discount']
         price_unit = base_line['price_unit']
         quantity = base_line['quantity']
+
         if include_vat:
             raw_total = tax_details['raw_total_included_currency']
         else:
@@ -30,22 +32,20 @@ class AccountMoveLine(models.Model):
         else:
             price_subtotal_before_discount = raw_total / (1 - discount / 100.0)
 
+        # Calculate sign multiplier for refund invoices
+        sign = -1 if invoice._l10n_ar_is_refund_invoice() else 1
+
         if quantity:
-            price_unit = price_subtotal_before_discount / quantity
-            price_net = raw_total / quantity
+            price_unit = (price_subtotal_before_discount / quantity) * sign
+            price_net = (raw_total / quantity) * sign
         else:
             price_unit = 0.0
             price_net = 0.0
+
+        raw_total *= sign
 
         return {
             'price_unit': price_unit,
             'price_subtotal': invoice.currency_id.round(raw_total),
             'price_net': price_net,
         }
-
-    def get_column_to_exclude_for_colspan_calculation(self, taxes=None):
-        # OVERRIDE OF ACCOUNT
-        if self.move_id.company_id.country_code == 'AR':
-            return 0 if self.display_type == 'product' else 2
-
-        return super().get_column_to_exclude_for_colspan_calculation(taxes)

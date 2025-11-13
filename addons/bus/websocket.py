@@ -898,9 +898,7 @@ class WebsocketRequest:
         self.session = self._get_session()
 
         try:
-            self.registry = Registry(self.db)
-            threading.current_thread().dbname = self.registry.db_name
-            self.registry.check_signaling()
+            self.registry = Registry(self.db).check_signaling()
         except (
             AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
         ) as exc:
@@ -964,7 +962,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "saas-18.5-1"
+    _VERSION = "19.0-2"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -1107,6 +1105,9 @@ class WebsocketConnectionHandler:
             # worker version.
             websocket.close(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
+            if message == b'\x00':
+                # Ignore internal sentinel message used to detect dead/idle connections.
+                continue
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
                     req.serve_websocket_message(message)

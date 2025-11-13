@@ -6,7 +6,7 @@ import contextlib
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import email_normalize, str2bool
+from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -64,7 +64,7 @@ class ResUsers(models.Model):
     has_external_mail_server = fields.Boolean(compute='_compute_has_external_mail_server')
 
     def _compute_has_external_mail_server(self):
-        self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_param(
+        self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_str(
             'base_setup.default_external_email_server')
 
     _notification_type = models.Constraint(
@@ -316,7 +316,7 @@ class ResUsers(models.Model):
 
     def _notify_security_setting_update_prepare_values(self, content, **kwargs):
         """"Prepare rendering values for the 'mail.account_security_alert' qweb template."""
-        reset_password_enabled = str2bool(self.env['ir.config_parameter'].sudo().get_param("auth_signup.reset_password", True))
+        reset_password_enabled = self.env['ir.config_parameter'].sudo().get_bool("auth_signup.reset_password")
 
         values = {
             'browser': False,
@@ -331,9 +331,10 @@ class ResUsers(models.Model):
         if not request:
             return values
 
-        city = request.geoip.get('city') or False
-        region = request.geoip.get('region_name') or False
-        country = request.geoip.get('country') or False
+        city = request.geoip.city.name or False
+        subdivisons = request.geoip.subdivisions
+        region = subdivisons[0].iso_code if subdivisons and subdivisons[0].iso_code else False
+        country = request.geoip.country_name or False
         if country:
             if region and city:
                 values['location_address'] = _("Near %(city)s, %(region)s, %(country)s", city=city, region=region, country=country)
@@ -406,22 +407,23 @@ class ResUsers(models.Model):
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
             store.add_global_values(
-                self_partner=Store.One(
-                    self.env.user.partner_id,
+                self_user=Store.One(
+                    self.env.user,
                     [
-                        "active",
                         Store.One(
-                            "main_user_id",
+                            "partner_id",
                             [
-                                Store.Attr("is_admin", lambda u: u._is_admin()),
-                                "notification_type",
-                                "share",
-                                "signature",
+                                "active",
+                                Store.One("main_user_id", []),
+                                "name",
+                                *self.env["res.partner"]._get_store_avatar_fields(),
+                                *self.env["res.partner"]._get_store_im_status_fields(),
                             ],
                         ),
-                        "name",
-                        *self.env["res.partner"]._get_store_avatar_fields(),
-                        *self.env["res.partner"]._get_store_im_status_fields(),
+                        Store.Attr("is_admin", lambda u: u._is_admin()),
+                        "notification_type",
+                        "share",
+                        "signature",
                     ],
                 ),
                 settings=settings._res_users_settings_format(),
@@ -454,7 +456,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_activity_groups(self):
-        search_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.activity.systray.limit', 1000))
+        search_limit = self.env['ir.config_parameter'].sudo().get_int('mail.activity.systray.limit') or 1000
         activities = self.env["mail.activity"].search(
             [("user_id", "=", self.env.uid)],
             order='id desc', limit=search_limit,
@@ -661,3 +663,9 @@ class ResUsers(models.Model):
     @api.model
     def _get_mail_server_setup_end_action(self, smtp_server):
         raise NotImplementedError()
+
+    @api.model
+    def _get_current_persona(self):
+        if not self.env.user or self.env.user._is_public():
+            return (self.env["res.users"], self.env["mail.guest"]._get_guest_from_context())
+        return (self.env.user, self.env["mail.guest"])

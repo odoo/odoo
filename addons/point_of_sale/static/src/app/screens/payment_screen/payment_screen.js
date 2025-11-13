@@ -133,22 +133,9 @@ export class PaymentScreen extends Component {
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
     async addNewPaymentLine(paymentMethod) {
-        if (
-            paymentMethod.type === "pay_later" &&
-            (!this.currentOrder.to_invoice ||
-                this.pos.models["ir.module.module"].find((m) => m.name === "pos_settle_due")
-                    ?.state !== "installed")
-        ) {
-            this.notification.add(
-                _t(
-                    "To ensure due balance follow-up, generate an invoice or download the accounting application. "
-                ),
-                { autocloseDelay: 7000 }
-            );
-        }
         if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
             this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+                title: _t("Oh snap !"),
                 body: _t("There is already an electronic payment in progress."),
             });
             return;
@@ -159,8 +146,8 @@ export class PaymentScreen extends Component {
         }
         // original function: click_paymentmethods
         const result = this.currentOrder.addPaymentline(paymentMethod);
-        if (result) {
-            this.numberBuffer.set(result.amount.toString());
+        if (result.status) {
+            this.numberBuffer.set(result.data.amount.toString());
             if (
                 paymentMethod.use_payment_terminal &&
                 !this.isRefundOrder &&
@@ -172,7 +159,7 @@ export class PaymentScreen extends Component {
             return true;
         } else {
             this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+                title: _t("Oh snap !"),
                 body: _t("There is already an electronic payment in progress."),
             });
             return false;
@@ -201,11 +188,11 @@ export class PaymentScreen extends Component {
         );
         if (
             !hasCashPaymentMethod &&
-            amount > this.currentOrder.getDue() + this.selectedPaymentLine.amount
+            amount > this.currentOrder.remainingDue + this.selectedPaymentLine.amount
         ) {
             this.selectedPaymentLine.setAmount(0);
-            this.numberBuffer.set(this.currentOrder.getDue().toString());
-            amount = this.currentOrder.getDue();
+            this.numberBuffer.set(this.currentOrder.remainingDue.toString());
+            amount = this.currentOrder.remainingDue;
             this.showMaxValueError();
         }
         if (
@@ -236,7 +223,7 @@ export class PaymentScreen extends Component {
     }
     async addTip() {
         const tip = this.currentOrder.getTip();
-        const change = this.currentOrder.getChange();
+        const change = Math.abs(this.currentOrder.change);
         const value = tip === 0 && change > 0 ? change : tip;
         const newTip = await makeAwaitable(this.dialog, NumberPopup, {
             title: tip ? _t("Change Tip") : _t("Add Tip"),
@@ -340,12 +327,10 @@ export class PaymentScreen extends Component {
         // the current order is fully paid and due is zero.
         this.pos.paymentTerminalInProgress = false;
         const config = this.pos.config;
-        const currency = this.pos.currency;
         const currentOrder = line.pos_order_id;
         if (
             isPaymentSuccessful &&
             currentOrder.isPaid() &&
-            currency.isZero(currentOrder.getDue()) &&
             config.auto_validate_terminal_payment &&
             !currentOrder.isRefundInProcess()
         ) {
@@ -381,12 +366,11 @@ export class PaymentScreen extends Component {
     }
     async sendForceDone(line) {
         line.setPaymentStatus("done");
+        this.pos.paymentTerminalInProgress = false;
         const config = this.pos.config;
-        const currency = this.pos.currency;
         const currentOrder = line.pos_order_id;
         if (
             currentOrder.isPaid() &&
-            currency.isZero(currentOrder.getDue()) &&
             config.auto_validate_terminal_payment &&
             !currentOrder.isRefundInProcess()
         ) {

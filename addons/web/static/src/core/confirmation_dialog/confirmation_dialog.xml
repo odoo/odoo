@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="web.ConfirmationDialog">
-    <Dialog size="'sm'" title="props.title" modalRef="modalRef">
+    <Dialog size="'md'" title="props.title" modalRef="modalRef">
       <p t-out="props.body" class="text-prewrap"/>
       <t t-set-slot="footer">
         <button class="btn" t-att-class="props.confirmClass" t-on-click="_confirm" t-esc="props.confirmLabel" data-hotkey="q"/>

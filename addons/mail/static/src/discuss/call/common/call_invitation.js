@@ -14,7 +14,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallInvitation extends Component {
-    static props = ["thread"];
+    static props = ["channel"];
     static template = "discuss.CallInvitation";
     static components = { ActionList, CallPreview };
 
@@ -34,7 +34,7 @@ export class CallInvitation extends Component {
     }
 
     joinCall() {
-        this.rtc.toggleCall(this.props.thread, {
+        this.rtc.toggleCall(this.props.channel, {
             audio: this.state.hasMicrophone,
             camera: this.state.hasCamera,
         });
@@ -61,21 +61,21 @@ export class CallInvitation extends Component {
                 definition: acceptWithCameraUpdated,
                 owner: this,
                 store: this.store,
-                thread: this.props.thread,
+                channel: this.props.channel,
             }),
             new CallAction({
                 id: "join",
                 definition: joinUpdated,
                 owner: this,
                 store: this.store,
-                thread: this.props.thread,
+                channel: this.props.channel,
             }),
             new CallAction({
                 id: "reject",
                 definition: rejectAction,
                 owner: this,
                 store: this.store,
-                thread: this.props.thread,
+                channel: this.props.channel,
             }),
         ];
     }
@@ -108,19 +108,19 @@ export class CallInvitation extends Component {
     }
 
     get avatarTitle() {
-        const channelName = this.props.thread.displayName;
-        if (this.props.thread.channel?.channel_type === "chat") {
+        const channelName = this.props.channel.displayName;
+        if (this.props.channel.channel_type === "chat") {
             return _t("View chat with %(channel_name)s", { channel_name: channelName });
         }
         return _t("View the %(channel_name)s channel", { channel_name: channelName });
     }
 
     get inviter() {
-        return this.props.thread.self_member_id?.rtc_inviting_session_id?.channel_member_id;
+        return this.props.channel.self_member_id?.rtc_inviting_session_id?.channel_member_id;
     }
 
     get incomingCallText() {
-        if (this.props.thread.channel?.channel_type === "chat" || !this.inviter) {
+        if (this.props.channel.channel_type === "chat" || !this.inviter) {
             return _t("Incoming call");
         }
         return _t("Incoming call from %(inviter)s", { inviter: this.inviter.name });

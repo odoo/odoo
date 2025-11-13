@@ -5,6 +5,8 @@ const HUMAN_VOICE_FREQUENCY_RANGE = [80, 1000];
 // Public
 //------------------------------------------------------------------------------
 
+/** @typedef {Function} MonitorAudioReturnType */
+
 /**
  * monitors the activity of an audio mediaStreamTrack
  *
@@ -17,8 +19,7 @@ const HUMAN_VOICE_FREQUENCY_RANGE = [80, 1000];
  * @param {function(boolean):void} [processorOptions.onThreshold] a function to be called when the threshold is passed
  * @param {function(number):void} [processorOptions.onTic] a function to be called at each tics
  * @param {number} [processorOptions.volumeThreshold] the normalized minimum value for audio detection
- * @returns {Object} returnValue
- * @returns {function} returnValue.disconnect callback to cleanly end the monitoring
+ * @returns {Promise<MonitorAudioReturnType>} callback to cleanly end the monitoring
  */
 export async function monitorAudio(track, processorOptions) {
     // cloning the track so it is not affected by the enabled change of the original track.

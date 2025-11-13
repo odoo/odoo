@@ -56,11 +56,7 @@ test("Many2ManyAttendee: basic rendering", async () => {
 });
 
 test("[Offline] Many2ManyAttendee: basic rendering", async () => {
-    onRpc(
-        "/web/dataset/call_kw/res.partner/get_attendee_detail",
-        () => new Response("", { status: 502 }),
-        { pure: true }
-    );
+    onRpc("res.partner", "get_attendee_detail", () => new Response("", { status: 502 }));
     await mountView({
         type: "form",
         resModel: "calendar.event",

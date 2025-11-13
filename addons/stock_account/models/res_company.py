@@ -53,6 +53,10 @@ class ResCompany(models.Model):
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
             raise UserError(_("Everything is correctly closed"))
+        if not self.account_stock_journal_id:
+            raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
+        if not self.account_stock_valuation_id:
+            raise UserError(self.env._("Please set the Valuation Account for Inventory Valuation in the settings."))
 
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,
@@ -91,7 +95,8 @@ class ResCompany(models.Model):
         account_data = defaultdict(float)
         stock_valuation_accounts_ids = set()
         for dummy, accounts in accounts_by_product.items():
-            stock_valuation_accounts_ids.add(accounts['valuation'].id)
+            if accounts['valuation']:
+                stock_valuation_accounts_ids.add(accounts['valuation'].id)
         stock_valuation_accounts = self.env['account.account'].browse(stock_valuation_accounts_ids)
         domain = Domain([
             ('account_id', 'in', stock_valuation_accounts.ids),
@@ -227,6 +232,9 @@ class ResCompany(models.Model):
         accounts = inventory_data.keys() | accounting_data.keys()
         for account in accounts:
             account_variation = False
+            # Continental accounting
+            if account.account_stock_variation_id and account.account_stock_expense_id:
+                account_variation = account.account_stock_expense_id
             if account.account_stock_variation_id:
                 account_variation = account.account_stock_variation_id
             if not account_variation and account.account_stock_expense_id:

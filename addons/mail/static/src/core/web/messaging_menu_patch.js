@@ -102,20 +102,17 @@ patch(MessagingMenu.prototype, {
             },
             {
                 counter:
-                    this.store.self.main_user_id?.notification_type === "inbox"
+                    this.store.self_user?.notification_type === "inbox"
                         ? this.store.inbox.counter
                         : this.store.starred.counter,
                 icon:
-                    this.store.self.main_user_id?.notification_type === "inbox"
+                    this.store.self_user?.notification_type === "inbox"
                         ? "fa fa-inbox"
                         : "fa fa-star-o",
-                activeIcon: this.store.self.main_user_id?.notification_type !== "inbox" && "fa fa-star",
-                id:
-                    this.store.self.main_user_id?.notification_type === "inbox"
-                        ? "inbox"
-                        : "starred",
+                activeIcon: this.store.self_user?.notification_type !== "inbox" && "fa fa-star",
+                id: this.store.self_user?.notification_type === "inbox" ? "inbox" : "starred",
                 label:
-                    this.store.self.main_user_id?.notification_type === "inbox"
+                    this.store.self_user?.notification_type === "inbox"
                         ? _t("Inbox")
                         : _t("Starred"),
                 sequence: 100,
@@ -170,7 +167,7 @@ patch(MessagingMenu.prototype, {
     },
     get counter() {
         let value =
-            this.store.inbox.counter +
+            this.store.globalCounter +
             this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);
         if (this.canPromptToInstall) {
             value++;

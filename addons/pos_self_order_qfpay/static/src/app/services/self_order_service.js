@@ -15,12 +15,6 @@ patch(SelfOrder.prototype, {
         }
     },
 
-    filterPaymentMethods(pms) {
-        const pm = super.filterPaymentMethods(...arguments);
-        const qfpay_pm = pms.filter((rec) => rec.use_payment_terminal === "qfpay");
-        return [...new Set([...pm, ...qfpay_pm])];
-    },
-
     handleQFPayError(error, type) {
         this.paymentError = true;
         this.handleErrorNotification(error, type);

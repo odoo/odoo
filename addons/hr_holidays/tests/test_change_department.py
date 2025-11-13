@@ -3,9 +3,12 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta, MO, FR
 
+from odoo.tests import tagged
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestChangeDepartment(TestHrHolidaysCommon):
     def test_employee_change_department_request_change_department(self):
         self.HolidaysEmployeeGroup = self.env['hr.leave'].with_user(self.user_employee_id)

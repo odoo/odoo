@@ -4,9 +4,12 @@
 from datetime import datetime, timedelta
 
 from odoo.addons.digest.tests.common import TestDigestCommon
+from odoo.tests import tagged
+
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmDigest(TestDigestCommon):
     @classmethod
     @mute_logger('odoo.models.unlink')

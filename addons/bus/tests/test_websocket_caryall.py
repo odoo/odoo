@@ -125,7 +125,13 @@ class TestWebsocketCaryall(WebsocketCase):
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
         # The session with whom the websocket connected has been
         # deleted. WebSocket should disconnect in order for the
         # session to be updated.
@@ -137,7 +143,13 @@ class TestWebsocketCaryall(WebsocketCase):
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
         self.subscribe(websocket, ['channel1'], self.env['bus.bus']._bus_last_id())
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
         # Simulate postgres notify. The session with whom the websocket
         # connected has been deleted. WebSocket should be closed without
         # receiving the message.

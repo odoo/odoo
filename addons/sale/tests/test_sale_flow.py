@@ -1,6 +1,8 @@
 from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.tests import tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSaleFlow(TestSaleCommon):
     ''' Test running at-install to test flows independently to other modules, e.g. 'sale_stock'. '''
 

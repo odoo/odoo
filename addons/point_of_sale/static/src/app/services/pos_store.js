@@ -28,7 +28,11 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
+import {
+    changesToOrder,
+    getOrderChanges,
+    filterChangeByCategories,
+} from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
@@ -73,7 +77,6 @@ export class PosStore extends WithLazyGetterTrap {
         "alert",
         "pos_router",
         "mail.sound_effects",
-        "iot_longpolling",
     ];
     constructor({ traps, env, deps }) {
         super({ traps });
@@ -98,7 +101,6 @@ export class PosStore extends WithLazyGetterTrap {
             action,
             pos_router,
             alert,
-            iot_longpolling,
         }
     ) {
         this.env = env;
@@ -144,7 +146,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
-        this.iotLongpolling = iot_longpolling;
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -289,24 +290,6 @@ export class PosStore extends WithLazyGetterTrap {
         this._storeConnectedCashier(user);
     }
 
-    getProductPrice(product, price = false, formatted = false) {
-        const order = this.getOrder();
-        const fiscalPosition = order.fiscal_position_id || this.config.fiscal_position_id;
-        const pricelist = order.pricelist_id || this.config.pricelist_id;
-        const pPrice = product.getProductPrice(price, pricelist, fiscalPosition);
-
-        if (formatted) {
-            const formattedPrice = this.env.utils.formatCurrency(pPrice);
-            if (product.to_weight) {
-                return `${formattedPrice}/${product.uom_id.name}`;
-            } else {
-                return formattedPrice;
-            }
-        }
-
-        return pPrice;
-    }
-
     _getConnectedCashier() {
         const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
         if (cashier_id && this.models["res.users"].get(cashier_id)) {
@@ -354,7 +337,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         try {
             const paidOrderNotSynced = this.models["pos.order"].filter(
-                (order) => order.state === "paid" && typeof order.id !== "number"
+                (order) => order.state === "paid" && !order.isSynced
             );
             this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
             await this.syncAllOrders({ throw: true });
@@ -365,15 +348,15 @@ export class PosStore extends WithLazyGetterTrap {
             });
         } catch {
             this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+                title: _t("Oh snap !"),
                 body: _t(
-                    "An error occurred while closing the session. Unsynced orders will be available in the next session. The page will be reloaded."
+                    "An error occurred while closing the session. But don't worry, unsynced orders will be available in the next session.\nThe page will now, be reloaded."
                 ),
             });
         } finally {
             // All orders saved on the server should be cancelled by the device that closes
             // the session. If some orders are not cancelled, we need to cancel them here.
-            const orders = this.models["pos.order"].filter((o) => typeof o.id === "number");
+            const orders = this.models["pos.order"].filter((o) => o.isSynced);
             for (const order of orders) {
                 if (!order.finalized) {
                     order.state = "cancel";
@@ -472,6 +455,7 @@ export class PosStore extends WithLazyGetterTrap {
         const productIds = new Set();
         const productTmplIds = new Set();
         const productByTmplId = {};
+        const productCombos = [];
 
         for (const product of this.models["product.product"].getAll()) {
             if (product.product_template_variant_value_ids.length > 0) {
@@ -484,7 +468,12 @@ export class PosStore extends WithLazyGetterTrap {
 
                 productByTmplId[product.raw.product_tmpl_id].push(product);
             }
+            if (product.product_tmpl_id?.type === "combo") {
+                productCombos.push(product);
+            }
         }
+
+        this.productCombos = productCombos;
 
         if (productIds.size > 0) {
             try {
@@ -526,7 +515,7 @@ export class PosStore extends WithLazyGetterTrap {
                 body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
                     order.pos_reference,
-                    this.env.utils.formatCurrency(order.getTotalWithTax())
+                    this.env.utils.formatCurrency(order.priceIncl)
                 ),
             });
             if (!confirmed) {
@@ -550,7 +539,7 @@ export class PosStore extends WithLazyGetterTrap {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     !ignoreChange &&
-                    typeof order.id === "number" &&
+                    order.isSynced &&
                     Object.keys(order.last_order_preparation_change).length > 0
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
@@ -567,7 +556,7 @@ export class PosStore extends WithLazyGetterTrap {
                 this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
-                } else if (typeof order.id === "number") {
+                } else if (order.isSynced) {
                     ids.add(order.id);
                 }
             } else {
@@ -585,7 +574,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (ids.size > 0) {
-            await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            await this.data.call("pos.order", "cancel_order_from_pos", [Array.from(ids)]);
             return true;
         }
 
@@ -624,14 +613,7 @@ export class PosStore extends WithLazyGetterTrap {
         const orderPathUuid = this.router.state.params.orderUuid;
         const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
         if (orderPathUuid && !order) {
-            await this.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["uuid", "=", orderPathUuid]]],
-                {},
-                false,
-                true
-            );
+            await this.data.loadServerOrders([["uuid", "=", orderPathUuid]]);
             const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
             if (order) {
                 this.setOrder(order);
@@ -695,8 +677,8 @@ export class PosStore extends WithLazyGetterTrap {
             return "flex-row-reverse justify-content-between m-1";
         }
     }
-    async onProductInfoClick(productTemplate) {
-        const info = await this.getProductInfo(productTemplate, 1);
+    async onProductInfoClick(productTemplate, productProduct = false) {
+        const info = await this.getProductInfo(productTemplate, 1, 0, productProduct);
         this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
     }
     async openConfigurator(pTemplate, opts = {}) {
@@ -712,12 +694,15 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 product = opts.presetVariant;
             }
+
+            const attrValueIds = new Set(
+                product?.product_template_attribute_value_ids?.map((v) => v.id) || []
+            );
+
             attributeLinesValues = attributeLinesValues.map((values) =>
                 values[0].attribute_id.create_variant === "no_variant"
                     ? values
-                    : values.filter((value) =>
-                          product.product_template_attribute_value_ids.includes(value)
-                      )
+                    : values.filter((value) => attrValueIds.has(value.id))
             );
         }
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
@@ -725,6 +710,7 @@ export class PosStore extends WithLazyGetterTrap {
                 productTemplate: pTemplate,
                 hideAlwaysVariants: opts.hideAlwaysVariants,
                 forceVariantValue: opts.forceVariantValue,
+                line: opts.line,
             });
         }
         return {
@@ -810,6 +796,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (typeof vals.product_tmpl_id == "number") {
             vals.product_tmpl_id = this.data.models["product.template"].get(vals.product_tmpl_id);
         }
+
         const productTemplate = vals.product_tmpl_id;
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
@@ -831,14 +818,260 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        // In case of configurable product a popup will be shown to the user
-        // We assign the payload to the current values object.
+        let keepGoing = await this.handleConfigurableProduct(
+            values,
+            productTemplate,
+            opts,
+            configure
+        );
+        if (keepGoing === false) {
+            return;
+        }
+
+        keepGoing = await this.handleComboProduct(values, order, configure, opts);
+        if (keepGoing === false) {
+            return;
+        }
+
+        // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
+        // It will return an instance of pos.pack.operation.lot
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
+        const code = opts.code;
+        let pack_lot_ids = {};
+        if (values.product_tmpl_id.isTracked() && (configure || code)) {
+            const packLotLinesToEdit =
+                (!values.product_tmpl_id.isAllowOnlyOneLot() &&
+                    this.getOrder()
+                        .getOrderlines()
+                        .filter((line) => !line.getDiscount())
+                        .find((line) => line.product_id.id === values.product_id.id)
+                        ?.getPackLotLinesToEdit()) ||
+                [];
+
+            // if the lot information exists in the barcode, we don't need to ask it from the user.
+            if (code && code.type === "lot") {
+                // consider the old and new packlot lines
+                const modifiedPackLotLines = Object.fromEntries(
+                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
+                );
+                const newPackLotLines = [{ lot_name: code.code }];
+                pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
+            } else {
+                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
+            }
+
+            if (!pack_lot_ids) {
+                return;
+            } else {
+                const packLotLine = pack_lot_ids.newPackLotLines;
+                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
+            }
+        }
+
+        // In case of clicking a product with tracking weight enabled a popup will be shown to the user
+        // It will return the weight of the product as quantity
+        // ---
+        // This actions cannot be handled inside pos_order.js or pos_order_line.js
+        if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
+            if (values.product_tmpl_id.isScaleAvailable) {
+                const decimalAccuracy = this.models["decimal.precision"].find(
+                    (dp) => dp.name === "Product Unit"
+                ).digits;
+                this.scale.setProduct(
+                    values.product_id,
+                    decimalAccuracy,
+                    values.product_id.getTaxDetails().total_included
+                );
+                const weight = await this.weighProduct();
+                if (weight) {
+                    values.qty = weight;
+                } else if (weight !== null) {
+                    return;
+                }
+            } else {
+                await values.product_tmpl_id._onScaleNotAvailable();
+            }
+        }
+
+        // Handle price unit
+        this.handlePriceUnit(values, order, vals.price_unit);
+
+        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
+        line.setOptions(options);
+        this.selectOrderLine(order, line);
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+        const selectedOrderline = order.getSelectedOrderline();
+        if (options.draftPackLotLines && configure) {
+            selectedOrderline.setPackLotLines({
+                ...options.draftPackLotLines,
+                setQuantity: options.quantity === undefined,
+            });
+        }
+
+        // Merge orderline if needed
+        this.tryMergeOrderline(order, line, merge, selectedOrderline);
+
+        if (values.product_id.tracking === "lot") {
+            const productTemplate = values.product_id.product_tmpl_id;
+            const related_lines = [];
+            const price = productTemplate.getPrice(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id,
+                line,
+                related_lines
+            );
+            related_lines.forEach((line) => line.setUnitPrice(price));
+        }
+
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+
+        if (values.product_id.tracking === "serial") {
+            this.selectedOrder.getSelectedOrderline().setPackLotLines({
+                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
+                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
+                setQuantity: true,
+            });
+        }
+
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
+
+        return order.getSelectedOrderline();
+    }
+
+    /**
+     * Try to merge the orderline with another one in the order.
+     * If no orderline can be merged, select the last orderline.
+     * If merge is false, do not merge the orderline.
+     */
+    tryMergeOrderline(order, line, merge, selectedOrderline) {
+        selectedOrderline = selectedOrderline || order.getSelectedOrderline();
+        let to_merge_orderline;
+        for (const curLine of order.lines) {
+            if (curLine.id !== line.id) {
+                if (curLine.canBeMergedWith(line) && merge !== false) {
+                    to_merge_orderline = curLine;
+                }
+            }
+        }
+
+        if (to_merge_orderline) {
+            to_merge_orderline.merge(line);
+            line.delete();
+            this.selectOrderLine(order, to_merge_orderline);
+        } else if (!selectedOrderline) {
+            this.selectOrderLine(order, order.getLastOrderline());
+        }
+    }
+
+    /**
+     * Handle price unit for the order line.
+     */
+    handlePriceUnit(values, order, price_unit) {
+        if (!values.product_tmpl_id.isCombo() && price_unit === undefined) {
+            values.price_unit = values.product_id.getPrice(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id
+            );
+        }
+    }
+
+    // In case of clicking a combo product a popup will be shown to the user
+    // It will return the combo prices and the selected products
+    // ---
+    // This actions cannot be handled inside pos_order.js or pos_order_line.js
+    async handleComboProduct(values, order, configure = true, opts = {}) {
+        const compleValue = (comboPrices) => {
+            values.combo_line_ids = comboPrices.map((comboItem) => [
+                "create",
+                {
+                    product_id: comboItem.combo_item_id.product_id,
+                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
+                        "link",
+                        tax,
+                    ]),
+                    combo_item_id: comboItem.combo_item_id,
+                    price_unit: comboItem.price_unit,
+                    price_type: "automatic",
+                    order_id: order,
+                    qty: comboItem.qty,
+                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
+                        "link",
+                        attr,
+                    ]),
+                    custom_attribute_value_ids: Object.entries(
+                        comboItem.attribute_custom_values
+                    ).map(([id, cus]) => [
+                        "create",
+                        {
+                            custom_product_template_attribute_value_id:
+                                this.data.models["product.template.attribute.value"].get(id),
+                            custom_value: cus,
+                        },
+                    ]),
+                },
+            ]);
+        };
+        if (values.product_tmpl_id.isCombo() && configure) {
+            const payload =
+                values?.payload && Object.keys(values?.payload).length
+                    ? values.payload
+                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
+                          productTemplate: values.product_tmpl_id,
+                          line: opts.line,
+                      });
+
+            if (!payload) {
+                return false;
+            }
+
+            // Product template of combo should not have more than 1 variant.
+            const [childLineConf, comboExtraLines] = payload;
+            const comboPrices = computeComboItems(
+                values.product_tmpl_id.product_variant_ids[0],
+                childLineConf,
+                order.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                comboExtraLines,
+                this.currency
+            );
+
+            compleValue(comboPrices);
+        } else if (!configure && opts.comboOpts) {
+            compleValue(opts.comboOpts);
+        }
+
+        return true;
+    }
+
+    // In case of configurable product a popup will be shown to the user
+    // We assign the payload to the current values object.
+    // ---
+    // This actions cannot be handled inside pos_order.js or pos_order_line.js
+    handleConfigurableProduct = async (values, productTemplate, opts = {}, configure = true) => {
         if (productTemplate.isConfigurable() && configure) {
             const payload =
-                vals?.payload && Object.keys(vals?.payload).length
-                    ? vals.payload
+                values?.payload && Object.keys(values?.payload).length
+                    ? values.payload
                     : await this.openConfigurator(productTemplate, opts);
 
             if (payload) {
@@ -892,9 +1125,9 @@ export class PosStore extends WithLazyGetterTrap {
                     product_id: candidate || productTemplate.product_variant_ids[0],
                 });
             } else {
-                return;
+                return false;
             }
-        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
+        } else if (values.product_id?.product_template_variant_value_ids.length > 0) {
             // Verify price extra of variant products
             const priceExtra = values.product_id.product_template_variant_value_ids
                 .filter((attr) => attr.attribute_id.create_variant !== "always")
@@ -908,196 +1141,7 @@ export class PosStore extends WithLazyGetterTrap {
                 values.product_id.product_template_variant_value_ids.map((attr) => ["link", attr])
             );
         }
-
-        // In case of clicking a combo product a popup will be shown to the user
-        // It will return the combo prices and the selected products
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_tmpl_id.isCombo() && configure) {
-            const payload =
-                vals?.payload && Object.keys(vals?.payload).length
-                    ? vals.payload
-                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
-                          productTemplate: values.product_tmpl_id,
-                      });
-
-            if (!payload) {
-                return;
-            }
-
-            // Product template of combo should not have more than 1 variant.
-            const [childLineConf, comboExtraLines] = payload;
-            const comboPrices = computeComboItems(
-                values.product_tmpl_id.product_variant_ids[0],
-                childLineConf,
-                order.pricelist_id,
-                this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id"),
-                comboExtraLines,
-                this.currency
-            );
-
-            values.combo_line_ids = comboPrices.map((comboItem) => [
-                "create",
-                {
-                    product_id: comboItem.combo_item_id.product_id,
-                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
-                    combo_item_id: comboItem.combo_item_id,
-                    price_unit: comboItem.price_unit,
-                    price_type: "automatic",
-                    order_id: order,
-                    qty: comboItem.qty,
-                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
-                        "link",
-                        attr,
-                    ]),
-                    custom_attribute_value_ids: Object.entries(
-                        comboItem.attribute_custom_values
-                    ).map(([id, cus]) => [
-                        "create",
-                        {
-                            custom_product_template_attribute_value_id:
-                                this.data.models["product.template.attribute.value"].get(id),
-                            custom_value: cus,
-                        },
-                    ]),
-                },
-            ]);
-        }
-
-        // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
-        // It will return an instance of pos.pack.operation.lot
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        const code = opts.code;
-        let pack_lot_ids = {};
-        if (values.product_tmpl_id.isTracked() && (configure || code)) {
-            const packLotLinesToEdit =
-                (!values.product_tmpl_id.isAllowOnlyOneLot() &&
-                    this.getOrder()
-                        .getOrderlines()
-                        .filter((line) => !line.getDiscount())
-                        .find((line) => line.product_id.id === values.product_id.id)
-                        ?.getPackLotLinesToEdit()) ||
-                [];
-
-            // if the lot information exists in the barcode, we don't need to ask it from the user.
-            if (code && code.type === "lot") {
-                // consider the old and new packlot lines
-                const modifiedPackLotLines = Object.fromEntries(
-                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
-                );
-                const newPackLotLines = [{ lot_name: code.code }];
-                pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
-            } else {
-                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
-            }
-
-            if (!pack_lot_ids) {
-                return;
-            } else {
-                const packLotLine = pack_lot_ids.newPackLotLines;
-                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
-            }
-        }
-
-        // In case of clicking a product with tracking weight enabled a popup will be shown to the user
-        // It will return the weight of the product as quantity
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
-            if (values.product_tmpl_id.isScaleAvailable) {
-                const decimalAccuracy = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit"
-                ).digits;
-                this.scale.setProduct(
-                    values.product_id,
-                    decimalAccuracy,
-                    this.getProductPrice(values.product_id)
-                );
-                const weight = await this.weighProduct();
-                if (weight) {
-                    values.qty = weight;
-                } else if (weight !== null) {
-                    return;
-                }
-            } else {
-                await values.product_tmpl_id._onScaleNotAvailable();
-            }
-        }
-
-        // Handle price unit
-        if (!values.product_tmpl_id.isCombo() && vals.price_unit === undefined) {
-            values.price_unit = values.product_id.getPrice(
-                order.pricelist_id,
-                values.qty,
-                values.price_extra,
-                false,
-                values.product_id
-            );
-        }
-
-        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
-        line.setOptions(options);
-        this.selectOrderLine(order, line);
-        if (configure) {
-            this.numberBuffer.reset();
-        }
-        const selectedOrderline = order.getSelectedOrderline();
-        if (options.draftPackLotLines && configure) {
-            selectedOrderline.setPackLotLines({
-                ...options.draftPackLotLines,
-                setQuantity: options.quantity === undefined,
-            });
-        }
-
-        let to_merge_orderline;
-        for (const curLine of order.lines) {
-            if (curLine.id !== line.id) {
-                if (curLine.canBeMergedWith(line) && merge !== false) {
-                    to_merge_orderline = curLine;
-                }
-            }
-        }
-
-        if (to_merge_orderline) {
-            to_merge_orderline.merge(line);
-            line.delete();
-            this.selectOrderLine(order, to_merge_orderline);
-        } else if (!selectedOrderline) {
-            this.selectOrderLine(order, order.getLastOrderline());
-        }
-
-        if (configure) {
-            this.numberBuffer.reset();
-        }
-
-        if (values.product_id.tracking === "serial") {
-            this.selectedOrder.getSelectedOrderline().setPackLotLines({
-                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
-                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
-                setQuantity: true,
-            });
-        }
-
-        // FIXME: Put this in an effect so that we don't have to call it manually.
-        order.recomputeOrderData();
-
-        if (configure) {
-            this.numberBuffer.reset();
-        }
-
-        this.hasJustAddedProduct = true;
-        clearTimeout(this.productReminderTimeout);
-        this.productReminderTimeout = setTimeout(() => {
-            this.hasJustAddedProduct = false;
-        }, 3000);
-
-        return order.getSelectedOrderline();
-    }
+    };
 
     createPrinter(printerConfig) {
         const printerType = printerConfig.printer_type;
@@ -1146,13 +1190,13 @@ export class PosStore extends WithLazyGetterTrap {
      */
     removeOrder(order, removeFromServer = true) {
         if (this.config.isShareable || removeFromServer) {
-            if (typeof order.id === "number" && !order.finalized) {
+            if (order.isSynced && !order.finalized) {
                 this.addPendingOrder([order.id], true);
                 this.syncAllOrdersDebounced();
             }
         }
 
-        if (typeof order.id === "string" && order.finalized) {
+        if (!order.isSynced && order.finalized) {
             this.addPendingOrder([order.id]);
             return;
         }
@@ -1203,11 +1247,9 @@ export class PosStore extends WithLazyGetterTrap {
         this.setNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
 
-        if (this.config.use_presets) {
+        if (this.config.use_presets && !data["preset_id"]) {
             this.selectPreset(this.config.default_preset_id, order);
         }
-
-        order.recomputeOrderData();
 
         return order;
     }
@@ -1233,8 +1275,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         order.pos_reference = posReference;
         order.tracking_number = deviceIdentifier + `${parseInt(number) % 1000}`.padStart(3, "0");
-
-        this.data.debouncedSynchronizeLocalDataInIndexedDB();
     }
 
     selectNextOrder() {
@@ -1341,8 +1381,14 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
-    // There for override
-    async preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {
+        // Prices are computed on the fly on the pos.order and pos.order.line model
+        // we need to set them before sending the orders to the backend
+        for (const order of orders) {
+            order.setOrderPrices();
+        }
+    }
+
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
@@ -1371,11 +1417,6 @@ export class PosStore extends WithLazyGetterTrap {
 
             // Add order IDs to the syncing set
             orders.forEach((order) => this.syncingOrders.add(order.uuid));
-
-            // Re-compute all taxes, prices and other information needed for the backend
-            for (const order of orders) {
-                order.recomputeOrderData();
-            }
 
             const serializedOrder = orders.map((order) => order.serializeForORM());
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
@@ -1481,26 +1522,10 @@ export class PosStore extends WithLazyGetterTrap {
     }
     async getServerOrders() {
         await this.syncAllOrders();
-        return await this.loadServerOrders([
+        return await this.data.loadServerOrders([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
         ]);
-    }
-    async loadServerOrders(domain) {
-        const result = await this.data.callRelated(
-            "pos.order",
-            "read_pos_orders",
-            [domain],
-            {},
-            false,
-            true
-        );
-        const orders = result["pos.order"] || [];
-        for (const order of orders) {
-            order.config_id = this.config;
-            order.session_id = this.session;
-        }
-        return orders;
     }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
@@ -1516,14 +1541,14 @@ export class PosStore extends WithLazyGetterTrap {
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
         const margin = priceWithoutTax - productTemplate.standard_price;
-        const orderPriceWithoutTax = order.getTotalWithoutTax();
+        const orderPriceWithoutTax = order.priceExcl;
         const orderCost = order.getTotalCost();
         const orderMargin = orderPriceWithoutTax - orderCost;
         const orderTaxTotalCurrency = this.env.utils.formatCurrency(
-            order.taxTotals.order_sign * order.taxTotals.tax_amount_currency
+            order.prices.taxDetails.order_sign * order.prices.taxDetails.tax_amount_currency
         );
         const orderPriceWithTaxCurrency = this.env.utils.formatCurrency(
-            order.taxTotals.order_sign * order.taxTotals.total_amount_currency
+            order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
         );
         const taxAmount = this.env.utils.formatCurrency(
             productInfo.all_prices.tax_details[0]?.amount || 0
@@ -1695,9 +1720,17 @@ export class PosStore extends WithLazyGetterTrap {
             this.printOptions
         );
         if (!printBillActionTriggered) {
-            order.nb_print = order.nb_print ? order.nb_print + 1 : 1;
-            if (typeof order.id === "number" && result) {
-                await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
+            if (result) {
+                const count = order.nb_print ? order.nb_print + 1 : 1;
+                if (order.isSynced) {
+                    const wasDirty = order.isDirty();
+                    await this.data.write("pos.order", [order.id], { nb_print: count });
+                    if (!wasDirty) {
+                        order._dirty = false;
+                    }
+                } else {
+                    order.nb_print = count;
+                }
             }
         } else if (!order.nb_print) {
             order.nb_print = 0;
@@ -1717,7 +1750,7 @@ export class PosStore extends WithLazyGetterTrap {
         return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
     }
     async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
-        if (typeof order.id !== "number") {
+        if (!order.isSynced) {
             return this.sendOrderInPreparation(order, opts);
         }
 
@@ -1805,56 +1838,11 @@ export class PosStore extends WithLazyGetterTrap {
         await this.checkPreparationStateAndSentOrderInPreparation(o, opts);
     }
 
-    getStrNotes(note) {
-        if (!note) {
-            return "";
-        }
-        if (Array.isArray(note)) {
-            return note.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
-        }
-        if (typeof note === "string") {
-            try {
-                const parsed = JSON.parse(note);
-                if (Array.isArray(parsed)) {
-                    return parsed.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
-                }
-                return note;
-            } catch (error) {
-                logPosMessage(
-                    "Store",
-                    "getStrNotes",
-                    "Error while parsing note, not valid JSON",
-                    CONSOLE_COLOR,
-                    [error]
-                );
-                return note;
-            }
-        }
-        return "";
-    }
-
-    getOrderData(order, reprint) {
-        return {
-            reprint: reprint,
-            pos_reference: order.getName(),
-            config_name: order.config_id?.name || order.config.name,
-            time: DateTime.now().toFormat("HH:mm"),
-            tracking_number: order.tracking_number,
-            preset_time: order.presetDateTime,
-            preset_name: order.preset_id?.name || "",
-            employee_name: order.employee_id?.name || order.user_id?.name,
-            internal_note: this.getStrNotes(order.internal_note),
-            general_customer_note: order.general_customer_note,
-            changes: {
-                title: "",
-                data: [],
-            },
-        };
-    }
-
     generateOrderChange(order, orderChange, categories, reprint = false) {
         const isPartOfCombo = (line) =>
-            line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
+            line.isCombo ||
+            line.combo_parent_uuid ||
+            this.models["product.product"].get(line.product_id).type == "combo";
         const comboChanges = orderChange.new.filter(isPartOfCombo);
         const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
         normalChanges.sort((a, b) => {
@@ -1868,12 +1856,9 @@ export class PosStore extends WithLazyGetterTrap {
         });
         orderChange.new = [...comboChanges, ...normalChanges];
 
-        const orderData = this.getOrderData(order, reprint);
+        const orderData = order.getOrderData(reprint);
 
-        const changes = this.filterChangeByCategories(categories, orderChange);
-        for (const changeItem of [...changes.new, ...changes.cancelled, ...changes.noteUpdate]) {
-            changeItem.note = this.getStrNotes(changeItem.note || "[]");
-        }
+        const changes = filterChangeByCategories(categories, orderChange, this.models);
         return { orderData, changes };
     }
 
@@ -1989,28 +1974,6 @@ export class PosStore extends WithLazyGetterTrap {
         return await printer.printReceipt(receipt);
     }
 
-    filterChangeByCategories(categories, currentOrderChange) {
-        const filterFn = (change) => {
-            const product = this.models["product.product"].get(change["product_id"]);
-            const categoryIds = product.parentPosCategIds;
-
-            if (change.isCombo) {
-                return true;
-            }
-            for (const categoryId of categoryIds) {
-                if (categories.includes(categoryId)) {
-                    return true;
-                }
-            }
-        };
-
-        return {
-            new: currentOrderChange["new"].filter(filterFn),
-            cancelled: currentOrderChange["cancelled"].filter(filterFn),
-            noteUpdate: currentOrderChange["noteUpdate"].filter(filterFn),
-        };
-    }
-
     connectToProxy() {
         return new Promise((resolve, reject) => {
             this.barcodeReader?.disconnectFromProxy();
@@ -2113,14 +2076,7 @@ export class PosStore extends WithLazyGetterTrap {
             resModel: "pos.order",
             resId: order.id,
             onRecordSaved: async (record) => {
-                await this.data.callRelated(
-                    "pos.order",
-                    "read_pos_orders",
-                    [[["id", "=", record.evalContext.id]]],
-                    {},
-                    false,
-                    true
-                );
+                await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
                 this.action.doAction({
                     type: "ir.actions.act_window_close",
                 });
@@ -2569,7 +2525,11 @@ export class PosStore extends WithLazyGetterTrap {
                 continue;
             }
 
-            if (availableCateg.size && !p.pos_categ_ids.some((c) => availableCateg.has(c.id))) {
+            if (
+                availableCateg.size &&
+                !this.config._pos_special_display_products_ids?.includes(p.id) &&
+                !p.pos_categ_ids.some((c) => availableCateg.has(c.id))
+            ) {
                 continue;
             }
 
@@ -2638,35 +2598,24 @@ export class PosStore extends WithLazyGetterTrap {
 
     getProductsBySearchWord(searchWord, products) {
         const words = normalize(searchWord);
-        const exactMatches = products.filter((product) => product.exactMatch(words));
-
-        if (exactMatches.length > 0 && words.length > 2) {
-            return this.sortByWordIndex(exactMatches, words);
-        }
-
         const matches = products.filter(
             (p) =>
                 normalize(p.searchString).includes(words) ||
                 p.product_variant_ids.some((variant) =>
-                    variant.product_template_variant_value_ids.some((vv) =>
-                        normalize(vv.name, false).toLowerCase().includes(words)
-                    )
+                    normalize(variant.searchString).includes(words)
                 )
         );
 
-        return this.sortByWordIndex(Array.from(new Set([...exactMatches, ...matches])), words);
+        return this.sortByWordIndex(matches, words);
     }
-
     getPaymentMethodFmtAmount(pm, order) {
-        const { cash_rounding, only_round_cash_method } = this.config;
         const amount = order.getDefaultAmountDueToPayIn(pm);
         const fmtAmount = this.env.utils.formatCurrency(amount, true);
-        if (
-            this.currency.isPositive(amount) &&
-            cash_rounding &&
-            !only_round_cash_method &&
-            pm.type === "cash"
-        ) {
+
+        if (!this.currency.isPositive(amount) || !this.config.cash_rounding) {
+            return;
+        }
+        if (!this.config.only_round_cash_method || pm.type === "cash") {
             return fmtAmount;
         }
     }
@@ -2721,6 +2670,323 @@ export class PosStore extends WithLazyGetterTrap {
             fastPaymentMethod: paymentMethod,
         });
         await validation.validateOrder(false);
+    }
+
+    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
+        const srcKey = srcLine.preparationKey;
+        const destKey = destLine.preparationKey;
+        const srcQty = srcPrep[srcKey]?.quantity;
+
+        if (srcQty) {
+            if (srcQty <= qty) {
+                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
+                destPrep[destKey] = newPrep;
+                delete srcPrep[srcKey];
+            } else {
+                srcPrep[srcKey].quantity = srcQty - qty;
+                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
+            }
+        }
+    }
+
+    get isSelectedLineCombo() {
+        const selectedOrderline = this.selectedOrder.getSelectedOrderline();
+        return selectedOrderline && selectedOrderline.isPartOfCombo();
+    }
+
+    /**
+     * This method is called in three different contexts.
+     *
+     * 1. Each time `order_summary` is rendered, this method is called in “limited” mode to
+     *    determine whether it is possible to create combos with the order lines.
+     *
+     * 2. When you click on “apply combos,” a popup opens if there are several possibilities, this
+     *    time in “combinations” mode.
+     *
+     * 3. When choosing a combo in the popup, this method is called in “full” mode to get all
+     *    possible combinations.
+     *
+     * Limited mode: this mode returns when more than one combo possibility is
+     * found.
+     *
+     * Combination mode: this mode returns 1 combination for each possible combo. It limits the computation time
+     * while giving all information needed for the popup.
+     *
+     * Full mode: returns all possibilities; this mode is more complex, hence the limited mode for
+     * rendering.
+     *
+     * @param {string} mode: limited | full | combinaison
+     * @param {ProductTemplate} productTmpl: ProductTmpl
+     */
+    getApplicableProductCombo(mode = "limited", productTmpl = null) {
+        const matchingCombos = [];
+        const productInOrder = this.selectedOrder.lines.reduce((acc, line) => {
+            if (line.isPartOfCombo()) {
+                return acc;
+            }
+            const pid = line.product_id.id;
+
+            if (!acc[pid]) {
+                acc[pid] = {
+                    lines: {},
+                    totalQty: 0,
+                };
+            }
+
+            acc[pid].lines[line.uuid] = line.qty;
+            acc[pid].totalQty += line.qty;
+            return acc;
+        }, {});
+        const combos = this.models["product.combo"].getAll();
+        const comboItems = combos.flatMap((combo) => combo.combo_item_ids);
+        const totalQtyAvailable = comboItems.reduce((acc, item) => {
+            const productId = item.product_id.id;
+            if (productInOrder[productId]) {
+                acc[item.combo_id.id] =
+                    (acc[item.combo_id.id] || 0) + productInOrder[productId].totalQty;
+            }
+            return acc;
+        }, {});
+
+        const productTmplsToCheck =
+            mode === "full" && productTmpl
+                ? [productTmpl]
+                : this.productCombos.sort(
+                      (a, b) => a.product_tmpl_id.list_price - b.product_tmpl_id.list_price
+                  );
+
+        for (const comboProduct of productTmplsToCheck) {
+            const combos = comboProduct.combo_ids;
+            const quantityTaken = {};
+            let comboQty = Infinity;
+            let hasUpsell = false;
+
+            for (const combo of combos) {
+                if (combo.is_upsell) {
+                    hasUpsell = true;
+                    continue;
+                }
+                const comboId = combo.id;
+                const minQty = combo.qty_free;
+                quantityTaken[comboId] = {};
+
+                if ((totalQtyAvailable[comboId] || 0) < minQty) {
+                    // Not enough to satisfy qty_free for this combo group
+                    comboQty = 0;
+                    break;
+                }
+                comboQty = Math.min(totalQtyAvailable[comboId] / minQty, comboQty);
+            }
+
+            if (comboQty === 0 || comboQty == Infinity) {
+                // The combo product is either composed of only upsell combo choices (Infinity)
+                // or cannot be completed with current order lines (0).
+                // We do not propose it as applicable or upsell
+                continue;
+            }
+
+            if (mode === "limited") {
+                // In limited mode, we only want the useful information for the UI
+                // We thus want to know if there is a applicable combo or not,
+                // If yes, we want to know if there could be several combos
+                // and the quantity of the first applicable combo
+                matchingCombos.push({
+                    productTmpl: comboProduct,
+                    quantity: comboQty,
+                    hasUpsell,
+                });
+                if (matchingCombos.length > 1) {
+                    break;
+                }
+                continue;
+            }
+
+            const availableQty = JSON.parse(JSON.stringify(productInOrder));
+            const combinations = [];
+
+            let qtyToCheck = Math.min(comboQty, 20); // For performance reasons, we only do 20 combos at a time
+            if (mode === "combinations") {
+                // In combinations mode, we only want to get the first combinations to display to the user
+                qtyToCheck = Math.min(qtyToCheck, 1);
+            }
+
+            for (let i = 0; i < qtyToCheck; i++) {
+                const quantityTaken = {};
+                for (const combo of combos) {
+                    const comboId = combo.id;
+                    let qtyNeeded = Math.min(
+                        Math.ceil(totalQtyAvailable[comboId] / comboQty),
+                        combo.qty_max
+                    );
+                    quantityTaken[comboId] = {};
+
+                    for (const item of combo.combo_item_ids) {
+                        const productId = item.product_id.id;
+                        if (!availableQty[productId]) {
+                            continue;
+                        }
+                        for (const [lUuid, qty] of Object.entries(availableQty[productId].lines)) {
+                            if (qtyNeeded === 0) {
+                                break;
+                            }
+                            const takeQty = Math.min(qty, qtyNeeded);
+                            quantityTaken[comboId][lUuid] = {
+                                qty: takeQty,
+                                combo_item: item,
+                            };
+                            availableQty[productId].lines[lUuid] -= takeQty;
+                            qtyNeeded -= takeQty;
+                        }
+                    }
+                    if (combo.is_upsell) {
+                        quantityTaken[comboId].upsell = true;
+                    }
+                }
+                combinations.push(quantityTaken);
+            }
+
+            matchingCombos.push({
+                productTmpl: comboProduct,
+                combinations,
+                combinationsQty: comboQty,
+            });
+        }
+        return matchingCombos;
+    }
+    async createComboFromLines(productTmpl, combinations) {
+        const concernedLinesQty = {};
+        combinations.forEach((items) => {
+            for (const combo of Object.values(items)) {
+                for (const uuid of Object.keys(combo)) {
+                    const line = this.selectedOrder.lines.find((l) => l.uuid === uuid);
+                    if (!line) {
+                        continue;
+                    }
+                    concernedLinesQty[uuid] = line.qty;
+                }
+            }
+        });
+        let comboLine = null;
+        for (const [index, items] of combinations.entries()) {
+            const props = {
+                productTemplate: productTmpl,
+                values: items,
+            };
+            if (combinations.length > 1) {
+                props.title = productTmpl.display_name + ` ${index + 1}/${combinations.length}`;
+            }
+            const payload = await makeAwaitable(this.dialog, ComboConfiguratorPopup, props);
+            if (!payload) {
+                break;
+            }
+
+            const comboPrices = computeComboItems(
+                productTmpl.product_variant_ids[0],
+                payload[0],
+                this.selectedOrder.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                payload[1],
+                this.currency
+            );
+
+            comboLine = await this.addLineToCurrentOrder(
+                { product_tmpl_id: productTmpl },
+                { comboOpts: comboPrices },
+                false
+            );
+
+            const linkOldNewLines = {};
+            comboLine.combo_line_ids.forEach((cl) => {
+                linkOldNewLines[cl.uuid] = 0;
+            });
+
+            const oldLines = this.selectedOrder.lines.filter((l) =>
+                Object.keys(concernedLinesQty).includes(l.uuid)
+            );
+
+            for (const oldLine of oldLines) {
+                const possibleLinkedComboLines = this.findComboLinesByOldLine(oldLine, comboLine);
+                for (const link of possibleLinkedComboLines) {
+                    if (linkOldNewLines[link.uuid] >= link.qty) {
+                        continue;
+                    }
+                    if (link.qty >= concernedLinesQty[oldLine.uuid]) {
+                        this.handlePreparationHistory(
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            oldLine,
+                            link,
+                            concernedLinesQty[oldLine.uuid]
+                        );
+                        linkOldNewLines[link.uuid] += concernedLinesQty[oldLine.uuid];
+                        concernedLinesQty[oldLine.uuid] = 0;
+                        break;
+                    } else {
+                        this.handlePreparationHistory(
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            oldLine,
+                            link,
+                            link.qty
+                        );
+                        linkOldNewLines[link.uuid] += link.qty;
+                        concernedLinesQty[oldLine.uuid] -= link.qty;
+                    }
+                }
+            }
+
+            // make orderline ignored by preparation printers if at least one child orderline has already been sent to the kitchen
+            if (
+                comboLine.combo_line_ids.some(
+                    (cl) =>
+                        this.selectedOrder.last_order_preparation_change.lines[cl.preparationKey]
+                )
+            ) {
+                this.selectedOrder.last_order_preparation_change[comboLine.preparationKey] = {
+                    ignoreQty: comboLine.qty,
+                };
+            }
+        }
+        for (const [lineUuid, newQty] of Object.entries(concernedLinesQty)) {
+            const line = this.models["pos.order.line"].getBy("uuid", lineUuid);
+            if (newQty > 0) {
+                line.setQuantity(newQty);
+            } else {
+                line.order_id.removeOrderline(line);
+            }
+        }
+        if (comboLine) {
+            this.selectedOrder.selectOrderline(comboLine);
+        }
+        return;
+    }
+    findComboLinesByOldLine(oldLine, comboProduct) {
+        // Link future new lines to old lines for preparation history tracking
+        return comboProduct.combo_line_ids.filter((cl) => {
+            if (cl.product_id.id !== oldLine.product_id.id) {
+                return false;
+            }
+            if (cl.full_product_name !== oldLine.full_product_name) {
+                return false;
+            }
+            return true;
+        });
+    }
+    breakCombo(orderline) {
+        if (!this.isSelectedLineCombo) {
+            return;
+        }
+        const order = this.selectedOrder;
+        for (const line of orderline.combo_line_ids) {
+            line.combo_parent_id = false;
+            line.setUnitPrice(
+                line.product_id.getPrice(order.pricelist_id, line.qty, 0, false, line.product_id)
+            );
+        }
+        const preparationKey = orderline.preparationKey;
+        order.removeOrderline(orderline, false);
+        delete order.last_order_preparation_change.lines[preparationKey];
     }
 }
 

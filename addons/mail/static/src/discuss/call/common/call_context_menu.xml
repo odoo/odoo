@@ -10,10 +10,10 @@
                     <output t-esc="`${Math.round(state.rangeVolume * 200)}%`" class="o-mail-CallContextMenu-volumeTooltip fw-bold rounded" t-attf-style="--progress:{{state.rangeVolume * 100}}%;"/>
                 </div>
             </div>
-            <t t-if="env.debug and !isSelf and rtc.state.connectionType === rtcConnectionTypes.P2P">
+            <t t-if="env.debug and !isSelf and rtc.connectionType === rtcConnectionTypes.P2P">
                 <hr class="w-100 border-top"/>
                 <div><span class="fw-bolder">RTC Session ID: </span><t t-out="props.rtcSession.id"/></div>
-                <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.state.connectionType"/></div>
+                <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.connectionType"/></div>
                 <div><span class="fw-bolder">To peer: </span><t t-out="outboundConnectionTypeText"/></div>
                 <div><span class="fw-bolder">From peer: </span><t t-out="inboundConnectionTypeText"/></div>
                 <div><span class="fw-bolder">Connection: </span><t t-out="state.peerStats.connectionState"/></div>
@@ -29,8 +29,8 @@
                 <div><span class="fw-bolder">Packets received: </span><t t-out="state.peerStats.packetsReceived"/></div>
                 <div><span class="fw-bolder">Log step: </span><t t-out="props.rtcSession.logStep"/></div>
             </t>
-            <t t-elif="env.debug and isSelf and rtc.state.connectionType === rtcConnectionTypes.SERVER">
-                <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.state.connectionType"/></div>
+            <t t-elif="env.debug and isSelf and rtc.connectionType === rtcConnectionTypes.SERVER">
+                <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.connectionType"/></div>
                 <div><span class="fw-bolder">RTC Session ID: </span><t t-out="props.rtcSession.id"/></div>
                 <hr class="w-100 border-top"/>
                 <div><span class="fw-bolder">Upload: </span><t t-out="outboundConnectionTypeText"/></div>

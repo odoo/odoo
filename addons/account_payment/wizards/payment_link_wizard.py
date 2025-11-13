@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.tools import format_date, formatLang, str2bool
+from odoo.tools import format_date, formatLang
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -29,7 +29,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _compute_warning_message(self):
         super()._compute_warning_message()
         for wizard in self:
-            if not wizard.warning_message and not str2bool(self.env['ir.config_parameter'].sudo().get_param('account_payment.enable_portal_payment')):
+            if not wizard.warning_message and not self.env['ir.config_parameter'].sudo().get_bool('account_payment.enable_portal_payment'):
                 wizard.warning_message = _("Online payment option is not enabled in Configuration.")
 
     @api.depends('amount_max')

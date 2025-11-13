@@ -114,9 +114,7 @@ test("SelectionField, edition and on many2one field", async () => {
 
 test.tags("desktop");
 test("[Offline] SelectionField on many2one field", async () => {
-    onRpc("/web/dataset/call_kw/product/name_search", () => new Response("", { status: 502 }), {
-        pure: true,
-    });
+    onRpc("product", "name_search", () => new Response("", { status: 502 }));
     Partner._onChanges.product_id = () => {};
     Partner._records[0].product_id = 37;
     Partner._records[0].trululu = false;
@@ -129,10 +127,10 @@ test("[Offline] SelectionField on many2one field", async () => {
                 <field name="product_id" widget="selection" />
             </form>`,
     });
-    expect(".o_select_menu").toHaveCount(1);
-    await contains(".o_field_widget[name='product_id'] input").click();
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xphone"]);
-    expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
+    expect(".o_field_widget[name='product_id'] span").toHaveCount(1, {
+        message: "field should be readonly",
+    });
+    expect(".o_field_widget[name='product_id']").toHaveText("xphone");
 });
 
 test("unset selection field with 0 as key", async () => {

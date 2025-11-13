@@ -2,9 +2,10 @@
 
 import datetime
 from markupsafe import Markup
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailActivityTodo(TransactionCase):
 
     @classmethod

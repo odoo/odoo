@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import survey_invite
+from . import hr_recruitment_survey_invite

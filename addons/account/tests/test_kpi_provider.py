@@ -70,12 +70,12 @@ class TestKpiProvider(TransactionCase):
             'move_type': 'out_invoice',
         })
         move.action_post()
-        move.checked = False
+        move.review_state = 'todo'
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [
             {'id': 'account_journal_type.sale', 'name': 'Sales', 'type': 'integer', 'value': 1},
         ])
 
-        move.button_set_checked()
+        move.set_moves_checked()
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])
 
     def test_kpi_summary_reports_unreconciled_bank_statements(self):

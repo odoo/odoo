@@ -77,6 +77,7 @@ import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
 import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_preview_plugin";
 import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
+import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -191,6 +192,7 @@ export const MAIN_PLUGINS = [
     InlineCodePlugin,
     TableResizePlugin,
     PlaceholderPlugin,
+    SelectionPlaceholderPlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [

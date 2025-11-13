@@ -82,7 +82,7 @@
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </xpath>
         <xpath expr="//table[@name='invoice_line_table']//span[@t-out='section_subtotal']" position="attributes">
-            <attribute name="t-out">current_subtotal * sign</attribute>
+            <attribute name="t-out">section_subtotal * sign</attribute>
         </xpath>
         <xpath expr="//div[hasclass('clearfix')]//span[@t-field='o.amount_residual']" position="attributes">
             <attribute name="t-field"/>

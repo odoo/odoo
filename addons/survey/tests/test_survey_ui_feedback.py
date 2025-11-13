@@ -295,15 +295,9 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                 }),
             ]
         })
-
-        q1 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q1')
+        q1, q2, q3 = survey_with_trigger_on_different_page.question_ids
         q1_a1 = q1.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
-
-        q2 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q2')
         q2_a1 = q2.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
-
-        q3 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q3')
-
         q3.triggering_answer_ids = q1_a1 | q2_a1
 
         access_token = survey_with_trigger_on_different_page.access_token
@@ -351,9 +345,31 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                         Command.create({'value': 'Answer 1'}),
                         Command.create({'value': 'Answer 2'}),
                     ],
+                }), Command.create({
+                    'title': 'Q4',
+                    'sequence': 4,
+                    'question_type': 'simple_choice',
+                    'constr_mandatory': True,
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
+                }), Command.create({
+                    'title': 'Q5',
+                    'sequence': 5,
+                    'question_type': 'simple_choice',
+                    'constr_mandatory': False,
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'Answer 1'}),
+                        Command.create({'value': 'Answer 2'}),
+                    ],
                 }),
             ]
         })
+        _, q2, _, q4, q5 = survey_with_mandatory_questions.question_ids
+        q2_a3 = q2.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 3')
+        q4.triggering_answer_ids = q2_a3
+        q5.triggering_answer_ids = q2_a3
 
         access_token = survey_with_mandatory_questions.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_roaming_mandatory_questions')

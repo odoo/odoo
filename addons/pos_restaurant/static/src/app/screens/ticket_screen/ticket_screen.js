@@ -51,7 +51,7 @@ patch(TicketScreen.prototype, {
         for (const order of this.getFilteredOrderList()) {
             const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
 
-            if (typeof order.id === "string") {
+            if (!order.isSynced) {
                 logPosMessage(
                     "TicketScreen",
                     "settleTips",
@@ -62,7 +62,7 @@ patch(TicketScreen.prototype, {
 
             order.state = "draft";
             this.pos.selectedOrderUuid = order.uuid;
-            this.pos.setTip(amount);
+            await this.pos.setTip(amount);
             order.state = "paid";
             order.uiState.screen_data.value = { name: "", props: {} };
 

@@ -1,20 +1,12 @@
 import { registry } from "@web/core/registry";
-import { contains } from "@web/../tests/utils";
 
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour", {
     steps: () => [
         {
-            trigger: messagesContain("Hello! I'm a bot!"),
-            async run() {
-                const ChatHub = this.anchor.closest(".o-mail-ChatHub");
-                await contains(".o-mail-ChatWindow", {
-                    text: "Testing Bot",
-                    count: 1,
-                    target: ChatHub,
-                });
-            },
+            trigger:
+                ".o-livechat-root:shadow .o-mail-ChatHub:has(.o-mail-ChatWindow .o-mail-ChatWindow-header:contains(/^Testing Bot$/)):count(1) .o-mail-Message-body:contains(/^Hello! I'm a bot!$/)",
         },
         {
             trigger: messagesContain("I help lost visitors find their way."),
@@ -36,15 +28,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             expectUnloadPage: true,
         },
         {
-            trigger: messagesContain("Hello! I'm a bot!"),
-            async run() {
-                const ChatHub = this.anchor.closest(".o-mail-ChatHub");
-                await contains(".o-mail-ChatWindow", {
-                    text: "Testing Bot",
-                    count: 1,
-                    target: ChatHub,
-                });
-            },
+            trigger:
+                ".o-livechat-root:shadow .o-mail-ChatHub:has(.o-mail-ChatWindow .o-mail-ChatWindow-header:contains(/^Testing Bot$/)):count(1) .o-mail-Message-body:contains(/^Hello! I'm a bot!$/)",
         },
         {
             trigger: '.o-livechat-root:shadow button:contains("Other & Documentation")',
@@ -63,15 +48,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow p:contains('Did we correctly answer your question?')",
-            async run() {
-                await contains("button", { target: this.anchor.getRootNode(), text: "Close" });
-                await contains("button", {
-                    target: this.anchor.getRootNode(),
-                    text: "New Session",
-                    count: 0,
-                });
-            },
+            trigger:
+                ".o-livechat-root:shadow .o-mail-ChatWindow:has(p:contains('Did we correctly answer your question?')):has(button:contains('Close')):not(:has(button:contains('New Session')))",
         },
         {
             trigger: ".o-livechat-root:shadow button:contains('Close')",

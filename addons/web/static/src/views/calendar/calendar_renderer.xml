@@ -3,11 +3,10 @@
 
     <t t-name="web.CalendarRenderer">
         <div class="o_calendar_renderer h-100 flex-grow-1">
-            <ActionSwiper t-props="actionSwiperProps">
+            <ActionSwiper t-props="actionSwiperProps" t-key="calendarKey">
                 <t
                     t-component="concreteRenderer"
                     t-props="concreteRendererProps"
-                    t-key="calendarKey"
                 />
             </ActionSwiper>
         </div>

@@ -3,34 +3,12 @@ from unittest import skip
 from odoo.fields import Date, Datetime
 from odoo.tools import float_is_zero, mute_logger
 from odoo.tests import Form, tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
 @tagged('post_install', '-at_install')
 @skip('Temporary to fast merge new valuation')
-class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.vendor01 = cls.env['res.partner'].create({'name': "Super Vendor"})
-
-        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.income_account, cls.stock_journal = _create_accounting_data(cls.env)
-        cls.avco_category = cls.env['product.category'].create({
-            'name': 'AVCO',
-            'property_cost_method': 'average',
-            'property_valuation': 'real_time',
-            'property_stock_account_input_categ_id': cls.stock_input_account.id,
-            'property_stock_account_output_categ_id': cls.stock_output_account.id,
-            'property_stock_journal': cls.stock_journal.id,
-            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
-        })
-
-        currency_grp = cls.env.ref('base.group_multi_currency')
-        cls.env.user.write({'group_ids': [(4, currency_grp.id)]})
-
-        cls.env.company.anglo_saxon_accounting = True
+class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
     def test_kit_anglo_saxo_price_diff(self):
         """

@@ -3,6 +3,7 @@ from odoo.tests.common import TransactionCase
 
 
 @tagged('phone_validation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPhoneFormat(TransactionCase):
 
     def test_phone_format_country_guess(self):

@@ -9,6 +9,7 @@ from odoo.tools import mute_logger, email_normalize
 
 
 @tagged('mass_mailing')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailing(TestMassMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

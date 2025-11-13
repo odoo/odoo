@@ -7,8 +7,8 @@ export class MonetaryFieldPlugin extends Plugin {
     static id = "monetaryField";
     static dependencies = ["selection"];
     resources = {
-        force_editable_selector: `${monetarySel} .oe_currency_value`,
-        force_not_editable_selector: monetarySel,
+        content_editable_selectors: `${monetarySel} .oe_currency_value`,
+        content_not_editable_selectors: monetarySel,
     };
 
     setup() {

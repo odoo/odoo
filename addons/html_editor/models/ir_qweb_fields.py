@@ -19,7 +19,6 @@ import babel
 import pytz
 import requests
 from lxml import etree, html
-from markupsafe import Markup, escape_silent
 from PIL import Image as I
 from werkzeug import urls
 
@@ -39,116 +38,6 @@ class IrQweb(models.AbstractModel):
     """
     _inherit = 'ir.qweb'
 
-    def _compile_node(self, el, compile_context, level):
-        snippet_key = compile_context.get('snippet-key')
-
-        template = compile_context['ref_name']
-        sub_call_key = compile_context.get('snippet-sub-call-key')
-
-        # We only add the 'data-snippet' & 'data-name' attrib once when
-        # compiling the root node of the template.
-        if not template or template not in {snippet_key, sub_call_key} or el.getparent() is not None:
-            return super()._compile_node(el, compile_context, level)
-
-        snippet_base_node = el
-        if el.tag == 't':
-            el_children = [child for child in list(el) if isinstance(child.tag, str) and child.tag != 't']
-            if len(el_children) == 1:
-                snippet_base_node = el_children[0]
-            elif not el_children:
-                # If there's not a valid base node we check if the base node is
-                # a t-call to another template. If so the called template's base
-                # node must take the current snippet key.
-                el_children = [child for child in list(el) if isinstance(child.tag, str)]
-                if len(el_children) == 1:
-                    sub_call = el_children[0].get('t-call')
-                    if sub_call:
-                        el_children[0].set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
-        # If it already has a data-snippet it is a saved or an
-        # inherited snippet. Do not override it.
-        if 'data-snippet' not in snippet_base_node.attrib:
-            snippet_base_node.attrib['data-snippet'] = \
-                snippet_key.split('.', 1)[-1]
-        # If it already has a data-name it is a saved or an
-        # inherited snippet. Do not override it.
-        snippet_name = compile_context.get('snippet-name')
-        if snippet_name and 'data-name' not in snippet_base_node.attrib:
-            snippet_base_node.attrib['data-name'] = snippet_name
-        return super()._compile_node(el, compile_context, level)
-
-    def _get_preload_attribute_xmlids(self):
-        return super()._get_preload_attribute_xmlids() + ['t-snippet', 't-snippet-call']
-
-    # compile directives
-
-    def _compile_directive_snippet(self, el, compile_context, indent):
-        key = el.attrib.pop('t-snippet')
-        el.set('t-call', key)
-        snippet_lang = self.env.context.get('snippet_lang')
-        if snippet_lang:
-            el.set('t-lang', f"'{snippet_lang}'")
-
-        el.set('t-options', f"{{'snippet-key': {key!r}}}")
-        view = self.env['ir.ui.view']._get_template_view(key)
-        name = el.attrib.pop('string', view.name)
-        thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
-        image_preview = el.attrib.pop('t-image-preview', None)
-        # Forbid sanitize contains the specific reason:
-        # - "true": always forbid
-        # - "form": forbid if forms are sanitized
-        forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
-        grid_column_span = el.attrib.pop('t-grid-column-span', None)
-        snippet_group = el.attrib.pop('snippet-group', None)
-        group = el.attrib.pop('group', None)
-        label = el.attrib.pop('label', None)
-        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s %s>') % (
-            name,
-            escape_silent(image_preview),
-            thumbnail,
-            view.id,
-            key.split('.')[-1],
-            escape_silent(el.findtext('keywords')),
-            Markup('data-oe-forbid-sanitize="%s"') % forbid_sanitize if forbid_sanitize else '',
-            Markup('data-o-grid-column-span="%s"') % grid_column_span if grid_column_span else '',
-            Markup('data-o-snippet-group="%s"') % snippet_group if snippet_group else '',
-            Markup('data-o-group="%s"') % group if group else '',
-            Markup('data-o-label="%s"') % label if label else '',
-        )
-        self._append_text(div, compile_context)
-        code = self._compile_node(el, compile_context, indent)
-        self._append_text('</div>', compile_context)
-        return code
-
-    def _compile_directive_snippet_call(self, el, compile_context, indent):
-        key = el.attrib.pop('t-snippet-call')
-        snippet_name = el.attrib.pop('string', None)
-        el.set('t-call', key)
-        el.set('t-options', f"{{'snippet-key': {key!r}, 'snippet-name': {snippet_name!r}}}")
-        return self._compile_node(el, compile_context, indent)
-
-    def _compile_directive_install(self, el, compile_context, indent):
-        key = el.attrib.pop('t-install')
-        thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
-        image_preview = el.attrib.pop('t-image-preview', None)
-        group = el.attrib.pop('group', None)
-        label = el.attrib.pop('label', None)
-        if self.env.user.has_group('base.group_system'):
-            module = self.env['ir.module.module'].search([('name', '=', key)])
-            if not module or module.state == 'installed':
-                return []
-            name = el.attrib.get('string') or 'Snippet'
-            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s %s><section/></div>') % (
-                name,
-                module.id,
-                module.display_name,
-                escape_silent(image_preview),
-                thumbnail,
-                Markup('data-o-group="%s"') % group if group else '',
-                Markup('data-o-label="%s"') % label if label else '',
-            )
-            self._append_text(div, compile_context)
-        return []
-
     def _compile_directive_placeholder(self, el, compile_context, indent):
         el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
         return []
@@ -161,13 +50,7 @@ class IrQweb(models.AbstractModel):
         # "string" and "att" clears all of those
         index = directives.index('att') - 1
         directives.insert(index, 'placeholder')
-        directives.insert(index, 'snippet')
-        directives.insert(index, 'snippet-call')
-        directives.insert(index, 'install')
         return directives
-
-    def _get_template_cache_keys(self):
-        return super()._get_template_cache_keys() + ['snippet_lang']
 
 
 # ------------------------------------------------------
@@ -588,20 +471,6 @@ class IrQwebFieldDuration(models.AbstractModel):
 
         # non-localized value
         return float(value)
-
-
-class IrQwebFieldRelative(models.AbstractModel):
-    _name = 'ir.qweb.field.relative'
-    _description = 'Qweb Field Relative'
-    _inherit = ['ir.qweb.field.relative']
-
-    # get formatting from ir.qweb.field.relative but edition/save from datetime
-
-
-class IrQwebFieldQweb(models.AbstractModel):
-    _name = 'ir.qweb.field.qweb'
-    _description = 'Qweb Field qweb'
-    _inherit = ['ir.qweb.field.qweb']
 
 
 def html_to_text(element):

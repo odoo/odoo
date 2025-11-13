@@ -11,7 +11,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from odoo import api
 from odoo.modules.registry import Registry
 from odoo.sql_db import db_connect
-from odoo.tests import common
+from odoo.tests import tagged, common
 from odoo.tests.common import BaseCase, HttpCase
 from odoo.tests.test_cursor import TestCursor
 from odoo.tools.misc import config
@@ -23,6 +23,7 @@ def registry():
     return Registry(common.get_db_name())
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRealCursor(BaseCase):
 
     def test_execute_bad_params(self):
@@ -66,6 +67,7 @@ class TestRealCursor(BaseCase):
             self.assertTrue(cr._cnx.readonly)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHTTPCursor(HttpCase):
     def test_cursor_keeps_readwriteness(self):
         with self.env.registry.cursor(readonly=False) as cr:
@@ -124,6 +126,7 @@ class TestHTTPCursor(HttpCase):
             self.assertEqual(readonly, False, 'Call to write are expecte to be read write')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()
@@ -281,6 +284,7 @@ class TestTestCursor(common.TransactionCase):
             config['db_port'] = origin_db_port
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCursorHooks(common.TransactionCase):
     def setUp(self):
         super().setUp()
@@ -336,6 +340,8 @@ class TestCursorHooks(common.TransactionCase):
         cr.close()
         self.assertEqual(self.log, ['preR', 'postR'])
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
     """Check savepoint cases handle commit hooks properly."""
     @staticmethod

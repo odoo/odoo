@@ -662,7 +662,7 @@ class TestAr(AccountTestInvoicingCommon):
         _logger.info('Created journal %s for company %s', journal.name, self.env.company.name)
         return journal
 
-    def _create_invoice(self, data=None, invoice_type='out_invoice'):
+    def _create_invoice_ar(self, data=None, invoice_type='out_invoice'):
         data = data or {}
         with Form(self.env['account.move'].with_context(default_move_type=invoice_type)) as invoice_form:
             invoice_form.partner_id = data.get('partner', self.partner)
@@ -692,7 +692,7 @@ class TestAr(AccountTestInvoicingCommon):
 
     def _create_invoice_product(self, data=None):
         data = data or {}
-        return self._create_invoice(data)
+        return self._create_invoice_ar(data)
 
     def _create_invoice_service(self, data=None):
         data = data or {}
@@ -701,7 +701,7 @@ class TestAr(AccountTestInvoicingCommon):
             line.update({'product': self.service_iva_27})
             newlines.append(line)
         data.update({'lines': newlines})
-        return self._create_invoice(data)
+        return self._create_invoice_ar(data)
 
     def _create_invoice_product_service(self, data=None):
         data = data or {}
@@ -710,7 +710,7 @@ class TestAr(AccountTestInvoicingCommon):
             line.update({'product': self.product_iva_21})
             newlines.append(line)
         data.update({'lines': newlines + [{'product': self.service_iva_27}]})
-        return self._create_invoice(data)
+        return self._create_invoice_ar(data)
 
     def _create_credit_note(self, invoice, data=None):
         data = data or {}

@@ -342,6 +342,10 @@ class PurchaseOrderLine(models.Model):
         if po.partner_id.group_rfq == 'week' and po.partner_id.group_on != 'default':
             delta_days = (7 + int(po.partner_id.group_on) - res['date_planned'].isoweekday()) % 7
             res['date_planned'] = fields.Datetime.to_datetime(res['date_planned']) + relativedelta(days=delta_days)
+            if not po.date_planned or po.date_planned >= res['date_planned']:
+                # date_order was computed based on procurement date_planned. If the PO date_planned is
+                # shifted, we also need to shift the date_order.
+                po.date_order = fields.Datetime.to_datetime(po.date_order) + relativedelta(days=delta_days)
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['location_final_id'] = location_dest_id.id
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id

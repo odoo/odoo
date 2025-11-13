@@ -1,9 +1,9 @@
-import odoo
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.tests import new_test_user
 
 
-@odoo.tests.tagged("-at_install", "post_install")
 class TestImLivechatSessions(TestImLivechatCommon):
     def test_livechat_session_open(self):
         new_test_user(

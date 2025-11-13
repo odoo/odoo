@@ -21,6 +21,7 @@ import { MultiSelectionButtons } from "@web/views/view_components/multi_selectio
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
 import { Component, reactive, useState } from "@odoo/owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 const { DateTime } = luxon;
 
@@ -105,6 +106,7 @@ export class CalendarController extends Component {
             domain: this.props.domain,
             fields: this.props.fields,
             date: this.props.state?.date,
+            loadSurroundings: hasTouch()
         };
     }
 
@@ -148,17 +150,17 @@ export class CalendarController extends Component {
     }
 
     get weekHeader() {
-        const { rangeStart, rangeEnd } = this.model;
-        if (rangeStart.year != rangeEnd.year) {
-            return `${rangeStart.toFormat("MMMM")} ${rangeStart.year} - ${rangeEnd.toFormat(
+        const { start, end } = this.model.visibleRange;
+        if (start.year != end.year) {
+            return `${start.toFormat("MMMM")} ${start.year} - ${end.toFormat(
                 "MMMM"
-            )} ${rangeEnd.year}`;
-        } else if (rangeStart.month != rangeEnd.month) {
-            return `${rangeStart.toFormat("MMMM")} - ${rangeEnd.toFormat("MMMM")} ${
-                rangeStart.year
+            )} ${end.year}`;
+        } else if (start.month != end.month) {
+            return `${start.toFormat("MMMM")} - ${end.toFormat("MMMM")} ${
+                start.year
             }`;
         }
-        return `${rangeStart.toFormat("MMMM")} ${rangeStart.year}`;
+        return `${start.toFormat("MMMM")} ${start.year}`;
     }
 
     get currentMonth() {
@@ -166,7 +168,7 @@ export class CalendarController extends Component {
     }
 
     get currentWeek() {
-        return getLocalYearAndWeek(this.model.rangeStart).week;
+        return getLocalYearAndWeek(this.model.visibleRange.start).week;
     }
 
     get rendererProps() {
@@ -407,7 +409,7 @@ export class CalendarController extends Component {
         return this.model.unlinkRecords(ids);
     }
 
-    async setDate(move) {
+    setDate(move) {
         let date = null;
         switch (move) {
             case "next":
@@ -423,7 +425,7 @@ export class CalendarController extends Component {
                 }
                 break;
         }
-        await this.model.load({ date });
+        this.model.load({ date });
     }
 
     get scales() {

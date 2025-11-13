@@ -61,6 +61,8 @@ class HrIndividualSkillMixin(models.AbstractModel):
     is_certification = fields.Boolean(related="skill_type_id.is_certification",
         export_string_translation=False)  # if is_certification change the model will not trigger the constrains
     display_warning_message = fields.Boolean()
+    certificate_filename = fields.Char()
+    certificate_file = fields.Binary(string="Certificate")
 
     @api.constrains(lambda self: [
         'valid_from', 'valid_to', 'skill_id', 'skill_type_id', 'skill_level_id', self._linked_field_name()
@@ -471,9 +473,13 @@ class HrIndividualSkillMixin(models.AbstractModel):
             skill_type = self.env['hr.skill.type'].browse(new_vals['skill_type_id'])
             valid_from = vals.get('valid_from', ind_skill.valid_from if skill_type.is_certification else fields.Date.today())
             valid_to = vals.get('valid_to', ind_skill.valid_to if skill_type.is_certification else False)
+            certificate_filename = vals.get('certificate_filename', ind_skill.certificate_filename)
+            certificate_file = vals.get('certificate_file', ind_skill.certificate_file)
             new_vals.update({
                 'valid_from': valid_from,
                 'valid_to': valid_to,
+                'certificate_filename': certificate_filename,
+                'certificate_file': certificate_file,
             })
             create_vals.append(new_vals)
         return result_command + (self - remove_from_expire)._expire_individual_skills() + self.env[self._name]._create_individual_skills(create_vals)

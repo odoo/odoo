@@ -85,6 +85,7 @@ except:
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestServerActions(TestServerActionsBase):
     def test_00_server_action(self):
         with self.assertLogs('odoo.addons.base.models.ir_actions.server_action_safe_eval',
@@ -647,6 +648,7 @@ class TestCommonCustomFields(common.TransactionCase):
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCustomFields(TestCommonCustomFields):
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
@@ -835,7 +837,7 @@ class TestCustomFields(TestCommonCustomFields):
 
         # create a non-computed field, and assert how many queries it takes
         model_id = self.env['ir.model']._get_id('res.partner')
-        query_count = 50
+        query_count = 51
         with self.assertQueryCount(query_count):
             self.env.registry.clear_cache()
             self.env['ir.model.fields'].create({

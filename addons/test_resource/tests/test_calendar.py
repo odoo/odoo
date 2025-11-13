@@ -4,9 +4,12 @@ from pytz import timezone
 
 from odoo import fields
 
+from odoo.tests import tagged
+
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCalendar(TestResourceCommon):
     def setUp(self):
         super().setUp()

@@ -8,6 +8,7 @@ from odoo.tests import tagged, users
 
 
 @tagged('mail_activity', 'mail_activity_plan')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivitySchedule(ActivityScheduleHRCase):
 
     @classmethod

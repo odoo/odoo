@@ -6,7 +6,6 @@ import requests
 from odoo import api, models, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import str2bool
 
 logger = logging.getLogger(__name__)
 
@@ -27,8 +26,8 @@ class IrHttp(models.AbstractModel):
     def _add_public_key_to_session_info(self, session_info):
         """Add the ReCaptcha public key to the given session_info object"""
         config_params = self.env['ir.config_parameter'].sudo()
-        recaptcha_enabled = str2bool(config_params.get_param('enable_recaptcha', default=True))
-        public_key = config_params.get_param('recaptcha_public_key')
+        recaptcha_enabled = config_params.get_bool('enable_recaptcha', True)
+        public_key = config_params.get_str('recaptcha_public_key')
         if public_key and recaptcha_enabled:
             session_info['recaptcha_public_key'] = public_key
         return session_info
@@ -41,7 +40,7 @@ class IrHttp(models.AbstractModel):
         """
         super()._verify_request_recaptcha_token(action)
         config_params = request.env['ir.config_parameter'].sudo()
-        recaptcha_enabled = str2bool(config_params.get_param('enable_recaptcha', default=True))
+        recaptcha_enabled = config_params.get_bool('enable_recaptcha', True)
         if not recaptcha_enabled:
             return
         ip_addr = request.httprequest.remote_addr
@@ -77,10 +76,10 @@ class IrHttp(models.AbstractModel):
                      bad_request: The request is invalid or malformed.
             :rtype: str
         """
-        private_key = request.env['ir.config_parameter'].sudo().get_param('recaptcha_private_key')
+        private_key = request.env['ir.config_parameter'].sudo().get_str('recaptcha_private_key')
         if not private_key:
             return 'no_secret'
-        min_score = request.env['ir.config_parameter'].sudo().get_param('recaptcha_min_score')
+        min_score = request.env['ir.config_parameter'].sudo().get_float('recaptcha_min_score', 0.7)
         try:
             r = requests.post('https://www.recaptcha.net/recaptcha/api/siteverify', {
                 'secret': private_key,
@@ -99,7 +98,7 @@ class IrHttp(models.AbstractModel):
 
         if res_success:
             score = result.get('score', False)
-            if score < float(min_score):
+            if score < min_score:
                 logger.warning("Trial captcha verification for ip address %s failed with score %f.", ip_addr, score)
                 return 'is_bot'
             if res_action and res_action != action:

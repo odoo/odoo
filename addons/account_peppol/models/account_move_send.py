@@ -132,7 +132,10 @@ class AccountMoveSend(models.AbstractModel):
         if method == 'peppol':
             partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
+            if partner.peppol_verification_state == 'not_verified':
+                partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
             return all([
+                partner.country_code in PEPPOL_LIST,
                 self._is_applicable_to_company(method, move.company_id),
                 partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
@@ -163,32 +166,7 @@ class AccountMoveSend(models.AbstractModel):
         invoices_data_peppol = {}
         for invoice, invoice_data in invoices_data.items():
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
-            if 'peppol' in invoice_data['sending_methods']:
-                if not partner.peppol_eas or not partner.peppol_endpoint:
-                    invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = {
-                        'error_title': _('The partner is missing Peppol EAS and/or Endpoint identifier.')
-                    }
-                    continue
-
-                if (peppol_verification_state := self.env['res.partner']._get_peppol_verification_state(
-                    partner.peppol_endpoint,
-                    partner.peppol_eas,
-                    invoice_data['invoice_edi_format'],
-                    process_type='selfbilling' if invoice.is_purchase_document() else 'billing',
-                )) != 'valid':
-                    invoice.peppol_move_state = 'error'
-                    if peppol_verification_state == 'not_valid_format':
-                        error_title = _('The partner has indicated it does not accept this document type, so you cannot send this invoice via Peppol.')
-                    else:
-                        error_title = _('Please verify partner configuration in partner settings.')
-                    invoice_data['error'] = {
-                        'error_title': error_title,
-                    }
-                    continue
-
-                if not self._is_applicable_to_move('peppol', invoice, **invoice_data):
-                    continue
+            if 'peppol' in invoice_data['sending_methods'] and self._is_applicable_to_move('peppol', invoice, **invoice_data):
 
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']

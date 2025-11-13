@@ -20,10 +20,22 @@ patch(OrderSummary.prototype, {
             )
         );
     },
+    async onOrderlineLongPress(ev, orderline) {
+        const result = await super.onOrderlineLongPress(ev, orderline);
+        if (!result) {
+            return false;
+        }
+
+        for (const child of orderline.combo_line_ids || []) {
+            child.course_id = orderline.course_id;
+        }
+
+        return result;
+    },
     async unbookTable() {
         const order = this.pos.getOrder();
-        await this.pos.deleteOrders([order]);
         this.pos.navigate("FloorScreen");
+        await this.pos.deleteOrders([order]);
     },
     showUnbookButton() {
         if (this.pos.selectedTable) {

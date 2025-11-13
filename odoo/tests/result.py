@@ -9,7 +9,6 @@ import re
 import sys
 import time
 import traceback
-
 from typing import NamedTuple
 
 from . import case
@@ -72,8 +71,8 @@ class OdooTestResult(object):
     _moduleSetUpFailed = False
 
     def __init__(self, stream=None, descriptions=None, verbosity=None, global_report=None):
-        self.failures_count = 0
-        self.errors_count = 0
+        self.failures: set[tuple[str, str]] = set()
+        self.errors: set[tuple[str, str]] = set()
         self.testsRun = 0
         self.skipped = 0
         self.tb_locals = False
@@ -85,6 +84,14 @@ class OdooTestResult(object):
         self.stats = collections.defaultdict(Stat)
         self.global_report = global_report
         self.shouldStop = self.global_report and self.global_report.shouldStop or False
+
+    @property
+    def failures_count(self):
+        return len(self.failures)
+
+    @property
+    def errors_count(self):
+        return len(self.errors)
 
     def total_errors_count(self):
         result = self.errors_count + self.failures_count
@@ -127,7 +134,7 @@ class OdooTestResult(object):
         if self._soft_fail:
             self.had_failure = True
         else:
-            self.errors_count += 1
+            self.errors.add((test.id(), str(err[1])))
         self.logError("ERROR", test, err)
         self._checkShouldStop()
 
@@ -137,7 +144,7 @@ class OdooTestResult(object):
         if self._soft_fail:
             self.had_failure = True
         else:
-            self.failures_count += 1
+            self.failures.add((test.id(), str(err[1])))
         self.logError("FAIL", test, err)
         self._checkShouldStop()
 
@@ -208,13 +215,11 @@ class OdooTestResult(object):
             self._soft_fail = False
             self.had_failure = False
 
-    def update(self, other):
+    def update(self, other: 'OdooTestResult') -> None:
         """ Merges an other test result into this one, only updates contents
-
-        :type other: OdooTestResult
         """
-        self.failures_count += other.failures_count
-        self.errors_count += other.errors_count
+        self.failures.update(other.failures)
+        self.errors.update(other.errors)
         self.testsRun += other.testsRun
         self.skipped += other.skipped
         self.stats.update(other.stats)

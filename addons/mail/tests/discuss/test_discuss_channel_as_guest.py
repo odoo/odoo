@@ -5,7 +5,7 @@ from odoo.tests.common import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
 
-@tagged("post_install", "-at_install", "is_tour")
+@tagged("is_tour")
 class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     """Checks that the invite page redirects to the channel and that all
     modules load correctly on the welcome and channel page when authenticated as various users"""
@@ -88,7 +88,7 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self._open_group_page_as_user('portal')
 
     def test_chat_from_token_as_guest(self):
-        self.env['ir.config_parameter'].set_param('mail.chat_from_token', True)
+        self.env['ir.config_parameter'].set_bool('mail.chat_from_token', True)
         self.url_open('/chat/xyz')
         channel = self.env['discuss.channel'].search([('uuid', '=', 'xyz')])
         self.assertEqual(len(channel), 1)

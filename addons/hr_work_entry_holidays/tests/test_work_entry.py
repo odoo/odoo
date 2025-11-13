@@ -11,6 +11,7 @@ from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHoliday
 
 
 @tagged('work_entry')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
     @classmethod
     def setUpClass(cls):

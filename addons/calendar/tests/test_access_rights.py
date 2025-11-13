@@ -3,11 +3,12 @@
 from datetime import datetime, timedelta
 
 from odoo.tests.common import TransactionCase, new_test_user
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRights(TransactionCase):
 
     @classmethod
@@ -322,7 +323,7 @@ class TestAccessRights(TransactionCase):
             self.assertEqual(self.admin_system_user.calendar_default_privacy, privacy, 'Admin must be able to update its calendar default privacy.')
 
             # Update the Default 'calendar.default_privacy' as an administrator.
-            self.env['ir.config_parameter'].sudo().set_param("calendar.default_privacy", privacy)
+            self.env['ir.config_parameter'].sudo().set_str("calendar.default_privacy", privacy)
 
             # All calendar default privacy updates must be blocked during write.
             with self.assertRaises(AccessError):

@@ -5,26 +5,21 @@
         <div t-att-class="className" t-ref="root">
             <div class="o_form_view_container">
                 <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                    <t t-set-slot="control-panel-create-button">
-                        <button t-if="canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
-                    </t>
-
-                    <t t-set-slot="layout-buttons">
+                    <t t-set-slot="control-panel-buttons">
                         <t t-if="env.inDialog">
                             <t t-if="footerArchInfo">
                                 <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo">
                                     <t t-set-slot="default_buttons">
-                                        <t t-call="{{ props.buttonTemplate }}"/>
+                                        <t t-call="{{ props.buttonDialogTemplate }}"/>
                                     </t>
                                 </t>
                             </t>
-                            <t t-else="">
-                                <t t-call="{{ props.buttonTemplate }}"/>
-                            </t>
+                            <t t-else="" t-call="{{ props.buttonDialogTemplate }}"/>
                         </t>
+                        <t t-else="" t-call="{{ props.buttonTemplate }}"/>
                     </t>
 
-                    <t t-set-slot="layout-actions">
+                    <t t-set-slot="control-panel-actions">
                         <t t-if="!env.isSmall and buttonBoxTemplate">
                             <t t-call="{{ buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                         </t>
@@ -49,7 +44,7 @@
         </div>
     </t>
 
-    <t t-name="web.FormView.Buttons">
+    <t t-name="web.FormView.DialogButtons">
         <button t-if="model.root.isInEdition" type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
             Save
         </button>
@@ -62,6 +57,10 @@
         <button t-if="!model.root.isInEdition and canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
             New
         </button>
+    </t>
+
+    <t t-name="web.FormView.Buttons">
+        <button t-if="canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
     </t>
 
     <t t-name="web.DefaultButtonsSlot">

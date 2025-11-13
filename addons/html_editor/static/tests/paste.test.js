@@ -101,11 +101,10 @@ describe("Html Paste cleaning - whitelist", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p><br></p></td>
+                            <td><p>[]<br></p></td>
                         </tr>
                     </tbody>
                 </table>
-                <p>[]<br></p>
             `),
         });
     });
@@ -3404,9 +3403,12 @@ describe("youtube video", () => {
             await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
-            expect(getContent(el)).toBe(
-                `<p>ab</p><div data-oe-expression="${videoUrl}" class="media_iframe_video" contenteditable="false"><div class="css_editable_mode_display"></div><div class="media_iframe_video_size" contenteditable="false"></div><iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="${videoUrl}"></iframe></div><p>[]cd</p>`
-            );
+            const expected = `<p>ab</p><div data-oe-expression="${videoUrl}" class="media_iframe_video" contenteditable="false">
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="${videoUrl}"></iframe>
+            </div><p>[]cd</p>`;
+            expect(getContent(el)).toBe(expected);
         });
 
         test("should paste and transform a youtube URL in a span (1)", async () => {
@@ -3420,9 +3422,12 @@ describe("youtube video", () => {
             await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
-            expect(getContent(el)).toBe(
-                '<p>a<span class="a">b</span></p><div data-oe-expression="https://youtu.be/dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false"><div class="css_editable_mode_display"></div><div class="media_iframe_video_size" contenteditable="false"></div><iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://youtu.be/dQw4w9WgXcQ"></iframe></div><p><span class="a">[]c</span>d</p>'
-            );
+            const expected = `<p>a<span class="a">b</span></p><div data-oe-expression="https://youtu.be/dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false">
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://youtu.be/dQw4w9WgXcQ"></iframe>
+            </div><p><span class="a">[]c</span>d</p>`;
+            expect(getContent(el)).toBe(expected);
         });
 
         test("should paste and not transform a youtube URL in a existing link", async () => {
@@ -3485,9 +3490,12 @@ describe("youtube video", () => {
             await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
-            expect(getContent(el)).toBe(
-                '<p>ab</p><div data-oe-expression="https://youtu.be/dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false"><div class="css_editable_mode_display"></div><div class="media_iframe_video_size" contenteditable="false"></div><iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://youtu.be/dQw4w9WgXcQ"></iframe></div><p>[]cd</p>'
-            );
+            const expected = `<p>ab</p><div data-oe-expression="https://youtu.be/dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false">
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://youtu.be/dQw4w9WgXcQ"></iframe>
+            </div><p>[]cd</p>`;
+            expect(getContent(el)).toBe(expected);
         });
 
         test("should paste and transform a youtube URL in a span (2)", async () => {
@@ -3502,9 +3510,12 @@ describe("youtube video", () => {
             await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
-            expect(getContent(el)).toBe(
-                `<p>a<span class="a">b</span></p><div data-oe-expression="${videoUrl}" class="media_iframe_video" contenteditable="false"><div class="css_editable_mode_display"></div><div class="media_iframe_video_size" contenteditable="false"></div><iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="${videoUrl}"></iframe></div><p><span class="a">[]c</span>d</p>`
-            );
+            const expected = `<p>a<span class="a">b</span></p><div data-oe-expression="${videoUrl}" class="media_iframe_video" contenteditable="false">
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="${videoUrl}"></iframe>
+            </div><p><span class="a">[]c</span>d</p>`;
+            expect(getContent(el)).toBe(expected);
         });
 
         test("should paste and not transform a youtube URL in a existing link", async () => {
@@ -3884,9 +3895,9 @@ ${"            "}
             </tr>
             <tr>
                 <td>14pt MONO TEXT
-                </td>
+                []</td>
             </tr>
-        </tbody></table><p>[]<br></p>`,
+        </tbody></table>`,
         });
     });
 
@@ -3994,10 +4005,10 @@ ${"        "}
                     text on color background</td>
             </tr>
             <tr>
-                <td>14pt MONO TEXT</td>
+                <td>14pt MONO TEXT[]</td>
             </tr>
         </tbody>
-    </table><p>[]<br></p>`,
+    </table>`,
         });
     });
 
@@ -4123,10 +4134,10 @@ ${"        "}
         </tr>
         <tr>
             <td>
-                14pt MONO TEXT
+                14pt MONO TEXT[]
             </td>
         </tr>
-    </tbody></table><p>[]<br></p>`,
+    </tbody></table>`,
         });
     });
     test("should apply default table classes (table, table-bordered, o_table) on paste", async () => {
@@ -4152,11 +4163,10 @@ ${"        "}
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p><br></p></td>
+                            <td><p>[]<br></p></td>
                         </tr>
                     </tbody>
                 </table>
-                <p>[]<br></p>
             `),
         });
     });
@@ -4201,11 +4211,10 @@ ${"        "}
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>2</td>
+                                    <td>2[]</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p>[]<br></p>
                     `),
         });
     });
@@ -4232,11 +4241,10 @@ ${"        "}
                             <tbody>
                                 <tr>
                                     <th>1</th>
-                                    <th>2</th>
+                                    <th>2[]</th>
                                 </tr>
                             </tbody>
                         </table>
-                        <p>[]<br></p>
                     `),
         });
     });

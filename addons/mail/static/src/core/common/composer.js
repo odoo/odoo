@@ -2,7 +2,6 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
-import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
@@ -131,6 +130,7 @@ export class Composer extends Component {
             active: true,
             isFullComposerOpen: false,
         });
+        this.root = useRef("root");
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
             refName: "textarea",
@@ -702,16 +702,11 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const attachments = this.props.composer.attachments;
-        if (attachments.some(({ uploading }) => uploading)) {
+        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
-        } else if (
-            !isHtmlEmpty(this.props.composer.composerHtml) ||
-            attachments.length > 0 ||
-            (this.message && this.message.attachment_ids.length > 0)
-        ) {
+        } else if (this.canProcessMessage) {
             if (!this.state.active) {
                 return;
             }
@@ -724,6 +719,14 @@ export class Composer extends Component {
             this.state.active = true;
             this.ref.el?.focus();
         }
+    }
+
+    get canProcessMessage() {
+        return (
+            !isHtmlEmpty(this.props.composer.composerHtml) ||
+            this.props.composer.attachments.length > 0 ||
+            (this.message && this.message.attachment_ids.length > 0)
+        );
     }
 
     async sendMessage() {
@@ -799,7 +802,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.composerText || composer.message.attachment_ids.length > 0) {
+        if (!this.askDeleteFromEdit) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
@@ -808,16 +811,14 @@ export class Composer extends Component {
                 })
             );
         } else {
-            this.env.services.dialog.add(MessageConfirmDialog, {
-                message: composer.message,
-                onConfirm: () =>
-                    this.message.remove({
-                        removeFromThread: this.shouldHideFromMessageListOnDelete,
-                    }),
-                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
-            });
+            composer.message.showDeleteConfirm(this);
         }
         this.suggestion?.clearRawMentions();
+    }
+
+    get askDeleteFromEdit() {
+        const composer = toRaw(this.props.composer);
+        return !composer.composerText && composer.message.attachment_ids.length === 0;
     }
 
     onClickInsertCannedResponse(ev) {
@@ -944,9 +945,5 @@ export class Composer extends Component {
         if (Number.isInteger(config.replyToMessageId)) {
             composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
         }
-    }
-
-    get shouldHideFromMessageListOnDelete() {
-        return false;
     }
 }

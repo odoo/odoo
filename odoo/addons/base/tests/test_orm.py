@@ -6,6 +6,7 @@ from odoo.tools import mute_logger
 from odoo import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestORM(TransactionCase):
     """ test special behaviors of ORM CRUD functions """
 
@@ -271,6 +272,7 @@ class TestORM(TransactionCase):
         self.assertCountEqual(bar.mapped('state_ids.code'), ['NB', 'SB'])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestInherits(TransactionCase):
     """ test the behavior of the orm for models that use _inherits;
         specifically: res.users, that inherits from res.partner

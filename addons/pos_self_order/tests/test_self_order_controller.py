@@ -96,7 +96,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertEqual(data['pos.order'][0]['id'], order1.id)
 
         # A cancelled order should be returned
-        order2.action_pos_order_cancel()
+        order2.cancel_order_from_pos()
         params['order_access_tokens'] = [{
             'access_token': order2.access_token,
             'state': 'paid',

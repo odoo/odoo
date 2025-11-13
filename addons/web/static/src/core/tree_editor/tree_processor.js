@@ -174,14 +174,19 @@ export const treeProcessorService = {
             return Object.fromEntries(zip(resModels, await Promise.all(proms)));
         }
 
-        async function makeGetPathDescriptions(resModel, tree) {
+        async function makeGetPathDescriptions(resModel, tree, limit) {
             const paths = getPathsInTree(tree);
             const promises = [];
             const pathDescriptions = new Map();
             for (const path of paths) {
                 promises.push(
                     fieldService.loadPathDescription(resModel, path).then(({ displayNames }) => {
-                        pathDescriptions.set(path, displayNames.join(" \u2794 "));
+                        pathDescriptions.set(
+                            path,
+                            `${displayNames.slice(0, limit).join(" \u2794 ")}${
+                                displayNames.length > limit ? "..." : ""
+                            }`
+                        );
                     })
                 );
             }
@@ -189,11 +194,11 @@ export const treeProcessorService = {
             return (path) => pathDescriptions.get(path);
         }
 
-        async function makeGetConditionDescription(resModel, tree, limit) {
+        async function makeGetConditionDescription(resModel, tree, limit, pathLimit) {
             tree = simplifyTree(tree);
             const [getFieldDef, getPathDescription] = await Promise.all([
                 makeGetFieldDef(resModel, tree),
-                makeGetPathDescriptions(resModel, tree),
+                makeGetPathDescriptions(resModel, tree, pathLimit),
             ]);
             const displayNames = await getDisplayNames(tree, getFieldDef);
             return (node) =>
@@ -289,7 +294,13 @@ export const treeProcessorService = {
             return description;
         }
 
-        async function getDomainTreeDescription(resModel, tree, isSubExpression = false) {
+        async function getDomainTreeDescription(
+            resModel,
+            tree,
+            isSubExpression = false,
+            limit = undefined,
+            pathLimit = undefined
+        ) {
             tree = simplifyTree(tree);
             if (tree.type === "connector") {
                 // we assume that the domain tree is normalized (--> there is at least two children)
@@ -308,7 +319,12 @@ export const treeProcessorService = {
                 return description;
             }
             const getFieldDef = await makeGetFieldDef(resModel, tree);
-            const getConditionDescription = await makeGetConditionDescription(resModel, tree);
+            const getConditionDescription = await makeGetConditionDescription(
+                resModel,
+                tree,
+                limit,
+                pathLimit
+            );
             const { pathDescription, operatorDescription, valueDescription } =
                 getConditionDescription(tree);
             const stringDescription = [pathDescription, operatorDescription];

@@ -301,13 +301,15 @@ describe("wrapInlinesInBlocks", () => {
         // element).
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -335,12 +337,13 @@ describe("wrapInlinesInBlocks", () => {
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     text
                     <div contenteditable="false" style="display: inline;">inline</div>
                     <span class="a">span</span>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -391,10 +394,14 @@ describe("wrapInlinesInBlocks", () => {
 describe("fillEmpty", () => {
     test("should not add fill a shrunk protected block, nor add a ZWS to it", async () => {
         const { el } = await setupEditor('<div data-oe-protected="true"></div>');
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            '<p data-selection-placeholder=""><br></p><div data-oe-protected="true" contenteditable="false"></div><p data-selection-placeholder=""><br></p>'
+        );
         const div = el.firstChild;
         fillEmpty(div);
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            '<p data-selection-placeholder=""><br></p><div data-oe-protected="true" contenteditable="false"></div><p data-selection-placeholder=""><br></p>'
+        );
     });
     test("should not fill a block containing a canvas", async () => {
         const { el } = await setupEditor("<div><canvas></canvas></div>");

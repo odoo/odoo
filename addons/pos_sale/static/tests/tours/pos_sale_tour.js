@@ -519,6 +519,19 @@ registry.category("web_tour.tours").add("test_multiple_lots_sale_order_2", {
     steps: () =>
         [
             Chrome.startPoS(),
+            PosSale.settleNthOrder(1, { loadSN: false }),
+            Order.hasLine({ productName: "Product", quantity: "3.0" }),
+            {
+                content: "Check that the line-lot-icon has text-danger class",
+                trigger: `.order-container .orderline:has(.product-name:contains("Product")) .line-lot-icon.text-danger`,
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order_3", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
             PosSale.settleNthOrder(1, { loadSN: true }),
             PosSale.selectedOrderLinesHasLots("Product", ["1002"]),
             Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1001"])),

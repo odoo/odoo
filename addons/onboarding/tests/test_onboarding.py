@@ -9,9 +9,12 @@ from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.onboarding.tests.common import TestOnboardingCommon
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
+
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOnboarding(TestOnboardingCommon):
     def test_onboarding_completion_global(self):
         # Completing onboarding as company_1

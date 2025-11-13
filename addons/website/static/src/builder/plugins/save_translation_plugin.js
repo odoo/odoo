@@ -4,7 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 
 export class SaveTranslationPlugin extends Plugin {
     static id = "saveTranslation";
-    static dependencies = ["savePlugin"];
+    static dependencies = ["websiteSavePlugin"];
 
     resources = {
         save_elements_overrides: withSequence(20, this.saveTranslationElements.bind(this)),
@@ -32,7 +32,7 @@ export class SaveTranslationPlugin extends Plugin {
                 translations,
             });
         }
-        await this.dependencies.savePlugin.saveView(els[0], false);
+        await this.dependencies.websiteSavePlugin.saveView(els[0], false);
         return true;
     }
 

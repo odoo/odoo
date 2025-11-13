@@ -7,12 +7,14 @@ import { RecordAutocomplete } from "./record_autocomplete";
 export class RecordSelector extends Component {
     static props = {
         resId: [Number, { value: false }],
+        virtualRecord: { type: Object, optional: true },
         resModel: String,
         update: Function,
         domain: { type: Array, optional: true },
         context: { type: Object, optional: true },
         fieldString: { type: String, optional: true },
         placeholder: { type: String, optional: true },
+        buildQuickCreate: { type: Function, optional: true },
     };
     static components = { RecordAutocomplete };
     static template = "web.RecordSelector";
@@ -41,15 +43,19 @@ export class RecordSelector extends Component {
 
     async getDisplayNames(props) {
         const ids = this.getIds(props);
-        return this.nameService.loadDisplayNames(props.resModel, ids);
+        const displayNames = await this.nameService.loadDisplayNames(props.resModel, ids);
+        if (props.virtualRecord?.display_name) {
+            displayNames[false] = props.virtualRecord.display_name;
+        }
+        return displayNames;
     }
 
     getDisplayName(props = this.props, displayNames) {
         const { resId } = props;
-        if (resId === false) {
+        if (resId === false && !props.virtualRecord?.display_name) {
             return "";
         }
-        return typeof displayNames[resId] === "string"
+        return typeof displayNames[resId || false] === "string"
             ? displayNames[resId]
             : _t("Inaccessible/missing record ID: %s", resId);
     }

@@ -2,13 +2,14 @@
 
 from re import search
 
-from odoo.tests import HttpCase
+from odoo.tests import tagged, HttpCase
 
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.project.tests.test_project_sharing import TestProjectSharingCommon
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
     def test_post_chatter_as_portal_user(self):
         self.project_no_collabo.privacy_visibility = 'portal'

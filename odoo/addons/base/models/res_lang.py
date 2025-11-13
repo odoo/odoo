@@ -1,26 +1,40 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import json
 import locale
 import logging
 import re
+from collections.abc import Mapping
 from typing import Any, Literal
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import OrderedSet
-from odoo.tools.misc import ReadonlyDict
 
 _logger = logging.getLogger(__name__)
 
-class LangData(ReadonlyDict):
+
+class LangData(Mapping):
     """ A ``dict``-like class which can access field value like a ``res.lang`` record.
     Note: This data class cannot store data for fields with the same name as
     ``dict`` methods, like ``dict.keys``.
     """
-    __slots__ = ()
+    __slots__ = ('__data',)
+
+    def __init__(self, data):
+        self.__data = dict(data)
+
+    def __getitem__(self, key):
+        return self.__data[key]
+
+    def __len__(self):
+        return len(self.__data)
+
+    def __iter__(self):
+        return iter(self.__data)
+
+    def __contains__(self, key):
+        return key in self.__data
 
     def __bool__(self) -> bool:
         return bool(self.id)
@@ -32,18 +46,30 @@ class LangData(ReadonlyDict):
             raise AttributeError
 
 
-class LangDataDict(ReadonlyDict):
+class LangDataDict(Mapping):
     """ A ``dict`` of :class:`LangData` objects indexed by some key, which returns
     a special dummy :class:`LangData` for missing keys.
     """
-    __slots__ = ()
+    __slots__ = ('__data',)
+
+    def __init__(self, data):
+        self.__data = dict(data)
 
     def __getitem__(self, key: Any) -> LangData:
         try:
-            return self._data__[key]
+            return self.__data[key]
         except KeyError:
             some_lang = next(iter(self.values()))  # should have at least one active language
             return LangData(dict.fromkeys(some_lang, False))
+
+    def __len__(self):
+        return len(self.__data)
+
+    def __iter__(self):
+        return iter(self.__data)
+
+    def __contains__(self, key):
+        return key in self.__data
 
 
 class ResLang(models.Model):
@@ -51,6 +77,7 @@ class ResLang(models.Model):
     _description = "Language"
     _order = "active desc,name"
     _allow_sudo_commands = False
+    _clear_cache_name = 'stable'
 
     _disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
@@ -64,6 +91,9 @@ class ResLang(models.Model):
             ('%d-%m-%Y', '31-01-%s' % current_year),
             ('%m-%d-%Y', '01-31-%s' % current_year),
             ('%Y-%m-%d', '%s-01-31' % current_year),
+            ('%d.%m.%Y', '31.01.%s' % current_year),
+            ('%m.%d.%Y', '01.31.%s' % current_year),
+            ('%Y.%m.%d', '%s.01.31' % current_year),
         ]
 
     name = fields.Char(required=True)
@@ -206,6 +236,14 @@ class ResLang(models.Model):
                 format = format.replace(pattern, replacement)
             return str(format)
 
+        def fix_grouping(grouping):
+            grouping = str(grouping).replace(' ', '')
+
+            if grouping in self._fields['grouping'].get_values(self.env):
+                return grouping
+
+            return '[3,0]'
+
         conv = locale.localeconv()
         lang_info = {
             'code': lang,
@@ -216,7 +254,7 @@ class ResLang(models.Model):
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),
             'thousands_sep' : fix_xa0(str(conv['thousands_sep'])),
-            'grouping': str(conv.get('grouping') or '[3,0]'),
+            'grouping': fix_grouping(conv.get('grouping')),
         }
         try:
             return self.create(lang_info)
@@ -322,7 +360,6 @@ class ResLang(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env.registry.clear_cache('stable')
         for vals in vals_list:
             if not vals.get('url_code'):
                 vals['url_code'] = vals.get('iso_code') or vals['code']
@@ -343,6 +380,7 @@ class ResLang(models.Model):
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super().write(vals)
+        self.flush_recordset(['url_code'])
 
         if vals.get('active'):
             # If we activate a lang, set it's url_code to the shortest version
@@ -363,8 +401,6 @@ class ResLang(models.Model):
                     short_lang.url_code = short_lang.code
                     long_lang.url_code = short_code
 
-        self.env.flush_all()
-        self.env.registry.clear_cache('stable')
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -377,10 +413,6 @@ class ResLang(models.Model):
                 raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
-
-    def unlink(self):
-        self.env.registry.clear_cache('stable')
-        return super().unlink()
 
     def copy_data(self, default=None):
         default = dict(default or {})

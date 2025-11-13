@@ -175,6 +175,7 @@ class StockMove(models.Model):
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(compute='_compute_is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+    is_date_editable = fields.Boolean("Is Date Editable", compute="_compute_is_date_editable")
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
@@ -264,14 +265,14 @@ class StockMove(models.Model):
         for move in self:
             move.has_lines_without_result_package = move.move_line_ids.result_package_id and any(not line.result_package_id for line in move.move_line_ids)
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.result_package_id.outermost_package_id')
     def _compute_package_ids(self):
         for move in self:
             if move.state in ['done', 'cancel']:
                 move.package_ids = move.move_line_ids.package_history_id.outermost_dest_id
             else:
                 # Only display the top-level packages until the move is done.
-                move.package_ids = move.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+                move.package_ids = move.move_line_ids.result_package_id.outermost_package_id
 
     @api.depends('move_line_ids.picked', 'state')
     def _compute_picked(self):
@@ -303,6 +304,13 @@ class StockMove(models.Model):
                 move.is_locked = move.picking_id.is_locked
             else:
                 move.is_locked = False
+
+    def _compute_is_date_editable(self):
+        for move in self:
+            if move.picking_id:
+                move.is_date_editable = move.picking_id.is_date_editable
+            else:
+                move.is_date_editable = True
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids')
     def _compute_show_details_visible(self):
@@ -1111,15 +1119,17 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
                 warehouse_id = False
 
+            related_packages = self.env['stock.package'].search_fetch([('id', 'parent_of', move.move_line_ids.result_package_id.ids)], ['package_type_id'])
+
             rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
-                'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
+                'route_ids': move.route_ids | related_packages.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
             })
 
             excluded_rule_ids = []
             while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
                 excluded_rule_ids.append(rule.id)
                 rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
-                    'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
+                    'route_ids': move.route_ids | related_packages.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
                     'domain': [('id', 'not in', excluded_rule_ids)],
                 })
 
@@ -1166,11 +1176,11 @@ Please change the quantity done or the rounding precision in your settings.""",
             'product_uom', 'restrict_partner_id', 'origin_returned_move_id',
             'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids',
         ]
-        if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
+        if self.env['ir.config_parameter'].sudo().get_bool('stock.merge_only_same_date'):
             fields.append('date')
         if self.env.context.get('merge_extra'):
             fields.pop(fields.index('procure_method'))
-        if not self.env['ir.config_parameter'].sudo().get_param('stock.merge_ignore_date_deadline'):
+        if not self.env['ir.config_parameter'].sudo().get_bool('stock.merge_ignore_date_deadline'):
             fields.append('date_deadline')
         return fields
 
@@ -1667,7 +1677,10 @@ Please change the quantity done or the rounding precision in your settings.""",
         warehouse = self.warehouse_id or self.picking_type_id.warehouse_id
         if not self.location_id.warehouse_id:
             warehouse = self.env['stock.warehouse']
-            route = self.route_ids or self.move_line_ids.result_package_id.package_type_id.route_ids
+            route = self.route_ids
+            if not route:
+                related_packages = self.env['stock.package'].search_fetch([('id', 'parent_of', self.move_line_ids.result_package_id.ids)], ['package_type_id'])
+                route = related_packages.package_type_id.route_ids
         move_dest_ids = False
         if self.procure_method == "make_to_order":
             move_dest_ids = self
@@ -1976,7 +1989,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
                         move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
-                        taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
+                        if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
+                            taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
                     if all_move_line_vals:
                         self.env['stock.move.line'].create(all_move_line_vals)
 
@@ -2012,7 +2026,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids
         moves_to_cancel._do_unreserve()
-        cancel_moves_origin = self.env['ir.config_parameter'].sudo().get_param('stock.cancel_moves_origin')
+        cancel_moves_origin = self.env['ir.config_parameter'].sudo().get_bool('stock.cancel_moves_origin')
 
         moves_to_cancel.state = 'cancel'
 
@@ -2357,7 +2371,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """
-        if not self or self.env['ir.config_parameter'].sudo().get_param('stock.no_auto_scheduler'):
+        if not self or self.env['ir.config_parameter'].sudo().get_bool('stock.no_auto_scheduler'):
             return
 
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
@@ -2383,7 +2397,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Check for and trigger action_assign for confirmed/partially_available moves related to done moves.
             Disable auto reservation if user configured to do so.
         """
-        if not self or self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve'):
+        if not self or self.env['ir.config_parameter'].sudo().get_bool('stock.picking_no_auto_reserve'):
             return
 
         product_domains = Domain.OR(

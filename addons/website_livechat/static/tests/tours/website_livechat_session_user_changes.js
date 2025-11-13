@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
             run: "click",
         },
         {
-            trigger: "a:contains(Logout)",
+            trigger: "button:contains(Logout)",
             run: "click",
             expectUnloadPage: true,
         },

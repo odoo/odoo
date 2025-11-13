@@ -42,6 +42,17 @@
         <field name="domain">[('allow_billable', '=', True)]</field>
     </record>
 
+    <record id="project_embedded_action_sales_order_items" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">52</field>
+        <field name="name">Sales Order Items</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_view_sols</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]" />
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
     <record id="project_embedded_action_invoices_dashboard" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">60</field>
@@ -61,6 +72,17 @@
         <field name="python_method">action_view_sos</field>
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
+    <record id="project_embedded_action_sales_order_items_dashboard" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">52</field>
+        <field name="name">Sales Order Items</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_view_sols</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]" />
         <field name="domain">[('allow_billable', '=', True)]</field>
     </record>
 

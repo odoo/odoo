@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarSubchannel">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-2 o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
+            <t t-call="mail.DiscussSidebarSubchannel.main"/>
+            <t t-set-slot="content">
+                <UseHoverOverlay hover="hover">
+                    <div class="overflow-hidden d-flex flex-column" t-ref="floating">
+                        <span class="fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-esc="thread.displayName"/>
+                        <DiscussSidebarChannelActions thread="thread"/>
+                    </div>
+                </UseHoverOverlay>
+            </t>
+        </Dropdown>
+        <t t-else="" t-call="mail.DiscussSidebarSubchannel.main"/>
+    </t>
+
+    <t t-name="mail.DiscussSidebarSubchannel.main">
+        <li class="o-mail-DiscussSidebarSubchannel d-flex align-items-center flex-grow-1 position-relative" t-att-class="{ 'p-0': !store.discuss.isSidebarCompact, 'o-pt-0_5': !store.discuss.isSidebarCompact and props.isFirst }" t-ref="root">
+            <t t-if="!store.discuss.isSidebarCompact">
+                <svg t-if="props.isFirst" class="position-absolute opacity-75" style="top: -8px;" xmlns="http://www.w3.org/2000/svg" width="10" height="25" viewBox="0 0 10 25">
+                    <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
+                    <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <svg t-else="" class="position-absolute opacity-75" style="top: -18px;" xmlns="http://www.w3.org/2000/svg" width="10" height="33" viewBox="0 0 10 33">
+                    <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
+                    <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
+                </svg>
+            </t>
+            <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-2 text-start text-truncate align-items-center" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName" t-on-click="(ev) => this.openThread(ev, thread)" t-att-class="{
+                'o-active': thread.eq(this.store.discuss.thread),
+                'px-1 py-2 mx-1 text-wrap word-break lh-1': store.discuss.isSidebarCompact,
+                'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !store.discuss.isSidebarCompact,
+                'o-unread': thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt,
+                'opacity-50': thread.self_member_id?.mute_until_dt,
+            }">
+                <span class="text-truncate" t-esc="thread.displayName" t-att-class="{
+                    'fw-bolder': thread.self_member_id?.message_unread_counter > 0,
+                    'opacity-75 opacity-100-hover': !(thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt),
+                }" t-att-style="store.discuss.isSidebarCompact ? 'text-overflow: clip;' : ''"/>
+                <span class="flex-grow-1"/>
+                <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
+                <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold {{thread.self_member_id?.mute_until_dt ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
+            </button>
+            <t t-if="thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
+        </li>
+    </t>
+</templates>

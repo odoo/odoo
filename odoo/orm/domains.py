@@ -63,9 +63,10 @@ import warnings
 from datetime import date, datetime, time, timedelta, timezone
 
 from odoo.exceptions import UserError
-from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
+from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
 from .identifiers import NewId
+from .query import Query
 from .utils import COLLECTION_TYPES, parse_field_expr
 
 if typing.TYPE_CHECKING:
@@ -316,14 +317,18 @@ class Domain:
 
     def __and__(self, other):
         """Domain & Domain"""
+        if isinstance(other, DomainBool):
+            return other & self
         if isinstance(other, Domain):
-            return DomainAnd.apply([self, other])
+            return DomainAnd.apply((self, other))
         return NotImplemented
 
     def __or__(self, other):
         """Domain | Domain"""
+        if isinstance(other, DomainBool):
+            return other | self
         if isinstance(other, Domain):
-            return DomainOr.apply([self, other])
+            return DomainOr.apply((self, other))
         return NotImplemented
 
     def __invert__(self):
@@ -653,6 +658,15 @@ class DomainNary(Domain):
         children = self._flatten(child._optimize(model, level) for child in self.children)
         size = len(children)
         if size > 1:
+            # nary-optimizations are independent of the level, so if BASIC was
+            # performed and all children are exactly the same, there is no need
+            # to try to merge them again
+            if (
+                level > OptimizationLevel.BASIC
+                and len(self.children) == size
+                and all(map(operator.is_, self.children, children))
+            ):
+                return self
             # sort children in order to ease their grouping by field and operator
             children.sort(key=_optimize_nary_sort_key)
             # run optimizations until some merge happens
@@ -977,6 +991,7 @@ class DomainCondition(Domain):
 
     def _optimize_field_search_method(self, model: BaseModel) -> Domain:
         field = self._field(model)
+        model._check_field_access(field, 'read')
         operator, value = self.operator, self.value
         # use the `Field.search` function
         original_exception = None
@@ -1451,9 +1466,7 @@ def _optimize_boolean_in(condition, model):
         condition._raise("Cannot compare %r to %s which is not a collection of length 1", condition.field_expr, type(value))
     if not all(isinstance(v, bool) for v in value):
         # parse the values
-        if any(isinstance(v, str) for v in value):
-            # TODO make a warning
-            _logger.debug("Comparing boolean with a string in %s", condition)
+        warnings.warn(f"Since 20.0, compare booleans only with booleans in {condition!r}", DeprecationWarning)
         value = {
             str2bool(v.lower(), False) if isinstance(v, str) else bool(v)
             for v in value
@@ -1563,7 +1576,7 @@ def _value_to_datetime(value, env, iso_only=False):
             tz = None
         elif (tz := env.tz) != pytz.utc:
             # get the tzinfo (without LMT)
-            tz = tz.localize(datetime.now()).tzinfo
+            tz = tz.localize(datetime.combine(value, time.min)).tzinfo
         else:
             tz = None
         value = datetime.combine(value, time.min, tz)
@@ -1735,7 +1748,7 @@ def _operator_hierarchy(condition, model):
     if isinstance(result, Domain):
         if field.name == 'id':
             return result
-        return DomainCondition(field.name, 'any', result)
+        return DomainCondition(field.name, 'any!', result)
     return DomainCondition(field.name, 'in', result)
 
 

@@ -51,6 +51,7 @@ class AccountJournal(models.Model):
                       SELECT id, company_id
                         FROM account_bank_statement
                        WHERE journal_id = journal.id
+                         AND first_line_index IS NOT NULL
                     ORDER BY first_line_index DESC
                        LIMIT 1
                    ) statement ON TRUE
@@ -203,6 +204,10 @@ class AccountJournal(models.Model):
                 journal.has_unhashed_entries = False
 
     def _compute_has_entries(self):
+        if not self.ids:
+            self.has_posted_entries = False
+            self.has_entries = False
+            return
         sql_query = SQL(
             """
                        SELECT j.id,
@@ -453,7 +458,7 @@ class AccountJournal(models.Model):
              WHERE st_line.journal_id IN %s
                AND st_line.company_id IN %s
                AND st_line.is_reconciled IS NOT TRUE
-               AND st_line_move.checked IS TRUE
+               AND (st_line_move.review_state IS NULL OR st_line_move.review_state NOT IN ('todo', 'anomaly'))
                AND st_line_move.state = 'posted'
           GROUP BY st_line.journal_id
         """, [tuple(bank_cash_journals.ids), tuple(self.env.companies.ids)])
@@ -501,7 +506,7 @@ class AccountJournal(models.Model):
                 domain=[
                     ('journal_id', 'in', bank_cash_journals.ids),
                     ('move_id.company_id', 'in', self.env.companies.ids),
-                    ('move_id.checked', '=', False),
+                    ('move_id.review_state', 'in', ('todo', 'anomaly')),
                     ('move_id.state', '=', 'posted'),
                 ],
                 groupby=['journal_id'],
@@ -522,6 +527,11 @@ class AccountJournal(models.Model):
                 'image': '/account/static/src/img/bank.svg' if journal.type in ('bank', 'credit') else '/web/static/img/rfq.svg',
                 'text': _('Drop to import transactions'),
             }
+            last_statement_visible = (
+                not journal.company_id.fiscalyear_lock_date
+                or journal.last_statement_id.date
+                and journal.company_id.fiscalyear_lock_date < journal.last_statement_id.date
+            )
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -534,6 +544,8 @@ class AccountJournal(models.Model):
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(journal.last_statement_id.balance_end_real),
                 'last_statement_id': journal.last_statement_id.id,
+                'last_statement_visible': last_statement_visible,
+                'has_invalid_statements': journal.has_invalid_statements,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
                 'nb_misc_operations': number_misc,
@@ -740,7 +752,7 @@ class AccountJournal(models.Model):
         query = self.env['account.move']._search([
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
-            ('checked', '=', False),
+            ('review_state', 'in', ('todo', 'anomaly')),
             ('state', '=', 'posted'),
         ])
         selects = [
@@ -798,6 +810,7 @@ class AccountJournal(models.Model):
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
                               AND company_id = ANY(%s)
+                              AND first_line_index IS NOT NULL
                          ORDER BY date DESC, id DESC
                             LIMIT 1
                    ) statement ON TRUE
@@ -996,7 +1009,7 @@ class AccountJournal(models.Model):
         return self.env['account.bank.statement.line'].search([
             ('journal_id', '=', self.id),
             ('move_id.company_id', 'in', self.env.companies.ids),
-            ('move_id.checked', '=', False),
+            ('move_id.review_state', 'in', ('todo', 'anomaly')),
             ('move_id.state', '=', 'posted'),
         ])
 
@@ -1114,6 +1127,10 @@ class AccountJournal(models.Model):
                 'search_default_date_between': True
             }
         return action
+
+    def open_invalid_statements_action(self):
+        self.ensure_one()
+        return self.env["ir.actions.act_window"]._for_xml_id('account.action_bank_statement_tree')
 
     def _show_sequence_holes(self, domain):
         return {

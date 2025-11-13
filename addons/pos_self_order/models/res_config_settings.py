@@ -46,13 +46,13 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange("pos_self_ordering_mode", "pos_module_pos_restaurant")
     def _onchange_pos_self_order_kiosk(self):
         if self.pos_self_ordering_mode == 'kiosk':
-            self.is_kiosk_mode = True
+            self.use_kiosk_mode = True
             self.pos_module_pos_restaurant = False
             self.pos_self_ordering_pay_after = "each"
             cash_payment_methods = self.pos_payment_method_ids.filtered(lambda x: x.is_cash_count)
             self.pos_payment_method_ids = self.pos_payment_method_ids - cash_payment_methods
         else:
-            self.is_kiosk_mode = False
+            self.use_kiosk_mode = False
 
             if not self.pos_module_pos_restaurant:
                 self.pos_self_ordering_service_mode = 'counter'
@@ -203,6 +203,14 @@ class ResConfigSettings(models.TransientModel):
                 }
             }
         )
+
+    def pos_close_ui(self):
+        if self.pos_self_ordering_mode == "kiosk":
+            if self.env.context.get('pos_config_id'):
+                pos_config_id = self.env.context['pos_config_id']
+                pos_config = self.env['pos.config'].browse(pos_config_id)
+                return pos_config.action_close_kiosk_session()
+        return super().pos_close_ui()
 
     def preview_self_order_app(self):
         self.ensure_one()

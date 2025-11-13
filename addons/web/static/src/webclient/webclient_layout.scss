@@ -10,14 +10,6 @@
     display: flex;
     flex-flow: column nowrap;
 
-    @media (display-mode: browser) {
-      overflow: hidden;
-    }
-    // For iOS devices
-    @supports (-webkit-touch-callout: none) {
-      overflow: hidden;
-    }
-
     > .o_action_manager {
       direction: ltr; //Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
       flex: 1 1 auto;

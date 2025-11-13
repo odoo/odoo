@@ -180,7 +180,10 @@ class MailTrackingDurationMixin(models.AbstractModel):
         rot_enabled = self.filtered_domain(self._get_rotting_domain())
         others = self - rot_enabled
         for stage, records in rot_enabled.grouped(self._track_duration_field).items():
-            rotting = records.filtered(lambda record: (record.date_last_stage_update or record.create_date) + timedelta(days=stage.rotting_threshold_days) < now)
+            rotting = records.filtered(lambda record:
+                (record.date_last_stage_update or record.create_date or fields.Datetime.now())
+                + timedelta(days=stage.rotting_threshold_days) < now
+            )
             for record in rotting:
                 record.is_rotting = True
                 record.rotting_days = (now - (record.date_last_stage_update or record.create_date)).days
@@ -213,7 +216,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
             """
 
         # Items with a date_last_stage_update inferior to that number of months will not be returned by the search function.
-        max_rotting_months = int(self.env['ir.config_parameter'].sudo().get_param('crm.lead.rot.max.months', default=12))
+        max_rotting_months = self.env['ir.config_parameter'].sudo().get_int('crm.lead.rot.max.months') or 12
 
         # We use a F-string so that the from_add_join is added with its %s parameters before the query string is processed
         query = f"""

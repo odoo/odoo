@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
                     <field name="has_access_livechat" invisible="1"/>
-                    <field name="livechat_username" string="Livechat Name" invisible="not has_access_livechat"/>
+                    <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat"/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
                            options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}"
                            widget="many2many_tags"
@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
                     <field name="has_access_livechat" invisible="1"/>
-                    <field name="livechat_username" string="Livechat Name" invisible="not has_access_livechat"/>
+                    <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat"/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
                            options="{'no_create': True, 'no_edit': True}"
                            widget="many2many_tags"

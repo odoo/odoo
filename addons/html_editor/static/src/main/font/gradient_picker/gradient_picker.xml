@@ -34,8 +34,8 @@
             </div>
             <div t-else="" class="d-flex flex-column gap-1 mb-1">
                 Size
-                <div class="d-flex align-items-center justify-content-between">
-                    <button t-on-click="() => this.onSizeChange('closest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-side' ? `active` : ''}}" title="Extend to the closest side">
+                <div class="d-flex align-items-center justify-content-between" t-on-mouseover="props.onColorPointerOver" t-on-mouseout="props.onColorPointerOut">
+                    <button t-on-click="() => this.onSizeChange('closest-side')" t-att-data-color="getRadialGradient('closest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-side' ? `active` : ''}}" title="Extend to the closest side">
                         <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 16 20" fill="none">
                             <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
                             <path d="M3 4H9V8C9 8.55228 8.55228 9 8 9H4C3.44772 9 3 8.55228 3 8V4Z" fill="#8C8C92"></path>
@@ -44,7 +44,7 @@
                             <rect x="2" y="3" width="12" height="1" fill="white"></rect>
                         </svg>
                     </button>
-                    <button t-on-click="() => this.onSizeChange('closest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-corner' ? `active` : ''}}" title="Extend to the closest corner">
+                    <button t-on-click="() => this.onSizeChange('closest-corner')" t-att-data-color="getRadialGradient('closest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-corner' ? `active` : ''}}" title="Extend to the closest corner">
                         <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 16 20" fill="none">
                             <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
                             <path d="M2 4H9V7C9 9.20914 7.20914 11 5 11H2V4Z" fill="#8C8C92"></path>
@@ -54,7 +54,7 @@
                             <rect x="1" y="11" width="8" height="1" transform="rotate(-90 1 11)" fill="white"></rect>
                         </svg>
                     </button>
-                    <button t-on-click="() => this.onSizeChange('farthest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-side' ? `active` : ''}}" title="Extend to the farthest side">
+                    <button t-on-click="() => this.onSizeChange('farthest-side')" t-att-data-color="getRadialGradient('farthest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-side' ? `active` : ''}}" title="Extend to the farthest side">
                         <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 16 20" fill="none">
                             <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
                             <path d="M7 12C10.3137 12 14 10.2091 14 8C14 5.79086 10.3137 4 7 4C3.68629 4 2 5.79086 2 8C2 10.2091 3.68629 12 7 12Z" fill="#8C8C92"></path>
@@ -63,7 +63,7 @@
                             <rect x="14" y="4" width="1" height="12" fill="white"></rect>
                         </svg>
                     </button>
-                    <button t-on-click="() => this.onSizeChange('farthest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-corner' ? `active` : ''}}" title="Extend to the farthest corner">
+                    <button t-on-click="() => this.onSizeChange('farthest-corner')" t-att-data-color="getRadialGradient('farthest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-corner' ? `active` : ''}}" title="Extend to the farthest corner">
                         <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 16 20" fill="none">
                             <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
                             <path d="M2 4H14V10C14 13.3137 11.3137 16 8 16H2V4Z" fill="#8C8C92"></path>

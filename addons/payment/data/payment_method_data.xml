@@ -757,7 +757,7 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/boleto.png"/>
-        <field name="support_tokenization">True</field>
+        <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
         <field name="support_refund">none</field>
@@ -2306,11 +2306,15 @@
         <field name="support_refund">partial</field>
         <field name="supported_country_ids"
                eval="[Command.set([
+                         ref('base.de'),
+                         ref('base.fi'),
+                         ref('base.fr'),
                          ref('base.uk'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
+                         ref('base.EUR'),
                          ref('base.GBP'),
                      ])]"
         />

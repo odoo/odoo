@@ -66,8 +66,8 @@ class LivechatChatbotScriptController(http.Controller):
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
             if chatbot.exists():
                 next_step = chatbot.script_step_ids[:1]
-        partner, guest = self.env["res.partner"]._get_current_persona()
-        store = Store(bus_channel=partner or guest)
+        user, guest = self.env["res.users"]._get_current_persona()
+        store = Store(bus_channel=user or guest)
         store.data_id = data_id
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow

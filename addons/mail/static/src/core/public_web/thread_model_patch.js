@@ -31,9 +31,8 @@ patch(Thread.prototype, {
         ) {
             if (this.model === "discuss.channel" && this.inChathubOnNewMessage) {
                 await this.store.chatHub.initPromise;
-                let chatWindow = this.store.ChatWindow.get({ thread: this });
-                if (!chatWindow) {
-                    chatWindow = this.store.ChatWindow.insert({ thread: this });
+                if (!this.channel.chatWindow) {
+                    const chatWindow = this.store.ChatWindow.insert({ channel: this.channel });
                     if (
                         this.autoOpenChatWindowOnNewMessage &&
                         this.store.chatHub.opened.length < this.store.chatHub.maxOpened
@@ -63,7 +62,7 @@ patch(Thread.prototype, {
         this.store.discuss.activeTab = !this.store.env.services.ui.isSmall
             ? "notification"
             : this.model === "mail.box"
-            ? this.store.self.main_user_id?.notification_type === "inbox"
+            ? this.store.self_user?.notification_type === "inbox"
                 ? "inbox"
                 : "starred"
             : ["chat", "group"].includes(this.channel?.channel_type)

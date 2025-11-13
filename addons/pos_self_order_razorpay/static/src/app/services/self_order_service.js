@@ -21,12 +21,6 @@ patch(SelfOrder.prototype, {
         }
     },
 
-    filterPaymentMethods(pms) {
-        const pm = super.filterPaymentMethods(...arguments);
-        const razorpay_pm = pms.filter((rec) => rec.use_payment_terminal === "razorpay");
-        return [...new Set([...pm, ...razorpay_pm])];
-    },
-
     handleRazorpayError(error, type) {
         this.paymentError = true;
         this.handleErrorNotification(error, type);

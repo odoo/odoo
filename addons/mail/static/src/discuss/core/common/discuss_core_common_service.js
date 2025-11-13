@@ -45,15 +45,6 @@ export class DiscussCoreCommon {
             message.thread.messages.push(message);
             message.thread.transientMessages.push(message);
         });
-        this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
-            const { channel_id, id, last_message_id, partner_id } = payload;
-            this.store["discuss.channel.member"].insert({
-                id,
-                fetched_message_id: { id: last_message_id },
-                partner_id: { id: partner_id },
-                thread: { id: channel_id, model: "discuss.channel" },
-            });
-        });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             if (message.thread) {
                 const { self_member_id } = message.thread;
@@ -115,7 +106,7 @@ export class DiscussCoreCommon {
         }
         if (
             thread.channel?.channel_type !== "channel" &&
-            this.store.self_partner &&
+            this.store.self_user &&
             thread.self_member_id
         ) {
             // disabled on non-channel threads and
@@ -126,7 +117,7 @@ export class DiscussCoreCommon {
             !thread.loadNewer &&
             !message.isSelfAuthored &&
             thread.composer.isFocused &&
-            this.store.self_partner &&
+            this.store.self_user &&
             thread.newestPersistentMessage?.eq(thread.newestMessage) &&
             !thread.markedAsUnread
         ) {

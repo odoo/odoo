@@ -1242,3 +1242,31 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertTrue(bill.id in po.invoice_ids.ids)
         self.assertTrue(bill.id in po_2.invoice_ids.ids)
         self.assertEqual(bill.amount_total, po.amount_total + po_2.amount_total)
+
+    def test_po_matching_credit_note(self):
+        po = self.init_purchase(partner=self.partner_a, products=[self.product_deliver])
+        pol = po.order_line
+        pol.product_qty = 3
+        po.button_confirm()
+
+        bill = self.init_invoice(move_type='in_invoice', partner=self.partner_a, products=[self.product_deliver])
+        bill.invoice_line_ids.quantity = 3
+
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines.action_match_lines()
+
+        bill.action_post()
+        pol.qty_received = 2
+
+        credit_note = self.init_invoice(move_type='in_refund', partner=self.partner_a, amounts=[0])
+
+        self.env['purchase.order.line'].flush_model()
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        self.assertEqual(match_lines.pol_id, pol)
+        self.assertEqual(match_lines.aml_id, credit_note.invoice_line_ids)
+
+        match_lines.action_match_lines()
+        self.assertRecordValues(credit_note.invoice_line_ids, [{
+            'quantity': 1,
+            'product_id': pol.product_id.id,
+        }])

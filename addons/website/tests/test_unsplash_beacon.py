@@ -12,7 +12,7 @@ class TestUnsplashBeacon(odoo.tests.HttpCase):
         return super().fetch_proxy(url)
 
     def test_01_beacon(self):
-        self.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', '123456')
+        self.env['ir.config_parameter'].sudo().set_str('unsplash.app_id', '123456')
         # Create page with unsplash image.
         page = self.env['website.page'].search([('url', '=', '/'), ('website_id', '=', 1)])
         page.arch = '''<t name="Homepage" t-name="website.homepage1">

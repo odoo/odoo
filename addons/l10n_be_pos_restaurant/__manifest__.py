@@ -8,5 +8,4 @@
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'post_init_hook': 'post_init_hook',
 }

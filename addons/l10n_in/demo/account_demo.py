@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from odoo import api, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import file_open
+from odoo.addons.account.models.chart_template import template
 
 _logger = logging.getLogger(__name__)
 
@@ -15,42 +16,37 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self, company=False):
-        demo_data = {}
-        if company.account_fiscal_country_id.code == "IN":
-            if company.state_id:
-                company.write({
-                    'l10n_in_is_gst_registered': True,
-                    'l10n_in_tcs_feature': True,
-                    'l10n_in_tds_feature': True,
-                    'l10n_in_edi_production_env': False,
-                })
-                demo_data = {
-                    'res.partner.category': self._get_demo_data_res_partner_category(company),
-                    'res.partner': self._get_demo_data_partner(),
-                    'account.move': self._get_demo_data_move(company),
-                    'res.config.settings': self._get_demo_data_config_settings(company),
-                    'ir.attachment': self._get_demo_data_attachment(company),
-                    'mail.message': self._get_demo_data_mail_message(company),
-                }
-            else:
-                _logger.warning('Error while loading Indian-Accounting demo data in the company "%s".State is not set in the company.', company.name)
-        else:
-            demo_data = super()._get_demo_data(company)
-        return demo_data
+    def _install_demo(self, companies):
+        in_without_state = companies.filtered(lambda c: c.chart_template == "in" and not c.state_id)
+        if in_without_state:
+            _logger.warning('Error while loading Indian-Accounting demo data in the companies "%s". State is not set in the company.', companies.mapped('name'))
+        return super()._install_demo(companies - in_without_state)
 
-    @api.model
-    def _get_demo_data_config_settings(self, company=False):
-        return{
-            'sales_credit_limit':{
+    @template(template='in', model='res.company', demo=True)
+    def _l10n_in_res_company_demo(self):
+        return {
+            self.env.company.id: {
                 'account_use_credit_limit': True,
-                'account_default_credit_limit': '10000'
-            }
+                'l10n_in_is_gst_registered': True,
+                'l10n_in_tcs_feature': True,
+                'l10n_in_tds_feature': True,
+                'l10n_in_edi_production_env': False,
+            },
         }
 
-    @api.model
-    def _get_demo_data_res_partner_category(self, company=False):
-        return{
+    @template(template='in', model='ir.default', demo=True)
+    def _l10n_in_ir_default_demo(self):
+        return {
+            'sales_credit_limit': {
+                'field_id': 'account.field_res_partner__credit_limit',
+                'company_id': self.env.company.id,
+                'json_value': '10000',
+            },
+        }
+
+    @template(template='in', model='res.partner.category', demo=True)
+    def _l10n_in_res_partner_category_demo(self):
+        return {
             'res_partner_category_registered': {
                 'name': 'Registered',
                 'color': 2,
@@ -61,15 +57,13 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    @api.model
-    def _get_demo_data_partner(self):
+    @template(template='in', model='res.partner', demo=True)
+    def _l10n_in_res_partner_demo(self):
         company = self.env.company
-        if company.account_fiscal_country_id.code != "IN" or not company.state_id:
-            return super()._get_demo_data_partner()
         inter_state_ref = 'base.state_in_ts'
         intra_state_ref = 'base.state_in_gj'
         default_partner_dict = {'country_id': 'base.in', 'is_company': True, 'company_id': company.id}
-        return{
+        return {
             'res_partner_registered_customer': {
                 **default_partner_dict,
                 'name': 'B2B Customer Intra State',
@@ -152,18 +146,9 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    @api.model
-    def _get_demo_data_move(self, company=False):
-        cid = company.id or self.env.company.id
-        def _get_tax_by_id(tax_id):
-            tax = self.env.ref('account.%s_%s'%((cid), (tax_id)))
-            return tax.id
-        if company.account_fiscal_country_id.code == "IN":
-            sale_journal = self.env['account.journal'].search(
-                domain=[
-                    *self.env['account.journal']._check_company_domain(cid),
-                    ('type', '=', 'sale'),
-                ], limit=1)
+    @template(model='account.move', demo=True)
+    def _get_demo_data_move(self, template_code):
+        if template_code == "in":
             return {
                 # Demo of B2B (business-to-business) Taxable supplies made to other registered person.
                 'demo_invoice_b2b_1': {
@@ -173,25 +158,25 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'regular',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_8',
                             'quantity': 2,
                             'price_unit': 40000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_28')])],
+                            'tax_ids': [Command.set(['sgst_sale_28'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_9',
                             'quantity': 3,
                             'price_unit': 400.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_28'), _get_tax_by_id('cess_5_plus_1591_sale')])],
+                            'tax_ids': [Command.set(['sgst_sale_28', 'cess_5_plus_1591_sale'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_10',
                             'quantity': 4,
                             'price_unit': 300.0,
-                            'tax_ids':[Command.set([_get_tax_by_id('sgst_sale_18')])],
+                            'tax_ids': [Command.set(['sgst_sale_18'])],
                         }),
                     ],
                 },
@@ -202,19 +187,19 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'regular',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_9',
                             'quantity': 2,
                             'price_unit': 4000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_sale_5')])],
+                            'tax_ids': [Command.set(['igst_sale_5'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_10',
                             'quantity': 3,
                             'price_unit': 300.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_sale_5')])],
+                            'tax_ids': [Command.set(['igst_sale_5'])],
                         }),
                     ],
                 },
@@ -230,13 +215,13 @@ class AccountChartTemplate(models.AbstractModel):
                             'product_id': 'product.consu_delivery_01',
                             'quantity': 1,
                             'price_unit': 1000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_purchase_18')])],
+                            'tax_ids': [Command.set(['igst_purchase_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.consu_delivery_03',
                             'quantity': 1,
                             'price_unit': 2000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_purchase_18')])],
+                            'tax_ids': [Command.set(['igst_purchase_18'])],
                         }),
                     ]
                 },
@@ -252,13 +237,13 @@ class AccountChartTemplate(models.AbstractModel):
                             'product_id': 'product.consu_delivery_01',
                             'quantity': 4,
                             'price_unit': 1000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.consu_delivery_03',
                             'quantity': 3,
                             'price_unit': 2000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                     ]
                 },
@@ -274,13 +259,13 @@ class AccountChartTemplate(models.AbstractModel):
                             'product_id': 'product.consu_delivery_01',
                             'quantity': 2,
                             'price_unit': 1000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.consu_delivery_03',
                             'quantity': 3,
                             'price_unit': 2000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                     ]
                 },
@@ -299,7 +284,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'name': 'Integrated Managed Infrastructure Service',
                             'quantity': 1,
                             'price_unit': 69132.78,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                     ],
                     'message_main_attachment_id': 'ir_attachment_in_invoice_2',
@@ -317,7 +302,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'product_id': 'product.product_product_4',
                             'quantity': 30,
                             'price_unit': 9000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                     ]
                 },
@@ -335,13 +320,13 @@ class AccountChartTemplate(models.AbstractModel):
                             'product_id': 'product.consu_delivery_01',
                             'quantity': 1,
                             'price_unit': 1000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.consu_delivery_03',
                             'quantity': 1,
                             'price_unit': 2000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_purchase_18')])],
+                            'tax_ids': [Command.set(['sgst_purchase_18'])],
                         }),
                     ]
                 },
@@ -358,7 +343,7 @@ class AccountChartTemplate(models.AbstractModel):
                                 'product_id': 'product.consu_delivery_01',
                                 'quantity': 1,
                                 'price_unit': 1000.0,
-                                'tax_ids': [Command.set([_get_tax_by_id('igst_purchase_18')])],
+                                'tax_ids': [Command.set(['igst_purchase_18'])],
                             }),
                         ]
                     },
@@ -370,31 +355,31 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'consumer',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_16',
                             'quantity': 1,
                             'price_unit': 1500.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_sale_18')])],
+                            'tax_ids': [Command.set(['igst_sale_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_20',
                             'quantity': 1,
                             'price_unit': 2300.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_sale_18')])],
+                            'tax_ids': [Command.set(['igst_sale_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_22',
                             'quantity': 1,
                             'price_unit': 2600.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_sale_18')])],
+                            'tax_ids': [Command.set(['igst_sale_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_24',
                             'quantity': 2,
                             'price_unit': 1655.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_sale_5')])],
+                            'tax_ids': [Command.set(['igst_sale_5'])],
                         }),
                     ]
                 },
@@ -406,13 +391,13 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'consumer',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.consu_delivery_01',
                             'quantity': 3,
                             'price_unit': 90000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_18')])],
+                            'tax_ids': [Command.set(['sgst_sale_18'])],
                         }),
                     ]
                 },
@@ -427,13 +412,13 @@ class AccountChartTemplate(models.AbstractModel):
                     'l10n_in_shipping_bill_number': '999704',
                     'l10n_in_shipping_bill_date': time.strftime('%Y-%m-02'),
                     'l10n_in_shipping_port_code_id': 'l10n_in.port_code_inixy1',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_4',
                             'quantity': 30,
                             'price_unit': 8000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('igst_sale_18_sez_exp')])],
+                            'tax_ids': [Command.set(['igst_sale_18_sez_exp'])],
                         }),
                     ]
                 },
@@ -445,19 +430,19 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'regular',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_1',
                             'quantity': 2,
                             'price_unit': 25000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('exempt_sale')])],
+                            'tax_ids': [Command.set(['exempt_sale'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_5',
                             'quantity': 1,
                             'price_unit': 400.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('nil_rated_sale')])],
+                            'tax_ids': [Command.set(['nil_rated_sale'])],
                         }),
                     ]
                 },
@@ -470,25 +455,25 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'regular',
                     'reversed_entry_id': 'demo_invoice_b2b_1',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.product_product_8',
                             'quantity': 2,
                             'price_unit': 40000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_28')])],
+                            'tax_ids': [Command.set(['sgst_sale_28'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_9',
                             'quantity': 3,
                             'price_unit': 400.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_28'), _get_tax_by_id('cess_5_plus_1591_sale')])],
+                            'tax_ids': [Command.set(['sgst_sale_28', 'cess_5_plus_1591_sale'])],
                         }),
                         Command.create({
                             'product_id': 'product.product_product_10',
                             'quantity': 4,
                             'price_unit': 300.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_18')])],
+                            'tax_ids': [Command.set(['sgst_sale_18'])],
                         }),
                     ]
                 },
@@ -499,19 +484,19 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'regular',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.consu_delivery_01',
                             'quantity': 1,
                             'price_unit': 1000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_18')])],
+                            'tax_ids': [Command.set(['sgst_sale_18'])],
                         }),
                         Command.create({
                             'product_id': 'product.consu_delivery_03',
                             'quantity': 1,
                             'price_unit': 2000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_18')])],
+                            'tax_ids': [Command.set(['sgst_sale_18'])],
                         }),
                     ]
                 },
@@ -524,24 +509,27 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_date': datetime.now(),
                     'l10n_in_gst_treatment': 'consumer',
                     'reversed_entry_id': 'demo_invoice_b2cl',
-                    'journal_id': sale_journal.id,
+                    'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
                             'product_id': 'product.consu_delivery_01',
                             'quantity': 3,
                             'price_unit': 90000.0,
-                            'tax_ids': [Command.set([_get_tax_by_id('sgst_sale_18')])],
+                            'tax_ids': [Command.set(['sgst_sale_18'])],
                         }),
                     ]
                 },
             }
-        else:
-            return super()._get_demo_data_move(company)
+        return super()._get_demo_data_move(template_code)
 
-    @api.model
-    def _get_demo_data_attachment(self, company=False):
-        if company.account_fiscal_country_id.code == "IN":
-            return{
+    @template(model='account.bank.statement', demo=True)
+    def _get_demo_data_statement(self, template_code):
+        return {} if template_code == 'in' else super()._get_demo_data_statement(template_code)
+
+    @template(model='ir.attachment', demo=True)
+    def _get_demo_data_attachment(self, chart_template):
+        if chart_template == "in":
+            return {
                 'ir_attachment_in_invoice_1': {
                     'type': 'binary',
                     'name': 'in_invoice_demo_1.pdf',
@@ -561,13 +549,11 @@ class AccountChartTemplate(models.AbstractModel):
                     ).read()
                 }
             }
-        else:
-            return super()._get_demo_data_attachment(company)
+        return super()._get_demo_data_attachment(chart_template)
 
-
-    @api.model
-    def _get_demo_data_mail_message(self, company=False):
-        if company.account_fiscal_country_id.code == "IN":
+    @template(model='mail.message', demo=True)
+    def _get_demo_data_mail_message(self, chart_template):
+        if chart_template == "in":
             return {
                 'mail_message_in_invoice_1': {
                     'model': 'account.move',
@@ -590,34 +576,36 @@ class AccountChartTemplate(models.AbstractModel):
                     ])]
                 },
             }
-        else:
-            return super()._get_demo_data_mail_message(company)
+        return super()._get_demo_data_mail_message(chart_template)
 
-    def _post_load_demo_data(self, company=False):
-        if company.account_fiscal_country_id.code == "IN":
-            if company.state_id:
-                invoices = (
-                    self.ref('demo_invoice_b2b_1')
-                    + self.ref('demo_invoice_b2b_2')
-                    + self.ref('demo_invoice_b2cs')
-                    + self.ref('demo_invoice_b2cl')
-                    + self.ref('demo_invoice_exp')
-                    + self.ref('demo_invoice_nill')
-                    + self.ref('demo_invoice_cdnr_1')
-                    + self.ref('demo_invoice_cdnr_2')
-                    + self.ref('demo_invoice_cdnur')
-                    + self.ref('demo_bill_b2b_1')
-                    + self.ref('demo_bill_b2b_2')
-                    + self.ref('demo_bill_b2b_3')
-                    + self.ref('demo_bill_imp')
-                    + self.ref('demo_bill_cdnr_1')
-                    + self.ref('demo_bill_cdnr_2')
-                    + self.ref('demo_invoice_service')
-                )
-                for move in invoices:
-                    try:
-                        move.action_post()
-                    except (UserError, ValidationError):
-                        _logger.exception('Error while posting demo data')
+    @template(model='mail.activity', demo=True)
+    def _get_demo_data_mail_activity(self, template_code):
+        return {} if template_code == 'in' else super()._get_demo_data_mail_activity(template_code)
+
+    def _post_load_demo_data(self, template_code):
+        if template_code == "in":
+            invoices = (
+                self.ref('demo_invoice_b2b_1')
+                + self.ref('demo_invoice_b2b_2')
+                + self.ref('demo_invoice_b2cs')
+                + self.ref('demo_invoice_b2cl')
+                + self.ref('demo_invoice_exp')
+                + self.ref('demo_invoice_nill')
+                + self.ref('demo_invoice_cdnr_1')
+                + self.ref('demo_invoice_cdnr_2')
+                + self.ref('demo_invoice_cdnur')
+                + self.ref('demo_bill_b2b_1')
+                + self.ref('demo_bill_b2b_2')
+                + self.ref('demo_bill_b2b_3')
+                + self.ref('demo_bill_imp')
+                + self.ref('demo_bill_cdnr_1')
+                + self.ref('demo_bill_cdnr_2')
+                + self.ref('demo_invoice_service')
+            )
+            for move in invoices:
+                try:
+                    move.action_post()
+                except (UserError, ValidationError):
+                    _logger.exception('Error while posting demo data')
         else:
-            return super()._post_load_demo_data(company)
+            super()._post_load_demo_data(template_code)

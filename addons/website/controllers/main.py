@@ -450,11 +450,10 @@ class Website(Home):
         templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name', 'arch_db'])
 
         for t in templates:
-            children = etree.fromstring(t.pop('arch_db')).getchildren()
-            attribs = children and children[0].attrib or {}
-            t['numOfEl'] = attribs.get('data-number-of-elements')
-            t['numOfElSm'] = attribs.get('data-number-of-elements-sm')
-            t['numOfElFetch'] = attribs.get('data-number-of-elements-fetch')
+            attribs = etree.fromstring(t.pop('arch_db')).attrib or {}
+            t['numberOfElements'] = attribs.get('data-number-of-elements')
+            t['numberOfElementsSmallDevices'] = attribs.get('data-number-of-elements-sm')
+            t['numberOfRecords'] = attribs.get('data-number-of-elements-fetch')
             t['rowPerSlide'] = attribs.get('data-row-per-slide')
             t['arrowPosition'] = attribs.get('data-arrow-position')
             t['extraClasses'] = attribs.get('data-extra-classes')

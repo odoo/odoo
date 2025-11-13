@@ -11,7 +11,7 @@
                 <h1><field name="name" placeholder="e.g. Computer Science for kids" class="w-100"/></h1>
             </div>
             <group>
-                <field name="website_url" invisible="1"/>
+                <field name="website_url" invisible="1"/>  <!-- We need this for `computePath` used in `onAddContent` to redirect to the slide after creation. -->
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                 <field name="channel_type" widget="image_radio" options="{'images': ['/website_slides/static/src/img/channel-training-layout.png', '/website_slides/static/src/img/channel-documentation-layout.png']}" string="Choose a layout"/>
                 <field name="description" placeholder="Common tasks for a computer scientist is asking the right questions and answering questions..." class="mb-3"/>

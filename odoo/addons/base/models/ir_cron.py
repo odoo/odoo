@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import logging
 import threading
 import time
@@ -53,7 +54,7 @@ _intervalTypes = {
 }
 
 
-class CompletionStatus:  # inherit from enum.StrEnum in 3.11
+class CompletionStatus(enum.StrEnum):
     FULLY_DONE = 'fully done'
     PARTIALLY_DONE = 'partially done'
     FAILED = 'failed'
@@ -653,7 +654,7 @@ class IrCron(models.Model):
     def toggle(self, model, domain):
         # Prevent deactivated cron jobs from being re-enabled through side effects on
         # neutralized databases.
-        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
+        if self.env['ir.config_parameter'].sudo().get_bool('database.is_neutralized'):
             return True
 
         active = bool(self.env[model].search_count(domain))

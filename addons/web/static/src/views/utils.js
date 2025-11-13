@@ -4,6 +4,8 @@ import { unique } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { combineModifiers } from "@web/model/relational_model/utils";
 
+export const TOUCH_SELECTION_THRESHOLD = 400;
+
 export const X2M_TYPES = ["one2many", "many2many"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
 

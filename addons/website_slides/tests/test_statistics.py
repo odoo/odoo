@@ -14,6 +14,7 @@ from odoo.tools import mute_logger, float_compare
 
 
 @tagged('functional')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestChannelStatistics(common.SlidesCase):
 
     @mute_logger('odoo.models')
@@ -177,6 +178,7 @@ class TestChannelStatistics(common.SlidesCase):
 
 
 @tagged('functional')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSlideStatistics(common.SlidesCase):
 
     def test_slide_user_statistics(self):
@@ -247,6 +249,7 @@ class TestSlideStatistics(common.SlidesCase):
         self.assertEqual(self.channel.total_slides, 3, 'The channel should still contain 3 slides')
 
 @tagged('functional')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHttpSlideStatistics(HttpCase, common.SlidesCase):
     @classmethod
     def setUpClass(cls):

@@ -101,7 +101,7 @@ export class MenuDataPlugin extends Plugin {
         return (
             linkElement &&
             (linkElement.getAttribute("role") === "menuitem" ||
-            linkElement.classList.contains("nav-link")) &&
+                linkElement.classList.contains("nav-link")) &&
             !linkElement.dataset.bsToggle
         );
     }

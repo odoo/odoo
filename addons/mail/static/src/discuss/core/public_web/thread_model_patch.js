@@ -24,6 +24,16 @@ const threadPatch = {
         });
         this.discussAppCategory = fields.One("DiscussAppCategory", {
             compute() {
+                if (this.channel?.self_member_id?.is_favorite) {
+                    return this.store.discuss.favoriteCategory;
+                }
+                if (this.channel?.parent_channel_id) {
+                    return;
+                }
+                if (this.channel?.discuss_category_id) {
+                    return this.channel.discuss_category_id.appCategory;
+                }
+                // channel_type based categorization (including overrides) comes last
                 return this._computeDiscussAppCategory();
             },
         });
@@ -55,24 +65,15 @@ const threadPatch = {
         return !this.parent_channel_id && super.canLeave;
     },
     _computeDiscussAppCategory() {
-        if (this.parent_channel_id) {
-            return;
-        }
         if (["group", "chat"].includes(this.channel?.channel_type)) {
-            return this.store.discuss.chats;
+            return this.store.discuss.chatCategory;
         }
         if (this.channel?.channel_type === "channel") {
-            return this.store.discuss.channels;
+            return this.store.discuss.channelCategory;
         }
     },
     get allowCalls() {
         return super.allowCalls && !this.parent_channel_id;
-    },
-    delete() {
-        if (this.model === "discuss.channel") {
-            this.store.env.services.bus_service.deleteChannel(this.busChannel);
-        }
-        super.delete(...arguments);
     },
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel?.channel_type);
@@ -151,14 +152,6 @@ const threadPatch = {
         if (!this.self_member_id?.is_pinned && !this.isLocallyPinned) {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
-    },
-    /** @override */
-    openChannel() {
-        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-            this.setAsDiscussThread();
-            return true;
-        }
-        return super.openChannel();
     },
     setAsDiscussThread() {
         super.setAsDiscussThread(...arguments);

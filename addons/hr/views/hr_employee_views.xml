@@ -18,7 +18,7 @@
                     <field name="job_id"/>
                     <field name="coach_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
-                    <field name="private_car_plate" />
+                    <field name="private_car_plate" groups="hr.group_hr_user"/>
                     <field name="resource_calendar_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="company_id"/>
                     <separator/>
@@ -130,28 +130,28 @@
                                 </div>
                             </button>
                         </div>
-                        <div class="row flex-column flex-sm-row align-items-center">
-                            <div class="o_employee_avatar ms-2 p-0 h-100 mw-25 align-self-start align-self-sm-center">
+                        <div class="d-flex flex-column flex-sm-row align-items-center">
+                            <div class="o_employee_avatar ms-2 p-0">
                                 <field name="image_1920" widget='image' class="m-0" options='{"size": [128,158], "zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
-                            <div class="align-self-start o_employee_form_header_info">
-                                <div class="oe_title ps-0 pe-2 mw-100">
+                            <div class="col-12 col-sm-6 col-md-7 col-lg-8 px-4">
+                                <div class="oe_title mw-100 ps-0 pe-sm-2">
                                     <h1 class="d-flex flex-row align-items-center">
                                         <field name="name" placeholder="Employee's Name"
                                             required="True" style="font-size: min(4vw, 2.6rem);"/>
                                     </h1>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
-                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
+                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email" class="w-100 w-sm-75"/>
                                     </h5>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
-                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
+                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"  class="w-100 w-sm-75"/>
                                     </h5>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
-                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
+                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"  class="w-100 w-sm-75"/>
                                     </h5>
                                     <h5>
                                         <i class="fa fa-tags fa-fw me-1 text-primary" title="Tags"/>
@@ -361,8 +361,10 @@
                                     <group name="contract" groups="hr.group_hr_user">
                                         <div colspan="2" class="col-lg-6 w-100 mt-4 mb-3 o_horizontal_separator text-uppercase fw-bolder small d-flex">
                                             <span>Contract Overview</span>
-                                            <button name="%(hr_version_wizard_action)d" type="action" string="Load a Template" 
-                                                class="btn btn-link ms-auto text-end lh-1 h-100 p-0"/>
+                                            <field name="contract_template_id"
+                                                widget="contract_template_button"
+                                                class="btn btn-addr btn-link ms-auto text-end w-auto lh-1 h-100 p-0"
+                                                nolabel="1"/>
                                         </div>
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">
@@ -377,12 +379,15 @@
                                             <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
                                         </div>
                                         <field name="employee_type"/>
-                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
+                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"
+                                               invisible="not has_country_contract_type" domain="[('country_id', '=', company_country_id)]"/>
+                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"
+                                               invisible="has_country_contract_type" domain="[('country_id', '=', False)]"/>
                                         <field name="structure_type_id" string="Pay Category" placeholder="Pay Category"
                                                 domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
                                         <separator name="schedule" string="Schedule"/>
-                                        <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
+                                        <field name="resource_calendar_id" help="The default working hours are set in configuration." placeholder="Flexible"/>
                                     </group>
                                 </group>
                             </page>
@@ -425,7 +430,13 @@
                                     <group name="managers" string="Approvers">
                                         <field name="hr_responsible_id" widget="many2one_avatar_user"/>
                                     </group>
-                                    <group name="application_group" string="Application Settings" invisible="1"/>
+                                    <group name="application_group" string="Application Settings" invisible="1">
+                                        <label for="hourly_cost"/>
+                                        <div name="hourly_cost">
+                                            <field name="hourly_cost" class="oe_inline"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </div>
+                                    </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
                                         <label for="barcode"/>

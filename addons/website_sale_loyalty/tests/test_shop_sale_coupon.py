@@ -311,7 +311,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
 
         # 4. Test order not older than ICP validity -> Should not be removed
         ICP = self.env['ir.config_parameter']
-        icp_validity = ICP.create({'key': 'website_sale_coupon.abandonned_coupon_validity', 'value': 5})
+        ICP.set_int('website_sale_coupon.abandonned_coupon_validity', 5)
         self.env.flush_all()
         query = """UPDATE %s SET write_date = %%s WHERE id = %%s""" % (order._table,)
         self.env.cr.execute(query, (fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=4, hours=2)), order.id))
@@ -320,7 +320,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         self.assertEqual(len(order.applied_coupon_ids), 1, "The coupon shouldn't have been removed from the order the order is 4 days old but icp validity is 5 days")
 
         # 5. Test order with no ICP and older then 4 default days -> Should be removed
-        icp_validity.unlink()
+        ICP.search([('key', '=', 'website_sale_coupon.abandonned_coupon_validity')]).unlink()
         order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 0, "The coupon should've been removed from the order as more than 4 days")

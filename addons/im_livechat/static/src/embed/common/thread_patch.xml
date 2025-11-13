@@ -7,7 +7,7 @@
             </div>
         </xpath>
         <xpath expr="(//div[hasclass('o-mail-Thread')])" position="inside">
-            <Message t-if="props.thread.chatbot?.typingMessage" message="props.thread.chatbot.typingMessage" hasActions="false" isInChatWindow="env.inChatWindow" isTypingMessage="true"  thread="props.thread"/>
+            <Message t-if="props.thread.chatbot?.typingMessage" message="props.thread.chatbot.typingMessage" hasActions="false" isTypingMessage="true"  thread="props.thread"/>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-empty')]" position="replace">
             <t t-if="props.thread.channel?.channel_type !== 'livechat'">$0</t>

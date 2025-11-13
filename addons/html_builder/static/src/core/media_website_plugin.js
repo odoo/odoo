@@ -104,7 +104,7 @@ export class MediaWebsitePlugin extends Plugin {
         this.removeCurrentTooltip = this.popover.add(mediaEl, Tooltip, {
             tooltip: _t("Double-click to edit"),
         });
-        setTimeout(this.removeCurrentTooltip, 1500);
+        setTimeout(this.removeCurrentTooltip, 3000);
     }
 
     async onSnippetDropped({ snippetEl }) {

@@ -19,7 +19,7 @@ test("click on next blog updates URL", async () => {
         </section>
     `);
     expect(core.interactions).toHaveLength(1);
-    expect(browser.location.pathname).toBe("/")
+    expect(browser.location.pathname).toBe("/");
     await click(".o_wblog_next_button");
     await advanceTime(300);
     expect(browser.location.pathname).toBe("/some/blog");

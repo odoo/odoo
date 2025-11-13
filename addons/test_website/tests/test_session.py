@@ -62,7 +62,13 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
                           side_effect=get_cached_values_without_cache, autospec=True):
 
             # ensure that permissions on logout are OK
-            res = self.url_open('/web/session/logout')
+            res = self.url_open(
+                '/web/session/logout',
+                method='POST',
+                data={
+                    "csrf_token": http.Request.csrf_token(self),
+                },
+            )
             self.assertEqual(res.status_code, 200)
 
     def test_branding_cache(self):

@@ -24,7 +24,7 @@ export const callInvitationsService = {
         const store = services["mail.store"];
         let removeOverlay;
         const onChangeRingingThreadsLength = () => {
-            if (store.ringingThreads.length > 0) {
+            if (store.ringingChannels.length > 0) {
                 if (!removeOverlay) {
                     removeOverlay = services.overlay.add(CallInvitations, {});
                 }
@@ -34,7 +34,7 @@ export const callInvitationsService = {
             }
         };
         onChangeRingingThreadsLength();
-        onChange(store.ringingThreads, "length", onChangeRingingThreadsLength);
+        onChange(store.ringingChannels, "length", onChangeRingingThreadsLength);
     },
 };
 registry.category("services").add("discuss.call_invitations", callInvitationsService);

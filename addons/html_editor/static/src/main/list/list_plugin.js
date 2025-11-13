@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     removeClass,
+    removeStyle,
     toggleClass,
     unwrapContents,
     wrapInlinesInBlocks,
@@ -30,13 +31,12 @@ import {
     lastLeaf,
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
-import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
-import { getTextColorOrClass } from "@html_editor/utils/color";
+import { getTextColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
@@ -44,6 +44,7 @@ import { composeToolbarButton } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
+import { isColorGradient } from "@web/core/utils/colors";
 
 const listSelectorItems = [
     {
@@ -95,7 +96,7 @@ export class ListPlugin extends Plugin {
                 title: _t("Numbered list"),
                 description: _t("Create a list with numbering"),
                 icon: "fa-list-ol",
-                run: () => this.toggleListCommand({ mode: "OL" }),
+                run: ({ listStyle } = {}) => this.toggleListCommand({ mode: "OL", listStyle }),
                 isAvailable: this.canToggleList.bind(this),
             },
             {
@@ -112,6 +113,30 @@ export class ListPlugin extends Plugin {
             { hotkey: "control+shift+7", commandId: "toggleListOL" },
             { hotkey: "control+shift+8", commandId: "toggleListUL" },
             { hotkey: "control+shift+9", commandId: "toggleListCL" },
+        ],
+        shorthands: [
+            {
+                pattern: /^1[.)]$/,
+                commandId: "toggleListOL",
+            },
+            {
+                pattern: /^a[.)]$/,
+                commandId: "toggleListOL",
+                commandParams: { listStyle: "lower-alpha" },
+            },
+            {
+                pattern: /^A[.)]$/,
+                commandId: "toggleListOL",
+                commandParams: { listStyle: "upper-alpha" },
+            },
+            {
+                pattern: /^[-*]$/,
+                commandId: "toggleListUL",
+            },
+            {
+                pattern: /^\[\]$/,
+                commandId: "toggleListCL",
+            },
         ],
         toolbar_items: [
             withSequence(5, {
@@ -150,7 +175,6 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
         /** Handlers */
-        input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
         step_added_handlers: this.updateToolbarButtons.bind(this),
         delete_handlers: this.adjustListPaddingOnDelete.bind(this),
@@ -195,8 +219,8 @@ export class ListPlugin extends Plugin {
         );
     }
 
-    toggleListCommand({ mode } = {}) {
-        this.toggleList(mode);
+    toggleListCommand({ mode, listStyle } = {}) {
+        this.toggleList(mode, listStyle);
         this.dependencies.history.addStep();
     }
 
@@ -212,51 +236,6 @@ export class ListPlugin extends Plugin {
 
     canToggleList(selection) {
         return this.canToggleListMemoized(selection);
-    }
-
-    onInput(ev) {
-        if (ev.data !== " ") {
-            return;
-        }
-        const selection = this.dependencies.selection.getEditableSelection();
-        const blockEl = closestBlock(selection.anchorNode);
-        const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
-        let spaceOffset = selection.anchorOffset;
-        let leftLeaf = leftDOMPath.next().value;
-        while (leftLeaf) {
-            // Calculate spaceOffset by adding lengths of previous text nodes
-            // to correctly find offset position for selection within inline
-            // elements. e.g. <p>ab<strong>cd[]e</strong></p>
-            spaceOffset += leftLeaf.length;
-            leftLeaf = leftDOMPath.next().value;
-        }
-        const stringToConvert = blockEl.textContent.substring(0, spaceOffset);
-        const shouldCreateNumberList = /^(?:[1aA])[.)]\s$/.test(stringToConvert);
-        const shouldCreateBulletList = /^[-*]\s$/.test(stringToConvert);
-        const shouldCreateCheckList = /^\[\]\s$/.test(stringToConvert);
-        if (
-            (shouldCreateNumberList || shouldCreateBulletList || shouldCreateCheckList) &&
-            !closestElement(selection.anchorNode, "li")
-        ) {
-            this.dependencies.selection.setSelection({
-                anchorNode: blockEl.firstChild,
-                anchorOffset: 0,
-                focusNode: selection.focusNode,
-                focusOffset: selection.focusOffset,
-            });
-            this.dependencies.delete.deleteSelection();
-            if (shouldCreateNumberList) {
-                const listStyle = { a: "lower-alpha", A: "upper-alpha", 1: null }[
-                    stringToConvert.substring(0, 1)
-                ];
-                this.toggleList("OL", listStyle);
-            } else if (shouldCreateBulletList) {
-                this.toggleList("UL");
-            } else if (shouldCreateCheckList) {
-                this.toggleList("CL");
-            }
-            this.dependencies.history.addStep();
-        }
     }
 
     // --------------------------------------------------------------------------
@@ -1108,7 +1087,7 @@ export class ListPlugin extends Plugin {
         const listItems = new Set(
             targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
         );
-        if (!listItems.size || mode !== "color") {
+        if (!listItems.size || mode !== "color" || isColorGradient(color)) {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
@@ -1120,9 +1099,14 @@ export class ListPlugin extends Plugin {
                         (n) => isElement(n) && closestElement(n, "LI") === listItem
                     ),
                 ]) {
-                    removeClass(node, "o_default_color");
+                    // Remove any color-related classes.
+                    const classesToRemove = [...node.classList].filter(
+                        (cls) => cls === "o_default_color" || TEXT_CLASSES_REGEX.test(cls)
+                    );
+                    removeClass(node, ...classesToRemove);
+
                     if (node.style.color) {
-                        node.style.color = "";
+                        removeStyle(node, "color");
                     }
                 }
 
@@ -1133,7 +1117,11 @@ export class ListPlugin extends Plugin {
                         list.classList.add("o_default_color");
                     }
                 }
-            } else if (color === "" && listItem.style.color) {
+            } else if (
+                color === "" &&
+                (listItem.style.color ||
+                    [...listItem.classList].some((cls) => TEXT_CLASSES_REGEX.test(cls)))
+            ) {
                 const textNodes = targetedNodes.filter(
                     (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
                 );
@@ -1265,7 +1253,7 @@ export class ListPlugin extends Plugin {
 
     adjustListPaddingOnDelete() {
         const selection = this.document.getSelection();
-        if (!selection.isCollapsed) {
+        if (!selection.isCollapsed || !selection.anchorNode) {
             return;
         }
         const listItem = closestElement(selection.anchorNode);

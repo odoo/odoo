@@ -5,6 +5,7 @@ import { DisableSnippetsPlugin } from "@html_builder/core/disable_snippets_plugi
 import { OperationPlugin } from "@html_builder/core/operation_plugin";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+import { TranslateSetupEditorPlugin } from "./plugins/translate_setup_editor_plugin";
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -17,6 +18,7 @@ import { useSetupAction } from "@web/search/action_hook";
 import { HighlightPlugin } from "./plugins/highlight/highlight_plugin";
 import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
+import { TranslateAnnouncementScrollPlugin } from "./plugins/translate_announcement_scroll_plugin";
 import { TranslateLinkInlinePlugin } from "./plugins/translate_link_inline_plugin";
 import { TranslationPlugin } from "./plugins/translation_plugin";
 import { WebsiteVisibilityPlugin } from "./plugins/website_visibility_plugin";
@@ -41,6 +43,8 @@ import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
+import { WebsiteSavePlugin } from "@website/builder/plugins/website_save_plugin";
+import { Plugin } from "@html_editor/plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -50,12 +54,14 @@ const TRANSLATION_PLUGINS = [
     DisableSnippetsPlugin,
     SavePlugin,
     SetupEditorPlugin,
+    TranslateSetupEditorPlugin,
     WebsiteSetupEditorPlugin,
     VisibilityPlugin,
     PopupVisibilityPlugin,
     SaveTranslationPlugin,
     TranslateLinkInlinePlugin,
     TranslationPlugin,
+    TranslateAnnouncementScrollPlugin,
     WebsiteVisibilityPlugin,
     AnimateOptionPlugin,
     HighlightPlugin,
@@ -69,6 +75,16 @@ const TRANSLATION_PLUGINS = [
     MonetaryFieldPlugin,
     Many2OneOptionPlugin,
     CustomizeTranslationTabPlugin,
+    WebsiteSavePlugin,
+    // Those plugin are depended by other Plugin but not used in translation
+    // mode.
+    // Todo: find a better way to handle that.
+    class FakeRemovePlugin extends Plugin {
+        static id = "remove";
+    },
+    class FakeClonePlugin extends Plugin {
+        static id = "clone";
+    },
 ];
 
 export class WebsiteBuilder extends Component {
@@ -152,7 +168,7 @@ export class WebsiteBuilder extends Component {
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);
         const websitePlugins = this.props.translation
-            ? TRANSLATION_PLUGINS
+            ? [...TRANSLATION_PLUGINS, ...registry.category("website-translation-plugins").getAll()]
             : [
                   ...registry.category("builder-plugins").getAll(),
                   ...registry.category("website-plugins").getAll(),

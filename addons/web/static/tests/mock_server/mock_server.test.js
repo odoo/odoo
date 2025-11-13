@@ -10,6 +10,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 
+import { ConnectionLostError, rpc } from "@web/core/network/rpc";
+
 class Partner extends models.Model {
     _name = "res.partner";
 
@@ -135,7 +137,6 @@ class Foo extends models.Model {
     });
     many2one_reference = fields.Many2oneReference({
         model_field: "res_model",
-        relation: "bar",
         inverse_fname_by_model_name: { bar: "one2many_field" },
         model_name_ref_fname: "res_model",
     });
@@ -152,15 +153,15 @@ defineModels([Partner, Bar, Foo]);
  *  kwargs: Record<string, any>;
  *  [key: string]: any;
  * }} params
- * @returns
  */
-const ormRequest = async (params) => {
-    const response = await fetch(`/web/dataset/call_kw/${params.model}/${params.method}`, {
+function fetchCallKw(params) {
+    return fetch(`/web/dataset/call_kw/${params.model}/${params.method}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            id: nextJsonRpcId++,
             jsonrpc: "2.0",
             method: "call",
             params: {
@@ -170,6 +171,19 @@ const ormRequest = async (params) => {
             },
         }),
     });
+}
+
+/**
+ * @param {{
+ *  model: string;
+ *  method: string;
+ *  args: any[];
+ *  kwargs: Record<string, any>;
+ *  [key: string]: any;
+ * }} params
+ */
+const ormRequest = async (params) => {
+    const response = await fetchCallKw(params);
     const { error, result } = await response.json();
     if (error) {
         console.error(error);
@@ -177,6 +191,17 @@ const ormRequest = async (params) => {
     }
     return result;
 };
+
+/**
+ * Minimal parameters to have a request considered as a JSON-RPC request
+ */
+const JSON_RPC_BASIC_PARAMS = {
+    body: "{}",
+    headers: {
+        ["Content-Type"]: "application/json",
+    },
+};
+let nextJsonRpcId = 0;
 
 describe.current.tags("headless");
 
@@ -189,35 +214,17 @@ test("onRpc: normal result", async () => {
 
     expect(response).toBeInstanceOf(Response);
 
-    await expect(response.json()).resolves.toEqual({ result: "result", error: null });
+    await expect(response.text()).resolves.toBe("result");
 });
 
 test("onRpc: error handling", async () => {
-    class CustomError extends Error {
-        name = "CustomError";
-    }
-
     onRpc("/boom", () => {
-        throw new CustomError("boom");
+        throw new Error("boom");
     });
 
     await makeMockServer();
 
-    const response = await fetch("/boom");
-
-    expect(response).toBeInstanceOf(Response);
-
-    await expect(response.json()).resolves.toEqual({
-        result: null,
-        error: {
-            code: 418,
-            data: {
-                name: "CustomError",
-            },
-            message: "boom",
-            type: "CustomError",
-        },
-    });
+    await expect(fetch("/boom")).rejects.toThrow("boom");
 });
 
 test("onRpc: pure, normal result", async () => {
@@ -244,6 +251,94 @@ test("onRpc: pure, error handling", async () => {
     await makeMockServer();
 
     await expect(fetch("/boom")).rejects.toThrow("boom");
+});
+
+test("onRpc: JSON-RPC normal result", async () => {
+    onRpc("/get_result", () => "get_result value");
+
+    await makeMockServer();
+
+    const response = await fetch("/get_result", JSON_RPC_BASIC_PARAMS);
+
+    expect(response).toBeInstanceOf(Response);
+
+    const result = await response.json();
+    expect(result).toMatchObject({
+        result: "get_result value",
+    });
+    expect(result).not.toInclude("error");
+});
+
+test("onRpc: JSON-RPC error handling", async () => {
+    class CustomError extends Error {
+        name = "CustomError";
+    }
+
+    onRpc("/boom", () => {
+        throw new CustomError("boom");
+    });
+
+    await makeMockServer();
+
+    const response = await fetch("/boom", JSON_RPC_BASIC_PARAMS);
+
+    expect(response).toBeInstanceOf(Response);
+
+    const result = await response.json();
+    expect(result).not.toInclude("result");
+    expect(result).toMatchObject({
+        error: {
+            code: 200,
+            data: {
+                name: "CustomError",
+                message: "boom",
+            },
+            message: "boom",
+            type: "server",
+        },
+    });
+});
+
+test("rpc: calls on mock server", async () => {
+    onRpc("/route", () => true);
+    onRpc("/pure/route", () => true);
+    onRpc("/boom", () => {
+        throw new Error("Boom");
+    });
+    onRpc(
+        "/boom/pure",
+        () => {
+            throw new Error("Pure boom");
+        },
+        { pure: true }
+    );
+    await makeMockServer();
+
+    await expect(rpc("/pure/route")).resolves.toBe(true);
+    await expect(rpc("/route")).resolves.toBe(true);
+
+    await expect(rpc("/boom")).rejects.toThrow("RPC_ERROR: Boom");
+    await expect(rpc("/boom/pure")).rejects.toThrow(ConnectionLostError);
+
+    // MockServer error handling with 'rpc'
+    await expect(rpc("/unknown/route")).rejects.toThrow(
+        "Unimplemented server route: /unknown/route"
+    );
+    await expect(
+        rpc("/web/dataset/call_kw/fake.model/fake_method", {
+            model: "fake.model",
+            method: "fake_method",
+        })
+    ).rejects.toThrow(
+        `Cannot find a definition for model "fake.model": could not get model from server environment`
+    );
+});
+
+test("performRPC: custom response", async () => {
+    const customResponse = new Response("{}", { status: 418 });
+    onRpc(() => customResponse);
+    await makeMockServer();
+    await expect(fetchCallKw({})).resolves.toBe(customResponse);
 });
 
 test("performRPC: search with active_test=false", async () => {
@@ -1059,6 +1154,61 @@ test("performRPC: formatted_read_group, group by m2o", async () => {
     ]);
 });
 
+test("performRPC: formatted_read_group, group by many2one_reference", async () => {
+    Bar._records = [{ id: 1 }];
+    Foo._records = [{ id: 2, many2one_reference: 1, res_model: "bar" }];
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            model: "foo",
+            method: "formatted_read_group",
+            kwargs: {
+                domain: [],
+                groupby: ["many2one_reference"],
+                aggregates: ["__count"],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            many2one_reference: 1,
+            __extra_domain: [["many2one_reference", "=", 1]],
+            __count: 1,
+        },
+    ]);
+});
+
+test("performRPC: formatted_read_group, group by reference", async () => {
+    Bar._records = [
+        { id: 1, partner_ref: "res.partner,1" },
+        { id: 2, partner_ref: "res.partner,2" },
+    ];
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            model: "bar",
+            method: "formatted_read_group",
+            kwargs: {
+                domain: [],
+                groupby: ["partner_ref"],
+                aggregates: ["__count"],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            partner_ref: "res.partner,1",
+            __extra_domain: [["partner_ref", "=", "res.partner,1"]],
+            __count: 1,
+        },
+        {
+            partner_ref: "res.partner,2",
+            __extra_domain: [["partner_ref", "=", "res.partner,2"]],
+            __count: 1,
+        },
+    ]);
+});
+
 test("performRPC: formatted_read_group, group by id", async () => {
     Bar._records = [
         { id: 1, name: "A" },
@@ -1143,9 +1293,9 @@ test("performRPC: formatted_read_group, group by selection", async () => {
             },
         })
     ).resolves.toEqual([
-        { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
         { select: "dev", __extra_domain: [["select", "=", "dev"]], __count: 1 },
         { select: "done", __extra_domain: [["select", "=", "done"]], __count: 2 },
+        { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
     ]);
 });
 
@@ -1796,7 +1946,7 @@ test("many2many update should update inverse field", async () => {
     expect(env["bar"][0].many2many_field).toEqual([2]);
 });
 
-test.todo("many2one update should update inverse field", async () => {
+test("many2one update should update inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2one_field: 1 }];
 
@@ -1850,6 +2000,38 @@ test("webRead sub-fields of a many2one field", async () => {
                 id: 1,
                 test_name: "Jean-Michel",
                 test_number: 5,
+            },
+        },
+    ]);
+});
+
+test("webRead display_name of a many2one_reference field", async () => {
+    Bar._records = [{ id: 1, name: "Raoul" }];
+    Foo._records = [{ id: 2, many2one_reference: 1, res_model: "bar" }];
+
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            method: "web_read",
+            model: "foo",
+            args: [[2]],
+            kwargs: {
+                specification: {
+                    many2one_reference: {
+                        fields: {
+                            display_name: {},
+                        },
+                    },
+                },
+            },
+        })
+    ).resolves.toEqual([
+        {
+            id: 2,
+            many2one_reference: {
+                id: 1,
+                display_name: "Raoul",
             },
         },
     ]);

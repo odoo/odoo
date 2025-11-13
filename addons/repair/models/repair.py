@@ -598,41 +598,7 @@ class RepairOrder(models.Model):
         self.ensure_one()
         if self.filtered(lambda repair: any(m.product_uom_qty < 0 for m in repair.move_ids)):
             raise UserError(_("You can not enter negative quantities."))
-        if not self.product_id or not self.product_id.is_storable:
-            return self._action_repair_confirm()
-        precision = self.env['decimal.precision'].precision_get('Product Unit')
-        available_qty_owner = sum(self.env['stock.quant'].search([
-            ('product_id', '=', self.product_id.id),
-            ('location_id', '=', self.product_location_src_id.id),
-            ('lot_id', '=', self.lot_id.id),
-            ('owner_id', '=', self.partner_id.id),
-        ]).mapped('quantity'))
-        available_qty_noown = sum(self.env['stock.quant'].search([
-            ('product_id', '=', self.product_id.id),
-            ('location_id', '=', self.product_location_src_id.id),
-            ('lot_id', '=', self.lot_id.id),
-            ('owner_id', '=', False),
-        ]).mapped('quantity'))
-        repair_qty = self.product_uom._compute_quantity(self.product_qty, self.product_id.uom_id)
-        for available_qty in [available_qty_owner, available_qty_noown]:
-            if float_compare(available_qty, repair_qty, precision_digits=precision) >= 0:
-                return self._action_repair_confirm()
-
-        return {
-            'name': _('%(product)s: Insufficient Quantity To Repair', product=self.product_id.display_name),
-            'view_mode': 'form',
-            'res_model': 'stock.warn.insufficient.qty.repair',
-            'view_id': self.env.ref('repair.stock_warn_insufficient_qty_repair_form_view').id,
-            'type': 'ir.actions.act_window',
-            'context': {
-                'default_product_id': self.product_id.id,
-                'default_location_id': self.product_location_src_id.id,
-                'default_repair_id': self.id,
-                'default_quantity': repair_qty,
-                'default_product_uom_name': self.product_id.uom_name
-            },
-            'target': 'new'
-        }
+        return self._action_repair_confirm()
 
     def action_view_sale_order(self):
         return {

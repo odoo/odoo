@@ -25,6 +25,7 @@ from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 
 
 @tagged('mail_gateway')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmailParsing(MailCommon):
 
     def test_message_parse_and_replace_binary_octetstream(self):
@@ -240,6 +241,7 @@ class MailGatewayCommon(MailCommon):
 
 
 @tagged('mail_gateway')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailgateway(MailGatewayCommon):
 
     def test_assert_initial_values(self):
@@ -1035,7 +1037,7 @@ class TestMailgateway(MailGatewayCommon):
                 (test_domain, test_domain),
             ], [True, True, False, True]):
             with self.subTest(alias_right_part=alias_right_part, allowed_domain=allowed_domain):
-                self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', allowed_domain)
+                self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', allowed_domain)
 
                 subject = f'Test wigh {alias_right_part}-{allowed_domain}'
                 email_to = f'{self.alias.alias_name}@{self.alias_domain}, {new_alias_2.alias_name}@{alias_right_part}'
@@ -1937,13 +1939,14 @@ class TestMailgateway(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_loop')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGatewayLoops(MailGatewayCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
-        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
+        cls.env['ir.config_parameter'].sudo().set_int('mail.gateway.loop.minutes', 30)
+        cls.env['ir.config_parameter'].sudo().set_int('mail.gateway.loop.threshold', 5)
 
         cls.env['mail.gateway.allowed'].create([
             {'email': 'Bob@EXAMPLE.com'},
@@ -2122,6 +2125,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
                 'author_id': self.other_partner.id,
                 'model': test_updates[0]._name,
                 'res_id': test_updates[0].id,
+                'message_type': 'email'
             } for x in range(4)  # 4 + 1 posted before = 5 aka threshold
         ])
         with self.mock_mail_gateway():
@@ -2250,6 +2254,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_tools')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGatewayRecipients(MailGatewayCommon):
 
     @classmethod
@@ -2307,6 +2312,7 @@ class TestMailGatewayRecipients(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_loop', 'mail_reply')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGatewayReplies(MailGatewayCommon):
     """ Check routing of replies, using headers, references, ... """
 
@@ -2654,6 +2660,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_thread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailThreadCC(MailCommon):
 
     @classmethod

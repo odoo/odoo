@@ -38,6 +38,10 @@ export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButton
         props.onQuickReplace = (values) => {
             this.props.reactive.onQuickReplace(values);
         }
+        props.multiCreateRecordProps.context = {
+            default_is_manual: true,
+            default_employee_id: this.actionService.currentController.currentState.active_id,
+        }
         return props;
     }
 
@@ -62,6 +66,7 @@ export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButton
             employee_id: this.actionService.currentController.currentState.active_id,
             duration: -1,
             work_entry_type_id: workEntryTypeId,
+            is_manual: true,
         };
     }
 

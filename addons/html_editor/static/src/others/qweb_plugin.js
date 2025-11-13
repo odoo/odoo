@@ -45,7 +45,7 @@ export class QWebPlugin extends Plugin {
                 delete element.dataset.oeProtected;
             }
         },
-        normalize_handlers: this.normalize.bind(this),
+        normalize_handlers: withSequence(0, this.normalize.bind(this)),
 
         system_attributes: QWEB_DATA_ATTRIBUTES,
         unremovable_node_predicates: isUnremovableQWebElement,

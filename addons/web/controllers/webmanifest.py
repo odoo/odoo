@@ -41,7 +41,7 @@ class WebManifest(http.Controller):
         return shortcuts
 
     def _get_webmanifest(self):
-        web_app_name = request.env['ir.config_parameter'].sudo().get_param('web.web_app_name', 'Odoo')
+        web_app_name = request.env['ir.config_parameter'].sudo().get_str('web.web_app_name') or 'Odoo'
         manifest = {
             'name': web_app_name,
             'scope': '/odoo',

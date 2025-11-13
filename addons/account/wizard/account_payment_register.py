@@ -126,6 +126,7 @@ class AccountPaymentRegister(models.TransientModel):
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n")
     available_payment_method_line_ids = fields.Many2many('account.payment.method.line', compute='_compute_payment_method_line_fields')
+    payment_method_code = fields.Char(related='payment_method_line_id.code')
 
     # == Payment difference fields ==
     payment_difference = fields.Monetary(
@@ -577,7 +578,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_actionable_errors(self):
         for wizard in self:
             actionable_errors = {}
-            if unpaid_matched_payments := wizard.line_ids.move_id.matched_payment_ids.filtered(lambda p: p.state == 'in_process'):
+            if unpaid_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: p.state == 'in_process'):
                 actionable_errors['unpaid_matched_payments'] = {
                     'message': self.env._("There are payments in progress. Make sure you don't pay twice."),
                     'action_text': self.env._("Check them"),

@@ -47,7 +47,7 @@ export class Many2ManyTagsField extends Component {
         canQuickCreate: { type: Boolean, optional: true },
         canCreateEdit: { type: Boolean, optional: true },
         colorField: { type: String, optional: true },
-        createDomain: { type: [Array, Boolean], optional: true },
+        createExpression: { type: String, optional: true },
         domain: { type: [Array, Function], optional: true },
         context: { type: Object, optional: true },
         placeholder: { type: String, optional: true },
@@ -87,7 +87,7 @@ export class Many2ManyTagsField extends Component {
         this.activeActions = useActiveActions({
             fieldType: "many2many",
             crudOptions: {
-                create: this.props.canCreate && this.props.createDomain,
+                create: this.props.canCreate && this.props.createExpression,
                 createEdit: this.props.canCreateEdit,
                 onDelete: removeRecord,
                 edit: this.props.record.isInEdition,
@@ -268,7 +268,7 @@ export const many2ManyTagsField = {
             canCreate,
             canQuickCreate: canCreate && !noQuickCreate,
             canCreateEdit: canCreate && !noCreateEdit,
-            createDomain: options.create,
+            createExpression: attrs.create,
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
             placeholder,

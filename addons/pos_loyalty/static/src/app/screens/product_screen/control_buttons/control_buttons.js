@@ -1,4 +1,4 @@
-import { useState, onWillRender } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
@@ -12,10 +12,6 @@ patch(ControlButtons.prototype, {
         super.setup(...arguments);
         this.state = useState({
             nbrRewards: [],
-        });
-
-        onWillRender(() => {
-            this.state.nbrRewards = this.getPotentialRewards().length;
         });
     },
     _getEWalletRewards(order) {
@@ -35,7 +31,7 @@ patch(ControlButtons.prototype, {
     async onClickWallet() {
         const order = this.pos.getOrder();
         const eWalletPrograms = this._getEWalletPrograms();
-        const orderTotal = order.getTotalWithTax();
+        const orderTotal = order.priceIncl;
         const eWalletRewards = this._getEWalletRewards(order);
         if (eWalletRewards.length === 0 && orderTotal >= 0) {
             this.dialog.add(AlertDialog, {
@@ -92,7 +88,7 @@ patch(ControlButtons.prototype, {
                 if (result !== true) {
                     // Returned an error
                     this.dialog.add(AlertDialog, {
-                        title: _t("Error"),
+                        title: _t("Oh snap !"),
                         body: result,
                     });
                 }

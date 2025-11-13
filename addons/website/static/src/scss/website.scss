@@ -714,6 +714,14 @@ font[class*='bg-'] {
     }
 }
 
+.btn-close {
+    // Most components with an integrated .btn-close (o_notification, modals,
+    // offcanvas, ...) use $body-bg by default, which is why we check it here.
+    @if lightness($body-bg) < 50 {
+        @include btn-close-white();
+    }
+}
+
 // Badges
 .badge, .o_filter_tag {
     --badge-color: var(--color);
@@ -721,6 +729,7 @@ font[class*='bg-'] {
     background: var(--badge-bg, var(--background-color)) !important;
     color: var(--badge-color, var(--color)) !important;
     border: $border-width solid var(--badge-border-color) !important;
+    font-size: var(--badge-font-size);
 
     // Similarly to list-group-item-x and alert-* classes, override text-bg-*
     // classes behavior when used on badges.
@@ -1690,7 +1699,7 @@ header {
 
 @if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
-        #wrapwrap {
+        #wrapwrap:has(> header) {
             // Two different website options might add padding:
             // - The sidebar header template
             // - The website layout template when different than 'full'
@@ -3187,4 +3196,64 @@ input[value*="data-oe-translation-source-sha"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    div.media_iframe_video {
+      width: 100%;
+    }
+}
+
+.s_social_media, .s_share {
+    $-size: map-get($spacers, 5);
+    a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+    &[data-icon-underline="hover"] a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    &[data-icon-underline="always"] a {
+        text-decoration: underline;
+    }
+    .small_social_icon {
+        width: $-size - 1rem;
+        height: $-size - 1rem;
+        font-size: 0.875em;
+    }
+    a {
+        .fa-stack{
+            /*
+            Ensures consistent size and padding around icons when the
+            layout is set to "none" and the size is "huge" or "large".
+            For "small", this is handled above, and for "medium",
+            it is handled in the respective SCSS files (@see
+            s_social_media/000.scss and s_share/000.scss).
+            */
+            @for $i from 2 through 3 {
+                &.fa-#{$i}x {
+                    width: $-size + $i;
+                    height: $-size + $i;
+                    line-height: $-size + $i;
+                }
+            }
+        }
+    }
+    /*
+    This rule makes social media icons inherit the text color of their parent
+    container when no explicit color is set.
+    */
+    &.no_icon_color {
+        a {
+            color: inherit !important;
+        }
+    }
+}
+
+// Cursor pointer for image's that open in lightbox popup
+img.o_image_popup {
+    cursor: pointer;
 }

@@ -29,6 +29,7 @@
                 archivable="0"
                 import="0"
                 groups_draggable="0"
+                group_edit="0"
                 default_order="priority desc, sequence, state, date_deadline asc, id desc"
             >
                 <field name="state"/>
@@ -121,7 +122,7 @@
                     <div class="oe_button_box" name="button_box">
                         <field name="display_parent_task_button" invisible="1"/>
                         <field name="recurrence_id" invisible="1" />
-                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" invisible="not display_parent_task_button">
+                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-check" invisible="not display_parent_task_button">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Parent Task</span>
                             </div>
@@ -139,7 +140,7 @@
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                             <field name="display_in_project" invisible="True"/>
                         </button>
-                        <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count or not allow_task_dependencies" class="oe_stat_button" icon="fa-tasks">
+                        <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count or not allow_task_dependencies" class="oe_stat_button" icon="fa-check">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Blocked Tasks</span>
                                 <span class="o_stat_value ">
@@ -243,7 +244,7 @@
                             </field>
                         </page>
                         <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies">
-                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" options="{'link': false}" readonly="1"
+                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" link="False" readonly="1"
                                 context="{
                                     'depend_on_count': depend_on_count,
                                     'list_view_ref': 'project.open_view_blocked_by_list_view',

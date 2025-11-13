@@ -4,11 +4,12 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
-import { getElementsWithOption } from "@html_builder/utils/utils";
+import { getElementsWithOption, getSnippetName } from "@html_builder/utils/utils";
 
-const anchorSelector = ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *";
+const anchorSelector =
+    ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .row > *, .s_card";
 const anchorExclude =
-    ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup";
+    ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup, .carousel *";
 
 export function canHaveAnchor(element) {
     return element.matches(anchorSelector) && !element.matches(anchorExclude);
@@ -63,8 +64,8 @@ export class AnchorPlugin extends Plugin {
     }
 
     createAnchor(element) {
-        const titleEls = element.querySelectorAll("h1, h2, h3, h4, h5, h6");
-        const title = titleEls.length > 0 ? titleEls[0].innerText : element.dataset.name;
+        const title =
+            element.querySelector("h1, h2, h3, h4, h5, h6")?.innerText || getSnippetName(element);
         const anchorName = this.formatAnchor(title);
 
         let n = "";
@@ -91,10 +92,16 @@ export class AnchorPlugin extends Plugin {
         }
         const anchorLink = this.getAnchorLink(element);
         await browser.navigator.clipboard.writeText(anchorLink);
-        const message = _t("Anchor copied to clipboard%(br)sLink: %(anchorLink)s", {
-            anchorLink,
-            br: markup`<br>`,
-        });
+        const message = _t(
+            "Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s",
+            {
+                open_span: markup`<span style=" display: -webkit-box; -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical; overflow: hidden;">`,
+                anchor_link: anchorLink,
+                br: markup`<br>`,
+                close_span: markup`</span>`,
+            }
+        );
         const closeNotification = this.services.notification.add(message, {
             type: "success",
             buttons: [

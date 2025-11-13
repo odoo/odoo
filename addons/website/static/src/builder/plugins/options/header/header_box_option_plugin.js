@@ -10,20 +10,14 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { HeaderBoxOption } from "./header_box_option";
-import { HEADER_BOX, basicHeaderOptionSettings } from "./header_option_plugin";
+import { HEADER_BOX } from "./header_option_plugin";
 
 class HeaderBoxOptionPlugin extends Plugin {
     static id = "HeaderBoxOptionPlugin";
     static dependencies = ["customizeWebsite"];
 
     resources = {
-        builder_options: [
-            withSequence(HEADER_BOX, {
-                ...basicHeaderOptionSettings,
-                applyTo: ".navbar:not(.d-none)",
-                OptionComponent: HeaderBoxOption,
-            }),
-        ],
+        builder_options: [withSequence(HEADER_BOX, HeaderBoxOption)],
         builder_actions: {
             StyleActionHeaderAction,
             SetShadowModeHeaderAction,

@@ -1,5 +1,4 @@
-import { after, destroy, getFixture } from "@odoo/hoot";
-import { queryFirst, queryOne } from "@odoo/hoot-dom";
+import { after, destroy, getFixture, queryFirst, queryOne } from "@odoo/hoot";
 import { App, Component, xml } from "@odoo/owl";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -14,7 +13,7 @@ import {
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
 
 /**
- * @typedef {import("@odoo/hoot-dom").Target} Target
+ * @typedef {import("@odoo/hoot").Target} Target
  * @typedef {import("@odoo/owl").Component} Component
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  *
@@ -182,4 +181,33 @@ export async function mountWithCleanup(ComponentClass, options) {
     }
 
     return component;
+}
+
+export async function waitUntilIdle(apps = [...App.apps]) {
+    const isOwlIdle = () => apps.every((app) => app.scheduler.tasks.size === 0);
+
+    if (isOwlIdle()) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+        function cleanup() {
+            for (const cb of unpatch) {
+                cb();
+            }
+            unpatch = [];
+        }
+        after(cleanup);
+        let unpatch = apps.map((app) =>
+            patch(app.scheduler, {
+                processTasks() {
+                    super.processTasks();
+                    if (isOwlIdle()) {
+                        cleanup();
+                        resolve();
+                    }
+                },
+            })
+        );
+    });
 }

@@ -859,8 +859,11 @@ class ProductTemplate(models.Model):
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
-            tags = list(map(int, tags)) # Convert list of strings to list of integers
-            domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
+            tags = list(map(int, tags))  # Convert list of strings to list of integers
+            domains.append(Domain.OR([
+                Domain('product_tag_ids', 'in', tags),
+                Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
+            ]))
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:
@@ -1046,7 +1049,7 @@ class ProductTemplate(models.Model):
         :rtype: `product.ribbon` recordset
         """
         variant = variant or self.product_variant_id
-        ribbon = variant.variant_ribbon_id or self.sudo().website_ribbon_id
+        ribbon = variant.sudo().variant_ribbon_id or self.sudo().website_ribbon_id
         if not ribbon:
             # The None check ensures that we do not recompute the ribbons when no ribbons were
             # previously found.
@@ -1064,7 +1067,7 @@ class ProductTemplate(models.Model):
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
-        if force_website or self.website_published:
+        if force_website or (self.website_published and self.env.user.share):
             return {
                 "type": "ir.actions.act_url",
                 "url": self.website_url,

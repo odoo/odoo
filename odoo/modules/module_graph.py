@@ -145,7 +145,7 @@ class ModuleNode:
         # acceptable in this context since we don't modify it
         manifest = Manifest.for_addon(name, display_warning=False)
         if manifest is not None:
-            manifest.manifest_cached  # parse the manifest now
+            manifest.raw_value('')  # parse the manifest now
         self.manifest: Mapping = manifest or {}
 
         # ir_module_module data                     # column_name

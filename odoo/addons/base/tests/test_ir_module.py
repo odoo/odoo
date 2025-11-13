@@ -1,7 +1,8 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class IrModuleCase(TransactionCase):
     @mute_logger("odoo.modules.module")
     def test_missing_module_icon(self):

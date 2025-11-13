@@ -1,7 +1,8 @@
 from odoo import api, Command
-from odoo.tests.common import HttpCase
+from odoo.tests.common import tagged, HttpCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class LoadMenusTests(HttpCase):
 
     maxDiff = None

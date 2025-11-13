@@ -163,10 +163,16 @@
                            invisible="not use_leads and not use_opportunities"/>
                     <div name="alias_def" invisible="not use_leads and not use_opportunities">
                         <field name="alias_id" string="Email Alias" class="oe_read_only" required="0"/>
-                        <div class="oe_edit_only" name="edit_alias" dir="ltr">
-                            <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                        <div class="oe_edit_only row" name="edit_alias" dir="ltr">
+                            <div class="d-flex col-10 p-0">
+                                <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
+                                <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <div class="col-2 p-0" invisible="not alias_email">
+                                <field name="alias_email" widget="CopyClipboardButton"
+                                    class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
+                            </div>
                         </div>
                     </div>
                     <field name="alias_contact"

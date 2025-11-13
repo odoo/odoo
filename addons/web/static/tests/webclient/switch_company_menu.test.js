@@ -52,8 +52,8 @@ beforeEach(() => {
 test("basic rendering", async () => {
     await createSwitchCompanyMenu();
 
-    expect("div.o_switch_company_menu").toHaveCount(1);
-    expect("div.o_switch_company_menu").toHaveText("Hermit");
+    expect("button.o_switch_company_menu").toHaveCount(1);
+    expect("button.o_switch_company_menu").toHaveText("Hermit");
 
     await openCompanyMenu();
 
@@ -643,4 +643,42 @@ test("de-select only changes visible companies", async () => {
     expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=false])").toHaveCount(
         1
     );
+});
+
+test("disallowed companies in between allowed companies are not enabled", async () => {
+    cookie.set("cids", "3");
+    serverState.companies = [
+        { id: 1, name: "Parent", sequence: 1, parent_id: false, child_ids: [2] },
+        { id: 2, name: "Child A", sequence: 2, parent_id: 1, child_ids: [3] },
+        { id: 3, name: "Child B", sequence: 3, parent_id: 2, child_ids: [] },
+    ];
+
+    patchWithCleanup(user.allowedCompanies, [serverState.companies[0], serverState.companies[2]]);
+
+    await createSwitchCompanyMenu();
+
+    /**
+     *   [ ] Parent
+     *   [ ]    Child A
+     *   [x]        Child B
+     */
+    expect(user.activeCompanies.map((c) => c.id)).toEqual([3]);
+    expect(user.activeCompany.id).toBe(3);
+    await openCompanyMenu();
+    expect("[data-company-id]").toHaveCount(3);
+    expect("[data-company-id] .fa-check-square").toHaveCount(1);
+    expect("[data-company-id] .fa-square-o").toHaveCount(2);
+
+    /**
+     *   [x] Parent -> toggle
+     *   [ ]    Child A
+     *   [x]        Child B
+     */
+    await contains(".log_into:eq(0)").click();
+    expect(cookie.get("cids")).toEqual("1-3");
+
+    await openCompanyMenu();
+    await toggleCompany(0);
+    expect("[data-company-id] .fa-check-square").toHaveCount(0);
+    expect("[data-company-id] .fa-square-o").toHaveCount(3);
 });

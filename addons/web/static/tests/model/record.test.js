@@ -796,7 +796,7 @@ test(`don't duplicate a useRecordObserver effect when switching back and forth b
 
         setup() {
             this.orm = useService("orm");
-            const services = { orm: this.orm };
+            const services = { orm: this.orm, offline: useService("offline") };
             const model = new StandaloneRelationalModel(this.env, {}, services);
             model.load({ resId: 1, values: { foo: "abc" } });
             const record1 = model.root;

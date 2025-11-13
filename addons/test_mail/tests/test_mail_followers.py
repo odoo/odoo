@@ -17,6 +17,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mail_followers')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class BaseFollowersTest(MailCommon):
 
     @classmethod
@@ -277,6 +278,7 @@ class BaseFollowersTest(MailCommon):
 
 
 @tagged('mail_followers')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class AdvancedFollowersTest(MailCommon):
 
     @classmethod
@@ -525,6 +527,7 @@ class AdvancedFollowersTest(MailCommon):
 
 
 @tagged('mail_followers')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class AdvancedResponsibleNotifiedTest(MailCommon):
 
     def setUp(self):

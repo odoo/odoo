@@ -46,10 +46,10 @@ def preserve_existing_tags_on_taxes(env, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
     xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
     if xml_records:
-        env.cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
+        env.cr.execute("update ir_model_data set noupdate = TRUE where id in %s", [tuple(xml_records.ids)])
 
 
-def template(template=None, model='template_data'):
+def template(template=None, model='template_data', *, demo=False):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -64,7 +64,7 @@ def template(template=None, model='template_data'):
         module = path_info[0] if path_info else 'account'
 
         wrapper._module = module
-        wrapper._l10n_template = (template, model)
+        wrapper._l10n_template = (template, model, demo)
         return wrapper
     return decorator
 
@@ -77,11 +77,21 @@ class AccountChartTemplate(models.AbstractModel):
     def _template_register(self):
         def is_template(func):
             return callable(func) and hasattr(func, '_l10n_template')
-        template_register = defaultdict(lambda: defaultdict(list))
+        template_register = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))  # {demo: template: {model: [function, ...]}}
         cls = self.env.registry[self._name]
-        for _attr, func in getmembers(cls, is_template):
-            template, model = func._l10n_template
-            template_register[template][model].append(func)
+        # remember the first decorator of the function in the MRO
+        template_funcs = {
+            attr: func
+            for subclass in cls.__mro__
+            for attr, func in getmembers(subclass, is_template)
+        }
+
+        # register the top function in the MRO remembering the initial module
+        for attr, func in getmembers(cls):
+            if decorated_func := template_funcs.get(attr):
+                template, model, demo = decorated_func._l10n_template
+                func._module = decorated_func._module
+                template_register[demo][template][model].append(func)
         cls._template_register = template_register
         return template_register
 
@@ -255,10 +265,15 @@ class AccountChartTemplate(models.AbstractModel):
         if not isinstance(companies, models.BaseModel):
             companies = self.env['res.company'].browse(companies)
         for company in companies:
-            self.sudo().with_context(skip_pdf_attachment_generation=True)._load_data(self._get_demo_data(company))
-            self._post_load_demo_data(company)
+            self_ctx = self.with_context(
+                default_company_id=company.id,
+                allowed_company_ids=[company.id],
+            ).sudo()
+            demo_data = self_ctx._get_chart_template_data(company.chart_template, demo=True)
+            self_ctx.with_context(skip_pdf_attachment_generation=True)._load_data(demo_data)
+            self_ctx._post_load_demo_data(company.chart_template)
 
-    def _pre_reload_data(self, company, template_data, data, force_create=True):
+    def _pre_reload_data(self, company, template_data, data, force_create=True, force_update=False):
         """Pre-process the data in case of reloading the chart of accounts.
 
         When we reload the chart of accounts, we only want to update fields that are main
@@ -268,8 +283,9 @@ class AccountChartTemplate(models.AbstractModel):
         for prop in list(template_data):
             if prop.startswith('property_'):
                 template_data.pop(prop)
-        data.pop('account.reconcile.model', None)
-        if 'res.company' in data:
+        if not force_update:
+            data.pop('account.reconcile.model', None)
+        if 'res.company' in data and not force_update:
             data['res.company'][company.id].clear()
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
@@ -347,8 +363,9 @@ class AccountChartTemplate(models.AbstractModel):
             for xmlid, values in records.items():
                 if model_name == 'account.fiscal.position':
                     # if xmlid is not in xmlid2fiscal_position and we do not force create so we will skip_update for that record
-                    if xmlid not in xmlid2fiscal_position and not force_create:
-                        skip_update.add((model_name, xmlid))
+                    if xmlid not in xmlid2fiscal_position:
+                        if not force_create:
+                            skip_update.add((model_name, xmlid))
                         continue
                     # Only add accounts mappings containing new records
                     if not force_create:  # there can't be new records if we don't create them
@@ -371,7 +388,7 @@ class AccountChartTemplate(models.AbstractModel):
                         continue
 
                 elif model_name == 'account.tax':
-                    if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
+                    if xmlid not in xmlid2tax or (tax_template_changed(xmlid2tax[xmlid], values) and not force_update):
                         if not force_create:
                             skip_update.add((model_name, xmlid))
                             continue
@@ -393,10 +410,11 @@ class AccountChartTemplate(models.AbstractModel):
                             if rename_idx:
                                 tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
-                        fiscal_position_ids = values.get('fiscal_position_ids')
-                        original_tax_ids = values.get('original_tax_ids')
-                        repartition_lines = values.get('repartition_line_ids')
-                        values.clear()
+                        fiscal_position_ids = values.pop('fiscal_position_ids', None)
+                        original_tax_ids = values.pop('original_tax_ids', None)
+                        repartition_lines = values.pop('repartition_line_ids', None)
+                        if not force_update:
+                            values.clear()
                         # taxes will always be (re)linked to fiscal positions (unless the fp doesn't exist and won't be created)
                         if fiscal_position_ids:
                             link_commands = [
@@ -423,32 +441,34 @@ class AccountChartTemplate(models.AbstractModel):
                                         repartition_line_values.clear()
                                         repartition_line_values['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
-                    if  existing_current_year_earnings_account and values['account_type'] == 'equity_unaffected':
+                    if existing_current_year_earnings_account and values.get('account_type') == 'equity_unaffected':
                         skip_update.add((model_name, xmlid))
                         continue
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
-                    normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
-                    if not account or not re.match(f'^{values["code"]}0*$', account.code):
-                        query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
-                        account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
-                        query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
-                        accounts = self.env['account.account'].browse(query)
-                        existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
-                        if existing_account:
-                            self.env['ir.model.data']._update_xmlids([{
-                                'xml_id': f"account.{company.id}_{xmlid}",
-                                'record': existing_account,
-                                'noupdate': True,
-                            }])
-                            account = existing_account
+                    if 'code' in values:
+                        normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                        if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                            query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
+                            account_code = self.with_company(company).env['account.account']._field_to_sql('account_account', 'code', query)
+                            query.add_where(SQL("%s SIMILAR TO %s", account_code, f'{values["code"]}0*'))
+                            accounts = self.env['account.account'].browse(query)
+                            existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                            if existing_account:
+                                self.env['ir.model.data']._update_xmlids([{
+                                    'xml_id': f"account.{company.id}_{xmlid}",
+                                    'record': existing_account,
+                                    'noupdate': True,
+                                }])
+                                account = existing_account
 
                     # Prevents overriding user setting & raising a partial reconcile error.
-                    values.pop('reconcile', None)
+                    if account:
+                        values.pop('reconcile', None)
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
-                    elif account or not force_create:
+                    elif (account and not force_update) or (not account and not force_create):
                         skip_update.add((model_name, xmlid))
 
         for skip_model, skip_xmlid in skip_update:
@@ -642,6 +662,7 @@ class AccountChartTemplate(models.AbstractModel):
                 for xml_id, vals in data.items():
                     to_be_removed = []
                     for field_name, field_val in vals.items():
+                        field = self.env[model]._fields.get(field_name)
                         if should_delay(created_models, yet_to_be_created_models, model, field_name, field_val):
                             # Default repartition lines will be created when we create account.tax
                             # If we delay the creation of repartition_line_ids, then we must get rid of the defaults
@@ -656,6 +677,22 @@ class AccountChartTemplate(models.AbstractModel):
                                 field_val = [Command.clear()] + field_val
                             to_be_removed.append(field_name)
                             to_delay[xml_id][field_name] = field_val
+                        if field and field.type == 'many2one_reference':
+                            model_field = self.env[model]._fields[field.model_field]
+                            if model_field.related:
+                                model_fname, path = model_field.related.split('.', 1)
+                                model_field = self.env[model]._fields[model_fname]
+                                if isinstance(vals[model_field.name], str):
+                                    model_id = self.ref(vals[model_field.name]).id
+                                else:
+                                    model_id = vals[model_field.name]
+                                res_model = self.env['ir.model'].browse(model_id).mapped(path)[0]
+                            else:
+                                res_model = vals[model_field.name]
+                            if res_model in yet_to_be_created_models:
+                                to_be_removed.extend([model_field.name, field_name])
+                                to_delay[xml_id][field_name] = vals[field_name]
+                                to_delay[xml_id][model_field.name] = vals[model_field.name]
                     for field_name in to_be_removed:
                         del vals[field_name]
                 if any(to_delay.values()):
@@ -786,19 +823,21 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_journal': 'product.category',
         }
 
-    def _get_chart_template_data(self, template_code):
+    def _get_chart_template_data(self, template_code, demo=False, module=None):
         template_data = defaultdict(lambda: defaultdict(dict))
         template_data['res.company']  # ensure it's the first property when iterating
         translatable_model_fields = self._get_translatable_template_model_fields()
         untranslatable_model_fields = self._get_untranslatable_fields_to_translate()
         for code in [None] + self._get_parent_template(template_code):
             for model, funcs in sorted(
-                self._template_register[code].items(),
+                self._template_register[demo][code].items(),
                 key=lambda i: TEMPLATE_MODELS.index(i[0]) if i[0] in TEMPLATE_MODELS else 1000
             ):
                 translatable_fields = translatable_model_fields.get(model, [])
                 untranslatable_fields = untranslatable_model_fields.get(model, [])
                 for func in funcs:
+                    if module is not None and func._module != module:
+                        continue
                     data = func(self, template_code)
                     if data is not None:
                         if model == 'template_data':
@@ -811,8 +850,11 @@ class AccountChartTemplate(models.AbstractModel):
                                 for field in translatable_fields + untranslatable_fields:
                                     if field in record:
                                         record.setdefault('__translation_module__', {})[field] = func._module
-
                                 template_data[model][xmlid].update(record)
+        if 'account.move' in template_data:
+            template_data['account.move'] = template_data.pop('account.move')
+        if not template_data['res.company']:
+            del template_data['res.company']
         return template_data
 
     def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):

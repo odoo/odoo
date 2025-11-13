@@ -6,8 +6,8 @@ patch(ChatWindow.prototype, {
     close() {
         super.close(...arguments);
         if (this.livechatStep === CW_LIVECHAT_STEP.FEEDBACK) {
-            this.store.env.services["im_livechat.livechat"].leave(this.thread);
-            this.thread.chatbot?.stop();
+            this.store.env.services["im_livechat.livechat"].leave(this.channel.thread);
+            this.channel.chatbot?.stop();
         }
     },
 });

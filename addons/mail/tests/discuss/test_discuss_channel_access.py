@@ -5,11 +5,9 @@ from psycopg2.errors import UniqueViolation
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
-@tagged("post_install", "-at_install")
 class TestDiscussChannelAccess(MailCommon):
     @classmethod
     def setUpClass(cls):

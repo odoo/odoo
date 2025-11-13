@@ -3,12 +3,13 @@ import logging
 import pytz
 from unittest.mock import patch
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo._monkeypatches.pytz import _tz_mapping
 
 _logger = logging.getLogger(__name__)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTZ(TransactionCase):
 
     def test_tz_legacy(self):

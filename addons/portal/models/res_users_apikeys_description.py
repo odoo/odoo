@@ -12,7 +12,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         try:
             return super().check_access_make_key()
         except AccessError:
-            if self.env['ir.config_parameter'].sudo().get_param('portal.allow_api_keys'):
+            if self.env['ir.config_parameter'].sudo().get_bool('portal.allow_api_keys'):
                 if self.env.user._is_portal():
                     return
                 else:

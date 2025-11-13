@@ -299,10 +299,6 @@ instead of ``_get_widget``. It's the ``ir.qweb.field.*`` models that format
 the value. The rendering model is chosen according to the type of field. The
 rendering model can be modified via the ``t-options-widget``.
 
-``t-raw``
-~~~~~~~~~
-Deprecated, please use ``t-out``
-
 ``t-set``
 ~~~~~~~~~
 **Values**: key name
@@ -401,7 +397,8 @@ from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError, MissingError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS
+from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
+from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS, FONT_EXTENSIONS
 
 _logger = logging.getLogger(__name__)
 
@@ -468,12 +465,21 @@ FIRST_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
 VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 TO_VARNAME_REGEXP = re.compile(r'[^A-Za-z0-9_]+')
 # Attribute name used outside the context of the QWeb.
-SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
+# When importing data, the <template> generate a root <t> with the `t-name` of
+# the template (equal to the xmlid). This is deprecated. It was used when
+# multiple templates were sent in the same etree.
+# Inside the template, `id` could be used as anchor for xpath. Actually `name`
+# is also used as anchor but is depreciated.
+SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title', 'id', 'name'} | set(MOVABLE_BRANDING)
 # Name of the variable to insert the content in t-call in the template.
 # The slot will be replaced by the `t-call` tag content of the caller.
 T_CALL_SLOT = '0'
 
 ETREE_TEMPLATE_REF = count()
+
+# Only allow a javascript scheme if it is followed by [ ][window.]history.back()
+MALICIOUS_SCHEMES = re.compile(r'javascript:(?!( ?)((window\.)?)history\.back\(\)$)', re.I).findall
+
 
 def _id_or_xmlid(ref):
     try:
@@ -641,8 +647,14 @@ class QwebContent:
 
 
 class QwebJSON(json.JSON):
+
+    def default(self, obj):
+        if isinstance(obj, Mapping):
+            return dict(obj)
+        return obj
+
     def dumps(self, *args, **kwargs):
-        prev_default = kwargs.pop('default', lambda obj: obj)
+        prev_default = kwargs.pop('default', self.default)
         return super().dumps(*args, **kwargs, default=(
             lambda obj: prev_default(str(obj) if isinstance(obj, QwebContent) else obj)
         ))
@@ -1024,7 +1036,7 @@ class IrQweb(models.AbstractModel):
 
         compile_context.pop('raise_if_not_found', None)
 
-        ref_name = element.attrib.pop('t-name', None)
+        ref_name = element.attrib.get('t-name')
         if isinstance(ref, int) or (isinstance(template, str) and '<' not in template):
             ref_name = self._get_template_info(ref)['key'] or ref_name
 
@@ -1066,9 +1078,6 @@ class IrQweb(models.AbstractModel):
         name_gen = count()
         compile_context['make_name'] = lambda prefix: f"{def_name}_{prefix}_{next(name_gen)}"
 
-        if element.text:
-            element.text = FIRST_RSTRIP_REGEXP.sub(r'\2', element.text)
-
         compile_context['template_functions'] = {}
 
         compile_context['_text_concat'] = []
@@ -1076,7 +1085,7 @@ class IrQweb(models.AbstractModel):
         compile_context['template_functions'][f'{def_name}_content'] = (
             [f"def {def_name}_content(self, values):"]
             + [indent_code('attrs = None', 1)]
-            + self._compile_node(element, compile_context, 1)
+            + self._compile_root(element, compile_context)
             + self._flush_text(compile_context, 1, rstrip=True))
 
         compile_context['template_functions'][def_name] = [indent_code(f"""
@@ -1613,7 +1622,7 @@ class IrQweb(models.AbstractModel):
             'options',
             'call',
             'att',
-            'field', 'raw', 'out',
+            'field', 'out',
             'tag-open',
             'set',
             'inner-content',
@@ -1621,6 +1630,12 @@ class IrQweb(models.AbstractModel):
         ]
 
     # compile
+
+    def _compile_root(self, element, compile_context):
+        element.attrib.pop('t-name', None)
+        if element.text:
+            element.text = FIRST_RSTRIP_REGEXP.sub(r'\2', element.text)
+        return self._compile_node(element, compile_context, 1)
 
     def _compile_node(self, el, compile_context, level):
         """ Compile the given element into python code.
@@ -1673,7 +1688,7 @@ class IrQweb(models.AbstractModel):
             if el_tag not in VOID_ELEMENTS:
                 el.set('t-tag-close', el_tag)
 
-        if not ({'t-out', 't-raw', 't-field'} & set(el.attrib)):
+        if not {'t-out', 't-field'}.intersection(el.attrib):
             el.set('t-inner-content', 'True')
 
         return body + self._compile_directives(el, compile_context, level)
@@ -1682,7 +1697,7 @@ class IrQweb(models.AbstractModel):
         """ Compile a purely static element into a list of string. """
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
-            attrib = self._post_processing_att(el.tag, el.attrib)
+            attrib = self._post_processing_att(el.tag, {**el.attrib, '__is_static_node': True})
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
@@ -1713,7 +1728,7 @@ class IrQweb(models.AbstractModel):
                 else:
                     attrib[name] = value
 
-            attrib = self._post_processing_att(el.tag, attrib)
+            attrib = self._post_processing_att(el.tag, {**attrib, '__is_static_node': True})
 
             # Update the dict of inherited namespaces before continuing the recursion. Note:
             # since `compile_context['nsmap']` is a dict (and therefore mutable) and we do **not**
@@ -1866,6 +1881,14 @@ class IrQweb(models.AbstractModel):
             expression.
         """
         code = []
+        if (not el.nsmap and el.tag == 't') or (el.nsmap and etree.QName(el.tag).localname == 't'):
+            # if it's an invisible element <t>
+            if not el.get('t-out') and not el.get('t-esc') and not el.get('t-raw') and el.getparent() is not None:
+                # if this invisible doesn't generate content, attributes will never be consumed
+                return code
+            if el.attrib.get('t-consumed-options') != 'True':
+                # If the content is inserted without using a widget, attributes will never be consumed
+                return code
 
         # Compile the introduced new namespaces of the given element.
         #
@@ -1917,15 +1940,6 @@ class IrQweb(models.AbstractModel):
                     elif isinstance(atts_value, (list, tuple)):
                         attrs.update(dict(atts_value))
                     """, level))
-
-        if (not el.nsmap and el.tag == 't') or (el.nsmap and etree.QName(el.tag).localname == 't'):
-            # if it's an invisible element <t>
-            if not el.get('t-out') and not el.get('t-esc') and not el.get('t-raw') and el.getparent() is not None:
-                # if this invisible doesn't generate content, attributes will never be consumed
-                return []
-            if el.attrib.get('t-consumed-options') != 'True':
-                # If the content is inserted without using a widget, attributes will never be consumed
-                return []
 
         if code:
             code = [indent_code("attrs = {}", level)] + code
@@ -2334,10 +2348,6 @@ class IrQweb(models.AbstractModel):
         if expr is None:
             ttype = 't-field'
             expr = el.attrib.pop('t-field', None)
-            if expr is None:
-                # deprecated use.
-                ttype = 't-raw'
-                expr = el.attrib.pop('t-raw')
 
         flush = self._flush_text(compile_context, level)
 
@@ -2396,13 +2406,6 @@ class IrQweb(models.AbstractModel):
                 force_display_dependent = True
             else:
                 force_display_dependent = False
-
-            if ttype == 't-raw':
-                # deprecated use.
-                code.append(indent_code("""
-                    if content is not None and content is not False:
-                        content = Markup(content)
-                """, level))
 
         level_tag = level + (0 if is_slot else 1)
         tag_open = (
@@ -2467,17 +2470,6 @@ class IrQweb(models.AbstractModel):
 
         return code
 
-    def _compile_directive_raw(self, el, compile_context, level):
-        # deprecated use.
-        _logger.warning(
-            "Found deprecated directive @t-raw=%r in template %r. Replace by "
-            "@t-out, and explicitely wrap content in `Markup` if "
-            "necessary (which likely is not the case)",
-            el.get('t-raw'),
-            compile_context.get('ref', '<unknown>'),
-        )
-        return self._compile_directive_out(el, compile_context, level)
-
     def _compile_directive_field(self, el, compile_context, level):
         """Compile ``t-field`` expressions into a python code as a list of
         strings.
@@ -2521,9 +2513,6 @@ class IrQweb(models.AbstractModel):
         el_tag = etree.QName(el.tag).localname if el.nsmap else el.tag
         if el_tag != 't':
             raise SyntaxError(f"t-call must be on a <t> element (actually on <{el_tag}>).")
-
-        if el.attrib.get('t-call-options'): # retro-compatibility
-            el.attrib.set('t-options', el.attrib.pop('t-call-options'))
 
         nsmap = compile_context.get('nsmap')
 
@@ -2626,6 +2615,7 @@ class IrQweb(models.AbstractModel):
         xmlid = el.attrib.pop('t-call-assets')
         css = self._compile_bool(el.attrib.pop('t-css', True))
         js = self._compile_bool(el.attrib.pop('t-js', True))
+        binary = self._compile_bool(el.attrib.pop('t-binary', False))
         # async_load support was removed
         defer_load = self._compile_bool(el.attrib.pop('defer_load', False))
         lazy_load = self._compile_bool(el.attrib.pop('lazy_load', False))
@@ -2636,6 +2626,7 @@ class IrQweb(models.AbstractModel):
                 {xmlid!r},
                 css={css},
                 js={js},
+                binary={binary},
                 debug=values.get("debug"),
                 defer_load={defer_load},
                 lazy_load={lazy_load},
@@ -2694,6 +2685,8 @@ class IrQweb(models.AbstractModel):
 
             @returns dict
         """
+        if not atts.pop('__is_static_node', False) and (href := atts.get('href')) and MALICIOUS_SCHEMES(str(href)):
+            atts['href'] = ""
         return atts
 
     def _get_field(self, record, field_name, expression, tagName, field_options, values):
@@ -2754,16 +2747,16 @@ class IrQweb(models.AbstractModel):
 
         return (attributes, content, inherit_branding)
 
-    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, defer_load=False, lazy_load=False, media=None, autoprefix=False):
+    def _get_asset_nodes(self, bundle, css=True, js=True, binary=False, debug=False, defer_load=False, lazy_load=False, media=None, autoprefix=False):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
         media = css and media or None
-        links = self._get_asset_links(bundle, css=css, js=js, debug=debug, autoprefix=autoprefix)
-        return self._links_to_nodes(links, defer_load=defer_load, lazy_load=lazy_load, media=media)
+        links = self._get_asset_links(bundle, css=css, js=js, binary=binary, debug=debug, autoprefix=autoprefix)
+        return self._links_to_nodes([links[0]] if binary else links, defer_load=defer_load, lazy_load=lazy_load, media=media)
 
-    def _get_asset_links(self, bundle, css=True, js=True, debug=None, autoprefix=False):
+    def _get_asset_links(self, bundle, css=True, js=True, binary=False, debug=None, autoprefix=False):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
@@ -2773,19 +2766,19 @@ class IrQweb(models.AbstractModel):
         debug_assets = debug and 'assets' in debug
 
         if debug_assets:
-            return self._generate_asset_links(bundle, css=css, js=js, debug_assets=True, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
+            return self._generate_asset_links(bundle, css=css, js=js, binary=binary, debug_assets=True, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
         else:
-            return self._generate_asset_links_cache(bundle, css=css, js=js, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
+            return self._generate_asset_links_cache(bundle, css=css, js=js, binary=binary, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
 
     # other methods used for the asset bundles
     @tools.conditional(
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'css', 'js', 'tuple(sorted(assets_params.items()))', 'rtl', 'autoprefix', cache='assets'),
+        tools.ormcache('bundle', 'css', 'js', 'binary', 'tuple(sorted(assets_params.items()))', 'rtl', 'autoprefix', cache='assets'),
     )
-    def _generate_asset_links_cache(self, bundle, css=True, js=True, assets_params=None, rtl=False, autoprefix=False):
-        return self._generate_asset_links(bundle, css, js, False, assets_params, rtl, autoprefix=autoprefix)
+    def _generate_asset_links_cache(self, bundle, css=True, js=True, binary=False, assets_params=None, rtl=False, autoprefix=False):
+        return self._generate_asset_links(bundle, css, js, binary, False, assets_params, rtl, autoprefix=autoprefix)
 
     def _get_asset_content(self, bundle, assets_params=None):
         if assets_params is None:
@@ -2793,23 +2786,24 @@ class IrQweb(models.AbstractModel):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, assets_params=assets_params)
         files = []
         external_asset = []
-        for path, full_path, _bundle, last_modified in asset_paths:
+        for path, full_path, definition_bundle, last_modified in asset_paths:
             if full_path is not EXTERNAL_ASSET:
                 files.append({
                     'url': path,
                     'filename': full_path,
                     'content': '',
                     'last_modified': last_modified,
+                    'definition_bundle': definition_bundle,
                 })
             else:
                 external_asset.append(path)
         return (files, external_asset)
 
-    def _get_asset_bundle(self, bundle_name, css=True, js=True, debug_assets=False, rtl=False, assets_params=None, autoprefix=False):
+    def _get_asset_bundle(self, bundle_name, css=True, js=True, binary=False, debug_assets=False, rtl=False, assets_params=None, autoprefix=False):
         if assets_params is None:
             assets_params = self.env['ir.asset']._get_asset_params()
         files, external_assets = self._get_asset_content(bundle_name, assets_params)
-        return AssetsBundle(bundle_name, files, external_assets, env=self.env, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)
+        return AssetsBundle(bundle_name, files, external_assets, env=self.env, css=css, js=js, binary=binary, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)
 
     def _links_to_nodes(self, paths, defer_load=False, lazy_load=False, media=None):
         return [self._link_to_node(path, defer_load=defer_load, lazy_load=lazy_load, media=media) for path in paths]
@@ -2819,6 +2813,7 @@ class IrQweb(models.AbstractModel):
         is_js = ext in SCRIPT_EXTENSIONS
         is_xml = ext in TEMPLATE_EXTENSIONS
         is_css = ext in STYLE_EXTENSIONS
+        is_font = ext in FONT_EXTENSIONS
 
         if is_js:
             is_asset_bundle = path and path.startswith('/web/assets/')
@@ -2860,10 +2855,19 @@ class IrQweb(models.AbstractModel):
                 }
             return ('script', attributes)
 
+        if is_font:
+            attributes = {
+                'rel': 'preload',
+                'href': path,
+                'as': 'font',
+                'crossorigin': '',
+            }
+            return ('link', attributes)
+
         return None
 
-    def _generate_asset_links(self, bundle, css=True, js=True, debug_assets=False, assets_params=None, rtl=False, autoprefix=False):
-        asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)
+    def _generate_asset_links(self, bundle, css=True, js=True, binary=False, debug_assets=False, assets_params=None, rtl=False, autoprefix=False):
+        asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, binary=binary, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)
         return asset_bundle.get_links()
 
     def _get_asset_link_urls(self, bundle, debug=False):

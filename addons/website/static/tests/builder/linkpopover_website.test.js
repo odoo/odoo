@@ -170,7 +170,7 @@ test("LinkPopover opens in full composer", async () => {
     await waitFor(".odoo-editor-editable");
     htmlEditor.editable.focus();
     await insertText(htmlEditor, "test");
-    const node = queryOne(".odoo-editor-editable div.o-paragraph");
+    const node = queryOne(".odoo-editor-editable div");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
     await mailClick(".o-we-toolbar .fa-link");
     await waitFor(".o-we-linkpopover");
@@ -216,5 +216,28 @@ test("link redirection should be prefixed for url of website pages only", async 
     setContent(el, `<p>this is a <a href="http://test.test">li[]nk</a></p>`);
     await waitFor(".o-we-linkpopover");
     await click(".o-we-linkpopover a");
+    expect.verifySteps([]);
+});
+
+test("link redirection should not be prefixed when the current page is not a website page", async () => {
+    patchWithCleanup(browser, {
+        open(url) {
+            expect.step("website page url prefixed");
+            expect(url.pathname.startsWith("/@")).toBe(true);
+        },
+        location: {
+            // simulating being on a non-website page (eg. backend) by using /odoo/ URL
+            href: browser.location.origin + "/odoo/contactus",
+            hostname: browser.location.hostname,
+        },
+    });
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+    onRpc("/contactus", () => ({}));
+
+    // website pages should not be prefixed with /@
+    await setupEditor('<p>this is a <a href="/contactus">li[]nk</a></p>');
+    await waitFor(".o-we-linkpopover");
+    await click(".o-we-linkpopover a");
+    // the open method should not be called from onClickForcePreviewMode
     expect.verifySteps([]);
 });

@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
+from datetime import date, datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -94,7 +94,7 @@ class FleetVehicle(models.Model):
         ('miles', 'mi')
         ], 'Odometer Unit', default='kilometers', required=True)
     transmission = fields.Selection(
-        [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
+        [('manual', 'Manual'), ('semi_automatic', 'Semi-Automatic'), ('automatic', 'Automatic')], 'Transmission',
         compute='_compute_transmission', store=True, readonly=False)
     fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_fuel_type', store=True, readonly=False)
     power_unit = fields.Selection([
@@ -139,9 +139,16 @@ class FleetVehicle(models.Model):
         ('today', 'Today'),
     ], compute='_compute_service_activity')
     vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
-    vehicle_range = fields.Integer(string="Range")
+    vehicle_range = fields.Integer(string="Range",
+        help="Range represents the maximum distance a vehicle can travel on a full charge (for EVs) or \
+            a full tank (for fuel-powered vehicles)")
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
         compute='_compute_range_unit', store=True, readonly=False, default="km", required=True)
+
+    _unique_license_plate = models.Constraint(
+        'UNIQUE(license_plate)',
+        'The license plate must be unique',
+    )
 
     @api.depends('log_services')
     def _compute_service_activity(self):
@@ -296,7 +303,7 @@ class FleetVehicle(models.Model):
     @api.depends('log_contracts')
     def _compute_contract_reminder(self):
         params = self.env['ir.config_parameter'].sudo()
-        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
+        delay_alert_contract = params.get_int('hr_fleet.delay_alert_contract', 30)
         current_date = fields.Date.context_today(self)
         data = self.env['fleet.vehicle.log.contract']._read_group(
             domain=[('expiration_date', '!=', False), ('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')],
@@ -335,7 +342,7 @@ class FleetVehicle(models.Model):
         if operator != 'in':
             return NotImplemented
         params = self.env['ir.config_parameter'].sudo()
-        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
+        delay_alert_contract = params.get_int('hr_fleet.delay_alert_contract', 30)
         today = fields.Date.context_today(self)
         datetime_today = fields.Datetime.from_string(today)
         limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
@@ -367,31 +374,34 @@ class FleetVehicle(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        vehicles = super().create(vals_list)
         to_update_drivers_cars = set()
         to_update_drivers_bikes = set()
         state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
-        for vehicle, vals in zip(vehicles, vals_list):
-            if vals.get('driver_id'):
-                vehicle.create_driver_history(vals)
+        for vals in vals_list:
             if vals.get('future_driver_id'):
-                state_id = vehicle.state_id.id
+                state_id = vals.get('state_id')
                 if not state_waiting_list or state_waiting_list.id != state_id:
                     future_driver = vals['future_driver_id']
-                    if vehicle.vehicle_type == 'bike':
+                    if vals.get('vehicle_type') == 'bike':
                         to_update_drivers_bikes.add(future_driver)
-                    elif vehicle.vehicle_type == 'car':
+                    elif vals.get('vehicle_type') == 'car':
                         to_update_drivers_cars.add(future_driver)
         if to_update_drivers_cars:
             self.search([
                 ('driver_id', 'in', to_update_drivers_cars),
                 ('vehicle_type', '=', 'car'),
-            ]).plan_to_change_car = False
+            ]).plan_to_change_car = True
         if to_update_drivers_bikes:
             self.search([
                 ('driver_id', 'in', to_update_drivers_bikes),
                 ('vehicle_type', '=', 'bike'),
-            ]).plan_to_change_bike = False
+            ]).plan_to_change_bike = True
+
+        vehicles = super().create(vals_list)
+
+        for vehicle, vals in zip(vehicles, vals_list):
+            if vals.get('driver_id'):
+                vehicle.create_driver_history(vals)
         return vehicles
 
     def write(self, vals):
@@ -402,11 +412,6 @@ class FleetVehicle(models.Model):
             driver_id = vals['driver_id']
             for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
                 vehicle.create_driver_history(vals)
-                if vehicle.driver_id:
-                    vehicle.activity_schedule(
-                        'mail.mail_activity_data_todo',
-                        user_id=vehicle.manager_id.id or self.env.user.id,
-                        note=_('Specify the End date of %s', vehicle.driver_id.name))
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = vals['future_driver_id']
@@ -416,7 +421,7 @@ class FleetVehicle(models.Model):
                                 vals.get('state_id', vehicle.state_id.id) not in [state_waiting_list.id, state_new_request.id]).mapped('vehicle_type'))
             if vehicle_types:
                 vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
-                    domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types)],
+                    domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)],
                     groupby=['vehicle_type'],
                     aggregates=['id:recordset'])
                 )
@@ -424,6 +429,23 @@ class FleetVehicle(models.Model):
                     vehicle_read_group['bike'].write({'plan_to_change_bike': True})
                 if 'car' in vehicle_read_group:
                     vehicle_read_group['car'].write({'plan_to_change_car': True})
+
+        if 'future_driver_id' in vals or 'driver_id' in vals:
+            # delete existing open activities for vehicles in self.
+            # must delete because cannot update date_deadline
+            self.env['mail.activity'].sudo().search([
+                ('res_model_id', '=', self._name),
+                ('res_id', 'in', self.ids),
+                ('note', 'ilike', _('Review driver change')),
+                ('user_id', 'in', self.manager_id.ids or [self.env.user.id])
+            ]).action_cancel()
+            for vehicle in self:
+                vehicle.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    date_deadline=date.today() + relativedelta(weeks=1),
+                    note=_('Review driver change of %s and specify End date', vehicle.display_name),
+                    user_id=vehicle.manager_id.id or self.env.user.id,
+                )
 
         if 'active' in vals and not vals['active']:
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False

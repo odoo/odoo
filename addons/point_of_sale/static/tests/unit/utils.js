@@ -5,6 +5,7 @@ import { Deferred } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
+import { expect } from "@odoo/hoot";
 
 const { DateTime } = luxon;
 
@@ -15,7 +16,7 @@ export const setupPosEnv = async () => {
     odoo.from_backend = 0;
     odoo.access_token = uuidv4(); // Avoid indexedDB conflicts
     odoo.info = {
-        db: "pos",
+        db: `pos-${uuidv4()}`, // Avoid indexedDB conflicts
         isEnterprise: true,
     };
 
@@ -100,4 +101,8 @@ export const patchDialogComponent = (component) => {
             });
         },
     });
+};
+
+export const expectFormattedPrice = (value, expected) => {
+    expect(value).toBe(expected.replaceAll(" ", "\u00a0"));
 };

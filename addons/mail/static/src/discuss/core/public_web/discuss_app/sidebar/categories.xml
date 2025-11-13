@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCategories">
+        <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat.id">
+            <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategories.category">
+                <t t-set="category" t-value="cat"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCategories.category">
+        <DiscussSidebarCategory category="category"/>
+        <t t-if="category.is_open">
+            <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
+        </t>
+        <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
+        <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.in(category.threads)" thread="store.discuss.thread.parent_channel_id" />
+    </t>
+</templates>

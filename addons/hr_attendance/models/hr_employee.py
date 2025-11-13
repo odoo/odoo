@@ -201,19 +201,6 @@ class HrEmployee(models.Model):
                 empl_name=self.sudo().name))
         return attendance
 
-    @api.model
-    def get_overtime_data(self, domain=None, employee_id=None):
-        domain = [] if domain is None else domain
-        validated_overtime = {
-            attendance[0].id: attendance[1]
-            for attendance in self.env["hr.attendance"]._read_group(
-                domain=domain,
-                groupby=['employee_id'],
-                aggregates=['validated_overtime_hours:sum']
-            )
-        }
-        return {"validated_overtime": validated_overtime, "overtime_adjustments": {}}
-
     def action_open_last_month_attendances(self):
         self.ensure_one()
         return {
@@ -242,11 +229,16 @@ class HrEmployee(models.Model):
                                                             and e.hr_presence_state == "out_of_working_hour")
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
-            if employee.attendance_state == "checked_out" and employee.hr_presence_state == "out_of_working_hour" and \
-                    employee.id in working_now_list:
+            if employee.attendance_state == "checked_in" or not employee.user_id:
+                if not employee.user_id and not employee.is_in_contract:
+                    employee.hr_presence_state = "out_of_working_hour"
+                else:
+                    employee.hr_presence_state = "present"
+            elif employee.attendance_state == "checked_out" and \
+                 employee.hr_presence_state == "out_of_working_hour" and \
+                 employee.id in working_now_list and \
+                 employee.is_in_contract:
                 employee.hr_presence_state = "absent"
-            elif employee.attendance_state == "checked_in":
-                employee.hr_presence_state = "present"
 
     def _compute_presence_icon(self):
         res = super()._compute_presence_icon()

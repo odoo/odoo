@@ -328,7 +328,7 @@
                     <h6 class="bg-secondary p-1 fw-bold">Invoices</h6>
                     <table  class="table table-sm table-borderless" >
                         <tbody>
-                        <t t-foreach="invoiceList" t-as="invoiceSession" class="border-bottom border-secondary">
+                        <t t-foreach="invoiceList" t-as="invoiceSession">
                             <t t-if="invoiceSession['invoices']">
                                 <tr t-foreach='invoiceSession["invoices"]' t-as='invoice'>
                                     <td class="ps-2 fw-bold"><span t-out="invoice['name']">Invoice Name</span></td>

@@ -1,3 +1,4 @@
+/* global posmodel */
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
@@ -40,6 +41,25 @@ export function clickMenuDropdownOption(name, { expectUnloadPage = false } = {})
         run: "click",
         expectUnloadPage,
     };
+}
+export function existMenuOption(name) {
+    return [
+        clickMenuButton(),
+        {
+            content: `check that ${name} exists in the burger menu`,
+            trigger: `span.dropdown-item:contains(${name})`,
+        },
+        clickMenuButton(),
+    ];
+}
+export function notExistMenuOption(name) {
+    return [
+        clickMenuButton(),
+        {
+            content: `check that ${name} doesn't exist in the burger menu`,
+            trigger: negate(`span.dropdown-item:contains(${name})`),
+        },
+    ];
 }
 export function isCashMoveButtonHidden() {
     return [
@@ -167,11 +187,25 @@ export function clickOrders() {
 export function clickPresetTimingSlot() {
     return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
 }
-export function presetTimingSlotIs(hour) {
-    return { trigger: `.pos-leftheader .preset-time-btn:contains('${hour}')` };
+export function checkPresetTimingSlot() {
+    return {
+        trigger: `.pos-leftheader`,
+        run: () => {
+            const selectedSlot = document.querySelector(
+                ".pos-leftheader .preset-time-btn"
+            ).innerText;
+            if (DateTime.fromFormat(selectedSlot, "HH:mm") < DateTime.now()) {
+                throw new Error(
+                    `The slot ${selectedSlot} is in the past, only future slots should be available!`
+                );
+            }
+        },
+    };
 }
-export function selectPresetTimingSlotHour(hour) {
-    return { trigger: `.modal button:contains('${hour}')`, run: "click" };
+export function selectPresetTimingSlotHour() {
+    // Selects the first valid slot, as past ones are unavailable and options vary with time
+    // Freeze the time in a way that we can find available slots for the day; otherwise, it will fail
+    return [{ trigger: `.modal .preset-slot-button`, run: "click" }];
 }
 export function clickRegister() {
     return { trigger: ".pos-leftheader .register-label", run: "click" };
@@ -197,6 +231,21 @@ export function waitRequest() {
     ];
 }
 
+export function storedOrderCount(expectedCount) {
+    return {
+        content: `Stored order count should be ${expectedCount}`,
+        trigger: "body",
+        run: () => {
+            const actualCount = posmodel.data.models["pos.order"].length;
+            if (actualCount !== expectedCount) {
+                throw new Error(
+                    `Expected stored order count to be ${expectedCount}, but got ${actualCount}`
+                );
+            }
+        },
+    };
+}
+
 export function isSynced() {
     return {
         content: "Check if the request is proceeded",
@@ -204,6 +253,13 @@ export function isSynced() {
     };
 }
 
+export function clickOnScanButton() {
+    return {
+        content: "Click the Scan button located in the top header.",
+        trigger: ".pos-topheader .status-buttons .fa-barcode",
+        run: "click",
+    };
+}
 export function freezeDateTime(millis) {
     return [
         {

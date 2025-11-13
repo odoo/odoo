@@ -56,3 +56,38 @@ class TestName(TransactionCase):
         res_ids = [r[0] for r in res]
         self.assertIn(template_dyn.id, res_ids)
         self.assertIn(product.product_tmpl_id.id, res_ids)
+
+    def test_product_product_search_name_is_case_insensitive(self):
+        # case 1: in case of 2 different products with same name but different case in default_code
+        product_1 = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'Aa1',
+        })
+
+        product_2 = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'aa1',
+        })
+        res_products = self.env['product.product'].name_search(name='Aa1')
+        res_products_ids = [r[0] for r in res_products]
+        self.assertIn(product_1.id, res_products_ids)
+        self.assertIn(product_2.id, res_products_ids)
+
+        # case 2: in case of 2 variants of the same product template with different case in default_code
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product Template',
+        })
+        variant_1 = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'Bb1',
+            'product_tmpl_id': product_template.id,
+        })
+        variant_2 = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'bb1',
+            'product_tmpl_id': product_template.id,
+        })
+        res_variants = self.env['product.product'].name_search(name='Bb1')
+        res_variants_ids = [r[0] for r in res_variants]
+        self.assertIn(variant_1.id, res_variants_ids)
+        self.assertIn(variant_2.id, res_variants_ids)

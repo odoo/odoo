@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 class DateTimeFieldPlugin extends Plugin {
     static id = "dateTimeField";
     resources = {
-        force_not_editable_selector: [
+        content_not_editable_selectors: [
             "[data-oe-field][data-oe-type=date]",
             "[data-oe-field][data-oe-type=datetime]",
         ],

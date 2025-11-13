@@ -24,6 +24,7 @@ class PurchaseOrder(models.Model):
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
+    _mail_post_access = 'read'
 
     @api.depends('order_line.price_subtotal', 'company_id', 'currency_id')
     def _amount_all(self):
@@ -268,7 +269,7 @@ class PurchaseOrder(models.Model):
                 company=order.company_id,
             )
             if order.currency_id != order.company_currency_id:
-                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=self.company_currency_id)})"
+                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=order.company_currency_id)})"
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -295,7 +296,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.purchase_warn_msg:
-                warnings.add(order.partner_id.name + ' - ' + partner_msg)
+                warnings.add((order.partner_id.name or order.partner_id.display_name) + ' - ' + partner_msg)
             for line in order.order_line:
                 if product_msg := line.purchase_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)

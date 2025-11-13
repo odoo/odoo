@@ -51,6 +51,7 @@ export class ChatHub extends Component {
             }
         });
         useMovable({
+            enable: () => this.chatHub.compact || !this.chatHub.opened.length,
             cursor: "grabbing",
             ref: this.ref,
             elements: ".o-mail-ChatHub-bubbles",
@@ -62,6 +63,9 @@ export class ChatHub extends Component {
             },
             onDragEnd: () => (this.position.isDragging = false),
             onDrop: this.onDrop.bind(this),
+        });
+        this.env.bus.addEventListener("ChatWindow:will-open", () => {
+            this.resetPosition();
         });
     }
 
@@ -136,7 +140,7 @@ export class ChatHub extends Component {
         let counter = 0;
         const cws = this.chatHub.opened.concat(this.chatHub.folded);
         for (const chatWindow of cws) {
-            counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
+            counter += chatWindow.channel.importantCounter > 0 ? 1 : 0;
         }
         return counter;
     }
@@ -144,29 +148,17 @@ export class ChatHub extends Component {
     get hiddenCounter() {
         let counter = 0;
         for (const chatWindow of this.chatHub.folded.slice(this.chatHub.maxFolded)) {
-            counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
+            counter += chatWindow.channel.importantCounter > 0 ? 1 : 0;
         }
         return counter;
-    }
-
-    /** @deprecated */
-    get displayConversations() {
-        return this.chatHub.showConversations && !this.chatHub.compact;
-    }
-
-    /** @deprecated */
-    get isShown() {
-        return true;
-    }
-
-    /** @deprecated */
-    shouldDisplayChatWindow(cw) {
-        return cw.canShow;
     }
 
     expand() {
         this.chatHub.compact = false;
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
+        if (this.chatHub.opened.length > 0) {
+            this.resetPosition();
+        }
     }
 }
 

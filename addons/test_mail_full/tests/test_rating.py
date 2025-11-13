@@ -31,6 +31,7 @@ class TestRatingCommon(TestMailFullCommon, TestSMSRecipients):
 
 
 @tagged('rating')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRatingFlow(TestRatingCommon):
 
     def test_initial_values(self):
@@ -124,6 +125,7 @@ class TestRatingFlow(TestRatingCommon):
 
 
 @tagged('rating')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRatingMixin(TestRatingCommon):
 
     @users('employee')
@@ -149,6 +151,7 @@ class TestRatingMixin(TestRatingCommon):
 
 
 @tagged("rating", "rating_portal")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRatingRoutes(TestRatingCommon):
     @classmethod
     def setUpClass(cls):

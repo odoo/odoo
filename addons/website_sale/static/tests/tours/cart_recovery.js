@@ -1,6 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
+import { post } from "@web/core/network/http_service";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
@@ -14,10 +15,12 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
         {
             content: "check product is in cart, get cart id, logout, go to login",
             trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
-            run: function () {
+            run: async function () {
                 const orderId = document.querySelector(".my_cart_quantity").dataset["orderId"];
                 browser.localStorage.setItem(orderIdKey, orderId);
-                redirect("/web/session/logout?redirect=/web/login");
+
+                const url = await post('/web/session/logout?redirect=/web/login', { csrf_token: odoo.csrf_token }, "url");
+                redirect(url);
             },
             expectUnloadPage: true,
         },
@@ -78,10 +81,12 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
         {
             content: "check the mail is sent, grab the recovery link, and logout",
             trigger: ".o-mail-Message-body a:contains(/^Resume order$/)",
-            run({ queryOne }) {
+            async run({ queryOne }) {
                 var link = queryOne('.o-mail-Message-body a:contains("Resume order")').getAttribute('href');
                 browser.localStorage.setItem(recoveryLinkKey, link);
-                redirect("/web/session/logout?redirect=/");
+
+                const url = await post('/web/session/logout?redirect=/', { csrf_token: odoo.csrf_token }, "url");
+                redirect(url);
             },
             expectUnloadPage: true,
         },

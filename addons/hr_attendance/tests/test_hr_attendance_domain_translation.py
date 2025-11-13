@@ -4,6 +4,7 @@ from odoo.tests.common import tagged, TransactionCase
 
 
 @tagged('attendance_searchbar_user_domain')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrAttendanceDomainTranslation(TransactionCase):
 
     @classmethod

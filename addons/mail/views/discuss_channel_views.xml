@@ -15,7 +15,7 @@
                         <t t-name="card" class="row g-0">
                             <widget name="web_ribbon" class="d-flex" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                             <aside class="col-2 my-auto">
-                                <field name="avatar_128" widget="image" options="{'size': [50, 50]}" alt="Channel"/>
+                                <field name="avatar_128" widget="image" options="{'size': [50, 50], 'img_class': 'bg-transparent'}" alt="Channel"/>
                             </aside>
                             <main class="col me-4 ms-2">
                                 <span class="fw-bold fs-5">#<field name="name"/></span>
@@ -65,6 +65,7 @@
                         </div>
                         <group class="o_label_nowrap">
                             <field name="active" invisible="1"/>
+                            <field name="discuss_category_id"/>
                             <field name="description" placeholder="Topics discussed in this group..." readonly="not is_editable"/>
                         </group>
                         <notebook>
@@ -136,7 +137,7 @@
         <record id="mail.discuss_channel_action" model="ir.actions.act_window">
             <field name="name">Channels</field>
             <field name="res_model">discuss.channel</field>
-            <field name="view_mode">kanban</field>
+            <field name="view_mode">kanban,form</field>
             <field name="domain" eval="[(('channel_type', '=', 'channel'))]" />
             <field name="search_view_id" ref="discuss_channel_view_search" />
         </record>

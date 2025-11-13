@@ -113,7 +113,7 @@ class MailMail(models.Model):
         """Garbage collects old canceled mail.mail records as we consider
         nobody is going to look at them anymore, becoming noise."""
         # The 10000 limit is arbitrary, chosen a big limit so that the cleaning can be shorter and not too big so that we don't block the server
-        months_limit = self.env['ir.config_parameter'].sudo().get_param("mass_mailing.cancelled_mails_months_limit", 6)
+        months_limit = self.env['ir.config_parameter'].sudo().get_int("mass_mailing.cancelled_mails_months_limit", 6)
         if months_limit <= 0:
             return
         history_deadline = datetime.utcnow() - relativedelta(months=months_limit)  # 6 months history will be kept

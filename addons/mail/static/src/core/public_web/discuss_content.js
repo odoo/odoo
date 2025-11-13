@@ -47,7 +47,7 @@ export class DiscussContent extends Component {
         }
         if (this.store.discuss.isMemberPanelOpenByDefault) {
             if (!this.threadActions.activeAction) {
-                memberListAction.open();
+                memberListAction.actionPanelOpen();
             } else if (this.threadActions.activeAction === memberListAction) {
                 return; // no-op (already open)
             } else {
@@ -83,8 +83,8 @@ export class DiscussContent extends Component {
 
     async renameGuest(name) {
         const newName = name.trim();
-        if (this.store.self.name !== newName) {
-            await this.store.self.updateGuestName(newName);
+        if (this.store.self_guest.name !== newName) {
+            await this.store.self_guest.updateGuestName(newName);
         }
     }
 

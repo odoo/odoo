@@ -38,7 +38,7 @@ class CalendarAttendee(models.Model):
     email = fields.Char('Email', related='partner_id.email')
     phone = fields.Char('Phone', related='partner_id.phone')
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
-    access_token = fields.Char('Invitation Token', default=_default_access_token)
+    access_token = fields.Char('Invitation Token', default=_default_access_token, groups="base.group_system")
     mail_tz = fields.Selection(_tz_get, compute='_compute_mail_tz', help='Timezone used for displaying time in the mail template')
     # state
     state = fields.Selection(STATE_SELECTION, string='Status', default='needsAction')
@@ -129,7 +129,7 @@ class CalendarAttendee(models.Model):
         """
         # TDE FIXME: check this
         if force_send:
-            force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_force_send_limit', 100))
+            force_send_limit = self.env['ir.config_parameter'].sudo().get_int('mail.mail_force_send_limit', 100)
         notified_attendees_ids = set(self.ids)
         for event, attendees in self.grouped('event_id').items():
             if event._skip_send_mail_status_update():
@@ -137,7 +137,7 @@ class CalendarAttendee(models.Model):
         notified_attendees = self.browse(notified_attendees_ids)
         if isinstance(mail_template, str):
             raise ValueError('Template should be a template record, not an XML ID anymore.')
-        if self.env['ir.config_parameter'].sudo().get_param('calendar.block_mail') or self.env.context.get("no_mail_to_attendees"):
+        if self.env['ir.config_parameter'].sudo().get_bool('calendar.block_mail') or self.env.context.get("no_mail_to_attendees"):
             return False
         if not mail_template:
             _logger.warning("No template passed to %s notification process. Skipped.", self)

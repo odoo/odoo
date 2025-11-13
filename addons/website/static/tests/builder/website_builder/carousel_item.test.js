@@ -1,6 +1,9 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilderWithSnippet,
+} from "@website/../tests/builder/website_helpers";
 import { waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
@@ -13,7 +16,7 @@ test("Reordering a carousel item should update the container title", async () =>
     firstItemEl.classList.add("first-slide");
 
     const editor = getEditor();
-    const builderOptions = editor.shared["builderOptions"];
+    const builderOptions = editor.shared.builderOptions;
     const expectOptionContainerToInclude = (elem) => {
         expect(builderOptions.getContainers().map((container) => container.element)).toInclude(
             elem

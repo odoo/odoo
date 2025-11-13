@@ -44,6 +44,20 @@ class MrpProduction(models.Model):
     _order = 'priority desc, date_start asc,id'
 
     @api.model
+    def default_get(self, fields):
+        context = dict(self.env.context)
+        product_qty = context.pop('bom_overview_product_qty', False)
+        picking_type_id = context.pop('bom_overview_picking_type_id', False)
+        defaults = super(MrpProduction, self.with_context(context)).default_get(fields)
+
+        if product_qty:
+            defaults['product_qty'] = product_qty
+        if picking_type_id:
+            defaults['picking_type_id'] = picking_type_id
+
+        return defaults
+
+    @api.model
     def _get_default_date_start(self):
         if self.env.context.get('default_date_deadline'):
             date_finished = fields.Datetime.to_datetime(self.env.context.get('default_date_deadline'))
@@ -1056,6 +1070,11 @@ class MrpProduction(models.Model):
             workorders_to_delete.unlink()
         return super(MrpProduction, self).unlink()
 
+    @api.ondelete(at_uninstall=True)
+    def _unlink_if_not_done(self):
+        if any(mo.state == 'done' for mo in self):
+            raise UserError(_("You cannot delete a manufacturing order that is already done."))
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
@@ -1185,6 +1204,10 @@ class MrpProduction(models.Model):
         ], limit=1).id
 
     def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False, cost_share=0):
+        group_orders = self.production_group_id.production_ids
+        move_dest_ids = self.move_dest_ids
+        if len(group_orders) > 1:
+            move_dest_ids |= group_orders[0].move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
@@ -1202,7 +1225,7 @@ class MrpProduction(models.Model):
             'origin': self.product_id.partner_ref,
             'reference_ids': self.reference_ids.ids,
             'propagate_cancel': self.propagate_cancel,
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if not byproduct_id],
+            'move_dest_ids': [(4, x.id) for x in move_dest_ids if not byproduct_id],
             'cost_share': cost_share,
             'production_group_id': self.production_group_id.id,
         }
@@ -1739,6 +1762,8 @@ class MrpProduction(models.Model):
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
         orders in exception """
+        if any(mo.state == 'done' for mo in self):
+            raise UserError(_("You cannot cancel a manufacturing order that is already done."))
         self._action_cancel()
         return True
 
@@ -1818,9 +1843,9 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
-                move.quantity = order.product_uom_id.round(order.qty_producing - order.qty_produced, rounding_method='HALF-UP')
                 if move.has_tracking != 'none' and not move.lot_ids:
                     move.lot_ids = order.lot_producing_ids.ids
+                move.quantity = order.product_uom_id.round(order.qty_producing - order.qty_produced, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)

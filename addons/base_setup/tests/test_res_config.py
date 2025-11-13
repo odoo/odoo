@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
 def just_raise(*args):
     raise Exception("We should not be here.")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResConfig(TransactionCase):
 
     def setUp(self):

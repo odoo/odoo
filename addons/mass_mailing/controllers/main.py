@@ -236,8 +236,9 @@ class MassMailController(http.Controller):
         # as there may be several contacts / email -> consider any opt-in overrides
         # opt-out
         contacts = self._fetch_contacts(email)
+        # private mailing lists are managed directly from received emails, with unsubscription links
         lists_optin = contacts.subscription_ids.filtered(
-            lambda sub: not sub.opt_out
+            lambda sub: not sub.opt_out and sub.list_id.is_public
         ).list_id.filtered('active')
         lists_optout = contacts.subscription_ids.filtered(
             lambda sub: sub.opt_out and sub.list_id not in lists_optin
@@ -263,11 +264,9 @@ class MassMailController(http.Controller):
             'feedback_readonly': False,
             'opt_out_reasons': opt_out_reasons,
             # blocklist
-            'blocklist_enabled': bool(
-                request.env['ir.config_parameter'].sudo().get_param(
-                    'mass_mailing.show_blacklist_buttons',
-                    default=True,
-                )
+            'blocklist_enabled': request.env['ir.config_parameter'].sudo().get_bool(
+                'mass_mailing.show_blacklist_buttons',
+                True,
             ),
             'blocklist_possible': mail_blocklist is not None,
             'is_blocklisted': mail_blocklist.active if mail_blocklist else False,
@@ -434,7 +433,7 @@ class MassMailController(http.Controller):
            not consteq(token, request.env['mailing.mailing']._generate_mailing_report_token(user.id)):
             raise Unauthorized()
 
-        request.env['ir.config_parameter'].sudo().set_param('mass_mailing.mass_mailing_reports', False)
+        request.env['ir.config_parameter'].sudo().set_bool('mass_mailing.mass_mailing_reports', False)
         render_vals = {}
         if user.has_group('base.group_system'):
             render_vals = {'menu_id': request.env.ref('mass_mailing.menu_mass_mailing_global_settings').id}

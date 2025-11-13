@@ -9,9 +9,10 @@ from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockQuant(TestStockCommon):
 
     @classmethod
@@ -1067,8 +1068,8 @@ class TestStockQuant(TestStockCommon):
         generate barcodes longer than the given limit and use the given separator.
         """
         # Initial config.
-        self.env['ir.config_parameter'].set_param('stock.agg_barcode_max_length', 400)
-        self.env['ir.config_parameter'].set_param('stock.barcode_separator', ';')
+        self.env['ir.config_parameter'].set_int('stock.agg_barcode_max_length', 400)
+        self.env['ir.config_parameter'].set_str('stock.barcode_separator', ';')
         # Create some products with a valid EAN-13 and LN/SN for tracked ones.
         product_ean13 = self.env['product.product'].create({
             'name': 'Product Test EAN13',
@@ -1146,8 +1147,8 @@ class TestStockQuant(TestStockCommon):
         )
 
         # Use another separator and set a lower aggregate barcode's max length.
-        self.env['ir.config_parameter'].set_param('stock.barcode_separator', '|')
-        self.env['ir.config_parameter'].set_param('stock.agg_barcode_max_length', 160)
+        self.env['ir.config_parameter'].set_str('stock.barcode_separator', '|')
+        self.env['ir.config_parameter'].set_int('stock.agg_barcode_max_length', 160)
         aggregate_barcodes = quants.sorted(lambda q: q.product_id.id).get_aggregate_barcodes()
         # Check we have now two aggregate barcodes (306 char but limit at 160).
         self.assertEqual(len(aggregate_barcodes), 2)
@@ -1171,8 +1172,8 @@ class TestStockQuant(TestStockCommon):
         regardless the product's barcode is a valid EAN or not.
         """
         # Initial config.
-        self.env['ir.config_parameter'].set_param('stock.agg_barcode_max_length', 400)
-        self.env['ir.config_parameter'].set_param('stock.barcode_separator', ';')
+        self.env['ir.config_parameter'].set_int('stock.agg_barcode_max_length', 400)
+        self.env['ir.config_parameter'].set_str('stock.barcode_separator', ';')
         # Creates some product with not GS1 compliant barcodes.
         product = self.env['product.product'].create({
             'name': "Product Test",
@@ -1383,6 +1384,7 @@ class TestStockQuant(TestStockCommon):
         }])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockQuantRemovalStrategy(TestStockCommon):
 
     @classmethod

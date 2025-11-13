@@ -35,7 +35,7 @@ export class ManageGiftCardPopup extends Component {
             lockGiftCardFields: false,
             loading: false,
             inputValue: this.props.startingValue,
-            amountValue: this.props.line.getPriceWithTax().toString(),
+            amountValue: this.props.line.prices.total_included.toString(),
             error: false,
             amountError: false,
             expirationDate: luxon.DateTime.now().plus({ year: 1 }),
@@ -72,7 +72,7 @@ export class ManageGiftCardPopup extends Component {
                 this.dialog.add(AlertDialog, {
                     title: _t("Invalid Gift Card Code"),
                     body: _t(
-                        "This code seems to be invalid, please check the Gift Card code and try again."
+                        "The code is invalid. Ensure that the spelling is right or if the gift card exists."
                     ),
                 });
                 this.state.error = true;

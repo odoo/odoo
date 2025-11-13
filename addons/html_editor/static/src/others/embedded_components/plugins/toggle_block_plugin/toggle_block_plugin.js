@@ -51,6 +51,12 @@ export class ToggleBlockPlugin extends Plugin {
             ),
         ],
         move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
+        selection_blocker_predicates: (blocker) => {
+            // Prevent the insertion of selection placeholders around toggle blocks.
+            if (blocker.nodeType === Node.ELEMENT_NODE && blocker.dataset.embedded === "toggleBlock") {
+                return false;
+            }
+        },
         powerbox_items: [
             {
                 commandId: "insertToggleBlock",
@@ -77,7 +83,6 @@ export class ToggleBlockPlugin extends Plugin {
             },
         ],
 
-        mount_component_handlers: this.setupNewToggle.bind(this),
         normalize_handlers: withSequence(Infinity, this.normalize.bind(this)),
 
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -579,15 +584,5 @@ export class ToggleBlockPlugin extends Plugin {
             selection.isCollapsed &&
             !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`)
         );
-    }
-
-    setupNewToggle({ name, env }) {
-        if (name === "toggleBlock") {
-            Object.assign(env, {
-                editorShared: {
-                    preserveSelection: this.dependencies.selection.preserveSelection,
-                },
-            });
-        }
     }
 }

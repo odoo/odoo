@@ -3,9 +3,12 @@
 
 # Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 
+from odoo.tests import tagged
+
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResPartnerBank(SavepointCaseWithUserDemo):
     """Tests acc_number
     """

@@ -11,6 +11,7 @@ from odoo.tests import Form, TransactionCase, tagged
 _logger = logging.getLogger(__name__)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResConfig(TransactionCase):
 
     def setUp(self):

@@ -5,10 +5,11 @@ from datetime import datetime, timedelta
 
 from odoo import fields, tests
 from odoo.fields import Command
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from freezegun import freeze_time
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReportStockQuantity(tests.TransactionCase):
 
     @classmethod

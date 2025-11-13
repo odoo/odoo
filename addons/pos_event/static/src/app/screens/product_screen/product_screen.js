@@ -2,7 +2,6 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { patch } from "@web/core/utils/patch";
 import { EventConfiguratorPopup } from "@pos_event/app/components/popup/event_configurator_popup/event_configurator_popup";
-import { _t } from "@web/core/l10n/translation";
 import { EventRegistrationPopup } from "../../components/popup/event_registration_popup/event_registration_popup";
 import { EventSlotSelectionPopup } from "../../components/popup/event_slot_selection_popup/event_slot_selection_popup";
 
@@ -12,13 +11,6 @@ patch(ProductScreen.prototype, {
     get products() {
         const products = super.products;
         return [...products].filter((p) => p.service_tracking !== "event");
-    },
-    getProductPrice(productTemplate) {
-        if (!productTemplate.event_id) {
-            return super.getProductPrice(productTemplate);
-        }
-
-        return _t("From %s", this.pos.getProductPrice(productTemplate, false, true));
     },
     getProductImage(product) {
         if (!product.event_id) {

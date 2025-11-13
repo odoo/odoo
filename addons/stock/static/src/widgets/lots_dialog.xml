@@ -9,7 +9,10 @@
     <t t-name="stock.generate_serial_dialog">
         <Dialog size="size" title="title" withBodyPadding="false">
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="_onGenerate">Generate</button>
+                <button class="btn btn-primary" t-on-click="_onGenerate">
+                    <t t-if="props.mode === 'generate'">Generate</t>
+                    <t t-if="props.mode === 'import'">Import</t>
+                </button>
                 <button class="btn btn-secondary" t-on-click="() => this.props.close()">
                     Discard
                 </button>

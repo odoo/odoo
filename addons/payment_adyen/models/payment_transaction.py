@@ -51,12 +51,16 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
         )
+        partner_country_code = (
+            self.partner_country_id.code or self.provider_id.company_id.country_id.code or 'NL'
+        )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
             },
+            'countryCode': partner_country_code,
             'reference': self.reference,
             'paymentMethod': {
                 'storedPaymentMethodId': self.token_id.provider_ref,
@@ -69,6 +73,11 @@ class PaymentTransaction(models.Model):
             'shopperName': adyen_utils.format_partner_name(self.partner_name),
             'telephoneNumber': self.partner_phone,
             **adyen_utils.include_partner_addresses(self),
+            'lineItems': [{
+                'amountIncludingTax': converted_amount,
+                'quantity': '1',
+                'description': self.reference,
+            }],
         }
 
         # Force the capture delay on Adyen side if the provider is not configured for capturing
@@ -161,7 +170,7 @@ class PaymentTransaction(models.Model):
     def _send_refund_request(self):
         """Override of `payment` to send a refund request to Adyen."""
         if self.provider_code != 'adyen':
-            super()._send_refund_request()
+            return super()._send_refund_request()
 
         # Send the refund request to Adyen.
         converted_amount = payment_utils.to_minor_currency_units(
@@ -303,6 +312,11 @@ class PaymentTransaction(models.Model):
         """Override of `payment` to extract the amount and currency from the payment data."""
         if self.provider_code != 'adyen':
             return super()._extract_amount_data(payment_data)
+
+        # Redirection payments don't have the amount or currency in their payment_data, but
+        # processing them results in a pending transaction anyway.
+        if payment_data.get('action', {}).get('type') == 'redirect':
+            return None  # Skip the validation
 
         amount_data = payment_data.get('amount', {})
         amount = payment_utils.to_major_currency_units(

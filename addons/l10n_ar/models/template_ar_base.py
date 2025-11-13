@@ -29,6 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'base_diferencias_de_cambio',
                 'expense_account_id': 'base_compra_mercaderia',
                 'income_account_id': 'base_venta_de_mercaderia',
+                'display_invoice_tax_company_currency': False,
             },
         }
 

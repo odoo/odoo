@@ -41,7 +41,7 @@
                  <div  t-if="showQtyButtons and selfOrder.ordering" class="d-flex container o_self_container justify-content-end pt-0 py-3">
                      <t t-call="pos_self_order.QuantityWidget" />
                  </div>
-                 <t t-if="hasMissingAttributeValues()" t-call="pos_self_order.MissingRequiredDetails" />
+                 <t t-if="hasMissingAttributeValues() and shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
             </div>
 
             <!-- Footer -->

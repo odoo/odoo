@@ -31,9 +31,9 @@ export class WelcomePage extends Component {
         }
     }
 
-    joinChannel() {
-        if (!this.store.self_partner) {
-            this.store.self_guest?.updateGuestName(this.state.userName.trim());
+    async joinChannel() {
+        if (!this.store.self_user) {
+            await this.store.self_guest?.updateGuestName(this.state.userName.trim());
         }
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
         browser.localStorage.setItem(
@@ -41,10 +41,6 @@ export class WelcomePage extends Component {
             Boolean(this.state.hasCamera)
         );
         this.props.proceed?.();
-    }
-
-    getLoggedInAsText() {
-        return _t("Logged in as %s", this.store.self.name);
     }
 
     get noActiveParticipants() {

@@ -3,13 +3,16 @@
     <t t-name="sale.Product">
         <td class="o_sale_product_configurator_img py-3 px-0">
             <img
-                class="w-100 border rounded"
+                class="w-75 w-lg-100 border rounded"
                 t-att-src="imageUrl"
                 alt="Product Image"
             />
         </td>
-        <td class="p-3 product_name_description">
-            <div class="mb-3 text-break text-truncate" name="o_sale_product_configurator_name">
+        <td class="p-0 p-md-3 product_name_description">
+            <div
+                name="o_sale_product_configurator_name"
+                class="mb-1 mb-lg-3 text-break text-truncate"
+            >
                 <span class="h5" t-out="this.props.display_name"/>
                 <div
                     t-if="this.props.description_sale"
@@ -39,11 +42,11 @@
         </td>
         <t t-if="!this.props.optional">
             <td
-                class="o_sale_product_configurator_qty py-3 px-0 text-end d-block d-md-table-cell"
+                class="o_sale_product_configurator_qty w-25 py-3 px-0 text-end"
             >
                 <div
                     t-if="env.showPrice"
-                    class="d-flex gap-2 align-items-baseline justify-content-end"
+                    class="d-md-flex gap-2 align-items-baseline justify-content-end"
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_price"/>
                 </div>
@@ -77,7 +80,7 @@
             >
                 <div
                     t-if="env.showPrice"
-                    class="d-flex gap-2 align-items-baseline justify-content-end"
+                    class="d-md-flex gap-2 align-items-baseline justify-content-end"
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
                 </div>

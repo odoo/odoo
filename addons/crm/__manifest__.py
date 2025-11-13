@@ -31,7 +31,6 @@
         'data/crm_stage_data.xml',
         'data/crm_team_data.xml',
         'data/digest_data.xml',
-        'data/ir_action_data.xml',
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/crm_recurring_plan_data.xml',

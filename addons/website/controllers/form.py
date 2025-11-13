@@ -236,7 +236,7 @@ class WebsiteForm(http.Controller):
         data['custom'] = "\n".join([u"%s : %s" % v for v in custom_fields])
 
         # Add metadata if enabled  # ICP for retrocompatibility
-        if request.env['ir.config_parameter'].sudo().get_param('website_form_enable_metadata'):
+        if request.env['ir.config_parameter'].sudo().get_bool('website_form_enable_metadata'):
             environ = request.httprequest.headers.environ
             data['meta'] += "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % (
                 "IP", environ.get("REMOTE_ADDR"),

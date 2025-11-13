@@ -10,17 +10,20 @@ class LayoutColumnOptionPlugin extends Plugin {
     static id = "LayoutColumnOption";
     static dependencies = ["clone", "selection"];
     resources = {
-        builder_options: [
-            withSequence(LAYOUT_COLUMN, {
-                OptionComponent: LayoutColumnOption,
-                selector: "section.s_features_grid, section.s_process_steps",
-                applyTo: ":scope > *:has(> .row), :scope > .s_allow_columns",
-                name: "layoutColumnOption",
-            }),
-        ],
+        builder_options: [withSequence(LAYOUT_COLUMN, LayoutColumnOption)],
         on_cloned_handlers: this.onCloned.bind(this),
         builder_actions: {
             ChangeColumnCountAction,
+        },
+        selection_placeholder_container_predicates: (container) => {
+            if (container.nodeName === "DIV" && container.parentElement.classList.contains("row")) {
+                return true;
+            }
+        },
+        selection_blocker_predicates: (blocker) => {
+            if (blocker.nodeType === Node.ELEMENT_NODE && blocker.classList.contains("row")) {
+                return false;
+            }
         },
     };
     onCloned({ cloneEl }) {

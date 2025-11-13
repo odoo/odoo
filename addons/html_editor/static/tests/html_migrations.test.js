@@ -81,7 +81,8 @@ describe("test the migration process", () => {
                     <div class="w-100 px-3 o_editor_banner_content o-contenteditable-true" contenteditable="true">
                         <p>content</p>
                     </div>
-                </div>`
+                </div>
+                <div class="o-paragraph" data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></div>`
             );
             expect(htmlFieldComponent.editor.getContent()).toBe(
                 `<p data-oe-version="${CURRENT_VERSION}">test</p>

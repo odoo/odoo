@@ -489,7 +489,7 @@ class BaseAutomation(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        base_automations = super(BaseAutomation, self).create(vals_list)
+        base_automations = super().create(vals_list)
         self._update_cron()
         self._update_registry()
         if base_automations._has_trigger_onchange():
@@ -499,11 +499,12 @@ class BaseAutomation(models.Model):
 
     def write(self, vals: dict):
         clear_templates = self._has_trigger_onchange()
-        res = super(BaseAutomation, self).write(vals)
+        res = super().write(vals)
         if set(vals).intersection(self.CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
-            if clear_templates or self._has_trigger_onchange():
+            clear_templates |= self._has_trigger_onchange()
+            if clear_templates and any(self._ids):
                 # Invalidate templates cache to update on_change attributes if needed
                 self.env.registry.clear_cache('templates')
         elif set(vals).intersection(self.RANGE_FIELDS):
@@ -512,7 +513,7 @@ class BaseAutomation(models.Model):
 
     def unlink(self):
         clear_templates = self._has_trigger_onchange()
-        res = super(BaseAutomation, self).unlink()
+        res = super().unlink()
         self._update_cron()
         self._update_registry()
         if clear_templates:
@@ -1106,7 +1107,7 @@ class BaseAutomation(models.Model):
             # use the calendar information from the record
             # _get_calendar can be overwritten and cannot be optimized
             time_domain = Domain.TRUE if is_date_automation_last else Domain(date_field.name, '!=', False)
-            if (date_field.store or date_field.search):
+            if date_field._description_searchable:
                 records = Model.search(time_domain & domain)
             else:
                 records = Model.search(domain).filtered_domain(time_domain)
@@ -1149,7 +1150,7 @@ class BaseAutomation(models.Model):
             if is_date_automation_last:
                 time_domain |= Domain(date_field.name, '=', False) & Domain('create_date', '>=', relative_last_run) & Domain('create_date', '<', relative_until)
 
-        if (date_field.store or date_field.search):
+        if date_field._description_searchable:
             return Model.search(time_domain & domain)
         else:
             return Model.search(domain).filtered_domain(time_domain)

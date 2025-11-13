@@ -1587,7 +1587,7 @@ class SaleOrderLine(models.Model):
         if len(self) == 1:
             return {
                 'quantity': self.product_uom_qty,
-                'price': self.price_unit,
+                'price': self._get_discounted_price(),
                 'readOnly': (
                     self.order_id._is_readonly()
                     or bool(self.combo_item_id)
@@ -1648,8 +1648,9 @@ class SaleOrderLine(models.Model):
             )
         return amount
 
-    def has_valued_move_ids(self):
-        return self.move_ids
+    def _get_discounted_price(self):
+        self.ensure_one()
+        return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
 
     def _get_linked_line(self):
         """ Return the linked line of this line, if any.

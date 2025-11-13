@@ -4,6 +4,7 @@ from . import hr_payroll_structure_type
 from . import hr_job
 from . import hr_version
 from . import hr_contract_type
+from . import mail_activity
 from . import hr_employee
 from . import hr_mixin
 from . import hr_employee_category
@@ -25,3 +26,4 @@ from . import resource
 from . import resource_calendar
 from . import resource_calendar_leaves
 from . import ir_ui_menu
+from . import hr_export_mixin

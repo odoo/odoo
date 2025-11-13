@@ -121,7 +121,7 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                                                                     data-oe-field="arch"
                                                                     data-oe-xpath="/t[1]/div[1]/div[2]/a[1]"
                                                                  >
-                                                                     ACTIVATE <t t-out="onboarding_provider.upper()"/>
+                                                                     CONNECT <t t-out="onboarding_provider.upper()"/>
                                                                 </a>
                                                                 <a role="button" type="action" class="btn-link alert-warning me-2" href="/odoo/action-payment.action_payment_provider" data-oe-model="ir.ui.view" data-oe-id="612" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[2]/a[3]">
                                                                 <strong><i class="oi oi-arrow-right"></i> Payment Providers</strong>

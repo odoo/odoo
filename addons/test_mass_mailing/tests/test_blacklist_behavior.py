@@ -15,6 +15,7 @@ from odoo.sql_db import Cursor
 
 
 @tagged('mail_blacklist')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAutoBlacklist(common.TestMassMailCommon):
 
     @classmethod

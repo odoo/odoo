@@ -60,7 +60,7 @@ class AccountMoveReversal(models.TransientModel):
     @api.constrains('journal_id', 'move_ids')
     def _check_journal_type(self):
         for record in self:
-            if record.journal_id.type not in record.move_ids.journal_id.mapped('type'):
+            if record.move_ids and record.journal_id.type not in record.move_ids.journal_id.mapped('type'):
                 raise UserError(_('Journal should be the same type as the reversed entry.'))
 
     @api.model

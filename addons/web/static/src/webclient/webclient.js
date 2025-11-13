@@ -60,6 +60,8 @@ export class WebClient extends Component {
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
         useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        this.serviceWorkerActivationResolvers = Promise.withResolvers();
+        this.serviceWorkerIsActivated = this.serviceWorkerActivationResolvers.promise;
         onWillStart(this.registerServiceWorker);
     }
 
@@ -169,7 +171,18 @@ export class WebClient extends Component {
         if (navigator.serviceWorker) {
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/odoo" })
-                .then(() => {
+                .then((registration) => {
+                    if (registration.active && registration.active.state === "activated") {
+                        this.serviceWorkerActivationResolvers.resolve();
+                    } else {
+                        const sw =
+                            registration.installing || registration.waiting || registration.active;
+                        sw.addEventListener("statechange", (e) => {
+                            if (e.target.state === "activated") {
+                                this.serviceWorkerActivationResolvers.resolve();
+                            }
+                        });
+                    }
                     navigator.serviceWorker.ready.then(() => {
                         if (!navigator.serviceWorker.controller) {
                             // https://stackoverflow.com/questions/51597231/register-service-worker-after-hard-refresh

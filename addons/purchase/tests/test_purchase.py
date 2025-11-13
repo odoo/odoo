@@ -4,10 +4,12 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
 from odoo import Command, fields
 from odoo.exceptions import UserError
+from odoo.tools import mute_logger
 
 
 from datetime import timedelta
 from freezegun import freeze_time
+from psycopg2.errors import IntegrityError
 import pytz
 
 
@@ -872,7 +874,10 @@ class TestPurchase(AccountTestInvoicingCommon):
         """Test warnings when partner/products with purchase warnings are used."""
         partner_with_warning = self.env['res.partner'].create({
             'name': 'Test Partner', 'purchase_warn_msg': 'Highly infectious disease'})
+        child_partner = self.env['res.partner'].create({
+            'type': 'invoice', 'parent_id': partner_with_warning.id, 'purchase_warn_msg': 'Slightly infectious disease'})
         purchase_order = self.env['purchase.order'].create({'partner_id': partner_with_warning.id})
+        purchase_order2 = self.env['purchase.order'].create({'partner_id': child_partner.id})
 
         product_with_warning1 = self.env['product.product'].create({
             'name': 'Test Product 1', 'purchase_line_warn_msg': 'Highly corrosive'})
@@ -892,12 +897,23 @@ class TestPurchase(AccountTestInvoicingCommon):
                 'order_id': purchase_order.id,
                 'product_id': product_with_warning1.id,
             },
+            {
+                'order_id': purchase_order2.id,
+                'product_id': product_with_warning2.id,
+            },
         ])
+        purchase_order2.button_confirm()
+        purchase_order2.action_create_invoice()
+        invoice = Form(purchase_order2.invoice_ids[0])
 
         expected_warnings = ('Test Partner - Highly infectious disease',
                              'Test Product 1 - Highly corrosive',
                              'Test Product 2 - Toxic pollutant')
+        expected_warnings_for_purchase_order2 = ('Test Partner, Invoice - Slightly infectious disease',
+                                             'Test Product 2 - Toxic pollutant')
         self.assertEqual(purchase_order.purchase_warning_text, '\n'.join(expected_warnings))
+        self.assertEqual(purchase_order2.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
+        self.assertEqual(invoice.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
 
     def test_bill_in_purchase_matching_individual(self):
         """
@@ -986,7 +1002,6 @@ class TestPurchase(AccountTestInvoicingCommon):
     def test_purchase_order_uom(self):
         fuzzy_drink = self.env['product.product'].create({
             'name': 'Fuzzy Drink',
-            'is_storable': True,
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'seller_ids': [Command.create({
                 'partner_id': self.partner_a.id,
@@ -1108,3 +1123,24 @@ class TestPurchase(AccountTestInvoicingCommon):
             line.price_unit = 100.0
         po.order_line.product_qty = 10
         self.assertEqual(po.order_line.price_unit, 100.0, "Price should remain 100.0 after changing the quantity")
+
+    def test_purchase_order_line_without_uom(self):
+        uom_test = self.env['uom.uom'].create({
+            'name': 'Test Uom',
+            'rounding': 1.0,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 1.0,
+                    'product_uom_id': uom_test.id,
+                })],
+        })
+
+        with (self.assertRaises(IntegrityError), self.cr.savepoint(), mute_logger("odoo.sql_db")):
+            uom_test.unlink()
+
+        self.assertEqual(po.order_line[0].product_uom_id, uom_test)

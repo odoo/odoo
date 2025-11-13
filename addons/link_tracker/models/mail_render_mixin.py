@@ -39,7 +39,7 @@ class MailRenderMixin(models.AbstractModel):
         """
         if not html or is_html_empty(html):
             return html
-        base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = base_url or self.env['ir.config_parameter'].sudo().get_str('web.base.url')
         short_schema = base_url + '/r/'
 
         root_node = lxml.html.fromstring(html)
@@ -70,7 +70,7 @@ class MailRenderMixin(models.AbstractModel):
         """
         if not content:
             return content
-        base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = base_url or self.env['ir.config_parameter'].sudo().get_str('web.base.url')
         shortened_schema = base_url + '/r/'
         unsubscribe_schema = base_url + '/sms/'
         for original_url in set(re.findall(TEXT_URL_REGEX, content)):

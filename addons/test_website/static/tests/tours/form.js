@@ -55,5 +55,5 @@ registerWebsitePreviewTour(
             content: "Name field is shown",
             trigger: ":iframe .s_website_form:has(.s_website_form_field_hidden_if:not(.d-none))",
         },
-    ],
+    ]
 );
