@@ -89,11 +89,11 @@
     <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="replace">
         <t t-if="availability_check and limit_check">
             <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
-            <button t-if="website.account_on_checkout == 'mandatory' and website.is_public_user() and has_paying_ticket" class="btn btn-primary" type="submit">
+            <button t-if="website.account_on_checkout == 'mandatory' and website.is_public_user() and has_paying_ticket" class="btn btn-primary o_event_registration_validate_submit_btn">
                 <span>Sign In</span>
                 <span class="fa fa-sign-in"/>
             </button>
-            <button t-else="" type="submit" class="btn btn-primary">
+            <button t-else="" class="btn btn-primary o_event_registration_validate_submit_btn">
                 <span t-if="has_paying_ticket">Go to Payment</span>
                 <span t-else="">Confirm Registration</span>
             </button>

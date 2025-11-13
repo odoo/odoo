@@ -54,6 +54,7 @@ class TestEventData(EventCase, MockVisitor):
             'question_type': 'company_name',
             'event_ids': [Command.set(event.ids)],
         }])
+        cb_a1, cb_a2 = self.event_question_4.answer_ids
 
         form_details = {
             '1-name-%s' % name_question.id: 'Pixis',
@@ -68,7 +69,10 @@ class TestEventData(EventCase, MockVisitor):
             '2-event_ticket_id': ticket_id_2.id,
             '1-simple_choice-%s' % self.event_question_1.id: '5',
             '2-simple_choice-%s' % self.event_question_1.id: '9',
-            '0-simple_choice-%s' % self.event_question_2.id: '7',
+            '1-checkbox-%s-%s' % (self.event_question_4.id, cb_a1.id): '10',
+            '1-checkbox-%s-%s' % (self.event_question_4.id, cb_a2.id): '11',
+            '2-checkbox-%s-%s' % (self.event_question_4.id, cb_a1.id): '10',
+            '0-radio-%s' % self.event_question_2.id: '7',
             '0-text_box-%s' % self.event_question_3.id: 'Free Text',
             'custom-field': 'custom-value',
             'recaptcha_token_response': 'opaquetokenvalue',
@@ -85,6 +89,8 @@ class TestEventData(EventCase, MockVisitor):
                 (0, 0, {'question_id': phone_question.id, 'value_text_box': '+32444444444'}),
                 (0, 0, {'question_id': second_phone_question.id, 'value_text_box': '+32555555555'}),
                 (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 5}),
+                (0, 0, {'question_id': self.event_question_4.id, 'value_answer_id': 10}),
+                (0, 0, {'question_id': self.event_question_4.id, 'value_answer_id': 11}),
                 (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
                 (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]},
             {'name': 'Geluchat', 'email': 'geluchat@gmail.com', 'phone': '+32777777777', 'company_name': 'My Company',
@@ -95,6 +101,7 @@ class TestEventData(EventCase, MockVisitor):
                 (0, 0, {'question_id': phone_question.id, 'value_text_box': '+32777777777'}),
                 (0, 0, {'question_id': company_name_question.id, 'value_text_box': 'My Company'}),
                 (0, 0, {'question_id': self.event_question_1.id, 'value_answer_id': 9}),
+                (0, 0, {'question_id': self.event_question_4.id, 'value_answer_id': 10}),
                 (0, 0, {'question_id': self.event_question_2.id, 'value_answer_id': 7}),
                 (0, 0, {'question_id': self.event_question_3.id, 'value_text_box': 'Free Text'})]}
         ])

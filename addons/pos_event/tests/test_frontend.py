@@ -58,13 +58,23 @@ class TestUi(TestPointOfSaleHttpCommon):
                 }),
                 (0, 0, {
                     'title': 'Question2',
-                    'question_type': 'simple_choice',
+                    'question_type': 'radio',
                     'once_per_order': True,
                     'answer_ids': [
                         (0, 0, {'name': 'Q2-Answer1'}),
                         (0, 0, {'name': 'Q2-Answer2'})
                     ],
-                })
+                }),
+                (0, 0, {
+                    'title': 'Question3',
+                    'question_type': 'checkbox',
+                    'once_per_order': False,
+                    'answer_ids': [
+                        (0, 0, {'name': 'Q3-Answer1'}),
+                        (0, 0, {'name': 'Q3-Answer2'}),
+                        (0, 0, {'name': 'Q3-Answer3'})
+                    ],
+                }),
             ]
         })
 
@@ -80,13 +90,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.test_event.write({
             'question_ids': [Command.create({
-                'title': 'Question3',
+                'title': 'Question4',
                 'question_type': 'simple_choice',
                 'once_per_order': True,
                 'is_mandatory_answer': True,
                 'answer_ids': [
-                    (0, 0, {'name': 'Q3-Answer1'}),
-                    (0, 0, {'name': 'Q3-Answer2'})
+                    (0, 0, {'name': 'Q4-Answer1'}),
+                    (0, 0, {'name': 'Q4-Answer2'})
                 ]
             })]
         })
@@ -96,8 +106,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].search([], order='id desc', limit=1)
         event_registration = order.lines[0].event_registration_ids
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
-        self.assertEqual(len(event_registration.registration_answer_ids), 3)
-        self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
+        self.assertEqual(len(event_registration.registration_answer_ids), 5)
+        self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1', 'Q3-Answer3', 'Q4-Answer1'])
 
     def test_selling_multislot_event_in_pos(self):
         self.pos_user.write({
@@ -152,9 +162,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertEqual(slot_1.seats_available, 0)
 
-        self.assertEqual(len(registrations.registration_answer_ids), 2)
+        self.assertEqual(len(registrations.registration_answer_ids), 4)
         event_answer_names = registrations.registration_answer_ids.value_answer_id.mapped('name')
-        self.assertEqual(event_answer_names, ['Q1-Answer1', 'Q2-Answer1'])
+        self.assertEqual(sorted(event_answer_names), ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1', 'Q3-Answer3'])
 
     def test_selling_multiple_ticket_saved(self):
         self.pos_user.write({

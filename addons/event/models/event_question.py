@@ -12,7 +12,10 @@ class EventQuestion(models.Model):
 
     title = fields.Char(required=True, translate=True)
     question_type = fields.Selection([
-        ('simple_choice', 'Selection'),
+        # TODO: rename to dropdown?
+        ('simple_choice', 'Dropdown (one answer)'),
+        ('radio', 'Radio (one answer)'),
+        ('checkbox', 'Checkboxes (multiple answers)'),
         ('text_box', 'Text Input'),
         ('name', 'Name'),
         ('email', 'Email'),
@@ -57,7 +60,12 @@ class EventQuestion(models.Model):
         Indeed, it would mess up the event.registration.answer (answer type not matching the question type). """
 
         if 'question_type' in vals:
-            questions_new_type = self.filtered(lambda question: question.question_type != vals['question_type'])
+            # Maybe overkill, but nice to be able to change - to discuss at review
+            selection_types = ['simple_choice', 'radio', 'checkbox']
+            questions_new_type = self.filtered(lambda question:
+                question.question_type != vals['question_type']
+                and not (question.question_type in selection_types and vals['question_type'] in selection_types)
+            )
             if questions_new_type:
                 answer_count = self.env['event.registration.answer'].search_count([('question_id', 'in', questions_new_type.ids)])
                 if answer_count > 0:
@@ -89,7 +97,7 @@ class EventQuestion(models.Model):
         # Fetch attendee answers for which the event is still linked to the question.
         action['domain'] = [('event_id.question_ids', 'in', self.ids)]
 
-        if self.question_type == 'simple_choice':
+        if self.question_type in ['simple_choice', 'radio', 'checkbox']:
             action['views'] = [(False, 'graph'), (False, 'pivot'), (False, 'list')]
         elif self.question_type == 'text_box':
             action['views'] = [(False, 'list')]

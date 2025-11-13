@@ -37,12 +37,26 @@ export class EventRegistrationPopup extends Component {
             };
 
             for (const question of this.questionsByRegistration) {
-                this.state.byRegistration[idx].questions[question.id] = "";
+                if (question.question_type === "checkbox") {
+                    this.state.byRegistration[idx].questions[question.id] = {};
+                    for (const answer of question.answer_ids) {
+                        this.state.byRegistration[idx].questions[question.id][answer.id] = "";
+                    }
+                } else {
+                    this.state.byRegistration[idx].questions[question.id] = "";
+                }
             }
         }
 
         for (const question of this.questionsOncePerOrder) {
-            this.state.byOrder[question.id] = "";
+            if (question.question_type === "checkbox") {
+                this.state.byOrder[question.id] = {};
+                for (const answer of question.answer_ids) {
+                    this.state.byOrder[question.id][answer.id] = "";
+                }
+            } else {
+                this.state.byOrder[question.id] = "";
+            }
         }
 
         // Autofill first ticket with customer data if customer is selected
@@ -78,7 +92,11 @@ export class EventRegistrationPopup extends Component {
 
     isQuestionMissingMandatoryAnswer(id, value) {
         const question = this.pos.models["event.question"].get(id);
-        return !!(question && question.is_mandatory_answer && !value);
+        const hasAnswers =
+            question.question_type === "checkbox"
+                ? Object.entries(value).some(([_answerId, isChecked]) => isChecked)
+                : value; // value is an object for checkbox questions
+        return !!(question && question.is_mandatory_answer && !hasAnswers);
     }
 
     confirm() {
