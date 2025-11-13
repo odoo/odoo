@@ -51,6 +51,7 @@
             <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Send conversation</h6>
                 <TranscriptSender thread="props.thread"/>
+                <a class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="props.thread.transcriptUrl"><i class="pe-2 fa fa-download"/>Download</a>
             </div>
         </ActionPanel>
     </t>
