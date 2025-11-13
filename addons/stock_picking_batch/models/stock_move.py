@@ -46,3 +46,9 @@ class StockMove(models.Model):
         if self.picking_id.batch_id:
             action['context']['default_picking_id'] = self.picking_id.id
         return action
+
+    def _get_batch_moves(self):
+        moves = super()._get_batch_moves()
+        if self.picking_id.batch_id:
+            moves |= self.picking_id.batch_id.move_ids
+        return moves
