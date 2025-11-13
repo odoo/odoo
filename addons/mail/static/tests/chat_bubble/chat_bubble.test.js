@@ -618,3 +618,21 @@ test("Open chat window from command palette with chat hub compact", async () => 
     await click(".o-mail-DiscussCommand", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
 });
+
+test("Close chat window from bubble while bubble preview is displayed", async () => {
+    const pyEnv = await startServer();
+    const johnId = pyEnv["res.users"].create({ name: "John" });
+    const johnPartnerId = pyEnv["res.partner"].create({ user_ids: [johnId], name: "John" });
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: johnPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    setupChatHub({ folded: [chatId] });
+    await start();
+    await hover(".o-mail-ChatBubble[name='John']");
+    await click(`.o-mail-ChatBubble[name='John'] .o-mail-ChatBubble-close`);
+    await contains(`.o-mail-ChatBubble[name='John']`, { count: 0 });
+});
