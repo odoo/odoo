@@ -1,5 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { PosSession } from "@point_of_sale/../tests/unit/data/pos_session.data";
+import { MockServer } from "@web/../tests/web_test_helpers";
 
 // Loading system of self order is in pos.session in hoot tests. This is
 // to avoid code duplication with point_of_sale tests.
@@ -47,22 +48,39 @@ patch(PosSession.prototype, {
             "res.country.state",
         ];
     },
-    getModelsToLoad(opts) {
-        if (opts.self_ordering) {
-            return this._load_self_data_models();
-        }
-        return super.getModelsToLoad(opts);
+    getModelsToLoadSelf() {
+        return this._load_self_data_models();
     },
-    getModelFieldsToLoad(model, opts) {
-        if (opts.self_ordering && model._load_pos_self_data_fields) {
-            return model._load_pos_self_data_fields();
-        }
-        return super.getModelFieldsToLoad(model, opts);
+    getModelFieldsToLoadSelf(model) {
+        return model._load_pos_self_data_fields
+            ? model._load_pos_self_data_fields()
+            : this.getModelFieldsToLoad(model);
     },
-    processPosReadData(model, records, opts) {
-        if (opts.self_ordering && model._load_pos_self_data_read) {
-            return model._load_pos_self_data_read(records);
+    processPosReadDataSelf(model, records) {
+        return model._load_pos_self_data_read
+            ? model._load_pos_self_data_read(records)
+            : this.processPosReadData(model, records);
+    },
+    load_self_data() {
+        const modelToLoad = this.getModelsToLoadSelf();
+        const response = modelToLoad.reduce((acc, modelName) => {
+            acc[modelName] = {};
+            return acc;
+        }, {});
+
+        for (const modelName of modelToLoad) {
+            const model = MockServer.env[modelName];
+            response[modelName].dependencies = this.getModelDependencies(model, {});
+            response[modelName].fields = this.getModelFieldsToLoadSelf(model);
+            response[modelName].relations = this._load_data_relations(
+                modelName,
+                response[modelName].fields
+            );
+            response[modelName].records = this.processPosReadDataSelf(
+                model,
+                model.search_read([], response[modelName].fields, false, false, false, false)
+            );
         }
-        return super.processPosReadData(model, records, opts);
+        return response;
     },
 });

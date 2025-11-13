@@ -6,7 +6,7 @@ class ResUsers(models.Model):
     _inherit = ['res.users', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return [('id', '=', self.env.uid)]
 
     @api.model

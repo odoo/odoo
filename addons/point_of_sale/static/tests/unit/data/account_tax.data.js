@@ -21,6 +21,10 @@ export class AccountTax extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -35,6 +39,7 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             sequence: 1,
             tax_group_id: 1,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -49,6 +54,7 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             sequence: 1,
             tax_group_id: 3,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -62,6 +68,7 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             is_base_affected: true,
             tax_group_id: 4,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

@@ -6,4 +6,8 @@ export class PosPackOperationLot extends models.ServerModel {
     _load_pos_data_fields() {
         return ["lot_name", "pos_order_line_id", "write_date"];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }

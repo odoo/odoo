@@ -6,4 +6,8 @@ export class ProductUom extends models.ServerModel {
     _load_pos_data_fields() {
         return ["id", "barcode", "product_id", "uom_id"];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }

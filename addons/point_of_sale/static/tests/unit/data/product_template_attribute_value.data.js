@@ -16,4 +16,8 @@ export class ProductTemplateAttributeValue extends models.ServerModel {
             "excluded_value_ids",
         ];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }

@@ -70,7 +70,7 @@ class PosPaymentMethod(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return ['|', ('active', '=', False), ('active', '=', True)]
 
     @api.model

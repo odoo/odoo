@@ -12,7 +12,7 @@ class TestTaxesTaxTotalsSummaryL10nInPos(TestTaxCommonAccountTaxPython, TestTaxC
     """
 
     def test_point_of_sale_custom_tax_with_extra_product_field(self):
-        assert 'weight' not in self.env['product.template']._load_pos_data_fields(self.main_pos_config.id)
+        assert 'weight' not in self.env['product.template']._load_pos_data_fields(self.main_pos_config)
 
         tax = self.python_tax('product.weight * quantity')
         document_params = self.init_document(

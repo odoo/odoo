@@ -20,6 +20,10 @@ export class PosOrder extends models.ServerModel {
         return [];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     cancel_order_from_pos(self) {
         const records = this.browse(self);
         const orderIds = [];

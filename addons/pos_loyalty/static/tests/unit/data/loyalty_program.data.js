@@ -27,6 +27,10 @@ export class LoyaltyProgram extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -45,6 +49,7 @@ export class LoyaltyProgram extends models.ServerModel {
             trigger_product_ids: [],
             rule_ids: [1],
             reward_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -63,6 +68,7 @@ export class LoyaltyProgram extends models.ServerModel {
             trigger_product_ids: [],
             rule_ids: [],
             reward_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -81,6 +87,7 @@ export class LoyaltyProgram extends models.ServerModel {
             trigger_product_ids: [],
             rule_ids: [1],
             reward_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
@@ -99,6 +106,7 @@ export class LoyaltyProgram extends models.ServerModel {
             trigger_product_ids: [],
             rule_ids: [],
             reward_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 5,
@@ -117,6 +125,7 @@ export class LoyaltyProgram extends models.ServerModel {
             trigger_product_ids: [],
             rule_ids: [1],
             reward_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 6,
@@ -135,6 +144,7 @@ export class LoyaltyProgram extends models.ServerModel {
             trigger_product_ids: [],
             rule_ids: [],
             reward_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

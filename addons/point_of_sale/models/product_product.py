@@ -8,8 +8,12 @@ class ProductProduct(models.Model):
     _inherit = ['product.product', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('product_tmpl_id', 'in', [p['id'] for p in data['product.template']])]
+    def _load_pos_data_domain(self, data):
+        return [('product_tmpl_id', 'in', data['product.template'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.template.attribute.value', 'product.template']
 
     @api.model
     def _load_pos_data_fields(self, config):

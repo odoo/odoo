@@ -7,71 +7,88 @@ export class PosBill extends models.ServerModel {
         return ["id", "name", "value"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
             name: "0.05",
             value: 0.05,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
             name: "0.10",
             value: 0.1,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
             name: "0.20",
             value: 0.2,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
             name: "0.25",
             value: 0.25,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 5,
             name: "0.50",
             value: 0.5,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 6,
             name: "1.00",
             value: 1.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 7,
             name: "2.00",
             value: 2.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 8,
             name: "5.00",
             value: 5.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 9,
             name: "10.00",
             value: 10.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 10,
             name: "20.00",
             value: 20.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 11,
             name: "50.00",
             value: 50.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 12,
             name: "100.00",
             value: 100.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 13,
             name: "200.00",
             value: 200.0,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

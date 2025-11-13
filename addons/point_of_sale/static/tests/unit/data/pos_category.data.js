@@ -18,6 +18,10 @@ export class PosCategory extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -29,6 +33,7 @@ export class PosCategory extends models.ServerModel {
             sequence: 1,
             hour_until: 0.0,
             hour_after: 24.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -40,6 +45,7 @@ export class PosCategory extends models.ServerModel {
             sequence: 2,
             hour_until: 0.0,
             hour_after: 24.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -51,6 +57,7 @@ export class PosCategory extends models.ServerModel {
             sequence: 4,
             hour_until: 0.0,
             hour_after: 24.0,
+            write_date: "2025-01-01 10:00:00",
         },
 
         {
@@ -63,6 +70,7 @@ export class PosCategory extends models.ServerModel {
             sequence: 3,
             hour_until: 0.0,
             hour_after: 24.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 5,
@@ -74,6 +82,7 @@ export class PosCategory extends models.ServerModel {
             sequence: 5,
             hour_until: 0.0,
             hour_after: 24.0,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

@@ -279,12 +279,12 @@ class PosConfig(models.Model):
             'res.country', 'res.country.state', 'mail.template']
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return [('id', '=', config.id)]
+    def _load_pos_self_data_domain(self, data):
+        return [('id', '=', data['pos.config'].id)]
 
     @api.model
     def _load_pos_self_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
+        read_records = super()._load_pos_self_data_read(records, config)
         if not read_records:
             return read_records
         record = read_records[0]
@@ -299,33 +299,24 @@ class PosConfig(models.Model):
         return read_records
 
     def load_self_data(self):
-        response = {}
-        response['pos.config'] = self.env['pos.config']._load_pos_self_data_search_read(response, self)
+        metadata = self._load_self_metadata()
+        data = self._read_pos_self_data_from_metadata(metadata, self)
+        return data
 
-        for model in self._load_self_data_models():
-            try:
-                response[model] = self.env[model]._load_pos_self_data_search_read(response, self)
-            except AccessError:
-                response[model] = []
-
-        return response
-
-    def load_data_params(self):
-        response = {}
+    def _load_self_metadata(self):
+        models = self._load_self_data_models()
+        records = {}
         fields = self._load_pos_self_data_fields(self)
-        response['pos.config'] = {
+        domain = [('id', '=', self.id)]
+        records['pos.config'] = {
+            'domain': domain,
             'fields': fields,
-            'relations': self.env['pos.session']._load_pos_data_relations('pos.config', fields)
+            'records': self.search(domain, limit=1),
+            'relations': self._load_data_relations(fields),
         }
-
-        for model in self._load_self_data_models():
-            fields = self.env[model]._load_pos_self_data_fields(self)
-            response[model] = {
-                'fields': fields,
-                'relations': self.env['pos.session']._load_pos_data_relations(model, fields)
-            }
-
-        return response
+        for model in models:
+            self.env[model]._load_pos_self_metadata(records, {})
+        return records
 
     def _compute_self_ordering_url(self):
         for record in self:
@@ -374,7 +365,7 @@ class PosConfig(models.Model):
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """
         self.ensure_one()
-        domain = self.payment_method_ids._load_pos_self_data_domain({}, self)
+        domain = self.payment_method_ids._load_pos_self_data_domain({'pos.config': self})
         return bool(self.payment_method_ids.filtered_domain(domain))
 
     @api.model

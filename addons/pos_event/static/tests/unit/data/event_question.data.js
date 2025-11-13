@@ -18,6 +18,10 @@ export class EventQuestion extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -28,6 +32,7 @@ export class EventQuestion extends models.ServerModel {
             once_per_order: false,
             is_mandatory_answer: true,
             answer_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -38,6 +43,7 @@ export class EventQuestion extends models.ServerModel {
             once_per_order: false,
             is_mandatory_answer: true,
             answer_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -48,6 +54,7 @@ export class EventQuestion extends models.ServerModel {
             once_per_order: false,
             is_mandatory_answer: true,
             answer_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
@@ -58,6 +65,7 @@ export class EventQuestion extends models.ServerModel {
             once_per_order: false,
             is_mandatory_answer: false,
             answer_ids: [1, 2],
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

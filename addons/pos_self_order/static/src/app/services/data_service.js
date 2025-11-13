@@ -6,11 +6,13 @@ import { rpc } from "@web/core/network/rpc";
 export const unpatchSelf = patch(PosData.prototype, {
     async loadInitialData() {
         const configId = session.data.config_id;
-        return await rpc(`/pos-self/data/${parseInt(configId)}`);
-    },
-    async loadFieldsAndRelations() {
-        const configId = session.data.config_id;
-        return await rpc(`/pos-self/relations/${parseInt(configId)}`);
+        const data = await rpc(`/pos-self/data/${parseInt(configId)}`);
+        const params = this.getFieldsAndRelations(data);
+        await this.initIndexedDB(params);
+        const localData = await this.getCachedServerDataFromIndexedDB();
+        this.initFieldsAndRelations(params);
+        await this.syncInitialData(data, localData, {});
+        return Object.fromEntries(Object.entries(data).map(([key, value]) => [key, value.records]));
     },
     get databaseName() {
         return `pos-self-order-${odoo.access_token}`;
@@ -23,6 +25,11 @@ export const unpatchSelf = patch(PosData.prototype, {
             ? super.initIndexedDB(...arguments)
             : true;
     },
+    async resetIndexedDB() {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.resetIndexedDB(...arguments)
+            : true;
+    },
     initListeners() {
         return session.data.self_ordering_mode === "mobile"
             ? super.initListeners(...arguments)
@@ -31,6 +38,11 @@ export const unpatchSelf = patch(PosData.prototype, {
     synchronizeLocalDataInIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? super.synchronizeLocalDataInIndexedDB(...arguments)
+            : true;
+    },
+    async synchronizeServerDataInIndexedDB(serverData = {}) {
+        return session.data.self_ordering_mode === "mobile"
+            ? super.synchronizeServerDataInIndexedDB(...arguments)
             : true;
     },
     async getCachedServerDataFromIndexedDB() {
@@ -42,6 +54,21 @@ export const unpatchSelf = patch(PosData.prototype, {
         return session.data.self_ordering_mode === "mobile"
             ? await super.getLocalDataFromIndexedDB(...arguments)
             : {};
+    },
+    async getCachedServerIdsFromIndexedDB(models = []) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.getCachedServerIdsFromIndexedDB(...arguments)
+            : {};
+    },
+    async cleanOldModels(localData, data) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.cleanOldModels(...arguments)
+            : true;
+    },
+    async cleanLocalData(data, localData) {
+        return session.data.self_ordering_mode === "mobile"
+            ? await super.cleanLocalData(...arguments)
+            : true;
     },
     async missingRecursive(recordMap) {
         return recordMap;

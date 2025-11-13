@@ -52,8 +52,12 @@ class AccountTax(models.Model):
         return used_taxes
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return self.env['account.tax']._check_company_domain(config.company_id.id)
+    def _load_pos_data_domain(self, data):
+        return self._check_company_domain(data['pos.config'].company_id)
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['account.tax.group']
 
     @api.model
     def _load_pos_data_fields(self, config):

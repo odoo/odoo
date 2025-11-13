@@ -17,8 +17,8 @@ class LoyaltyProgram(models.Model):
         help="This is used to print the generated gift cards from PoS.")
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', 'in', config._get_program_ids().ids)]
+    def _load_pos_data_domain(self, data):
+        return [('id', 'in', data['pos.config']._get_program_ids().ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):
