@@ -3,6 +3,7 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
+import { url } from "@web/core/utils/urls";
 
 patch(Thread.prototype, {
     setup() {
@@ -64,6 +65,11 @@ patch(Thread.prototype, {
     get composerHidden() {
         return this.channel?.channel_type === "livechat" && this.livechat_end_dt;
     },
+
+    get transcriptUrl() {
+        return url(`/im_livechat/download_transcript/${this.id}`);
+    },
+
     /**
      * @override
      * @param {import("models").Persona} persona
