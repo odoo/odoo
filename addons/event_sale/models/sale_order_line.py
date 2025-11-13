@@ -19,7 +19,7 @@ class SaleOrderLine(models.Model):
         'event.event.ticket', string='Ticket Type',
         compute="_compute_event_related", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
-    is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
+    event_has_slots = fields.Boolean(related="event_id.has_slots")
     registration_ids = fields.One2many('event.registration', 'sale_order_line_id', string="Registrations")
 
     @api.constrains('event_id', 'event_slot_id', 'event_ticket_id', 'product_id')
@@ -27,12 +27,10 @@ class SaleOrderLine(models.Model):
         for so_line in self:
             if so_line.product_id.service_tracking == "event" and (
                 not so_line.event_id or
-                not so_line.event_ticket_id or
-                (so_line.is_multi_slots and not so_line.event_slot_id)
+                not so_line.event_ticket_id
             ):
                 raise ValidationError(_(
-                    "The sale order line with the product %(product_name)s needs an event,"
-                    " a ticket and a slot in case the event has multiple time slots.",
+                    "The sale order line with the product %(product_name)s needs an event and a ticket",
                     product_name=so_line.product_id.name))
 
     @api.depends('state', 'event_id')

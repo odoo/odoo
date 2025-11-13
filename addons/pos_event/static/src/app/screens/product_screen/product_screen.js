@@ -41,7 +41,7 @@ patch(ProductScreen.prototype, {
         let slotResult = {};
         let slotSelected;
         let slotTicketAvailabilities = {};
-        if (event.is_multi_slots) {
+        if (event.has_slots) {
             // Updating data in case of event change
             await this.pos.data.read(
                 "event.event",

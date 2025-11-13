@@ -155,7 +155,8 @@ export class EventPage extends Component {
     }
 
     seatAvailability(ticket) {
-        if (this.event.is_multi_slots && this.state.selectedSlot) {
+        console.log(this.event.has_slots);
+        if (this.event.has_slots && this.state.selectedSlot) {
             const slotId = this.state.selectedSlot;
             return Boolean(this.state.slotTicketAvailabilities?.[ticket.id]?.[slotId] ?? 0);
         }
@@ -192,8 +193,8 @@ export class EventPage extends Component {
     }
 
     canIncreaseTicket(ticket, event, newQty) {
-        if (event.is_multi_slots && this.state.selectedSlot) {
-            // When the event has multiple slots, check both slot-level and ticket-level limits:
+        if (event.has_slots && this.state.selectedSlot) {
+            // When the event has slots, check both slot-level and ticket-level limits:
             // - If newQty exceeds the slot's available seats, OR
             // - If newQty exceeds the ticket's available seats for that slot
             const slotId = this.state.selectedSlot;
@@ -402,7 +403,7 @@ export class EventPage extends Component {
                 ...userData,
                 event_id: this.event.id,
                 event_ticket_id: ticket,
-                event_slot_id: this.event.is_multi_slots ? this.state.selectedSlot : null,
+                event_slot_id: this.event.has_slots ? this.state.selectedSlot : null,
                 pos_order_line_id: line,
                 partner_id: this.selfOrder.currentOrder.partner_id,
                 registration_answer_ids: this.formatTextAnswers(textAnswer),

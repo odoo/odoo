@@ -34,7 +34,7 @@ class EventEvent(models.Model):
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'seats_available', 'event_ticket_ids', 'registration_ids', 'seats_limited', 'write_date',
                 'question_ids', 'general_question_ids', 'specific_question_ids', 'seats_max',
-                'is_multi_slots', 'event_slot_ids']
+                'has_slots', 'event_slot_ids']
 
     def get_slot_tickets_availability_pos(self, slot_ticket_ids):
         self.ensure_one()

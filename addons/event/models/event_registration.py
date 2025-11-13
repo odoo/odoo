@@ -34,7 +34,7 @@ class EventRegistration(models.Model):
     # event
     event_id = fields.Many2one(
         'event.event', string='Event', required=True, tracking=True, index=True)
-    is_multi_slots = fields.Boolean(string="Is Event Multi Slots", related="event_id.is_multi_slots")
+    event_has_slots = fields.Boolean(related="event_id.has_slots")
     event_slot_id = fields.Many2one(
         "event.slot", string="Slot", ondelete='restrict', tracking=True, index="btree_not_null",
         domain="[('event_id', '=', event_id)]")
@@ -202,8 +202,8 @@ class EventRegistration(models.Model):
     def _check_event_slot(self):
         if any(registration.event_id != registration.event_slot_id.event_id for registration in self if registration.event_slot_id):
             raise ValidationError(_('Invalid event / slot choice'))
-        if any(not registration.event_slot_id for registration in self if registration.is_multi_slots):
-            raise ValidationError(_('Slot choice is mandatory on multi-slots events.'))
+        if any(not registration.event_slot_id for registration in self if registration.event_has_slots):
+            raise ValidationError(_('Slot choice is mandatory for event with slots.'))
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):

@@ -112,7 +112,7 @@ class EventEvent(models.Model):
         string='Maximum Attendees',
         compute='_compute_seats_max', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this number the registrations are not accepted. "
-        "If the event has multiple slots, this maximum number is applied per slot.")
+        "If the event has slots, this maximum number is applied per slot.")
     seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
                                    precompute=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
@@ -129,10 +129,7 @@ class EventEvent(models.Model):
         store=False, readonly=True, compute='_compute_seats')
     # Registration fields
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
-    is_multi_slots = fields.Boolean("Is Multi Slots", copy=True,
-        help="Allow multiple time slots. "
-        "The communications, the maximum number of attendees and the maximum number of tickets registrations "
-        "are defined for each time slot instead of the whole event.")
+    has_slots = fields.Boolean(compute="_compute_has_slots")
     event_slot_ids = fields.One2many("event.slot", "event_id", "Slots", copy=True)
     event_slot_count = fields.Integer("Slots Count", compute="_compute_event_slot_count")
     event_ticket_ids = fields.One2many(
@@ -247,7 +244,7 @@ class EventEvent(models.Model):
             event.question_ids = command
             event.question_ids = [Command.link(question_id.id) for question_id in event.event_type_id.question_ids]
 
-    @api.depends('event_slot_count', 'is_multi_slots', 'seats_max', 'registration_ids.state', 'registration_ids.active')
+    @api.depends('event_slot_count', 'seats_max', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
         """ Determine available, reserved, used and taken seats. """
         # initialize fields to 0
@@ -275,7 +272,7 @@ class EventEvent(models.Model):
         # compute seats_available and expected
         for event in self:
             event.update(results.get(event._origin.id or event.id, base_vals))
-            seats_max = event.seats_max * event.event_slot_count if event.is_multi_slots else event.seats_max
+            seats_max = event.seats_max * event.event_slot_count if event.has_slots else event.seats_max
             if seats_max > 0:
                 event.seats_available = seats_max - (event.seats_reserved + event.seats_used)
 
@@ -313,12 +310,12 @@ class EventEvent(models.Model):
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
                 (not event.seats_limited or not event.seats_max or event.seats_available) and \
                 (
-                    # Not multi slots: open if no tickets or at least a sale available ticket
-                    (not event.is_multi_slots and
+                    # Have no slots: open if no tickets or at least a sale available ticket
+                    (not event.has_slots and
                         (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids)))
                     or
-                    # Multi slots: open if at least a slot and no tickets or at least an ongoing ticket with availability
-                    (event.is_multi_slots and event.event_slot_count and (
+                    # Have slots: open if at least a slot and no tickets or at least an ongoing ticket with availability
+                    (event.has_slots and (
                         not event.event_ticket_ids or any(
                             ticket.is_launched and not ticket.is_expired and (
                                 any(availability is None or availability > 0
@@ -347,7 +344,7 @@ class EventEvent(models.Model):
         E.g. max 20 seats for ticket A, 20 seats for ticket B
             * With max 20 seats for the event
             * Without limit set on the event (=40, but the customer didn't explicitly write 40)
-        When the event is multi slots, instead of checking if every tickets is sold out,
+        When the event has slots, instead of checking if every tickets is sold out,
         checking if every slot-ticket combination is sold out.
         """
         for event in self:
@@ -361,7 +358,7 @@ class EventEvent(models.Model):
                             for ticket in event.event_ticket_ids
                         ])
                     )
-                    if event.is_multi_slots else
+                    if event.has_slots else
                     all(ticket.is_sold_out for ticket in event.event_ticket_ids)
                 ))
             )
@@ -411,6 +408,11 @@ class EventEvent(models.Model):
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
+
+    @api.depends('event_slot_ids')
+    def _compute_has_slots(self):
+        for event in self:
+            event.has_slots = bool(event.event_slot_ids)
 
     @api.depends("event_slot_ids")
     def _compute_event_slot_count(self):
@@ -580,15 +582,15 @@ class EventEvent(models.Model):
         """Reset url field as it should only be used for events with no physical location."""
         self.filtered('address_id').event_url = ''
 
-    @api.constrains("date_begin", "date_end", "event_slot_ids", "is_multi_slots")
+    @api.constrains("date_begin", "date_end", "event_slot_ids")
     def _check_slots_dates(self):
-        multi_slots_event_ids = self.filtered(lambda event: event.is_multi_slots).ids
-        if not multi_slots_event_ids:
+        has_slots_event_ids = self.filtered(lambda event: event.has_slots).ids
+        if not has_slots_event_ids:
             return
         min_max_slot_dates_per_event = {
             event: (min_start, max_end)
             for event, min_start, max_end in self.env['event.slot']._read_group(
-                domain=[('event_id', 'in', multi_slots_event_ids)],
+                domain=[('event_id', 'in', has_slots_event_ids)],
                 groupby=['event_id'],
                 aggregates=['start_datetime:min', 'end_datetime:max']
             )
@@ -628,8 +630,7 @@ class EventEvent(models.Model):
     @api.onchange('seats_max')
     def _onchange_seats_max(self):
         for event in self:
-            if event.seats_limited and event.seats_max and event.seats_available <= 0 and \
-                (event.event_slot_ids if event.is_multi_slots else True):
+            if event.seats_limited and event.seats_max and event.seats_available <= 0:
                 return {
                     'warning': {
                         'title': _("Update the limit of registrations?"),

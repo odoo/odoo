@@ -16,7 +16,7 @@ class EventEventConfigurator(models.TransientModel):
     event_ticket_id = fields.Many2one('event.event.ticket', string="Ticket Type", domain="[('event_id', '=', event_id)]",
         compute="_compute_event_ticket_id", readonly=False, store=True)
     additional_product_ids = fields.Many2many(related='event_ticket_id.additional_product_ids')
-    is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
+    event_has_slots = fields.Boolean(related="event_id.has_slots")
     has_available_tickets = fields.Boolean("Has Available Tickets", compute="_compute_has_available_tickets")
 
     @api.constrains('event_id', 'event_slot_id', 'event_ticket_id')
@@ -43,11 +43,11 @@ class EventEventConfigurator(models.TransientModel):
         for configurator in self:
             configurator.has_available_tickets = bool(mapped_data.get(configurator.product_id, 0))
 
-    @api.depends("is_multi_slots")
+    @api.depends("event_has_slots")
     def _compute_event_slot_id(self):
-        """ Pre-select the slot of the multi slots event selected if it is the only one """
+        """ Pre-select the slot of the event selected if it is the only one """
         for configurator in self:
-            if not configurator.is_multi_slots:
+            if not configurator.event_has_slots:
                 configurator.event_slot_id = False
             else:
                 event_slot_ids = self.env['event.slot'].search([

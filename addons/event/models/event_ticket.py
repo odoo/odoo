@@ -139,14 +139,14 @@ class EventEventTicket(models.Model):
     @api.depends_context('name_with_seats_availability')
     def _compute_display_name(self):
         """Adds ticket seats availability if requested by context.
-        Always display the name without availabilities if the event is multi slots
+        Always display the name without availabilities if the event has slots
         because the availability displayed won't be relative to the possible slot combinations
         but only relative to the event and this will confuse the user.
         """
         if not self.env.context.get('name_with_seats_availability'):
             return super()._compute_display_name()
         for ticket in self:
-            if not ticket.seats_max or ticket.event_id.is_multi_slots:
+            if not ticket.seats_max or ticket.event_id.has_slots:
                 name = ticket.name
             elif not ticket.seats_available:
                 name = _('%(ticket_name)s (Sold out)', ticket_name=ticket.name)
