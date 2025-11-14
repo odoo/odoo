@@ -43,6 +43,7 @@ import { DebugWidget } from "../utils/debug/debug_widget";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { initLNA } from "../utils/init_lna";
 import { uuid } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
@@ -160,6 +161,7 @@ export class PosStore extends WithLazyGetterTrap {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
+
         this.handleQRPaymentLines();
     }
 
@@ -415,12 +417,15 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         // Create preparation/kitchen printers
+        let useLna = false;
         for (const printerConfig of this.config.preparation_printer_ids) {
             const printer = this.createPrinter(printerConfig);
             if (printer) {
                 printer.config = printerConfig.raw;
                 this.kitchenPrinters.push(printer);
             }
+
+            useLna = useLna || printerConfig.use_lna;
         }
         this.config.iface_printers = !!this.kitchenPrinters.length;
 
@@ -430,6 +435,12 @@ export class PosStore extends WithLazyGetterTrap {
             if (printer == this.config.default_receipt_printer_id) {
                 this.printer.setPrinter(printerDevice);
             }
+
+            useLna = useLna || printer.use_lna;
+        }
+
+        if (useLna) {
+            initLNA(this.notification);
         }
 
         this.models["product.pricelist.item"].addEventListener("create", () => {
