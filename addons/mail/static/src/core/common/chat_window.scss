@@ -2,6 +2,9 @@
     width: $o-mail-ChatWindow-width;
 
     z-index: $zindex-sticky;
+    &.o-mobile {
+        z-index: $zindex-sticky - 2 !important;
+    }
     &:not(.o-mobile) {
         --border-opacity: .15;
         height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
