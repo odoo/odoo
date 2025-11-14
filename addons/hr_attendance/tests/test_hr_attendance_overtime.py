@@ -3,13 +3,13 @@ from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import Form, new_test_user
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import Form, HttpCase, new_test_user
+from odoo.tests.common import tagged
 
 
 @tagged('hr_attendance_overtime')
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestHrAttendanceOvertime(TransactionCase):
+class TestHrAttendanceOvertime(HttpCase):
     """ Tests for overtime """
 
     @classmethod
@@ -1033,3 +1033,24 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         self.assertEqual(ruleset.rule_ids.timing_type, 'work_days',
                  "Employee work Timing type should default to 'work_days' when not set.")
+
+    def test_employee_overtime_with_multiple_attendance_lines(self):
+        """Validate that multiple overtime lines for today are summed correctly
+        and that the entire attendance_employee_data response is consistent.
+        """
+        for _ in range(2):
+            self.env['hr.attendance.overtime.line'].create({
+                'employee_id': self.employee.id,
+                'date': date.today(),
+                'duration': 5,
+            })
+        token = self.employee.company_id.attendance_kiosk_key
+        response = self.make_jsonrpc_request(
+            '/hr_attendance/attendance_employee_data',
+            {'token': token, 'employee_id': self.employee.id},
+        )
+        self.assertEqual(response.get('hours_previously_today'), 0)
+        self.assertEqual(response.get('hours_today'), 0)
+        self.assertEqual(response.get('last_attendance_worked_hours'), 0)
+        self.assertEqual(response.get('overtime_today'), 10)
+        self.assertEqual(response.get('total_overtime'), 10)
