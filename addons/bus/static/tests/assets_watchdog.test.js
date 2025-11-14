@@ -17,7 +17,7 @@ test("can listen on bus and display notifications in DOM", async () => {
     });
     await expect.waitForSteps(["bundle_changed"]);
     await runAllTimers();
-    await waitFor(".o_notification", { text: "The page appears to be out of date." });
+    await waitFor(".o_notification", { contains: "The page appears to be out of date." });
     await contains(".o_notification button:contains(Refresh)").click();
     await expect.waitForSteps(["reload-page"]);
 });

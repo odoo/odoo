@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add('website_sale.google_analytics_add_to_ca
         },
         {
             content: 'check add to cart event',
-            trigger: "a:has(.my_cart_quantity:contains(/^1$/))",
+            trigger: "a:has(.my_cart_quantity:text(1))",
             timeout: 25000,
         },
     ]

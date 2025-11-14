@@ -29,7 +29,7 @@ import {
 import { _makeUser, user } from "@web/core/user";
 
 function getPickerCell(expr) {
-    return queryAll(`.o_datetime_picker .o_date_item_cell:contains(/^${expr}$/)`);
+    return queryAll(`.o_datetime_picker .o_date_item_cell:text(${expr})`);
 }
 
 class Partner extends models.Model {

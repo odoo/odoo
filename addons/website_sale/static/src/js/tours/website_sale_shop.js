@@ -51,7 +51,7 @@ registerWebsitePreviewTour(
             timeout: 30000,
         },
         {
-            trigger: ":iframe .product_price .o_dirty .oe_currency_value:not(:contains(/^1.00$/))",
+            trigger: ":iframe .product_price .o_dirty .oe_currency_value:not(:text(1.00))",
         },
         {
             trigger: ":iframe #wrap img.product_detail_img",

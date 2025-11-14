@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
     steps: () => [
         {
             trigger:
-                ".o-livechat-root:shadow .o-mail-ChatHub:has(.o-mail-ChatWindow .o-mail-ChatWindow-header:contains(/^Testing Bot$/)):count(1) .o-mail-Message-body:contains(/^Hello! I'm a bot!$/)",
+                ".o-livechat-root:shadow .o-mail-ChatHub:has(.o-mail-ChatWindow .o-mail-ChatWindow-header:text(Testing Bot)):count(1) .o-mail-Message-body:text(Hello! I'm a bot!)",
         },
         {
             trigger: messagesContain("I help lost visitors find their way."),
@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
         },
         {
             trigger:
-                ".o-livechat-root:shadow .o-mail-ChatHub:has(.o-mail-ChatWindow .o-mail-ChatWindow-header:contains(/^Testing Bot$/)):count(1) .o-mail-Message-body:contains(/^Hello! I'm a bot!$/)",
+                ".o-livechat-root:shadow .o-mail-ChatHub:has(.o-mail-ChatWindow .o-mail-ChatWindow-header:text(Testing Bot)):count(1) .o-mail-Message-body:text(Hello! I'm a bot!)",
         },
         {
             trigger: '.o-livechat-root:shadow button:contains("Other & Documentation")',

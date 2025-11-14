@@ -218,7 +218,7 @@ test("Can add reaction to a message on an ipad", async () => {
     await advanceTime(LONG_PRESS_DELAY);
     await click("button:contains('Add a Reaction')");
     await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
-    await contains(".o-mail-MessageReaction:contains('😀\n1')");
+    await contains(".o-mail-MessageReaction:contains('😀 1')");
 });
 
 test("Editing message keeps the mentioned channels", async () => {
@@ -866,7 +866,7 @@ test("Reaction summary", async () => {
         await withUser(userId, async () => {
             await click(".o-mail-Message-actions [title='Add a Reaction']");
             await click(".o-mail-QuickReactionMenu button", { text: "😅" });
-            await waitFor(`.o-mail-MessageReaction:contains(/^😅 ${idx + 1}$/)`, {
+            await waitFor(`.o-mail-MessageReaction:text(😅 ${idx + 1})`, {
                 exact: true,
                 timeout: 3000,
             });

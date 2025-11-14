@@ -28,7 +28,7 @@ registerBackendAndFrontendTour("question", {
     run: "editor Test",
 },
 {
-    trigger: `.note-editable p:not(:contains(/^<br>$/))`,
+    trigger: `.note-editable p:not(:text(<br>))`,
 },
 {
     trigger: ".o_select_menu_toggler",
@@ -75,7 +75,7 @@ registerBackendAndFrontendTour("question", {
     run: "editor Test",
 },
 {
-    trigger: `.note-editable p:not(:contains(/^<br>$/))`,
+    trigger: `.note-editable p:not(:text(<br>))`,
 },
 {
     trigger: "button:contains(\"Post Answer\")",
@@ -83,7 +83,7 @@ registerBackendAndFrontendTour("question", {
     tooltipPosition: "bottom",
     run: "click",
     expectUnloadPage: true,
-}, 
+},
 {
     trigger: ".o_wforum_content_wrapper .h3:contains(test)",
 },

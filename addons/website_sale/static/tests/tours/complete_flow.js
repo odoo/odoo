@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Check b2b Tax-Excluded Prices",
-            trigger: ".product_price .oe_price .oe_currency_value:contains(/^79.00$/)",
+            trigger: ".product_price .oe_price .oe_currency_value:text(79.00)",
         },
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart({ quantity: 2 }),
@@ -286,7 +286,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Check b2c Tax-Included Prices",
-            trigger: ".product_price .oe_price .oe_currency_value:contains(/^90.85$/)",
+            trigger: ".product_price .oe_price .oe_currency_value:text(90.85)",
         },
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart({ quantity: 2 }),
