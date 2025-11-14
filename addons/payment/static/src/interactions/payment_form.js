@@ -25,12 +25,6 @@ export class PaymentForm extends Interaction {
         this.defaultSubmitButtonLabel = document.querySelector(
             'button[name="o_payment_submit_button"]'
         )?.textContent;
-
-        // Enable tooltips.
-        this.el.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-            const tooltip = window.Tooltip.getOrCreateInstance(el);
-            this.registerCleanup(() => tooltip.dispose());
-        });
     }
 
     async willStart() {
