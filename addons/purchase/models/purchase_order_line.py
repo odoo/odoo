@@ -138,6 +138,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
         for line in self:
+<<<<<<< 97b1d400220dd3131d17b7e8c78d0007d5548f0d
             # compute qty_invoiced
             qty = 0.0
             for inv_line in line._get_invoice_lines():
@@ -147,6 +148,12 @@ class PurchaseOrderLine(models.Model):
                     elif inv_line.move_id.move_type == 'in_refund':
                         qty -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
             line.qty_invoiced = qty
+||||||| 0259ddbc7e43ab156d9bef8ef3531d9734bd3f31
+            if not line.qty_invoiced or line in invoiced_quantities:
+                line.qty_invoiced = invoiced_quantities[line]
+=======
+            line.qty_invoiced = invoiced_quantities[line]
+>>>>>>> eea1efd396cc25a10d4edd32955d8cfa34b9fd13
 
             # compute qty_to_invoice
             if line.order_id.state == 'purchase':
