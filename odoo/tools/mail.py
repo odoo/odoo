@@ -80,7 +80,8 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-ai-field', 'data-ai-record-id',
      'data-heading-link-id',
      'data-mimetype-before-conversion',
-     'data-language-id'
+     'data-language-id',
+     'data-bs-toggle',  # support nav-tabs
      ])
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
