@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('website_sale.product_page_zoom', {
     steps: () => [
         {
             content: "select " + imageName,
-            trigger: `.oe_product_cart a:contains(/^${imageName}$/)`,
+            trigger: `.oe_product_cart a:text(${imageName})`,
             run: "click",
             expectUnloadPage: true,
         },

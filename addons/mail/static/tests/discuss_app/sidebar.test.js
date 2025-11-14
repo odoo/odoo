@@ -1163,7 +1163,7 @@ test("add and remove channel from favorites updates sidebar", async () => {
         ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel-container";
     const favoriteContainerSelector =
         ".o-mail-DiscussSidebarCategory-favorite + .o-mail-DiscussSidebarChannel-container";
-    const generalChannelSelector = ".o-mail-DiscussSidebarChannel:has(:contains(/^General$/))";
+    const generalChannelSelector = ".o-mail-DiscussSidebarChannel:has(:text(General))";
     await start();
     await openDiscuss();
     await click(`${channelContainerSelector} ${generalChannelSelector} button .oi-ellipsis-h`);

@@ -347,6 +347,6 @@ test("Can delete channel thread as author of thread", async () => {
     await click(".modal button:contains('Delete Thread')");
     await contains(".o-mail-DiscussContent-threadName[title='General']");
     await contains(
-        `.o-mail-NotificationMessage :contains(/^Mitchell Admin deleted the thread "test thread"$/)`
+        `.o-mail-NotificationMessage :text(Mitchell Admin deleted the thread "test thread")`
     );
 });

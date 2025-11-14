@@ -5,7 +5,7 @@ export function assertRewardAmounts(rewards) {
     for (const [reward, amount] of Object.entries(rewards)) {
         steps.push({
             content: `check if ${reward} reward is correct`,
-            trigger: `[data-reward-type=${reward}] ${currencyValue}:contains(/^${amount}$/)`,
+            trigger: `[data-reward-type=${reward}] ${currencyValue}:text(${amount})`,
         });
     }
     return steps;

@@ -36,7 +36,7 @@ export function goToWishlist({
 } = {}) {
     return {
         content: _t("Go to wishlist"),
-        trigger: `${backend ? ":iframe" : ""} a sup.my_wish_quantity:contains(/^${quantity}$/)`,
+        trigger: `${backend ? ":iframe" : ""} a sup.my_wish_quantity:text(${quantity})`,
         tooltipPosition: position,
         run: "click",
         expectUnloadPage: true,
@@ -46,7 +46,7 @@ export function goToWishlist({
 export function assertWishlistQuantity(quantity = 1) {
     return {
         content: "Check wishlist quantity",
-        trigger: `a sup.my_wish_quantity:contains(/^${quantity}$/)`,
+        trigger: `a sup.my_wish_quantity:text(${quantity})`,
     };
 }
 

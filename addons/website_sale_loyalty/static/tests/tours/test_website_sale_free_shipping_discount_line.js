@@ -31,11 +31,11 @@ registry.category("web_tour.tours").add("website_sale_loyalty.update_shipping_af
         }),
         {
             content: "check discount code discount doesn't apply to shipping",
-            trigger: '[data-reward-type=discount] .oe_currency_value:contains(/^- 50.00$/)',
+            trigger: '[data-reward-type=discount] .oe_currency_value:text(- 50.00)',
         },
         {
             content: "check eWallet discount applies to shipping ($50 for Plumbus + $5 for delivery)",
-            trigger: '[data-reward-type=discount] .oe_currency_value:contains(/^- 55.00$/)',
+            trigger: '[data-reward-type=discount] .oe_currency_value:text(- 55.00)',
         },
     ],
 });
