@@ -873,6 +873,11 @@ class ProjectProject(models.Model):
         action['context'] = context
         return action
 
+    def action_project_time_by_stage_report(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('project.action_project_time_by_stage_report')
+        action['display_name'] = _("%(name)s's Time by Stage", name=self.name)
+        return action
+
     def project_update_all_action(self):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_update_all_action')
         action['display_name'] = _("%(name)s Dashboard", name=self.name)

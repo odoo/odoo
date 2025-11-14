@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_time_by_stage_report_view_search" model="ir.ui.view">
+        <field name="name">project.time.by.stage.report.view.search</field>
+        <field name="model">report.project.task.user</field>
+        <field name="inherit_id" ref="project.view_task_search_form_project_fsm_base"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search position="attributes">
+                <attribute name="string">Time by Stage</attribute>
+            </search>
+            <xpath expr="//filter[@name='unassigned']" position="replace"/>
+            <xpath expr="//filter[@name='favorite_projects']" position="replace"/>
+            <xpath expr="//filter[@name='blocking']" position="replace"/>
+            <xpath expr="//filter[@name='creation_date_filter']" position="after">
+                <separator/>
+                <filter string="Deadline" name="deadline_filter" date="date_deadline"/>
+            </xpath>
+            <xpath expr="//filter[@name='templates']" position="replace"/>
+            <xpath expr="//filter[@name='project']" position="replace"/>
+            <xpath expr="//filter[@name='create_date']" position="after">
+                <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_time_by_stage_report_view_graph" model="ir.ui.view">
+        <field name="name">project.time.by.stage.report.view.graph</field>
+        <field name="model">report.project.task.user</field>
+        <field name="arch" type="xml">
+            <graph string="Stage Chart" sample="1">
+                <field name="project_id"/>
+                <field name="stage_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="project_time_by_stage_report_view_pivot" model="ir.ui.view">
+        <field name="name">project.time.by.stage.report.view.pivot</field>
+        <field name="model">report.project.task.user</field>
+        <field name="arch" type="xml">
+            <pivot string="Stage Analysis" sample="1">
+                <field name="stage_id" type="col"/>
+                <field name="project_id" type="row"/>
+                <!-- <field name="task_id" type="row"/> -->
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_project_time_by_stage_report" model="ir.actions.act_window">
+        <field name="name">Time by Stage</field>
+        <field name="res_model">report.project.task.user</field>
+        <field name="path">time-by-stage</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="project_time_by_stage_report_view_search"/>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No data yet!</p>
+            <p>Analyze how quickly your team is completing your project's tasks and check if everything is progressing according to plan.</p>
+        </field>
+    </record>
+
+</odoo>
