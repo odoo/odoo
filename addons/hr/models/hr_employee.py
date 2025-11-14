@@ -297,6 +297,27 @@ class HrEmployee(models.Model):
             })
         return new_vals_list
 
+    def _read_group_groupby(self, alias: str, groupby_spec: str, query: Query) -> SQL:
+        if groupby_spec != 'hr_presence_state':
+            return super()._read_group_groupby(alias, groupby_spec, query)
+
+        # Ugly hack to be able to groupby presence_state: that's not efficient since we will compute
+        # the presence_state on every record in the DB to generate this new groupby specification.
+        all_records = self.sudo().with_context(active_test=False).search_fetch([])
+        states_map = all_records.grouped('hr_presence_state')
+        if not states_map:  # No record, no result
+            return SQL('FALSE')
+
+        id_field = SQL.identifier(self._table, 'id')
+        when_cases = SQL.join(
+            '\n',
+            [
+                SQL('WHEN %s IN %s THEN %s', id_field, records._ids, state)
+                for state, records in states_map.items()
+            ],
+        )
+        return SQL("CASE %s END", when_cases)
+
     @api.depends('bank_account_ids.allow_out_payment')
     def _compute_is_trusted_bank_account(self):
         for employee in self:

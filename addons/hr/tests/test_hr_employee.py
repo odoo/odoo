@@ -669,6 +669,32 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(partner.email, second_employee.work_email)
         self.assertNotEqual(partner.email, first_employee.work_email)
 
+    def test_presence_state_groupby(self):
+        present_emp_a, present_emp_b, absent_emp, archived_emp, out_working_emp = self.env['hr.employee'].create([
+            {'name': 'Present Employee A'},
+            {'name': 'Present Employee B'},
+            {'name': 'Absent Employee'},
+            {'name': 'Archived Employee'},
+            {'name': 'Out of Office Employee'},
+        ])
+        present_emp_a.hr_presence_state = 'present'
+        present_emp_b.hr_presence_state = 'present'
+        absent_emp.hr_presence_state = 'absent'
+        archived_emp.hr_presence_state = 'archive'
+        out_working_emp.hr_presence_state = 'out_of_working_hour'
+
+        employee_per_presence_state = self.env['hr.employee']._read_group(domain=[], groupby=['hr_presence_state'])
+        self.assertEqual(len(employee_per_presence_state), 5)
+        for presence_state, employees in employee_per_presence_state.items():
+            if presence_state == 'present':
+                self.assertEqual(employees.ids, [present_emp_a.id, present_emp_b.id])
+            if presence_state == 'absent':
+                self.assertEqual(employees.ids, [absent_emp.id])
+            if presence_state == 'archive':
+                self.assertEqual(employees.ids, [archived_emp.id])
+            if presence_state == 'out_of_working_hour':
+                self.assertEqual(employees.ids, [out_working_emp.id])
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
