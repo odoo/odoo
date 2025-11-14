@@ -50,14 +50,18 @@ test("Double click on image and replace it", async () => {
             public: true,
         },
     ]);
-    await setupWebsiteBuilder(`<div><img class=a_nice_img src='${dummyBase64Img}'></div>`);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<div><img class=a_nice_img src='${dummyBase64Img}'></div>`
+    );
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe img.a_nice_img");
     await animationFrame();
     expect(".modal-content:contains(Select a media) .o_upload_media_button").toHaveCount(1);
     expect("div.o-tooltip").toHaveCount(0);
     await contains(".o_select_media_dialog .o_button_area[aria-label='logo']").click();
+    await waitSidebarUpdated();
     await waitForNone(".o_select_media_dialog");
+    expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe img").toHaveClass("o_modified_image_to_save");
     expect(".options-container[data-container-title='Image']").toHaveCount(1);
 });
@@ -240,14 +244,14 @@ test("pasted/dropped images are converted to attachments on snippet save", async
 
 describe("Image format/optimize", () => {
     test("Should format an image to be 800px", async () => {
-        const { getEditor } = await setupWebsiteBuilder(`
+        const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
-
+        await waitSidebarUpdated();
         await contains("[data-label='Format'] .dropdown").click();
         await waitFor('[data-action-id="setImageFormat"]');
         queryAll(`[data-action-id="setImageFormat"]`)
@@ -265,7 +269,7 @@ describe("Image format/optimize", () => {
         expect(queryFirst("[data-label='Format'] .dropdown").textContent).toMatch(/800px/);
     });
     test("should set the quality of an image to 50", async () => {
-        const { getEditor } = await setupWebsiteBuilder(`
+        const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
@@ -274,8 +278,8 @@ describe("Image format/optimize", () => {
 
         const img = await waitFor(":iframe .test-options-target img");
         await contains(":iframe .test-options-target img").click();
-
-        const input = await waitFor('[data-action-id="setImageQuality"] input');
+        await waitSidebarUpdated();
+        const input = queryFirst('[data-action-id="setImageQuality"] input');
         input.value = 50;
         input.dispatchEvent(new Event("input"));
         await delay();
