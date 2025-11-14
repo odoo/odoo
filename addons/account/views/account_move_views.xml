@@ -1170,8 +1170,7 @@
                                              invisible="currency_id == company_currency_id">
                                             <span>1</span>
                                             <field name="company_currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
-                                            <span>=</span>
-                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="state != 'draft'" style="max-width: 21ch;"/>
+                                            <field name="invoice_currency_rate" widget="float_field_with_operator" digits="[12,6]" readonly="state != 'draft'" style="max-width: 21ch;"/>
                                             <field name="currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
                                             <div
                                              invisible="show_journal or state != 'draft' or invoice_currency_rate == expected_currency_rate">

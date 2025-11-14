@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account.FloatFieldWithOperator">
+        <div class="d-flex gap-1">
+            <div t-out="(digitsCount &lt;= (props.digits[1] || 2))? '=': '≃'"/>
+            <t t-call="web.FloatField"/>
+        </div>
+    </t>
+
+</templates>
