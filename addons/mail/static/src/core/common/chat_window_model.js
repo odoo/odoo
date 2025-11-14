@@ -45,7 +45,10 @@ export class ChatWindow extends Record {
     });
 
     computeCanShow() {
-        return !this.store.discuss?.isActive || this.store.env.services.ui.isSmall;
+        if (this.store.env.services.ui.isSmall) {
+            return !this.hubAsFolded || !this.store.discuss?.isActive;
+        }
+        return !this.store.discuss?.isActive;
     }
 
     async close(options = {}) {
