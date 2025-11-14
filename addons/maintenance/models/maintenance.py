@@ -240,12 +240,6 @@ class MaintenanceRequest(models.Model):
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, index=True, default=_get_default_team_id,
                                           compute='_compute_maintenance_team_id', store=True, readonly=False, check_company=True)
     duration = fields.Float(help="Duration in hours.", compute='_compute_duration', store=True)
-    instruction_type = fields.Selection([
-        ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Instruction", default="text"
-    )
-    instruction_pdf = fields.Binary('PDF')
-    instruction_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
     instruction_text = fields.Html('Text')
     recurring_maintenance = fields.Boolean(string="Recurrent", compute='_compute_recurring_maintenance', store=True, readonly=False)
     repeat_interval = fields.Integer(string='Repeat Every', default=1)

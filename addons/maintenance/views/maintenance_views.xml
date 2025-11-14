@@ -131,12 +131,7 @@
                             <field name='description' placeholder="Internal Notes"/>
                         </page>
                         <page string="Instructions">
-                            <group col="1">
-                                <field name="instruction_type" widget="radio" nolabel="1"/>
-                                <field name="instruction_pdf" help="Upload your PDF file." widget="pdf_viewer" invisible="instruction_type != 'pdf'" required="instruction_type == 'pdf'" nolabel="1"/>
-                                <field name="instruction_google_slide" placeholder="Google Slide Link" widget="google_slide_viewer" invisible="instruction_type != 'google_slide'" required="instruction_type == 'google_slide'" nolabel="1"/>
-                                <field name="instruction_text" placeholder="Your instructions" invisible="instruction_type != 'text'" nolabel="1"/>
-                            </group>
+                            <field name="instruction_text" placeholder="Your instructions"/>
                         </page>
                     </notebook>
                 </sheet>
