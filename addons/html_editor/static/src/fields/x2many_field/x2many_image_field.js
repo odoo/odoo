@@ -3,6 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ImageField, imageField } from "@web/views/fields/image/image_field";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getVideoUrl } from "@html_editor/utils/url";
+import { save } from "@web/core/utils/image_library"
 
 export class X2ManyImageField extends ImageField {
     static template = "html_editor.ImageField";
@@ -43,26 +44,11 @@ export class X2ManyImageField extends ImageField {
     }
 
     async onImageSave(attachment) {
-        const attachmentRecord = await this.orm.searchRead(
-            "ir.attachment",
-            [["id", "=", attachment[0].id]],
-            ["id", "datas", "name"],
-            {}
-        );
-        if (!attachmentRecord[0].datas) {
-            // URL type attachments are mostly demo records which don't have any ir.attachment datas
-            // TODO: make it work with URL type attachments
-            return this.notification.add(
-                `Cannot add URL type attachment "${attachmentRecord[0].name}". Please try to reupload this image.`,
-                {
-                    type: "warning",
-                }
-            );
-        }
-        await this.props.record.update({
-            [this.props.name]: attachmentRecord[0].datas,
-            name: attachmentRecord[0].name,
-        });
+        await save(this.env, {
+            attachments: attachment,
+            targetRecord: this.props.record,
+            targetFieldName: this.props.name,
+        })
     }
 
     async onVideoSave(videoInfo) {

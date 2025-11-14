@@ -7,7 +7,7 @@
         <field name="model">product.template</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <form string="Product">
+            <form string="Producton">
                 <sheet name="product_form">
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
@@ -27,7 +27,7 @@
                     <field name="id" invisible="True"/>
                     <field
                         name="image_1920"
-                        widget="image"
+                        widget="image_with_media_dialog"
                         class="oe_avatar"
                         options="{'convert_to_webp': True, 'preview_image': 'image_128'}"
                     />

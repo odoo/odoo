@@ -74,7 +74,34 @@ class IrAttachment(models.Model):
     def _get_media_info(self):
         """Return a dict with the values that we need on the media dialog."""
         self.ensure_one()
-        return self._read_format(['id', 'name', 'description', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'public', 'access_token', 'image_src', 'image_width', 'image_height', 'original_id'])[0]
+        return self._read_format(self._editor_media_fields())[0]
+
+    @api.model
+    def _editor_media_fields(self, split_relational = False):
+        relational_fields = ['original_id']
+        non_relational_fields = [
+            'id',
+            'name',
+            'description',
+            'mimetype',
+            'checksum',
+            'url',
+            'type',
+            'res_id',
+            'res_model',
+            'public',
+            'access_token',
+            'image_src',
+            'image_width',
+            'image_height',
+            'original_id',
+        ]
+        if not split_relational:
+            return relational_fields + non_relational_fields
+        return {
+            'relational': relational_fields,
+            'non_relational': non_relational_fields
+        }
 
     def _can_bypass_rights_on_media_dialog(self, **attachment_data):
         """ This method is meant to be overridden, for instance to allow to
