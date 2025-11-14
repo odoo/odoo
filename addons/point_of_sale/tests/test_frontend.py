@@ -1574,6 +1574,28 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'RefundFewQuantities', login="pos_user")
 
+    def test_refund_multiple_products_amounts_compliance(self):
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 10.00,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'refund_multiple_products_amounts_compliance', login="pos_user")
+
+        refund_order = current_session.order_ids.filtered(lambda order: order.is_refund)
+        self.assertEqual(refund_order.lines[0].price_subtotal, 2 * test_product.list_price)
+        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
+            lambda payment: payment.payment_method_id.type == 'cash').mapped('amount')
+        )
+        current_session.post_closing_cash_details(total_cash_payment)
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
+
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
         self.desk_organizer.product_variant_id.write({"lst_price": 7})
