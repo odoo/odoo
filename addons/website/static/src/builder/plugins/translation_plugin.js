@@ -70,6 +70,7 @@ export class TranslationPlugin extends Plugin {
             for (const editableEl of editableEls) {
                 if (editableEl.querySelectorAll(editableElSelector).length) {
                     editableEl.setAttribute("data-oe-readonly", "true");
+                    editableEl.classList.remove("o_editable", "o_editable_attribute");
                 }
             }
             return true;

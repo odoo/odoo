@@ -1,9 +1,14 @@
 import { Builder } from "@html_builder/builder";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { insertText, pasteText } from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, manuallyDispatchProgrammaticEvent, queryAllTexts } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    manuallyDispatchProgrammaticEvent,
+    queryAllTexts,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -125,11 +130,60 @@ test("only have translation editors on deepest nodes", async () => {
             inWrap: getTranslateEditable({ inWrap: "Hello" }).match(/<span.*<\/span>/)[0],
         }),
     });
-    expect(":iframe .o_editable:has(.o_editable)").not.toHaveAttribute("contenteditable");
-    expect(":iframe .o_editable .o_editable").toHaveAttribute("contenteditable", "true");
+    expect(":iframe [data-oe-model]:has([data-oe-model])").not.toHaveAttribute("contenteditable");
+    expect(":iframe [data-oe-model] [data-oe-model]").toHaveAttribute("contenteditable", "true");
 });
 
-test("only [data-oe-model] not o_editable in translation", async () => {
+test("translate field", async () => {
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step(args[1]);
+        return true;
+    });
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div data-oe-model="test" data-oe-field="field" data-oe-id="1"><p id="sectionId">Title</p></div>
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expect(":iframe [data-oe-model='test']").toHaveClass("o_editable");
+    setSelection({ anchorNode: queryOne(":iframe #sectionId"), anchorOffset: 0 });
+    await insertText(editor, "New");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect.verifySteps([
+        `<div data-oe-model="test" data-oe-field="field" data-oe-id="1" class=""><p id="sectionId">NewTitle</p></div>`,
+    ]);
+});
+
+test("Translate link of a mega menu", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div data-oe-model="test">
+                <section>
+                    <div class="container s_allow_columns">
+                        <a href="#" class="nav-link d-inline">
+                            <span data-oe-model="ir.ui.view" data-oe-id="526" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="123" class="o_editable translate_branding">
+                                Hello
+                            </span>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    const textNode = editor.editable.querySelector("[data-oe-id='526']").childNodes[0];
+    setSelection({
+        anchorNode: textNode,
+        anchorOffset: 0,
+        focusOffset: 5,
+    });
+    pasteText(editor, "x");
+    expect(":iframe a [data-oe-model].o_dirty").toHaveCount(1);
+});
+
+test("cascade of [data-oe-model] in translation", async () => {
     await setupSidebarBuilderForTranslation({
         websiteContent: `
             <div data-oe-model="test"><section>${getTranslateEditable({
