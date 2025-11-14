@@ -81,6 +81,7 @@ class AccountMove(models.Model):
 
     @api.depends("country_code", "move_type")
     def _compute_l10n_rs_edi_is_eligible(self):
+        self.fetch(["country_code"])
         for move in self:
             move.l10n_rs_edi_is_eligible = move.country_code == 'RS' and move.is_sale_document() and move.l10n_rs_edi_state in (False, 'sending_failed')
 
