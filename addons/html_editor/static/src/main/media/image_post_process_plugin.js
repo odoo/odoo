@@ -276,6 +276,7 @@ export class ImagePostProcessPlugin extends Plugin {
         el.classList.add("o_modified_image_to_save");
         if (el.tagName === "IMG") {
             el.setAttribute("src", url);
+            el.removeAttribute("srcset");
         } else {
             this.dependencies.style.setBackgroundImageUrl(el, url);
         }

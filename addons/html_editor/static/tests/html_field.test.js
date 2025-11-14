@@ -2251,7 +2251,8 @@ describe("save image", () => {
                 expect(params.res_id).toBe(1);
                 await modifyImagePromise;
                 modifyImageCount++;
-                return newImageSrc;
+                const res = { original: newImageSrc };
+                return res;
             } else {
                 // Fail the test if too many modify_image are called.
                 throw new Error("The image should only have been modified once during this test");

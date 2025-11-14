@@ -45,8 +45,8 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             if expect_fail:
                 return json_safe.loads(response.content)
             url = json_safe.loads(response.content).get('result')
-            self.assertTrue(url.endswith(name), "Expect name in URL")
-            response = self.url_open(url)
+            self.assertTrue(url['original'].endswith(name), "Expect name in URL")
+            response = self.url_open(url['original'])
             self.assertEqual(200, response.status_code, "Expect response")
             self.assertTrue('image/svg+xml' in response.headers.get('Content-Type'), "Expect SVG mimetype")
             self.assertEqual(svg, response.content, "Expect unchanged SVG")
