@@ -73,7 +73,10 @@ class PosOrder(models.Model):
         :returns: id of created/updated pos.order
         :rtype: int
         """
-        draft = True if order.get('state') == 'draft' else False
+        draft = order.get('state') == 'draft'
+        paid = order.get('state') == 'paid'
+        if 'state' in order:
+            order['state'] = 'draft' if paid else order['state']  # paid state will be set later
         pos_session = self.env['pos.session'].browse(order['session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             order['session_id'] = self._get_valid_session(order).id
@@ -113,9 +116,6 @@ class PosOrder(models.Model):
 
             del order['uuid']
             del order['access_token']
-            if order.get('state') == 'paid':
-                # The "paid" state will be assigned later by `_process_saved_order`
-                order['state'] = pos_order.state
             pos_order.write(order)
 
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
@@ -182,9 +182,10 @@ class PosOrder(models.Model):
         :type draft: bool.
         """
         prec_acc = order.currency_id.decimal_places
+        order = order.with_context(backend_recomputation=True)
 
         # Recompute amount paid because we don't trust the client
-        order.with_context(backend_recomputation=True).write({'amount_paid': sum(order.payment_ids.mapped('amount'))})
+        order.write({'amount_paid': sum(order.payment_ids.mapped('amount'))})
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
