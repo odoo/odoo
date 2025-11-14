@@ -84,7 +84,7 @@ class ResPartner(models.Model):
         domain = expression.AND(
             [
                 self._get_mention_suggestions_domain(search),
-                [("channel_ids", "in", channel.id)],
+                [("channel_ids", "in", (channel.parent_channel_id | channel).ids)],
             ]
         )
         extra_domain = expression.AND([
@@ -101,7 +101,10 @@ class ResPartner(models.Model):
                 ]
             )
         partners = self._search_mention_suggestions(domain, limit, extra_domain)
-        members_domain = [("channel_id", "=", channel.id), ("partner_id", "in", partners.ids)]
+        members_domain = [
+            ("channel_id", "=", (channel.parent_channel_id | channel).ids),
+            ("partner_id", "in", partners.ids)
+        ]
         members = self.env["discuss.channel.member"].search(members_domain)
         member_fields = [
             Store.One("channel_id", [], as_thread=True, rename="thread"),
