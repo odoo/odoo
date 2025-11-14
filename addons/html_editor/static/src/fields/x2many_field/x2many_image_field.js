@@ -6,6 +6,15 @@ import { getVideoUrl } from "@html_editor/utils/url";
 
 export class X2ManyImageField extends ImageField {
     static template = "html_editor.ImageField";
+    static props = {
+        ...ImageField.props,
+        visibleTabs: { type: Array, optional: true }
+    };
+    static defaultProps = {
+        ...ImageField.defaultProps,
+        visibleTabs: ["IMAGES", "VIDEOS"],
+    };
+
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -17,14 +26,14 @@ export class X2ManyImageField extends ImageField {
      * standard behavior of opening file input box in order to update a record.
      */
     onFileEdit(ev) {
-        const isVideo = this.props.record.data.video_url;
+        const isVideo = "VIDEOS" in this.props.visibleTabs && this.props.record.data.video_url;
         let mediaEl;
         if (isVideo) {
             mediaEl = document.createElement("img");
             mediaEl.dataset.src = this.props.record.data.video_url;
         }
         this.dialog.add(CustomMediaDialog, {
-            visibleTabs: ["IMAGES", "VIDEOS"],
+            visibleTabs: this.props.visibleTabs,
             media: mediaEl,
             activeTab: isVideo ? "VIDEOS" : "IMAGES",
             save: (el) => {}, // Simple rebound to fake its execution
@@ -73,6 +82,12 @@ export class X2ManyImageField extends ImageField {
 export const x2ManyImageField = {
     ...imageField,
     component: X2ManyImageField,
+    extractProps({ options }) {
+        return {
+            ...imageField.extractProps(...arguments),
+            visibleTabs: options.visible_tabs,
+        };
+    },
 };
 
 registry.category("fields").add("x2_many_image", x2ManyImageField);
