@@ -389,8 +389,12 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                         "model": test_model_name,
                         "name": "Test Multi Company Mail With Activity",
                         "icon": "/base/static/description/icon.png",
+                        "activity_ids": set(expected_test_model_activities.ids),
                     },
-                    activity_groups_by_model[test_model_name])
+                    {
+                        **activity_groups_by_model[test_model_name],
+                        "activity_ids": set(activity_groups_by_model[test_model_name]['activity_ids']),
+                    })
         # Activities related to not accessible records are in other activities regardless of the allowed companies
         self.authenticate(user_admin.login, user_admin.login)
         with patch.object(MailTestMultiCompanyWithActivity, '_check_access', autospec=True,
