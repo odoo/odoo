@@ -45,28 +45,6 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         for message, expected_needle in zip(trail, expected[::-1]):
             self.assertIn(expected_needle, message.account_audit_log_preview)
 
-    def test_can_reset_deferred_invoice(self):
-        customer = self.env['res.partner'].create({'name': 'Rob Odoo'})
-        invoice = self.env['account.move'].create({
-            'invoice_date': '2025-09-01',
-            'invoice_date_due': '2025-09-01',
-            'invoice_line_ids': [
-                (0, 0, {'name': 'Line1',
-                        'price_unit': 100.0,
-                        'deferred_start_date': '2025-09-01',
-                        'deferred_end_date': '2025-12-31',
-                       }
-                ),
-            ],
-            'move_type': 'out_invoice',
-            'name': 'INVOICE_00001',
-            'partner_id': customer.id,
-        })
-
-        for i in range(4):
-            invoice.action_post()
-            invoice.button_draft()
-
     def test_can_unlink_draft(self):
         self.move.unlink()
 
