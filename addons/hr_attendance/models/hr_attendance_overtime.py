@@ -38,6 +38,11 @@ class HrAttendanceOvertimeLine(models.Model):
 
     rule_ids = fields.Many2many("hr.attendance.overtime.rule", string="Applied Rules")
 
+    quantity_comparison = fields.Selection([
+        ('exceed', 'Exceed'),
+        ('fall_behind', 'Fall behind')
+    ], string="Quantity Comparison")
+
     # in payroll: rate, work_entry_type
     # in time_off: convertible_to_time_off
 

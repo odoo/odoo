@@ -17,7 +17,8 @@
         <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_rule_view_form"/>
         <field name="arch" type="xml">
             <group name="action_section" position="inside">
-                <field name="compensable_as_leave"/>
+                <field name="compensable_as_leave" invisible="quantity_comparison == 'fall_behind'"/>
+                <field name="deduct_as_leave" invisible="quantity_comparison == 'exceed'"/>
             </group>
         </field>
     </record>

@@ -8,3 +8,4 @@ class HrAttendanceOvertimeLine(models.Model):
     _inherit = 'hr.attendance.overtime.line'
 
     compensable_as_leave = fields.Boolean("Compensable as Time Off")
+    deduct_as_leave = fields.Boolean("Deductable from Time Off")

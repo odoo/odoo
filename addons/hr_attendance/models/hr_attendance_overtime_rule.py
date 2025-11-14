@@ -126,6 +126,18 @@ class HrAttendanceOvertimeRule(models.Model):
 
     information_display = fields.Char("Information", compute='_compute_information_display')
 
+    quantity_comparison = fields.Selection([
+            ('exceed', 'Exceed'),
+            ('fall_behind', 'Fall behind')
+        ],
+        string="Comparison Type",
+        default='exceed',
+    )
+
+    set_missing_hours = fields.Boolean("Set Missing Hours")
+
+    expected_hours_label = fields.Char("Expected Hours Label", compute="_compute_expected_hours_label")
+
     _timing_start_is_hour = models.Constraint(
         'CHECK(0 <= timing_start AND timing_start < 24)',
         "Timing Start is an hour of the day",
@@ -352,33 +364,48 @@ class HrAttendanceOvertimeRule(models.Model):
 
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
-                if overtime_quantity <= 0 or overtime_quantity <= rule.employer_tolerance:
-                    continue
-                if overtime_quantity < overtime_hours_by[period][date]:
-                    for start, end, attendance in _last_hours_as_intervals(
-                        starting_intervals=overtimes_by[period][date],
-                        hours=overtime_quantity,
-                    ):
-                        quantity_intervals_by_date[attendance.date].append((start, end, rule))
-                else:
+                # Handle "exceed" rules (existing logic)
+                if rule.quantity_comparison == 'exceed':
+                    if overtime_quantity <= 0 or overtime_quantity <= rule.employer_tolerance:
+                        continue
+                    if overtime_quantity < overtime_hours_by[period][date]:
+                        for start, end, attendance in _last_hours_as_intervals(
+                            starting_intervals=overtimes_by[period][date],
+                            hours=overtime_quantity,
+                        ):
+                            quantity_intervals_by_date[attendance.date].append((start, end, rule))
+                    else:
+                        new_intervals = _last_hours_as_intervals(
+                            starting_intervals=attendances_by[period][date],
+                            hours=overtime_quantity - overtime_hours_by[period][date],
+                        )
+
+                        # Uncommenting this changes the logic of how rules for different periods will interact.
+                        # Would make it so weekly overtimes try to overlap daily overtimes as much as possible
+                        # for outer_period, key_date in self._get_period_keys(date).items():
+                        #     overtimes_by[outer_period][key_date] |= new_intervals
+                        #     attendances_by[outer_period][key_date] -= new_intervals
+                        #     overtime_hours_by[outer_period][key_date] += sum(
+                        #         (end - start).seconds / 3600
+                        #         for (start, end, _) in new_intervals
+                        #     )
+
+                        for start, end, attendance in (
+                            new_intervals | overtimes_by[period][date]
+                        ):
+                            date = attendance[0].date
+                            quantity_intervals_by_date[date].append((start, end, rule))
+
+                # Handle "fall_behind" rules (new logic)
+                elif rule.quantity_comparison == 'fall_behind':
+                    undertime_quantity = expected_hours - work_hours_by[period][date]
+                    if undertime_quantity <= rule.employee_tolerance:
+                        continue
                     new_intervals = _last_hours_as_intervals(
                         starting_intervals=attendances_by[period][date],
-                        hours=overtime_quantity - overtime_hours_by[period][date],
+                        hours=undertime_quantity,
                     )
-
-                    # Uncommenting this changes the logic of how rules for different periods will interact.
-                    # Would make it so weekly overtimes try to overlap daily overtimes as much as possible
-                    # for outer_period, key_date in self._get_period_keys(date).items():
-                    #     overtimes_by[outer_period][key_date] |= new_intervals
-                    #     attendances_by[outer_period][key_date] -= new_intervals
-                    #     overtime_hours_by[outer_period][key_date] += sum(
-                    #         (end - start).seconds / 3600
-                    #         for (start, end, _) in new_intervals
-                    #     )
-
-                    for start, end, attendance in (
-                        new_intervals | overtimes_by[period][date]
-                    ):
+                    for start, end, attendance in new_intervals:
                         date = attendance[0].date
                         quantity_intervals_by_date[date].append((start, end, rule))
         intervals_by_date = {}
@@ -407,6 +434,7 @@ class HrAttendanceOvertimeRule(models.Model):
                     'employee_id': employee.id,
                     'date': date,
                     'rule_ids': rules.ids,
+                    'quantity_comparison': rules.quantity_comparison,
                     **rules._extra_overtime_vals(),
                 }
                 for start, stop, rules in intervals
@@ -451,3 +479,11 @@ class HrAttendanceOvertimeRule(models.Model):
                     )
                     continue
                 rule.information_display = timing_types[rule.timing_type]
+
+    @api.depends('quantity_comparison')
+    def _compute_expected_hours_label(self):
+        for rule in self:
+            if rule.quantity_comparison == 'fall_behind':
+                rule.expected_hours_label = "Duration to fall behind:"
+            else:
+                rule.expected_hours_label = "Duration to exceed:"

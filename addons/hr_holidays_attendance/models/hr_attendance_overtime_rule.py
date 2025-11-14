@@ -9,16 +9,19 @@ class HrAttendanceOvertimeRule(models.Model):
     _inherit = 'hr.attendance.overtime.rule'
 
     compensable_as_leave = fields.Boolean("Give back as time off", default=False)
+    deduct_as_leave = fields.Boolean("Take back as time off", default=False)
 
     def _extra_overtime_vals(self):
         if not self:
             return {
                 **super()._extra_overtime_vals(),
                 'compensable_as_leave': False,
+                'deduct_as_leave': False,
             }
 
         res = super()._extra_overtime_vals()
         res['compensable_as_leave'] = any(self.mapped('compensable_as_leave'))
+        res['deduct_as_leave'] = any(self.mapped('deduct_as_leave'))
         if self.ruleset_id.rate_combination_mode == 'sum' and any(self.mapped('paid')):
             combined_rate = 1.0
             combined_rate += sum(r.amount_rate - 1.0 for r in self.filtered(
