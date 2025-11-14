@@ -972,8 +972,7 @@ class SaleOrderLine(models.Model):
         """
         invoiced_quantities = self._prepare_qty_invoiced()
         for line in self:
-            if not line.qty_invoiced or line in invoiced_quantities:
-                line.qty_invoiced = invoiced_quantities[line]
+            line.qty_invoiced = invoiced_quantities[line]
 
     @api.depends('qty_invoiced')
     @api.depends_context('accrual_entry_date')
