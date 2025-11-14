@@ -279,7 +279,17 @@
         <!-- Generic one2many -->
         <t t-if="field.relation !== 'ir.attachment'">
             <t t-call="website.form_field">
-                <select class="form-select s_website_form_input" t-att-name="field.name"
+                <t t-if="!field.records || field.records.length === 0">
+                    <input
+                        class="form-control s_website_form_input"
+                        t-att-name="field.name"
+                        t-att-value="undefined"
+                        t-att-required="field.required || field.modelRequired || None"
+                        placeholder="No matching record!"
+                        disabled=""
+                    />
+                </t>
+                <select t-else="" class="form-select s_website_form_input" t-att-name="field.name"
                     t-att-required="field.required || field.modelRequired || None" t-att-id="field.id"
                     t-attf-data-link-state-to-country="{{ field.name == 'state_id' and field.linkStateToCountry ? 'true' : 'false' }}">
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
