@@ -4,6 +4,7 @@ from collections import defaultdict
 from odoo import _, api, Command, fields, models
 from odoo.tools import OrderedSet, float_is_zero
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class StockMove(models.Model):
@@ -476,6 +477,10 @@ class StockMove(models.Model):
             'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
             'procure_method': self.procure_method,
         }
+
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super()._get_moves_to_assign_domain(company_id)
+        return Domain(domain) & Domain('production_id', '=', False)
 
     def _get_source_document(self):
         res = super()._get_source_document()

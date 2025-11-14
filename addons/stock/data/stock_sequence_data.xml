@@ -42,15 +42,32 @@
             <field name="company_id" eval="False"/>
         </record>
 
-        <!-- Scheduler -->
-        <record forcecreate="True" id="ir_cron_scheduler_action" model="ir.cron">
-            <field name="name">Procurement: run scheduler</field>
-            <field name="model_id" ref="model_stock_rule"/>
+        <!-- Schedulers -->
+        <record forcecreate="True" id="ir_cron_scheduler_orderpoints_action" model="ir.cron">
+            <field name="name">Scheduler: Run Orderpoints</field>
+            <field name="model_id" ref="model_stock_warehouse_orderpoint"/>
             <field name="state">code</field>
-            <field name="code">
-model.run_scheduler(True)
-            </field>
-            <field eval="True" name="active"/>
+            <field name="code">model._run_scheduler_orderpoints()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_scheduler_reservations_action" model="ir.cron">
+            <field name="name">Scheduler: Run Reservations</field>
+            <field name="model_id" ref="model_stock_move"/>
+            <field name="state">code</field>
+            <field name="code">model._run_scheduler_reservations()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_scheduler_merge_quants_action" model="ir.cron">
+            <field name="name">Scheduler: Merge Quants</field>
+            <field name="model_id" ref="model_stock_quant"/>
+            <field name="state">code</field>
+            <field name="code">model._quant_tasks()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>

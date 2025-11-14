@@ -10,7 +10,7 @@ from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import clean_context, OrderedSet, groupby
+from odoo.tools.misc import clean_context, OrderedSet, groupby, split_every
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
@@ -2459,6 +2459,24 @@ Please change the quantity done or the rounding precision in your settings.""",
         moves_to_reserve = moves_to_reserve.sorted(key=lambda m: any(r in self.reference_ids.ids for r in m.reference_ids.ids), reverse=True)
         moves_to_reserve._action_assign()
 
+    @api.model
+    def _run_scheduler_reservations(self):
+        """ Assign stock reservations to confirmed or partially available moves,
+            processing them in order of reservation date and priority.
+        """
+        domain = self._get_moves_to_assign_domain(False)
+        all_moves_to_assign = self.search(domain, limit=None, order='reservation_date, priority desc, date asc, id asc')
+
+        from_cron = self.env.context.get('cron_id')
+        if from_cron:
+            self.env['ir.cron']._commit_progress(remaining=len(all_moves_to_assign))
+
+        for moves_chunk in split_every(1000, all_moves_to_assign.ids, self.browse):
+            moves_chunk.sudo()._action_assign()
+
+            if from_cron:
+                self.env['ir.cron']._commit_progress(processed=len(moves_chunk))
+
     def _rollup_move_dests_fetch(self):
         seen = set(self.ids)
         self.fetch(['move_dest_ids'])
@@ -2621,6 +2639,16 @@ Please change the quantity done or the rounding precision in your settings.""",
             'readOnly': len(self) > 1,
             'uomDisplayName': len(self) == 1 and self.product_uom.display_name or self.product_id.uom_id.display_name,
         }
+
+    def _get_moves_to_assign_domain(self, company_id):
+        return Domain([
+            ('company_id', '=?', company_id),
+            ('state', 'in', ['confirmed', 'partially_available']),
+            ('product_uom_qty', '!=', 0.0),
+            '|',
+                ('reservation_date', '<=', fields.Date.today()),
+                ('picking_type_id.reservation_method', '=', 'at_confirm'),
+        ])
 
     def _visible_quantity(self):
         self.ensure_one()

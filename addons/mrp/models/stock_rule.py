@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.fields import Domain, Command
+from odoo.fields import Command
 from odoo.tools import OrderedSet
 
 
@@ -122,10 +122,6 @@ class StockRule(models.Model):
         res = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
         res['production_group_id'] = values.get('production_group_id')
         return res
-
-    def _get_moves_to_assign_domain(self, company_id):
-        domain = super()._get_moves_to_assign_domain(company_id)
-        return Domain(domain) & Domain('production_id', '=', False)
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
