@@ -130,7 +130,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Selection type">
-        <BuilderSelect t-if="isExistingFieldSelectType"
+        <BuilderSelect t-if="isExistingFieldSelectType and state.valueList"
             id="'existing_field_select_type_opt'" preview="false" action="'existingFieldSelectType'"
         >
             <BuilderSelectItem actionValue="'many2one'">Dropdown List</BuilderSelectItem>
