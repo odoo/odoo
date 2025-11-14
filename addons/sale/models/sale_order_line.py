@@ -937,6 +937,47 @@ class SaleOrderLine(models.Model):
         a refund made would automatically decrease the invoiced quantity, then there is a risk of reinvoicing
         it automatically, which may not be wanted at all. That's why the refund has to be created from the SO
         """
+<<<<<<< 97b1d400220dd3131d17b7e8c78d0007d5548f0d
+||||||| 04794445b368052556d12db91ce2a948ced858a8
+        invoiced_quantities = self._prepare_qty_invoiced()
+        for line in self:
+            if not line.qty_invoiced or line in invoiced_quantities:
+                line.qty_invoiced = invoiced_quantities[line]
+
+    @api.depends('qty_invoiced')
+    @api.depends_context('accrual_entry_date')
+    def _compute_qty_invoiced_at_date(self):
+        if not self._date_in_the_past():
+            # Avoid useless compute if we don't look in the past.
+            for line in self:
+                line.qty_invoiced_at_date = line.qty_invoiced
+            return
+        invoiced_quantities = self._prepare_qty_invoiced()
+        for line in self:
+            line.qty_invoiced_at_date = invoiced_quantities[line]
+
+    def _prepare_qty_invoiced(self):
+        invoiced_qties = defaultdict(float)
+=======
+        invoiced_quantities = self._prepare_qty_invoiced()
+        for line in self:
+            line.qty_invoiced = invoiced_quantities[line]
+
+    @api.depends('qty_invoiced')
+    @api.depends_context('accrual_entry_date')
+    def _compute_qty_invoiced_at_date(self):
+        if not self._date_in_the_past():
+            # Avoid useless compute if we don't look in the past.
+            for line in self:
+                line.qty_invoiced_at_date = line.qty_invoiced
+            return
+        invoiced_quantities = self._prepare_qty_invoiced()
+        for line in self:
+            line.qty_invoiced_at_date = invoiced_quantities[line]
+
+    def _prepare_qty_invoiced(self):
+        invoiced_qties = defaultdict(float)
+>>>>>>> cf97f233d28ab3147f4145a8628b9ae4d4c091e7
         for line in self:
             qty_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
