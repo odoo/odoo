@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 
-from odoo import _, api, fields, models, modules, SUPERUSER_ID
+from odoo import _, api, models, modules, SUPERUSER_ID
 
 
 class ResUsers(models.Model):
@@ -11,82 +10,48 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_activity_groups(self):
-        """ Split To-do and Project activities in systray by removing
-            the single project.task activity represented and doing a
-            new query to split them between private/non-private tasks.
+        """Override to split the single 'project.task' activity group.
+
+        This method intercepts all task-related activities and divides them
+        into two distinct groups for the systray:
+        - **To-Do**: Tasks not linked to a project (`project_id` is False).
+        - **Task**: Tasks linked to a project (`project_id` is True).
         """
-        activity_groups = super()._get_activity_groups()
-        # 1. removing project.task activity group
-        to_remove = next((g for g in activity_groups if g.get('model') == 'project.task'), None)
-        if to_remove:
-            activity_groups.remove(to_remove)
+        groups = super()._get_activity_groups()
 
-        # 2. Splitting tasks in 'regular-task' (is_task=TRUE) and 'to-do' (is_task=False)
-        #    Counting max 1 activity per task
-        query = """
-            WITH task_states AS (
-                SELECT BOOL(t.project_id) AS is_task, act.res_id,
-                    CASE
-                        WHEN %(date)s - MIN(act.date_deadline)::date = 0 THEN 'today'
-                        WHEN %(date)s - MIN(act.date_deadline)::date > 0 THEN 'overdue'
-                        WHEN %(date)s - MIN(act.date_deadline)::date < 0 THEN 'planned'
-                    END AS states
-                FROM mail_activity AS act
-                JOIN project_task AS t ON act.res_id = t.id
-                WHERE act.res_model = 'project.task' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
-                GROUP BY is_task, act.res_id
-            )
-            SELECT is_task, states, array_agg(res_id) AS res_ids, COUNT(res_id) AS count
-            FROM task_states
-            GROUP BY is_task, states
-        """
+        task_group = next((g for g in groups if g['model'] == 'project.task'), None)
+        if not task_group:
+            return groups
+        groups.remove(task_group)
 
-        self.env.cr.execute(query, {
-            'date': str(fields.Date.context_today(self)),
-            'user_id': self.env.uid,
-            'active': self.env.context.get('active_test', True),
-        })
-        activity_data = self.env.cr.dictfetchall()
-        view_type = self.env['project.task']._systray_view
+        all_activities = self.env['mail.activity'].browse(task_group['activity_ids'])
 
-        user_activities = {}
-        for activity in activity_data:
-            is_task = activity['is_task']
-            if is_task not in user_activities:
-                if not is_task:
-                    module_name = 'project_todo'
-                    name = _('To-Do')
-                else:
-                    module_name = 'project'
-                    name = _('Task')
-                icon = modules.Manifest.for_addon(module_name).icon
-                user_activities[is_task] = {
-                    'id': self.env['ir.model']._get('project.task').id,
-                    'name': name,
-                    'is_todo': not is_task,
-                    'model': 'project.task',
-                    'type': 'activity',
-                    'icon': icon,
-                    'domain': [('active', 'in', [True, False])],
-                    'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
-                    'res_ids': set(),
-                    'view_type': view_type,
-                }
-            user_activities[is_task]['res_ids'].update(activity['res_ids'])
-            user_activities[is_task][f"{activity['states']}_count"] += activity['count']
-            if activity['states'] in ('today', 'overdue'):
-                user_activities[is_task]['total_count'] += activity['count']
+        task_ids = all_activities.mapped('res_id')
+        tasks = self.env['project.task'].browse(task_ids)
+        is_todo_map = {t.id: not t.project_id for t in tasks}
 
-        for group in user_activities.values():
-            group.update({
-                'domain': json.dumps([
-                    ['active', 'in', [True, False]],
-                    ['activity_ids.res_id', 'in', list(group['res_ids'])]
-                ])
+        todo_activities = all_activities.filtered(lambda a: is_todo_map.get(a.res_id))
+        task_activities = all_activities - todo_activities
+
+        if todo_activities:
+            todo_group = self._format_activity_group('project.task', todo_activities)
+            todo_group.update({
+                'name': _('To-Do'),
+                'is_todo': True,
+                'icon': modules.module.get_module_icon('project_todo'),
+                'domain': [("active", "in", [True, False]), ("project_id", "=", False)],
             })
-        activity_groups.extend(list(user_activities.values()))
+            groups.append(todo_group)
 
-        return activity_groups
+        if task_activities:
+            project_group = self._format_activity_group('project.task', task_activities)
+            project_group.update({
+                'is_todo': False,
+                'domain': [("active", "in", [True, False]), ("project_id", "!=", False)],
+            })
+            groups.append(project_group)
+
+        return groups
 
     def _onboard_users_into_project(self, users):
         res = super()._onboard_users_into_project(users)
