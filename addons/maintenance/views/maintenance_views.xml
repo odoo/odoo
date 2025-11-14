@@ -28,9 +28,6 @@
                 <separator/>
                 <filter string="Unscheduled" name="unscheduled" domain="[('state', 'not in', ['done', 'cancelled']), ('schedule_date', '=', False)]"/>
                 <separator/>
-                <filter name="filter_schedule_date" date="schedule_date"/>
-                <filter name="filter_close_date" date="close_date"/>
-                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                 <separator/>
                 <filter invisible="1" string="My Activities" name="filter_activities_my"
@@ -43,9 +40,6 @@
                     domain="[('my_activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
-                <separator/>
-                <filter string="Active" name="active" domain="[('archive', '=', False)]"/>
-                <filter string="Cancelled" name="inactive" domain="[('archive', '=', True)]"/>
                 <group>
                     <filter string='Assigned to' name="assigned" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by' : 'category_id'}"/>
@@ -103,7 +97,6 @@
                             <field name="equipment_id" context="{'default_company_id':company_id, 'default_category_id':category_id}" required="1"/>
                             <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" invisible="not equipment_id"/>
                             <field name="close_date" readonly="True" invisible="state != 'done'"/>
-                            <field name="archive" invisible="1"/>
                             <field name="maintenance_type" widget="radio"/>
                         </group>
                         <group>
@@ -232,7 +225,6 @@
                 <field name="repeat_unit" invisible="1"/>
                 <field name="repeat_type" invisible="1"/>
                 <field name="repeat_until" invisible="1"/>
-                <field name="archive" invisible="1"/>
                 <field name="duration" invisible="1"/>
                 <field name="state" invisible="1"/>
             </calendar>
@@ -247,8 +239,8 @@
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
-            'search_default_active': True,
-            'default_user_id': uid
+            'search_default_todo': True,
+            'default_user_id': uid,
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -267,7 +259,9 @@
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
             'search_default_category_id': [active_id],
-            'search_default_active': True,
+            'search_default_todo': True,
+            'search_default_done': True,
+            'search_default_cancelled': True,
             'default_category_id': active_id,
         }</field>
         <field name="help" type="html">
@@ -285,7 +279,9 @@
         <field name="binding_model_id" ref="maintenance.model_maintenance_equipment"/>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="context">{
-            'search_default_active': True,
+            'search_default_todo': True,
+            'search_default_done': True,
+            'search_default_cancelled': True,
             'default_equipment_id': active_id,
         }</field>
         <field name="domain">[('equipment_id', '=', active_id)]</field>
@@ -303,7 +299,6 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="context">{
-            'search_default_active': True,
             'search_default_maintenance_team_id': active_id,
             'default_maintenance_team_id': active_id,
         }</field>
@@ -323,10 +318,7 @@
         <field name="path">maintenance-calendar</field>
         <field name="view_mode">calendar,kanban,list,form,pivot,graph,activity</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
-        <field name="context">{
-            'search_default_active': True,
-            'search_default_todo': True,
-        }</field>
+        <field name="context">{'search_default_todo': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance request
@@ -341,9 +333,7 @@
         <field name="res_model">maintenance.request</field>
         <field name="path">maintenance-requests-analysis</field>
         <field name="view_mode">graph,pivot,kanban,list,form,calendar,activity</field>
-        <field name="context">{
-            'search_default_active': True,
-        }</field>
+        <field name="context">{'search_default_todo': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance request
@@ -365,7 +355,7 @@
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
                             class="oe_stat_button"
-                            context="{'search_default_active': True, 'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
+                            context="{'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
                             icon="fa-wrench">
                             <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
@@ -847,7 +837,7 @@
                         </div>
                     </t>
                     <t t-name="card">
-                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
+                        <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
                             <field name="name" class="fw-bold fs-4 ms-2"/>
                         </a>
                         <div class="row g-0 mt-3 ms-2 pb-4">
