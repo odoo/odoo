@@ -73,6 +73,7 @@ class BlackBoxDriver(SerialDriver):
         """Initializes `self._actions`, a map of action keys sent by the frontend to backend action methods."""
 
         self._actions.update({
+            'batchAction': self._batch_action,  # Batch of multiple actions to be done one after another and send all reponse at once
             'registerReceiptWeb': self._request_registerReceiptWeb,  # 'H' from server (websocket) so requires an answer
             'registerReceipt': self._request_registerReceipt,  # 'H'
             'registerPIN': self._request_registerPIN,  # 'P'
@@ -195,8 +196,32 @@ class BlackBoxDriver(SerialDriver):
         except requests.exceptions.RequestException:
             _logger.exception('Could not reach confirmation status URL: %s', server_url)
 
+    def _batch_action(self, batch):
+        """Handles a batch of multiple actions to be done one after another and send all response at once.
+        :param batch: batch of arrays of action and the data to be sent to the blackbox
+        :type batch: array of tuples
+        """
+        responses = []
+        for (data, action) in batch['high_level_message']:
+            if action == 'registerReceipt':
+                self._registerReceipt(data)
+            elif action == 'registerPIN':
+                self._registerPIN(data)
+            else:
+                _logger.error("Unknown action '%s' in batch", action)
+                continue
+            responses.append(self.data['result'])
+            if self._is_last_response_error():
+                # If the last response was an error, we do not send the next messages in the batch. They will be sent later in a new batch.
+                break
+
+        self.data['result'] = responses
+
+    def _is_last_response_error(self):
+        return 'error' in self.data['result'] and self.data['result']['error']['errorCode'][:3] != '000'
+
     def _request_registerReceiptWeb(self, data):
-        self._request_registerReceipt(data)
+        self._registerReceipt(data['high_level_message'])
 
         self.send_blackbox_response({
             'order_id': data['id'],
@@ -205,21 +230,27 @@ class BlackBoxDriver(SerialDriver):
             'iot_mac': system.IOT_IDENTIFIER
         })
 
-    def _request_registerReceipt(self, data):
-        if data['high_level_message'].get('clock'):
-            packet = self._wrap_low_level_message_around(self._wrap_high_level_message_around('I', data['high_level_message']))
+    def _registerReceipt(self, data):
+        if data.get('clock'):
+            packet = self._wrap_low_level_message_around(self._wrap_high_level_message_around('I', data))
             blackbox_response = self._send_to_blackbox(packet, self._connection)
 
-        packet = self._wrap_low_level_message_around(self._wrap_high_level_message_around('H', data['high_level_message']))
+        packet = self._wrap_low_level_message_around(self._wrap_high_level_message_around('H', data))
+        blackbox_response = self._send_to_blackbox(packet, self._connection)
+        if blackbox_response:
+            self.data['result'] = self._parse_blackbox_response(blackbox_response)
+
+    def _request_registerReceipt(self, data):
+        self._registerReceipt(data['high_level_message'])
+
+    def _registerPIN(self, data):
+        packet = self._wrap_low_level_message_around("P040%s" % data)
         blackbox_response = self._send_to_blackbox(packet, self._connection)
         if blackbox_response:
             self.data['result'] = self._parse_blackbox_response(blackbox_response)
 
     def _request_registerPIN(self, data):
-        packet = self._wrap_low_level_message_around("P040%s" % data['high_level_message'])
-        blackbox_response = self._send_to_blackbox(packet, self._connection)
-        if blackbox_response:
-            self.data['result'] = self._parse_blackbox_response(blackbox_response)
+        self._registerPIN(data['high_level_message'])
 
     def _send_to_blackbox(self, packet, connection):
         """Sends a message to and wait for a response from the blackbox.
@@ -263,6 +294,10 @@ class BlackBoxDriver(SerialDriver):
         wrap = request_type + str(self.sequence_number % 100).zfill(2) + '0'
 
         if request_type == 'I':
+            return wrap
+
+        if request_type == 'P':
+            wrap += f"{data:0>5}"
             return wrap
 
         wrap += "{:>8}".format(data['date'])
