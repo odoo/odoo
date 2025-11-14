@@ -251,7 +251,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         service = self.env['product.product'].create({
             'name': 'Super Product',
             'type': 'service',
-            'service_to_purchase': True,
+            'service_tracking': 'subcontract',
             'seller_ids': [(0, 0, {
                 'partner_id': self.partner_vendor_service.id,
                 'min_qty': 1,
@@ -323,10 +323,10 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         pol = sale_order._get_purchase_orders().order_line
         self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
 
-    def test_service_to_purchase_multi_company(self):
+    def test_service_tracking_subcontract_multi_company(self):
         """Test the service to purchase in a multi-company environment
 
-        The `product.template.service_to_purchase` is a company_dependent field, whose
+        The `product.template.service_tracking` is a company_dependent field, whose
         value depends on the company are in, which is not necessarily the order company
 
         Granted that:
@@ -343,8 +343,8 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         company_1 = self.env.company
         company_2 = self.company_data_2['company']
         self.env.user.company_ids += company_2
-        self.assertTrue(self.service_purchase_1.service_to_purchase)
-        self.assertFalse(self.service_purchase_1.with_company(company_2).service_to_purchase)
+        self.assertTrue(self.service_purchase_1.service_tracking == 'subcontract')
+        self.assertFalse(self.service_purchase_1.with_company(company_2).service_tracking == 'subcontract')
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'company_id': company_2.id,
@@ -376,7 +376,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         order2.sudo().with_company(company_2).action_confirm()
         self.assertTrue(order2.purchase_order_count)
 
-    def test_service_to_purchase_branch_tax_propagation(self):
+    def test_service_tracking_subcontract_branch_tax_propagation(self):
         """
         Ensure that SO/PO of a branch can use root company's taxes
         """
@@ -392,7 +392,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
             'invoice_policy': 'delivery',
             'taxes_id': self.company_data['default_tax_sale'],
             'supplier_taxes_id': self.company_data['default_tax_purchase'],
-            'service_to_purchase': True,
+            'service_tracking': 'subcontract',
             'seller_ids': [Command.create({
                 'partner_id': self.partner_b.id,
                 'min_qty': 1,

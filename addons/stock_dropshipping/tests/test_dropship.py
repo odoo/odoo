@@ -332,7 +332,7 @@ class TestDropship(common.TransactionCase):
         subcontracted_service = self.env['product.product'].create({
             'name': 'SuperService',
             'type': 'service',
-            'service_to_purchase': True,
+            'service_tracking': 'subcontract',
             'seller_ids': [(0, 0, {'partner_id': supplier.id})],
         })
 
