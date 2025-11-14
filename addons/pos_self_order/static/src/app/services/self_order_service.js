@@ -23,6 +23,7 @@ import {
     filterChangeByCategories,
 } from "@point_of_sale/app/models/utils/order_change";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
+import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -434,12 +435,18 @@ export class SelfOrder extends Reactive {
     }
 
     initHardware() {
+        if (this.config.self_ordering_mode !== "kiosk") {
+            return;
+        }
+        let useLna = false;
         for (const printerConfig of this.config.preparation_printer_ids) {
             const printer = this.createPrinter(printerConfig);
             if (printer) {
                 printer.config = printerConfig;
                 this.kitchenPrinters.push(printer);
             }
+
+            useLna = useLna || printerConfig.use_lna;
         }
         for (const relPrinter of this.config.receipt_printer_ids) {
             const printerDevice = this.createPrinter(relPrinter);
@@ -447,17 +454,21 @@ export class SelfOrder extends Reactive {
             if (relPrinter == this.config.default_receipt_printer_id) {
                 this.printer.setPrinter(printerDevice);
             }
+
+            useLna = useLna || relPrinter.use_lna;
         }
 
-        if (this.config.self_ordering_mode === "kiosk") {
-            for (const pm of this.models["pos.payment.method"].getAll()) {
-                const PaymentInterface = registry
-                    .category("electronic_payment_interfaces")
-                    .get(pm.use_payment_terminal, null);
-                if (PaymentInterface) {
-                    pm.payment_terminal = new PaymentInterface(this, pm);
-                }
+        for (const pm of this.models["pos.payment.method"].getAll()) {
+            const PaymentInterface = registry
+                .category("electronic_payment_interfaces")
+                .get(pm.use_payment_terminal, null);
+            if (PaymentInterface) {
+                pm.payment_terminal = new PaymentInterface(this, pm);
             }
+        }
+
+        if (useLna) {
+            initLNA(this.notification);
         }
     }
 

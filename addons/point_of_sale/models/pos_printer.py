@@ -60,7 +60,7 @@ class PosPrinter(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'epson_printer_ip']
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'epson_printer_ip']
 
     @api.constrains('epson_printer_ip')
     def _constrains_epson_printer_ip(self):
