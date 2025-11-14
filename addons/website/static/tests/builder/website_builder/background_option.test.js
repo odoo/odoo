@@ -455,3 +455,17 @@ test("change background size", async () => {
     expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
     expect(section).toHaveStyle("background-size: 1px");
 });
+
+test("background shape detection is compatible with previous ones (web_editor)", async () => {
+    await setupWebsiteBuilder(`
+        <section data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            AAAA
+        </section>`);
+    await contains(":iframe section").click();
+    expect("div[data-label='Shape'] button:first-of-type").toHaveText("Connections 01");
+    await contains("div[data-label='Shape'] button:first-of-type").click();
+    expect("button.active[data-action-id='setBackgroundShape']").toHaveAttribute(
+        "data-action-value",
+        "html_builder/Connections/01"
+    );
+});
