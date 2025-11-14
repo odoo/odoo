@@ -12,7 +12,7 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
-    static dependencies = ["media", "selection", "builderOptions"];
+    static dependencies = ["media", "selection", "builderOptions", "operation"];
     static shared = ["replaceMedia"];
 
     /** @type {import("plugins").BuilderResources} */
@@ -78,13 +78,15 @@ export class MediaWebsitePlugin extends Plugin {
     }
 
     /**
-     * Replaces the double-cliked media element.
+     * Replaces the double-clicked media element.
      *
      * @param {HTMLElement} mediaEl the media element to replace
      */
     async onDblClickEditableMedia(mediaEl) {
-        this.removeCurrentTooltip();
-        await this.replaceMedia(mediaEl);
+        this.dependencies.operation.next(async () => {
+            this.removeCurrentTooltip();
+            await this.replaceMedia(mediaEl);
+        });
     }
 
     /**
