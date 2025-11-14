@@ -15,6 +15,7 @@ test("buttonToShow", async () => {
     expect(comp.buttonToShow).toMatchObject({ label: "Checkout", disabled: true });
 
     await getFilledSelfOrder(store);
+    store.router.activeSlot = "product_list";
     expect(comp.buttonToShow).toMatchObject({ label: "Checkout", disabled: false });
 
     store.router.activeSlot = "cart";

@@ -10,8 +10,13 @@
                         <div class="o_so_order_header pb-2" t-on-click="() => this.editOrder(order)">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="d-flex flex-column">
-                                    <h4 class="mb-1" t-esc="order.pos_reference"/>
-                                    <span class="text-muted">#<t t-esc="order.tracking_number" /> - <t t-esc="order.date_order.toFormat('dd/MM/yyyy')" /></span>
+                                    <h4 class="mb-1" t-esc="order.pos_reference || order.floating_order_name"/>
+                                    <span class="text-muted">
+                                        <t t-if="order.tracking_number !== '__self_order_no_session__'">
+                                            #<t t-esc="order.tracking_number" /> -
+                                        </t>
+                                        <t t-esc="order.date_order.toFormat('dd/MM/yyyy')" />
+                                    </span>
                                 </div>
                                 <div class="d-flex justify-content-around gap-1 align-items-center">
                                     <div t-if="selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" t-on-click="() => this.selfOrder.downloadReceipt(order)">

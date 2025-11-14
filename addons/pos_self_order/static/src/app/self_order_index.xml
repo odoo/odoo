@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.selfOrderIndex">
-        <div t-if="!selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
-            We're currently closed.
-        </div>
+        <PosSelfOrderTopAlert activeSlot="router.activeSlot" />
         <div t-if="selfOrder.rpcLoading">
             <LoadingOverlay />
         </div>
@@ -15,7 +13,7 @@
                 <ProductListPage />
             </t>
             <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
-                <ProductPage  productTemplate="selfOrder.models['product.template'].get(url.id)" />
+                <ProductPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
                 <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" />

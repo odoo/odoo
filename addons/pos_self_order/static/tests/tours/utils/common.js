@@ -1,5 +1,4 @@
 /* global posmodel */
-
 export function clickBtn(buttonName) {
     return {
         content: `Click on button '${buttonName}'`,
@@ -133,5 +132,26 @@ export function setProductAvailability(productName, value) {
             }
             product.self_order_available = value;
         },
+    };
+}
+
+export function noTopAlert() {
+    return {
+        content: `Check that there is no top alert`,
+        trigger: negate(".o-self-closed"),
+    };
+}
+
+export function closedTopAlert() {
+    return {
+        content: `Check that the POS is closed`,
+        trigger: `.o-self-closed:contains('We are currently closed')`,
+    };
+}
+
+export function nextAvailabilityTopAlert() {
+    return {
+        content: `Check that the POS is closed with next available slot message`,
+        trigger: `.o-self-closed:contains('The next available slot')`,
     };
 }

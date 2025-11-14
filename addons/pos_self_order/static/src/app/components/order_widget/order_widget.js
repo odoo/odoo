@@ -41,6 +41,14 @@ export class OrderWidget extends Component {
         const isNoLine = this.selfOrder.currentOrder.lines.length === 0;
         const hasNotAllLinesSent = this.selfOrder.currentOrder.unsentLines;
 
+        // Do not show the button if ...
+        if (
+            this.selfOrder.menuOnlyMode || // ... it's consultation mode
+            (["product_list", "cart"].includes(currentPage) && !this.selfOrder.ordering) // ... we cannot order while being on the products or cart page
+        ) {
+            return false;
+        }
+
         let label = "";
         let disabled = false;
 

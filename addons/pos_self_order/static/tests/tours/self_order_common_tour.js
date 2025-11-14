@@ -5,9 +5,10 @@ import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_
 
 registry.category("web_tour.tours").add("self_order_is_close", {
     steps: () => [
-        LandingPage.isClosed(),
+        Utils.noTopAlert(),
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Coca-Cola"),
+        Utils.closedTopAlert(),
         Utils.checkIsNoBtn("Checkout"),
     ],
 });
@@ -26,61 +27,8 @@ registry.category("web_tour.tours").add("self_order_landing_page_carousel", {
     steps: () => [Utils.checkIsNoBtn("My Order"), LandingPage.checkCarouselAutoPlaying()],
 });
 
-registry.category("web_tour.tours").add("self_order_pos_closed", {
-    steps: () => [
-        LandingPage.isClosed(),
-        // Normal product
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Test-In"),
-        ProductPage.clickProduct("Coca-Cola"),
-        Utils.checkIsNoBtn("Checkout"),
-        // Product with attributes
-        ProductPage.clickProduct("Desk Organizer"),
-        ...ProductPage.setupAttribute(
-            [
-                { name: "Size", value: "M" },
-                { name: "Fabric", value: "Leather" },
-            ],
-            false
-        ),
-        Utils.checkIsNoBtn("Add to cart"),
-        ProductPage.clickDiscard(),
-        // Combo product
-        ProductPage.clickProduct("Office Combo"),
-        ...ProductPage.setupCombo(
-            [
-                {
-                    product: "Desk Organizer",
-                    attributes: [
-                        { name: "Size", value: "M" },
-                        { name: "Fabric", value: "Leather" },
-                    ],
-                },
-                {
-                    product: "Combo Product 5",
-                    attributes: [],
-                },
-                {
-                    product: "Combo Product 8",
-                    attributes: [],
-                },
-            ],
-            false
-        ),
-        Utils.checkIsNoBtn("Add to cart"),
-    ],
-});
-
-registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
-    steps: () => [
-        LandingPage.isClosed(),
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Test-In"),
-        ProductPage.clickCategory("Miscellaneous"),
-
-        ProductPage.clickProduct("Coca-Cola"),
-        Utils.checkIsNoBtn("Checkout"),
-
+const commonSelfOrderPosClosed = () =>
+    [
         // Product with attributes
         ProductPage.clickProduct("Desk Organizer"),
         ...ProductPage.setupAttribute(
@@ -116,5 +64,44 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
             false
         ),
         Utils.checkIsNoBtn("Add to cart"),
+    ].flat();
+
+registry.category("web_tour.tours").add("mobile_self_order_pos_closed", {
+    steps: () => [
+        Utils.noTopAlert(),
+        // Normal product
+        Utils.clickBtn("Order Now"),
+        LandingPage.hasClosedBadge(),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Checkout"),
+        ...commonSelfOrderPosClosed(),
+    ],
+});
+
+registry.category("web_tour.tours").add("consultation_self_order_pos_closed", {
+    steps: () => [
+        Utils.noTopAlert(),
+        // Normal product
+        Utils.clickBtn("Order Now"),
+        LandingPage.hasNoClosedBadge(),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Checkout"),
+        ...commonSelfOrderPosClosed(),
+    ],
+});
+
+registry.category("web_tour.tours").add("kiosk_self_order_pos_closed", {
+    steps: () => [
+        Utils.noTopAlert(),
+        Utils.clickBtn("Order Now"),
+        LandingPage.hasNoClosedBadge(),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickCategory("Miscellaneous"),
+
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Checkout"),
+        ...commonSelfOrderPosClosed(),
     ],
 });

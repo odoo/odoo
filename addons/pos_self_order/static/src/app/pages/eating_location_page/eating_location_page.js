@@ -36,4 +36,8 @@ export class EatingLocationPage extends Component {
         }
         return "none";
     }
+
+    get showBadges() {
+        return !this.selfOrder.session && this.selfOrder.mobileOrderingMode;
+    }
 }
