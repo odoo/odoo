@@ -632,7 +632,7 @@ export class SampleServer {
      */
     _mockWebReadGroup(params) {
         const aggregates = [...params.aggregates, "__count"];
-        if (params.auto_unfold && params.unfold_read_specification) {
+        if (params.unfold_read_specification) {
             aggregates.push("id:array_agg");
         }
         let groups;
@@ -645,25 +645,23 @@ export class SampleServer {
         // Don't care another params - and no subgroup:
         // order / opening_info / unfold_read_default_limit / groupby_read_specification
         let nbOpenedGroup = 0;
-        if (params.auto_unfold && params.unfold_read_specification) {
+        if (params.unfold_read_specification) {
             for (const group of groups) {
-                if (nbOpenedGroup < MAX_NUMBER_OPENED_GROUPS) {
-                    nbOpenedGroup++;
-                    group["__records"] = this._mockWebSearchReadUnity({
-                        model: params.model,
-                        specification: params.unfold_read_specification,
-                        recordIds: group["id:array_agg"],
-                    }).records;
+                if (params.auto_unfold || "__records" in group) {
+                    // if group has a "__records" key, it means that it is an existing group, and
+                    // that the real webReadGroup returned a "__records" key for that group (which
+                    // is empty, otherwise we wouldn't be here), i.e. that group is opened.
+                    if (nbOpenedGroup < MAX_NUMBER_OPENED_GROUPS) {
+                        nbOpenedGroup++;
+                        group["__records"] = this._mockWebSearchReadUnity({
+                            model: params.model,
+                            specification: params.unfold_read_specification,
+                            recordIds: group["id:array_agg"],
+                        }).records;
+                    }
                 }
                 delete group["id:array_agg"];
             }
-        }
-        if (params.opening_info) {
-            params.opening_info.forEach((info, i) => {
-                if (!info.folded) {
-                    groups[i].__records ||= [];
-                }
-            });
         }
 
         return {
