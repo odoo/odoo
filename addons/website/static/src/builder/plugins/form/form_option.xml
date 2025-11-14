@@ -127,7 +127,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Selection type" level="1">
-        <BuilderSelect t-if="isExistingFieldSelectType"
+        <BuilderSelect t-if="isExistingFieldSelectType and state.valueList"
             id="'existing_field_select_type_opt'" preview="false" action="'existingFieldSelectType'"
         >
             <BuilderSelectItem actionValue="'many2many'" t-if="isExistingFieldSelectTypeMultiple">Checkbox</BuilderSelectItem>
