@@ -2,8 +2,8 @@
     background: white;
     border-radius: 12px;
     padding: 2rem;
-    max-width: 800px;
-    margin: 2rem auto;
+    max-width: 1200px;
+    margin: 0rem auto;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 
     .kiosk-dialog-header {
@@ -129,16 +129,110 @@
         .kiosk-project-list {
             h3 {
                 font-size: 1.5rem;
-                margin-bottom: 1.5rem;
+                margin-bottom: 1rem;
                 text-align: center;
                 color: #333;
+            }
+
+            .kiosk-search-container {
+                margin-bottom: 1rem;
+
+                .kiosk-search-input-wrapper {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    max-width: 800px;
+                    margin: 0 auto;
+
+                    .kiosk-search-icon {
+                        position: absolute;
+                        left: 0.75rem;
+                        color: #999;
+                        font-size: 1.1rem;
+                        pointer-events: none;
+                        z-index: 1;
+                    }
+
+                    .kiosk-search-input {
+                        flex: 1;
+                        padding: 0.6rem 2.5rem 0.6rem 2.5rem;
+                        font-size: 1rem;
+                        border: 2px solid #ddd;
+                        border-radius: 8px;
+                        transition: all 0.2s ease;
+
+                        &:focus {
+                            border-color: #007bff;
+                            outline: none;
+                            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                        }
+
+                        &::placeholder {
+                            color: #999;
+                        }
+                    }
+
+                    .kiosk-search-clear {
+                        position: absolute;
+                        right: 0.25rem;
+                        background: transparent;
+                        border: none;
+                        color: #666;
+                        font-size: 1.1rem;
+                        padding: 0.4rem;
+                        cursor: pointer;
+                        border-radius: 50%;
+                        transition: all 0.2s ease;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 1.8rem;
+                        height: 1.8rem;
+
+                        &:hover:not(:disabled) {
+                            background: #f0f0f0;
+                            color: #333;
+                        }
+
+                        &:disabled {
+                            opacity: 0.5;
+                            cursor: not-allowed;
+                        }
+
+                        i {
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+
+            .kiosk-empty-state {
+                text-align: center;
+                padding: 2rem 1.5rem;
+                color: #666;
+
+                i {
+                    color: #999;
+                    margin-bottom: 0.75rem;
+                    opacity: 0.5;
+                }
+
+                p {
+                    font-size: 1.1rem;
+                    margin: 0;
+
+                    strong {
+                        color: #007bff;
+                        word-break: break-word;
+                    }
+                }
             }
 
             .kiosk-projects-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                 gap: 1rem;
-                margin-bottom: 1.5rem;
+                margin-bottom: 1rem;
                 max-height: 400px;
                 overflow-y: auto;
                 padding: 0.5rem;

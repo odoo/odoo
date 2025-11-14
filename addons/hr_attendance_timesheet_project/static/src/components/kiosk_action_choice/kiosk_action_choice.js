@@ -25,9 +25,23 @@ export class KioskActionChoice extends Component {
             selectedProjectId: null,
             error: null,
             closing: false,
+            searchTerm: '',
         });
 
         console.log("[KioskActionChoice] Component setup with props:", this.props);
+    }
+
+    get filteredProjects() {
+        if (!this.state.searchTerm || !this.state.searchTerm.trim()) {
+            return this.state.projects;
+        }
+
+        const searchLower = this.state.searchTerm.toLowerCase().trim();
+        return this.state.projects.filter(project => {
+            const projectNameMatch = project.name.toLowerCase().includes(searchLower);
+            const partnerNameMatch = project.partner_name && project.partner_name.toLowerCase().includes(searchLower);
+            return projectNameMatch || partnerNameMatch;
+        });
     }
 
     async onClickChangeProject() {
@@ -141,5 +155,14 @@ export class KioskActionChoice extends Component {
         this.state.showProjectList = false;
         this.state.error = null;
         this.state.selectedProjectId = null;
+        this.state.searchTerm = '';
+    }
+
+    onSearchInput(event) {
+        this.state.searchTerm = event.target.value;
+    }
+
+    clearSearch() {
+        this.state.searchTerm = '';
     }
 }

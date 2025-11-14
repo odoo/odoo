@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_attendance_timesheet_project.KioskActionChoice">
-        <Dialog title="'What would you like to do?'" size="'md'">
+        <Dialog title="'What would you like to do?'" size="'lg'">
             <t t-if="!state.closing">
             <div class="kiosk-action-choice-dialog">
                 <t t-if="props.currentProjectName">
@@ -63,18 +63,49 @@
                         </t>
 
                         <t t-elif="Array.isArray(state.projects)">
-                            <div class="kiosk-projects-grid">
-                                <t t-foreach="state.projects" t-as="project" t-key="project.id">
-                                    <button
-                                        class="btn btn-light btn-lg kiosk-project-btn"
-                                        t-att-class="{ 'selected': state.selectedProjectId === project.id }"
-                                        t-on-click="() => this.onSelectProject(project.id)"
-                                        t-att-disabled="state.loading">
-                                        <i class="fa fa-folder-o fa-2x"/>
-                                        <span t-esc="project.name"/>
-                                    </button>
-                                </t>
+                            <!-- Search bar -->
+                            <div class="kiosk-search-container">
+                                <div class="kiosk-search-input-wrapper">
+                                    <i class="fa fa-search kiosk-search-icon"/>
+                                    <input
+                                        type="text"
+                                        class="form-control kiosk-search-input"
+                                        placeholder="Search projects..."
+                                        t-att-value="state.searchTerm"
+                                        t-on-input="onSearchInput"
+                                        t-att-disabled="state.loading"/>
+                                    <t t-if="state.searchTerm">
+                                        <button
+                                            class="btn kiosk-search-clear"
+                                            t-on-click="clearSearch"
+                                            t-att-disabled="state.loading">
+                                            <i class="fa fa-times"/>
+                                        </button>
+                                    </t>
+                                </div>
                             </div>
+
+                            <!-- Project grid or empty state -->
+                            <t t-if="filteredProjects.length > 0">
+                                <div class="kiosk-projects-grid">
+                                    <t t-foreach="filteredProjects" t-as="project" t-key="project.id">
+                                        <button
+                                            class="btn btn-light btn-lg kiosk-project-btn"
+                                            t-att-class="{ 'selected': state.selectedProjectId === project.id }"
+                                            t-on-click="() => this.onSelectProject(project.id)"
+                                            t-att-disabled="state.loading">
+                                            <i class="fa fa-folder-o fa-2x"/>
+                                            <span t-esc="project.name"/>
+                                        </button>
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="kiosk-empty-state">
+                                    <i class="fa fa-search fa-3x"/>
+                                    <p>No projects found matching '<strong t-esc="state.searchTerm"/>'</p>
+                                </div>
+                            </t>
 
                             <div class="kiosk-back-section">
                                 <button

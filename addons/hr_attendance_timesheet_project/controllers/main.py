@@ -125,6 +125,7 @@ class HrAttendanceTimesheetProject(http.Controller):
         project_list = [{
             'id': project.id,
             'name': project.name,
+            'partner_name': project.partner_id.name if project.partner_id else '',
         } for project in projects]
 
         return {'projects': project_list}
