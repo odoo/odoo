@@ -12,7 +12,7 @@ export class SpreadsheetComponent extends Component {
     static template = "spreadsheet.SpreadsheetComponent";
     static components = { Spreadsheet };
     static props = {
-        model: Model,
+        model: { type: Model, optional: true },
     };
 
     get model() {
