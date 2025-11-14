@@ -1791,7 +1791,7 @@ class TestMailgateway(MailGatewayCommon):
     def test_message_process_file_encoding(self):
         """ Incoming email with file encoding """
         file_content = 'Hello World'
-        for encoding in ['', 'UTF-8', 'UTF-16LE', 'UTF-32BE']:
+        for encoding in ['', 'UTF-8', 'UTF-16LE', 'UTF-32BE', 'cp-850']:
             file_content_b64 = base64.b64encode(file_content.encode(encoding or 'utf-8')).decode()
             record = self.format_and_process(test_mail_data.MAIL_FILE_ENCODING,
                 self.email_from, f'groups@{self.alias_domain}',
@@ -1801,7 +1801,7 @@ class TestMailgateway(MailGatewayCommon):
             )
             attachment = record.message_ids.attachment_ids
             self.assertEqual(file_content, attachment.raw.decode(encoding or 'utf-8'))
-            if encoding not in ['', 'UTF-8']:
+            if encoding not in ['', 'UTF-8', 'cp-850']:
                 self.assertNotEqual(file_content, attachment.raw.decode('utf-8'))
 
     def test_message_hebrew_iso8859_8_i(self):
