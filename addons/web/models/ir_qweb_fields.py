@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+import re
 from collections import OrderedDict
 from werkzeug.urls import url_quote
 from markupsafe import Markup
@@ -54,6 +55,49 @@ class IrQwebFieldImage(models.AbstractModel):
 
         return src, src_zoom
 
+    def _get_srcset(self, record, field_name, options):
+        srcset = []
+        size_list = ('128', '256', '512', '1024', '1920')
+
+        if not field_name.endswith(size_list):
+            return None
+
+        if not field_name.startswith('image'):
+            return None
+
+        # Delete the number (size) at the end of the field name
+        tmp_field_name = re.sub(r'_\d+$', '', field_name)
+
+        # get maximum size of the image
+        max_size = '1920'
+        selected_preview_image = options.get('preview_image')
+        if selected_preview_image is not None:
+            selected_preview_image = selected_preview_image.split('_')
+            max_size = selected_preview_image[-1]
+
+        if not max_size.isdigit():
+            max_size = '1920'
+
+        for size in size_list:
+            if int(size) > int(max_size):
+                break
+
+            tmp_preview_image = tmp_field_name + '_' + size
+
+            preview_options = dict(options, preview_image=tmp_preview_image)
+            if options.get('qweb_img_raw_data', False):
+                value = record[tmp_preview_image]
+                if not value:
+                    continue
+                src = self._get_src_data_b64(value, preview_options)
+            else:
+                src = self._get_src_urls(record, field_name, preview_options)[0]
+
+            srcset.append('%s %sw' % (src, size))
+
+        srcset = ', '.join(srcset)
+        return srcset
+
     @api.model
     def record_to_html(self, record, field_name, options):
         assert options['tagName'] != 'img',\
@@ -85,8 +129,12 @@ class IrQwebFieldImage(models.AbstractModel):
         if options.get('itemprop'):
             itemprop = options['itemprop']
 
+        srcset = self._get_srcset(record, field_name, options)
         atts = OrderedDict()
         atts["src"] = src
+        if srcset:
+            atts["srcset"] = srcset
+
         atts["itemprop"] = itemprop
         atts["class"] = classes
         atts["style"] = options.get('style')
