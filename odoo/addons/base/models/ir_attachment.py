@@ -839,3 +839,9 @@ class IrAttachment(models.Model):
     def _is_remote_source(self):
         self.ensure_one()
         return self.url and not self.file_size and self.url.startswith(('http://', 'https://', 'ftp://'))
+
+    def _migrate_remote_to_local(self):
+        if self.type == 'binary':
+            return
+        if self.type == 'url':
+            raise ValidationError(_("URL attachment (%s) shouldn't be migrated to local.", self.id))

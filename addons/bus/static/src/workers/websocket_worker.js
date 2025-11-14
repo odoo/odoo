@@ -499,6 +499,7 @@ export class WebsocketWorker {
             this._onWebsocketClose(
                 new CloseEvent("close", { code: WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED })
             );
+            this.websocket = null;
             return;
         }
         this._updateState(WORKER_STATE.CONNECTING);
