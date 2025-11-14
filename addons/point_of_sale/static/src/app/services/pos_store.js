@@ -40,6 +40,7 @@ import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { initLNA } from "../utils/init_lna";
 
 const { DateTime } = luxon;
 
@@ -153,6 +154,8 @@ export class PosStore extends WithLazyGetterTrap {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
+
+        initLNA(this.notification);
     }
 
     get firstScreen() {
